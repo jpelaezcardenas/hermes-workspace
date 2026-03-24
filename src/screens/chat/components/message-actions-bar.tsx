@@ -12,6 +12,7 @@ import {
   TooltipRoot,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { writeTextToClipboard } from '@/lib/clipboard'
 import { cn } from '@/lib/utils'
 
 type MessageActionsBarProps = {
@@ -37,7 +38,7 @@ export function MessageActionsBar({
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(text)
+      await writeTextToClipboard(text)
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1400)
     } catch {
