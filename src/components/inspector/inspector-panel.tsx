@@ -4,7 +4,8 @@ import {  useActivityStore } from './activity-store'
 import type {ActivityEvent} from './activity-store';
 import { cn } from '@/lib/utils'
 
-const HERMES_API = 'http://localhost:8642'
+const MEMORY_API = '/api/memory'
+const SKILLS_API = '/api/skills'
 
 // ── Store ─────────────────────────────────────────────────────────────────────
 
@@ -143,7 +144,7 @@ function MemoryTab() {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`${HERMES_API}/api/memory`)
+    fetch(MEMORY_API)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
@@ -224,7 +225,7 @@ function SkillsTab() {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`${HERMES_API}/api/skills`)
+    fetch(SKILLS_API)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()

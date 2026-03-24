@@ -34,6 +34,7 @@ import { Route as ApiSendStreamRouteImport } from './routes/api/send-stream'
 import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
+import { Route as ApiMemoryRouteImport } from './routes/api/memory'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
 import { Route as ApiHermesJobsRouteImport } from './routes/api/hermes-jobs'
 import { Route as ApiHermesConfigRouteImport } from './routes/api/hermes-config'
@@ -179,6 +180,11 @@ const ApiModelsRoute = ApiModelsRouteImport.update({
   path: '/api/models',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMemoryRoute = ApiMemoryRouteImport.update({
+  id: '/api/memory',
+  path: '/api/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHistoryRoute = ApiHistoryRouteImport.update({
   id: '/api/history',
   path: '/api/history',
@@ -245,24 +251,24 @@ const ApiOauthDeviceCodeRoute = ApiOauthDeviceCodeRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMemoryWriteRoute = ApiMemoryWriteRouteImport.update({
-  id: '/api/memory/write',
-  path: '/api/memory/write',
-  getParentRoute: () => rootRouteImport,
+  id: '/write',
+  path: '/write',
+  getParentRoute: () => ApiMemoryRoute,
 } as any)
 const ApiMemorySearchRoute = ApiMemorySearchRouteImport.update({
-  id: '/api/memory/search',
-  path: '/api/memory/search',
-  getParentRoute: () => rootRouteImport,
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => ApiMemoryRoute,
 } as any)
 const ApiMemoryReadRoute = ApiMemoryReadRouteImport.update({
-  id: '/api/memory/read',
-  path: '/api/memory/read',
-  getParentRoute: () => rootRouteImport,
+  id: '/read',
+  path: '/read',
+  getParentRoute: () => ApiMemoryRoute,
 } as any)
 const ApiMemoryListRoute = ApiMemoryListRouteImport.update({
-  id: '/api/memory/list',
-  path: '/api/memory/list',
-  getParentRoute: () => rootRouteImport,
+  id: '/list',
+  path: '/list',
+  getParentRoute: () => ApiMemoryRoute,
 } as any)
 const ApiHermesJobsJobIdRoute = ApiHermesJobsJobIdRouteImport.update({
   id: '/$jobId',
@@ -295,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-jobs': typeof ApiHermesJobsRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
+  '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/send': typeof ApiSendRoute
@@ -340,6 +347,7 @@ export interface FileRoutesByTo {
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-jobs': typeof ApiHermesJobsRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
+  '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/send': typeof ApiSendRoute
@@ -387,6 +395,7 @@ export interface FileRoutesById {
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-jobs': typeof ApiHermesJobsRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
+  '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/send': typeof ApiSendRoute
@@ -435,6 +444,7 @@ export interface FileRouteTypes {
     | '/api/hermes-config'
     | '/api/hermes-jobs'
     | '/api/history'
+    | '/api/memory'
     | '/api/models'
     | '/api/paths'
     | '/api/send'
@@ -480,6 +490,7 @@ export interface FileRouteTypes {
     | '/api/hermes-config'
     | '/api/hermes-jobs'
     | '/api/history'
+    | '/api/memory'
     | '/api/models'
     | '/api/paths'
     | '/api/send'
@@ -526,6 +537,7 @@ export interface FileRouteTypes {
     | '/api/hermes-config'
     | '/api/hermes-jobs'
     | '/api/history'
+    | '/api/memory'
     | '/api/models'
     | '/api/paths'
     | '/api/send'
@@ -573,6 +585,7 @@ export interface RootRouteChildren {
   ApiHermesConfigRoute: typeof ApiHermesConfigRoute
   ApiHermesJobsRoute: typeof ApiHermesJobsRouteWithChildren
   ApiHistoryRoute: typeof ApiHistoryRoute
+  ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiSendRoute: typeof ApiSendRoute
@@ -588,10 +601,6 @@ export interface RootRouteChildren {
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
-  ApiMemoryListRoute: typeof ApiMemoryListRoute
-  ApiMemoryReadRoute: typeof ApiMemoryReadRoute
-  ApiMemorySearchRoute: typeof ApiMemorySearchRoute
-  ApiMemoryWriteRoute: typeof ApiMemoryWriteRoute
   ApiOauthDeviceCodeRoute: typeof ApiOauthDeviceCodeRoute
   ApiOauthPollTokenRoute: typeof ApiOauthPollTokenRoute
 }
@@ -773,6 +782,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiModelsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/memory': {
+      id: '/api/memory'
+      path: '/api/memory'
+      fullPath: '/api/memory'
+      preLoaderRoute: typeof ApiMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/history': {
       id: '/api/history'
       path: '/api/history'
@@ -866,31 +882,31 @@ declare module '@tanstack/react-router' {
     }
     '/api/memory/write': {
       id: '/api/memory/write'
-      path: '/api/memory/write'
+      path: '/write'
       fullPath: '/api/memory/write'
       preLoaderRoute: typeof ApiMemoryWriteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiMemoryRoute
     }
     '/api/memory/search': {
       id: '/api/memory/search'
-      path: '/api/memory/search'
+      path: '/search'
       fullPath: '/api/memory/search'
       preLoaderRoute: typeof ApiMemorySearchRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiMemoryRoute
     }
     '/api/memory/read': {
       id: '/api/memory/read'
-      path: '/api/memory/read'
+      path: '/read'
       fullPath: '/api/memory/read'
       preLoaderRoute: typeof ApiMemoryReadRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiMemoryRoute
     }
     '/api/memory/list': {
       id: '/api/memory/list'
-      path: '/api/memory/list'
+      path: '/list'
       fullPath: '/api/memory/list'
       preLoaderRoute: typeof ApiMemoryListRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiMemoryRoute
     }
     '/api/hermes-jobs/$jobId': {
       id: '/api/hermes-jobs/$jobId'
@@ -935,6 +951,24 @@ const ApiHermesJobsRouteWithChildren = ApiHermesJobsRoute._addFileChildren(
   ApiHermesJobsRouteChildren,
 )
 
+interface ApiMemoryRouteChildren {
+  ApiMemoryListRoute: typeof ApiMemoryListRoute
+  ApiMemoryReadRoute: typeof ApiMemoryReadRoute
+  ApiMemorySearchRoute: typeof ApiMemorySearchRoute
+  ApiMemoryWriteRoute: typeof ApiMemoryWriteRoute
+}
+
+const ApiMemoryRouteChildren: ApiMemoryRouteChildren = {
+  ApiMemoryListRoute: ApiMemoryListRoute,
+  ApiMemoryReadRoute: ApiMemoryReadRoute,
+  ApiMemorySearchRoute: ApiMemorySearchRoute,
+  ApiMemoryWriteRoute: ApiMemoryWriteRoute,
+}
+
+const ApiMemoryRouteWithChildren = ApiMemoryRoute._addFileChildren(
+  ApiMemoryRouteChildren,
+)
+
 interface ApiSessionsRouteChildren {
   ApiSessionsSendRoute: typeof ApiSessionsSendRoute
   ApiSessionsSessionKeyStatusRoute: typeof ApiSessionsSessionKeyStatusRoute
@@ -968,6 +1002,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHermesConfigRoute: ApiHermesConfigRoute,
   ApiHermesJobsRoute: ApiHermesJobsRouteWithChildren,
   ApiHistoryRoute: ApiHistoryRoute,
+  ApiMemoryRoute: ApiMemoryRouteWithChildren,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiSendRoute: ApiSendRoute,
@@ -983,10 +1018,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
-  ApiMemoryListRoute: ApiMemoryListRoute,
-  ApiMemoryReadRoute: ApiMemoryReadRoute,
-  ApiMemorySearchRoute: ApiMemorySearchRoute,
-  ApiMemoryWriteRoute: ApiMemoryWriteRoute,
   ApiOauthDeviceCodeRoute: ApiOauthDeviceCodeRoute,
   ApiOauthPollTokenRoute: ApiOauthPollTokenRoute,
 }
