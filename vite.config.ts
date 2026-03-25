@@ -32,9 +32,9 @@ function resolveHermesAgentDir(env: Record<string, string>): string | null {
   }
 
   // Resolve relative to the workspace root (parent of clawsuite/)
-  const workspaceRoot = dirname(resolve('.'))  // clawsuite/ → parent
+  const workspaceRoot = dirname(resolve('.')) // clawsuite/ → parent
   candidates.push(
-    resolve(workspaceRoot, 'hermes-agent'),    // sibling of clawsuite/
+    resolve(workspaceRoot, 'hermes-agent'), // sibling of clawsuite/
     resolve(workspaceRoot, '..', 'hermes-agent'), // one level up
   )
 
@@ -88,8 +88,8 @@ const config = defineConfig(({ mode, command }) => {
     if (!agentDir) {
       console.warn(
         '[hermes-agent] Could not find hermes-agent directory.\n' +
-        '  Set HERMES_AGENT_PATH in .env or clone hermes-agent as a sibling:\n' +
-        '    git clone https://github.com/outsourc-e/hermes-agent.git ../hermes-agent',
+          '  Set HERMES_AGENT_PATH in .env or clone hermes-agent as a sibling:\n' +
+          '    git clone https://github.com/outsourc-e/hermes-agent.git ../hermes-agent',
       )
       return
     }
@@ -99,10 +99,18 @@ const config = defineConfig(({ mode, command }) => {
 
     const child = spawn(
       python,
-      ['-m', 'uvicorn', 'webapi.app:app', '--host', '0.0.0.0', '--port', '8642'],
+      [
+        '-m',
+        'uvicorn',
+        'webapi.app:app',
+        '--host',
+        '0.0.0.0',
+        '--port',
+        '8642',
+      ],
       {
         cwd: agentDir,
-        detached: false,   // keep tied to vite process — stops when dev server stops
+        detached: false, // keep tied to vite process — stops when dev server stops
         stdio: 'pipe',
         env: {
           ...process.env,
@@ -139,7 +147,9 @@ const config = defineConfig(({ mode, command }) => {
         return
       }
     }
-    console.warn('[hermes-agent] Started but health check timed out — may still be loading')
+    console.warn(
+      '[hermes-agent] Started but health check timed out — may still be loading',
+    )
   }
 
   let workspaceDaemonStarted = false
@@ -334,11 +344,12 @@ const config = defineConfig(({ mode, command }) => {
 
   // Allow access from Tailscale, LAN, or custom domains via env var
   // e.g. HERMES_ALLOWED_HOSTS=my-server.tail1234.ts.net,192.168.1.50
-  const _allowedHosts: string[] | true = (env.HERMES_ALLOWED_HOSTS)?.trim()
-    ? (env.HERMES_ALLOWED_HOSTS)!.split(',')
+  const _allowedHosts: string[] | true = env.HERMES_ALLOWED_HOSTS?.trim()
+    ? env
+        .HERMES_ALLOWED_HOSTS!.split(',')
         .map((h) => h.trim())
         .filter(Boolean)
-    : ['.ts.net']  // allow all Tailscale hostnames by default
+    : ['.ts.net'] // allow all Tailscale hostnames by default
   let proxyTarget = 'http://127.0.0.1:18789'
 
   try {
@@ -499,7 +510,12 @@ const config = defineConfig(({ mode, command }) => {
             }
           })
 
-          if (command !== 'serve' || workspaceDaemonStarted || workspaceDaemonStarting) return
+          if (
+            command !== 'serve' ||
+            workspaceDaemonStarted ||
+            workspaceDaemonStarting
+          )
+            return
 
           workspaceDaemonStarting = true
           void (async () => {
@@ -538,13 +554,26 @@ const config = defineConfig(({ mode, command }) => {
         transform(code, _id) {
           const envName = this.environment?.name
           if (envName !== 'client') return null
-          if (!code.includes('process.env') && !code.includes('process.platform')) return null
+          if (
+            !code.includes('process.env') &&
+            !code.includes('process.platform')
+          )
+            return null
 
           // Replace specific env vars first, then the generic fallback
           let result = code
-          result = result.replace(/process\.env\.HERMES_API_URL/g, JSON.stringify(hermesApiUrl))
-          result = result.replace(/process\.env\.HERMES_API_TOKEN/g, JSON.stringify(env.HERMES_API_TOKEN || ''))
-          result = result.replace(/process\.env\.NODE_ENV/g, JSON.stringify(mode))
+          result = result.replace(
+            /process\.env\.HERMES_API_URL/g,
+            JSON.stringify(hermesApiUrl),
+          )
+          result = result.replace(
+            /process\.env\.HERMES_API_TOKEN/g,
+            JSON.stringify(env.HERMES_API_TOKEN || ''),
+          )
+          result = result.replace(
+            /process\.env\.NODE_ENV/g,
+            JSON.stringify(mode),
+          )
           result = result.replace(/process\.env/g, '{}')
           result = result.replace(/process\.platform/g, '"browser"')
           return result
@@ -568,4 +597,3 @@ const config = defineConfig(({ mode, command }) => {
 })
 
 export default config
-

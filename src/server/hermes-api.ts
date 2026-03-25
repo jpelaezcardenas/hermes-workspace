@@ -106,7 +106,10 @@ export async function checkHealth(): Promise<{ status: string }> {
 
 // ── Sessions ─────────────────────────────────────────────────────
 
-export async function listSessions(limit = 50, offset = 0): Promise<Array<HermesSession>> {
+export async function listSessions(
+  limit = 50,
+  offset = 0,
+): Promise<Array<HermesSession>> {
   const resp = await hermesGet<{ items: Array<HermesSession>; total: number }>(
     `/api/sessions?limit=${limit}&offset=${offset}`,
   )
@@ -114,7 +117,9 @@ export async function listSessions(limit = 50, offset = 0): Promise<Array<Hermes
 }
 
 export async function getSession(sessionId: string): Promise<HermesSession> {
-  const resp = await hermesGet<{ session: HermesSession }>(`/api/sessions/${sessionId}`)
+  const resp = await hermesGet<{ session: HermesSession }>(
+    `/api/sessions/${sessionId}`,
+  )
   return resp.session
 }
 
@@ -123,7 +128,10 @@ export async function createSession(opts?: {
   title?: string
   model?: string
 }): Promise<HermesSession> {
-  const resp = await hermesPost<{ session: HermesSession }>('/api/sessions', opts || {})
+  const resp = await hermesPost<{ session: HermesSession }>(
+    '/api/sessions',
+    opts || {},
+  )
   return resp.session
 }
 
@@ -142,7 +150,9 @@ export async function deleteSession(sessionId: string): Promise<void> {
   return hermesDeleteReq(`/api/sessions/${sessionId}`)
 }
 
-export async function getMessages(sessionId: string): Promise<Array<HermesMessage>> {
+export async function getMessages(
+  sessionId: string,
+): Promise<Array<HermesMessage>> {
   const resp = await hermesGet<{ items: Array<HermesMessage>; total: number }>(
     `/api/sessions/${sessionId}/messages`,
   )
@@ -194,7 +204,9 @@ export function toChatMessage(
         | Record<string, unknown>
         | undefined
       streamToolCallsArr.push({
-        id: (tc as Record<string, unknown>).id || `tc-${Math.random().toString(36).slice(2, 8)}`,
+        id:
+          (tc as Record<string, unknown>).id ||
+          `tc-${Math.random().toString(36).slice(2, 8)}`,
         name: fn?.name || 'tool',
         args: fn?.arguments,
         phase: 'complete',
@@ -221,17 +233,23 @@ export function toChatMessage(
     content,
     text: msg.content || '',
     timestamp: msg.timestamp ? msg.timestamp * 1000 : Date.now(),
-    createdAt: msg.timestamp ? new Date(msg.timestamp * 1000).toISOString() : undefined,
+    createdAt: msg.timestamp
+      ? new Date(msg.timestamp * 1000).toISOString()
+      : undefined,
     sessionKey: msg.session_id,
     ...(typeof options?.historyIndex === 'number'
       ? { __historyIndex: options.historyIndex }
       : {}),
-    ...(streamToolCallsArr.length > 0 ? { streamToolCalls: streamToolCallsArr } : {}),
+    ...(streamToolCallsArr.length > 0
+      ? { streamToolCalls: streamToolCallsArr }
+      : {}),
   }
 }
 
 /** Convert a HermesSession to the session summary format the frontend expects */
-export function toSessionSummary(session: HermesSession): Record<string, unknown> {
+export function toSessionSummary(
+  session: HermesSession,
+): Record<string, unknown> {
   return {
     key: session.id,
     friendlyId: session.id,
@@ -272,15 +290,23 @@ type StreamChatOptions = {
  */
 export async function streamChat(
   sessionId: string,
-  body: { message: string; model?: string; system_message?: string; attachments?: Array<Record<string, unknown>> },
+  body: {
+    message: string
+    model?: string
+    system_message?: string
+    attachments?: Array<Record<string, unknown>>
+  },
   opts: StreamChatOptions,
 ): Promise<void> {
-  const res = await fetch(`${HERMES_API}/api/sessions/${sessionId}/chat/stream`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-    signal: opts.signal,
-  })
+  const res = await fetch(
+    `${HERMES_API}/api/sessions/${sessionId}/chat/stream`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: opts.signal,
+    },
+  )
 
   if (!res.ok) {
     const text = await res.text().catch(() => '')
@@ -325,9 +351,13 @@ export async function sendChat(
   messageOrOpts: string | { message: string; model?: string },
   model?: string,
 ): Promise<Record<string, unknown>> {
-  const msg = typeof messageOrOpts === 'string' ? messageOrOpts : messageOrOpts.message
+  const msg =
+    typeof messageOrOpts === 'string' ? messageOrOpts : messageOrOpts.message
   const mdl = typeof messageOrOpts === 'string' ? model : messageOrOpts.model
-  return hermesPost(`/api/sessions/${sessionId}/chat`, { message: msg, model: mdl })
+  return hermesPost(`/api/sessions/${sessionId}/chat`, {
+    message: msg,
+    model: mdl,
+  })
 }
 
 // ── Memory ───────────────────────────────────────────────────────

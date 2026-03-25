@@ -182,7 +182,11 @@ export function ModelConfigurationStep({
   return (
     <div className="flex w-full flex-col items-center text-center">
       <div className="mb-5 flex size-20 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
-        <HugeiconsIcon icon={Settings01Icon} className="size-10" strokeWidth={1.8} />
+        <HugeiconsIcon
+          icon={Settings01Icon}
+          className="size-10"
+          strokeWidth={1.8}
+        />
       </div>
 
       <h2 className="mb-3 text-2xl font-semibold text-primary-900">
@@ -202,9 +206,13 @@ export function ModelConfigurationStep({
 
         {status === 'error' && (
           <div className="flex items-start gap-3 text-amber-700">
-            <HugeiconsIcon icon={Alert02Icon} className="mt-0.5 size-5 shrink-0" />
+            <HugeiconsIcon
+              icon={Alert02Icon}
+              className="mt-0.5 size-5 shrink-0"
+            />
             <p className="text-sm">
-              Could not load Hermes configuration right now. You can still continue and update it in settings.
+              Could not load Hermes configuration right now. You can still
+              continue and update it in settings.
             </p>
           </div>
         )}
@@ -218,9 +226,13 @@ export function ModelConfigurationStep({
 
         {status === 'ready' && !hasModel && (
           <div className="flex items-start gap-3 text-amber-700">
-            <HugeiconsIcon icon={Alert02Icon} className="mt-0.5 size-5 shrink-0" />
+            <HugeiconsIcon
+              icon={Alert02Icon}
+              className="mt-0.5 size-5 shrink-0"
+            />
             <p className="text-sm">
-              No model is configured yet. Hermes can open, but you should choose a provider and default model before relying on responses.
+              No model is configured yet. Hermes can open, but you should choose
+              a provider and default model before relying on responses.
             </p>
           </div>
         )}

@@ -24,10 +24,13 @@ export const Route = createFileRoute('/api/context-usage')({
               signal: AbortSignal.timeout(3000),
             })
             if (res.ok) {
-              const data = (await res.json()) as { session?: { input_tokens?: number; output_tokens?: number } }
+              const data = (await res.json()) as {
+                session?: { input_tokens?: number; output_tokens?: number }
+              }
               const session = data.session
               if (session) {
-                usedTokens = (session.input_tokens || 0) + (session.output_tokens || 0)
+                usedTokens =
+                  (session.input_tokens || 0) + (session.output_tokens || 0)
               }
             }
           }
@@ -38,15 +41,20 @@ export const Route = createFileRoute('/api/context-usage')({
               signal: AbortSignal.timeout(3000),
             })
             if (modelsRes.ok) {
-              const modelsData = (await modelsRes.json()) as { data?: Array<{ context_length?: number }> }
+              const modelsData = (await modelsRes.json()) as {
+                data?: Array<{ context_length?: number }>
+              }
               const firstModel = modelsData.data?.[0]
               if (firstModel?.context_length) {
                 maxTokens = firstModel.context_length
               }
             }
-          } catch { /* use default */ }
+          } catch {
+            /* use default */
+          }
 
-          const contextPercent = maxTokens > 0 ? Math.round((usedTokens / maxTokens) * 100) : 0
+          const contextPercent =
+            maxTokens > 0 ? Math.round((usedTokens / maxTokens) * 100) : 0
 
           return json({
             ok: true,

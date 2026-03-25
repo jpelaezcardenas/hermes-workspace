@@ -4,14 +4,12 @@
  * degrade cleanly against older Hermes gateways.
  */
 
-export let HERMES_API =
-  process.env.HERMES_API_URL || 'http://127.0.0.1:8642'
+export let HERMES_API = process.env.HERMES_API_URL || 'http://127.0.0.1:8642'
 
 export const HERMES_UPGRADE_INSTRUCTIONS =
   'Update Hermes: cd hermes-agent && git pull && pip install -e . && hermes gateway'
 
-export const SESSIONS_API_UNAVAILABLE_MESSAGE =
-  `Your Hermes gateway does not support the sessions API. ${HERMES_UPGRADE_INSTRUCTIONS}`
+export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your Hermes gateway does not support the sessions API. ${HERMES_UPGRADE_INSTRUCTIONS}`
 
 const PROBE_TIMEOUT_MS = 3_000
 const PROBE_TTL_MS = 30_000
@@ -75,8 +73,7 @@ const OPTIONAL_APIS = new Set(['jobs'])
 
 function logCapabilities(next: GatewayCapabilities): void {
   const { available, missing } = summarizeCapabilities(next)
-  const summary =
-    `[gateway] ${HERMES_API} available: ${available.join(', ') || 'none'}; missing: ${missing.join(', ') || 'none'}`
+  const summary = `[gateway] ${HERMES_API} available: ${available.join(', ') || 'none'}; missing: ${missing.join(', ') || 'none'}`
   if (summary === lastLoggedSummary) return
   lastLoggedSummary = summary
   console.log(summary)
@@ -107,7 +104,9 @@ export async function probeGateway(options?: {
         const fallback = 'http://127.0.0.1:8643'
         const healthOn8643 = await fetch(`${fallback}/health`, {
           signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-        }).then(r => r.ok).catch(() => false)
+        })
+          .then((r) => r.ok)
+          .catch(() => false)
         if (healthOn8643) {
           HERMES_API = fallback
           console.log(`[gateway] Connected to Hermes at ${HERMES_API}`)

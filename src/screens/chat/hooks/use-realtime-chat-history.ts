@@ -51,8 +51,12 @@ function extractUserMessageText(message: ChatMessage): string {
  * base64 content is stripped before storage.
  */
 function attachmentSignature(message: ChatMessage): string {
-  const attachments = Array.isArray((message as Record<string, unknown>).attachments)
-    ? ((message as Record<string, unknown>).attachments as Array<Record<string, unknown>>)
+  const attachments = Array.isArray(
+    (message as Record<string, unknown>).attachments,
+  )
+    ? ((message as Record<string, unknown>).attachments as Array<
+        Record<string, unknown>
+      >)
     : []
   if (attachments.length === 0) return ''
   return attachments
@@ -62,7 +66,12 @@ function attachmentSignature(message: ChatMessage): string {
 }
 
 const EMPTY_MESSAGES: Array<ChatMessage> = []
-const EMPTY_TOOL_CALLS: Array<{ id: string; name: string; phase: string; args?: unknown }> = []
+const EMPTY_TOOL_CALLS: Array<{
+  id: string
+  name: string
+  phase: string
+  args?: unknown
+}> = []
 
 type UseRealtimeChatHistoryOptions = {
   sessionKey: string
@@ -113,7 +122,11 @@ export function useRealtimeChatHistory({
     try {
       const key = chatQueryKeys.history(friendlyId, sessionKey)
       await queryClient.invalidateQueries({ queryKey: key, exact: true })
-      await queryClient.refetchQueries({ queryKey: key, exact: true, type: 'active' })
+      await queryClient.refetchQueries({
+        queryKey: key,
+        exact: true,
+        type: 'active',
+      })
     } finally {
       isBackfillingRef.current = false
     }
@@ -131,9 +144,12 @@ export function useRealtimeChatHistory({
     onReconnect: useCallback(() => {
       void backfillHistory()
     }, [backfillHistory]),
-    onSilentTimeout: useCallback((_silentForMs: number) => {
-      void backfillHistory()
-    }, [backfillHistory]),
+    onSilentTimeout: useCallback(
+      (_silentForMs: number) => {
+        void backfillHistory()
+      },
+      [backfillHistory],
+    ),
     onUserMessage: useCallback(
       (message: ChatMessage, source?: string) => {
         // Filter internal system messages (pre-compaction flushes, heartbeat
@@ -151,7 +167,8 @@ export function useRealtimeChatHistory({
             msgText.startsWith('A subagent task') ||
             msgText.startsWith('[Queued announce messages') ||
             msgText.includes('Summarize this naturally for the user') ||
-            (msgText.includes('Stats: runtime') && msgText.includes('sessionKey agent:'))
+            (msgText.includes('Stats: runtime') &&
+              msgText.includes('sessionKey agent:'))
           ) {
             onUserMessage?.(message, source)
             return
@@ -192,11 +209,17 @@ export function useRealtimeChatHistory({
                   m.__optimisticId.length > 0
                 if (!isOptimistic) return false
                 // Text match (plain-text messages)
-                if (echoText.length > 0 && extractUserMessageText(m).trim() === echoText) {
+                if (
+                  echoText.length > 0 &&
+                  extractUserMessageText(m).trim() === echoText
+                ) {
                   return true
                 }
                 // Attachment signature match (image-only messages)
-                if (echoAttachSig.length > 0 && attachmentSignature(m) === echoAttachSig) {
+                if (
+                  echoAttachSig.length > 0 &&
+                  attachmentSignature(m) === echoAttachSig
+                ) {
                   return true
                 }
                 return false
@@ -244,7 +267,8 @@ export function useRealtimeChatHistory({
           if (sessionKey && sessionKey !== 'new') {
             const key = chatQueryKeys.history(friendlyId, sessionKey)
             const prevData = queryClient.getQueryData(key) as Record<string, unknown> | undefined
-            const prevCount = (prevData?.messages as Array<unknown> | undefined)?.length ?? 0
+            const prevCount =
+              (prevData?.messages as Array<unknown> | undefined)?.length ?? 0
 
             // Refetch immediately — done event message is already in realtime store
             queryClient.invalidateQueries({ queryKey: key }).then(() => {
@@ -253,7 +277,8 @@ export function useRealtimeChatHistory({
 
               // Check for compaction — significant message count drop
               const newData = queryClient.getQueryData(key) as Record<string, unknown> | undefined
-              const newCount = (newData?.messages as Array<unknown> | undefined)?.length ?? 0
+              const newCount =
+                (newData?.messages as Array<unknown> | undefined)?.length ?? 0
               if (
                 prevCount > 10 &&
                 newCount > 0 &&
@@ -275,20 +300,23 @@ export function useRealtimeChatHistory({
       },
       [sessionKey, friendlyId, queryClient, onCompactionEnd],
     ),
-    onCompaction: useCallback((event: CompactionEvent) => {
-      if (!event.sessionKey || event.sessionKey !== sessionKey) return
+    onCompaction: useCallback(
+      (event: CompactionEvent) => {
+        if (!event.sessionKey || event.sessionKey !== sessionKey) return
 
-      if (event.phase === 'start') {
-        lastCompactionSignalRef.current = `compaction:${event.sessionKey}:start`
-        onCompactionStart?.()
-        return
-      }
+        if (event.phase === 'start') {
+          lastCompactionSignalRef.current = `compaction:${event.sessionKey}:start`
+          onCompactionStart?.()
+          return
+        }
 
-      if (event.phase === 'end') {
-        lastCompactionSignalRef.current = ''
-        onCompactionEnd?.()
-      }
-    }, [onCompactionEnd, onCompactionStart, sessionKey]),
+        if (event.phase === 'end') {
+          lastCompactionSignalRef.current = ''
+          onCompactionEnd?.()
+        }
+      },
+      [onCompactionEnd, onCompactionStart, sessionKey],
+    ),
     onApprovalRequest,
   })
 
@@ -301,10 +329,14 @@ export function useRealtimeChatHistory({
   )
 
   // Subscribe directly to streaming state — useMemo with stable fn ref was stale (bug #1)
-  const streamingState = useChatStore((s) => s.streamingState.get(sessionKey) ?? null)
+  const streamingState = useChatStore(
+    (s) => s.streamingState.get(sessionKey) ?? null,
+  )
   const streamingStateRef = useRef(streamingState)
   const syncIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const delayedClearSessionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const delayedClearSessionTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const activeSessionKeyRef = useRef(sessionKey)
   const isUnmountingRef = useRef(false)
   activeSessionKeyRef.current = sessionKey
@@ -343,11 +375,11 @@ export function useRealtimeChatHistory({
 
     const textCandidates = [
       textFromMessage(latest),
-      ...((Array.isArray(latest.content) ? latest.content : []).map((part) => {
+      ...(Array.isArray(latest.content) ? latest.content : []).map((part) => {
         if (part.type === 'text') return String(part.text ?? '')
         if (part.type === 'thinking') return String(part.thinking ?? '')
         return ''
-      })),
+      }),
     ]
       .join('\n')
       .toLowerCase()

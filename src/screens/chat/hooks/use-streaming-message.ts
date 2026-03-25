@@ -42,8 +42,15 @@ type UseStreamingMessageOptions = {
   onError?: (error: string) => void
   onThinking?: (thinking: string) => void
   onTool?: (tool: unknown) => void
-  onMessageAccepted?: (sessionKey: string, friendlyId: string, clientId: string) => void
-  onSessionResolved?: (payload: { sessionKey: string; friendlyId: string }) => void
+  onMessageAccepted?: (
+    sessionKey: string,
+    friendlyId: string,
+    clientId: string,
+  ) => void
+  onSessionResolved?: (payload: {
+    sessionKey: string
+    friendlyId: string
+  }) => void
 }
 
 export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
@@ -145,7 +152,13 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       }))
       onError?.(message)
     },
-    [clearHandoffTimer, clearSendStreamRun, clearStreamingSession, onError, stopFrame],
+    [
+      clearHandoffTimer,
+      clearSendStreamRun,
+      clearStreamingSession,
+      onError,
+      stopFrame,
+    ],
   )
 
   const schedulePostAcceptanceTimeout = useCallback(
@@ -170,13 +183,15 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           const lastEventTimestamp = store.lastEventAt
           if (
             streamingState !== null ||
-            (lastEventTimestamp > 0 && Date.now() - lastEventTimestamp < timeoutMs)
+            (lastEventTimestamp > 0 &&
+              Date.now() - lastEventTimestamp < timeoutMs)
           ) {
             schedulePostAcceptanceTimeout(reason)
             return
           }
         }
-        const lastActivityAt = lastActivityAtRef.current ?? acceptedAtRef.current
+        const lastActivityAt =
+          lastActivityAtRef.current ?? acceptedAtRef.current
         if (lastActivityAt && Date.now() - lastActivityAt < timeoutMs - 250) {
           schedulePostAcceptanceTimeout(reason)
           return
@@ -202,7 +217,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       isStreaming: false,
     }))
     schedulePostAcceptanceTimeout('handoff')
-  }, [clearHandoffTimer, clearSendStreamRun, schedulePostAcceptanceTimeout, stopFrame])
+  }, [
+    clearHandoffTimer,
+    clearSendStreamRun,
+    schedulePostAcceptanceTimeout,
+    stopFrame,
+  ])
 
   useEffect(
     function cleanupStreamingOnUnmount() {
@@ -333,7 +353,11 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             registerSendStreamRun(runId)
           }
           markActivity()
-          pushActivity({ type: 'assistant_start', time: new Date().toLocaleTimeString(), text: 'Assistant started' })
+          pushActivity({
+            type: 'assistant_start',
+            time: new Date().toLocaleTimeString(),
+            text: 'Assistant started',
+          })
           processStoreEvent({
             type: 'chunk',
             text: '',
@@ -391,13 +415,31 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
         case 'tool': {
           markActivity()
           {
-            const toolName = typeof payload.name === 'string' ? payload.name : 'tool'
-            const phase = typeof payload.phase === 'string' ? payload.phase : 'calling'
-            const isMemory = /memory|remember|recall|save_memory/i.test(toolName)
-            const isFileWrite = /^(write_file|write|edit|Edit|Write)$/i.test(toolName)
-            const isFileRead = /^(read_file|read|Read|search_files)$/i.test(toolName)
-            const eventType = isMemory ? 'memory_write' : isFileWrite ? 'file_write' : isFileRead ? 'file_read' : 'tool_call'
-            pushActivity({ type: eventType, time: new Date().toLocaleTimeString(), text: `${toolName} (${phase})` })
+            const toolName =
+              typeof payload.name === 'string' ? payload.name : 'tool'
+            const phase =
+              typeof payload.phase === 'string' ? payload.phase : 'calling'
+            const isMemory = /memory|remember|recall|save_memory/i.test(
+              toolName,
+            )
+            const isFileWrite = /^(write_file|write|edit|Edit|Write)$/i.test(
+              toolName,
+            )
+            const isFileRead = /^(read_file|read|Read|search_files)$/i.test(
+              toolName,
+            )
+            const eventType = isMemory
+              ? 'memory_write'
+              : isFileWrite
+                ? 'file_write'
+                : isFileRead
+                  ? 'file_read'
+                  : 'tool_call'
+            pushActivity({
+              type: eventType,
+              time: new Date().toLocaleTimeString(),
+              text: `${toolName} (${phase})`,
+            })
           }
           processStoreEvent({
             type: 'tool',
@@ -450,7 +492,11 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           const doneState = (payload as { state?: string }).state
           const errorMessage = (payload as { errorMessage?: string })
             .errorMessage
-          pushActivity({ type: 'assistant_complete', time: new Date().toLocaleTimeString(), text: doneState === 'error' ? `Error: ${errorMessage}` : 'Complete' })
+          pushActivity({
+            type: 'assistant_complete',
+            time: new Date().toLocaleTimeString(),
+            text: doneState === 'error' ? `Error: ${errorMessage}` : 'Complete',
+          })
           processStoreEvent({
             type: 'done',
             state: doneState ?? 'final',
@@ -472,7 +518,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
         }
         case 'error': {
           // Ignore late error events after stream already completed or finished
-          if (finishedRef.current || lifecyclePhaseRef.current === 'complete' || lifecyclePhaseRef.current === 'idle' || lifecyclePhaseRef.current === 'error') {
+          if (
+            finishedRef.current ||
+            lifecyclePhaseRef.current === 'complete' ||
+            lifecyclePhaseRef.current === 'idle' ||
+            lifecyclePhaseRef.current === 'error'
+          ) {
             break
           }
           const errorMessage =
@@ -584,7 +635,8 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
         }
 
         const resolvedSessionKey =
-          response.headers.get('x-hermes-session-key')?.trim() || params.sessionKey
+          response.headers.get('x-hermes-session-key')?.trim() ||
+          params.sessionKey
         const resolvedFriendlyId =
           response.headers.get('x-hermes-friendly-id')?.trim() ||
           resolvedSessionKey

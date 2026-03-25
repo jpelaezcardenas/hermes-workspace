@@ -8,13 +8,13 @@ services:
     environment:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8642/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:8642/health']
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 15s
     ports:
-      - "8642:8642"
+      - '8642:8642'
 
   hermes-workspace:
     build:
@@ -28,4 +28,4 @@ services:
     environment:
       HERMES_API_URL: http://hermes-agent:8642
     ports:
-      - "3000:3000"
+      - '3000:3000'

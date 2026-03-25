@@ -18,17 +18,16 @@ import type * as React from 'react'
 import type { AccentColor, SettingsThemeMode } from '@/hooks/use-settings'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
-import type {ThemeId} from '@/lib/theme';
+import type { ThemeId } from '@/lib/theme'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { applyTheme, useSettings } from '@/hooks/use-settings'
 import {
   THEMES,
-  
   getTheme,
   getThemeVariant,
   isDarkTheme,
-  setTheme
+  setTheme,
 } from '@/lib/theme'
 import { cn } from '@/lib/utils'
 import {
@@ -52,11 +51,7 @@ import {
 
 // ── Types ───────────────────────────────────────────────────────────────
 
-type SectionId =
-  | 'hermes'
-  | 'appearance'
-  | 'chat'
-  | 'notifications'
+type SectionId = 'hermes' | 'appearance' | 'chat' | 'notifications'
 
 const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
   { id: 'hermes', label: 'Hermes Agent', icon: CloudIcon },
@@ -133,15 +128,75 @@ const SETTINGS_CARD_CLASS =
 
 // ── Section components ──────────────────────────────────────────────────
 
-const PROVIDER_CARDS: Array<{ id: string; name: string; logo: string; models: Array<string>; authType: 'oauth' | 'api_key' | 'none'; envKey?: string }> = [
-  { id: 'nous', name: 'Nous Portal', logo: '/providers/nous.png', models: ['hermes-3-llama-3.1-405b', 'hermes-3-llama-3.1-70b'], authType: 'oauth' },
-  { id: 'openai-codex', name: 'OpenAI Codex', logo: '/providers/openai.png', models: ['gpt-5.4', 'gpt-5.3-codex', 'gpt-4o'], authType: 'oauth' },
-  { id: 'anthropic', name: 'Anthropic', logo: '/providers/anthropic.png', models: ['claude-sonnet-4-6', 'claude-opus-4-6', 'claude-haiku-3-5'], authType: 'api_key', envKey: 'ANTHROPIC_API_KEY' },
-  { id: 'openrouter', name: 'OpenRouter', logo: '/providers/openrouter.png', models: ['auto', 'deepseek/deepseek-r1', 'google/gemini-2.5-pro'], authType: 'api_key', envKey: 'OPENROUTER_API_KEY' },
-  { id: 'zai', name: 'Z.AI / GLM', logo: '/providers/zhipu.png', models: ['glm-4-plus', 'glm-4-air'], authType: 'api_key', envKey: 'GLM_API_KEY' },
-  { id: 'kimi-coding', name: 'Kimi', logo: '/providers/kimi.png', models: ['kimi-latest', 'moonshot-v1-128k'], authType: 'api_key', envKey: 'KIMI_API_KEY' },
-  { id: 'minimax', name: 'MiniMax', logo: '/providers/minimax.png', models: ['MiniMax-M2.5', 'MiniMax-M2.5-Lightning'], authType: 'api_key', envKey: 'MINIMAX_API_KEY' },
-  { id: 'ollama', name: 'Ollama', logo: '/providers/ollama.png', models: ['llama3.1:70b', 'qwen3:32b', 'deepseek-r1:32b'], authType: 'none' },
+const PROVIDER_CARDS: Array<{
+  id: string
+  name: string
+  logo: string
+  models: Array<string>
+  authType: 'oauth' | 'api_key' | 'none'
+  envKey?: string
+}> = [
+  {
+    id: 'nous',
+    name: 'Nous Portal',
+    logo: '/providers/nous.png',
+    models: ['hermes-3-llama-3.1-405b', 'hermes-3-llama-3.1-70b'],
+    authType: 'oauth',
+  },
+  {
+    id: 'openai-codex',
+    name: 'OpenAI Codex',
+    logo: '/providers/openai.png',
+    models: ['gpt-5.4', 'gpt-5.3-codex', 'gpt-4o'],
+    authType: 'oauth',
+  },
+  {
+    id: 'anthropic',
+    name: 'Anthropic',
+    logo: '/providers/anthropic.png',
+    models: ['claude-sonnet-4-6', 'claude-opus-4-6', 'claude-haiku-3-5'],
+    authType: 'api_key',
+    envKey: 'ANTHROPIC_API_KEY',
+  },
+  {
+    id: 'openrouter',
+    name: 'OpenRouter',
+    logo: '/providers/openrouter.png',
+    models: ['auto', 'deepseek/deepseek-r1', 'google/gemini-2.5-pro'],
+    authType: 'api_key',
+    envKey: 'OPENROUTER_API_KEY',
+  },
+  {
+    id: 'zai',
+    name: 'Z.AI / GLM',
+    logo: '/providers/zhipu.png',
+    models: ['glm-4-plus', 'glm-4-air'],
+    authType: 'api_key',
+    envKey: 'GLM_API_KEY',
+  },
+  {
+    id: 'kimi-coding',
+    name: 'Kimi',
+    logo: '/providers/kimi.png',
+    models: ['kimi-latest', 'moonshot-v1-128k'],
+    authType: 'api_key',
+    envKey: 'KIMI_API_KEY',
+  },
+  {
+    id: 'minimax',
+    name: 'MiniMax',
+    logo: '/providers/minimax.png',
+    models: ['MiniMax-M2.5', 'MiniMax-M2.5-Lightning'],
+    authType: 'api_key',
+    envKey: 'MINIMAX_API_KEY',
+  },
+  {
+    id: 'ollama',
+    name: 'Ollama',
+    logo: '/providers/ollama.png',
+    models: ['llama3.1:70b', 'qwen3:32b', 'deepseek-r1:32b'],
+    authType: 'none',
+  },
   { id: 'custom', name: 'Custom', logo: '', models: [], authType: 'api_key' },
 ]
 
@@ -153,12 +208,16 @@ function HermesContent() {
   const [keyInput, setKeyInput] = useState('')
   const [_saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
-  const [configuredKeys, setConfiguredKeys] = useState<Record<string, string>>({})
+  const [configuredKeys, setConfiguredKeys] = useState<Record<string, string>>(
+    {},
+  )
   const [memEnabled, setMemEnabled] = useState(true)
   const [userProfileEnabled, setUserProfileEnabled] = useState(true)
 
   const fetchModelsForProvider = useCallback((providerId: string) => {
-    fetch(`/api/hermes-proxy/api/available-models?provider=${encodeURIComponent(providerId)}`)
+    fetch(
+      `/api/hermes-proxy/api/available-models?provider=${encodeURIComponent(providerId)}`,
+    )
       .then((r) => r.json())
       .then((d: { models?: Array<{ id: string }> }) => {
         setAvailableModels((d.models || []).map((m) => m.id))
@@ -182,30 +241,43 @@ function HermesContent() {
         setUserProfileEnabled(mem.user_profile_enabled !== false)
         // Build configured keys map
         const keys: Record<string, string> = {}
-        for (const p of (d.providers || [])) {
-          if (p.configured && p.envKeys?.[0]) keys[p.envKeys[0]] = p.maskedKeys?.[p.envKeys[0]] || '••••'
+        for (const p of d.providers || []) {
+          if (p.configured && p.envKeys?.[0])
+            keys[p.envKeys[0]] = p.maskedKeys?.[p.envKeys[0]] || '••••'
         }
         setConfiguredKeys(keys)
       })
       .catch(() => {})
   }, [])
 
-  const save = async (updates: { config?: Record<string, unknown>; env?: Record<string, string> }) => {
-    setSaving(true); setMsg(null)
+  const save = async (updates: {
+    config?: Record<string, unknown>
+    env?: Record<string, string>
+  }) => {
+    setSaving(true)
+    setMsg(null)
     try {
-      const res = await fetch('/api/hermes-config', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updates) })
-      const r = await res.json() as { message?: string }
+      const res = await fetch('/api/hermes-config', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      const r = (await res.json()) as { message?: string }
       setMsg(r.message || 'Saved')
       const ref = await fetch('/api/hermes-config')
       const d = await ref.json()
-      setActiveProvider(d.activeProvider || ''); setActiveModel(d.activeModel || '')
+      setActiveProvider(d.activeProvider || '')
+      setActiveModel(d.activeModel || '')
       const keys: Record<string, string> = {}
-      for (const p of (d.providers || [])) {
-        if (p.configured && p.envKeys?.[0]) keys[p.envKeys[0]] = p.maskedKeys?.[p.envKeys[0]] || '••••'
+      for (const p of d.providers || []) {
+        if (p.configured && p.envKeys?.[0])
+          keys[p.envKeys[0]] = p.maskedKeys?.[p.envKeys[0]] || '••••'
       }
       setConfiguredKeys(keys)
       setTimeout(() => setMsg(null), 3000)
-    } catch { setMsg('Failed to save') }
+    } catch {
+      setMsg('Failed to save')
+    }
     setSaving(false)
   }
 
@@ -221,25 +293,46 @@ function HermesContent() {
     }
   }
 
-  const cardStyle: React.CSSProperties = { backgroundColor: 'var(--theme-card)', border: '1px solid var(--theme-border)', color: 'var(--theme-text)' }
+  const cardStyle: React.CSSProperties = {
+    backgroundColor: 'var(--theme-card)',
+    border: '1px solid var(--theme-border)',
+    color: 'var(--theme-text)',
+  }
   const mutedStyle: React.CSSProperties = { color: 'var(--theme-muted)' }
 
   return (
     <div className="space-y-5">
       {msg && (
-        <div className={cn('rounded-lg px-3 py-2 text-sm font-medium', msg.includes('Failed') ? 'bg-red-500/15 text-red-400' : 'bg-green-500/15 text-green-400')}>
+        <div
+          className={cn(
+            'rounded-lg px-3 py-2 text-sm font-medium',
+            msg.includes('Failed')
+              ? 'bg-red-500/15 text-red-400'
+              : 'bg-green-500/15 text-green-400',
+          )}
+        >
           {msg}
         </div>
       )}
 
       {/* Provider Selection */}
       <div>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>Provider</p>
-        <p className="mb-3 text-[11px]" style={mutedStyle}>Select your AI provider. OAuth providers authenticate via browser.</p>
+        <p
+          className="mb-1 text-xs font-semibold uppercase tracking-wider"
+          style={mutedStyle}
+        >
+          Provider
+        </p>
+        <p className="mb-3 text-[11px]" style={mutedStyle}>
+          Select your AI provider. OAuth providers authenticate via browser.
+        </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {PROVIDER_CARDS.map((p) => {
             const isActive = activeProvider === p.id
-            const hasKey = p.authType === 'none' || p.authType === 'oauth' || (p.envKey ? !!configuredKeys[p.envKey] : false)
+            const hasKey =
+              p.authType === 'none' ||
+              p.authType === 'oauth' ||
+              (p.envKey ? !!configuredKeys[p.envKey] : false)
             return (
               <button
                 key={p.id}
@@ -249,20 +342,34 @@ function HermesContent() {
                 }}
                 className={cn(
                   'flex flex-col items-start gap-1 rounded-xl px-3 py-2.5 text-left transition-all',
-                  isActive ? 'ring-2 ring-accent-500 shadow-md' : 'hover:brightness-110',
+                  isActive
+                    ? 'ring-2 ring-accent-500 shadow-md'
+                    : 'hover:brightness-110',
                   !hasKey && p.authType === 'api_key' && 'opacity-60',
                 )}
                 style={cardStyle}
               >
                 <div className="flex w-full items-center justify-between">
                   <ProviderLogo provider={p.id} size={32} />
-                  {isActive && <span className="size-2 rounded-full bg-green-500" />}
-                  {!isActive && hasKey && <span className="size-2 rounded-full bg-green-500/40" />}
-                  {!hasKey && p.authType === 'api_key' && <span className="size-2 rounded-full bg-red-500/60" />}
+                  {isActive && (
+                    <span className="size-2 rounded-full bg-green-500" />
+                  )}
+                  {!isActive && hasKey && (
+                    <span className="size-2 rounded-full bg-green-500/40" />
+                  )}
+                  {!hasKey && p.authType === 'api_key' && (
+                    <span className="size-2 rounded-full bg-red-500/60" />
+                  )}
                 </div>
                 <span className="text-xs font-semibold mt-1">{p.name}</span>
                 <span className="text-[9px]" style={mutedStyle}>
-                  {p.authType === 'oauth' ? 'OAuth' : p.authType === 'none' ? 'Local' : hasKey ? 'Key set' : 'Key required'}
+                  {p.authType === 'oauth'
+                    ? 'OAuth'
+                    : p.authType === 'none'
+                      ? 'Local'
+                      : hasKey
+                        ? 'Key set'
+                        : 'Key required'}
                 </span>
               </button>
             )
@@ -273,16 +380,27 @@ function HermesContent() {
       {/* Model Selection for active provider */}
       {activeProvider && (
         <div>
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>Model</p>
+          <p
+            className="mb-1 text-xs font-semibold uppercase tracking-wider"
+            style={mutedStyle}
+          >
+            Model
+          </p>
           <div className="flex flex-wrap gap-2">
-            {(availableModels.length > 0 ? availableModels : PROVIDER_CARDS.find((p) => p.id === activeProvider)?.models || []).map((model) => (
+            {(availableModels.length > 0
+              ? availableModels
+              : PROVIDER_CARDS.find((p) => p.id === activeProvider)?.models ||
+                []
+            ).map((model) => (
               <button
                 key={model}
                 type="button"
                 onClick={() => selectProvider(activeProvider, model)}
                 className={cn(
                   'rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
-                  activeModel === model ? 'ring-2 ring-accent-500' : 'hover:brightness-110',
+                  activeModel === model
+                    ? 'ring-2 ring-accent-500'
+                    : 'hover:brightness-110',
                 )}
                 style={cardStyle}
               >
@@ -295,15 +413,28 @@ function HermesContent() {
 
       {/* API Keys */}
       <div>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>API Keys</p>
+        <p
+          className="mb-1 text-xs font-semibold uppercase tracking-wider"
+          style={mutedStyle}
+        >
+          API Keys
+        </p>
         <div className="space-y-1.5">
           {PROVIDER_CARDS.filter((p) => p.envKey).map((p) => {
             const key = p.envKey!
             const hasKey = !!configuredKeys[key]
             const isEditing = editingKey === key
             return (
-              <div key={p.id} className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={cardStyle}>
-                <ProviderLogo provider={p.id} size={28} className="rounded-md" />
+              <div
+                key={p.id}
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+                style={cardStyle}
+              >
+                <ProviderLogo
+                  provider={p.id}
+                  size={28}
+                  className="rounded-md"
+                />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium">{p.name}</div>
                   <div className="text-[11px] font-mono" style={mutedStyle}>
@@ -317,25 +448,70 @@ function HermesContent() {
                         style={{ color: 'var(--theme-text)' }}
                         autoFocus
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' && keyInput) { save({ env: { [key]: keyInput } }); setEditingKey(null); setKeyInput('') }
-                          if (e.key === 'Escape') { setEditingKey(null); setKeyInput('') }
+                          if (e.key === 'Enter' && keyInput) {
+                            save({ env: { [key]: keyInput } })
+                            setEditingKey(null)
+                            setKeyInput('')
+                          }
+                          if (e.key === 'Escape') {
+                            setEditingKey(null)
+                            setKeyInput('')
+                          }
                         }}
                       />
-                    ) : hasKey ? configuredKeys[key] : 'Not configured'}
+                    ) : hasKey ? (
+                      configuredKeys[key]
+                    ) : (
+                      'Not configured'
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={cn('size-2 rounded-full', hasKey ? 'bg-green-500' : 'bg-neutral-500')} />
+                  <span
+                    className={cn(
+                      'size-2 rounded-full',
+                      hasKey ? 'bg-green-500' : 'bg-neutral-500',
+                    )}
+                  />
                   {isEditing ? (
                     <>
-                      <button type="button" onClick={() => { if (keyInput) { save({ env: { [key]: keyInput } }) }; setEditingKey(null); setKeyInput('') }}
-                        className="rounded-lg px-2 py-1 text-[11px] font-medium bg-accent-500 text-white">Save</button>
-                      <button type="button" onClick={() => { setEditingKey(null); setKeyInput('') }}
-                        className="rounded-lg px-2 py-1 text-[11px] font-medium" style={{ color: 'var(--theme-muted)' }}>Cancel</button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (keyInput) {
+                            save({ env: { [key]: keyInput } })
+                          }
+                          setEditingKey(null)
+                          setKeyInput('')
+                        }}
+                        className="rounded-lg px-2 py-1 text-[11px] font-medium bg-accent-500 text-white"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingKey(null)
+                          setKeyInput('')
+                        }}
+                        className="rounded-lg px-2 py-1 text-[11px] font-medium"
+                        style={{ color: 'var(--theme-muted)' }}
+                      >
+                        Cancel
+                      </button>
                     </>
                   ) : (
-                    <button type="button" onClick={() => { setEditingKey(key); setKeyInput('') }}
-                      className="rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors hover:bg-accent-500/10" style={{ color: 'var(--theme-accent, var(--theme-text))' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingKey(key)
+                        setKeyInput('')
+                      }}
+                      className="rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors hover:bg-accent-500/10"
+                      style={{
+                        color: 'var(--theme-accent, var(--theme-text))',
+                      }}
+                    >
                       {hasKey ? 'Update' : 'Add'}
                     </button>
                   )}
@@ -348,21 +524,48 @@ function HermesContent() {
 
       {/* Memory */}
       <div>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>Memory</p>
+        <p
+          className="mb-1 text-xs font-semibold uppercase tracking-wider"
+          style={mutedStyle}
+        >
+          Memory
+        </p>
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between rounded-xl px-3 py-2.5" style={cardStyle}>
+          <div
+            className="flex items-center justify-between rounded-xl px-3 py-2.5"
+            style={cardStyle}
+          >
             <div>
               <div className="text-sm font-medium">Memory</div>
-              <div className="text-[11px]" style={mutedStyle}>Store & recall memories across sessions</div>
+              <div className="text-[11px]" style={mutedStyle}>
+                Store & recall memories across sessions
+              </div>
             </div>
-            <Switch checked={memEnabled} onCheckedChange={(c) => { setMemEnabled(c); save({ config: { memory: { memory_enabled: c } } }) }} />
+            <Switch
+              checked={memEnabled}
+              onCheckedChange={(c) => {
+                setMemEnabled(c)
+                save({ config: { memory: { memory_enabled: c } } })
+              }}
+            />
           </div>
-          <div className="flex items-center justify-between rounded-xl px-3 py-2.5" style={cardStyle}>
+          <div
+            className="flex items-center justify-between rounded-xl px-3 py-2.5"
+            style={cardStyle}
+          >
             <div>
               <div className="text-sm font-medium">User Profile</div>
-              <div className="text-[11px]" style={mutedStyle}>Remember preferences & context</div>
+              <div className="text-[11px]" style={mutedStyle}>
+                Remember preferences & context
+              </div>
             </div>
-            <Switch checked={userProfileEnabled} onCheckedChange={(c) => { setUserProfileEnabled(c); save({ config: { memory: { user_profile_enabled: c } } }) }} />
+            <Switch
+              checked={userProfileEnabled}
+              onCheckedChange={(c) => {
+                setUserProfileEnabled(c)
+                save({ config: { memory: { user_profile_enabled: c } } })
+              }}
+            />
           </div>
         </div>
       </div>
@@ -371,12 +574,24 @@ function HermesContent() {
       <div className="rounded-xl px-3 py-2.5" style={cardStyle}>
         <div className="flex items-center gap-2 mb-2">
           <span className="size-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>Runtime</span>
+          <span
+            className="text-xs font-semibold uppercase tracking-wider"
+            style={mutedStyle}
+          >
+            Runtime
+          </span>
         </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
-          <span style={mutedStyle}>Model</span><span className="font-mono font-medium">{activeModel || '—'}</span>
-          <span style={mutedStyle}>Provider</span><span className="font-mono font-medium">{PROVIDER_CARDS.find((p) => p.id === activeProvider)?.name || activeProvider || '—'}</span>
-          <span style={mutedStyle}>Config</span><span className="font-mono font-medium">~/.hermes/config.yaml</span>
+          <span style={mutedStyle}>Model</span>
+          <span className="font-mono font-medium">{activeModel || '—'}</span>
+          <span style={mutedStyle}>Provider</span>
+          <span className="font-mono font-medium">
+            {PROVIDER_CARDS.find((p) => p.id === activeProvider)?.name ||
+              activeProvider ||
+              '—'}
+          </span>
+          <span style={mutedStyle}>Config</span>
+          <span className="font-mono font-medium">~/.hermes/config.yaml</span>
         </div>
       </div>
     </div>
@@ -480,7 +695,11 @@ function _ProfileContent() {
               aria-describedby={nameError ? errorId : undefined}
             />
             {nameError && (
-              <p id={errorId} className="mt-1 text-xs text-red-600" role="alert">
+              <p
+                id={errorId}
+                className="mt-1 text-xs text-red-600"
+                role="alert"
+              >
                 {nameError}
               </p>
             )}
@@ -592,7 +811,9 @@ function AppearanceContent() {
         >
           <Switch
             checked={settings.showSystemMetricsFooter}
-            onCheckedChange={(c) => updateSettings({ showSystemMetricsFooter: c })}
+            onCheckedChange={(c) =>
+              updateSettings({ showSystemMetricsFooter: c })
+            }
             aria-label="Show system metrics footer"
           />
         </Row>
@@ -615,37 +836,105 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
   desc: theme.description,
   preview:
     theme.id === 'hermes-official'
-      ? { bg: '#0A0E1A', panel: '#11182A', border: '#24304A', accent: '#6366F1', text: '#E6EAF2' }
+      ? {
+          bg: '#0A0E1A',
+          panel: '#11182A',
+          border: '#24304A',
+          accent: '#6366F1',
+          text: '#E6EAF2',
+        }
       : theme.id === 'hermes-official-light'
-        ? { bg: '#F6F8FC', panel: '#FFFFFF', border: '#D7DEEE', accent: '#4F46E5', text: '#111827' }
+        ? {
+            bg: '#F6F8FC',
+            panel: '#FFFFFF',
+            border: '#D7DEEE',
+            accent: '#4F46E5',
+            text: '#111827',
+          }
         : theme.id === 'hermes-classic'
-      ? { bg: '#0d0f12', panel: '#1a1f26', border: '#2a313b', accent: '#b98a44', text: '#eceff4' }
-      : theme.id === 'hermes-classic-light'
-        ? { bg: '#F5F2ED', panel: '#FCFAF7', border: '#D8CCBC', accent: '#b98a44', text: '#1a1f26' }
-      : theme.id === 'hermes-slate'
-        ? { bg: '#0d1117', panel: '#1c2128', border: '#30363d', accent: '#7eb8f6', text: '#c9d1d9' }
-        : theme.id === 'hermes-slate-light'
-          ? { bg: '#F6F8FA', panel: '#FFFFFF', border: '#D0D7DE', accent: '#3b82f6', text: '#24292f' }
-          : theme.id === 'hermes-mono'
-            ? { bg: '#111111', panel: '#222222', border: '#333333', accent: '#aaaaaa', text: '#e6edf3' }
-            : { bg: '#FAFAFA', panel: '#FFFFFF', border: '#D4D4D4', accent: '#666666', text: '#1a1a1a' },
+          ? {
+              bg: '#0d0f12',
+              panel: '#1a1f26',
+              border: '#2a313b',
+              accent: '#b98a44',
+              text: '#eceff4',
+            }
+          : theme.id === 'hermes-classic-light'
+            ? {
+                bg: '#F5F2ED',
+                panel: '#FCFAF7',
+                border: '#D8CCBC',
+                accent: '#b98a44',
+                text: '#1a1f26',
+              }
+            : theme.id === 'hermes-slate'
+              ? {
+                  bg: '#0d1117',
+                  panel: '#1c2128',
+                  border: '#30363d',
+                  accent: '#7eb8f6',
+                  text: '#c9d1d9',
+                }
+              : theme.id === 'hermes-slate-light'
+                ? {
+                    bg: '#F6F8FA',
+                    panel: '#FFFFFF',
+                    border: '#D0D7DE',
+                    accent: '#3b82f6',
+                    text: '#24292f',
+                  }
+                : theme.id === 'hermes-mono'
+                  ? {
+                      bg: '#111111',
+                      panel: '#222222',
+                      border: '#333333',
+                      accent: '#aaaaaa',
+                      text: '#e6edf3',
+                    }
+                  : {
+                      bg: '#FAFAFA',
+                      panel: '#FFFFFF',
+                      border: '#D4D4D4',
+                      accent: '#666666',
+                      text: '#1a1a1a',
+                    },
 }))
 
-function ThemeSwatch({ colors }: { colors: typeof ENTERPRISE_THEMES[number]['preview'] }) {
+function ThemeSwatch({
+  colors,
+}: {
+  colors: (typeof ENTERPRISE_THEMES)[number]['preview']
+}) {
   return (
     <div
       className="flex h-10 w-full overflow-hidden rounded-md border"
       style={{ borderColor: colors.border, backgroundColor: colors.bg }}
     >
-      <div className="flex h-full w-4 flex-col gap-0.5 p-0.5" style={{ backgroundColor: colors.panel }}>
+      <div
+        className="flex h-full w-4 flex-col gap-0.5 p-0.5"
+        style={{ backgroundColor: colors.panel }}
+      >
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-1.5 w-full rounded-sm" style={{ backgroundColor: colors.border }} />
+          <div
+            key={i}
+            className="h-1.5 w-full rounded-sm"
+            style={{ backgroundColor: colors.border }}
+          />
         ))}
       </div>
       <div className="flex flex-1 flex-col gap-0.5 p-1">
-        <div className="h-1.5 w-3/4 rounded" style={{ backgroundColor: colors.text, opacity: 0.8 }} />
-        <div className="h-1 w-1/2 rounded" style={{ backgroundColor: colors.text, opacity: 0.3 }} />
-        <div className="mt-0.5 h-1.5 w-6 rounded-full" style={{ backgroundColor: colors.accent }} />
+        <div
+          className="h-1.5 w-3/4 rounded"
+          style={{ backgroundColor: colors.text, opacity: 0.8 }}
+        />
+        <div
+          className="h-1 w-1/2 rounded"
+          style={{ backgroundColor: colors.text, opacity: 0.3 }}
+        />
+        <div
+          className="mt-0.5 h-1.5 w-6 rounded-full"
+          style={{ backgroundColor: colors.accent }}
+        />
       </div>
     </div>
   )
@@ -688,7 +977,8 @@ function EnterpriseThemePicker() {
             {currentMode === 'dark' ? 'Dark mode' : 'Light mode'}
           </p>
           <p className="text-[11px] text-primary-500 dark:text-neutral-400">
-            Toggle the current theme family between paired light and dark variants.
+            Toggle the current theme family between paired light and dark
+            variants.
           </p>
         </div>
         <button
@@ -710,32 +1000,38 @@ function EnterpriseThemePicker() {
         </button>
       </div>
       <div className="grid w-full grid-cols-2 gap-2">
-      {visibleThemes.map((t) => {
-        const isActive = current === t.id
-        return (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => applyEnterpriseTheme(t.id)}
-            className={cn(
-              'flex flex-col gap-1.5 rounded-lg border p-2 text-left transition-colors',
-              isActive
-                ? 'border-accent-500 bg-accent-50 text-accent-700'
-                : 'border-primary-200 bg-primary-50/80 hover:bg-primary-100',
-            )}
-          >
-            <ThemeSwatch colors={t.preview} />
-            <div className="flex items-center gap-1">
-              <span className="text-xs">{t.icon}</span>
-              <span className="text-xs font-semibold text-primary-900 dark:text-neutral-100">{t.label}</span>
-              {isActive && (
-                <span className="ml-auto text-[9px] font-bold text-accent-600 uppercase tracking-wide">Active</span>
+        {visibleThemes.map((t) => {
+          const isActive = current === t.id
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => applyEnterpriseTheme(t.id)}
+              className={cn(
+                'flex flex-col gap-1.5 rounded-lg border p-2 text-left transition-colors',
+                isActive
+                  ? 'border-accent-500 bg-accent-50 text-accent-700'
+                  : 'border-primary-200 bg-primary-50/80 hover:bg-primary-100',
               )}
-            </div>
-            <p className="text-[10px] text-primary-500 dark:text-neutral-400 leading-tight">{t.desc}</p>
-          </button>
-        )
-      })}
+            >
+              <ThemeSwatch colors={t.preview} />
+              <div className="flex items-center gap-1">
+                <span className="text-xs">{t.icon}</span>
+                <span className="text-xs font-semibold text-primary-900 dark:text-neutral-100">
+                  {t.label}
+                </span>
+                {isActive && (
+                  <span className="ml-auto text-[9px] font-bold text-accent-600 uppercase tracking-wide">
+                    Active
+                  </span>
+                )}
+              </div>
+              <p className="text-[10px] text-primary-500 dark:text-neutral-400 leading-tight">
+                {t.desc}
+              </p>
+            </button>
+          )
+        })}
       </div>
     </div>
   )
@@ -1111,10 +1407,15 @@ export function SettingsDialog({
                       onClick={() => handleSectionSelect(s.id)}
                       className={cn(
                         'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm text-primary-600 transition-colors hover:bg-primary-100',
-                        active === s.id && 'bg-accent-50 font-medium text-accent-700',
+                        active === s.id &&
+                          'bg-accent-50 font-medium text-accent-700',
                       )}
                     >
-                      <HugeiconsIcon icon={s.icon} size={16} strokeWidth={1.5} />
+                      <HugeiconsIcon
+                        icon={s.icon}
+                        size={16}
+                        strokeWidth={1.5}
+                      />
                       {s.label}
                     </button>
                   ))}

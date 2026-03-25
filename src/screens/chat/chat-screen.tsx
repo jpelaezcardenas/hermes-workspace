@@ -52,8 +52,7 @@ import { ContextBar } from './components/context-bar'
 import {
   CHAT_OPEN_SETTINGS_EVENT,
   CHAT_PENDING_COMMAND_STORAGE_KEY,
-  CHAT_RUN_COMMAND_EVENT
-  
+  CHAT_RUN_COMMAND_EVENT,
 } from './chat-events'
 import type {
   ChatComposerAttachment,
@@ -63,7 +62,7 @@ import type {
 } from './components/chat-composer'
 import type { ApprovalRequest } from '@/lib/approvals-store'
 import type { ChatAttachment, ChatMessage, SessionMeta } from './types'
-import type {ChatRunCommandDetail} from './chat-events';
+import type { ChatRunCommandDetail } from './chat-events'
 import {
   addApproval,
   loadApprovals,
@@ -138,9 +137,11 @@ function normalizeMessageValue(value: unknown): string {
   return trimmed.length > 0 ? trimmed : ''
 }
 
-
 function sanitizeExportToken(value: string): string {
-  return value.trim().replace(/[^a-z0-9-_]+/gi, '-').replace(/^-+|-+$/g, '')
+  return value
+    .trim()
+    .replace(/[^a-z0-9-_]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
 }
 
 function exportConversationTranscript(payload: {
@@ -149,7 +150,8 @@ function exportConversationTranscript(payload: {
 }) {
   if (typeof document === 'undefined') return false
 
-  const sessionToken = sanitizeExportToken(payload.sessionLabel) || 'conversation'
+  const sessionToken =
+    sanitizeExportToken(payload.sessionLabel) || 'conversation'
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
   const body = payload.messages
     .map((message) => {
@@ -203,13 +205,13 @@ function messageFallbackSignature(message: ChatMessage): string {
             return `t:${typeof part.text === 'string' ? part.text.trim() : ''}`
           }
           if (part.type === 'thinking') {
-            return `th:${typeof (part).thinking === 'string' ? (part).thinking : ''}`
+            return `th:${typeof part.thinking === 'string' ? part.thinking : ''}`
           }
           if (part.type === 'toolCall') {
             const toolPart = part
             return `tc:${toolPart.id ?? ''}:${toolPart.name ?? ''}`
           }
-          return `p:${(part).type ?? ''}`
+          return `p:${part.type ?? ''}`
         })
         .join('|')
     : ''
@@ -217,8 +219,10 @@ function messageFallbackSignature(message: ChatMessage): string {
   const attachments = Array.isArray(message.attachments)
     ? message.attachments
         .map((attachment) => {
-          const name = typeof attachment?.name === 'string' ? attachment.name : ''
-          const size = typeof attachment?.size === 'number' ? String(attachment.size) : ''
+          const name =
+            typeof attachment?.name === 'string' ? attachment.name : ''
+          const size =
+            typeof attachment?.size === 'number' ? String(attachment.size) : ''
           const type =
             typeof attachment?.contentType === 'string'
               ? attachment.contentType
@@ -320,7 +324,8 @@ function getMessageAttachmentSignature(message: ChatMessage): string {
   return message.attachments
     .map((attachment) => {
       const name = typeof attachment?.name === 'string' ? attachment.name : ''
-      const size = typeof attachment?.size === 'number' ? String(attachment.size) : ''
+      const size =
+        typeof attachment?.size === 'number' ? String(attachment.size) : ''
       const type =
         typeof attachment?.contentType === 'string'
           ? attachment.contentType
@@ -415,9 +420,9 @@ export function ChatScreen({
   const retriedQueuedMessageKeysRef = useRef(new Set<string>())
   const hasSeenDisconnectRef = useRef(false)
   const hadErrorRef = useRef(false)
-  const [pendingApprovals, setPendingApprovals] = useState<Array<ApprovalRequest>>(
-    [],
-  )
+  const [pendingApprovals, setPendingApprovals] = useState<
+    Array<ApprovalRequest>
+  >([])
   const [isCompacting, setIsCompacting] = useState(false)
   const [researchResetKey, setResearchResetKey] = useState(0)
   // Per-session thinking level — stored in sessionStorage keyed by session
@@ -425,7 +430,8 @@ export function ChatScreen({
     if (typeof window === 'undefined') return 'low'
     const key = `hermes-thinking-${activeFriendlyId || 'new'}`
     const stored = window.sessionStorage.getItem(key)
-    if (stored === 'off' || stored === 'low' || stored === 'adaptive') return stored
+    if (stored === 'off' || stored === 'low' || stored === 'adaptive')
+      return stored
     return 'low'
   })
   const { alertOpen, alertThreshold, alertPercent, dismissAlert } =
@@ -448,7 +454,9 @@ export function ChatScreen({
   })
   const { isMobile } = useChatMobile(queryClient)
   const mobileKeyboardInset = useWorkspaceStore((s) => s.mobileKeyboardInset)
-  const mobileComposerFocused = useWorkspaceStore((s) => s.mobileComposerFocused)
+  const mobileComposerFocused = useWorkspaceStore(
+    (s) => s.mobileComposerFocused,
+  )
   const mobileKeyboardActive = mobileKeyboardInset > 0 || mobileComposerFocused
   void mobileKeyboardActive // kept for future use
   const isTerminalPanelOpen = useTerminalPanelStore(
@@ -504,86 +512,90 @@ export function ChatScreen({
     completedStreamingThinking,
     activeToolCalls,
   } = useRealtimeChatHistory({
-      sessionKey: resolvedSessionKey || sessionKeyForHistory || activeCanonicalKey,
-      friendlyId: activeFriendlyId,
-      historyMessages,
-      enabled:
-        !isNewChat &&
-        Boolean(resolvedSessionKey || sessionKeyForHistory || activeCanonicalKey) &&
-        !isRedirecting,
-      onUserMessage: useCallback(() => {
-        // External message arrived (e.g. from Telegram) — show thinking indicator
-        setWaitingForResponse(true)
-        setPendingGeneration(true)
-      }, []),
-      onApprovalRequest: useCallback((payload: Record<string, unknown>) => {
-        const approvalId =
-          typeof payload.id === 'string'
-            ? payload.id
+    sessionKey:
+      resolvedSessionKey || sessionKeyForHistory || activeCanonicalKey,
+    friendlyId: activeFriendlyId,
+    historyMessages,
+    enabled:
+      !isNewChat &&
+      Boolean(
+        resolvedSessionKey || sessionKeyForHistory || activeCanonicalKey,
+      ) &&
+      !isRedirecting,
+    onUserMessage: useCallback(() => {
+      // External message arrived (e.g. from Telegram) — show thinking indicator
+      setWaitingForResponse(true)
+      setPendingGeneration(true)
+    }, []),
+    onApprovalRequest: useCallback((payload: Record<string, unknown>) => {
+      const approvalId =
+        typeof payload.id === 'string'
+          ? payload.id
+          : typeof payload.approvalId === 'string'
+            ? payload.approvalId
             : typeof payload.approvalId === 'string'
               ? payload.approvalId
-              : typeof payload.approvalId === 'string'
-                ? payload.approvalId
-                : ''
-
-        const currentApprovals = loadApprovals()
-        if (
-          approvalId &&
-          currentApprovals.some((entry) => {
-            return (
-              entry.status === 'pending' &&
-              entry.approvalId === approvalId
-            )
-          })
-        ) {
-          setPendingApprovals(
-            currentApprovals.filter((entry) => entry.status === 'pending'),
-          )
-          return
-        }
-
-        const actionValue = payload.action ?? payload.tool ?? payload.command
-        const action =
-          typeof actionValue === 'string'
-            ? actionValue
-            : actionValue
-              ? JSON.stringify(actionValue)
-              : 'Tool call requires approval'
-        const contextValue = payload.context ?? payload.input ?? payload.args
-        const context =
-          typeof contextValue === 'string'
-            ? contextValue
-            : contextValue
-              ? JSON.stringify(contextValue)
               : ''
-        const agentNameValue = payload.agentName ?? payload.agent ?? payload.source
-        const agentName =
-          typeof agentNameValue === 'string' && agentNameValue.trim().length > 0
-            ? agentNameValue
-            : 'Agent'
-        const agentIdValue = payload.agentId ?? payload.sessionKey ?? payload.source
-        const agentId =
-          typeof agentIdValue === 'string' && agentIdValue.trim().length > 0
-            ? agentIdValue
-            : 'hermes'
 
-        addApproval({
-          agentId,
-          agentName,
-          action,
-          context,
-          source: 'hermes',
-          approvalId: approvalId || undefined,
+      const currentApprovals = loadApprovals()
+      if (
+        approvalId &&
+        currentApprovals.some((entry) => {
+          return entry.status === 'pending' && entry.approvalId === approvalId
         })
-        setPendingApprovals(loadApprovals().filter((entry) => entry.status === 'pending'))
-      }, []),
-      onCompactionStart: useCallback(() => {
-        setIsCompacting(true)
-      }, []),
-      onCompactionEnd: useCallback(() => {
-        setIsCompacting(false)
-      }, []),
-    })
+      ) {
+        setPendingApprovals(
+          currentApprovals.filter((entry) => entry.status === 'pending'),
+        )
+        return
+      }
+
+      const actionValue = payload.action ?? payload.tool ?? payload.command
+      const action =
+        typeof actionValue === 'string'
+          ? actionValue
+          : actionValue
+            ? JSON.stringify(actionValue)
+            : 'Tool call requires approval'
+      const contextValue = payload.context ?? payload.input ?? payload.args
+      const context =
+        typeof contextValue === 'string'
+          ? contextValue
+          : contextValue
+            ? JSON.stringify(contextValue)
+            : ''
+      const agentNameValue =
+        payload.agentName ?? payload.agent ?? payload.source
+      const agentName =
+        typeof agentNameValue === 'string' && agentNameValue.trim().length > 0
+          ? agentNameValue
+          : 'Agent'
+      const agentIdValue =
+        payload.agentId ?? payload.sessionKey ?? payload.source
+      const agentId =
+        typeof agentIdValue === 'string' && agentIdValue.trim().length > 0
+          ? agentIdValue
+          : 'hermes'
+
+      addApproval({
+        agentId,
+        agentName,
+        action,
+        context,
+        source: 'hermes',
+        approvalId: approvalId || undefined,
+      })
+      setPendingApprovals(
+        loadApprovals().filter((entry) => entry.status === 'pending'),
+      )
+    }, []),
+    onCompactionStart: useCallback(() => {
+      setIsCompacting(true)
+    }, []),
+    onCompactionEnd: useCallback(() => {
+      setIsCompacting(false)
+    }, []),
+  })
 
   // Apply smooth character-reveal animation to the raw SSE text
   const smoothRealtimeStreamingText = useSmoothStreamingText(
@@ -594,7 +606,9 @@ export function ChatScreen({
   // Keep activity stream open persistently — opens on mount so it's ready
   // before the first tool call fires (avoids connection latency gap).
   const waitingForResponseRef = useRef(waitingForResponse)
-  useEffect(() => { waitingForResponseRef.current = waitingForResponse }, [waitingForResponse])
+  useEffect(() => {
+    waitingForResponseRef.current = waitingForResponse
+  }, [waitingForResponse])
 
   useEffect(() => {
     const events = new EventSource('/api/events')
@@ -609,9 +623,7 @@ export function ChatScreen({
         if (payload.type !== 'tool' || typeof payload.title !== 'string') {
           return
         }
-        const name = payload.title
-          .replace(/^Tool activity:\s*/i, '')
-          .trim()
+        const name = payload.title.replace(/^Tool activity:\s*/i, '').trim()
         if (!name) return
         setLiveToolActivity((prev) => {
           const filtered = prev.filter((entry) => entry.name !== name)
@@ -880,9 +892,10 @@ export function ChatScreen({
     // Use actual realtime streaming state when available
     if (isRealtimeStreaming) {
       const last = finalDisplayMessages[finalDisplayMessages.length - 1]
-      const id = last?.role === 'assistant'
-        ? ((last as any).__optimisticId || (last as any).id || null)
-        : null
+      const id =
+        last?.role === 'assistant'
+          ? (last as any).__optimisticId || (last as any).id || null
+          : null
       return { isStreaming: true, streamingMessageId: id }
     }
     // Fallback: waiting for response + last message is assistant
@@ -940,7 +953,9 @@ export function ChatScreen({
     // Snapshot any unconfirmed optimistic user messages BEFORE refetch.
     // The refetch replaces the query cache with server data — if the server
     // hasn't processed the user's POST yet, the optimistic message vanishes.
-    const currentMessages = (historyQuery.data as any)?.messages as Array<ChatMessage> | undefined
+    const currentMessages = (historyQuery.data as any)?.messages as
+      | Array<ChatMessage>
+      | undefined
     const pendingOptimistic = (currentMessages ?? []).filter((msg) => {
       const raw = msg as Record<string, unknown>
       return (
@@ -1026,7 +1041,6 @@ export function ChatScreen({
       !isNewChat && Boolean(resolvedSessionKey) && historyQuery.isSuccess,
   })
 
-
   // Phase 4.1: Smart Model Suggestions
   const modelsQuery = useQuery({
     queryKey: ['models'],
@@ -1072,7 +1086,9 @@ export function ChatScreen({
 
   // Ref so sendMessage can always read latest thinkingLevel without being in deps
   const thinkingLevelRef = useRef<ThinkingLevel>(thinkingLevel)
-  useEffect(() => { thinkingLevelRef.current = thinkingLevel }, [thinkingLevel])
+  useEffect(() => {
+    thinkingLevelRef.current = thinkingLevel
+  }, [thinkingLevel])
 
   // Auto-upgrade thinking to adaptive for Claude 4.6 when session first loads
   const thinkingInitializedRef = useRef(false)
@@ -1080,10 +1096,15 @@ export function ChatScreen({
     if (!currentModel) return
     if (thinkingInitializedRef.current) return
     thinkingInitializedRef.current = true
-    const is46 = currentModel.toLowerCase().includes('4-6') || currentModel.toLowerCase().includes('claude-4.6')
+    const is46 =
+      currentModel.toLowerCase().includes('4-6') ||
+      currentModel.toLowerCase().includes('claude-4.6')
     if (is46) {
       const key = `hermes-thinking-${activeFriendlyId || 'new'}`
-      const stored = typeof window !== 'undefined' ? window.sessionStorage.getItem(key) : null
+      const stored =
+        typeof window !== 'undefined'
+          ? window.sessionStorage.getItem(key)
+          : null
       // Only auto-set if not explicitly configured
       if (!stored) {
         setThinkingLevel('adaptive')
@@ -1092,13 +1113,16 @@ export function ChatScreen({
   }, [currentModel, activeFriendlyId])
 
   // Persist thinking level changes to sessionStorage
-  const handleThinkingLevelChange = useCallback((level: ThinkingLevel) => {
-    setThinkingLevel(level)
-    if (typeof window !== 'undefined') {
-      const key = `hermes-thinking-${activeFriendlyId || 'new'}`
-      window.sessionStorage.setItem(key, level)
-    }
-  }, [activeFriendlyId])
+  const handleThinkingLevelChange = useCallback(
+    (level: ThinkingLevel) => {
+      setThinkingLevel(level)
+      if (typeof window !== 'undefined') {
+        const key = `hermes-thinking-${activeFriendlyId || 'new'}`
+        window.sessionStorage.setItem(key, level)
+      }
+    },
+    [activeFriendlyId],
+  )
 
   const { suggestion, dismiss, dismissForSession } = useModelSuggestions({
     currentModel, // Real model from session-status (fail closed if empty)
@@ -1112,7 +1136,13 @@ export function ChatScreen({
 
   const { startStreaming, cancelStreaming } = useStreamingMessage({
     onSessionResolved: useCallback(
-      ({ sessionKey, friendlyId }: { sessionKey: string; friendlyId: string }) => {
+      ({
+        sessionKey,
+        friendlyId,
+      }: {
+        sessionKey: string
+        friendlyId: string
+      }) => {
         const activeSend = activeSendRef.current
         if (activeSend) {
           activeSendRef.current = {
@@ -1121,7 +1151,10 @@ export function ChatScreen({
             friendlyId,
           }
         }
-        if (sessionKey === activeFriendlyId && friendlyId === activeFriendlyId) {
+        if (
+          sessionKey === activeFriendlyId &&
+          friendlyId === activeFriendlyId
+        ) {
           return
         }
         onSessionResolved?.({ sessionKey, friendlyId })
@@ -1132,11 +1165,15 @@ export function ChatScreen({
       ({ runId }: { runId: string | null }) => {
         const activeSend = activeSendRef.current
         if (!activeSend?.clientId) return
-        updateHistoryMessageByClientIdEverywhere(queryClient, activeSend.clientId, (message) => ({
-          ...message,
-          status: 'sent',
-          runId: runId ?? message.runId,
-        }))
+        updateHistoryMessageByClientIdEverywhere(
+          queryClient,
+          activeSend.clientId,
+          (message) => ({
+            ...message,
+            status: 'sent',
+            runId: runId ?? message.runId,
+          }),
+        )
         setSending(false)
       },
       [queryClient],
@@ -1144,11 +1181,15 @@ export function ChatScreen({
     onComplete: useCallback(() => {
       const activeSend = activeSendRef.current
       if (activeSend?.clientId) {
-        updateHistoryMessageByClientIdEverywhere(queryClient, activeSend.clientId, (message) => ({
-          ...message,
-          status: 'done',
-          __optimisticId: undefined,
-        }))
+        updateHistoryMessageByClientIdEverywhere(
+          queryClient,
+          activeSend.clientId,
+          (message) => ({
+            ...message,
+            status: 'done',
+            __optimisticId: undefined,
+          }),
+        )
       }
       activeSendRef.current = null
       refreshHistoryRef.current()
@@ -1157,14 +1198,15 @@ export function ChatScreen({
     onError: useCallback(
       (messageText: string) => {
         const activeSend = activeSendRef.current
-        if (
-          activeSend?.clientId &&
-          !isMissingAuth(messageText)
-        ) {
-          updateHistoryMessageByClientIdEverywhere(queryClient, activeSend.clientId, (message) => ({
-            ...message,
-            status: 'error',
-          }))
+        if (activeSend?.clientId && !isMissingAuth(messageText)) {
+          updateHistoryMessageByClientIdEverywhere(
+            queryClient,
+            activeSend.clientId,
+            (message) => ({
+              ...message,
+              status: 'error',
+            }),
+          )
         }
         activeSendRef.current = null
         setSending(false)
@@ -1191,14 +1233,24 @@ export function ChatScreen({
         // status immediately so the Retry timer never fires. This is the
         // primary confirmation path since the server does NOT echo user
         // messages back via SSE.
-        updateHistoryMessageByClientId(queryClient, friendlyId, _sessionKey, clientId, (message) => ({
-          ...message,
-          status: 'queued',
-        }))
-        updateHistoryMessageByClientIdEverywhere(queryClient, clientId, (message) => ({
-          ...message,
-          status: 'queued',
-        }))
+        updateHistoryMessageByClientId(
+          queryClient,
+          friendlyId,
+          _sessionKey,
+          clientId,
+          (message) => ({
+            ...message,
+            status: 'queued',
+          }),
+        )
+        updateHistoryMessageByClientIdEverywhere(
+          queryClient,
+          clientId,
+          (message) => ({
+            ...message,
+            status: 'queued',
+          }),
+        )
       },
       [queryClient],
     ),
@@ -1240,7 +1292,12 @@ export function ChatScreen({
     } else {
       setLocalActivity('idle')
     }
-  }, [waitingForResponse, isRealtimeStreaming, liveToolActivity, setLocalActivity])
+  }, [
+    waitingForResponse,
+    isRealtimeStreaming,
+    liveToolActivity,
+    setLocalActivity,
+  ])
 
   const statusQuery = useQuery({
     queryKey: ['hermes', 'status'],
@@ -1259,8 +1316,7 @@ export function ChatScreen({
       ? statusQuery.error instanceof Error
         ? {
             message: statusQuery.error.message,
-            status: (statusQuery.error as Error & { status?: number })
-              .status,
+            status: (statusQuery.error as Error & { status?: number }).status,
           }
         : statusQuery.data && !statusQuery.data.ok
           ? {
@@ -1299,7 +1355,8 @@ export function ChatScreen({
       }
     }
     document.addEventListener('visibilitychange', handleVisibility)
-    return () => document.removeEventListener('visibilitychange', handleVisibility)
+    return () =>
+      document.removeEventListener('visibilitychange', handleVisibility)
   }, [historyQuery])
 
   useEffect(() => {
@@ -1331,9 +1388,7 @@ export function ChatScreen({
     }
     return {
       paddingBottom:
-        terminalPanelInset > 0
-          ? `${terminalPanelInset + 16}px`
-          : '16px',
+        terminalPanelInset > 0 ? `${terminalPanelInset + 16}px` : '16px',
     }
   }, [isMobile, terminalPanelInset])
 
@@ -1365,8 +1420,7 @@ export function ChatScreen({
       if (error) setError(null)
       return
     }
-    const messageText =
-      sessionsError ?? historyError ?? statusError?.message
+    const messageText = sessionsError ?? historyError ?? statusError?.message
     if (!messageText) {
       if (error?.startsWith('Failed to load')) {
         setError(null)
@@ -1415,7 +1469,11 @@ export function ChatScreen({
     resetPendingSend()
     clearHistoryMessages(queryClient, activeFriendlyId, sessionKeyForHistory)
     const latestSession = sessions[0]?.friendlyId ?? 'new'
-    navigate({ to: '/chat/$sessionKey', params: { sessionKey: latestSession }, replace: true })
+    navigate({
+      to: '/chat/$sessionKey',
+      params: { sessionKey: latestSession },
+      replace: true,
+    })
   }, [
     activeFriendlyId,
     historyQuery.isFetching,
@@ -1514,9 +1572,9 @@ export function ChatScreen({
         id: attachment.id ?? crypto.randomUUID(),
       }))
 
-    // Inject text/file attachment content directly into the message body.
-    // Servers reliably forward text in the message body; file attachments
-    // may be silently dropped for non-image types.
+      // Inject text/file attachment content directly into the message body.
+      // Servers reliably forward text in the message body; file attachments
+      // may be silently dropped for non-image types.
       const textBlocks = normalizedAttachments
         .filter((a) => {
           const mime =
@@ -1625,7 +1683,8 @@ export function ChatScreen({
         message: enrichedBody,
         attachments:
           payloadAttachments.length > 0 ? payloadAttachments : undefined,
-        thinking: currentThinkingLevel === 'off' ? undefined : currentThinkingLevel,
+        thinking:
+          currentThinkingLevel === 'off' ? undefined : currentThinkingLevel,
         fastMode,
         idempotencyKey: optimisticClientId || crypto.randomUUID(),
       }).catch((err: unknown) => {
@@ -1705,7 +1764,10 @@ export function ChatScreen({
       if (body.length === 0 && attachments.length === 0) return false
 
       const retryKey = getRetryMessageKey(message)
-      if (mode === 'auto' && retriedQueuedMessageKeysRef.current.has(retryKey)) {
+      if (
+        mode === 'auto' &&
+        retriedQueuedMessageKeysRef.current.has(retryKey)
+      ) {
         return false
       }
 
@@ -1715,12 +1777,22 @@ export function ChatScreen({
       const existingClientId = getMessageClientId(message)
 
       if (existingClientId) {
-        updateHistoryMessageByClientId(queryClient, activeFriendlyId, sessionKeyForMessage, existingClientId, function markSending(currentMessage) {
-          return { ...currentMessage, status: 'sending' }
-        })
-        updateHistoryMessageByClientIdEverywhere(queryClient, existingClientId, function markSendingEverywhere(currentMessage) {
-          return { ...currentMessage, status: 'sending' }
-        })
+        updateHistoryMessageByClientId(
+          queryClient,
+          activeFriendlyId,
+          sessionKeyForMessage,
+          existingClientId,
+          function markSending(currentMessage) {
+            return { ...currentMessage, status: 'sending' }
+          },
+        )
+        updateHistoryMessageByClientIdEverywhere(
+          queryClient,
+          existingClientId,
+          function markSendingEverywhere(currentMessage) {
+            return { ...currentMessage, status: 'sending' }
+          },
+        )
       }
 
       if (mode === 'auto') {
@@ -1768,7 +1840,8 @@ export function ChatScreen({
   )
 
   useEffect(() => {
-    if (false) { // Server connection checks removed — Hermes uses direct API
+    if (false) {
+      // Server connection checks removed — Hermes uses direct API
       hasSeenDisconnectRef.current = true
       retriedQueuedMessageKeysRef.current.clear()
       return
@@ -1804,10 +1877,7 @@ export function ChatScreen({
 
     window.addEventListener('hermes:health-restored', handleHealthRestored)
     return () => {
-      window.removeEventListener(
-        'hermes:health-restored',
-        handleHealthRestored,
-      )
+      window.removeEventListener('hermes:health-restored', handleHealthRestored)
     }
   }, [flushRetryableMessages, handleRefetch])
 
@@ -1896,12 +1966,15 @@ export function ChatScreen({
     [queryClient],
   )
 
-  const scrollChatToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
-    const viewport = document.querySelector('[data-chat-scroll-viewport]')
-    if (viewport) {
-      viewport.scrollTo({ top: viewport.scrollHeight, behavior })
-    }
-  }, [])
+  const scrollChatToBottom = useCallback(
+    (behavior: ScrollBehavior = 'smooth') => {
+      const viewport = document.querySelector('[data-chat-scroll-viewport]')
+      if (viewport) {
+        viewport.scrollTo({ top: viewport.scrollHeight, behavior })
+      }
+    },
+    [],
+  )
 
   const handleUiSlashCommand = useCallback(
     (command: string) => {
@@ -1915,7 +1988,10 @@ export function ChatScreen({
 
       if (trimmedCommand === '/clear') {
         const sessionKey =
-          forcedSessionKey || resolvedSessionKey || activeSessionKey || activeFriendlyId
+          forcedSessionKey ||
+          resolvedSessionKey ||
+          activeSessionKey ||
+          activeFriendlyId
         clearHistoryMessages(queryClient, activeFriendlyId, sessionKey)
         toast('Chat cleared', { type: 'success' })
         return true
@@ -1976,7 +2052,11 @@ export function ChatScreen({
       // This prevents double-fire from paste events that trigger multiple send paths.
       const sendKey = `${trimmedBody}|${attachments.map((a) => `${a.name}:${a.size}`).join(',')}`
       const now = Date.now()
-      if (sendKey === lastSendKeyRef.current && now - lastSendAtRef.current < 500) return
+      if (
+        sendKey === lastSendKeyRef.current &&
+        now - lastSendAtRef.current < 500
+      )
+        return
       lastSendKeyRef.current = sendKey
       lastSendAtRef.current = now
 
@@ -2012,7 +2092,9 @@ export function ChatScreen({
           if (import.meta.env.DEV) {
             console.warn('[chat] failed to register new thread', err)
           }
-          void queryClient.invalidateQueries({ queryKey: chatQueryKeys.sessions })
+          void queryClient.invalidateQueries({
+            queryKey: chatQueryKeys.sessions,
+          })
         })
 
         // Send using the new thread id — server can still resolve/reroute under the hood
@@ -2209,16 +2291,29 @@ export function ChatScreen({
       const sessionKey =
         resolvedSessionKey || activeSession?.key || activeSessionKey || ''
       if (!sessionKey) return
-      await renameSession(sessionKey, activeSession?.friendlyId ?? null, nextTitle)
+      await renameSession(
+        sessionKey,
+        activeSession?.friendlyId ?? null,
+        nextTitle,
+      )
     },
-    [activeSession?.friendlyId, activeSession?.key, activeSessionKey, renameSession, resolvedSessionKey],
+    [
+      activeSession?.friendlyId,
+      activeSession?.key,
+      activeSessionKey,
+      renameSession,
+      resolvedSessionKey,
+    ],
   )
 
   // Listen for mobile header agent-details tap
   useEffect(() => {
-    const handler = () => { /* agent view removed */ }
+    const handler = () => {
+      /* agent view removed */
+    }
     window.addEventListener('hermes:chat-agent-details', handler)
-    return () => window.removeEventListener('hermes:chat-agent-details', handler)
+    return () =>
+      window.removeEventListener('hermes:chat-agent-details', handler)
   }, [])
 
   return (
@@ -2251,7 +2346,8 @@ export function ChatScreen({
           className={cn(
             'flex h-full flex-1 min-h-0 min-w-0 flex-col overflow-hidden transition-[margin-right,margin-bottom] duration-200',
             'mr-0',
-            (isRealtimeStreaming || hasPendingGeneration()) && 'chat-streaming-glow',
+            (isRealtimeStreaming || hasPendingGeneration()) &&
+              'chat-streaming-glow',
           )}
           style={{
             marginBottom:
@@ -2268,7 +2364,12 @@ export function ChatScreen({
               onOpenSessions={() => setSessionsOpen(true)}
               sessions={sessions ?? []}
               activeFriendlyId={activeFriendlyId}
-              onSelectSession={(key) => void navigate({ to: '/chat/$sessionKey', params: { sessionKey: key } })}
+              onSelectSession={(key) =>
+                void navigate({
+                  to: '/chat/$sessionKey',
+                  params: { sessionKey: key },
+                })
+              }
               showFileExplorerButton={!isMobile && !isFocusMode}
               fileExplorerCollapsed={fileExplorerCollapsed}
               onToggleFileExplorer={handleToggleFileExplorer}
@@ -2286,10 +2387,16 @@ export function ChatScreen({
             />
           )}
 
-          <div className="md:hidden"><ContextMeter variant="mobile" /></div>
-          <div className="hidden md:block px-4 py-1"><ContextMeter variant="desktop" /></div>
+          <div className="md:hidden">
+            <ContextMeter variant="mobile" />
+          </div>
+          <div className="hidden md:block px-4 py-1">
+            <ContextMeter variant="desktop" />
+          </div>
 
-          {errorNotice && <div className="sticky top-0 z-20 px-4 py-2">{errorNotice}</div>}
+          {errorNotice && (
+            <div className="sticky top-0 z-20 px-4 py-2">{errorNotice}</div>
+          )}
           {pendingApprovals.length > 0 && (
             <div className="mx-4 mb-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/50 dark:bg-amber-900/15">
               <div className="space-y-2">
@@ -2300,7 +2407,8 @@ export function ChatScreen({
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
-                        {'\uD83D\uDD10'} Approval Required - {approval.agentName || 'Agent'}
+                        {'\uD83D\uDD10'} Approval Required -{' '}
+                        {approval.agentName || 'Agent'}
                       </p>
                       <p className="mt-0.5 truncate text-xs text-amber-600 dark:text-amber-500">
                         {approval.action}
@@ -2360,7 +2468,9 @@ export function ChatScreen({
               pinGroupMinHeight={pinGroupMinHeight}
               headerHeight={headerHeight}
               contentStyle={stableContentStyle}
-              bottomOffset={isMobile ? mobileScrollBottomOffset : terminalPanelInset}
+              bottomOffset={
+                isMobile ? mobileScrollBottomOffset : terminalPanelInset
+              }
               isStreaming={derivedStreamingInfo.isStreaming}
               streamingMessageId={derivedStreamingInfo.streamingMessageId}
               streamingText={
@@ -2401,7 +2511,6 @@ export function ChatScreen({
             />
           ) : null}
         </main>
-
       </div>
       {!compact && !hideUi && !isMobile && !isFocusMode && <TerminalPanel />}
       <InspectorPanel />
@@ -2425,11 +2534,17 @@ export function ChatScreen({
           activeFriendlyId={activeFriendlyId}
           onSelectSession={(friendlyId) => {
             setSessionsOpen(false)
-            void navigate({ to: '/chat/$sessionKey', params: { sessionKey: friendlyId } })
+            void navigate({
+              to: '/chat/$sessionKey',
+              params: { sessionKey: friendlyId },
+            })
           }}
           onNewChat={() => {
             setSessionsOpen(false)
-            void navigate({ to: '/chat/$sessionKey', params: { sessionKey: 'new' } })
+            void navigate({
+              to: '/chat/$sessionKey',
+              params: { sessionKey: 'new' },
+            })
           }}
         />
       )}

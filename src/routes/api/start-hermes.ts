@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
-import { dirname, resolve, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { homedir } from 'node:os'
 import { json } from '@tanstack/react-start'
 import { createFileRoute } from '@tanstack/react-router'
@@ -46,11 +46,11 @@ function resolveHermesAgentDir(): string | null {
 
   // 2. Sibling of the workspace root (standard README clone layout)
   //    cwd() is the clawsuite/ dir when running via pnpm dev
-  const cwd = process.cwd()                            // clawsuite/
-  const workspaceRoot = dirname(cwd)                   // parent dir
+  const cwd = process.cwd() // clawsuite/
+  const workspaceRoot = dirname(cwd) // parent dir
   candidates.push(
-    resolve(workspaceRoot, 'hermes-agent'),             // ../hermes-agent  (sibling clone)
-    resolve(workspaceRoot, '..', 'hermes-agent'),       // ../../hermes-agent (one level up)
+    resolve(workspaceRoot, 'hermes-agent'), // ../hermes-agent  (sibling clone)
+    resolve(workspaceRoot, '..', 'hermes-agent'), // ../../hermes-agent (one level up)
   )
 
   for (const candidate of candidates) {
@@ -105,7 +105,15 @@ export const Route = createFileRoute('/api/start-hermes')({
           // Spawn detached so it survives if the dev server restarts
           const child = spawn(
             python,
-            ['-m', 'uvicorn', 'webapi.app:app', '--host', '0.0.0.0', '--port', '8642'],
+            [
+              '-m',
+              'uvicorn',
+              'webapi.app:app',
+              '--host',
+              '0.0.0.0',
+              '--port',
+              '8642',
+            ],
             {
               cwd: agentDir,
               detached: true,
@@ -128,7 +136,11 @@ export const Route = createFileRoute('/api/start-hermes')({
                 signal: AbortSignal.timeout(2000),
               })
               if (health.ok) {
-                return json({ ok: true, pid: child.pid, message: 'Started and healthy' })
+                return json({
+                  ok: true,
+                  pid: child.pid,
+                  message: 'Started and healthy',
+                })
               }
             } catch {
               // Still starting
@@ -143,7 +155,10 @@ export const Route = createFileRoute('/api/start-hermes')({
           })
         } catch (err) {
           return json(
-            { ok: false, error: err instanceof Error ? err.message : String(err) },
+            {
+              ok: false,
+              error: err instanceof Error ? err.message : String(err),
+            },
             { status: 500 },
           )
         }

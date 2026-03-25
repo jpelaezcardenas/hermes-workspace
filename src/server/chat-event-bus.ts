@@ -1,5 +1,7 @@
 // Stub — active run tracking is handled locally in send-stream.ts
-function hasActiveSendRun(_runId: string | null | undefined): boolean { return false }
+function hasActiveSendRun(_runId: string | null | undefined): boolean {
+  return false
+}
 
 export interface ChatSSEEvent {
   event: string
@@ -39,7 +41,10 @@ function broadcast(event: string, data: Record<string, unknown>): void {
   }
 }
 
-export function publishChatEvent(event: string, data: Record<string, unknown>): void {
+export function publishChatEvent(
+  event: string,
+  data: Record<string, unknown>,
+): void {
   const runId = typeof data.runId === 'string' ? data.runId : undefined
   if (hasActiveSendRun(runId)) return
   broadcast(event, data)

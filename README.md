@@ -32,16 +32,16 @@
 
 ## 📸 Screenshots
 
-| Chat | Files |
-|:---:|:---:|
+|                 Chat                 |                 Files                  |
+| :----------------------------------: | :------------------------------------: |
 | ![Chat](./docs/screenshots/chat.png) | ![Files](./docs/screenshots/files.png) |
 
-| Terminal | Memory |
-|:---:|:---:|
+|                   Terminal                   |                  Memory                  |
+| :------------------------------------------: | :--------------------------------------: |
 | ![Terminal](./docs/screenshots/terminal.png) | ![Memory](./docs/screenshots/memory.png) |
 
-| Skills | Settings |
-|:---:|:---:|
+|                  Skills                  |                   Settings                   |
+| :--------------------------------------: | :------------------------------------------: |
 | ![Skills](./docs/screenshots/skills.png) | ![Settings](./docs/screenshots/settings.png) |
 
 ---
@@ -171,12 +171,14 @@ Access Hermes Workspace from anywhere on your devices — no port forwarding, no
 2. **Sign in** to the same Tailscale account on both devices
 
 3. **Find your Mac's Tailscale IP:**
+
    ```bash
    tailscale ip -4
    # Example output: 100.x.x.x
    ```
 
 4. **Open Hermes Workspace on your phone:**
+
    ```
    http://100.x.x.x:3000
    ```
@@ -192,6 +194,7 @@ Access Hermes Workspace from anywhere on your devices — no port forwarding, no
 > **Status: In Development** — A native Electron-based desktop app is in active development.
 
 The desktop app will offer:
+
 - Native window management and tray icon
 - System notifications for agent events and mission completions
 - Auto-launch on startup
@@ -213,6 +216,7 @@ A fully managed cloud version of Hermes Workspace is in development:
 - **Automatic updates** — Always on the latest version
 
 Features pending cloud infrastructure:
+
 - Cross-device session sync
 - Team shared memory and workspaces
 - Cloud-hosted backend with managed uptime
@@ -223,6 +227,7 @@ Features pending cloud infrastructure:
 ## ✨ Features
 
 ### 💬 Chat
+
 - Real-time SSE streaming with tool call rendering
 - Multi-session management with full history
 - Markdown + syntax highlighting
@@ -230,31 +235,37 @@ Features pending cloud infrastructure:
 - Inspector panel for session activity, memory, and skills
 
 ### 🧠 Memory
+
 - Browse and edit agent memory files
 - Search across memory entries
 - Markdown preview with live editing
 
 ### 🧩 Skills
+
 - Browse 2,000+ skills from the registry
 - View skill details, categories, and documentation
 - Skill management per session
 
 ### 📁 Files
+
 - Full workspace file browser
 - Navigate directories, preview and edit files
 - Monaco editor integration
 
 ### 💻 Terminal
+
 - Full PTY terminal with cross-platform support
 - Persistent shell sessions
 - Direct workspace access
 
 ### 🎨 Themes
+
 - 8 themes: Official, Classic, Slate, Mono — each with light and dark variants
 - Theme persists across sessions
 - Full mobile dark mode support
 
 ### 🔒 Security
+
 - Auth middleware on all API routes
 - CSP headers via meta tags
 - Path traversal prevention on file/memory routes
@@ -275,6 +286,7 @@ The workspace auto-detects your gateway's capabilities on startup. Check your te
 ```
 
 **Fix:** You need the WebAPI backend. Use our fork:
+
 ```bash
 git clone https://github.com/outsourc-e/hermes-agent.git
 cd hermes-agent && pip install -e . && hermes webapi
@@ -283,6 +295,7 @@ cd hermes-agent && pip install -e . && hermes webapi
 ### "Connection refused" or workspace hangs on load
 
 Your Hermes gateway isn't running. Start it:
+
 ```bash
 cd hermes-agent
 source .venv/bin/activate
@@ -299,19 +312,19 @@ The upstream hermes-agent doesn't include the WebAPI server yet. The workspace w
 
 ## 🗺️ Roadmap
 
-| Feature | Status |
-|---------|--------|
-| Chat + SSE Streaming | ✅ Shipped |
-| Files + Terminal | ✅ Shipped |
-| Memory Browser | ✅ Shipped |
-| Skills Browser | ✅ Shipped |
-| Mobile PWA + Tailscale | ✅ Shipped |
-| 8-Theme System | ✅ Shipped |
+| Feature                       | Status            |
+| ----------------------------- | ----------------- |
+| Chat + SSE Streaming          | ✅ Shipped        |
+| Files + Terminal              | ✅ Shipped        |
+| Memory Browser                | ✅ Shipped        |
+| Skills Browser                | ✅ Shipped        |
+| Mobile PWA + Tailscale        | ✅ Shipped        |
+| 8-Theme System                | ✅ Shipped        |
 | Native Desktop App (Electron) | 🔨 In Development |
-| Model Switching & Config | 🔨 In Development |
-| Chat Abort / Cancel | 🔨 In Development |
-| Cloud / Hosted Version | 🔜 Coming Soon |
-| Team Collaboration | 🔜 Coming Soon |
+| Model Switching & Config      | 🔨 In Development |
+| Chat Abort / Cancel           | 🔨 In Development |
+| Cloud / Hosted Version        | 🔜 Coming Soon    |
+| Team Collaboration            | 🔜 Coming Soon    |
 
 ---
 

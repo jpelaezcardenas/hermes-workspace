@@ -293,7 +293,10 @@ export function SkillsScreen() {
                 <TabsTab value="installed" className="flex-1 sm:min-w-[132px]">
                   Installed
                 </TabsTab>
-                <TabsTab value="marketplace" className="flex-1 sm:min-w-[168px]">
+                <TabsTab
+                  value="marketplace"
+                  className="flex-1 sm:min-w-[168px]"
+                >
                   Marketplace
                 </TabsTab>
                 <TabsTab value="featured" className="flex-1 sm:min-w-[120px]">
@@ -731,7 +734,8 @@ function SkillsGrid({
   }
 
   if (skills.length === 0) {
-    const isMarketplace = tab === 'marketplace' || tab === ('featured' as string)
+    const isMarketplace =
+      tab === 'marketplace' || tab === ('featured' as string)
     return (
       <div className="rounded-xl border border-dashed border-primary-200 bg-primary-100/40 px-4 py-8 text-center">
         <p className="text-sm font-medium text-primary-700">

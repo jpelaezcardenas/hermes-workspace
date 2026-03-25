@@ -12,8 +12,12 @@ import {
 } from '../../server/hermes-api'
 // Active run tracking (replaces legacy imports)
 const _activeSendRuns = new Set<string>()
-function registerActiveSendRun(runId: string): void { if (runId) _activeSendRuns.add(runId) }
-function unregisterActiveSendRun(runId: string): void { if (runId) _activeSendRuns.delete(runId) }
+function registerActiveSendRun(runId: string): void {
+  if (runId) _activeSendRuns.add(runId)
+}
+function unregisterActiveSendRun(runId: string): void {
+  if (runId) _activeSendRuns.delete(runId)
+}
 
 // Hermes agent runs can take 5+ minutes with complex tool chains
 const SEND_STREAM_RUN_TIMEOUT_MS = 600_000
@@ -180,7 +184,10 @@ export const Route = createFileRoute('/api/send-stream')({
         await ensureGatewayProbed()
         if (!getGatewayCapabilities().sessions) {
           return new Response(
-            JSON.stringify({ ok: false, error: SESSIONS_API_UNAVAILABLE_MESSAGE }),
+            JSON.stringify({
+              ok: false,
+              error: SESSIONS_API_UNAVAILABLE_MESSAGE,
+            }),
             { status: 503, headers: { 'Content-Type': 'application/json' } },
           )
         }
@@ -289,7 +296,8 @@ export const Route = createFileRoute('/api/send-stream')({
                 sessionKey,
                 {
                   message: getChatMessage(message, attachments),
-                  model: typeof body.model === 'string' ? body.model : undefined,
+                  model:
+                    typeof body.model === 'string' ? body.model : undefined,
                   system_message: thinking,
                   attachments: attachments || undefined,
                 },
@@ -297,13 +305,14 @@ export const Route = createFileRoute('/api/send-stream')({
                   signal: abortController.signal,
                   onEvent({ event, data }) {
                     const sessionKeyFromEvent =
-                      typeof data.session_id === 'string' && data.session_id.trim()
+                      typeof data.session_id === 'string' &&
+                      data.session_id.trim()
                         ? data.session_id
                         : sessionKey
                     const runId =
                       typeof data.run_id === 'string' && data.run_id.trim()
                         ? data.run_id
-                        : activeRunId ?? undefined
+                        : (activeRunId ?? undefined)
 
                     if (runId && !activeRunId) {
                       activeRunId = runId
@@ -327,7 +336,8 @@ export const Route = createFileRoute('/api/send-stream')({
 
                     if (event === 'run.started') {
                       const userMessage =
-                        data.user_message && typeof data.user_message === 'object'
+                        data.user_message &&
+                        typeof data.user_message === 'object'
                           ? (data.user_message as Record<string, unknown>)
                           : null
                       if (userMessage) {
@@ -373,7 +383,8 @@ export const Route = createFileRoute('/api/send-stream')({
                     }
 
                     if (event === 'assistant.delta') {
-                      const delta = typeof data.delta === 'string' ? data.delta : ''
+                      const delta =
+                        typeof data.delta === 'string' ? data.delta : ''
                       if (!delta) return
                       const translated = {
                         text: delta,
@@ -393,9 +404,10 @@ export const Route = createFileRoute('/api/send-stream')({
                     ) {
                       const toolName = getToolName(data)
                       const translated = {
-                        phase: event === 'tool.pending' || event === 'tool.started'
-                          ? 'start'
-                          : 'calling',
+                        phase:
+                          event === 'tool.pending' || event === 'tool.started'
+                            ? 'start'
+                            : 'calling',
                         name: toolName,
                         toolCallId: getToolCallId(data, runId, toolName),
                         args: getToolArgs(data),
@@ -513,7 +525,8 @@ export const Route = createFileRoute('/api/send-stream')({
                     if (event === 'tool.failed') {
                       const errorMessage =
                         readString(
-                          (data.error as Record<string, unknown> | undefined)?.message,
+                          (data.error as Record<string, unknown> | undefined)
+                            ?.message,
                         ) || readString(data.message)
                       const toolName = getToolName(data)
                       const translated = {
@@ -532,7 +545,8 @@ export const Route = createFileRoute('/api/send-stream')({
                     if (event === 'error') {
                       const errorMessage =
                         readString(
-                          (data.error as Record<string, unknown> | undefined)?.message,
+                          (data.error as Record<string, unknown> | undefined)
+                            ?.message,
                         ) || 'Hermes stream error'
                       sendEvent('error', {
                         message: errorMessage,
