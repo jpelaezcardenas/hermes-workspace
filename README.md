@@ -304,6 +304,89 @@ hermes webapi
 
 Verify: `curl http://localhost:8642/health` should return `{"status": "ok"}`.
 
+### "Failed to send message — Hermes Stream Error"
+
+This error means the workspace frontend successfully sent your message, but the Hermes gateway returned an error during the chat stream.
+
+**Diagnose first:** Open `http://localhost:3000/api/diagnostics` in your browser while Hermes is running. This shows exactly which endpoints are reachable.
+
+**Common causes and fixes:**
+
+| Cause | What you'll see in `/api/diagnostics` | Fix |
+|---|---|---|
+| Hermes not running | `health: unreachable` | Start: `cd hermes-agent && source .venv/bin/activate && hermes webapi` |
+| Wrong `HERMES_API_URL` | `health: unreachable` | Set correct URL in `.env` or `HERMES_API_URL` env var |
+| Old Hermes version | `sessions: error` (404) | `cd hermes-agent && git pull && pip install -e .` |
+| Auth misconfigured | `health: error` (401) | Check `HERMES_PASSWORD` in `.env` matches your Hermes config |
+
+**Manual check:**
+```bash
+# Test if Hermes is reachable
+curl http://localhost:8642/health
+# Should return: {"status": "ok"}
+
+# Test the sessions API (used for chat streaming)
+curl http://localhost:8642/api/sessions
+# Should return: {"items": [...], "total": N}
+
+# Test the streaming endpoint
+curl -X POST http://localhost:8642/api/sessions/main/chat/stream \
+  -H "Content-Type: application/json" \
+  -d '{"message": "hello"}'
+# Should stream SSE events back
+```
+
+### "Terminal doesn't accept keyboard input"
+
+If the terminal panel loads but you can't type anything, this is usually a **PTY/session initialization issue**.
+
+**Quick fix — restart the terminal panel:**
+1. Click the `×` button to close the terminal panel
+2. Reopen it from the left sidebar
+
+**If it persists — check the backend terminal session:**
+```bash
+# The terminal uses a separate PTY backend
+# Make sure no other process is holding the terminal port
+lsof -i :8642 | grep LISTEN
+```
+
+**For remote setups (Tailscale/remote服务器):** The terminal requires a local PTY. If you're accessing the workspace over a remote connection, the terminal features may be limited. Use the workspace from a local machine for full terminal support.
+
+### "I set a custom API URL but chat still fails"
+
+The workspace has **two places** where the Hermes URL is used:
+
+1. **Frontend → Workspace server** (browser → Vite dev server on port 3000)
+   - The workspace UI runs entirely in your browser
+   - It calls `/api/send-stream` on the *workspace* server, NOT directly to Hermes
+   - This always stays on `localhost:3000`
+
+2. **Workspace server → Hermes gateway** (Vite server → Hermes on port 8642)
+   - The workspace server proxies chat requests to Hermes
+   - This uses `HERMES_API_URL` — set in `.env` or as an environment variable
+
+**So even if you're running the workspace on a remote server**, the browser always connects to `http://YOUR_SERVER:3000`. Make sure:
+- Your server's port `3000` is accessible from your browser
+- The server's port `8642` is accessible from the server itself (i.e. Hermes must be running on that server)
+
+**The custom URL you set in the UI** (Connection screen → "Use custom gateway") sets the Hermes URL for future connections — it's stored locally in your browser's localStorage, not on the server.
+
+### "Agent thinks but never shows a reply"
+
+If you see the thinking bubble but it disappears without a response:
+
+1. **The stream was interrupted** — check the browser console (F12 → Console) for `send-stream failed` errors
+2. **Hermes timed out** — complex agent tasks (multiple tool calls) can take 5+ minutes. Wait for the timeout.
+3. **Session was rejected** — check that your API key/model is configured correctly in Hermes
+
+To see verbose logs:
+```bash
+# In the workspace terminal where you ran pnpm dev:
+# Look for [gateway] probe messages showing which endpoints are available
+[gateway] http://127.0.0.1:8642 available: health, models, sessions, skills, memory
+```
+
 ### "Using upstream NousResearch/hermes-agent"
 
 The upstream hermes-agent doesn't include the WebAPI server yet. The workspace will load but with limited functionality. For full features, switch to our fork (`outsourc-e/hermes-agent`).

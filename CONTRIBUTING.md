@@ -43,6 +43,64 @@ See `.env.example` for all options. Key ones:
 - `HERMES_PASSWORD` — Optional password protection for the web UI
 - `HERMES_ALLOWED_HOSTS` — Comma-separated hostnames for non-localhost access
 
+## Troubleshooting & Debugging
+
+### Chat stream errors ("Hermes Stream Error")
+
+When a user reports a chat stream failure, here's the debugging path:
+
+```
+1. GET /api/diagnostics  →  shows which Hermes endpoints are reachable
+2. Check gateway-capabilities.ts →  did probe succeed? Check console logs
+3. Check send-stream.ts  →  which error normalization branch fired?
+4. Check hermes-api.ts  →  did the fetch to Hermes succeed?
+```
+
+**Key files for stream debugging:**
+
+| File | Role |
+|---|---|
+| `src/server/gateway-capabilities.ts` | Probes Hermes, caches capabilities. Check `[gateway]` console logs |
+| `src/server/hermes-api.ts` | All HTTP calls to Hermes. `streamChat()` is the main entry point |
+| `src/routes/api/send-stream.ts` | Workspace route that proxies to Hermes, transforms SSE events |
+| `src/screens/chat/hooks/use-streaming-message.ts` | Frontend SSE consumer — handles `chunk`, `tool`, `done`, `error` events |
+
+**To add debug logging for a specific error:**
+```typescript
+// In src/routes/api/send-stream.ts
+// Add before the streamChat() call:
+console.debug('[send-stream] Starting stream for sessionKey:', sessionKey)
+```
+
+**What to look for in browser DevTools (F12):**
+```
+# Network tab — filter by /api/send-stream
+# Look at the Response for SSE events:
+event: error
+data: {"message": "Cannot reach Hermes gateway..."}
+
+# Console tab — workspace server logs appear here too
+[gateway] http://127.0.0.1:8642 available: health, models, sessions
+```
+
+### Connection refused / Hermes unreachable
+
+```
+1. Is Hermes running?           →  curl http://localhost:8642/health
+2. Is the port right?           →  check HERMES_API_URL in .env
+3. Is it a network issue?       →  curl -v http://localhost:8642/health
+4. Is the sessions API there?   →  curl http://localhost:8642/api/sessions
+```
+
+### Terminal not working
+
+Terminal requires a local PTY. Key file: `src/routes/api/terminal-stream.ts`.
+
+If terminal input doesn't work:
+1. Check `requireLocalOrAuth()` in `src/server/auth-middleware.ts`
+2. If password auth is OFF, it requires a local request — remote browsers blocked
+3. The terminal is NOT designed for fully remote deployments
+
 ## Guidelines
 
 - **One PR per feature/fix** — keep them focused
@@ -50,3 +108,4 @@ See `.env.example` for all options. Key ones:
 - **Describe what you changed** — clear PR title + description
 - **No secrets** — never commit API keys, tokens, or passwords
 - **Follow existing patterns** — match the code style you see
+- **Add troubleshooting docs** — if you fix a bug, document it in README troubleshooting

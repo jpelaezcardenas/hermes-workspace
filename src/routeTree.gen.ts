@@ -32,6 +32,7 @@ import { Route as ApiSessionsRouteImport } from './routes/api/sessions'
 import { Route as ApiSessionStatusRouteImport } from './routes/api/session-status'
 import { Route as ApiSendStreamRouteImport } from './routes/api/send-stream'
 import { Route as ApiSendRouteImport } from './routes/api/send'
+import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
@@ -39,6 +40,7 @@ import { Route as ApiHermesJobsRouteImport } from './routes/api/hermes-jobs'
 import { Route as ApiHermesConfigRouteImport } from './routes/api/hermes-config'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
+import { Route as ApiDiagnosticsRouteImport } from './routes/api/diagnostics'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
@@ -169,6 +171,11 @@ const ApiSendRoute = ApiSendRouteImport.update({
   path: '/api/send',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPingRoute = ApiPingRouteImport.update({
+  id: '/api/ping',
+  path: '/api/ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPathsRoute = ApiPathsRouteImport.update({
   id: '/api/paths',
   path: '/api/paths',
@@ -202,6 +209,11 @@ const ApiGatewayStatusRoute = ApiGatewayStatusRouteImport.update({
 const ApiFilesRoute = ApiFilesRouteImport.update({
   id: '/api/files',
   path: '/api/files',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDiagnosticsRoute = ApiDiagnosticsRouteImport.update({
+  id: '/api/diagnostics',
+  path: '/api/diagnostics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiContextUsageRoute = ApiContextUsageRouteImport.update({
@@ -290,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
+  '/api/diagnostics': typeof ApiDiagnosticsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
@@ -297,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/api/history': typeof ApiHistoryRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
+  '/api/ping': typeof ApiPingRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
   '/api/session-status': typeof ApiSessionStatusRoute
@@ -335,6 +349,7 @@ export interface FileRoutesByTo {
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
+  '/api/diagnostics': typeof ApiDiagnosticsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
@@ -342,6 +357,7 @@ export interface FileRoutesByTo {
   '/api/history': typeof ApiHistoryRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
+  '/api/ping': typeof ApiPingRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
   '/api/session-status': typeof ApiSessionStatusRoute
@@ -382,6 +398,7 @@ export interface FileRoutesById {
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
+  '/api/diagnostics': typeof ApiDiagnosticsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
@@ -389,6 +406,7 @@ export interface FileRoutesById {
   '/api/history': typeof ApiHistoryRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
+  '/api/ping': typeof ApiPingRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
   '/api/session-status': typeof ApiSessionStatusRoute
@@ -430,6 +448,7 @@ export interface FileRouteTypes {
     | '/api/chat-events'
     | '/api/connection-status'
     | '/api/context-usage'
+    | '/api/diagnostics'
     | '/api/files'
     | '/api/gateway-status'
     | '/api/hermes-config'
@@ -437,6 +456,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/models'
     | '/api/paths'
+    | '/api/ping'
     | '/api/send'
     | '/api/send-stream'
     | '/api/session-status'
@@ -475,6 +495,7 @@ export interface FileRouteTypes {
     | '/api/chat-events'
     | '/api/connection-status'
     | '/api/context-usage'
+    | '/api/diagnostics'
     | '/api/files'
     | '/api/gateway-status'
     | '/api/hermes-config'
@@ -482,6 +503,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/models'
     | '/api/paths'
+    | '/api/ping'
     | '/api/send'
     | '/api/send-stream'
     | '/api/session-status'
@@ -521,6 +543,7 @@ export interface FileRouteTypes {
     | '/api/chat-events'
     | '/api/connection-status'
     | '/api/context-usage'
+    | '/api/diagnostics'
     | '/api/files'
     | '/api/gateway-status'
     | '/api/hermes-config'
@@ -528,6 +551,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/models'
     | '/api/paths'
+    | '/api/ping'
     | '/api/send'
     | '/api/send-stream'
     | '/api/session-status'
@@ -568,6 +592,7 @@ export interface RootRouteChildren {
   ApiChatEventsRoute: typeof ApiChatEventsRoute
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
+  ApiDiagnosticsRoute: typeof ApiDiagnosticsRoute
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
   ApiHermesConfigRoute: typeof ApiHermesConfigRoute
@@ -575,6 +600,7 @@ export interface RootRouteChildren {
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
+  ApiPingRoute: typeof ApiPingRoute
   ApiSendRoute: typeof ApiSendRoute
   ApiSendStreamRoute: typeof ApiSendStreamRoute
   ApiSessionStatusRoute: typeof ApiSessionStatusRoute
@@ -759,6 +785,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSendRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ping': {
+      id: '/api/ping'
+      path: '/api/ping'
+      fullPath: '/api/ping'
+      preLoaderRoute: typeof ApiPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/paths': {
       id: '/api/paths'
       path: '/api/paths'
@@ -806,6 +839,13 @@ declare module '@tanstack/react-router' {
       path: '/api/files'
       fullPath: '/api/files'
       preLoaderRoute: typeof ApiFilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/diagnostics': {
+      id: '/api/diagnostics'
+      path: '/api/diagnostics'
+      fullPath: '/api/diagnostics'
+      preLoaderRoute: typeof ApiDiagnosticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/context-usage': {
@@ -963,6 +1003,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatEventsRoute: ApiChatEventsRoute,
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
+  ApiDiagnosticsRoute: ApiDiagnosticsRoute,
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
   ApiHermesConfigRoute: ApiHermesConfigRoute,
@@ -970,6 +1011,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHistoryRoute: ApiHistoryRoute,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
+  ApiPingRoute: ApiPingRoute,
   ApiSendRoute: ApiSendRoute,
   ApiSendStreamRoute: ApiSendStreamRoute,
   ApiSessionStatusRoute: ApiSessionStatusRoute,

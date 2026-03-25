@@ -108,10 +108,69 @@ function getChatMessage(
   return message
 }
 
+/**
+ * Convert raw Hermes errors into user-facing messages with actionable context.
+ * Each branch returns a message that helps the user understand WHAT went wrong
+ * and, where possible, HOW to fix it.
+ */
 function normalizeHermesErrorMessage(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error)
   const message = raw.trim()
-  if (!message) return 'Hermes request failed'
+  if (!message) return 'Hermes request failed — no details available'
+
+  // Connection refused / unreachable
+  if (
+    /fetch failed|network|ECONNREFUSED|ENOTFOUND|getaddrinfo|net::err/i.test(
+      message,
+    )
+  ) {
+    return (
+      'Cannot reach Hermes gateway. ' +
+      'Is Hermes running? ' +
+      'Check that your HERMES_API_URL is correct and the gateway is reachable.'
+    )
+  }
+
+  // HTTP 401 — auth failure
+  if (/401|Unauthorized|unauthorized/i.test(message)) {
+    return (
+      'Hermes authentication failed. ' +
+      'Ensure your API key or password is set correctly in the Hermes config.'
+    )
+  }
+
+  // HTTP 403 — forbidden
+  if (/403|Forbidden|forbidden/i.test(message)) {
+    return (
+      'Access forbidden. ' +
+      'Your API key may lack permissions or the request is blocked. ' +
+      'Check your Hermes configuration.'
+    )
+  }
+
+  // HTTP 404 — endpoint not found (old Hermes version?)
+  if (/404|Not Found|not found/i.test(message)) {
+    return (
+      'Hermes endpoint not found. ' +
+      'Your Hermes version may be outdated — ' +
+      'try: cd hermes-agent && git pull && pip install -e .'
+    )
+  }
+
+  // HTTP 503 — sessions API unavailable
+  if (/503|unavailable|Sessions API/i.test(message)) {
+    return (
+      'Hermes sessions API is unavailable. ' +
+      'Update Hermes: cd hermes-agent && git pull && pip install -e . && hermes gateway'
+    )
+  }
+
+  // Stream errors
+  if (/no response body|failed to parse|stream/i.test(message)) {
+    return `Hermes stream error: ${message}`
+  }
+
+  // Generic fallback — replace generic "server" with "Hermes" and return
   return message.replace(/\bserver\b/gi, 'Hermes')
 }
 
