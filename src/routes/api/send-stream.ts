@@ -627,7 +627,7 @@ export const Route = createFileRoute('/api/send-stream')({
                       const errorMessage =
                         readString(
                           (data.error as Record<string, unknown> | undefined)?.message,
-                        ) || 'Hermes stream error'
+                        ) || readString(data.message) || 'Hermes stream error'
                       sendEvent('error', {
                         message: errorMessage,
                         sessionKey: sessionKeyFromEvent,
