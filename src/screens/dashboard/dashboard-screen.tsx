@@ -11,9 +11,10 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts'
-import { listSessions, getConfig } from '@/server/hermes-api'
+import type { HermesSession } from '@/server/hermes-api'
 import { chatQueryKeys } from '@/screens/chat/chat-queries'
 import { getCapabilities } from '@/server/gateway-capabilities'
+import { useIsFeatureAvailable } from '@/hooks/use-gateway-caps'
 import type { HermesSession } from '@/server/hermes-api'
 import { getUnavailableReason, isFeatureAvailable } from '@/lib/feature-gates'
 import { cn } from '@/lib/utils'
@@ -211,20 +212,26 @@ function ActivityChart({ sessions }: { sessions: HermesSession[] }) {
 // ── Model Card ───────────────────────────────────────────────────
 
 function ModelCard() {
-  const configAvailable = isFeatureAvailable('config')
+  const configAvailable = useIsFeatureAvailable('config') ?? false
+  const sessionsAvailable = useIsFeatureAvailable('sessions') ?? false
+  // Use workspace proxy — getConfig() uses hermesGet/HERMES_API (server-side only)
   const configQuery = useQuery({
     queryKey: ['hermes-config'],
-    queryFn: getConfig,
+    queryFn: async () => {
+      const res = await fetch('/api/hermes-config')
+      if (!res.ok) return null
+      return res.json() as Promise<Record<string, unknown>>
+    },
     staleTime: 30_000,
     enabled: configAvailable,
   })
-  const caps = getCapabilities()
   const config = configQuery.data as Record<string, unknown> | undefined
-  const modelBlock = config?.model as Record<string, unknown> | undefined
-  const modelName = (modelBlock?.default ?? config?.model ?? '—') as string
-  const provider = (modelBlock?.provider ?? config?.provider ?? '—') as string
-  const baseUrl = (modelBlock?.base_url ?? config?.base_url ?? '') as string
-  const connected = caps?.sessions === true
+  const modelName = (config?.activeModel ?? '—') as string
+  const provider = (config?.activeProvider ?? '—') as string
+  const configBlock = config?.config as Record<string, unknown> | undefined
+  const modelBlock = configBlock?.model as Record<string, unknown> | undefined
+  const baseUrl = (modelBlock?.base_url ?? configBlock?.base_url ?? '') as string
+  const connected = sessionsAvailable
   const fallbackBlock = config?.fallback_model as Record<string, unknown> | undefined
   const fallbackModel = fallbackBlock?.model as string | undefined
 
@@ -277,7 +284,7 @@ function ModelCard() {
 // ── Skills Widget ────────────────────────────────────────────────
 
 function SkillsWidget() {
-  const skillsAvailable = isFeatureAvailable('skills')
+  const skillsAvailable = useIsFeatureAvailable('skills') ?? false
   const skillsQuery = useQuery({
     queryKey: ['hermes-skills'],
     queryFn: async () => {
@@ -384,8 +391,8 @@ function SessionRow({ session, maxTokens, onClick }: {
 
 export function DashboardScreen() {
   const navigate = useNavigate()
-  const sessionsAvailable = isFeatureAvailable('sessions')
-  const skillsAvailable = isFeatureAvailable('skills')
+  const sessionsAvailable = useIsFeatureAvailable('sessions') ?? false
+  const skillsAvailable = useIsFeatureAvailable('skills') ?? false
   const sessionsQuery = useQuery({
     // Use a dedicated query key — NOT chatQueryKeys.sessions — to avoid
     // cache collisions with the chat sidebar which fetches fewer sessions
@@ -412,7 +419,7 @@ export function DashboardScreen() {
   })
 
   const sessions = (sessionsQuery.data ?? []) as HermesSession[]
-  const caps = getCapabilities()
+  const caps = { ...getCapabilities(), sessions: sessionsAvailable, skills: skillsAvailable }
 
   const stats = useMemo(() => {
     let totalMessages = 0, totalToolCalls = 0, totalTokens = 0
