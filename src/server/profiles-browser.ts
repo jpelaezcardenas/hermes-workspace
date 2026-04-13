@@ -172,13 +172,14 @@ export function listProfiles(): Array<ProfileSummary> {
     }
   }
 
-  if (activeProfile === 'default') {
+  // Always include the default profile so the user can switch back
+  {
     const root = getHermesRoot()
     const config = readYamlConfig(path.join(root, 'config.yaml'))
     results.unshift({
       name: 'default',
       path: root,
-      active: true,
+      active: activeProfile === 'default',
       exists: true,
       model: typeof config.model === 'string' ? config.model : undefined,
       provider:
