@@ -16,7 +16,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-RUN addgroup -S hermes && adduser -S hermes -G hermes
+RUN apk add --no-cache python3 bash && addgroup -S hermes && adduser -S hermes -G hermes && mkdir -p /home/hermes/.hermes && chown hermes:hermes /home/hermes/.hermes
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
