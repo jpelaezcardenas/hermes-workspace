@@ -155,7 +155,9 @@ export function HermesOnboarding() {
   const needsApiKey =
     provider?.authType === 'api_key' || provider?.authType === 'custom'
   const needsBaseUrl =
-    provider?.id === 'ollama' || provider?.id === 'atomic-chat' || provider?.authType === 'custom'
+    provider?.id === 'ollama' ||
+    provider?.id === 'atomic-chat' ||
+    provider?.authType === 'custom'
   const isOAuth = provider?.authType === 'oauth'
   const capabilities = backendInfo?.capabilities
   const canEditConfig = Boolean(capabilities?.config)
@@ -265,7 +267,9 @@ export function HermesOnboarding() {
         body.env = { [prov.envKey]: apiKey }
       }
       if (baseUrl) {
-        body.config = { model: { provider: selectedProvider, baseUrl } }
+        body.config = {
+          model: { provider: selectedProvider, base_url: baseUrl },
+        }
       }
 
       const res = await fetch('/api/hermes-config', {
@@ -342,7 +346,7 @@ export function HermesOnboarding() {
       const decoder = new TextDecoder()
       let text = ''
 
-      while (true) {
+      for (;;) {
         const { done, value } = await reader.read()
         if (done) break
         const chunk = decoder.decode(value)
@@ -816,7 +820,7 @@ export function HermesOnboarding() {
                           selectedProvider === 'ollama'
                             ? 'http://localhost:11434'
                             : selectedProvider === 'atomic-chat'
-                              ? 'http://localhost:1337'
+                              ? 'http://127.0.0.1:1337/v1'
                               : 'https://api.example.com/v1'
                         }
                         className="w-full rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-accent-500"
