@@ -12,6 +12,7 @@ const KNOWN_PROVIDER_PREFIXES = [
   'openai-codex',
   'nous',
   'ollama',
+  'atomic-chat',
   'zai',
   'kimi-coding',
   'minimax',
@@ -87,6 +88,13 @@ const PROVIDERS = [
     authType: 'none',
   },
   {
+    id: 'atomic-chat',
+    name: 'Atomic Chat',
+    logo: '/providers/atomic-chat.png',
+    desc: 'Local LLMs via Atomic Chat desktop app',
+    authType: 'none',
+  },
+  {
     id: 'custom',
     name: 'Custom (OpenAI-compat)',
     logo: '/providers/openai.png',
@@ -147,7 +155,7 @@ export function HermesOnboarding() {
   const needsApiKey =
     provider?.authType === 'api_key' || provider?.authType === 'custom'
   const needsBaseUrl =
-    provider?.id === 'ollama' || provider?.authType === 'custom'
+    provider?.id === 'ollama' || provider?.id === 'atomic-chat' || provider?.authType === 'custom'
   const isOAuth = provider?.authType === 'oauth'
   const capabilities = backendInfo?.capabilities
   const canEditConfig = Boolean(capabilities?.config)
@@ -796,7 +804,9 @@ export function HermesOnboarding() {
                       >
                         {selectedProvider === 'ollama'
                           ? 'Ollama URL'
-                          : 'Base URL'}
+                          : selectedProvider === 'atomic-chat'
+                            ? 'Atomic Chat URL'
+                            : 'Base URL'}
                       </label>
                       <input
                         type="text"
@@ -805,7 +815,9 @@ export function HermesOnboarding() {
                         placeholder={
                           selectedProvider === 'ollama'
                             ? 'http://localhost:11434'
-                            : 'https://api.example.com/v1'
+                            : selectedProvider === 'atomic-chat'
+                              ? 'http://localhost:1337'
+                              : 'https://api.example.com/v1'
                         }
                         className="w-full rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-accent-500"
                         style={inputStyle}
