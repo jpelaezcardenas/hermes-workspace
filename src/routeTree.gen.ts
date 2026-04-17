@@ -16,6 +16,7 @@ import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AiHotboardRouteImport } from './routes/ai-hotboard'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -90,6 +91,11 @@ const FilesRoute = FilesRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiHotboardRoute = AiHotboardRouteImport.update({
+  id: '/ai-hotboard',
+  path: '/ai-hotboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -297,6 +303,7 @@ const ApiSessionsSessionKeyStatusRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/ai-hotboard': typeof AiHotboardRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
@@ -346,6 +353,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/ai-hotboard': typeof AiHotboardRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
@@ -395,6 +403,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/ai-hotboard': typeof AiHotboardRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
@@ -446,6 +455,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/ai-hotboard'
     | '/dashboard'
     | '/files'
     | '/jobs'
@@ -495,6 +505,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/ai-hotboard'
     | '/dashboard'
     | '/files'
     | '/jobs'
@@ -543,6 +554,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/ai-hotboard'
     | '/dashboard'
     | '/files'
     | '/jobs'
@@ -593,6 +605,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AiHotboardRoute: typeof AiHotboardRoute
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
   JobsRoute: typeof JobsRoute
@@ -684,6 +697,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-hotboard': {
+      id: '/ai-hotboard'
+      path: '/ai-hotboard'
+      fullPath: '/ai-hotboard'
+      preLoaderRoute: typeof AiHotboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -1012,6 +1032,7 @@ const ApiSessionsRouteWithChildren = ApiSessionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AiHotboardRoute: AiHotboardRoute,
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
   JobsRoute: JobsRoute,

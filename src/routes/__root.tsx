@@ -1,4 +1,4 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, useRouterState } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import appCss from '../styles.css?url'
@@ -194,6 +194,11 @@ export const Route = createRootRoute({
 const queryClient = new QueryClient()
 
 function RootLayout() {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
+  const suppressFirstOpenOverlays = pathname === '/dashboard'
+
   // Unregister any existing service workers — they cause stale asset issues
   // after Docker image updates and behind reverse proxies (Pangolin, Cloudflare, etc.)
   useEffect(() => {
@@ -218,14 +223,14 @@ function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HermesOnboarding />
+      {suppressFirstOpenOverlays ? null : <HermesOnboarding />}
       <GlobalShortcutListener />
       <TerminalShortcutListener />
-      <MobilePromptTrigger />
+      {suppressFirstOpenOverlays ? null : <MobilePromptTrigger />}
       <Toaster />
       <WorkspaceShell />
       <SearchModal />
-      <OnboardingTour />
+      {suppressFirstOpenOverlays ? null : <OnboardingTour />}
       <KeyboardShortcutsModal />
     </QueryClientProvider>
   )
