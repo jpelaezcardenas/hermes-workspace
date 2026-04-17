@@ -28,9 +28,15 @@ type MockPayload = {
   events: MockEvent[]
 }
 
+type TimelineEvent = MockEvent & {
+  signalScore: number
+  actionLine: string
+  recommendReasonLine: string
+}
+
 type TimelineGroup = {
   timestamp: string
-  events: Array<MockEvent & { signalScore: number; actionLine: string }>
+  events: TimelineEvent[]
 }
 
 const payload = hotboardData as MockPayload
@@ -105,6 +111,14 @@ function normalizeActionLine(action: string) {
   return `→ 建议动作：更新战略：${action}`
 }
 
+function normalizeRecommendReason(reason: string) {
+  const trimmedReason = reason.trim() || '待补充'
+  if (trimmedReason.startsWith('推荐理由：')) {
+    return trimmedReason
+  }
+  return `推荐理由：${trimmedReason}`
+}
+
 function formatGeneratedAt(value: string) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
@@ -115,6 +129,16 @@ function formatGeneratedAt(value: string) {
     minute: '2-digit',
     hour12: false,
   }).format(date)
+}
+
+function normalizeTimelineTimestamp(timestamp: string) {
+  const trimmed = timestamp.trim()
+  const match = trimmed.match(/^(\d{1,2}):(\d{1,2})$/)
+
+  if (!match) return trimmed
+
+  const [, hour, minute] = match
+  return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
 }
 
 function getTagTone(tag: string) {
@@ -132,23 +156,23 @@ function getTagTone(tag: string) {
 
 function SidebarBlock({ title, items }: { title: string; items: readonly string[] }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3">
+    <section className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3" aria-label={title}>
       <div className="mb-2 text-[11px] font-semibold tracking-[0.24em] text-slate-500">
         {title}
       </div>
-      <div className="space-y-2">
+      <ul className="space-y-2">
         {items.map(function renderItem(item) {
           return (
-            <div
+            <li
               key={item}
-              className="rounded-xl border border-transparent px-2 py-2 text-sm text-slate-300 transition hover:border-emerald-400/30 hover:bg-emerald-400/8 hover:text-white"
+              className="list-none rounded-xl border border-transparent px-2 py-2 text-sm text-slate-300 transition hover:border-emerald-400/30 hover:bg-emerald-400/8 hover:text-white"
             >
               {item}
-            </div>
+            </li>
           )
         })}
-      </div>
-    </div>
+      </ul>
+    </section>
   )
 }
 
@@ -162,27 +186,30 @@ function SidebarNavGroup({
   highlightedItem?: string
 }) {
   return (
-    <div className="space-y-2">
+    <section className="space-y-2" aria-label={heading ?? '主导航'}>
       {heading ? (
         <div className="px-1 text-[11px] font-semibold tracking-[0.24em] text-slate-500">{heading}</div>
       ) : null}
-      {items.map(function renderNavItem(item) {
-        const isHighlighted = item === highlightedItem
-        return (
-          <div
-            key={item}
-            className={cn(
-              'rounded-2xl border px-4 py-3 text-sm font-medium transition',
-              isHighlighted
-                ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
-                : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
-            )}
-          >
-            {item}
-          </div>
-        )
-      })}
-    </div>
+      <ul className="space-y-2">
+        {items.map(function renderNavItem(item) {
+          const isHighlighted = item === highlightedItem
+          return (
+            <li
+              key={item}
+              className={cn(
+                'list-none rounded-2xl border px-4 py-3 text-sm font-medium transition',
+                isHighlighted
+                  ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
+                  : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
+              )}
+              data-nav-item={item}
+            >
+              {item}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }
 
@@ -190,15 +217,17 @@ export function AiHotboardScreen() {
   const timelineGroups = useMemo<TimelineGroup[]>(function buildTimelineGroups() {
     const enriched = payload.events
       .slice()
-      .sort(function sortByTimestampDesc(a, b) {
-        return b.timestamp.localeCompare(a.timestamp)
-      })
       .map(function enrichEvent(event) {
         return {
           ...event,
+          timestamp: normalizeTimelineTimestamp(event.timestamp),
           signalScore: computeSignalScore(event),
           actionLine: normalizeActionLine(event.suggested_action),
+          recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
         }
+      })
+      .sort(function sortByTimestampDesc(a, b) {
+        return b.timestamp.localeCompare(a.timestamp)
       })
 
     const groups = new Map<string, TimelineGroup>()
@@ -219,10 +248,23 @@ export function AiHotboardScreen() {
     return Array.from(groups.values())
   }, [])
 
+  const highestSignalScore = useMemo(function getHighestSignalScore() {
+    return timelineGroups.reduce(function findHighestScore(highestScore, group) {
+      const groupHighestScore = group.events.reduce(function findGroupHighestScore(currentHighestScore, event) {
+        return Math.max(currentHighestScore, event.signalScore)
+      }, 0)
+
+      return Math.max(highestScore, groupHighestScore)
+    }, 0)
+  }, [timelineGroups])
+
   return (
     <div className="fixed inset-0 z-[120] overflow-y-auto bg-[#050816] text-slate-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1660px] gap-6 px-4 py-5 sm:px-5 lg:px-6">
-        <aside className="hidden w-[270px] shrink-0 rounded-[28px] border border-white/8 bg-[#0b1220] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.45)] lg:flex lg:flex-col">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1660px] gap-4 px-3 py-5 sm:gap-5 sm:px-4 lg:gap-6 lg:px-6">
+        <aside
+          className="w-[240px] shrink-0 rounded-[28px] border border-white/8 bg-[#0b1220] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:w-[260px] sm:p-5 lg:w-[270px]"
+          aria-label="AI HOT 左侧导航"
+        >
           <div className="mb-6 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
             <div>
               <div className="text-[12px] tracking-[0.36em] text-slate-500">SIGNAL BOARD</div>
@@ -239,7 +281,7 @@ export function AiHotboardScreen() {
             </div>
           </div>
 
-          <nav className="space-y-4">
+          <nav className="space-y-4" aria-label="AI HOT 导航列表">
             <SidebarNavGroup items={PRIMARY_NAV_ITEMS} highlightedItem="精选" />
             <SidebarBlock title="信源" items={SOURCE_ITEMS} />
             <SidebarBlock title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
@@ -261,7 +303,7 @@ export function AiHotboardScreen() {
             </div>
             <div className="flex flex-col items-start gap-2 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-300 sm:items-end">
               <div>更新时间：{formatGeneratedAt(payload.generated_at)}</div>
-              <div>数据源：ai_hotboard_mock_events.json</div>
+              <div>数据来源：ai-hotboard-mock-data.json</div>
             </div>
           </header>
 
@@ -310,13 +352,22 @@ export function AiHotboardScreen() {
                                 <div className="mt-1 text-3xl font-bold text-white">{event.signalScore}</div>
                               </div>
                               <div className="flex gap-2">
-                                <button className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-emerald-400/40 hover:text-white">
+                                <button
+                                  type="button"
+                                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-emerald-400/40 hover:text-white"
+                                >
                                   👍 {event.engagement.likes}
                                 </button>
-                                <button className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-rose-400/40 hover:text-white">
+                                <button
+                                  type="button"
+                                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-rose-400/40 hover:text-white"
+                                >
                                   👎 {event.engagement.dislikes}
                                 </button>
-                                <button className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-amber-400/40 hover:text-white">
+                                <button
+                                  type="button"
+                                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-amber-400/40 hover:text-white"
+                                >
                                   ☆ {event.engagement.bookmarks}
                                 </button>
                               </div>
@@ -348,11 +399,15 @@ export function AiHotboardScreen() {
                             </div>
                           ) : null}
 
-                          <div className="mt-4 rounded-[22px] border border-emerald-400/70 bg-emerald-500/22 px-4 py-4 text-sm leading-7 text-emerald-50 shadow-[0_0_0_1px_rgba(16,185,129,0.2)]">
-                            <div className="font-semibold text-emerald-50">
-                              推荐理由：{event.recommend_reason}
+                          <div
+                            className="mt-4 rounded-[22px] border-2 border-emerald-300 bg-emerald-500 px-4 py-4 text-sm leading-7 text-emerald-950 shadow-[0_16px_40px_rgba(16,185,129,0.28)]"
+                            data-recommend-banner="true"
+                            aria-label="推荐理由绿色条"
+                          >
+                            <div className="font-semibold text-emerald-950">
+                              {event.recommendReasonLine}
                             </div>
-                            <div className="mt-2 border-t border-emerald-200/20 pt-2 text-emerald-100">
+                            <div className="mt-2 border-t border-emerald-900/15 pt-2 text-emerald-950/90">
                               {event.actionLine}
                             </div>
                           </div>
@@ -376,9 +431,7 @@ export function AiHotboardScreen() {
               </div>
               <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
                 <div className="text-sm text-slate-400">最高信号分</div>
-                <div className="mt-1 text-3xl font-semibold text-white">
-                  {Math.max(...timelineGroups.flatMap((group) => group.events.map((event) => event.signalScore)))}
-                </div>
+                <div className="mt-1 text-3xl font-semibold text-white">{highestSignalScore}</div>
               </div>
               <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm leading-7 text-slate-300">
                 白名单增量已覆盖：信号分算法、建议动作第二行、信源/信源提报静态子项、M2 五条业务主线。
