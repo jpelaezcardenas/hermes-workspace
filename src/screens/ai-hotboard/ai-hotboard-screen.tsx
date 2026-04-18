@@ -383,38 +383,38 @@ export function AiHotboardScreen() {
                             </div>
                           </div>
 
-                          <div className="mt-1.5">
-                              <div className="flex flex-wrap items-center gap-1.5 text-[12px] leading-5 text-slate-500">
-                                {event.tags.map(function renderTag(tag) {
-                                  return (
-                                    <span
-                                      key={`${event.id}-${tag}`}
-                                      className={cn(
-                                        'rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-[0.01em]',
-                                        getTagTone(tag),
-                                      )}
-                                    >
-                                      {tag}
-                                    </span>
-                                  )
-                                })}
-                                <span className="text-[11px] text-slate-500">· {event.signal_category}</span>
-                                {event.aggregatedSourcesLabel ? (
-                                  <span className="text-[11px] text-slate-500/90">· {event.aggregatedSourcesLabel}</span>
-                                ) : null}
-                                <span
-                                  className="inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-full border border-emerald-400/16 bg-emerald-400/[0.04] px-2 py-0.5 text-[11px] leading-5 text-emerald-50/82"
-                                  data-recommend-banner="true"
-                                  aria-label="推荐理由绿色条"
-                                  title={`${event.recommendReasonLine} · ${event.actionLine}`}
-                                >
-                                  <span className="min-w-0 truncate font-medium text-emerald-50/86">
-                                    {event.recommendReasonLine}
+                          <div className="mt-1">
+                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px] leading-5 text-slate-500">
+                              {event.tags.map(function renderTag(tag) {
+                                return (
+                                  <span
+                                    key={`${event.id}-${tag}`}
+                                    className={cn(
+                                      'rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-[0.01em]',
+                                      getTagTone(tag),
+                                    )}
+                                  >
+                                    {tag}
                                   </span>
-                                  <span className="shrink-0 text-emerald-100/36">·</span>
-                                  <span className="min-w-0 truncate text-emerald-100/68">{event.actionLine}</span>
+                                )
+                              })}
+                              <span className="text-[11px] text-slate-500">· {event.signal_category}</span>
+                              {event.aggregatedSourcesLabel ? (
+                                <span className="rounded-full border border-white/8 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
+                                  {event.aggregatedSourcesLabel}
                                 </span>
-                              </div>
+                              ) : null}
+                              <span
+                                className="inline-flex min-w-0 max-w-full items-center gap-1 overflow-hidden rounded-full border border-emerald-400/12 bg-emerald-400/[0.03] px-2 py-0.5 text-[11px] leading-5 text-emerald-50/78"
+                                data-recommend-banner="true"
+                                aria-label="推荐理由绿色条"
+                                title={`${event.recommendReasonLine} · ${event.actionLine}`}
+                              >
+                                <span className="min-w-0 truncate">{event.recommendReasonLine}</span>
+                                <span className="shrink-0 text-emerald-100/28">·</span>
+                                <span className="min-w-0 truncate text-emerald-100/60">{event.actionLine}</span>
+                              </span>
+                            </div>
                           </div>
                         </article>
                       )
