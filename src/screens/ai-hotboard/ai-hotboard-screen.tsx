@@ -376,41 +376,44 @@ export function AiHotboardScreen() {
                             </div>
                           </div>
 
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {event.tags.map(function renderTag(tag) {
-                              return (
-                                <span
-                                  key={`${event.id}-${tag}`}
-                                  className={cn(
-                                    'rounded-full border px-3 py-1 text-xs font-medium tracking-[0.02em]',
-                                    getTagTone(tag),
-                                  )}
-                                >
-                                  {tag}
-                                </span>
-                              )
-                            })}
-                            <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-300">
-                              {event.signal_category}
-                            </span>
-                          </div>
-
-                          {event.aggregated_sources_count > 0 ? (
-                            <div className="mt-3 rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-slate-300">
-                              另有 {event.aggregated_sources_count} 个源也报道了此事件
+                          <div className="mt-3 space-y-2.5">
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              {event.tags.map(function renderTag(tag) {
+                                return (
+                                  <span
+                                    key={`${event.id}-${tag}`}
+                                    className={cn(
+                                      'rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-[0.01em]',
+                                      getTagTone(tag),
+                                    )}
+                                  >
+                                    {tag}
+                                  </span>
+                                )
+                              })}
+                              <span className="rounded-full border border-white/8 bg-white/[0.025] px-2.5 py-0.5 text-[11px] text-slate-400">
+                                {event.signal_category}
+                              </span>
                             </div>
-                          ) : null}
 
-                          <div
-                            className="mt-3 rounded-[20px] border border-emerald-400/18 bg-emerald-400/6 px-4 py-3 text-sm leading-6 text-emerald-50/90"
-                            data-recommend-banner="true"
-                            aria-label="推荐理由绿色条"
-                          >
-                            <div className="font-medium text-emerald-50/88">
-                              {event.recommendReasonLine}
-                            </div>
-                            <div className="mt-2 border-t border-emerald-200/8 pt-2 text-emerald-100/72">
-                              {event.actionLine}
+                            {event.aggregated_sources_count > 0 ? (
+                              <div className="flex items-center gap-2 pl-0.5 text-[12px] leading-5 text-slate-500">
+                                <span className="h-px w-4 bg-white/10" aria-hidden="true" />
+                                <span>另有 {event.aggregated_sources_count} 个源也报道了此事件</span>
+                              </div>
+                            ) : null}
+
+                            <div
+                              className="rounded-2xl border border-emerald-400/10 bg-emerald-400/[0.035] px-3.5 py-2.5 text-[13px] leading-5 text-emerald-50/78 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]"
+                              data-recommend-banner="true"
+                              aria-label="推荐理由绿色条"
+                            >
+                              <div className="font-medium text-emerald-50/78">
+                                {event.recommendReasonLine}
+                              </div>
+                              <div className="mt-1.5 border-t border-emerald-200/5 pt-1.5 text-emerald-100/62">
+                                {event.actionLine}
+                              </div>
                             </div>
                           </div>
                         </article>
