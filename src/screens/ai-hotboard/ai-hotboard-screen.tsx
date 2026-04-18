@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
-import hotboardData from './ai-hotboard-mock-data.json'
+import hotboardData from './ai_hotboard_mock_events.json'
 
 type MockEvent = {
   id: string
@@ -42,13 +42,14 @@ type TimelineGroup = {
 }
 
 const payload = hotboardData as MockPayload
+const DATA_SOURCE_LABEL = 'ai_hotboard_mock_events.json'
 
 const STRATEGY_LINES = [
-  'A线-抓数稳定化',
-  'B线-财务报表自动化',
-  'C线-AI短视频→投流ROI',
-  'D线-自动化有效率',
-  'E线-全员Agent协作',
+  'M2 A线 | 抓数稳定化',
+  'M2 B线 | 财务报表自动化',
+  'M2 C线 | AI短视频→投流ROI',
+  'M2 D线 | 自动化有效率',
+  'M2 E线 | 全员Agent协作',
 ] as const
 
 const SOURCE_ITEMS = [
@@ -363,7 +364,7 @@ export function AiHotboardScreen() {
             </div>
             <div className="flex flex-col items-start gap-2 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-300 sm:items-end">
               <div>更新时间：{formatGeneratedAt(payload.generated_at)}</div>
-              <div>数据来源：ai-hotboard-mock-data.json</div>
+              <div>数据来源：{DATA_SOURCE_LABEL}</div>
             </div>
           </header>
 
