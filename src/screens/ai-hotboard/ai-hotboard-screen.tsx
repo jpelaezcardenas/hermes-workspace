@@ -33,6 +33,7 @@ type TimelineEvent = MockEvent & {
   actionLine: string
   recommendReasonLine: string
   condensedSourceLabel: string
+  aggregatedSourcesLabel: string | null
 }
 
 type TimelineGroup = {
@@ -122,6 +123,11 @@ function normalizeRecommendReason(reason: string) {
 
 function buildCondensedSourceLabel(event: MockEvent) {
   return `${event.source_type} · ${event.source_name} · ${event.source_channel}`
+}
+
+function buildAggregatedSourcesLabel(event: MockEvent) {
+  if (event.aggregated_sources_count <= 0) return null
+  return `另有 ${event.aggregated_sources_count} 个源也报道了此事件`
 }
 
 function formatGeneratedAt(value: string) {
@@ -230,6 +236,7 @@ export function AiHotboardScreen() {
           actionLine: normalizeActionLine(event.suggested_action),
           recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
           condensedSourceLabel: buildCondensedSourceLabel(event),
+          aggregatedSourcesLabel: buildAggregatedSourcesLabel(event),
         }
       })
       .sort(function sortByTimestampDesc(a, b) {
@@ -376,8 +383,8 @@ export function AiHotboardScreen() {
                             </div>
                           </div>
 
-                          <div className="mt-3 space-y-2.5">
-                            <div className="flex flex-wrap items-center gap-1.5">
+                          <div className="mt-2 space-y-1.5">
+                            <div className="flex flex-wrap items-center gap-1.5 text-[12px] leading-5 text-slate-500">
                               {event.tags.map(function renderTag(tag) {
                                 return (
                                   <span
@@ -391,28 +398,26 @@ export function AiHotboardScreen() {
                                   </span>
                                 )
                               })}
-                              <span className="rounded-full border border-white/8 bg-white/[0.025] px-2.5 py-0.5 text-[11px] text-slate-400">
+                              <span className="rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500">
                                 {event.signal_category}
                               </span>
+                              {event.aggregatedSourcesLabel ? (
+                                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500/90">
+                                  <span className="h-1 w-1 rounded-full bg-slate-500/70" aria-hidden="true" />
+                                  {event.aggregatedSourcesLabel}
+                                </span>
+                              ) : null}
                             </div>
 
-                            {event.aggregated_sources_count > 0 ? (
-                              <div className="flex items-center gap-2 pl-0.5 text-[12px] leading-5 text-slate-500">
-                                <span className="h-px w-4 bg-white/10" aria-hidden="true" />
-                                <span>另有 {event.aggregated_sources_count} 个源也报道了此事件</span>
-                              </div>
-                            ) : null}
-
                             <div
-                              className="rounded-2xl border border-emerald-400/10 bg-emerald-400/[0.035] px-3.5 py-2.5 text-[13px] leading-5 text-emerald-50/78 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]"
+                              className="rounded-lg border border-emerald-400/6 bg-emerald-400/[0.02] px-3 py-1.5 text-[12px] leading-5 text-emerald-50/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.015)]"
                               data-recommend-banner="true"
                               aria-label="推荐理由绿色条"
                             >
-                              <div className="font-medium text-emerald-50/78">
-                                {event.recommendReasonLine}
-                              </div>
-                              <div className="mt-1.5 border-t border-emerald-200/5 pt-1.5 text-emerald-100/62">
-                                {event.actionLine}
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                                <span className="font-medium text-emerald-50/72">{event.recommendReasonLine}</span>
+                                <span className="text-emerald-100/36">•</span>
+                                <span className="text-emerald-100/56">{event.actionLine}</span>
                               </div>
                             </div>
                           </div>
