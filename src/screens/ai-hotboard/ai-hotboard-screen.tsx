@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
 import hotboardData from './ai-hotboard-mock-data.json'
 
@@ -42,8 +42,6 @@ type TimelineGroup = {
 }
 
 const payload = hotboardData as MockPayload
-
-const PRIMARY_NAV_ITEMS = ['精选', '全部 AI 动态', '低粉爆文', '收藏', '信源', '信源提报'] as const
 
 const STRATEGY_LINES = [
   'A线-抓数稳定化',
@@ -185,6 +183,61 @@ function SidebarBlock({ items, ariaLabel }: { items: readonly string[]; ariaLabe
   )
 }
 
+function SidebarDisclosure({
+  title,
+  items,
+  defaultOpen = false,
+}: {
+  title: string
+  items: readonly string[]
+  defaultOpen?: boolean
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen)
+
+  return (
+    <section className="space-y-2" aria-label={`${title}分组`}>
+      <button
+        type="button"
+        data-nav-item={title}
+        aria-expanded={isOpen}
+        className={cn(
+          'flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm font-medium transition',
+          isOpen
+            ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
+            : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
+        )}
+        onClick={() => setIsOpen((value) => !value)}
+      >
+        <span>{title}</span>
+        <span className="text-xs text-slate-400">{isOpen ? '−' : '+'}</span>
+      </button>
+
+      {isOpen ? (
+        <div className="ml-3 border-l border-white/8 pl-3">
+          <SidebarBlock items={items} ariaLabel={`${title}列表`} />
+        </div>
+      ) : null}
+    </section>
+  )
+}
+
+function SidebarExpandedGroup({ title, items }: { title: string; items: readonly string[] }) {
+  return (
+    <section className="space-y-2" aria-label={`${title}分组`}>
+      <div
+        data-nav-item={title}
+        className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm font-medium text-slate-300"
+      >
+        <span>{title}</span>
+        <span className="text-xs text-slate-400">−</span>
+      </div>
+      <div className="ml-3 border-l border-white/8 pl-3">
+        <StrategyList items={items} />
+      </div>
+    </section>
+  )
+}
+
 function StrategyList({ items }: { items: readonly string[] }) {
   return (
     <ul className="space-y-2">
@@ -293,13 +346,11 @@ export function AiHotboardScreen() {
           </div>
 
           <nav className="space-y-4" aria-label="AI HOT 导航列表">
-            <SidebarNavGroup items={PRIMARY_NAV_ITEMS} highlightedItem="精选" />
-            <SidebarBlock items={SOURCE_ITEMS} ariaLabel="信源列表" />
-            <SidebarBlock items={SOURCE_SUBMISSION_ITEMS} ariaLabel="信源提报列表" />
-            <SidebarNavGroup items={['精选策略']} />
-            <StrategyList items={STRATEGY_LINES} />
-            <SidebarNavGroup items={['策略迭代']} />
-            <StrategyList items={STRATEGY_LINES} />
+            <SidebarNavGroup items={['精选', '全部 AI 动态', '低粉爆文', '收藏']} highlightedItem="精选" />
+            <SidebarDisclosure title="信源" items={SOURCE_ITEMS} />
+            <SidebarDisclosure title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
+            <SidebarExpandedGroup title="精选策略" items={STRATEGY_LINES} />
+            <SidebarExpandedGroup title="策略迭代" items={STRATEGY_LINES} />
             <SidebarNavGroup items={['系统', '用户', '退出']} />
           </nav>
         </aside>
@@ -309,9 +360,6 @@ export function AiHotboardScreen() {
             <div>
               <div className="text-[11px] tracking-[0.35em] text-emerald-300/80">AI HOTBOARD</div>
               <h1 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">AI 热点看板</h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-                独立路由时间轴骨架，按 mock 数据聚合信号分、推荐理由与建议动作，仅展示 charter 白名单内容。
-              </p>
             </div>
             <div className="flex flex-col items-start gap-2 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-300 sm:items-end">
               <div>更新时间：{formatGeneratedAt(payload.generated_at)}</div>

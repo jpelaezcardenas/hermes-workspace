@@ -42,7 +42,7 @@
       "summary": "可以明显看出，使用 AI 的整套实践——提示词、技能文件、连接器、检索工作、Markdown 文件等——很大程度上替代了持续学习这一真正问题。若该问题得以解决，诸多事物将迅速改变。",
       "tags": ["Agent", "大佬观点", "skills"],
       "signal_category": "同行动作",
-      "aggregated_sources_count": 0,
+      "aggregated_sources_count": 2,
       "engagement": {"likes": 77, "dislikes": 6, "bookmarks": 0},
       "recommend_reason": "Mollick 点破当前复杂 AI 工作流只是过渡方案，持续学习突破将颠覆现有范式",
       "suggested_action": "更新战略：E线（全员 skill 化）——对齐 Mollick 指向的 skill-file 范式"
