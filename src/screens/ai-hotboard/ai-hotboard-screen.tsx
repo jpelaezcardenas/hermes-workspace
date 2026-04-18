@@ -32,6 +32,7 @@ type TimelineEvent = MockEvent & {
   signalScore: number
   actionLine: string
   recommendReasonLine: string
+  condensedSourceLabel: string
 }
 
 type TimelineGroup = {
@@ -117,6 +118,10 @@ function normalizeRecommendReason(reason: string) {
     return trimmedReason
   }
   return `推荐理由：${trimmedReason}`
+}
+
+function buildCondensedSourceLabel(event: MockEvent) {
+  return `${event.source_type} · ${event.source_name} · ${event.source_channel}`
 }
 
 function formatGeneratedAt(value: string) {
@@ -224,6 +229,7 @@ export function AiHotboardScreen() {
           signalScore: computeSignalScore(event),
           actionLine: normalizeActionLine(event.suggested_action),
           recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
+          condensedSourceLabel: buildCondensedSourceLabel(event),
         }
       })
       .sort(function sortByTimestampDesc(a, b) {
@@ -323,50 +329,46 @@ export function AiHotboardScreen() {
                       return (
                         <article
                           key={event.id}
-                          className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 shadow-[0_22px_60px_rgba(0,0,0,0.28)]"
+                          className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-4 shadow-[0_22px_60px_rgba(0,0,0,0.24)]"
                         >
                           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
                           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                            <div className="min-w-0 flex-1">
-                              <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
-                                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.7)]" />
-                                <span>{event.source_type}</span>
-                                <span>/</span>
-                                <span>{event.source_name}</span>
-                                <span>·</span>
-                                <span>{event.source_channel}</span>
+                            <div className="min-w-0 flex-1 space-y-3.5 pr-0 lg:pr-4">
+                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-400 sm:text-sm">
+                                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.55)]" />
+                                <span className="truncate">{event.condensedSourceLabel}</span>
                               </div>
 
-                              <h2 className="mt-3 text-xl font-bold leading-8 text-white sm:text-2xl">
+                              <h2 className="max-w-4xl text-lg font-bold leading-7 text-white sm:text-[22px] sm:leading-8">
                                 {event.title}
                               </h2>
 
-                              <p className="mt-3 text-sm leading-7 text-slate-300 sm:text-[15px]">
+                              <p className="max-w-4xl text-sm leading-6 text-slate-300 sm:text-[15px] sm:leading-7 lg:max-w-[92%]">
                                 {event.summary}
                               </p>
                             </div>
 
-                            <div className="flex shrink-0 items-start gap-3 lg:ml-4">
-                              <div className="rounded-[20px] border border-emerald-400/40 bg-emerald-400/12 px-4 py-3 text-center shadow-[0_12px_30px_rgba(16,185,129,0.18)]">
-                                <div className="text-[11px] tracking-[0.22em] text-emerald-200/80">信号分</div>
-                                <div className="mt-1 text-3xl font-bold text-white">{event.signalScore}</div>
+                            <div className="flex shrink-0 items-start gap-2 lg:ml-2">
+                              <div className="rounded-[18px] border border-white/10 bg-white/[0.04] px-3 py-2 text-center">
+                                <div className="text-[10px] tracking-[0.22em] text-slate-400">信号分</div>
+                                <div className="mt-1 text-[24px] font-semibold leading-none text-slate-100">{event.signalScore}</div>
                               </div>
-                              <div className="flex gap-2">
+                              <div className="flex gap-1.5">
                                 <button
                                   type="button"
-                                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-emerald-400/40 hover:text-white"
+                                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300 hover:border-emerald-400/40 hover:text-white"
                                 >
                                   👍 {event.engagement.likes}
                                 </button>
                                 <button
                                   type="button"
-                                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-rose-400/40 hover:text-white"
+                                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300 hover:border-rose-400/40 hover:text-white"
                                 >
                                   👎 {event.engagement.dislikes}
                                 </button>
                                 <button
                                   type="button"
-                                  className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 hover:border-amber-400/40 hover:text-white"
+                                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300 hover:border-amber-400/40 hover:text-white"
                                 >
                                   ☆ {event.engagement.bookmarks}
                                 </button>
@@ -374,7 +376,7 @@ export function AiHotboardScreen() {
                             </div>
                           </div>
 
-                          <div className="mt-4 flex flex-wrap gap-2">
+                          <div className="mt-3 flex flex-wrap gap-2">
                             {event.tags.map(function renderTag(tag) {
                               return (
                                 <span
@@ -394,20 +396,20 @@ export function AiHotboardScreen() {
                           </div>
 
                           {event.aggregated_sources_count > 0 ? (
-                            <div className="mt-4 rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-slate-300">
+                            <div className="mt-3 rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-slate-300">
                               另有 {event.aggregated_sources_count} 个源也报道了此事件
                             </div>
                           ) : null}
 
                           <div
-                            className="mt-4 rounded-[22px] border-2 border-emerald-300 bg-emerald-500 px-4 py-4 text-sm leading-7 text-emerald-950 shadow-[0_16px_40px_rgba(16,185,129,0.28)]"
+                            className="mt-3 rounded-[20px] border border-emerald-400/18 bg-emerald-400/6 px-4 py-3 text-sm leading-6 text-emerald-50/90"
                             data-recommend-banner="true"
                             aria-label="推荐理由绿色条"
                           >
-                            <div className="font-semibold text-emerald-950">
+                            <div className="font-medium text-emerald-50/88">
                               {event.recommendReasonLine}
                             </div>
-                            <div className="mt-2 border-t border-emerald-900/15 pt-2 text-emerald-950/90">
+                            <div className="mt-2 border-t border-emerald-200/8 pt-2 text-emerald-100/72">
                               {event.actionLine}
                             </div>
                           </div>
