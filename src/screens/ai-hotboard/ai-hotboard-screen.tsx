@@ -34,6 +34,7 @@ type TimelineEvent = MockEvent & {
   recommendReasonLine: string
   condensedSourceLabel: string
   aggregatedSourcesLabel: string | null
+  aggregatedSourcesCompactLabel: string | null
 }
 
 type TimelineGroup = {
@@ -128,6 +129,11 @@ function buildCondensedSourceLabel(event: MockEvent) {
 function buildAggregatedSourcesLabel(event: MockEvent) {
   if (event.aggregated_sources_count <= 0) return null
   return `另有 ${event.aggregated_sources_count} 个源也报道了此事件`
+}
+
+function buildAggregatedSourcesCompactLabel(event: MockEvent) {
+  if (event.aggregated_sources_count <= 0) return null
+  return `聚合 ${event.aggregated_sources_count} 源`
 }
 
 function formatGeneratedAt(value: string) {
@@ -237,6 +243,7 @@ export function AiHotboardScreen() {
           recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
           condensedSourceLabel: buildCondensedSourceLabel(event),
           aggregatedSourcesLabel: buildAggregatedSourcesLabel(event),
+          aggregatedSourcesCompactLabel: buildAggregatedSourcesCompactLabel(event),
         }
       })
       .sort(function sortByTimestampDesc(a, b) {
@@ -401,24 +408,29 @@ export function AiHotboardScreen() {
                               <span className="rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500">
                                 {event.signal_category}
                               </span>
-                              {event.aggregatedSourcesLabel ? (
-                                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500/90">
-                                  <span className="h-1 w-1 rounded-full bg-slate-500/70" aria-hidden="true" />
-                                  {event.aggregatedSourcesLabel}
+                              {event.aggregatedSourcesCompactLabel ? (
+                                <span className="inline-flex items-center gap-1 rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500/90">
+                                  <span className="h-1 w-1 rounded-full bg-slate-500/60" aria-hidden="true" />
+                                  {event.aggregatedSourcesCompactLabel}
                                 </span>
                               ) : null}
                               <div
-                                className="inline-flex max-w-full shrink items-center gap-x-2 gap-y-0.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.03] px-3 py-1 text-[11px] leading-5 text-emerald-50/68 shadow-[inset_0_1px_0_rgba(255,255,255,0.01)]"
+                                className="inline-flex max-w-full shrink items-center gap-x-2 gap-y-0.5 rounded-full border border-emerald-400/8 bg-emerald-400/[0.025] px-2.5 py-0.5 text-[11px] leading-5 text-emerald-50/62 shadow-[inset_0_1px_0_rgba(255,255,255,0.01)]"
                                 data-recommend-banner="true"
                                 aria-label="推荐理由绿色条"
                               >
-                                <span className="min-w-0 basis-[56%] truncate font-medium text-emerald-50/70">
+                                <span className="min-w-0 max-w-[42ch] truncate font-medium text-emerald-50/66">
                                   {event.recommendReasonLine}
                                 </span>
-                                <span className="shrink-0 text-emerald-100/28">•</span>
-                                <span className="min-w-0 basis-[44%] truncate text-emerald-100/50">{event.actionLine}</span>
+                                <span className="shrink-0 text-emerald-100/24">·</span>
+                                <span className="min-w-0 max-w-[34ch] truncate text-emerald-100/46">{event.actionLine}</span>
                               </div>
                             </div>
+                            {event.aggregatedSourcesLabel ? (
+                              <div className="mt-1.5 pl-1 text-[11px] leading-5 text-slate-600/95">
+                                {event.aggregatedSourcesLabel}
+                              </div>
+                            ) : null}
                           </div>
                         </article>
                       )
