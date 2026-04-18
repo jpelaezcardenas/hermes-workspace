@@ -63,24 +63,20 @@ const SOURCE_ITEMS = [
   '小红书',
 ] as const
 
-const SOURCE_SUBMISSION_ITEMS = [
-  'JC 苹果备忘录日记',
-  '爱马仕战略发现',
-  '小J 执行发现',
-] as const
+const SOURCE_SUBMISSION_ITEMS = ['JC 苹果备忘录日记', '爱马仕战略发现', '小J 执行发现'] as const
 
 const TAG_WEIGHT_MAP: Record<string, number> = {
   Agent: 40,
   多Agent架构: 40,
   skills: 40,
   Anthropic: 30,
-  '模型发布': 30,
+  模型发布: 30,
   编码: 20,
   工具: 20,
   API: 20,
-  '视频生成': 20,
+  视频生成: 20,
   开源: 10,
-  '大佬观点': 10,
+  大佬观点: 10,
 }
 
 const CATEGORY_WEIGHT_MAP: Record<string, number> = {
@@ -101,7 +97,12 @@ function computeSignalScore(event: MockEvent) {
     event.engagement.likes * 0.18 + event.engagement.bookmarks * 0.35 - event.engagement.dislikes * 0.4,
   )
   const aggregatedScore = event.aggregated_sources_count * 2
-  const rawScore = 60 + Math.round(tagScore / Math.max(event.tags.length, 1) / 3) + Math.round(categoryScore / 5) + engagementScore + aggregatedScore
+  const rawScore =
+    60 +
+    Math.round(tagScore / Math.max(event.tags.length, 1) / 3) +
+    Math.round(categoryScore / 5) +
+    engagementScore +
+    aggregatedScore
 
   return Math.max(60, Math.min(99, rawScore))
 }
@@ -165,12 +166,9 @@ function getTagTone(tag: string) {
   return 'border-white/10 bg-white/6 text-slate-200'
 }
 
-function SidebarBlock({ title, items }: { title: string; items: readonly string[] }) {
+function SidebarBlock({ items, ariaLabel }: { items: readonly string[]; ariaLabel: string }) {
   return (
-    <section className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3" aria-label={title}>
-      <div className="mb-2 text-[11px] font-semibold tracking-[0.24em] text-slate-500">
-        {title}
-      </div>
+    <section className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3" aria-label={ariaLabel}>
       <ul className="space-y-2">
         {items.map(function renderItem(item) {
           return (
@@ -187,35 +185,45 @@ function SidebarBlock({ title, items }: { title: string; items: readonly string[
   )
 }
 
-function SidebarNavGroup({
-  heading,
-  items,
-  highlightedItem,
-}: {
-  heading?: string
-  items: readonly string[]
-  highlightedItem?: string
-}) {
+function StrategyList({ items }: { items: readonly string[] }) {
   return (
-    <section className="space-y-2" aria-label={heading ?? '主导航'}>
-      {heading ? (
-        <div className="px-1 text-[11px] font-semibold tracking-[0.24em] text-slate-500">{heading}</div>
-      ) : null}
+    <ul className="space-y-2">
+      {items.map(function renderItem(item) {
+        return (
+          <li
+            key={item}
+            className="list-none rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-sm text-slate-300"
+          >
+            {item}
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function SidebarNavGroup({ items, highlightedItem }: { items: readonly string[]; highlightedItem?: string }) {
+  return (
+    <section className="space-y-2" aria-label="主导航">
       <ul className="space-y-2">
         {items.map(function renderNavItem(item) {
           const isHighlighted = item === highlightedItem
+          const navHref = `#${encodeURIComponent(item)}`
+
           return (
-            <li
-              key={item}
-              className={cn(
-                'list-none rounded-2xl border px-4 py-3 text-sm font-medium transition',
-                isHighlighted
-                  ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
-                  : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
-              )}
-              data-nav-item={item}
-            >
-              {item}
+            <li key={item} className="list-none" data-nav-item={item}>
+              <a
+                href={navHref}
+                aria-current={isHighlighted ? 'page' : undefined}
+                className={cn(
+                  'block rounded-2xl border px-4 py-3 text-sm font-medium transition',
+                  isHighlighted
+                    ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
+                    : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
+                )}
+              >
+                {item}
+              </a>
             </li>
           )
         })}
@@ -261,19 +269,9 @@ export function AiHotboardScreen() {
     return Array.from(groups.values())
   }, [])
 
-  const highestSignalScore = useMemo(function getHighestSignalScore() {
-    return timelineGroups.reduce(function findHighestScore(highestScore, group) {
-      const groupHighestScore = group.events.reduce(function findGroupHighestScore(currentHighestScore, event) {
-        return Math.max(currentHighestScore, event.signalScore)
-      }, 0)
-
-      return Math.max(highestScore, groupHighestScore)
-    }, 0)
-  }, [timelineGroups])
-
   return (
     <div className="fixed inset-0 z-[120] overflow-y-auto bg-[#050816] text-slate-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1660px] gap-4 px-3 py-5 sm:gap-5 sm:px-4 lg:gap-6 lg:px-6">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1440px] gap-4 px-3 py-5 sm:gap-5 sm:px-4 lg:gap-6 lg:px-6">
         <aside
           className="w-[240px] shrink-0 rounded-[28px] border border-white/8 bg-[#0b1220] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:w-[260px] sm:p-5 lg:w-[270px]"
           aria-label="AI HOT 左侧导航"
@@ -296,12 +294,13 @@ export function AiHotboardScreen() {
 
           <nav className="space-y-4" aria-label="AI HOT 导航列表">
             <SidebarNavGroup items={PRIMARY_NAV_ITEMS} highlightedItem="精选" />
-            <SidebarBlock title="信源" items={SOURCE_ITEMS} />
-            <SidebarBlock title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
-            <SidebarNavGroup heading="策略" items={['精选策略', '策略迭代']} />
-            <SidebarBlock title="精选策略" items={STRATEGY_LINES} />
-            <SidebarBlock title="策略迭代" items={STRATEGY_LINES} />
-            <SidebarNavGroup heading="后台" items={['系统', '用户', '退出']} />
+            <SidebarBlock items={SOURCE_ITEMS} ariaLabel="信源列表" />
+            <SidebarBlock items={SOURCE_SUBMISSION_ITEMS} ariaLabel="信源提报列表" />
+            <SidebarNavGroup items={['精选策略']} />
+            <StrategyList items={STRATEGY_LINES} />
+            <SidebarNavGroup items={['策略迭代']} />
+            <StrategyList items={STRATEGY_LINES} />
+            <SidebarNavGroup items={['系统', '用户', '退出']} />
           </nav>
         </aside>
 
@@ -325,9 +324,14 @@ export function AiHotboardScreen() {
               return (
                 <section key={group.timestamp} className="grid grid-cols-[88px_minmax(0,1fr)] gap-4 lg:gap-6">
                   <div className="sticky top-5 h-fit">
-                    <div className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-3 text-center">
-                      <div className="text-[11px] uppercase tracking-[0.25em] text-emerald-200/80">TIME</div>
-                      <div className="mt-1 text-2xl font-semibold text-white">{group.timestamp}</div>
+                    <div className="flex gap-3">
+                      <div className="flex flex-col items-center pt-1">
+                        <span className="h-3.5 w-3.5 rounded-full border-2 border-emerald-300 bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.55)]" />
+                        <span className="mt-2 min-h-20 w-px flex-1 bg-gradient-to-b from-emerald-400/60 via-emerald-400/20 to-transparent" />
+                      </div>
+                      <div className="text-[32px] font-extrabold leading-none tracking-[-0.04em] text-white sm:text-[36px]">
+                        {group.timestamp}
+                      </div>
                     </div>
                   </div>
 
@@ -339,51 +343,50 @@ export function AiHotboardScreen() {
                           className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-4 shadow-[0_22px_60px_rgba(0,0,0,0.24)]"
                         >
                           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
-                          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                            <div className="min-w-0 flex-1 space-y-3.5 pr-0 lg:pr-4">
-                              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-400 sm:text-sm">
-                                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.55)]" />
-                                <span className="truncate">{event.condensedSourceLabel}</span>
+                          <div className="flex flex-col gap-4">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="min-w-0 flex-1 space-y-3.5 pr-0 lg:pr-4">
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-400 sm:text-sm">
+                                  <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.55)]" />
+                                  <span className="truncate">{event.condensedSourceLabel}</span>
+                                </div>
+
+                                <h2 className="max-w-4xl text-lg font-bold leading-7 text-white sm:text-[22px] sm:leading-8">
+                                  {event.title}
+                                </h2>
+
+                                <p className="max-w-4xl text-sm leading-6 text-slate-300 sm:text-[15px] sm:leading-7 lg:max-w-[92%]">
+                                  {event.summary}
+                                </p>
                               </div>
 
-                              <h2 className="max-w-4xl text-lg font-bold leading-7 text-white sm:text-[22px] sm:leading-8">
-                                {event.title}
-                              </h2>
-
-                              <p className="max-w-4xl text-sm leading-6 text-slate-300 sm:text-[15px] sm:leading-7 lg:max-w-[92%]">
-                                {event.summary}
-                              </p>
+                              <div className="flex shrink-0 items-start gap-2 lg:ml-2">
+                                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(96,165,250,0.95),rgba(37,99,235,0.98))] text-[22px] font-bold leading-none text-white shadow-[0_10px_30px_rgba(37,99,235,0.45)] ring-1 ring-white/10">
+                                  {event.signalScore}
+                                </div>
+                                <div className="flex gap-1.5">
+                                  <span
+                                    className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300"
+                                    aria-label={`点赞数 ${event.engagement.likes}`}
+                                  >
+                                    👍 {event.engagement.likes}
+                                  </span>
+                                  <span
+                                    className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300"
+                                    aria-label={`点踩数 ${event.engagement.dislikes}`}
+                                  >
+                                    👎 {event.engagement.dislikes}
+                                  </span>
+                                  <span
+                                    className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300"
+                                    aria-label={`收藏数 ${event.engagement.bookmarks}`}
+                                  >
+                                    ☆ {event.engagement.bookmarks}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
 
-                            <div className="flex shrink-0 items-start gap-2 lg:ml-2">
-                              <div className="rounded-[18px] border border-white/10 bg-white/[0.04] px-3 py-2 text-center">
-                                <div className="text-[10px] tracking-[0.22em] text-slate-400">信号分</div>
-                                <div className="mt-1 text-[24px] font-semibold leading-none text-slate-100">{event.signalScore}</div>
-                              </div>
-                              <div className="flex gap-1.5">
-                                <button
-                                  type="button"
-                                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300 hover:border-emerald-400/40 hover:text-white"
-                                >
-                                  👍 {event.engagement.likes}
-                                </button>
-                                <button
-                                  type="button"
-                                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300 hover:border-rose-400/40 hover:text-white"
-                                >
-                                  👎 {event.engagement.dislikes}
-                                </button>
-                                <button
-                                  type="button"
-                                  className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300 hover:border-amber-400/40 hover:text-white"
-                                >
-                                  ☆ {event.engagement.bookmarks}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-1">
                             <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px] leading-5 text-slate-500">
                               {event.tags.map(function renderTag(tag) {
                                 return (
@@ -404,16 +407,15 @@ export function AiHotboardScreen() {
                                   {event.aggregatedSourcesLabel}
                                 </span>
                               ) : null}
-                              <span
-                                className="inline-flex min-w-0 max-w-full items-center gap-1 overflow-hidden rounded-full border border-emerald-400/12 bg-emerald-400/[0.03] px-2 py-0.5 text-[11px] leading-5 text-emerald-50/78"
-                                data-recommend-banner="true"
-                                aria-label="推荐理由绿色条"
-                                title={`${event.recommendReasonLine} · ${event.actionLine}`}
-                              >
-                                <span className="min-w-0 truncate">{event.recommendReasonLine}</span>
-                                <span className="shrink-0 text-emerald-100/28">·</span>
-                                <span className="min-w-0 truncate text-emerald-100/60">{event.actionLine}</span>
-                              </span>
+                            </div>
+
+                            <div
+                              className="rounded-2xl border border-emerald-400/24 bg-emerald-400/[0.08] px-4 py-3 text-sm leading-6 text-emerald-50"
+                              data-recommend-banner="true"
+                              aria-label="推荐理由绿色条"
+                            >
+                              <div>{event.recommendReasonLine}</div>
+                              <div className="mt-1 text-emerald-100/85">{event.actionLine}</div>
                             </div>
                           </div>
                         </article>
@@ -425,25 +427,6 @@ export function AiHotboardScreen() {
             })}
           </div>
         </main>
-
-        <aside className="hidden w-[320px] shrink-0 rounded-[28px] border border-white/8 bg-[#0c1323] p-5 xl:block">
-          <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
-            <div className="text-[11px] tracking-[0.28em] text-slate-500">观察摘要</div>
-            <div className="mt-3 space-y-3">
-              <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
-                <div className="text-sm text-slate-400">今日事件数</div>
-                <div className="mt-1 text-3xl font-semibold text-white">{payload.events.length}</div>
-              </div>
-              <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
-                <div className="text-sm text-slate-400">最高信号分</div>
-                <div className="mt-1 text-3xl font-semibold text-white">{highestSignalScore}</div>
-              </div>
-              <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm leading-7 text-slate-300">
-                白名单增量已覆盖：信号分算法、建议动作第二行、信源/信源提报静态子项、M2 五条业务主线。
-              </div>
-            </div>
-          </div>
-        </aside>
       </div>
     </div>
   )
