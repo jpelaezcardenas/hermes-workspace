@@ -34,7 +34,6 @@ type TimelineEvent = MockEvent & {
   recommendReasonLine: string
   condensedSourceLabel: string
   aggregatedSourcesLabel: string | null
-  aggregatedSourcesCompactLabel: string | null
 }
 
 type TimelineGroup = {
@@ -129,11 +128,6 @@ function buildCondensedSourceLabel(event: MockEvent) {
 function buildAggregatedSourcesLabel(event: MockEvent) {
   if (event.aggregated_sources_count <= 0) return null
   return `另有 ${event.aggregated_sources_count} 个源也报道了此事件`
-}
-
-function buildAggregatedSourcesCompactLabel(event: MockEvent) {
-  if (event.aggregated_sources_count <= 0) return null
-  return `聚合 ${event.aggregated_sources_count} 源`
 }
 
 function formatGeneratedAt(value: string) {
@@ -243,7 +237,6 @@ export function AiHotboardScreen() {
           recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
           condensedSourceLabel: buildCondensedSourceLabel(event),
           aggregatedSourcesLabel: buildAggregatedSourcesLabel(event),
-          aggregatedSourcesCompactLabel: buildAggregatedSourcesCompactLabel(event),
         }
       })
       .sort(function sortByTimestampDesc(a, b) {
@@ -390,7 +383,7 @@ export function AiHotboardScreen() {
                             </div>
                           </div>
 
-                          <div className="mt-2">
+                          <div className="mt-1.5">
                             <div className="flex flex-wrap items-center gap-1.5 text-[12px] leading-5 text-slate-500">
                               {event.tags.map(function renderTag(tag) {
                                 return (
@@ -408,29 +401,25 @@ export function AiHotboardScreen() {
                               <span className="rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500">
                                 {event.signal_category}
                               </span>
-                              {event.aggregatedSourcesCompactLabel ? (
+                              {event.aggregatedSourcesLabel ? (
                                 <span className="inline-flex items-center gap-1 rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500/90">
                                   <span className="h-1 w-1 rounded-full bg-slate-500/60" aria-hidden="true" />
-                                  {event.aggregatedSourcesCompactLabel}
+                                  {event.aggregatedSourcesLabel}
                                 </span>
                               ) : null}
-                              <div
-                                className="inline-flex max-w-full shrink items-center gap-x-2 gap-y-0.5 rounded-full border border-emerald-400/8 bg-emerald-400/[0.025] px-2.5 py-0.5 text-[11px] leading-5 text-emerald-50/62 shadow-[inset_0_1px_0_rgba(255,255,255,0.01)]"
+                              <span
+                                className="inline-flex max-w-full shrink flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-full border border-emerald-400/8 bg-emerald-400/[0.018] px-2.5 py-0.5 text-[11px] leading-5 text-emerald-50/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.008)]"
                                 data-recommend-banner="true"
                                 aria-label="推荐理由绿色条"
+                                title={`${event.recommendReasonLine} · ${event.actionLine}`}
                               >
-                                <span className="min-w-0 max-w-[42ch] truncate font-medium text-emerald-50/66">
+                                <span className="min-w-0 break-words font-medium text-emerald-50/62">
                                   {event.recommendReasonLine}
                                 </span>
-                                <span className="shrink-0 text-emerald-100/24">·</span>
-                                <span className="min-w-0 max-w-[34ch] truncate text-emerald-100/46">{event.actionLine}</span>
-                              </div>
+                                <span className="shrink-0 text-emerald-100/20">·</span>
+                                <span className="min-w-0 break-words text-emerald-100/42">{event.actionLine}</span>
+                              </span>
                             </div>
-                            {event.aggregatedSourcesLabel ? (
-                              <div className="mt-1.5 pl-1 text-[11px] leading-5 text-slate-600/95">
-                                {event.aggregatedSourcesLabel}
-                              </div>
-                            ) : null}
                           </div>
                         </article>
                       )
