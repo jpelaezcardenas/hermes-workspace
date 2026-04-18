@@ -383,7 +383,7 @@ export function AiHotboardScreen() {
                             </div>
                           </div>
 
-                          <div className="mt-2 space-y-1.5">
+                          <div className="mt-2">
                             <div className="flex flex-wrap items-center gap-1.5 text-[12px] leading-5 text-slate-500">
                               {event.tags.map(function renderTag(tag) {
                                 return (
@@ -407,17 +407,16 @@ export function AiHotboardScreen() {
                                   {event.aggregatedSourcesLabel}
                                 </span>
                               ) : null}
-                            </div>
-
-                            <div
-                              className="rounded-lg border border-emerald-400/6 bg-emerald-400/[0.02] px-3 py-1.5 text-[12px] leading-5 text-emerald-50/72 shadow-[inset_0_1px_0_rgba(255,255,255,0.015)]"
-                              data-recommend-banner="true"
-                              aria-label="推荐理由绿色条"
-                            >
-                              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                                <span className="font-medium text-emerald-50/72">{event.recommendReasonLine}</span>
-                                <span className="text-emerald-100/36">•</span>
-                                <span className="text-emerald-100/56">{event.actionLine}</span>
+                              <div
+                                className="inline-flex max-w-full shrink items-center gap-x-2 gap-y-0.5 rounded-full border border-emerald-400/10 bg-emerald-400/[0.03] px-3 py-1 text-[11px] leading-5 text-emerald-50/68 shadow-[inset_0_1px_0_rgba(255,255,255,0.01)]"
+                                data-recommend-banner="true"
+                                aria-label="推荐理由绿色条"
+                              >
+                                <span className="min-w-0 basis-[56%] truncate font-medium text-emerald-50/70">
+                                  {event.recommendReasonLine}
+                                </span>
+                                <span className="shrink-0 text-emerald-100/28">•</span>
+                                <span className="min-w-0 basis-[44%] truncate text-emerald-100/50">{event.actionLine}</span>
                               </div>
                             </div>
                           </div>
