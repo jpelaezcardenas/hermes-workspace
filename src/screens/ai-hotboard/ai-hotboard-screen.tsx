@@ -384,42 +384,37 @@ export function AiHotboardScreen() {
                           </div>
 
                           <div className="mt-1.5">
-                            <div className="flex flex-wrap items-center gap-1.5 text-[12px] leading-5 text-slate-500">
-                              {event.tags.map(function renderTag(tag) {
-                                return (
-                                  <span
-                                    key={`${event.id}-${tag}`}
-                                    className={cn(
-                                      'rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-[0.01em]',
-                                      getTagTone(tag),
-                                    )}
-                                  >
-                                    {tag}
+                              <div className="flex flex-wrap items-center gap-1.5 text-[12px] leading-5 text-slate-500">
+                                {event.tags.map(function renderTag(tag) {
+                                  return (
+                                    <span
+                                      key={`${event.id}-${tag}`}
+                                      className={cn(
+                                        'rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-[0.01em]',
+                                        getTagTone(tag),
+                                      )}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
+                                <span className="text-[11px] text-slate-500">· {event.signal_category}</span>
+                                {event.aggregatedSourcesLabel ? (
+                                  <span className="text-[11px] text-slate-500/90">· {event.aggregatedSourcesLabel}</span>
+                                ) : null}
+                                <span
+                                  className="inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-full border border-emerald-400/16 bg-emerald-400/[0.04] px-2 py-0.5 text-[11px] leading-5 text-emerald-50/82"
+                                  data-recommend-banner="true"
+                                  aria-label="推荐理由绿色条"
+                                  title={`${event.recommendReasonLine} · ${event.actionLine}`}
+                                >
+                                  <span className="min-w-0 truncate font-medium text-emerald-50/86">
+                                    {event.recommendReasonLine}
                                   </span>
-                                )
-                              })}
-                              <span className="rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500">
-                                {event.signal_category}
-                              </span>
-                              {event.aggregatedSourcesLabel ? (
-                                <span className="inline-flex items-center gap-1 rounded-full border border-white/8 bg-white/[0.02] px-2.5 py-0.5 text-[11px] text-slate-500/90">
-                                  <span className="h-1 w-1 rounded-full bg-slate-500/60" aria-hidden="true" />
-                                  {event.aggregatedSourcesLabel}
+                                  <span className="shrink-0 text-emerald-100/36">·</span>
+                                  <span className="min-w-0 truncate text-emerald-100/68">{event.actionLine}</span>
                                 </span>
-                              ) : null}
-                              <span
-                                className="inline-flex max-w-full shrink flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-full border border-emerald-400/8 bg-emerald-400/[0.018] px-2.5 py-0.5 text-[11px] leading-5 text-emerald-50/58 shadow-[inset_0_1px_0_rgba(255,255,255,0.008)]"
-                                data-recommend-banner="true"
-                                aria-label="推荐理由绿色条"
-                                title={`${event.recommendReasonLine} · ${event.actionLine}`}
-                              >
-                                <span className="min-w-0 break-words font-medium text-emerald-50/62">
-                                  {event.recommendReasonLine}
-                                </span>
-                                <span className="shrink-0 text-emerald-100/20">·</span>
-                                <span className="min-w-0 break-words text-emerald-100/42">{event.actionLine}</span>
-                              </span>
-                            </div>
+                              </div>
                           </div>
                         </article>
                       )
