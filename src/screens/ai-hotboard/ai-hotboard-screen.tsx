@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import hotboardData from './ai_hotboard_mock_events.json'
 
@@ -44,7 +44,19 @@ type TimelineGroup = {
 const payload = hotboardData as MockPayload
 const DATA_SOURCE_LABEL = 'ai_hotboard_mock_events.json'
 
-const STRATEGY_LINES = [
+export const SOURCE_ITEMS = [
+  'X bookmarks',
+  'X likes',
+  'X following',
+  'X for_you',
+  '公众号',
+  '肖恩对谈',
+  '小红书',
+] as const
+
+export const SOURCE_SUBMISSION_ITEMS = ['JC 苹果备忘录日记', '爱马仕战略发现', '小J 执行发现'] as const
+
+export const STRATEGY_LINES = [
   'M2 A线 | 抓数稳定化',
   'M2 B线 | 财务报表自动化',
   'M2 C线 | AI短视频→投流ROI',
@@ -52,31 +64,23 @@ const STRATEGY_LINES = [
   'M2 E线 | 全员Agent协作',
 ] as const
 
-const SOURCE_ITEMS = [
-  '8 bookmarks',
-  '24 likes',
-  '12 following',
-  '6 for_you',
-  '公众号',
-  '肖恩对谈',
-  '小红书',
+export const STRATEGY_ITERATION_ITEMS = [
+  'v1 产品化交接（CSO 验收中）',
+  'adversarial-v3 45 轮迭代已归档',
+  '两周稳定运行后评估黑板架构收编',
 ] as const
 
-const SOURCE_SUBMISSION_ITEMS = ['JC 苹果备忘录日记', '爱马仕战略发现', '小J 执行发现'] as const
+const PRIMARY_NAV_ITEMS = ['精选', '全部 AI 动态', '低粉爆文', '收藏'] as const
+const SYSTEM_NAV_ITEMS = ['系统', '用户', '退出'] as const
 
-const TAG_WEIGHT_MAP: Record<string, number> = {
-  Agent: 40,
-  多Agent架构: 40,
-  skills: 40,
-  Anthropic: 30,
-  模型发布: 30,
-  编码: 20,
-  工具: 20,
-  API: 20,
-  视频生成: 20,
-  开源: 10,
-  大佬观点: 10,
-}
+export const SIDEBAR_NAV_SEQUENCE = [
+  ...PRIMARY_NAV_ITEMS,
+  '信源',
+  '信源提报',
+  '精选策略',
+  '策略迭代',
+  ...SYSTEM_NAV_ITEMS,
+] as const
 
 const CATEGORY_WEIGHT_MAP: Record<string, number> = {
   同行动作: 40,
@@ -85,40 +89,63 @@ const CATEGORY_WEIGHT_MAP: Record<string, number> = {
   纯新闻: 10,
 }
 
-const ACTION_LABELS = ['触发 skill', '派 agent', '更新战略'] as const
+const TAG_SIGNAL_BUCKET_MAP: Record<string, keyof typeof CATEGORY_WEIGHT_MAP> = {
+  Agent: '同行动作',
+  多Agent架构: '同行动作',
+  skills: '同行动作',
+  对抗式监督: '同行动作',
+  Anthropic: 'AI基础设施',
+  模型发布: 'AI基础设施',
+  编码: '工具赛道',
+  工具: '工具赛道',
+  API: '工具赛道',
+  视频生成: '工具赛道',
+  开源: '纯新闻',
+  大佬观点: '纯新闻',
+}
+
+const ACTION_PREFIXES = ['触发 skill', '派 agent', '更新战略'] as const
+
+export const SIGNAL_BADGE_CLASS =
+  'inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#2a2f3e] text-[12px] font-semibold leading-none text-white'
+
+export const RECOMMEND_BANNER_CLASS = 'rounded-xl bg-emerald-950/70 px-3 py-2 text-sm leading-6 text-emerald-200'
 
 function computeSignalScore(event: MockEvent) {
-  const tagScore = event.tags.reduce(function accumulate(score, tag) {
-    return score + (TAG_WEIGHT_MAP[tag] ?? 10)
-  }, 0)
-  const categoryScore = CATEGORY_WEIGHT_MAP[event.signal_category] ?? 10
+  const tagBuckets = event.tags.map((tag) => TAG_SIGNAL_BUCKET_MAP[tag] ?? '纯新闻')
+  const tagWeightTotal = tagBuckets.reduce((score, bucket) => score + CATEGORY_WEIGHT_MAP[bucket], 0)
+  const tagWeightAverage = Math.round(tagWeightTotal / Math.max(tagBuckets.length, 1))
+  const categoryWeight = CATEGORY_WEIGHT_MAP[event.signal_category] ?? 10
+
   const engagementScore = Math.round(
-    event.engagement.likes * 0.18 + event.engagement.bookmarks * 0.35 - event.engagement.dislikes * 0.4,
+    event.engagement.likes * 0.16 + event.engagement.bookmarks * 0.32 - event.engagement.dislikes * 0.48,
   )
-  const aggregatedScore = event.aggregated_sources_count * 2
+  const sourceResonanceScore = Math.min(event.aggregated_sources_count * 2, 12)
+
   const rawScore =
-    60 +
-    Math.round(tagScore / Math.max(event.tags.length, 1) / 3) +
-    Math.round(categoryScore / 5) +
+    58 +
+    Math.round(tagWeightAverage / 3.2) +
+    Math.round(categoryWeight / 4.5) +
     engagementScore +
-    aggregatedScore
+    sourceResonanceScore
 
   return Math.max(60, Math.min(99, rawScore))
 }
 
 function normalizeActionLine(action: string) {
-  if (ACTION_LABELS.some((label) => action.startsWith(label))) {
-    return `→ 建议动作：${action}`
+  const normalized = action.trim()
+  if (ACTION_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
+    return `→ 建议动作：${normalized}`
   }
-  return `→ 建议动作：更新战略：${action}`
+  return `→ 建议动作：更新战略：${normalized}`
 }
 
 function normalizeRecommendReason(reason: string) {
-  const trimmedReason = reason.trim() || '待补充'
-  if (trimmedReason.startsWith('推荐理由：')) {
-    return trimmedReason
+  const normalized = reason.trim() || '待补充'
+  if (normalized.startsWith('推荐理由：')) {
+    return normalized
   }
-  return `推荐理由：${trimmedReason}`
+  return `推荐理由：${normalized}`
 }
 
 function buildCondensedSourceLabel(event: MockEvent) {
@@ -153,102 +180,51 @@ function normalizeTimelineTimestamp(timestamp: string) {
 }
 
 function getTagTone(tag: string) {
-  if (tag === 'Agent' || tag === '多Agent架构' || tag === 'skills') {
-    return 'border-cyan-400/40 bg-cyan-400/12 text-cyan-100'
+  if (tag === 'Agent' || tag === '多Agent架构' || tag === 'skills' || tag === '对抗式监督') {
+    return 'border-cyan-300/25 bg-cyan-300/10 text-cyan-100'
   }
+
   if (tag === '模型发布' || tag === 'Anthropic') {
-    return 'border-violet-400/40 bg-violet-400/12 text-violet-100'
+    return 'border-emerald-300/25 bg-emerald-300/10 text-emerald-100'
   }
-  if (tag === '工具' || tag === 'API' || tag === '视频生成') {
-    return 'border-amber-400/40 bg-amber-400/12 text-amber-100'
+
+  if (tag === '工具' || tag === 'API' || tag === '视频生成' || tag === '编码') {
+    return 'border-amber-300/25 bg-amber-300/10 text-amber-100'
   }
-  return 'border-white/10 bg-white/6 text-slate-200'
+
+  return 'border-slate-400/25 bg-slate-400/10 text-slate-200'
 }
 
-function SidebarBlock({ items, ariaLabel }: { items: readonly string[]; ariaLabel: string }) {
+function SidebarItems({ items }: { items: readonly string[] }) {
   return (
-    <section className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3" aria-label={ariaLabel}>
-      <ul className="space-y-2">
-        {items.map(function renderItem(item) {
-          return (
-            <li
-              key={item}
-              className="list-none rounded-xl border border-transparent px-2 py-2 text-sm text-slate-300 transition hover:border-emerald-400/30 hover:bg-emerald-400/8 hover:text-white"
+    <ul className="space-y-1.5">
+      {items.map((item) => (
+        <li key={item} className="list-none">
+          <div className="rounded-xl border border-slate-700/70 bg-slate-900/50 px-3 py-2 text-sm text-slate-200">{item}</div>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function SidebarNavItems({ items, highlightedItem }: { items: readonly string[]; highlightedItem?: string }) {
+  return (
+    <ul className="space-y-1.5">
+      {items.map((item) => {
+        const highlighted = item === highlightedItem
+
+        return (
+          <li key={item} className="list-none" data-nav-item={item}>
+            <div
+              className={cn(
+                'rounded-xl border px-3 py-2 text-sm',
+                highlighted
+                  ? 'border-cyan-400/45 bg-cyan-400/15 font-medium text-cyan-100'
+                  : 'border-slate-700/70 bg-slate-900/50 text-slate-300',
+              )}
             >
               {item}
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  )
-}
-
-function SidebarDisclosure({
-  title,
-  items,
-  defaultOpen = false,
-}: {
-  title: string
-  items: readonly string[]
-  defaultOpen?: boolean
-}) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
-
-  return (
-    <section className="space-y-2" aria-label={`${title}分组`}>
-      <button
-        type="button"
-        data-nav-item={title}
-        aria-expanded={isOpen}
-        className={cn(
-          'flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm font-medium transition',
-          isOpen
-            ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
-            : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
-        )}
-        onClick={() => setIsOpen((value) => !value)}
-      >
-        <span>{title}</span>
-        <span className="text-xs text-slate-400">{isOpen ? '−' : '+'}</span>
-      </button>
-
-      {isOpen ? (
-        <div className="ml-3 border-l border-white/8 pl-3">
-          <SidebarBlock items={items} ariaLabel={`${title}列表`} />
-        </div>
-      ) : null}
-    </section>
-  )
-}
-
-function SidebarExpandedGroup({ title, items }: { title: string; items: readonly string[] }) {
-  return (
-    <section className="space-y-2" aria-label={`${title}分组`}>
-      <div
-        data-nav-item={title}
-        className="flex items-center justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm font-medium text-slate-300"
-      >
-        <span>{title}</span>
-        <span className="text-xs text-slate-400">−</span>
-      </div>
-      <div className="ml-3 border-l border-white/8 pl-3">
-        <StrategyList items={items} />
-      </div>
-    </section>
-  )
-}
-
-function StrategyList({ items }: { items: readonly string[] }) {
-  return (
-    <ul className="space-y-2">
-      {items.map(function renderItem(item) {
-        return (
-          <li
-            key={item}
-            className="list-none rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2 text-sm text-slate-300"
-          >
-            {item}
+            </div>
           </li>
         )
       })}
@@ -256,61 +232,50 @@ function StrategyList({ items }: { items: readonly string[] }) {
   )
 }
 
-function SidebarNavGroup({ items, highlightedItem }: { items: readonly string[]; highlightedItem?: string }) {
+function SidebarSection({
+  title,
+  items,
+  testId,
+}: {
+  title: string
+  items: readonly string[]
+  testId?: string
+}) {
   return (
-    <section className="space-y-2" aria-label="主导航">
-      <ul className="space-y-2">
-        {items.map(function renderNavItem(item) {
-          const isHighlighted = item === highlightedItem
-          const navHref = `#${encodeURIComponent(item)}`
-
-          return (
-            <li key={item} className="list-none" data-nav-item={item}>
-              <a
-                href={navHref}
-                aria-current={isHighlighted ? 'page' : undefined}
-                className={cn(
-                  'block rounded-2xl border px-4 py-3 text-sm font-medium transition',
-                  isHighlighted
-                    ? 'border-emerald-400/40 bg-emerald-400/10 text-white shadow-[0_0_0_1px_rgba(16,185,129,0.2)]'
-                    : 'border-white/8 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:bg-white/[0.05] hover:text-white',
-                )}
-              >
-                {item}
-              </a>
-            </li>
-          )
-        })}
+    <section className="space-y-1.5" aria-label={`${title}导航`} data-testid={testId}>
+      <ul className="space-y-1.5">
+        <li className="list-none" data-nav-item={title}>
+          <div className="rounded-xl border border-slate-700/70 bg-slate-900/50 px-3 py-2 text-sm text-slate-200">{title}</div>
+        </li>
       </ul>
+      <div className="pl-2">
+        <SidebarItems items={items} />
+      </div>
     </section>
   )
 }
 
 export function AiHotboardScreen() {
-  const timelineGroups = useMemo<TimelineGroup[]>(function buildTimelineGroups() {
+  const timelineGroups = useMemo<TimelineGroup[]>(() => {
     const enriched = payload.events
       .slice()
-      .map(function enrichEvent(event) {
-        return {
-          ...event,
-          timestamp: normalizeTimelineTimestamp(event.timestamp),
-          signalScore: computeSignalScore(event),
-          actionLine: normalizeActionLine(event.suggested_action),
-          recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
-          condensedSourceLabel: buildCondensedSourceLabel(event),
-          aggregatedSourcesLabel: buildAggregatedSourcesLabel(event),
-        }
-      })
-      .sort(function sortByTimestampDesc(a, b) {
-        return b.timestamp.localeCompare(a.timestamp)
-      })
+      .map((event) => ({
+        ...event,
+        timestamp: normalizeTimelineTimestamp(event.timestamp),
+        signalScore: computeSignalScore(event),
+        actionLine: normalizeActionLine(event.suggested_action),
+        recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
+        condensedSourceLabel: buildCondensedSourceLabel(event),
+        aggregatedSourcesLabel: buildAggregatedSourcesLabel(event),
+      }))
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
 
     const groups = new Map<string, TimelineGroup>()
 
-    enriched.forEach(function assignGroup(event) {
-      const existing = groups.get(event.timestamp)
-      if (existing) {
-        existing.events.push(event)
+    enriched.forEach((event) => {
+      const current = groups.get(event.timestamp)
+      if (current) {
+        current.events.push(event)
         return
       }
 
@@ -324,156 +289,117 @@ export function AiHotboardScreen() {
   }, [])
 
   return (
-    <div className="fixed inset-0 z-[120] overflow-y-auto bg-[#050816] text-slate-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1440px] gap-4 px-3 py-5 sm:gap-5 sm:px-4 lg:gap-6 lg:px-6">
+    <div className="fixed inset-0 z-[120] overflow-y-auto bg-slate-950 text-slate-100">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1440px] gap-4 px-3 py-4 sm:gap-5 sm:px-4 lg:px-6">
         <aside
-          className="w-[240px] shrink-0 rounded-[28px] border border-white/8 bg-[#0b1220] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.45)] sm:w-[260px] sm:p-5 lg:w-[270px]"
+          className="w-[252px] shrink-0 rounded-3xl border border-slate-700/60 bg-slate-950/95 p-4 shadow-[0_30px_80px_rgba(2,6,23,0.6)]"
           aria-label="AI HOT 左侧导航"
         >
-          <div className="mb-6 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
-            <div>
-              <div className="text-[12px] tracking-[0.36em] text-slate-500">SIGNAL BOARD</div>
-              <div className="mt-2 flex items-center gap-2 text-2xl font-semibold tracking-[0.2em] text-white">
-                <span>AI</span>
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-emerald-400/60 text-sm text-emerald-300">
-                  ○
-                </span>
-                <span>HOT</span>
-              </div>
-            </div>
-            <div className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] text-emerald-200">
-              Live
+          <div className="mb-4 rounded-2xl border border-slate-700/70 bg-slate-900/70 px-4 py-3">
+            <div className="text-[11px] tracking-[0.34em] text-slate-500">SIGNAL BOARD</div>
+            <div className="mt-2 flex items-center gap-2 text-[31px] font-semibold tracking-[0.18em] text-cyan-300">
+              <span className="text-slate-100">AI</span>
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-cyan-300/65 text-base leading-none text-cyan-300">
+                ○
+              </span>
+              <span>HOT</span>
             </div>
           </div>
 
-          <nav className="space-y-4" aria-label="AI HOT 导航列表">
-            <SidebarNavGroup items={['精选', '全部 AI 动态', '低粉爆文', '收藏']} highlightedItem="精选" />
-            <SidebarDisclosure title="信源" items={SOURCE_ITEMS} />
-            <SidebarDisclosure title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
-            <SidebarExpandedGroup title="精选策略" items={STRATEGY_LINES} />
-            <SidebarExpandedGroup title="策略迭代" items={STRATEGY_LINES} />
-            <SidebarNavGroup items={['系统', '用户', '退出']} />
+          <nav className="space-y-3" aria-label="AI HOT 导航列表">
+            <SidebarNavItems items={PRIMARY_NAV_ITEMS} highlightedItem="精选" />
+            <SidebarSection title="信源" items={SOURCE_ITEMS} />
+            <SidebarSection title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
+
+            <div className="px-1 text-xs tracking-[0.24em] text-slate-500">策略</div>
+            <SidebarSection title="精选策略" items={STRATEGY_LINES} testId="featured-strategy-section" />
+            <SidebarSection title="策略迭代" items={STRATEGY_ITERATION_ITEMS} testId="strategy-iteration-section" />
+
+            <div className="px-1 text-xs tracking-[0.24em] text-slate-500">后台</div>
+            <SidebarNavItems items={SYSTEM_NAV_ITEMS} />
           </nav>
         </aside>
 
-        <main className="min-w-0 flex-1 rounded-[32px] border border-white/8 bg-[#0a1020] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.4)] sm:p-5 lg:p-6">
-          <header className="mb-6 flex flex-col gap-4 rounded-[26px] border border-white/8 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_36%),linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] px-5 py-5 sm:flex-row sm:items-end sm:justify-between">
+        <main className="min-w-0 flex-1 rounded-3xl border border-slate-700/60 bg-slate-900/65 p-4 shadow-[0_30px_80px_rgba(2,6,23,0.5)] sm:p-5 lg:p-6">
+          <header className="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-700/60 bg-slate-900/80 px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <div className="text-[11px] tracking-[0.35em] text-emerald-300/80">AI HOTBOARD</div>
-              <h1 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">AI 热点看板</h1>
+              <div className="text-[11px] tracking-[0.32em] text-cyan-300/80">AI HOTBOARD</div>
+              <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl">AI 热点看板</h1>
             </div>
-            <div className="flex flex-col items-start gap-2 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-300 sm:items-end">
+            <div className="rounded-xl border border-slate-700/60 bg-slate-950/45 px-3 py-2 text-sm text-slate-300">
               <div>更新时间：{formatGeneratedAt(payload.generated_at)}</div>
               <div>数据来源：{DATA_SOURCE_LABEL}</div>
             </div>
           </header>
 
-          <div className="space-y-6">
-            {timelineGroups.map(function renderGroup(group) {
-              return (
-                <section key={group.timestamp} className="grid grid-cols-[88px_minmax(0,1fr)] gap-4 lg:gap-6">
-                  <div className="sticky top-5 h-fit">
-                    <div className="flex gap-3">
-                      <div className="flex flex-col items-center pt-1">
-                        <span className="h-3.5 w-3.5 rounded-full border-2 border-emerald-300 bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.55)]" />
-                        <span className="mt-2 min-h-20 w-px flex-1 bg-gradient-to-b from-emerald-400/60 via-emerald-400/20 to-transparent" />
-                      </div>
-                      <div className="text-[32px] font-extrabold leading-none tracking-[-0.04em] text-white sm:text-[36px]">
-                        {group.timestamp}
-                      </div>
+          <div className="space-y-5">
+            {timelineGroups.map((group) => (
+              <section key={group.timestamp} className="grid grid-cols-[84px_minmax(0,1fr)] gap-3 sm:gap-4">
+                <div className="pt-0.5">
+                  <div className="flex gap-2">
+                    <div className="flex flex-col items-center">
+                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                      <span className="mt-1 w-px flex-1 bg-gradient-to-b from-emerald-400/70 to-transparent" />
                     </div>
+                    <div className="text-[36px] font-extrabold leading-none tracking-[-0.03em] text-slate-100">{group.timestamp}</div>
                   </div>
+                </div>
 
-                  <div className="space-y-4">
-                    {group.events.map(function renderEvent(event) {
-                      return (
-                        <article
-                          key={event.id}
-                          className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-5 py-4 shadow-[0_22px_60px_rgba(0,0,0,0.24)]"
-                        >
-                          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
-                          <div className="flex flex-col gap-4">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="min-w-0 flex-1 space-y-3.5 pr-0 lg:pr-4">
-                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-slate-400 sm:text-sm">
-                                  <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.55)]" />
-                                  <span className="truncate">{event.condensedSourceLabel}</span>
-                                </div>
-
-                                <h2 className="max-w-4xl text-lg font-bold leading-7 text-white sm:text-[22px] sm:leading-8">
-                                  {event.title}
-                                </h2>
-
-                                <p className="max-w-4xl text-sm leading-6 text-slate-300 sm:text-[15px] sm:leading-7 lg:max-w-[92%]">
-                                  {event.summary}
-                                </p>
-                              </div>
-
-                              <div className="flex shrink-0 items-start gap-2 lg:ml-2">
-                                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(96,165,250,0.95),rgba(37,99,235,0.98))] text-[22px] font-bold leading-none text-white shadow-[0_10px_30px_rgba(37,99,235,0.45)] ring-1 ring-white/10">
-                                  {event.signalScore}
-                                </div>
-                                <div className="flex gap-1.5">
-                                  <span
-                                    className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300"
-                                    aria-label={`点赞数 ${event.engagement.likes}`}
-                                  >
-                                    👍 {event.engagement.likes}
-                                  </span>
-                                  <span
-                                    className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300"
-                                    aria-label={`点踩数 ${event.engagement.dislikes}`}
-                                  >
-                                    👎 {event.engagement.dislikes}
-                                  </span>
-                                  <span
-                                    className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs text-slate-300"
-                                    aria-label={`收藏数 ${event.engagement.bookmarks}`}
-                                  >
-                                    ☆ {event.engagement.bookmarks}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px] leading-5 text-slate-500">
-                              {event.tags.map(function renderTag(tag) {
-                                return (
-                                  <span
-                                    key={`${event.id}-${tag}`}
-                                    className={cn(
-                                      'rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-[0.01em]',
-                                      getTagTone(tag),
-                                    )}
-                                  >
-                                    {tag}
-                                  </span>
-                                )
-                              })}
-                              <span className="text-[11px] text-slate-500">· {event.signal_category}</span>
-                              {event.aggregatedSourcesLabel ? (
-                                <span className="rounded-full border border-white/8 bg-white/[0.03] px-2 py-0.5 text-[11px] text-slate-400">
-                                  {event.aggregatedSourcesLabel}
-                                </span>
-                              ) : null}
-                            </div>
-
-                            <div
-                              className="rounded-2xl border border-emerald-400/24 bg-emerald-400/[0.08] px-4 py-3 text-sm leading-6 text-emerald-50"
-                              data-recommend-banner="true"
-                              aria-label="推荐理由绿色条"
-                            >
-                              <div>{event.recommendReasonLine}</div>
-                              <div className="mt-1 text-emerald-100/85">{event.actionLine}</div>
-                            </div>
+                <div className="space-y-3">
+                  {group.events.map((event) => (
+                    <article
+                      key={event.id}
+                      className="rounded-3xl border border-slate-700/65 bg-slate-900/70 px-4 py-4 shadow-[0_16px_36px_rgba(2,6,23,0.45)]"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1 space-y-2">
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
+                            <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                            <span className="truncate">{event.condensedSourceLabel}</span>
                           </div>
-                        </article>
-                      )
-                    })}
-                  </div>
-                </section>
-              )
-            })}
+
+                          <h2 className="text-xl font-bold leading-7 text-slate-100">{event.title}</h2>
+
+                          <p className="text-[15px] leading-7 text-slate-300">{event.summary}</p>
+                        </div>
+
+                        <div className="flex shrink-0 items-start gap-2 pl-2">
+                          <span className={SIGNAL_BADGE_CLASS} data-testid="signal-score-badge" aria-label={`信号分 ${event.signalScore}`}>
+                            {event.signalScore}
+                          </span>
+                          <div className="flex gap-1 text-xs text-slate-400">
+                            <span className="rounded-full border border-slate-700/70 bg-slate-900/50 px-2 py-1">👍 {event.engagement.likes}</span>
+                            <span className="rounded-full border border-slate-700/70 bg-slate-900/50 px-2 py-1">👎 {event.engagement.dislikes}</span>
+                            <span className="rounded-full border border-slate-700/70 bg-slate-900/50 px-2 py-1">☆ {event.engagement.bookmarks}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
+                        {event.tags.map((tag) => (
+                          <span key={`${event.id}-${tag}`} className={cn('rounded-full border px-2 py-0.5 text-[11px]', getTagTone(tag))}>
+                            {tag}
+                          </span>
+                        ))}
+                        <span>· {event.signal_category}</span>
+                        {event.aggregatedSourcesLabel ? (
+                          <span className="rounded-full border border-slate-700/65 bg-slate-900/50 px-2 py-0.5 text-[11px] text-slate-300">
+                            {event.aggregatedSourcesLabel}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <div className="mt-3" data-testid="recommend-reason-banner">
+                        <div className={RECOMMEND_BANNER_CLASS} data-recommend-banner="true" aria-label="推荐理由绿色条">
+                          <div>{event.recommendReasonLine}</div>
+                          <div className="mt-1 text-emerald-200/90">{event.actionLine}</div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
         </main>
       </div>
