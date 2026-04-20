@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { AiHotboardScreen } from '@/screens/ai-hotboard/ai-hotboard-screen'
+import { type AiHotboardPage } from '@/screens/ai-hotboard/ai-hotboard-route-config'
 
 const HIDDEN_SELECTOR_PAIRS = [
   ['aside', 'Hermes Workspace'],
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/ai-hotboard')({
 })
 
 function AiHotboardRoute() {
-  return <AiHotboardRouteContent source="all" />
+  return <AiHotboardRouteContent source="all" page="featured" />
 }
 
 export function usePrepareAiHotboardPage() {
@@ -103,7 +104,15 @@ export function usePrepareAiHotboardPage() {
   }, [])
 }
 
-export function AiHotboardRouteContent({ source }: { source: string }) {
+export function AiHotboardRouteContent({
+  source,
+  page,
+  strategyLine,
+}: {
+  source: string
+  page?: AiHotboardPage
+  strategyLine?: string
+}) {
   usePrepareAiHotboardPage()
-  return <AiHotboardScreen source={source} />
+  return <AiHotboardScreen source={source} page={page} strategyLine={strategyLine} />
 }
