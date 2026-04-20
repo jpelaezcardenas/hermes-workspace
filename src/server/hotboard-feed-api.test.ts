@@ -1,0 +1,175 @@
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
+import { handleHotboardFeedGet } from './hotboard-feed-api'
+
+const tempDirs: string[] = []
+const originalXFeedPath = process.env.HOTBOARD_X_SIGNAL_PATH
+
+afterEach(() => {
+  if (originalXFeedPath === undefined) {
+    delete process.env.HOTBOARD_X_SIGNAL_PATH
+  } else {
+    process.env.HOTBOARD_X_SIGNAL_PATH = originalXFeedPath
+  }
+
+  while (tempDirs.length > 0) {
+    const dir = tempDirs.pop()
+    if (dir) {
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
+  }
+})
+
+function createTempFeedFile(payload: unknown) {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hotboard-feed-api-'))
+  tempDirs.push(tempDir)
+  const feedPath = path.join(tempDir, 'x_signal_sync_latest.json')
+  fs.writeFileSync(feedPath, JSON.stringify(payload, null, 2), 'utf-8')
+  process.env.HOTBOARD_X_SIGNAL_PATH = feedPath
+  return feedPath
+}
+
+function makeRequest(url: string) {
+  return new Request(url, {
+    headers: {
+      'x-forwarded-for': '127.0.0.1',
+    },
+  })
+}
+
+describe('hotboard feed api handlers', () => {
+  it('returns transformed x feed cards for source=x-bookmarks', async () => {
+    createTempFeedFile({
+      bookmarks: [
+        {
+          id: 'tweet-1',
+          author: 'builder',
+          name: 'Builder Name',
+          text: 'A'.repeat(220),
+          likes: 7,
+          retweets: 2,
+          views: 150,
+          replies: 0,
+          created_at: 'Wed Apr 16 09:35:02 +0000 2026',
+          url: 'https://x.com/builder/status/tweet-1',
+        },
+      ],
+      likes: [],
+      following: [],
+      for_you: [],
+    })
+
+    const response = await handleHotboardFeedGet(makeRequest('http://localhost/api/hotboard/feed?source=x-bookmarks'))
+    expect(response.status).toBe(200)
+
+    const payload = (await response.json()) as {
+      ok: boolean
+      source: string
+      count: number
+      data_source: string
+      fallback: boolean
+      events: Array<Record<string, unknown>>
+    }
+
+    expect(payload.ok).toBe(true)
+    expect(payload.source).toBe('x-bookmarks')
+    expect(payload.count).toBe(1)
+    expect(payload.data_source).toBe('x_signal_sync_latest.json')
+    expect(payload.fallback).toBe(false)
+    expect(payload.events[0]?.event_id).toBe('tweet-1')
+    expect(typeof payload.events[0]?.signal_score).toBe('number')
+    expect(String(payload.events[0]?.summary).length).toBeLessThanOrEqual(203)
+    expect(payload.events[0]?.source_line).toBe('@builder · Builder Name')
+  })
+
+  it('returns merged timeline for source=all sorted by created_at desc', async () => {
+    createTempFeedFile({
+      bookmarks: [
+        {
+          id: 'bookmark-new',
+          author: 'a',
+          name: 'A',
+          text: 'new bookmark',
+          likes: 10,
+          retweets: 2,
+          views: 100,
+          replies: 0,
+          created_at: 'Wed Apr 16 12:00:00 +0000 2026',
+        },
+      ],
+      likes: [
+        {
+          id: 'like-old',
+          author: 'b',
+          name: 'B',
+          text: 'old like',
+          likes: 1,
+          retweets: 0,
+          views: 20,
+          replies: 0,
+          created_at: 'Wed Apr 16 10:00:00 +0000 2026',
+        },
+      ],
+      following: [
+        {
+          id: 'follow-mid',
+          author: 'c',
+          name: 'C',
+          text: 'mid follow',
+          likes: 3,
+          retweets: 1,
+          views: 50,
+          replies: 0,
+          created_at: 'Wed Apr 16 11:00:00 +0000 2026',
+        },
+      ],
+      for_you: [],
+    })
+
+    const response = await handleHotboardFeedGet(makeRequest('http://localhost/api/hotboard/feed?source=all'))
+    expect(response.status).toBe(200)
+
+    const payload = (await response.json()) as {
+      count: number
+      events: Array<{ event_id: string }>
+    }
+
+    expect(payload.count).toBe(3)
+    expect(payload.events.map((item) => item.event_id)).toEqual([
+      'bookmark-new',
+      'follow-mid',
+      'like-old',
+    ])
+  })
+
+  it('falls back to mock data when x feed file is missing', async () => {
+    process.env.HOTBOARD_X_SIGNAL_PATH = path.join(os.tmpdir(), 'missing-hotboard-feed.json')
+    const response = await handleHotboardFeedGet(makeRequest('http://localhost/api/hotboard/feed?source=x-following'))
+    expect(response.status).toBe(200)
+
+    const payload = (await response.json()) as {
+      ok: boolean
+      fallback: boolean
+      data_source: string
+      count: number
+      events: Array<Record<string, unknown>>
+    }
+
+    expect(payload.ok).toBe(true)
+    expect(payload.fallback).toBe(true)
+    expect(payload.data_source).toBe('ai_hotboard_mock_events.json')
+    expect(payload.count).toBeGreaterThan(0)
+    expect(payload.events[0]).toHaveProperty('event_id')
+    expect(payload.events[0]).toHaveProperty('signal_score')
+  })
+
+  it('returns 400 on invalid source query value', async () => {
+    const response = await handleHotboardFeedGet(makeRequest('http://localhost/api/hotboard/feed?source=bad-source'))
+    expect(response.status).toBe(400)
+    const payload = (await response.json()) as { ok: boolean; error: string }
+    expect(payload.ok).toBe(false)
+    expect(payload.error).toContain('Invalid source')
+  })
+})

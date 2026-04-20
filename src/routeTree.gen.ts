@@ -56,7 +56,9 @@ import { Route as ApiMemorySearchRouteImport } from './routes/api/memory/search'
 import { Route as ApiMemoryReadRouteImport } from './routes/api/memory/read'
 import { Route as ApiMemoryListRouteImport } from './routes/api/memory/list'
 import { Route as ApiHotboardVoteRouteImport } from './routes/api/hotboard/vote'
+import { Route as ApiHotboardFeedRouteImport } from './routes/api/hotboard/feed'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
+import { Route as AiHotboardSourceSourceRouteImport } from './routes/ai-hotboard/source/$source'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiHotboardVoteAggregateRouteImport } from './routes/api/hotboard/vote/aggregate'
 
@@ -295,10 +297,20 @@ const ApiHotboardVoteRoute = ApiHotboardVoteRouteImport.update({
   path: '/api/hotboard/vote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHotboardFeedRoute = ApiHotboardFeedRouteImport.update({
+  id: '/api/hotboard/feed',
+  path: '/api/hotboard/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHermesJobsJobIdRoute = ApiHermesJobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
   getParentRoute: () => ApiHermesJobsRoute,
+} as any)
+const AiHotboardSourceSourceRoute = AiHotboardSourceSourceRouteImport.update({
+  id: '/source/$source',
+  path: '/source/$source',
+  getParentRoute: () => AiHotboardRoute,
 } as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
@@ -316,7 +328,7 @@ const ApiHotboardVoteAggregateRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/ai-hotboard': typeof AiHotboardRoute
+  '/ai-hotboard': typeof AiHotboardRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
@@ -353,7 +365,9 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
+  '/api/hotboard/feed': typeof ApiHotboardFeedRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
@@ -368,7 +382,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/ai-hotboard': typeof AiHotboardRoute
+  '/ai-hotboard': typeof AiHotboardRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
@@ -404,7 +418,9 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
+  '/api/hotboard/feed': typeof ApiHotboardFeedRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
@@ -420,7 +436,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/ai-hotboard': typeof AiHotboardRoute
+  '/ai-hotboard': typeof AiHotboardRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
@@ -457,7 +473,9 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
+  '/api/hotboard/feed': typeof ApiHotboardFeedRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
@@ -511,7 +529,9 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/ai-hotboard/source/$source'
     | '/api/hermes-jobs/$jobId'
+    | '/api/hotboard/feed'
     | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
@@ -562,7 +582,9 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/ai-hotboard/source/$source'
     | '/api/hermes-jobs/$jobId'
+    | '/api/hotboard/feed'
     | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
@@ -614,7 +636,9 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/ai-hotboard/source/$source'
     | '/api/hermes-jobs/$jobId'
+    | '/api/hotboard/feed'
     | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
@@ -630,7 +654,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
-  AiHotboardRoute: typeof AiHotboardRoute
+  AiHotboardRoute: typeof AiHotboardRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
   JobsRoute: typeof JobsRoute
@@ -665,6 +689,7 @@ export interface RootRouteChildren {
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  ApiHotboardFeedRoute: typeof ApiHotboardFeedRoute
   ApiHotboardVoteRoute: typeof ApiHotboardVoteRouteWithChildren
   ApiMemoryListRoute: typeof ApiMemoryListRoute
   ApiMemoryReadRoute: typeof ApiMemoryReadRoute
@@ -1005,12 +1030,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHotboardVoteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hotboard/feed': {
+      id: '/api/hotboard/feed'
+      path: '/api/hotboard/feed'
+      fullPath: '/api/hotboard/feed'
+      preLoaderRoute: typeof ApiHotboardFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hermes-jobs/$jobId': {
       id: '/api/hermes-jobs/$jobId'
       path: '/$jobId'
       fullPath: '/api/hermes-jobs/$jobId'
       preLoaderRoute: typeof ApiHermesJobsJobIdRouteImport
       parentRoute: typeof ApiHermesJobsRoute
+    }
+    '/ai-hotboard/source/$source': {
+      id: '/ai-hotboard/source/$source'
+      path: '/source/$source'
+      fullPath: '/ai-hotboard/source/$source'
+      preLoaderRoute: typeof AiHotboardSourceSourceRouteImport
+      parentRoute: typeof AiHotboardRoute
     }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
@@ -1028,6 +1067,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AiHotboardRouteChildren {
+  AiHotboardSourceSourceRoute: typeof AiHotboardSourceSourceRoute
+}
+
+const AiHotboardRouteChildren: AiHotboardRouteChildren = {
+  AiHotboardSourceSourceRoute: AiHotboardSourceSourceRoute,
+}
+
+const AiHotboardRouteWithChildren = AiHotboardRoute._addFileChildren(
+  AiHotboardRouteChildren,
+)
 
 interface SettingsRouteChildren {
   SettingsProvidersRoute: typeof SettingsProvidersRoute
@@ -1084,7 +1135,7 @@ const ApiHotboardVoteRouteWithChildren = ApiHotboardVoteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
-  AiHotboardRoute: AiHotboardRoute,
+  AiHotboardRoute: AiHotboardRouteWithChildren,
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
   JobsRoute: JobsRoute,
@@ -1119,6 +1170,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
+  ApiHotboardFeedRoute: ApiHotboardFeedRoute,
   ApiHotboardVoteRoute: ApiHotboardVoteRouteWithChildren,
   ApiMemoryListRoute: ApiMemoryListRoute,
   ApiMemoryReadRoute: ApiMemoryReadRoute,

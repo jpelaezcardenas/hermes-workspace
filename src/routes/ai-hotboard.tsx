@@ -15,6 +15,10 @@ export const Route = createFileRoute('/ai-hotboard')({
 })
 
 function AiHotboardRoute() {
+  return <AiHotboardRouteContent source="all" />
+}
+
+export function usePrepareAiHotboardPage() {
   usePageTitle('AI 热点看板')
 
   useEffect(() => {
@@ -97,6 +101,9 @@ function AiHotboardRoute() {
       })
     }
   }, [])
+}
 
-  return <AiHotboardScreen />
+export function AiHotboardRouteContent({ source }: { source: string }) {
+  usePrepareAiHotboardPage()
+  return <AiHotboardScreen source={source} />
 }

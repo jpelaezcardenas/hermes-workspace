@@ -1,26 +1,15 @@
+import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import hotboardData from './ai_hotboard_mock_events.json'
-
-type MockEvent = {
-  id: string
-  timestamp: string
-  source_type: string
-  source_name: string
-  source_channel: string
-  title: string
-  summary: string
-  tags: string[]
-  signal_category: string
-  aggregated_sources_count: number
-  engagement: {
-    likes: number
-    dislikes: number
-    bookmarks: number
-  }
-  recommend_reason: string
-  suggested_action: string
-}
+import {
+  buildFallbackEventsFromMock,
+  mapFeedEventToMockEvent,
+  normalizeTimelineTimestamp,
+  parseGeneratedAtValue,
+  toSupportedHotboardSource,
+  type MockEvent,
+} from './ai-hotboard-feed-adapter'
 
 type MockPayload = {
   generated_at: string
@@ -29,6 +18,7 @@ type MockPayload = {
 }
 
 type TimelineEvent = MockEvent & {
+  id: string
   signalScore: number
   actionLine: string
   recommendReasonLine: string
@@ -67,6 +57,13 @@ export const SOURCE_ITEMS = [
 ] as const
 
 export const SOURCE_SUBMISSION_ITEMS = ['JC 苹果备忘录日记', '爱马仕战略发现', '小J 执行发现'] as const
+
+export const X_SOURCE_ROUTE_ITEMS = [
+  { key: 'x-bookmarks', label: 'X bookmarks', to: '/ai-hotboard/source/x-bookmarks' },
+  { key: 'x-likes', label: 'X likes', to: '/ai-hotboard/source/x-likes' },
+  { key: 'x-following', label: 'X following', to: '/ai-hotboard/source/x-following' },
+  { key: 'x-for_you', label: 'X for_you', to: '/ai-hotboard/source/x-for_you' },
+] as const
 
 export const STRATEGY_LINES = [
   'M2 A线 | 抓数稳定化',
@@ -194,16 +191,6 @@ function formatGeneratedAt(value: string) {
   }).format(date)
 }
 
-function normalizeTimelineTimestamp(timestamp: string) {
-  const trimmed = timestamp.trim()
-  const match = trimmed.match(/^(\d{1,2}):(\d{1,2})$/)
-
-  if (!match) return trimmed
-
-  const [, hour, minute] = match
-  return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`
-}
-
 function getTagTone(tag: string) {
   if (tag === 'Agent' || tag === '多Agent架构' || tag === 'skills' || tag === '对抗式监督') {
     return 'border-cyan-300/25 bg-cyan-300/10 text-cyan-100'
@@ -280,27 +267,125 @@ function SidebarSection({
   )
 }
 
-export function AiHotboardScreen() {
+function SourceRouteItems({
+  highlightedItem,
+}: {
+  highlightedItem: string
+}) {
+  return (
+    <ul className="space-y-1.5">
+      <li className="list-none" data-nav-item="信源">
+        <div className="rounded-xl border border-slate-700/70 bg-slate-900/50 px-3 py-2 text-sm text-slate-200">信源</div>
+      </li>
+      <li className="list-none">
+        <div className="pl-2 space-y-1.5">
+          {X_SOURCE_ROUTE_ITEMS.map((item) => {
+            const highlighted = highlightedItem === item.key
+            return (
+              <Link key={item.key} to={item.to} className="block rounded-xl focus-visible:outline-none">
+                <div
+                  className={cn(
+                    'rounded-xl border px-3 py-2 text-sm transition-colors',
+                    highlighted
+                      ? 'border-cyan-400/45 bg-cyan-400/15 font-medium text-cyan-100'
+                      : 'border-slate-700/70 bg-slate-900/50 text-slate-300 hover:border-slate-500/80 hover:text-slate-100',
+                  )}
+                >
+                  {item.label}
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </li>
+    </ul>
+  )
+}
+
+export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
+  const normalizedSource = toSupportedHotboardSource(source)
   const userIdRef = useRef<string>('')
   if (!userIdRef.current) {
     userIdRef.current = getOrCreateHotboardUserId()
   }
 
+  const [remotePayload, setRemotePayload] = useState<MockPayload>(payload)
+  const [remoteSourceLabel, setRemoteSourceLabel] = useState(DATA_SOURCE_LABEL)
+  const [remoteGeneratedAt, setRemoteGeneratedAt] = useState(payload.generated_at)
   const [voteAggregateByEvent, setVoteAggregateByEvent] = useState<VoteAggregateByEvent>({})
 
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadFeed() {
+      try {
+        const response = await fetch(
+          `/api/hotboard/feed?source=${encodeURIComponent(normalizedSource)}`,
+        )
+        if (!response.ok) throw new Error('feed request failed')
+
+        const body = (await response.json().catch(() => ({}))) as {
+          generated_at?: string
+          data_source?: string
+          events?: Array<Record<string, unknown>>
+        }
+
+        const list = Array.isArray(body.events) ? body.events : []
+        const normalizedEvents: MockEvent[] = list.map((item, index) =>
+          mapFeedEventToMockEvent(item, `api-${normalizedSource}-${index}`, normalizedSource),
+        )
+
+        if (cancelled) return
+
+        if (normalizedEvents.length > 0) {
+          setRemotePayload({
+            generated_at: String(body.generated_at ?? new Date().toISOString()),
+            note: `source=${normalizedSource}`,
+            events: normalizedEvents,
+          })
+          setRemoteSourceLabel(String(body.data_source ?? DATA_SOURCE_LABEL))
+          setRemoteGeneratedAt(String(body.generated_at ?? new Date().toISOString()))
+          return
+        }
+      } catch {
+        // Keep fallback payload when feed API fails.
+      }
+
+      if (!cancelled) {
+          setRemotePayload({
+            generated_at: payload.generated_at,
+            note: payload.note,
+            events: buildFallbackEventsFromMock(normalizedSource, payload.events),
+          })
+        setRemoteSourceLabel(DATA_SOURCE_LABEL)
+        setRemoteGeneratedAt(payload.generated_at)
+      }
+    }
+
+    loadFeed()
+    return () => {
+      cancelled = true
+    }
+  }, [normalizedSource])
+
   const timelineGroups = useMemo<TimelineGroup[]>(() => {
-    const enriched = payload.events
+    const enriched = remotePayload.events
       .slice()
       .map((event) => ({
         ...event,
+        id: event.event_id?.trim() || event.id,
         timestamp: normalizeTimelineTimestamp(event.timestamp),
-        signalScore: computeSignalScore(event),
+        signalScore: event.signal_score ?? computeSignalScore(event),
         actionLine: normalizeActionLine(event.suggested_action),
         recommendReasonLine: normalizeRecommendReason(event.recommend_reason),
         condensedSourceLabel: buildCondensedSourceLabel(event),
         aggregatedSourcesLabel: buildAggregatedSourcesLabel(event),
       }))
-      .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+      .sort(
+        (a, b) =>
+          parseGeneratedAtValue(b.created_at ?? b.timestamp) -
+          parseGeneratedAtValue(a.created_at ?? a.timestamp),
+      )
 
     const groups = new Map<string, TimelineGroup>()
 
@@ -318,7 +403,7 @@ export function AiHotboardScreen() {
     })
 
     return Array.from(groups.values())
-  }, [])
+  }, [remotePayload])
 
   useEffect(() => {
     let cancelled = false
@@ -447,7 +532,7 @@ export function AiHotboardScreen() {
 
           <nav className="space-y-3" aria-label="AI HOT 导航列表">
             <SidebarNavItems items={PRIMARY_NAV_ITEMS} highlightedItem="精选" />
-            <SidebarSection title="信源" items={SOURCE_ITEMS} />
+            <SourceRouteItems highlightedItem={normalizedSource} />
             <SidebarSection title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
 
             <div className="px-1 text-xs tracking-[0.24em] text-slate-500">策略</div>
@@ -466,8 +551,8 @@ export function AiHotboardScreen() {
               <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl">AI 热点看板</h1>
             </div>
             <div className="rounded-xl border border-slate-700/60 bg-slate-950/45 px-3 py-2 text-sm text-slate-300">
-              <div>更新时间：{formatGeneratedAt(payload.generated_at)}</div>
-              <div>数据来源：{DATA_SOURCE_LABEL}</div>
+              <div>更新时间：{formatGeneratedAt(remoteGeneratedAt)}</div>
+              <div>数据来源：{remoteSourceLabel}</div>
             </div>
           </header>
 
