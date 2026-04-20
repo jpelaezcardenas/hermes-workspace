@@ -48,6 +48,7 @@ import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
+import { Route as AuthFeishuCallbackRouteImport } from './routes/auth/feishu/callback'
 import { Route as ApiSessionsSendRouteImport } from './routes/api/sessions/send'
 import { Route as ApiOauthPollTokenRouteImport } from './routes/api/oauth.poll-token'
 import { Route as ApiOauthDeviceCodeRouteImport } from './routes/api/oauth.device-code'
@@ -58,6 +59,7 @@ import { Route as ApiMemoryListRouteImport } from './routes/api/memory/list'
 import { Route as ApiHotboardVoteRouteImport } from './routes/api/hotboard/vote'
 import { Route as ApiHotboardFeedRouteImport } from './routes/api/hotboard/feed'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
+import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
 import { Route as AiHotboardSourceSourceRouteImport } from './routes/ai-hotboard/source/$source'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiHotboardVoteAggregateRouteImport } from './routes/api/hotboard/vote/aggregate'
@@ -257,6 +259,11 @@ const ApiAuthRoute = ApiAuthRouteImport.update({
   path: '/api/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthFeishuCallbackRoute = AuthFeishuCallbackRouteImport.update({
+  id: '/auth/feishu/callback',
+  path: '/auth/feishu/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSessionsSendRoute = ApiSessionsSendRouteImport.update({
   id: '/send',
   path: '/send',
@@ -307,6 +314,11 @@ const ApiHermesJobsJobIdRoute = ApiHermesJobsJobIdRouteImport.update({
   path: '/$jobId',
   getParentRoute: () => ApiHermesJobsRoute,
 } as any)
+const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => ApiAuthRoute,
+} as any)
 const AiHotboardSourceSourceRoute = AiHotboardSourceSourceRouteImport.update({
   id: '/source/$source',
   path: '/source/$source',
@@ -336,7 +348,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/terminal': typeof TerminalRoute
-  '/api/auth': typeof ApiAuthRoute
+  '/api/auth': typeof ApiAuthRouteWithChildren
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
@@ -366,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
+  '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hotboard/feed': typeof ApiHotboardFeedRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
@@ -376,6 +389,7 @@ export interface FileRoutesByFullPath {
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
+  '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -389,7 +403,7 @@ export interface FileRoutesByTo {
   '/memory': typeof MemoryRoute
   '/skills': typeof SkillsRoute
   '/terminal': typeof TerminalRoute
-  '/api/auth': typeof ApiAuthRoute
+  '/api/auth': typeof ApiAuthRouteWithChildren
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
@@ -419,6 +433,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
+  '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hotboard/feed': typeof ApiHotboardFeedRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
@@ -429,6 +444,7 @@ export interface FileRoutesByTo {
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
+  '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -444,7 +460,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/terminal': typeof TerminalRoute
-  '/api/auth': typeof ApiAuthRoute
+  '/api/auth': typeof ApiAuthRouteWithChildren
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
@@ -474,6 +490,7 @@ export interface FileRoutesById {
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
+  '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hotboard/feed': typeof ApiHotboardFeedRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
@@ -484,6 +501,7 @@ export interface FileRoutesById {
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
+  '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -530,6 +548,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/settings/'
     | '/ai-hotboard/source/$source'
+    | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hotboard/feed'
     | '/api/hotboard/vote'
@@ -540,6 +559,7 @@ export interface FileRouteTypes {
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/sessions/send'
+    | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
@@ -583,6 +603,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/settings'
     | '/ai-hotboard/source/$source'
+    | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hotboard/feed'
     | '/api/hotboard/vote'
@@ -593,6 +614,7 @@ export interface FileRouteTypes {
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/sessions/send'
+    | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/status'
   id:
@@ -637,6 +659,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/settings/'
     | '/ai-hotboard/source/$source'
+    | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hotboard/feed'
     | '/api/hotboard/vote'
@@ -647,6 +670,7 @@ export interface FileRouteTypes {
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/sessions/send'
+    | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
@@ -662,7 +686,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
   TerminalRoute: typeof TerminalRoute
-  ApiAuthRoute: typeof ApiAuthRoute
+  ApiAuthRoute: typeof ApiAuthRouteWithChildren
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
   ApiChatEventsRoute: typeof ApiChatEventsRoute
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
@@ -697,6 +721,7 @@ export interface RootRouteChildren {
   ApiMemoryWriteRoute: typeof ApiMemoryWriteRoute
   ApiOauthDeviceCodeRoute: typeof ApiOauthDeviceCodeRoute
   ApiOauthPollTokenRoute: typeof ApiOauthPollTokenRoute
+  AuthFeishuCallbackRoute: typeof AuthFeishuCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -974,6 +999,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/feishu/callback': {
+      id: '/auth/feishu/callback'
+      path: '/auth/feishu/callback'
+      fullPath: '/auth/feishu/callback'
+      preLoaderRoute: typeof AuthFeishuCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/sessions/send': {
       id: '/api/sessions/send'
       path: '/send'
@@ -1044,6 +1076,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesJobsJobIdRouteImport
       parentRoute: typeof ApiHermesJobsRoute
     }
+    '/api/auth/logout': {
+      id: '/api/auth/logout'
+      path: '/logout'
+      fullPath: '/api/auth/logout'
+      preLoaderRoute: typeof ApiAuthLogoutRouteImport
+      parentRoute: typeof ApiAuthRoute
+    }
     '/ai-hotboard/source/$source': {
       id: '/ai-hotboard/source/$source'
       path: '/source/$source'
@@ -1094,6 +1133,17 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
 
+interface ApiAuthRouteChildren {
+  ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
+}
+
+const ApiAuthRouteChildren: ApiAuthRouteChildren = {
+  ApiAuthLogoutRoute: ApiAuthLogoutRoute,
+}
+
+const ApiAuthRouteWithChildren =
+  ApiAuthRoute._addFileChildren(ApiAuthRouteChildren)
+
 interface ApiHermesJobsRouteChildren {
   ApiHermesJobsJobIdRoute: typeof ApiHermesJobsJobIdRoute
 }
@@ -1143,7 +1193,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
   TerminalRoute: TerminalRoute,
-  ApiAuthRoute: ApiAuthRoute,
+  ApiAuthRoute: ApiAuthRouteWithChildren,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
   ApiChatEventsRoute: ApiChatEventsRoute,
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
@@ -1178,6 +1228,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMemoryWriteRoute: ApiMemoryWriteRoute,
   ApiOauthDeviceCodeRoute: ApiOauthDeviceCodeRoute,
   ApiOauthPollTokenRoute: ApiOauthPollTokenRoute,
+  AuthFeishuCallbackRoute: AuthFeishuCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

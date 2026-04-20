@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { json } from '@tanstack/react-start'
 import { z } from 'zod'
-import { isAuthenticated } from './auth-middleware'
+import { getSessionUser, isAuthenticated } from './auth-middleware'
 import {
   getClientIp,
   rateLimit,
@@ -17,28 +17,15 @@ import {
 const VoteSchema = z.object({
   event_id: z.string().min(1).max(500),
   vote_type: z.enum(VOTE_TYPES),
-  user_id: z.string().min(1).max(200).optional(),
 })
-
-function resolveUserId(input?: string) {
-  const normalized = input?.trim()
-  if (normalized && normalized.length > 0) {
-    return normalized
-  }
-  return randomUUID()
-}
-
-function resolveUserIdFromRequest(request: Request) {
-  const url = new URL(request.url)
-  const explicit = url.searchParams.get('user_id')?.trim()
-  if (explicit) {
-    return explicit
-  }
-  return randomUUID()
-}
 
 export async function handleHotboardVotePost(request: Request): Promise<Response> {
   if (!isAuthenticated(request)) {
+    return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const sessionUser = getSessionUser(request)
+  if (!sessionUser) {
     return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -59,7 +46,7 @@ export async function handleHotboardVotePost(request: Request): Promise<Response
     }
 
     const body = parsed.data
-    const userId = resolveUserId(body.user_id)
+    const userId = sessionUser.feishu_open_id || randomUUID()
     const store = createHotboardVoteStore()
     const result = store.toggleVote({
       eventId: body.event_id,
@@ -89,8 +76,13 @@ export async function handleHotboardVoteAggregateGet(request: Request): Promise<
     return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
 
+  const sessionUser = getSessionUser(request)
+  if (!sessionUser) {
+    return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
-    const userId = resolveUserIdFromRequest(request)
+    const userId = sessionUser.feishu_open_id || randomUUID()
     const store = createHotboardVoteStore()
     return json({
       ok: true,

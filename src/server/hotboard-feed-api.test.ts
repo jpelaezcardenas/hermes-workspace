@@ -2,16 +2,24 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
+import { createSessionStore, storeSessionToken } from './auth-middleware'
 import { handleHotboardFeedGet } from './hotboard-feed-api'
 
 const tempDirs: string[] = []
 const originalXFeedPath = process.env.HOTBOARD_X_SIGNAL_PATH
+const originalAuthDbPath = process.env.HERMES_AUTH_DB_PATH
 
 afterEach(() => {
   if (originalXFeedPath === undefined) {
     delete process.env.HOTBOARD_X_SIGNAL_PATH
   } else {
     process.env.HOTBOARD_X_SIGNAL_PATH = originalXFeedPath
+  }
+
+  if (originalAuthDbPath === undefined) {
+    delete process.env.HERMES_AUTH_DB_PATH
+  } else {
+    process.env.HERMES_AUTH_DB_PATH = originalAuthDbPath
   }
 
   while (tempDirs.length > 0) {
@@ -22,9 +30,29 @@ afterEach(() => {
   }
 })
 
-function createTempFeedFile(payload: unknown) {
+function setupTempAuth() {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hotboard-feed-api-'))
   tempDirs.push(tempDir)
+  process.env.HERMES_AUTH_DB_PATH = path.join(tempDir, 'auth.sqlite')
+
+  const store = createSessionStore()
+  store.upsertUser({
+    feishuOpenId: 'ou_40ece573ca861adce640dc9ea5054460',
+    feishuUnionId: 'on_owner',
+    displayName: 'JC',
+    role: 'owner',
+  })
+
+  storeSessionToken('session-jc', {
+    userId: 'ou_40ece573ca861adce640dc9ea5054460',
+    ttlSeconds: 7 * 24 * 60 * 60,
+  })
+
+  return tempDir
+}
+
+function createTempFeedFile(payload: unknown) {
+  const tempDir = setupTempAuth()
   const feedPath = path.join(tempDir, 'x_signal_sync_latest.json')
   fs.writeFileSync(feedPath, JSON.stringify(payload, null, 2), 'utf-8')
   process.env.HOTBOARD_X_SIGNAL_PATH = feedPath
@@ -35,6 +63,7 @@ function makeRequest(url: string) {
   return new Request(url, {
     headers: {
       'x-forwarded-for': '127.0.0.1',
+      cookie: 'hermes-auth=session-jc',
     },
   })
 }
@@ -145,6 +174,7 @@ describe('hotboard feed api handlers', () => {
   })
 
   it('falls back to mock data when x feed file is missing', async () => {
+    setupTempAuth()
     process.env.HOTBOARD_X_SIGNAL_PATH = path.join(os.tmpdir(), 'missing-hotboard-feed.json')
     const response = await handleHotboardFeedGet(makeRequest('http://localhost/api/hotboard/feed?source=x-following'))
     expect(response.status).toBe(200)
@@ -166,6 +196,7 @@ describe('hotboard feed api handlers', () => {
   })
 
   it('returns 400 on invalid source query value', async () => {
+    setupTempAuth()
     const response = await handleHotboardFeedGet(makeRequest('http://localhost/api/hotboard/feed?source=bad-source'))
     expect(response.status).toBe(400)
     const payload = (await response.json()) as { ok: boolean; error: string }

@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { fetchHermesAuthStatus, type AuthUser } from '@/lib/hermes-auth'
 import hotboardData from './ai_hotboard_mock_events.json'
 import {
   buildFallbackEventsFromMock,
@@ -33,7 +34,6 @@ type TimelineGroup = {
 
 const payload = hotboardData as MockPayload
 const DATA_SOURCE_LABEL = 'ai_hotboard_mock_events.json'
-const HOTBOARD_USER_ID_KEY = 'ai-hotboard-user-id'
 
 type VoteType = 'like' | 'dislike' | 'bookmark'
 
@@ -166,19 +166,6 @@ function buildAggregatedSourcesLabel(event: MockEvent) {
   return `另有 ${event.aggregated_sources_count} 个源也报道了此事件`
 }
 
-function getOrCreateHotboardUserId() {
-  if (typeof window === 'undefined') return `hotboard-${Date.now()}`
-  const existing = window.localStorage.getItem(HOTBOARD_USER_ID_KEY)?.trim()
-  if (existing) {
-    return existing
-  }
-  const next = window.crypto?.randomUUID
-    ? window.crypto.randomUUID()
-    : `hotboard-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
-  window.localStorage.setItem(HOTBOARD_USER_ID_KEY, next)
-  return next
-}
-
 function formatGeneratedAt(value: string) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
@@ -304,10 +291,9 @@ function SourceRouteItems({
 
 export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
   const normalizedSource = toSupportedHotboardSource(source)
-  const userIdRef = useRef<string>('')
-  if (!userIdRef.current) {
-    userIdRef.current = getOrCreateHotboardUserId()
-  }
+  const userIdRef = useRef<string>('unknown-user')
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const [remotePayload, setRemotePayload] = useState<MockPayload>(payload)
   const [remoteSourceLabel, setRemoteSourceLabel] = useState(DATA_SOURCE_LABEL)
@@ -408,11 +394,24 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
   useEffect(() => {
     let cancelled = false
 
+    async function loadAuthUser() {
+      try {
+        const auth = await fetchHermesAuthStatus()
+        if (cancelled) return
+        if (auth.user?.feishu_open_id) {
+          userIdRef.current = auth.user.feishu_open_id
+          setAuthUser(auth.user)
+        }
+      } catch {
+        if (!cancelled) {
+          setAuthUser(null)
+        }
+      }
+    }
+
     async function loadAggregate() {
       try {
-        const response = await fetch(
-          `/api/hotboard/vote/aggregate?user_id=${encodeURIComponent(userIdRef.current)}`,
-        )
+        const response = await fetch('/api/hotboard/vote/aggregate')
         if (!response.ok) return
         const payload = (await response.json().catch(() => ({}))) as {
           aggregate?: VoteAggregateByEvent
@@ -421,7 +420,6 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
         if (cancelled) return
         if (payload.user_id && payload.user_id.trim()) {
           userIdRef.current = payload.user_id
-          window.localStorage.setItem(HOTBOARD_USER_ID_KEY, payload.user_id)
         }
         setVoteAggregateByEvent(
           payload.aggregate && typeof payload.aggregate === 'object' ? payload.aggregate : {},
@@ -431,11 +429,24 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
       }
     }
 
-    loadAggregate()
+    void loadAuthUser()
+    void loadAggregate()
     return () => {
       cancelled = true
     }
   }, [])
+
+  async function handleLogout() {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      })
+    } finally {
+      window.location.href = '/ai-hotboard'
+    }
+  }
 
   function resolveVoteAggregate(event: TimelineEvent): VoteAggregateEntry {
     const existing = voteAggregateByEvent[event.id]
@@ -483,7 +494,6 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
         body: JSON.stringify({
           event_id: eventId,
           vote_type: voteType,
-          user_id: userIdRef.current,
         }),
       })
 
@@ -498,7 +508,6 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
 
       if (payload.user_id && payload.user_id.trim()) {
         userIdRef.current = payload.user_id
-        window.localStorage.setItem(HOTBOARD_USER_ID_KEY, payload.user_id)
       }
 
       if (payload.aggregate && typeof payload.aggregate === 'object') {
@@ -550,9 +559,25 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
               <div className="text-[11px] tracking-[0.32em] text-cyan-300/80">AI HOTBOARD</div>
               <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl">AI 热点看板</h1>
             </div>
-            <div className="rounded-xl border border-slate-700/60 bg-slate-950/45 px-3 py-2 text-sm text-slate-300">
+            <div className="flex flex-col gap-2 rounded-xl border border-slate-700/60 bg-slate-950/45 px-3 py-2 text-sm text-slate-300">
               <div>更新时间：{formatGeneratedAt(remoteGeneratedAt)}</div>
               <div>数据来源：{remoteSourceLabel}</div>
+              <div className="flex items-center justify-between gap-2 rounded-md border border-slate-700/50 bg-slate-900/60 px-2 py-1">
+                <span>
+                  欢迎 {authUser?.display_name ?? '成员'}
+                  {authUser?.role === 'owner' ? ' (admin)' : ''}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleLogout()
+                  }}
+                  disabled={isLoggingOut}
+                  className="rounded border border-slate-600/70 px-2 py-0.5 text-xs text-slate-200 transition-colors hover:border-slate-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isLoggingOut ? '退出中...' : '登出'}
+                </button>
+              </div>
             </div>
           </header>
 
