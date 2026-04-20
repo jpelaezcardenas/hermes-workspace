@@ -12,7 +12,7 @@
  * Non-chat routes show the sub-page content.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useRouterState } from '@tanstack/react-router'
+import { Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Suspense, lazy } from 'react'
 import type { SessionMeta } from '@/screens/chat/types'
@@ -30,10 +30,11 @@ import { LoginScreen } from '@/components/auth/login-screen'
 import { MobileTabBar } from '@/components/mobile-tab-bar'
 import { MobileHamburgerMenu } from '@/components/mobile-hamburger-menu'
 import { MobilePageHeader } from '@/components/mobile-page-header'
-
+import { HermesOnboarding } from '@/components/onboarding/hermes-onboarding'
 import { MobileTerminalInput } from '@/components/terminal/mobile-terminal-input'
 import { HermesReconnectBanner } from '@/components/hermes-reconnect-banner'
 import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard'
+import { ErrorBoundary } from '@/components/error-boundary'
 // System metrics footer removed — not used in Hermes Workspace
 import { CommandPalette } from '@/components/command-palette'
 import { useSettings } from '@/hooks/use-settings'
@@ -60,11 +61,7 @@ async function fetchSessions(): Promise<SessionsListResponse> {
       : []
 }
 
-type WorkspaceShellProps = {
-  children?: React.ReactNode
-}
-
-export function WorkspaceShell({ children }: WorkspaceShellProps) {
+export function WorkspaceShell() {
   const navigate = useNavigate()
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -102,12 +99,9 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (path.startsWith('/files')) return 2
     if (path.startsWith('/terminal')) return 3
     if (path.startsWith('/jobs')) return 4
-    if (path.startsWith('/conductor')) return 5
-    if (path.startsWith('/operations')) return 6
-    if (path.startsWith('/memory')) return 7
-    if (path.startsWith('/skills')) return 8
-    if (path.startsWith('/profiles')) return 9
-    if (path.startsWith('/settings')) return 10
+    if (path.startsWith('/memory')) return 5
+    if (path.startsWith('/skills')) return 6
+    if (path.startsWith('/settings')) return 7
     return -1
   }, [])
 
@@ -133,11 +127,8 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (pathname.startsWith('/terminal')) return 'Terminal'
     if (pathname.startsWith('/files')) return 'Files'
     if (pathname.startsWith('/jobs')) return 'Jobs'
-    if (pathname.startsWith('/conductor')) return 'Conductor'
-    if (pathname.startsWith('/operations')) return 'Operations'
     if (pathname.startsWith('/memory')) return 'Memory'
     if (pathname.startsWith('/skills')) return 'Skills'
-    if (pathname.startsWith('/profiles')) return 'Profiles'
     if (pathname.startsWith('/settings')) return 'Settings'
     if (pathname.startsWith('/debug')) return 'Debug'
     if (pathname.startsWith('/activity')) return 'Activity'
@@ -148,6 +139,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const activeFriendlyId = chatMatch ? chatMatch[1] : 'main'
   const isOnChatRoute = Boolean(chatMatch) || pathname === '/new'
   const isOnTerminalRoute = pathname.startsWith('/terminal')
+  const suppressFirstOpenOverlays = pathname === '/dashboard'
   const hideChatSidebar = isOnChatRoute && chatFocusMode
   const showDesktopSidebarBackdrop =
     !isMobile && !isOnChatRoute && !sidebarCollapsed
@@ -224,8 +216,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
 
     if (prevIdx !== -1 && currentIdx !== -1 && currentIdx !== prevIdx) {
       // Navigate right (higher index) = slide left; left = slide right
-      const direction =
-        currentIdx > prevIdx ? 'slide-enter-left' : 'slide-enter-right'
+      const direction = currentIdx > prevIdx ? 'slide-enter-left' : 'slide-enter-right'
       setSlideClass(direction)
       // Remove class after animation completes
       const timer = setTimeout(() => setSlideClass(''), 250)
@@ -273,23 +264,13 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         {isElectron && (
           <div
             className="absolute inset-x-0 top-0 flex h-10 items-center border-b border-primary-200 z-40"
-            style={
-              {
-                WebkitAppRegion: 'drag',
-                background: 'var(--theme-sidebar)',
-              } as React.CSSProperties
-            }
+            style={{ WebkitAppRegion: 'drag', background: 'var(--theme-sidebar)' } as React.CSSProperties}
           >
             {/* Traffic light spacer (left ~78px for macOS buttons) */}
             <div className="w-[78px] shrink-0" />
             {/* Centered title */}
             <div className="flex-1 text-center">
-              <span
-                className="text-[13px] font-medium select-none"
-                style={{ color: 'var(--theme-accent, #B98A44)' }}
-              >
-                Hermes
-              </span>
+              <span className="text-[13px] font-medium select-none" style={{ color: 'var(--theme-accent, #B98A44)' }}>Hermes</span>
             </div>
             {/* Right spacer to balance */}
             <div className="w-[78px] shrink-0" />
@@ -356,32 +337,24 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
               )}
               <div className="flex-1 min-h-0 overflow-hidden">
                 <Suspense fallback={null}>
-                  <TerminalWorkspace
-                    mode="fullscreen"
-                    panelVisible={isOnTerminalRoute}
-                  />
+                  <TerminalWorkspace mode="fullscreen" panelVisible={isOnTerminalRoute} />
                 </Suspense>
               </div>
-              {/* Mobile input bar — only mount on the terminal route.
-                  It uses fixed bottom positioning, so if it stays mounted while
-                  hidden it leaks onto other mobile pages like Operations. */}
-              {isMobile && isOnTerminalRoute && <MobileTerminalInput />}
+              {/* Mobile input bar — sibling to terminal, NOT a child, so SSE re-renders don't freeze it */}
+              {isMobile && <MobileTerminalInput />}
             </div>
 
-            <div
-              className={[
-                'page-transition h-full flex flex-col',
-                slideClass,
-                isOnTerminalRoute ? 'hidden' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              {isMobile &&
-                !isOnChatRoute &&
-                !isOnTerminalRoute &&
-                mobilePageTitle && <MobilePageHeader title={mobilePageTitle} />}
-              {children}
+            <div className={['page-transition h-full flex flex-col', slideClass, isOnTerminalRoute ? 'hidden' : ''].filter(Boolean).join(' ')}>
+              {isMobile && !isOnChatRoute && !isOnTerminalRoute && mobilePageTitle && (
+                <MobilePageHeader title={mobilePageTitle} />
+              )}
+              <ErrorBoundary
+                className="h-full min-h-0 flex-1"
+                title="Something went wrong"
+                description="This page failed to render. Reload to try again."
+              >
+                <Outlet />
+              </ErrorBoundary>
             </div>
           </main>
 
@@ -409,6 +382,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
       <MobileHamburgerMenu />
       {/* System metrics footer removed */}
       <CommandPalette pathname={pathname} sessions={sessions} />
+      {suppressFirstOpenOverlays ? null : <HermesOnboarding />}
     </>
   )
 }

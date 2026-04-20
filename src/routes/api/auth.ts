@@ -1,91 +1,58 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { z } from 'zod'
 import {
-  createSessionCookie,
   generateSessionToken,
+  isFeishuSsoEnabled,
   isPasswordProtectionEnabled,
-  storeSessionToken,
-  verifyPassword,
 } from '../../server/auth-middleware'
+import { buildFeishuAuthorizeUrl } from '../../server/feishu-auth'
 import {
   getClientIp,
   rateLimit,
   rateLimitResponse,
-  requireJsonContentType,
 } from '../../server/rate-limit'
-
-const AuthSchema = z.object({
-  password: z.string().max(1000),
-})
 
 export const Route = createFileRoute('/api/auth')({
   server: {
     handlers: {
-      POST: async ({ request }) => {
-        const csrfCheck = requireJsonContentType(request)
-        if (csrfCheck) return csrfCheck
-
-        // If password protection is disabled, reject auth attempts
-        if (!isPasswordProtectionEnabled()) {
+      GET: async ({ request }) => {
+        const ssoEnabled = isFeishuSsoEnabled()
+        if (!ssoEnabled) {
           return json(
-            { ok: false, error: 'Authentication not required' },
+            { ok: false, error: 'Feishu SSO is not configured' },
             { status: 400 },
           )
         }
 
-        // Rate limit: max 5 auth attempts per minute per IP
         const ip = getClientIp(request)
-        if (!rateLimit(`auth:${ip}`, 5, 60_000)) {
+        if (!rateLimit(`feishu-auth-start:${ip}`, 30, 60_000)) {
           return rateLimitResponse()
         }
 
-        try {
-          const raw = await request.json().catch(() => ({}))
-          const parsed = AuthSchema.safeParse(raw)
+        const state = generateSessionToken()
+        const authorizeUrl = buildFeishuAuthorizeUrl(request, state)
 
-          if (!parsed.success) {
-            return json(
-              { ok: false, error: 'Invalid request' },
-              { status: 400 },
-            )
-          }
+        return Response.redirect(authorizeUrl, 302)
+      },
 
-          const { password } = parsed.data
-
-          // Verify password
-          const valid = verifyPassword(password)
-
-          if (!valid) {
-            // Add small delay to prevent brute force
-            await new Promise((resolve) => setTimeout(resolve, 1000))
-            return json(
-              { ok: false, error: 'Invalid password' },
-              { status: 401 },
-            )
-          }
-
-          // Generate session token
-          const token = generateSessionToken()
-          storeSessionToken(token)
-
-          // Return success with Set-Cookie header
+      POST: async () => {
+        if (isPasswordProtectionEnabled() && !isFeishuSsoEnabled()) {
           return json(
-            { ok: true },
             {
-              status: 200,
-              headers: {
-                'Set-Cookie': createSessionCookie(token),
-              },
+              ok: false,
+              error: 'Password authentication is no longer supported for this route',
             },
-          )
-        } catch (err) {
-          if (import.meta.env.DEV) console.error('[/api/auth] Error:', err)
-          return json(
-            { ok: false, error: 'Authentication failed' },
-            { status: 500 },
+            { status: 410 },
           )
         }
+
+        return json(
+          {
+            ok: false,
+            error: 'Use GET /api/auth to start Feishu SSO',
+          },
+          { status: 405 },
+        )
       },
     },
   },

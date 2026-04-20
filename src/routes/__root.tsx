@@ -1,11 +1,6 @@
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, useRouterState } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import appCss from '../styles.css?url'
 import { SearchModal } from '@/components/search/search-modal'
 import { TerminalShortcutListener } from '@/components/terminal-shortcut-listener'
@@ -16,14 +11,7 @@ import { Toaster } from '@/components/ui/toast'
 import { OnboardingTour } from '@/components/onboarding/onboarding-tour'
 import { KeyboardShortcutsModal } from '@/components/keyboard-shortcuts-modal'
 import { initializeSettingsAppearance } from '@/hooks/use-settings'
-import {
-  HermesOnboarding,
-  ONBOARDING_COMPLETE_EVENT,
-  ONBOARDING_KEY,
-} from '@/components/onboarding/hermes-onboarding'
-import { ErrorBoundary } from '@/components/error-boundary'
-import { getRootSurfaceState } from './-root-layout-state'
-
+import { HermesOnboarding } from '@/components/onboarding/hermes-onboarding'
 
 const APP_CSP = [
   "default-src 'self'",
@@ -44,14 +32,14 @@ const APP_CSP = [
 const THEME_STORAGE_KEY = 'hermes-theme'
 const DEFAULT_THEME = 'hermes-official'
 const VALID_THEMES = [
-  'hermes-nous',
-  'hermes-nous-light',
   'hermes-official',
   'hermes-official-light',
   'hermes-classic',
   'hermes-classic-light',
   'hermes-slate',
   'hermes-slate-light',
+  'hermes-mono',
+  'hermes-mono-light',
 ]
 
 const themeScript = `
@@ -62,7 +50,7 @@ const themeScript = `
     const root = document.documentElement
     const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
     const theme = ${JSON.stringify(VALID_THEMES)}.includes(storedTheme) ? storedTheme : '${DEFAULT_THEME}'
-    const lightThemes = ['hermes-nous-light', 'hermes-official-light', 'hermes-classic-light', 'hermes-slate-light']
+    const lightThemes = ['hermes-official-light', 'hermes-classic-light', 'hermes-slate-light', 'hermes-mono-light']
     const isDark = !lightThemes.includes(theme)
     root.classList.remove('light', 'dark', 'system')
     root.classList.add(isDark ? 'dark' : 'light')
@@ -85,17 +73,17 @@ const themeColorScript = `
     const root = document.documentElement
     const theme = root.getAttribute('data-theme') || '${DEFAULT_THEME}'
     const colors = {
-      'hermes-nous': '#031A1A',
-      'hermes-nous-light': '#F8FAF8',
       'hermes-official': '#0A0E1A',
-      'hermes-official-light': '#F7F7F1',
+      'hermes-official-light': '#F6F8FC',
       'hermes-classic': '#0d0f12',
       'hermes-classic-light': '#F5F2ED',
       'hermes-slate': '#0d1117',
       'hermes-slate-light': '#F6F8FA',
+      'hermes-mono': '#111111',
+      'hermes-mono-light': '#FAFAFA',
     }
     const nextColor = colors[theme] || colors['${DEFAULT_THEME}']
-    const isDark = !['hermes-nous-light', 'hermes-official-light', 'hermes-classic-light', 'hermes-slate-light'].includes(String(theme))
+    const isDark = !['hermes-official-light', 'hermes-classic-light', 'hermes-slate-light', 'hermes-mono-light'].includes(String(theme))
 
     let meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) {
@@ -205,125 +193,45 @@ export const Route = createRootRoute({
 
 const queryClient = new QueryClient()
 
-export function getRootLayoutMode(onboardingComplete: string | null): 'onboarding' | 'workspace' {
-  return onboardingComplete === 'true' ? 'workspace' : 'onboarding'
-}
-
-export function wrapInlineScript(source: string): string {
-  return `(() => {\n  try {\n${source}\n  } catch (error) {\n    console.error('Inline bootstrap script failed', error)\n  }\n})()`
-}
-
-type ServiceWorkerLike = {
-  getRegistrations: () => Promise<Array<{ unregister: () => void | Promise<void> }>>
-}
-
-type CachesLike = {
-  keys: () => Promise<Array<string>>
-  delete: (name: string) => Promise<boolean> | boolean
-}
-
-export async function unregisterServiceWorkers({
-  serviceWorker,
-  cachesApi,
-}: {
-  serviceWorker?: ServiceWorkerLike
-  cachesApi?: CachesLike
-}): Promise<void> {
-  await serviceWorker
-    ?.getRegistrations()
-    .then((registrations) =>
-      Promise.allSettled(
-        registrations.map((registration) => registration.unregister()),
-      ),
-    )
-    .catch(() => undefined)
-
-  await cachesApi
-    ?.keys()
-    .then((names) => Promise.allSettled(names.map((name) => cachesApi.delete(name))))
-    .catch(() => undefined)
-}
-
 function RootLayout() {
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(
-    null,
-  )
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
+  const suppressFirstOpenOverlays = pathname === '/dashboard'
 
+  // Unregister any existing service workers — they cause stale asset issues
+  // after Docker image updates and behind reverse proxies (Pangolin, Cloudflare, etc.)
   useEffect(() => {
     initializeSettingsAppearance()
 
-    const syncOnboardingCompletion = () => {
-      try {
-        setOnboardingComplete(localStorage.getItem(ONBOARDING_KEY) === 'true')
-      } catch {
-        setOnboardingComplete(false)
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister()
+        }
+      })
+      // Also clear any stale caches
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          for (const name of names) {
+            caches.delete(name)
+          }
+        })
       }
-    }
-
-    if (typeof window === 'undefined') {
-      return undefined
-    }
-
-    syncOnboardingCompletion()
-
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key && event.key !== ONBOARDING_KEY) return
-      syncOnboardingCompletion()
-    }
-
-    const handleOnboardingCompleteChanged = () => {
-      syncOnboardingCompletion()
-    }
-
-    window.addEventListener('storage', handleStorage)
-    window.addEventListener(
-      ONBOARDING_COMPLETE_EVENT,
-      handleOnboardingCompleteChanged,
-    )
-
-    void unregisterServiceWorkers({
-      serviceWorker: 'serviceWorker' in navigator ? navigator.serviceWorker : undefined,
-      cachesApi: 'caches' in window ? caches : undefined,
-    })
-
-    return () => {
-      window.removeEventListener('storage', handleStorage)
-      window.removeEventListener(
-        ONBOARDING_COMPLETE_EVENT,
-        handleOnboardingCompleteChanged,
-      )
     }
   }, [])
 
-  const rootSurfaceState = getRootSurfaceState(onboardingComplete)
-
   return (
     <QueryClientProvider client={queryClient}>
+      {suppressFirstOpenOverlays ? null : <HermesOnboarding />}
+      <GlobalShortcutListener />
+      <TerminalShortcutListener />
+      {suppressFirstOpenOverlays ? null : <MobilePromptTrigger />}
       <Toaster />
-      {rootSurfaceState.showOnboarding ? <HermesOnboarding /> : null}
-      {rootSurfaceState.showWorkspaceShell ? (
-        <>
-          <GlobalShortcutListener />
-          <TerminalShortcutListener />
-          <WorkspaceShell>
-            <ErrorBoundary
-              className="h-full min-h-0 flex-1"
-              title="Something went wrong"
-              description="This page failed to render. Reload to try again."
-            >
-              <Outlet />
-            </ErrorBoundary>
-          </WorkspaceShell>
-          <SearchModal />
-          <KeyboardShortcutsModal />
-          {rootSurfaceState.showPostOnboardingOverlays ? (
-            <>
-              <MobilePromptTrigger />
-              <OnboardingTour />
-            </>
-          ) : null}
-        </>
-      ) : null}
+      <WorkspaceShell />
+      <SearchModal />
+      {suppressFirstOpenOverlays ? null : <OnboardingTour />}
+      <KeyboardShortcutsModal />
     </QueryClientProvider>
   )
 }
@@ -333,9 +241,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta httpEquiv="Content-Security-Policy" content={APP_CSP} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: wrapInlineScript(`
+        <script dangerouslySetInnerHTML={{ __html: `
           // Polyfill crypto.randomUUID for non-secure contexts (HTTP access via LAN IP)
           if (typeof crypto !== 'undefined' && !crypto.randomUUID) {
             crypto.randomUUID = function() {
@@ -344,44 +250,28 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               });
             };
           }
-        `),
-          }}
-        />
-        <script dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeScript) }} />
+        ` }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <HeadContent />
-        <script
-          dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeColorScript) }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeColorScript }} />
       </head>
       <body>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: wrapInlineScript(`
+        <script dangerouslySetInnerHTML={{ __html: `
           (function(){
             if (document.getElementById('splash-screen')) return;
             var bg = '#0A0E1A', txt = '#E6EAF2', muted = '#9AA5BD', accent = '#6366F1';
             try {
               var theme = localStorage.getItem('${THEME_STORAGE_KEY}') || '${DEFAULT_THEME}';
-              if (theme === 'hermes-nous') {
-                bg = '#031A1A';
-                txt = '#F8F1E3';
-                muted = '#9CB2AE';
-                accent = '#FFAC02';
-              } else if (theme === 'hermes-nous-light') {
-                bg = '#F8FAF8';
-                txt = '#16315F';
-                muted = '#6F7D96';
-                accent = '#2557B7';
-              } else if (theme === 'hermes-classic') {
+              if (theme === 'hermes-classic') {
                 bg = '#0d0f12';
                 txt = '#eceff4';
                 muted = '#7f8a96';
                 accent = '#b98a44';
               } else if (theme === 'hermes-official-light') {
-                bg = '#F7F7F1';
-                txt = '#16315F';
-                muted = '#6F7D96';
-                accent = '#2557B7';
+                bg = '#F6F8FC';
+                txt = '#111827';
+                muted = '#4B5563';
+                accent = '#4F46E5';
               } else if (theme === 'hermes-classic-light') {
                 bg = '#F5F2ED';
                 txt = '#1a1f26';
@@ -397,10 +287,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 txt = '#24292f';
                 muted = '#57606A';
                 accent = '#3b82f6';
+              } else if (theme === 'hermes-mono') {
+                bg = '#111111';
+                txt = '#e6edf3';
+                muted = '#888888';
+                accent = '#aaaaaa';
+              } else if (theme === 'hermes-mono-light') {
+                bg = '#FAFAFA';
+                txt = '#1a1a1a';
+                muted = '#666666';
+                accent = '#666666';
               }
             } catch(e){}
 
-            var isDark = !['hermes-nous-light','hermes-official-light','hermes-classic-light','hermes-slate-light'].includes(theme);
+            var isDark = !['hermes-official-light','hermes-classic-light','hermes-slate-light','hermes-mono-light'].includes(theme);
             var quips = ["Consulting the oracle...","Loading ancient knowledge...","Warming up the messenger...","Calibrating tool chain...","Summoning Hermes...","Preparing the workspace...","Bridging realms...","Initializing agent runtime..."];
             var quip = quips[Math.floor(Math.random() * quips.length)];
 
@@ -440,14 +340,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               }
             } catch(e) {}
           })()
-        `),
-          }}
-        />
+        `}} />
         <div className="root">{children}</div>
         <Scripts />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: wrapInlineScript(`
+        <script dangerouslySetInnerHTML={{ __html: `
           (function(){
             var start = Date.now();
             function check() {
@@ -458,9 +354,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             }
             setTimeout(check, 2500);
           })()
-        `),
-          }}
-        />
+        `}} />
       </body>
     </html>
   )
