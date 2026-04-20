@@ -55,8 +55,10 @@ import { Route as ApiMemoryWriteRouteImport } from './routes/api/memory/write'
 import { Route as ApiMemorySearchRouteImport } from './routes/api/memory/search'
 import { Route as ApiMemoryReadRouteImport } from './routes/api/memory/read'
 import { Route as ApiMemoryListRouteImport } from './routes/api/memory/list'
+import { Route as ApiHotboardVoteRouteImport } from './routes/api/hotboard/vote'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
+import { Route as ApiHotboardVoteAggregateRouteImport } from './routes/api/hotboard/vote/aggregate'
 
 const TerminalRoute = TerminalRouteImport.update({
   id: '/terminal',
@@ -288,6 +290,11 @@ const ApiMemoryListRoute = ApiMemoryListRouteImport.update({
   path: '/api/memory/list',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHotboardVoteRoute = ApiHotboardVoteRouteImport.update({
+  id: '/api/hotboard/vote',
+  path: '/api/hotboard/vote',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHermesJobsJobIdRoute = ApiHermesJobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
@@ -298,6 +305,12 @@ const ApiSessionsSessionKeyStatusRoute =
     id: '/$sessionKey/status',
     path: '/$sessionKey/status',
     getParentRoute: () => ApiSessionsRoute,
+  } as any)
+const ApiHotboardVoteAggregateRoute =
+  ApiHotboardVoteAggregateRouteImport.update({
+    id: '/aggregate',
+    path: '/aggregate',
+    getParentRoute: () => ApiHotboardVoteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -341,6 +354,7 @@ export interface FileRoutesByFullPath {
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
+  '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
   '/api/memory/search': typeof ApiMemorySearchRoute
@@ -348,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
+  '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
 export interface FileRoutesByTo {
@@ -390,6 +405,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
+  '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
   '/api/memory/search': typeof ApiMemorySearchRoute
@@ -397,6 +413,7 @@ export interface FileRoutesByTo {
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
+  '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
 export interface FileRoutesById {
@@ -441,6 +458,7 @@ export interface FileRoutesById {
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
+  '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
   '/api/memory/search': typeof ApiMemorySearchRoute
@@ -448,6 +466,7 @@ export interface FileRoutesById {
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
+  '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
 export interface FileRouteTypes {
@@ -493,6 +512,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/settings/'
     | '/api/hermes-jobs/$jobId'
+    | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
     | '/api/memory/search'
@@ -500,6 +520,7 @@ export interface FileRouteTypes {
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/sessions/send'
+    | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -542,6 +563,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/settings'
     | '/api/hermes-jobs/$jobId'
+    | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
     | '/api/memory/search'
@@ -549,6 +571,7 @@ export interface FileRouteTypes {
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/sessions/send'
+    | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/status'
   id:
     | '__root__'
@@ -592,6 +615,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/settings/'
     | '/api/hermes-jobs/$jobId'
+    | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
     | '/api/memory/search'
@@ -599,6 +623,7 @@ export interface FileRouteTypes {
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/sessions/send'
+    | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
 }
@@ -640,6 +665,7 @@ export interface RootRouteChildren {
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  ApiHotboardVoteRoute: typeof ApiHotboardVoteRouteWithChildren
   ApiMemoryListRoute: typeof ApiMemoryListRoute
   ApiMemoryReadRoute: typeof ApiMemoryReadRoute
   ApiMemorySearchRoute: typeof ApiMemorySearchRoute
@@ -972,6 +998,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMemoryListRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hotboard/vote': {
+      id: '/api/hotboard/vote'
+      path: '/api/hotboard/vote'
+      fullPath: '/api/hotboard/vote'
+      preLoaderRoute: typeof ApiHotboardVoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hermes-jobs/$jobId': {
       id: '/api/hermes-jobs/$jobId'
       path: '/$jobId'
@@ -985,6 +1018,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/sessions/$sessionKey/status'
       preLoaderRoute: typeof ApiSessionsSessionKeyStatusRouteImport
       parentRoute: typeof ApiSessionsRoute
+    }
+    '/api/hotboard/vote/aggregate': {
+      id: '/api/hotboard/vote/aggregate'
+      path: '/aggregate'
+      fullPath: '/api/hotboard/vote/aggregate'
+      preLoaderRoute: typeof ApiHotboardVoteAggregateRouteImport
+      parentRoute: typeof ApiHotboardVoteRoute
     }
   }
 }
@@ -1029,6 +1069,18 @@ const ApiSessionsRouteWithChildren = ApiSessionsRoute._addFileChildren(
   ApiSessionsRouteChildren,
 )
 
+interface ApiHotboardVoteRouteChildren {
+  ApiHotboardVoteAggregateRoute: typeof ApiHotboardVoteAggregateRoute
+}
+
+const ApiHotboardVoteRouteChildren: ApiHotboardVoteRouteChildren = {
+  ApiHotboardVoteAggregateRoute: ApiHotboardVoteAggregateRoute,
+}
+
+const ApiHotboardVoteRouteWithChildren = ApiHotboardVoteRoute._addFileChildren(
+  ApiHotboardVoteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
@@ -1067,6 +1119,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
+  ApiHotboardVoteRoute: ApiHotboardVoteRouteWithChildren,
   ApiMemoryListRoute: ApiMemoryListRoute,
   ApiMemoryReadRoute: ApiMemoryReadRoute,
   ApiMemorySearchRoute: ApiMemorySearchRoute,

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import hotboardData from './ai_hotboard_mock_events.json'
 
@@ -43,6 +43,18 @@ type TimelineGroup = {
 
 const payload = hotboardData as MockPayload
 const DATA_SOURCE_LABEL = 'ai_hotboard_mock_events.json'
+const HOTBOARD_USER_ID_KEY = 'ai-hotboard-user-id'
+
+type VoteType = 'like' | 'dislike' | 'bookmark'
+
+type VoteAggregateEntry = {
+  like_count: number
+  dislike_count: number
+  bookmark_count: number
+  my_vote: VoteType[]
+}
+
+type VoteAggregateByEvent = Record<string, VoteAggregateEntry>
 
 export const SOURCE_ITEMS = [
   'X bookmarks',
@@ -157,6 +169,19 @@ function buildAggregatedSourcesLabel(event: MockEvent) {
   return `另有 ${event.aggregated_sources_count} 个源也报道了此事件`
 }
 
+function getOrCreateHotboardUserId() {
+  if (typeof window === 'undefined') return `hotboard-${Date.now()}`
+  const existing = window.localStorage.getItem(HOTBOARD_USER_ID_KEY)?.trim()
+  if (existing) {
+    return existing
+  }
+  const next = window.crypto?.randomUUID
+    ? window.crypto.randomUUID()
+    : `hotboard-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+  window.localStorage.setItem(HOTBOARD_USER_ID_KEY, next)
+  return next
+}
+
 function formatGeneratedAt(value: string) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
@@ -256,6 +281,13 @@ function SidebarSection({
 }
 
 export function AiHotboardScreen() {
+  const userIdRef = useRef<string>('')
+  if (!userIdRef.current) {
+    userIdRef.current = getOrCreateHotboardUserId()
+  }
+
+  const [voteAggregateByEvent, setVoteAggregateByEvent] = useState<VoteAggregateByEvent>({})
+
   const timelineGroups = useMemo<TimelineGroup[]>(() => {
     const enriched = payload.events
       .slice()
@@ -287,6 +319,113 @@ export function AiHotboardScreen() {
 
     return Array.from(groups.values())
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadAggregate() {
+      try {
+        const response = await fetch(
+          `/api/hotboard/vote/aggregate?user_id=${encodeURIComponent(userIdRef.current)}`,
+        )
+        if (!response.ok) return
+        const payload = (await response.json().catch(() => ({}))) as {
+          aggregate?: VoteAggregateByEvent
+          user_id?: string
+        }
+        if (cancelled) return
+        if (payload.user_id && payload.user_id.trim()) {
+          userIdRef.current = payload.user_id
+          window.localStorage.setItem(HOTBOARD_USER_ID_KEY, payload.user_id)
+        }
+        setVoteAggregateByEvent(
+          payload.aggregate && typeof payload.aggregate === 'object' ? payload.aggregate : {},
+        )
+      } catch {
+        // Keep default UI state on network errors.
+      }
+    }
+
+    loadAggregate()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  function resolveVoteAggregate(event: TimelineEvent): VoteAggregateEntry {
+    const existing = voteAggregateByEvent[event.id]
+    if (existing) return existing
+    return {
+      like_count: event.engagement.likes,
+      dislike_count: event.engagement.dislikes,
+      bookmark_count: event.engagement.bookmarks,
+      my_vote: [],
+    }
+  }
+
+  async function handleVoteClick(eventId: string, voteType: VoteType, baseline?: VoteAggregateEntry) {
+    const previous = voteAggregateByEvent[eventId] ?? baseline ?? {
+      like_count: 0,
+      dislike_count: 0,
+      bookmark_count: 0,
+      my_vote: [],
+    }
+
+    const wasActive = previous.my_vote.includes(voteType)
+    const nextCountDelta = wasActive ? -1 : 1
+    const optimisticNext: VoteAggregateEntry = {
+      like_count: previous.like_count,
+      dislike_count: previous.dislike_count,
+      bookmark_count: previous.bookmark_count,
+      my_vote: wasActive ? previous.my_vote.filter((vote) => vote !== voteType) : [...previous.my_vote, voteType].sort(),
+    }
+
+    if (voteType === 'like') optimisticNext.like_count = Math.max(0, previous.like_count + nextCountDelta)
+    if (voteType === 'dislike') optimisticNext.dislike_count = Math.max(0, previous.dislike_count + nextCountDelta)
+    if (voteType === 'bookmark') optimisticNext.bookmark_count = Math.max(0, previous.bookmark_count + nextCountDelta)
+
+    setVoteAggregateByEvent((current) => ({
+      ...current,
+      [eventId]: optimisticNext,
+    }))
+
+    try {
+      const response = await fetch('/api/hotboard/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_id: eventId,
+          vote_type: voteType,
+          user_id: userIdRef.current,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('vote request failed')
+      }
+
+      const payload = (await response.json().catch(() => ({}))) as {
+        aggregate?: VoteAggregateByEvent
+        user_id?: string
+      }
+
+      if (payload.user_id && payload.user_id.trim()) {
+        userIdRef.current = payload.user_id
+        window.localStorage.setItem(HOTBOARD_USER_ID_KEY, payload.user_id)
+      }
+
+      if (payload.aggregate && typeof payload.aggregate === 'object') {
+        setVoteAggregateByEvent(payload.aggregate)
+      }
+    } catch {
+      setVoteAggregateByEvent((current) => ({
+        ...current,
+        [eventId]: previous,
+      }))
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-[120] overflow-y-auto bg-slate-950 text-slate-100">
@@ -351,6 +490,10 @@ export function AiHotboardScreen() {
                       key={event.id}
                       className="rounded-3xl border border-slate-700/65 bg-slate-900/70 px-4 py-4 shadow-[0_16px_36px_rgba(2,6,23,0.45)]"
                     >
+                      {(() => {
+                        const voteState = resolveVoteAggregate(event)
+                        return (
+                          <>
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1 space-y-2">
                           <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
@@ -368,9 +511,48 @@ export function AiHotboardScreen() {
                             {event.signalScore}
                           </span>
                           <div className="flex gap-1 text-xs text-slate-400">
-                            <span className="rounded-full border border-slate-700/70 bg-slate-900/50 px-2 py-1">👍 {event.engagement.likes}</span>
-                            <span className="rounded-full border border-slate-700/70 bg-slate-900/50 px-2 py-1">👎 {event.engagement.dislikes}</span>
-                            <span className="rounded-full border border-slate-700/70 bg-slate-900/50 px-2 py-1">☆ {event.engagement.bookmarks}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleVoteClick(event.id, 'like', voteState)}
+                              className={cn(
+                                'cursor-pointer rounded-full border px-2 py-1 transition-colors',
+                                voteState.my_vote.includes('like')
+                                  ? 'border-emerald-300/70 bg-emerald-300/25 text-emerald-100'
+                                  : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
+                              )}
+                              aria-pressed={voteState.my_vote.includes('like')}
+                              aria-label={`点赞 ${event.title}`}
+                            >
+                              👍 {voteState.like_count}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleVoteClick(event.id, 'dislike', voteState)}
+                              className={cn(
+                                'cursor-pointer rounded-full border px-2 py-1 transition-colors',
+                                voteState.my_vote.includes('dislike')
+                                  ? 'border-rose-300/70 bg-rose-300/25 text-rose-100'
+                                  : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
+                              )}
+                              aria-pressed={voteState.my_vote.includes('dislike')}
+                              aria-label={`点踩 ${event.title}`}
+                            >
+                              👎 {voteState.dislike_count}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleVoteClick(event.id, 'bookmark', voteState)}
+                              className={cn(
+                                'cursor-pointer rounded-full border px-2 py-1 transition-colors',
+                                voteState.my_vote.includes('bookmark')
+                                  ? 'border-amber-300/70 bg-amber-300/25 text-amber-100'
+                                  : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
+                              )}
+                              aria-pressed={voteState.my_vote.includes('bookmark')}
+                              aria-label={`收藏 ${event.title}`}
+                            >
+                              ☆ {voteState.bookmark_count}
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -395,6 +577,9 @@ export function AiHotboardScreen() {
                           <div className="mt-1 text-emerald-200/90">{event.actionLine}</div>
                         </div>
                       </div>
+                          </>
+                        )
+                      })()}
                     </article>
                   ))}
                 </div>
