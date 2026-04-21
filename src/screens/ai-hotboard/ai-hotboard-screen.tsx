@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { LoginScreen } from '@/components/auth/login-screen'
 import { cn } from '@/lib/utils'
 import { fetchHermesAuthStatus, type AuthUser } from '@/lib/hermes-auth'
 import hotboardData from './ai_hotboard_mock_events.json'
@@ -11,6 +12,13 @@ import {
   toSupportedHotboardSource,
   type MockEvent,
 } from './ai-hotboard-feed-adapter'
+import {
+  normalizeHotboardPage,
+  resolveHotboardPageFromSource,
+  resolveSourceByHotboardPage,
+  type AiHotboardPage,
+  type SourcePageKey,
+} from './ai-hotboard-route-config'
 
 type MockPayload = {
   generated_at: string
@@ -46,6 +54,35 @@ type VoteAggregateEntry = {
 
 type VoteAggregateByEvent = Record<string, VoteAggregateEntry>
 
+type FeedMode = 'featured' | 'all' | 'low-follower' | 'bookmarks'
+
+type IntakeAgentKey = 'hermes' | 'xiaoj'
+
+type IntakeItem = {
+  id: string
+  author_agent_id: IntakeAgentKey
+  title: string
+  body: string
+  tags: string[]
+  submitted_by_open_id: string
+  submitted_by_name: string
+  created_at: string
+}
+
+type StrategyStatusItem = {
+  lineKey: string
+  code: string
+  name: string
+  owner: string
+  priority: string
+}
+
+type NavItem = {
+  key: string
+  label: string
+  to: string
+}
+
 export const SOURCE_ITEMS = [
   'X bookmarks',
   'X likes',
@@ -65,13 +102,55 @@ export const X_SOURCE_ROUTE_ITEMS = [
   { key: 'x-for_you', label: 'X for_you', to: '/ai-hotboard/source/x-for_you' },
 ] as const
 
-export const STRATEGY_LINES = [
-  'M2 A线 | 抓数稳定化',
-  'M2 B线 | 财务报表自动化',
-  'M2 C线 | AI短视频→投流ROI',
-  'M2 D线 | 自动化有效率',
-  'M2 E线 | 全员Agent协作',
+const SOURCE_PLACEHOLDER_ROUTE_ITEMS = [
+  {
+    key: 'wechat',
+    label: '公众号',
+    to: '/ai-hotboard/source/wechat',
+    expectedWeek: '2026-W18',
+    owner: '爱马仕',
+    dataSource: '微信公众号 API + 手工补录',
+  },
+  {
+    key: 'jc-human-talks',
+    label: '肖恩对谈',
+    to: '/ai-hotboard/source/jc-human-talks',
+    expectedWeek: '2026-W19',
+    owner: 'JC',
+    dataSource: '会议纪要 + 语音转写流',
+  },
+  {
+    key: 'xiaohongshu',
+    label: '小红书',
+    to: '/ai-hotboard/source/xiaohongshu',
+    expectedWeek: '2026-W20',
+    owner: '小J',
+    dataSource: '小红书热门话题 + 爆文抓取',
+  },
 ] as const
+
+const INTAKE_ROUTE_ITEMS = [
+  {
+    key: 'hermes',
+    label: '爱马仕战略发现',
+    to: '/ai-hotboard/intake/hermes-strategy',
+  },
+  {
+    key: 'xiaoj',
+    label: '小J 执行发现',
+    to: '/ai-hotboard/intake/xiaoj-execution',
+  },
+] as const
+
+const STRATEGY_ROUTE_ITEMS = [
+  { key: 'm2-a', label: 'M2 A线 | 抓数稳定化', to: '/ai-hotboard/strategy/m2-a' },
+  { key: 'm2-b', label: 'M2 B线 | 财务报表自动化', to: '/ai-hotboard/strategy/m2-b' },
+  { key: 'm2-c', label: 'M2 C线 | AI短视频→投流ROI', to: '/ai-hotboard/strategy/m2-c' },
+  { key: 'm2-d', label: 'M2 D线 | 自动化有效率', to: '/ai-hotboard/strategy/m2-d' },
+  { key: 'm2-e', label: 'M2 E线 | 全员Agent协作', to: '/ai-hotboard/strategy/m2-e' },
+] as const
+
+export const STRATEGY_LINES = STRATEGY_ROUTE_ITEMS.map((item) => item.label)
 
 export const STRATEGY_ITERATION_ITEMS = [
   'v1 产品化交接（CSO 验收中）',
@@ -79,16 +158,26 @@ export const STRATEGY_ITERATION_ITEMS = [
   '两周稳定运行后评估黑板架构收编',
 ] as const
 
-const PRIMARY_NAV_ITEMS = ['精选', '全部 AI 动态', '低粉爆文', '收藏'] as const
-const SYSTEM_NAV_ITEMS = ['系统', '用户', '退出'] as const
+const PRIMARY_NAV_ITEMS = [
+  { key: 'featured', label: '精选', to: '/ai-hotboard' },
+  { key: 'view-all', label: '全部 AI 动态', to: '/ai-hotboard/view/all' },
+  { key: 'view-low-follower', label: '低粉爆文', to: '/ai-hotboard/view/low-follower' },
+  { key: 'view-bookmarks', label: '收藏', to: '/ai-hotboard/view/bookmarks' },
+] as const
+
+const SYSTEM_NAV_ITEMS = [
+  { key: 'system', label: '系统', to: '/ai-hotboard/system' },
+  { key: 'user', label: '用户', to: '/ai-hotboard/user' },
+  { key: 'logout', label: '退出', to: '/ai-hotboard/logout' },
+] as const
 
 export const SIDEBAR_NAV_SEQUENCE = [
-  ...PRIMARY_NAV_ITEMS,
+  ...PRIMARY_NAV_ITEMS.map((item) => item.label),
   '信源',
   '信源提报',
   '精选策略',
   '策略迭代',
-  ...SYSTEM_NAV_ITEMS,
+  ...SYSTEM_NAV_ITEMS.map((item) => item.label),
 ] as const
 
 const CATEGORY_WEIGHT_MAP: Record<string, number> = {
@@ -178,6 +267,18 @@ function formatGeneratedAt(value: string) {
   }).format(date)
 }
 
+function formatEntryTime(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+  return new Intl.DateTimeFormat('zh-CN', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date)
+}
+
 function getTagTone(tag: string) {
   if (tag === 'Agent' || tag === '多Agent架构' || tag === 'skills' || tag === '对抗式监督') {
     return 'border-cyan-300/25 bg-cyan-300/10 text-cyan-100'
@@ -194,36 +295,150 @@ function getTagTone(tag: string) {
   return 'border-slate-400/25 bg-slate-400/10 text-slate-200'
 }
 
-function SidebarItems({ items }: { items: readonly string[] }) {
+function resolveFeedModeByPage(page: AiHotboardPage): FeedMode {
+  if (page === 'view-all') return 'all'
+  if (page === 'view-low-follower') return 'low-follower'
+  if (page === 'view-bookmarks') return 'bookmarks'
+  return 'featured'
+}
+
+function isFeedPage(page: AiHotboardPage) {
   return (
-    <ul className="space-y-1.5">
-      {items.map((item) => (
-        <li key={item} className="list-none">
-          <div className="rounded-xl border border-slate-700/70 bg-slate-900/50 px-3 py-2 text-sm text-slate-200">{item}</div>
-        </li>
-      ))}
-    </ul>
+    page === 'featured' ||
+    page === 'view-all' ||
+    page === 'view-low-follower' ||
+    page === 'view-bookmarks' ||
+    page.startsWith('source-')
   )
 }
 
-function SidebarNavItems({ items, highlightedItem }: { items: readonly string[]; highlightedItem?: string }) {
+function isPlaceholderSourcePage(page: AiHotboardPage): page is Extract<SourcePageKey, 'source-wechat' | 'source-jc-human-talks' | 'source-xiaohongshu'> {
+  return page === 'source-wechat' || page === 'source-jc-human-talks' || page === 'source-xiaohongshu'
+}
+
+function getFeedHeading(page: AiHotboardPage) {
+  if (page === 'featured') {
+    return {
+      title: 'AI 热点看板',
+      subtitle: '精选视图 · 汇总关键 AI 信号',
+    }
+  }
+
+  if (page === 'view-all') {
+    return {
+      title: '全部 AI 动态',
+      subtitle: '全量时间线 · 便于回看今日所有信号',
+    }
+  }
+
+  if (page === 'view-low-follower') {
+    return {
+      title: '低粉爆文',
+      subtitle: '优先关注低粉账号的高传播信号',
+    }
+  }
+
+  if (page === 'view-bookmarks') {
+    return {
+      title: '收藏',
+      subtitle: '当前账号已收藏的热点记录',
+    }
+  }
+
+  if (page === 'source-x-bookmarks') {
+    return {
+      title: '信源 · X bookmarks',
+      subtitle: '信源视角 · X bookmarks 同步',
+    }
+  }
+
+  if (page === 'source-x-likes') {
+    return {
+      title: '信源 · X likes',
+      subtitle: '信源视角 · X likes 同步',
+    }
+  }
+
+  if (page === 'source-x-following') {
+    return {
+      title: '信源 · X following',
+      subtitle: '信源视角 · X following 同步',
+    }
+  }
+
+  if (page === 'source-x-for_you') {
+    return {
+      title: '信源 · X for_you',
+      subtitle: '信源视角 · X for_you 同步',
+    }
+  }
+
+  return {
+    title: 'AI 热点看板',
+    subtitle: '精选视图 · 汇总关键 AI 信号',
+  }
+}
+
+function buildFeedStats(events: TimelineEvent[]) {
+  const totalLikes = events.reduce((sum, event) => sum + event.engagement.likes, 0)
+  const totalBookmarks = events.reduce((sum, event) => sum + event.engagement.bookmarks, 0)
+  const averageSignalScore =
+    events.length > 0
+      ? Math.round(events.reduce((sum, event) => sum + event.signalScore, 0) / events.length)
+      : 0
+
+  return {
+    totalEvents: events.length,
+    totalLikes,
+    totalBookmarks,
+    averageSignalScore,
+  }
+}
+
+function feedMatchesMode(
+  event: TimelineEvent,
+  mode: FeedMode,
+  voteAggregateByEvent: VoteAggregateByEvent,
+) {
+  if (mode === 'all') return true
+
+  if (mode === 'low-follower') {
+    return event.engagement.likes >= 30 && event.engagement.likes <= 280
+  }
+
+  if (mode === 'bookmarks') {
+    return voteAggregateByEvent[event.id]?.my_vote.includes('bookmark') ?? false
+  }
+
+  return event.signalScore >= 84
+}
+
+function LinkNavItems({
+  items,
+  highlightedKey,
+}: {
+  items: readonly NavItem[]
+  highlightedKey?: string
+}) {
   return (
     <ul className="space-y-1.5">
       {items.map((item) => {
-        const highlighted = item === highlightedItem
+        const highlighted = item.key === highlightedKey
 
         return (
-          <li key={item} className="list-none" data-nav-item={item}>
-            <div
-              className={cn(
-                'rounded-xl border px-3 py-2 text-sm',
-                highlighted
-                  ? 'border-cyan-400/45 bg-cyan-400/15 font-medium text-cyan-100'
-                  : 'border-slate-700/70 bg-slate-900/50 text-slate-300',
-              )}
-            >
-              {item}
-            </div>
+          <li key={item.key} className="list-none" data-nav-item={item.label}>
+            <Link to={item.to} className="block rounded-xl focus-visible:outline-none">
+              <div
+                className={cn(
+                  'rounded-xl border px-3 py-2 text-sm transition-colors',
+                  highlighted
+                    ? 'border-cyan-400/45 bg-cyan-400/15 font-medium text-cyan-100'
+                    : 'border-slate-700/70 bg-slate-900/50 text-slate-300 hover:border-slate-500/80 hover:text-slate-100',
+                )}
+              >
+                {item.label}
+              </div>
+            </Link>
           </li>
         )
       })}
@@ -231,13 +446,15 @@ function SidebarNavItems({ items, highlightedItem }: { items: readonly string[];
   )
 }
 
-function SidebarSection({
+function SidebarSectionLinkGroup({
   title,
   items,
+  highlightedKey,
   testId,
 }: {
   title: string
-  items: readonly string[]
+  items: readonly NavItem[]
+  highlightedKey?: string
   testId?: string
 }) {
   return (
@@ -248,17 +465,34 @@ function SidebarSection({
         </li>
       </ul>
       <div className="pl-2">
-        <SidebarItems items={items} />
+        <LinkNavItems items={items} highlightedKey={highlightedKey} />
       </div>
     </section>
   )
 }
 
 function SourceRouteItems({
-  highlightedItem,
+  highlightedPage,
 }: {
-  highlightedItem: string
+  highlightedPage: AiHotboardPage
 }) {
+  const highlightedKey =
+    highlightedPage === 'source-x-bookmarks'
+      ? 'x-bookmarks'
+      : highlightedPage === 'source-x-likes'
+      ? 'x-likes'
+      : highlightedPage === 'source-x-following'
+      ? 'x-following'
+      : highlightedPage === 'source-x-for_you'
+      ? 'x-for_you'
+      : highlightedPage === 'source-wechat'
+      ? 'wechat'
+      : highlightedPage === 'source-jc-human-talks'
+      ? 'jc-human-talks'
+      : highlightedPage === 'source-xiaohongshu'
+      ? 'xiaohongshu'
+      : undefined
+
   return (
     <ul className="space-y-1.5">
       <li className="list-none" data-nav-item="信源">
@@ -266,33 +500,472 @@ function SourceRouteItems({
       </li>
       <li className="list-none">
         <div className="pl-2 space-y-1.5">
-          {X_SOURCE_ROUTE_ITEMS.map((item) => {
-            const highlighted = highlightedItem === item.key
-            return (
-              <Link key={item.key} to={item.to} className="block rounded-xl focus-visible:outline-none">
-                <div
-                  className={cn(
-                    'rounded-xl border px-3 py-2 text-sm transition-colors',
-                    highlighted
-                      ? 'border-cyan-400/45 bg-cyan-400/15 font-medium text-cyan-100'
-                      : 'border-slate-700/70 bg-slate-900/50 text-slate-300 hover:border-slate-500/80 hover:text-slate-100',
-                  )}
-                >
-                  {item.label}
-                </div>
-              </Link>
-            )
-          })}
+          <LinkNavItems items={X_SOURCE_ROUTE_ITEMS} highlightedKey={highlightedKey} />
+          <LinkNavItems items={SOURCE_PLACEHOLDER_ROUTE_ITEMS} highlightedKey={highlightedKey} />
         </div>
       </li>
     </ul>
   )
 }
 
-export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
-  const normalizedSource = toSupportedHotboardSource(source)
+function feedPageHighlightedNavKey(page: AiHotboardPage) {
+  if (page === 'featured') return 'featured'
+  if (page === 'view-all') return 'view-all'
+  if (page === 'view-low-follower') return 'view-low-follower'
+  if (page === 'view-bookmarks') return 'view-bookmarks'
+  return undefined
+}
+
+function systemPageHighlightedNavKey(page: AiHotboardPage) {
+  if (page === 'system') return 'system'
+  if (page === 'user') return 'user'
+  if (page === 'logout') return 'logout'
+  return undefined
+}
+
+function intakeHighlightedKey(page: AiHotboardPage) {
+  if (page === 'intake-hermes') return 'hermes'
+  if (page === 'intake-xiaoj') return 'xiaoj'
+  return undefined
+}
+
+function strategyHighlightedKey(strategyLine: string) {
+  const key = strategyLine.trim().toLowerCase()
+  const matched = STRATEGY_ROUTE_ITEMS.find((item) => item.key === key)
+  return matched?.key
+}
+
+function resolveStrategyLineKey(input?: string) {
+  const value = (input || 'm2-a').trim().toLowerCase()
+  if (value === 'm2-a' || value === 'm2-b' || value === 'm2-c' || value === 'm2-d' || value === 'm2-e') {
+    return value
+  }
+  return 'm2-a'
+}
+
+function V2PlaceholderPanel({
+  title,
+  expectedWeek,
+  owner,
+  dataSource,
+}: {
+  title: string
+  expectedWeek: string
+  owner: string
+  dataSource: string
+}) {
+  return (
+    <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+      <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">PLACEHOLDER</div>
+      <h2 className="mt-2 text-2xl font-semibold text-slate-100">{title}</h2>
+      <div className="mt-3 rounded-2xl border border-cyan-400/35 bg-cyan-400/10 px-4 py-3 text-lg font-medium text-cyan-100">
+        v2 milestone 接入中 · 预计 {expectedWeek} 上线
+      </div>
+      <div className="mt-4 space-y-2 text-sm text-slate-300">
+        <div>数据来源：{dataSource}</div>
+        <div>负责人：{owner}</div>
+      </div>
+    </section>
+  )
+}
+
+function StrategyPanel({
+  strategyLine,
+  item,
+  loading,
+  error,
+}: {
+  strategyLine: string
+  item: StrategyStatusItem | null
+  loading: boolean
+  error: string | null
+}) {
+  const label = STRATEGY_ROUTE_ITEMS.find((route) => route.key === strategyLine)?.label ?? strategyLine
+
+  return (
+    <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+      <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">M2 STRATEGY</div>
+      <h2 className="mt-2 text-2xl font-semibold text-slate-100">{label}</h2>
+
+      {loading ? (
+        <div className="mt-4 rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3 text-sm text-slate-300">正在读取主线状态...</div>
+      ) : error ? (
+        <div className="mt-4 rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">读取失败：{error}</div>
+      ) : item ? (
+        <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
+          <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-400">主线</div>
+            <div className="mt-1 text-lg font-medium text-slate-100">{item.code}</div>
+            <div className="mt-1 text-slate-300">{item.name}</div>
+          </div>
+          <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-400">负责人</div>
+            <div className="mt-2 text-slate-100">{item.owner}</div>
+          </div>
+          <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-400">优先级</div>
+            <div className="mt-2 text-slate-100">{item.priority}</div>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-4 rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3 text-sm text-slate-300">当前主线暂无状态数据。</div>
+      )}
+
+      <div className="mt-4 text-xs text-slate-400">状态来源：`~/.org/shared-memory/business-glossary.md`</div>
+    </section>
+  )
+}
+
+function IntakePanel({
+  authorAgent,
+  title,
+  authUser,
+  items,
+  selectedItemId,
+  onSelectItem,
+  draft,
+  onDraftChange,
+  onSubmit,
+  submitting,
+  requestError,
+  listLoading,
+  listError,
+}: {
+  authorAgent: IntakeAgentKey
+  title: string
+  authUser: AuthUser | null
+  items: IntakeItem[]
+  selectedItemId: string | null
+  onSelectItem: (id: string) => void
+  draft: { title: string; body: string; tagsText: string }
+  onDraftChange: (next: { title?: string; body?: string; tagsText?: string }) => void
+  onSubmit: () => void
+  submitting: boolean
+  requestError: string | null
+  listLoading: boolean
+  listError: string | null
+}) {
+  const canWrite = authUser?.role === 'owner'
+
+  const selectedItem =
+    items.find((item) => item.id === selectedItemId) ||
+    items[0] ||
+    null
+
+  return (
+    <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+      <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">INTAKE</div>
+      <h2 className="mt-2 text-2xl font-semibold text-slate-100">{title}</h2>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+        <div className="space-y-3">
+          <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3 text-sm text-slate-300">当前流：{authorAgent === 'hermes' ? '爱马仕战略发现' : '小J 执行发现'}</div>
+
+          {listLoading ? (
+            <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3 text-sm text-slate-300">正在加载提报列表...</div>
+          ) : listError ? (
+            <div className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">读取失败：{listError}</div>
+          ) : items.length === 0 ? (
+            <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3 text-sm text-slate-300">暂无提报记录。</div>
+          ) : (
+            <ul className="space-y-2">
+              {items.map((item) => {
+                const selected = item.id === selectedItem?.id
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => onSelectItem(item.id)}
+                      className={cn(
+                        'w-full rounded-xl border px-3 py-2 text-left transition-colors',
+                        selected
+                          ? 'border-cyan-400/45 bg-cyan-400/15 text-cyan-100'
+                          : 'border-slate-700/70 bg-slate-900/45 text-slate-300 hover:border-slate-500/80 hover:text-slate-100',
+                      )}
+                    >
+                      <div className="text-sm font-medium">{item.title}</div>
+                      <div className="mt-1 text-xs text-slate-400">{formatEntryTime(item.created_at)} · {item.submitted_by_name}</div>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+
+        <div className="space-y-3">
+          {selectedItem ? (
+            <article className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-4">
+              <h3 className="text-lg font-semibold text-slate-100">{selectedItem.title}</h3>
+              <div className="mt-1 text-xs text-slate-400">{formatEntryTime(selectedItem.created_at)} · {selectedItem.submitted_by_name}</div>
+              <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-200">{selectedItem.body}</p>
+              {selectedItem.tags.length > 0 ? (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {selectedItem.tags.map((tag) => (
+                    <span key={`${selectedItem.id}-${tag}`} className="rounded-full border border-slate-600/60 bg-slate-900/80 px-2 py-0.5 text-xs text-slate-300">{tag}</span>
+                  ))}
+                </div>
+              ) : null}
+            </article>
+          ) : null}
+
+          <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-4">
+            <div className="text-sm font-medium text-slate-100">新增提报</div>
+            {!canWrite ? (
+              <div className="mt-2 rounded-md border border-slate-700/70 bg-slate-900/70 px-3 py-2 text-sm text-slate-300">当前账号为员工只读身份，写入入口仅对 agent 开放。</div>
+            ) : (
+              <div className="mt-3 space-y-2">
+                <input
+                  type="text"
+                  value={draft.title}
+                  onChange={(event) => onDraftChange({ title: event.target.value })}
+                  placeholder="标题"
+                  className="w-full rounded-lg border border-slate-600/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                />
+                <textarea
+                  value={draft.body}
+                  onChange={(event) => onDraftChange({ body: event.target.value })}
+                  placeholder="正文"
+                  rows={5}
+                  className="w-full rounded-lg border border-slate-600/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                />
+                <input
+                  type="text"
+                  value={draft.tagsText}
+                  onChange={(event) => onDraftChange({ tagsText: event.target.value })}
+                  placeholder="tags，逗号分隔"
+                  className="w-full rounded-lg border border-slate-600/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+                />
+                {requestError ? (
+                  <div className="rounded-md border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs text-rose-100">{requestError}</div>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={onSubmit}
+                  disabled={submitting}
+                  className="rounded-lg border border-cyan-300/55 bg-cyan-300/20 px-3 py-1.5 text-sm text-cyan-100 transition-colors hover:border-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? '提交中...' : '提交提报'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function IterationPanel() {
+  return (
+    <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]" data-testid="strategy-iteration-section">
+      <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">ITERATION</div>
+      <h2 className="mt-2 text-2xl font-semibold text-slate-100">策略迭代</h2>
+      <ul className="mt-4 space-y-2">
+        {STRATEGY_ITERATION_ITEMS.map((item) => (
+          <li key={item} className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-4 py-3 text-sm text-slate-200">{item}</li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function BasicPagePanel({
+  page,
+  onLogout,
+  isLoggingOut,
+}: {
+  page: AiHotboardPage
+  onLogout: () => void
+  isLoggingOut: boolean
+}) {
+  if (page === 'system') {
+    return (
+      <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+        <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">SYSTEM</div>
+        <h2 className="mt-2 text-2xl font-semibold text-slate-100">系统</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-300">系统页已接入，用于后续放置环境配置、任务开关与数据回补入口。</p>
+      </section>
+    )
+  }
+
+  if (page === 'user') {
+    return (
+      <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+        <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">USER</div>
+        <h2 className="mt-2 text-2xl font-semibold text-slate-100">用户</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-300">用户页已接入，后续可扩展我的收藏统计与个人偏好设置。</p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+      <div className="text-[11px] tracking-[0.26em] text-cyan-300/80">LOGOUT</div>
+      <h2 className="mt-2 text-2xl font-semibold text-slate-100">退出</h2>
+      <p className="mt-3 text-sm leading-6 text-slate-300">将结束当前登录会话并返回 ai-hotboard 入口。</p>
+      <button
+        type="button"
+        onClick={onLogout}
+        disabled={isLoggingOut}
+        className="mt-4 rounded-lg border border-slate-500/70 px-3 py-1.5 text-sm text-slate-100 transition-colors hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isLoggingOut ? '退出中...' : '确认退出'}
+      </button>
+    </section>
+  )
+}
+
+function FeedTimeline({
+  timelineGroups,
+  resolveVoteAggregate,
+  handleVoteClick,
+}: {
+  timelineGroups: TimelineGroup[]
+  resolveVoteAggregate: (event: TimelineEvent) => VoteAggregateEntry
+  handleVoteClick: (eventId: string, voteType: VoteType, baseline?: VoteAggregateEntry) => void
+}) {
+  if (timelineGroups.length === 0) {
+    return (
+      <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+        <div className="text-sm text-slate-300">当前视图暂无数据。</div>
+      </section>
+    )
+  }
+
+  return (
+    <div className="space-y-5">
+      {timelineGroups.map((group) => (
+        <section key={group.timestamp} className="grid grid-cols-[84px_minmax(0,1fr)] gap-3 sm:gap-4">
+          <div className="pt-0.5">
+            <div className="flex gap-2">
+              <div className="flex flex-col items-center">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                <span className="mt-1 w-px flex-1 bg-gradient-to-b from-emerald-400/70 to-transparent" />
+              </div>
+              <div className="text-[36px] font-extrabold leading-none tracking-[-0.03em] text-slate-100">{group.timestamp}</div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {group.events.map((event) => {
+              const voteState = resolveVoteAggregate(event)
+              return (
+                <article
+                  key={event.id}
+                  className="rounded-3xl border border-slate-700/65 bg-slate-900/70 px-4 py-4 shadow-[0_16px_36px_rgba(2,6,23,0.45)]"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
+                        <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                        <span className="truncate">{event.condensedSourceLabel}</span>
+                      </div>
+
+                      <h2 className="text-xl font-bold leading-7 text-slate-100">{event.title}</h2>
+
+                      <p className="text-[15px] leading-7 text-slate-300">{event.summary}</p>
+                    </div>
+
+                    <div className="flex shrink-0 items-start gap-2 pl-2">
+                      <span className={SIGNAL_BADGE_CLASS} data-testid="signal-score-badge" aria-label={`信号分 ${event.signalScore}`}>
+                        {event.signalScore}
+                      </span>
+                      <div className="flex gap-1 text-xs text-slate-400">
+                        <button
+                          type="button"
+                          onClick={() => handleVoteClick(event.id, 'like', voteState)}
+                          className={cn(
+                            'cursor-pointer rounded-full border px-2 py-1 transition-colors',
+                            voteState.my_vote.includes('like')
+                              ? 'border-emerald-300/70 bg-emerald-300/25 text-emerald-100'
+                              : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
+                          )}
+                          aria-pressed={voteState.my_vote.includes('like')}
+                          aria-label={`点赞 ${event.title}`}
+                        >
+                          👍 {voteState.like_count}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleVoteClick(event.id, 'dislike', voteState)}
+                          className={cn(
+                            'cursor-pointer rounded-full border px-2 py-1 transition-colors',
+                            voteState.my_vote.includes('dislike')
+                              ? 'border-rose-300/70 bg-rose-300/25 text-rose-100'
+                              : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
+                          )}
+                          aria-pressed={voteState.my_vote.includes('dislike')}
+                          aria-label={`点踩 ${event.title}`}
+                        >
+                          👎 {voteState.dislike_count}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleVoteClick(event.id, 'bookmark', voteState)}
+                          className={cn(
+                            'cursor-pointer rounded-full border px-2 py-1 transition-colors',
+                            voteState.my_vote.includes('bookmark')
+                              ? 'border-amber-300/70 bg-amber-300/25 text-amber-100'
+                              : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
+                          )}
+                          aria-pressed={voteState.my_vote.includes('bookmark')}
+                          aria-label={`收藏 ${event.title}`}
+                        >
+                          ☆ {voteState.bookmark_count}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
+                    {event.tags.map((tag) => (
+                      <span key={`${event.id}-${tag}`} className={cn('rounded-full border px-2 py-0.5 text-[11px]', getTagTone(tag))}>
+                        {tag}
+                      </span>
+                    ))}
+                    <span>· {event.signal_category}</span>
+                    {event.aggregatedSourcesLabel ? (
+                      <span className="rounded-full border border-slate-700/65 bg-slate-900/50 px-2 py-0.5 text-[11px] text-slate-300">
+                        {event.aggregatedSourcesLabel}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <div className="mt-3" data-testid="recommend-reason-banner">
+                    <div className={RECOMMEND_BANNER_CLASS} data-recommend-banner="true" aria-label="推荐理由绿色条">
+                      <div>{event.recommendReasonLine}</div>
+                      <div className="mt-1 text-emerald-200/90">{event.actionLine}</div>
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+export function AiHotboardScreen({
+  source = 'all',
+  page,
+  strategyLine,
+}: {
+  source?: string
+  page?: AiHotboardPage
+  strategyLine?: string
+}) {
+  const effectivePage = normalizeHotboardPage(page ?? resolveHotboardPageFromSource(source))
+  const resolvedSource = resolveSourceByHotboardPage(effectivePage, source)
+  const normalizedSource = toSupportedHotboardSource(resolvedSource)
+  const feedMode = resolveFeedModeByPage(effectivePage)
+
   const userIdRef = useRef<string>('unknown-user')
   const [authUser, setAuthUser] = useState<AuthUser | null>(null)
+  const [authResolved, setAuthResolved] = useState(false)
+  const [authRequired, setAuthRequired] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const [remotePayload, setRemotePayload] = useState<MockPayload>(payload)
@@ -300,10 +973,46 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
   const [remoteGeneratedAt, setRemoteGeneratedAt] = useState(payload.generated_at)
   const [voteAggregateByEvent, setVoteAggregateByEvent] = useState<VoteAggregateByEvent>({})
 
+  const [intakeItemsByAgent, setIntakeItemsByAgent] = useState<Record<IntakeAgentKey, IntakeItem[]>>({
+    hermes: [],
+    xiaoj: [],
+  })
+  const [intakeLoadingByAgent, setIntakeLoadingByAgent] = useState<Record<IntakeAgentKey, boolean>>({
+    hermes: false,
+    xiaoj: false,
+  })
+  const [intakeErrorByAgent, setIntakeErrorByAgent] = useState<Record<IntakeAgentKey, string | null>>({
+    hermes: null,
+    xiaoj: null,
+  })
+  const [selectedIntakeItemIdByAgent, setSelectedIntakeItemIdByAgent] = useState<Record<IntakeAgentKey, string | null>>({
+    hermes: null,
+    xiaoj: null,
+  })
+  const [intakeDraftByAgent, setIntakeDraftByAgent] = useState<Record<IntakeAgentKey, { title: string; body: string; tagsText: string }>>({
+    hermes: { title: '', body: '', tagsText: '' },
+    xiaoj: { title: '', body: '', tagsText: '' },
+  })
+  const [intakeSubmittingByAgent, setIntakeSubmittingByAgent] = useState<Record<IntakeAgentKey, boolean>>({
+    hermes: false,
+    xiaoj: false,
+  })
+  const [intakeRequestErrorByAgent, setIntakeRequestErrorByAgent] = useState<Record<IntakeAgentKey, string | null>>({
+    hermes: null,
+    xiaoj: null,
+  })
+
+  const [strategyStatus, setStrategyStatus] = useState<StrategyStatusItem | null>(null)
+  const [strategyStatusLoading, setStrategyStatusLoading] = useState(false)
+  const [strategyStatusError, setStrategyStatusError] = useState<string | null>(null)
+
   useEffect(() => {
     let cancelled = false
 
     async function loadFeed() {
+      if (!isFeedPage(effectivePage)) return
+      if (isPlaceholderSourcePage(effectivePage)) return
+
       try {
         const response = await fetch(
           `/api/hotboard/feed?source=${encodeURIComponent(normalizedSource)}`,
@@ -338,24 +1047,24 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
       }
 
       if (!cancelled) {
-          setRemotePayload({
-            generated_at: payload.generated_at,
-            note: payload.note,
-            events: buildFallbackEventsFromMock(normalizedSource, payload.events),
-          })
+        setRemotePayload({
+          generated_at: payload.generated_at,
+          note: payload.note,
+          events: buildFallbackEventsFromMock(normalizedSource, payload.events),
+        })
         setRemoteSourceLabel(DATA_SOURCE_LABEL)
         setRemoteGeneratedAt(payload.generated_at)
       }
     }
 
-    loadFeed()
+    void loadFeed()
     return () => {
       cancelled = true
     }
-  }, [normalizedSource])
+  }, [effectivePage, normalizedSource])
 
-  const timelineGroups = useMemo<TimelineGroup[]>(() => {
-    const enriched = remotePayload.events
+  const timelineEvents = useMemo<TimelineEvent[]>(() => {
+    return remotePayload.events
       .slice()
       .map((event) => ({
         ...event,
@@ -372,10 +1081,16 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
           parseGeneratedAtValue(b.created_at ?? b.timestamp) -
           parseGeneratedAtValue(a.created_at ?? a.timestamp),
       )
+  }, [remotePayload])
 
+  const filteredTimelineEvents = useMemo(() => {
+    return timelineEvents.filter((event) => feedMatchesMode(event, feedMode, voteAggregateByEvent))
+  }, [timelineEvents, feedMode, voteAggregateByEvent])
+
+  const timelineGroups = useMemo<TimelineGroup[]>(() => {
     const groups = new Map<string, TimelineGroup>()
 
-    enriched.forEach((event) => {
+    filteredTimelineEvents.forEach((event) => {
       const current = groups.get(event.timestamp)
       if (current) {
         current.events.push(event)
@@ -389,7 +1104,9 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
     })
 
     return Array.from(groups.values())
-  }, [remotePayload])
+  }, [filteredTimelineEvents])
+
+  const feedStats = useMemo(() => buildFeedStats(filteredTimelineEvents), [filteredTimelineEvents])
 
   useEffect(() => {
     let cancelled = false
@@ -398,13 +1115,22 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
       try {
         const auth = await fetchHermesAuthStatus()
         if (cancelled) return
+
+        setAuthRequired(Boolean(auth.authRequired && !auth.authenticated))
         if (auth.user?.feishu_open_id) {
           userIdRef.current = auth.user.feishu_open_id
           setAuthUser(auth.user)
+        } else {
+          setAuthUser(null)
         }
       } catch {
         if (!cancelled) {
+          setAuthRequired(false)
           setAuthUser(null)
+        }
+      } finally {
+        if (!cancelled) {
+          setAuthResolved(true)
         }
       }
     }
@@ -413,16 +1139,16 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
       try {
         const response = await fetch('/api/hotboard/vote/aggregate')
         if (!response.ok) return
-        const payload = (await response.json().catch(() => ({}))) as {
+        const data = (await response.json().catch(() => ({}))) as {
           aggregate?: VoteAggregateByEvent
           user_id?: string
         }
         if (cancelled) return
-        if (payload.user_id && payload.user_id.trim()) {
-          userIdRef.current = payload.user_id
+        if (data.user_id && data.user_id.trim()) {
+          userIdRef.current = data.user_id
         }
         setVoteAggregateByEvent(
-          payload.aggregate && typeof payload.aggregate === 'object' ? payload.aggregate : {},
+          data.aggregate && typeof data.aggregate === 'object' ? data.aggregate : {},
         )
       } catch {
         // Keep default UI state on network errors.
@@ -431,10 +1157,105 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
 
     void loadAuthUser()
     void loadAggregate()
+
     return () => {
       cancelled = true
     }
   }, [])
+
+  const activeIntakeAgent: IntakeAgentKey | null =
+    effectivePage === 'intake-hermes' ? 'hermes' : effectivePage === 'intake-xiaoj' ? 'xiaoj' : null
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadIntake(agent: IntakeAgentKey) {
+      setIntakeLoadingByAgent((current) => ({ ...current, [agent]: true }))
+      setIntakeErrorByAgent((current) => ({ ...current, [agent]: null }))
+
+      try {
+        const response = await fetch(`/api/hotboard/intake?author_agent=${encodeURIComponent(agent)}`)
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        const body = (await response.json().catch(() => ({}))) as {
+          items?: IntakeItem[]
+        }
+
+        if (cancelled) return
+        const items = Array.isArray(body.items) ? body.items : []
+        setIntakeItemsByAgent((current) => ({ ...current, [agent]: items }))
+        setSelectedIntakeItemIdByAgent((current) => ({
+          ...current,
+          [agent]: current[agent] && items.some((item) => item.id === current[agent]) ? current[agent] : items[0]?.id ?? null,
+        }))
+      } catch (error) {
+        if (cancelled) return
+        setIntakeErrorByAgent((current) => ({
+          ...current,
+          [agent]: error instanceof Error ? error.message : '加载失败',
+        }))
+      } finally {
+        if (!cancelled) {
+          setIntakeLoadingByAgent((current) => ({ ...current, [agent]: false }))
+        }
+      }
+    }
+
+    if (activeIntakeAgent) {
+      void loadIntake(activeIntakeAgent)
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [activeIntakeAgent])
+
+  const normalizedStrategyLine = resolveStrategyLineKey(strategyLine)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadStrategyStatus() {
+      if (effectivePage !== 'strategy-line') return
+
+      setStrategyStatusLoading(true)
+      setStrategyStatusError(null)
+
+      try {
+        const response = await fetch(
+          `/api/hotboard/strategy?line=${encodeURIComponent(normalizedStrategyLine)}`,
+        )
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        const body = (await response.json().catch(() => ({}))) as {
+          item?: StrategyStatusItem
+        }
+
+        if (cancelled) return
+
+        setStrategyStatus(body.item ?? null)
+      } catch (error) {
+        if (cancelled) return
+        setStrategyStatus(null)
+        setStrategyStatusError(error instanceof Error ? error.message : '加载失败')
+      } finally {
+        if (!cancelled) {
+          setStrategyStatusLoading(false)
+        }
+      }
+    }
+
+    void loadStrategyStatus()
+
+    return () => {
+      cancelled = true
+    }
+  }, [effectivePage, normalizedStrategyLine])
 
   async function handleLogout() {
     if (isLoggingOut) return
@@ -501,17 +1322,17 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
         throw new Error('vote request failed')
       }
 
-      const payload = (await response.json().catch(() => ({}))) as {
+      const data = (await response.json().catch(() => ({}))) as {
         aggregate?: VoteAggregateByEvent
         user_id?: string
       }
 
-      if (payload.user_id && payload.user_id.trim()) {
-        userIdRef.current = payload.user_id
+      if (data.user_id && data.user_id.trim()) {
+        userIdRef.current = data.user_id
       }
 
-      if (payload.aggregate && typeof payload.aggregate === 'object') {
-        setVoteAggregateByEvent(payload.aggregate)
+      if (data.aggregate && typeof data.aggregate === 'object') {
+        setVoteAggregateByEvent(data.aggregate)
       }
     } catch {
       setVoteAggregateByEvent((current) => ({
@@ -519,6 +1340,200 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
         [eventId]: previous,
       }))
     }
+  }
+
+  async function refreshIntake(agent: IntakeAgentKey) {
+    setIntakeLoadingByAgent((current) => ({ ...current, [agent]: true }))
+    setIntakeErrorByAgent((current) => ({ ...current, [agent]: null }))
+
+    try {
+      const response = await fetch(`/api/hotboard/intake?author_agent=${encodeURIComponent(agent)}`)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      const body = (await response.json().catch(() => ({}))) as { items?: IntakeItem[] }
+      const items = Array.isArray(body.items) ? body.items : []
+
+      setIntakeItemsByAgent((current) => ({ ...current, [agent]: items }))
+      setSelectedIntakeItemIdByAgent((current) => ({ ...current, [agent]: items[0]?.id ?? null }))
+    } catch (error) {
+      setIntakeErrorByAgent((current) => ({
+        ...current,
+        [agent]: error instanceof Error ? error.message : '加载失败',
+      }))
+    } finally {
+      setIntakeLoadingByAgent((current) => ({ ...current, [agent]: false }))
+    }
+  }
+
+  async function submitIntake(agent: IntakeAgentKey) {
+    const draft = intakeDraftByAgent[agent]
+    const title = draft.title.trim()
+    const body = draft.body.trim()
+    const tags = draft.tagsText
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+
+    if (!title || !body) {
+      setIntakeRequestErrorByAgent((current) => ({
+        ...current,
+        [agent]: '标题和正文不能为空',
+      }))
+      return
+    }
+
+    setIntakeRequestErrorByAgent((current) => ({ ...current, [agent]: null }))
+    setIntakeSubmittingByAgent((current) => ({ ...current, [agent]: true }))
+
+    try {
+      const response = await fetch('/api/hotboard/intake', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          author_agent: agent,
+          title,
+          body,
+          tags,
+        }),
+      })
+
+      const bodyJson = (await response.json().catch(() => ({}))) as {
+        ok?: boolean
+        error?: string
+      }
+
+      if (!response.ok || !bodyJson.ok) {
+        throw new Error(bodyJson.error || `HTTP ${response.status}`)
+      }
+
+      setIntakeDraftByAgent((current) => ({
+        ...current,
+        [agent]: { title: '', body: '', tagsText: '' },
+      }))
+
+      await refreshIntake(agent)
+    } catch (error) {
+      setIntakeRequestErrorByAgent((current) => ({
+        ...current,
+        [agent]: error instanceof Error ? error.message : '提交失败',
+      }))
+    } finally {
+      setIntakeSubmittingByAgent((current) => ({ ...current, [agent]: false }))
+    }
+  }
+
+  const feedHeading = getFeedHeading(effectivePage)
+
+  const renderMainPanel = () => {
+    if (isPlaceholderSourcePage(effectivePage)) {
+      const placeholderMeta = SOURCE_PLACEHOLDER_ROUTE_ITEMS.find((item) => `source-${item.key}` === effectivePage)
+      if (!placeholderMeta) return null
+
+      return (
+        <V2PlaceholderPanel
+          title={`信源 · ${placeholderMeta.label}`}
+          expectedWeek={placeholderMeta.expectedWeek}
+          owner={placeholderMeta.owner}
+          dataSource={placeholderMeta.dataSource}
+        />
+      )
+    }
+
+    if (effectivePage === 'intake-hermes' || effectivePage === 'intake-xiaoj') {
+      const panelTitle = effectivePage === 'intake-hermes' ? '爱马仕战略发现' : '小J 执行发现'
+      const agent = effectivePage === 'intake-hermes' ? 'hermes' : 'xiaoj'
+
+      return (
+        <IntakePanel
+          authorAgent={agent}
+          title={panelTitle}
+          authUser={authUser}
+          items={intakeItemsByAgent[agent]}
+          selectedItemId={selectedIntakeItemIdByAgent[agent]}
+          onSelectItem={(id) => {
+            setSelectedIntakeItemIdByAgent((current) => ({ ...current, [agent]: id }))
+          }}
+          draft={intakeDraftByAgent[agent]}
+          onDraftChange={(next) => {
+            setIntakeDraftByAgent((current) => ({
+              ...current,
+              [agent]: {
+                ...current[agent],
+                ...next,
+              },
+            }))
+          }}
+          onSubmit={() => {
+            void submitIntake(agent)
+          }}
+          submitting={intakeSubmittingByAgent[agent]}
+          requestError={intakeRequestErrorByAgent[agent]}
+          listLoading={intakeLoadingByAgent[agent]}
+          listError={intakeErrorByAgent[agent]}
+        />
+      )
+    }
+
+    if (effectivePage === 'strategy-line') {
+      return (
+        <StrategyPanel
+          strategyLine={normalizedStrategyLine}
+          item={strategyStatus}
+          loading={strategyStatusLoading}
+          error={strategyStatusError}
+        />
+      )
+    }
+
+    if (effectivePage === 'iteration') {
+      return <IterationPanel />
+    }
+
+    if (effectivePage === 'system' || effectivePage === 'user' || effectivePage === 'logout') {
+      return <BasicPagePanel page={effectivePage} onLogout={() => { void handleLogout() }} isLoggingOut={isLoggingOut} />
+    }
+
+    return (
+      <>
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-500">EVENTS</div>
+            <div className="mt-2 text-2xl font-semibold text-slate-100">{feedStats.totalEvents}</div>
+          </div>
+          <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-500">LIKES</div>
+            <div className="mt-2 text-2xl font-semibold text-slate-100">{feedStats.totalLikes}</div>
+          </div>
+          <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-500">BOOKMARKS</div>
+            <div className="mt-2 text-2xl font-semibold text-slate-100">{feedStats.totalBookmarks}</div>
+          </div>
+          <div className="rounded-xl border border-slate-700/70 bg-slate-900/70 px-4 py-3">
+            <div className="text-xs tracking-[0.2em] text-slate-500">AVG SIGNAL</div>
+            <div className="mt-2 text-2xl font-semibold text-slate-100">{feedStats.averageSignalScore}</div>
+          </div>
+        </section>
+
+        <FeedTimeline
+          timelineGroups={timelineGroups}
+          resolveVoteAggregate={resolveVoteAggregate}
+          handleVoteClick={handleVoteClick}
+        />
+      </>
+    )
+  }
+
+  if (!authResolved) {
+    return (
+      <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950 text-slate-200">
+        正在检查登录状态...
+      </div>
+    )
+  }
+
+  if (authRequired) {
+    return <LoginScreen />
   }
 
   return (
@@ -540,16 +1555,26 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
           </div>
 
           <nav className="space-y-3" aria-label="AI HOT 导航列表">
-            <SidebarNavItems items={PRIMARY_NAV_ITEMS} highlightedItem="精选" />
-            <SourceRouteItems highlightedItem={normalizedSource} />
-            <SidebarSection title="信源提报" items={SOURCE_SUBMISSION_ITEMS} />
+            <LinkNavItems items={PRIMARY_NAV_ITEMS} highlightedKey={feedPageHighlightedNavKey(effectivePage)} />
+            <SourceRouteItems highlightedPage={effectivePage} />
+            <SidebarSectionLinkGroup title="信源提报" items={INTAKE_ROUTE_ITEMS} highlightedKey={intakeHighlightedKey(effectivePage)} />
 
             <div className="px-1 text-xs tracking-[0.24em] text-slate-500">策略</div>
-            <SidebarSection title="精选策略" items={STRATEGY_LINES} testId="featured-strategy-section" />
-            <SidebarSection title="策略迭代" items={STRATEGY_ITERATION_ITEMS} testId="strategy-iteration-section" />
+            <SidebarSectionLinkGroup
+              title="精选策略"
+              items={STRATEGY_ROUTE_ITEMS}
+              highlightedKey={effectivePage === 'strategy-line' ? strategyHighlightedKey(normalizedStrategyLine) : undefined}
+              testId="featured-strategy-section"
+            />
+            <SidebarSectionLinkGroup
+              title="策略迭代"
+              items={[{ key: 'iteration', label: '策略迭代总览', to: '/ai-hotboard/iteration' }]}
+              highlightedKey={effectivePage === 'iteration' ? 'iteration' : undefined}
+              testId="strategy-iteration-section"
+            />
 
             <div className="px-1 text-xs tracking-[0.24em] text-slate-500">后台</div>
-            <SidebarNavItems items={SYSTEM_NAV_ITEMS} />
+            <LinkNavItems items={SYSTEM_NAV_ITEMS} highlightedKey={systemPageHighlightedNavKey(effectivePage)} />
           </nav>
         </aside>
 
@@ -557,7 +1582,8 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
           <header className="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-700/60 bg-slate-900/80 px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div className="text-[11px] tracking-[0.32em] text-cyan-300/80">AI HOTBOARD</div>
-              <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl">AI 热点看板</h1>
+              <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl">{feedHeading.title}</h1>
+              <p className="mt-1 text-sm text-slate-300">{feedHeading.subtitle}</p>
             </div>
             <div className="flex flex-col gap-2 rounded-xl border border-slate-700/60 bg-slate-950/45 px-3 py-2 text-sm text-slate-300">
               <div>更新时间：{formatGeneratedAt(remoteGeneratedAt)}</div>
@@ -581,121 +1607,7 @@ export function AiHotboardScreen({ source = 'all' }: { source?: string }) {
             </div>
           </header>
 
-          <div className="space-y-5">
-            {timelineGroups.map((group) => (
-              <section key={group.timestamp} className="grid grid-cols-[84px_minmax(0,1fr)] gap-3 sm:gap-4">
-                <div className="pt-0.5">
-                  <div className="flex gap-2">
-                    <div className="flex flex-col items-center">
-                      <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                      <span className="mt-1 w-px flex-1 bg-gradient-to-b from-emerald-400/70 to-transparent" />
-                    </div>
-                    <div className="text-[36px] font-extrabold leading-none tracking-[-0.03em] text-slate-100">{group.timestamp}</div>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {group.events.map((event) => (
-                    <article
-                      key={event.id}
-                      className="rounded-3xl border border-slate-700/65 bg-slate-900/70 px-4 py-4 shadow-[0_16px_36px_rgba(2,6,23,0.45)]"
-                    >
-                      {(() => {
-                        const voteState = resolveVoteAggregate(event)
-                        return (
-                          <>
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1 space-y-2">
-                          <div className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
-                            <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                            <span className="truncate">{event.condensedSourceLabel}</span>
-                          </div>
-
-                          <h2 className="text-xl font-bold leading-7 text-slate-100">{event.title}</h2>
-
-                          <p className="text-[15px] leading-7 text-slate-300">{event.summary}</p>
-                        </div>
-
-                        <div className="flex shrink-0 items-start gap-2 pl-2">
-                          <span className={SIGNAL_BADGE_CLASS} data-testid="signal-score-badge" aria-label={`信号分 ${event.signalScore}`}>
-                            {event.signalScore}
-                          </span>
-                          <div className="flex gap-1 text-xs text-slate-400">
-                            <button
-                              type="button"
-                              onClick={() => handleVoteClick(event.id, 'like', voteState)}
-                              className={cn(
-                                'cursor-pointer rounded-full border px-2 py-1 transition-colors',
-                                voteState.my_vote.includes('like')
-                                  ? 'border-emerald-300/70 bg-emerald-300/25 text-emerald-100'
-                                  : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
-                              )}
-                              aria-pressed={voteState.my_vote.includes('like')}
-                              aria-label={`点赞 ${event.title}`}
-                            >
-                              👍 {voteState.like_count}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleVoteClick(event.id, 'dislike', voteState)}
-                              className={cn(
-                                'cursor-pointer rounded-full border px-2 py-1 transition-colors',
-                                voteState.my_vote.includes('dislike')
-                                  ? 'border-rose-300/70 bg-rose-300/25 text-rose-100'
-                                  : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
-                              )}
-                              aria-pressed={voteState.my_vote.includes('dislike')}
-                              aria-label={`点踩 ${event.title}`}
-                            >
-                              👎 {voteState.dislike_count}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleVoteClick(event.id, 'bookmark', voteState)}
-                              className={cn(
-                                'cursor-pointer rounded-full border px-2 py-1 transition-colors',
-                                voteState.my_vote.includes('bookmark')
-                                  ? 'border-amber-300/70 bg-amber-300/25 text-amber-100'
-                                  : 'border-slate-700/70 bg-slate-900/50 text-slate-400 hover:border-slate-500/80 hover:text-slate-200',
-                              )}
-                              aria-pressed={voteState.my_vote.includes('bookmark')}
-                              aria-label={`收藏 ${event.title}`}
-                            >
-                              ☆ {voteState.bookmark_count}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
-                        {event.tags.map((tag) => (
-                          <span key={`${event.id}-${tag}`} className={cn('rounded-full border px-2 py-0.5 text-[11px]', getTagTone(tag))}>
-                            {tag}
-                          </span>
-                        ))}
-                        <span>· {event.signal_category}</span>
-                        {event.aggregatedSourcesLabel ? (
-                          <span className="rounded-full border border-slate-700/65 bg-slate-900/50 px-2 py-0.5 text-[11px] text-slate-300">
-                            {event.aggregatedSourcesLabel}
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <div className="mt-3" data-testid="recommend-reason-banner">
-                        <div className={RECOMMEND_BANNER_CLASS} data-recommend-banner="true" aria-label="推荐理由绿色条">
-                          <div>{event.recommendReasonLine}</div>
-                          <div className="mt-1 text-emerald-200/90">{event.actionLine}</div>
-                        </div>
-                      </div>
-                          </>
-                        )
-                      })()}
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          <div className="space-y-5">{renderMainPanel()}</div>
         </main>
       </div>
     </div>

@@ -48,6 +48,10 @@ import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
+import { Route as AiHotboardUserRouteImport } from './routes/ai-hotboard/user'
+import { Route as AiHotboardSystemRouteImport } from './routes/ai-hotboard/system'
+import { Route as AiHotboardLogoutRouteImport } from './routes/ai-hotboard/logout'
+import { Route as AiHotboardIterationRouteImport } from './routes/ai-hotboard/iteration'
 import { Route as AuthFeishuCallbackRouteImport } from './routes/auth/feishu/callback'
 import { Route as ApiSessionsSendRouteImport } from './routes/api/sessions/send'
 import { Route as ApiOauthPollTokenRouteImport } from './routes/api/oauth.poll-token'
@@ -57,10 +61,18 @@ import { Route as ApiMemorySearchRouteImport } from './routes/api/memory/search'
 import { Route as ApiMemoryReadRouteImport } from './routes/api/memory/read'
 import { Route as ApiMemoryListRouteImport } from './routes/api/memory/list'
 import { Route as ApiHotboardVoteRouteImport } from './routes/api/hotboard/vote'
+import { Route as ApiHotboardStrategyRouteImport } from './routes/api/hotboard/strategy'
+import { Route as ApiHotboardIntakeRouteImport } from './routes/api/hotboard/intake'
 import { Route as ApiHotboardFeedRouteImport } from './routes/api/hotboard/feed'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
 import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
+import { Route as AiHotboardViewLowFollowerRouteImport } from './routes/ai-hotboard/view/low-follower'
+import { Route as AiHotboardViewBookmarksRouteImport } from './routes/ai-hotboard/view/bookmarks'
+import { Route as AiHotboardViewAllRouteImport } from './routes/ai-hotboard/view/all'
+import { Route as AiHotboardStrategyLineRouteImport } from './routes/ai-hotboard/strategy/$line'
 import { Route as AiHotboardSourceSourceRouteImport } from './routes/ai-hotboard/source/$source'
+import { Route as AiHotboardIntakeXiaojExecutionRouteImport } from './routes/ai-hotboard/intake/xiaoj-execution'
+import { Route as AiHotboardIntakeHermesStrategyRouteImport } from './routes/ai-hotboard/intake/hermes-strategy'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiHotboardVoteAggregateRouteImport } from './routes/api/hotboard/vote/aggregate'
 
@@ -259,6 +271,26 @@ const ApiAuthRoute = ApiAuthRouteImport.update({
   path: '/api/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiHotboardUserRoute = AiHotboardUserRouteImport.update({
+  id: '/user',
+  path: '/user',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
+const AiHotboardSystemRoute = AiHotboardSystemRouteImport.update({
+  id: '/system',
+  path: '/system',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
+const AiHotboardLogoutRoute = AiHotboardLogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
+const AiHotboardIterationRoute = AiHotboardIterationRouteImport.update({
+  id: '/iteration',
+  path: '/iteration',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
 const AuthFeishuCallbackRoute = AuthFeishuCallbackRouteImport.update({
   id: '/auth/feishu/callback',
   path: '/auth/feishu/callback',
@@ -304,6 +336,16 @@ const ApiHotboardVoteRoute = ApiHotboardVoteRouteImport.update({
   path: '/api/hotboard/vote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHotboardStrategyRoute = ApiHotboardStrategyRouteImport.update({
+  id: '/api/hotboard/strategy',
+  path: '/api/hotboard/strategy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHotboardIntakeRoute = ApiHotboardIntakeRouteImport.update({
+  id: '/api/hotboard/intake',
+  path: '/api/hotboard/intake',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHotboardFeedRoute = ApiHotboardFeedRouteImport.update({
   id: '/api/hotboard/feed',
   path: '/api/hotboard/feed',
@@ -319,11 +361,44 @@ const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
   path: '/logout',
   getParentRoute: () => ApiAuthRoute,
 } as any)
+const AiHotboardViewLowFollowerRoute =
+  AiHotboardViewLowFollowerRouteImport.update({
+    id: '/view/low-follower',
+    path: '/view/low-follower',
+    getParentRoute: () => AiHotboardRoute,
+  } as any)
+const AiHotboardViewBookmarksRoute = AiHotboardViewBookmarksRouteImport.update({
+  id: '/view/bookmarks',
+  path: '/view/bookmarks',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
+const AiHotboardViewAllRoute = AiHotboardViewAllRouteImport.update({
+  id: '/view/all',
+  path: '/view/all',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
+const AiHotboardStrategyLineRoute = AiHotboardStrategyLineRouteImport.update({
+  id: '/strategy/$line',
+  path: '/strategy/$line',
+  getParentRoute: () => AiHotboardRoute,
+} as any)
 const AiHotboardSourceSourceRoute = AiHotboardSourceSourceRouteImport.update({
   id: '/source/$source',
   path: '/source/$source',
   getParentRoute: () => AiHotboardRoute,
 } as any)
+const AiHotboardIntakeXiaojExecutionRoute =
+  AiHotboardIntakeXiaojExecutionRouteImport.update({
+    id: '/intake/xiaoj-execution',
+    path: '/intake/xiaoj-execution',
+    getParentRoute: () => AiHotboardRoute,
+  } as any)
+const AiHotboardIntakeHermesStrategyRoute =
+  AiHotboardIntakeHermesStrategyRouteImport.update({
+    id: '/intake/hermes-strategy',
+    path: '/intake/hermes-strategy',
+    getParentRoute: () => AiHotboardRoute,
+  } as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
     id: '/$sessionKey/status',
@@ -348,6 +423,10 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/terminal': typeof TerminalRoute
+  '/ai-hotboard/iteration': typeof AiHotboardIterationRoute
+  '/ai-hotboard/logout': typeof AiHotboardLogoutRoute
+  '/ai-hotboard/system': typeof AiHotboardSystemRoute
+  '/ai-hotboard/user': typeof AiHotboardUserRoute
   '/api/auth': typeof ApiAuthRouteWithChildren
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
@@ -377,10 +456,18 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/ai-hotboard/intake/hermes-strategy': typeof AiHotboardIntakeHermesStrategyRoute
+  '/ai-hotboard/intake/xiaoj-execution': typeof AiHotboardIntakeXiaojExecutionRoute
   '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
+  '/ai-hotboard/strategy/$line': typeof AiHotboardStrategyLineRoute
+  '/ai-hotboard/view/all': typeof AiHotboardViewAllRoute
+  '/ai-hotboard/view/bookmarks': typeof AiHotboardViewBookmarksRoute
+  '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hotboard/feed': typeof ApiHotboardFeedRoute
+  '/api/hotboard/intake': typeof ApiHotboardIntakeRoute
+  '/api/hotboard/strategy': typeof ApiHotboardStrategyRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
@@ -403,6 +490,10 @@ export interface FileRoutesByTo {
   '/memory': typeof MemoryRoute
   '/skills': typeof SkillsRoute
   '/terminal': typeof TerminalRoute
+  '/ai-hotboard/iteration': typeof AiHotboardIterationRoute
+  '/ai-hotboard/logout': typeof AiHotboardLogoutRoute
+  '/ai-hotboard/system': typeof AiHotboardSystemRoute
+  '/ai-hotboard/user': typeof AiHotboardUserRoute
   '/api/auth': typeof ApiAuthRouteWithChildren
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
@@ -432,10 +523,18 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/ai-hotboard/intake/hermes-strategy': typeof AiHotboardIntakeHermesStrategyRoute
+  '/ai-hotboard/intake/xiaoj-execution': typeof AiHotboardIntakeXiaojExecutionRoute
   '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
+  '/ai-hotboard/strategy/$line': typeof AiHotboardStrategyLineRoute
+  '/ai-hotboard/view/all': typeof AiHotboardViewAllRoute
+  '/ai-hotboard/view/bookmarks': typeof AiHotboardViewBookmarksRoute
+  '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hotboard/feed': typeof ApiHotboardFeedRoute
+  '/api/hotboard/intake': typeof ApiHotboardIntakeRoute
+  '/api/hotboard/strategy': typeof ApiHotboardStrategyRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
@@ -460,6 +559,10 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/terminal': typeof TerminalRoute
+  '/ai-hotboard/iteration': typeof AiHotboardIterationRoute
+  '/ai-hotboard/logout': typeof AiHotboardLogoutRoute
+  '/ai-hotboard/system': typeof AiHotboardSystemRoute
+  '/ai-hotboard/user': typeof AiHotboardUserRoute
   '/api/auth': typeof ApiAuthRouteWithChildren
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
@@ -489,10 +592,18 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/ai-hotboard/intake/hermes-strategy': typeof AiHotboardIntakeHermesStrategyRoute
+  '/ai-hotboard/intake/xiaoj-execution': typeof AiHotboardIntakeXiaojExecutionRoute
   '/ai-hotboard/source/$source': typeof AiHotboardSourceSourceRoute
+  '/ai-hotboard/strategy/$line': typeof AiHotboardStrategyLineRoute
+  '/ai-hotboard/view/all': typeof AiHotboardViewAllRoute
+  '/ai-hotboard/view/bookmarks': typeof AiHotboardViewBookmarksRoute
+  '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hotboard/feed': typeof ApiHotboardFeedRoute
+  '/api/hotboard/intake': typeof ApiHotboardIntakeRoute
+  '/api/hotboard/strategy': typeof ApiHotboardStrategyRoute
   '/api/hotboard/vote': typeof ApiHotboardVoteRouteWithChildren
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
@@ -518,6 +629,10 @@ export interface FileRouteTypes {
     | '/settings'
     | '/skills'
     | '/terminal'
+    | '/ai-hotboard/iteration'
+    | '/ai-hotboard/logout'
+    | '/ai-hotboard/system'
+    | '/ai-hotboard/user'
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
@@ -547,10 +662,18 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/ai-hotboard/intake/hermes-strategy'
+    | '/ai-hotboard/intake/xiaoj-execution'
     | '/ai-hotboard/source/$source'
+    | '/ai-hotboard/strategy/$line'
+    | '/ai-hotboard/view/all'
+    | '/ai-hotboard/view/bookmarks'
+    | '/ai-hotboard/view/low-follower'
     | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hotboard/feed'
+    | '/api/hotboard/intake'
+    | '/api/hotboard/strategy'
     | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
@@ -573,6 +696,10 @@ export interface FileRouteTypes {
     | '/memory'
     | '/skills'
     | '/terminal'
+    | '/ai-hotboard/iteration'
+    | '/ai-hotboard/logout'
+    | '/ai-hotboard/system'
+    | '/ai-hotboard/user'
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
@@ -602,10 +729,18 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/ai-hotboard/intake/hermes-strategy'
+    | '/ai-hotboard/intake/xiaoj-execution'
     | '/ai-hotboard/source/$source'
+    | '/ai-hotboard/strategy/$line'
+    | '/ai-hotboard/view/all'
+    | '/ai-hotboard/view/bookmarks'
+    | '/ai-hotboard/view/low-follower'
     | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hotboard/feed'
+    | '/api/hotboard/intake'
+    | '/api/hotboard/strategy'
     | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
@@ -629,6 +764,10 @@ export interface FileRouteTypes {
     | '/settings'
     | '/skills'
     | '/terminal'
+    | '/ai-hotboard/iteration'
+    | '/ai-hotboard/logout'
+    | '/ai-hotboard/system'
+    | '/ai-hotboard/user'
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
@@ -658,10 +797,18 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/ai-hotboard/intake/hermes-strategy'
+    | '/ai-hotboard/intake/xiaoj-execution'
     | '/ai-hotboard/source/$source'
+    | '/ai-hotboard/strategy/$line'
+    | '/ai-hotboard/view/all'
+    | '/ai-hotboard/view/bookmarks'
+    | '/ai-hotboard/view/low-follower'
     | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hotboard/feed'
+    | '/api/hotboard/intake'
+    | '/api/hotboard/strategy'
     | '/api/hotboard/vote'
     | '/api/memory/list'
     | '/api/memory/read'
@@ -714,6 +861,8 @@ export interface RootRouteChildren {
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiHotboardFeedRoute: typeof ApiHotboardFeedRoute
+  ApiHotboardIntakeRoute: typeof ApiHotboardIntakeRoute
+  ApiHotboardStrategyRoute: typeof ApiHotboardStrategyRoute
   ApiHotboardVoteRoute: typeof ApiHotboardVoteRouteWithChildren
   ApiMemoryListRoute: typeof ApiMemoryListRoute
   ApiMemoryReadRoute: typeof ApiMemoryReadRoute
@@ -999,6 +1148,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-hotboard/user': {
+      id: '/ai-hotboard/user'
+      path: '/user'
+      fullPath: '/ai-hotboard/user'
+      preLoaderRoute: typeof AiHotboardUserRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/system': {
+      id: '/ai-hotboard/system'
+      path: '/system'
+      fullPath: '/ai-hotboard/system'
+      preLoaderRoute: typeof AiHotboardSystemRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/logout': {
+      id: '/ai-hotboard/logout'
+      path: '/logout'
+      fullPath: '/ai-hotboard/logout'
+      preLoaderRoute: typeof AiHotboardLogoutRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/iteration': {
+      id: '/ai-hotboard/iteration'
+      path: '/iteration'
+      fullPath: '/ai-hotboard/iteration'
+      preLoaderRoute: typeof AiHotboardIterationRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
     '/auth/feishu/callback': {
       id: '/auth/feishu/callback'
       path: '/auth/feishu/callback'
@@ -1062,6 +1239,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHotboardVoteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hotboard/strategy': {
+      id: '/api/hotboard/strategy'
+      path: '/api/hotboard/strategy'
+      fullPath: '/api/hotboard/strategy'
+      preLoaderRoute: typeof ApiHotboardStrategyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hotboard/intake': {
+      id: '/api/hotboard/intake'
+      path: '/api/hotboard/intake'
+      fullPath: '/api/hotboard/intake'
+      preLoaderRoute: typeof ApiHotboardIntakeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hotboard/feed': {
       id: '/api/hotboard/feed'
       path: '/api/hotboard/feed'
@@ -1083,11 +1274,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthLogoutRouteImport
       parentRoute: typeof ApiAuthRoute
     }
+    '/ai-hotboard/view/low-follower': {
+      id: '/ai-hotboard/view/low-follower'
+      path: '/view/low-follower'
+      fullPath: '/ai-hotboard/view/low-follower'
+      preLoaderRoute: typeof AiHotboardViewLowFollowerRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/view/bookmarks': {
+      id: '/ai-hotboard/view/bookmarks'
+      path: '/view/bookmarks'
+      fullPath: '/ai-hotboard/view/bookmarks'
+      preLoaderRoute: typeof AiHotboardViewBookmarksRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/view/all': {
+      id: '/ai-hotboard/view/all'
+      path: '/view/all'
+      fullPath: '/ai-hotboard/view/all'
+      preLoaderRoute: typeof AiHotboardViewAllRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/strategy/$line': {
+      id: '/ai-hotboard/strategy/$line'
+      path: '/strategy/$line'
+      fullPath: '/ai-hotboard/strategy/$line'
+      preLoaderRoute: typeof AiHotboardStrategyLineRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
     '/ai-hotboard/source/$source': {
       id: '/ai-hotboard/source/$source'
       path: '/source/$source'
       fullPath: '/ai-hotboard/source/$source'
       preLoaderRoute: typeof AiHotboardSourceSourceRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/intake/xiaoj-execution': {
+      id: '/ai-hotboard/intake/xiaoj-execution'
+      path: '/intake/xiaoj-execution'
+      fullPath: '/ai-hotboard/intake/xiaoj-execution'
+      preLoaderRoute: typeof AiHotboardIntakeXiaojExecutionRouteImport
+      parentRoute: typeof AiHotboardRoute
+    }
+    '/ai-hotboard/intake/hermes-strategy': {
+      id: '/ai-hotboard/intake/hermes-strategy'
+      path: '/intake/hermes-strategy'
+      fullPath: '/ai-hotboard/intake/hermes-strategy'
+      preLoaderRoute: typeof AiHotboardIntakeHermesStrategyRouteImport
       parentRoute: typeof AiHotboardRoute
     }
     '/api/sessions/$sessionKey/status': {
@@ -1108,11 +1341,31 @@ declare module '@tanstack/react-router' {
 }
 
 interface AiHotboardRouteChildren {
+  AiHotboardIterationRoute: typeof AiHotboardIterationRoute
+  AiHotboardLogoutRoute: typeof AiHotboardLogoutRoute
+  AiHotboardSystemRoute: typeof AiHotboardSystemRoute
+  AiHotboardUserRoute: typeof AiHotboardUserRoute
+  AiHotboardIntakeHermesStrategyRoute: typeof AiHotboardIntakeHermesStrategyRoute
+  AiHotboardIntakeXiaojExecutionRoute: typeof AiHotboardIntakeXiaojExecutionRoute
   AiHotboardSourceSourceRoute: typeof AiHotboardSourceSourceRoute
+  AiHotboardStrategyLineRoute: typeof AiHotboardStrategyLineRoute
+  AiHotboardViewAllRoute: typeof AiHotboardViewAllRoute
+  AiHotboardViewBookmarksRoute: typeof AiHotboardViewBookmarksRoute
+  AiHotboardViewLowFollowerRoute: typeof AiHotboardViewLowFollowerRoute
 }
 
 const AiHotboardRouteChildren: AiHotboardRouteChildren = {
+  AiHotboardIterationRoute: AiHotboardIterationRoute,
+  AiHotboardLogoutRoute: AiHotboardLogoutRoute,
+  AiHotboardSystemRoute: AiHotboardSystemRoute,
+  AiHotboardUserRoute: AiHotboardUserRoute,
+  AiHotboardIntakeHermesStrategyRoute: AiHotboardIntakeHermesStrategyRoute,
+  AiHotboardIntakeXiaojExecutionRoute: AiHotboardIntakeXiaojExecutionRoute,
   AiHotboardSourceSourceRoute: AiHotboardSourceSourceRoute,
+  AiHotboardStrategyLineRoute: AiHotboardStrategyLineRoute,
+  AiHotboardViewAllRoute: AiHotboardViewAllRoute,
+  AiHotboardViewBookmarksRoute: AiHotboardViewBookmarksRoute,
+  AiHotboardViewLowFollowerRoute: AiHotboardViewLowFollowerRoute,
 }
 
 const AiHotboardRouteWithChildren = AiHotboardRoute._addFileChildren(
@@ -1221,6 +1474,8 @@ const rootRouteChildren: RootRouteChildren = {
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiHotboardFeedRoute: ApiHotboardFeedRoute,
+  ApiHotboardIntakeRoute: ApiHotboardIntakeRoute,
+  ApiHotboardStrategyRoute: ApiHotboardStrategyRoute,
   ApiHotboardVoteRoute: ApiHotboardVoteRouteWithChildren,
   ApiMemoryListRoute: ApiMemoryListRoute,
   ApiMemoryReadRoute: ApiMemoryReadRoute,
