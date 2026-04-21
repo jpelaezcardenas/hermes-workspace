@@ -13,6 +13,7 @@ const HIDDEN_SELECTOR_PAIRS = [
 
 export const Route = createFileRoute('/ai-hotboard')({
   component: AiHotboardRoute,
+  path: '/ai-hotboard/',
 })
 
 function AiHotboardRoute() {

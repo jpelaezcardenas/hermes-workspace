@@ -416,9 +416,11 @@ function feedMatchesMode(
 function LinkNavItems({
   items,
   highlightedKey,
+  exactHighlights = false,
 }: {
   items: readonly NavItem[]
   highlightedKey?: string
+  exactHighlights?: boolean
 }) {
   return (
     <ul className="space-y-1.5">
@@ -427,7 +429,11 @@ function LinkNavItems({
 
         return (
           <li key={item.key} className="list-none" data-nav-item={item.label}>
-            <Link to={item.to} className="block rounded-xl focus-visible:outline-none">
+            <Link
+              to={item.to}
+              activeOptions={exactHighlights ? { exact: true } : undefined}
+              className="block rounded-xl focus-visible:outline-none"
+            >
               <div
                 className={cn(
                   'rounded-xl border px-3 py-2 text-sm transition-colors',
@@ -1555,7 +1561,11 @@ export function AiHotboardScreen({
           </div>
 
           <nav className="space-y-3" aria-label="AI HOT 导航列表">
-            <LinkNavItems items={PRIMARY_NAV_ITEMS} highlightedKey={feedPageHighlightedNavKey(effectivePage)} />
+            <LinkNavItems
+              items={PRIMARY_NAV_ITEMS}
+              highlightedKey={feedPageHighlightedNavKey(effectivePage)}
+              exactHighlights
+            />
             <SourceRouteItems highlightedPage={effectivePage} />
             <SidebarSectionLinkGroup title="信源提报" items={INTAKE_ROUTE_ITEMS} highlightedKey={intakeHighlightedKey(effectivePage)} />
 
