@@ -858,7 +858,7 @@ export async function cleanupGatewayConnection(): Promise<void> {
 
 /**
  * Force-reconnect the gateway client with current process.env values.
- * Call this after updating CLAWDBOT_GATEWAY_URL / CLAWDBOT_GATEWAY_TOKEN.
+ * Call this after updating HERMES_GATEWAY_URL / HERMES_GATEWAY_TOKEN.
  */
 export async function gatewayReconnect(): Promise<void> {
   await gatewayClient.shutdown()
