@@ -3,11 +3,27 @@ import { getFeishuAuthConfig, resolveWhitelistedUserByOpenId } from './auth-midd
 const FEISHU_BASE_URL = 'https://open.feishu.cn'
 
 type FeishuTokenResponse = {
-  code: number
+  // Standard OAuth2 flat format (v1 oidc endpoint returns this):
+  access_token?: string
+  token_type?: string
+  expires_in?: number
+  refresh_token?: string
+  scope?: string
+  // Error response:
+  error?: string
+  error_description?: string
+  // Legacy Feishu-wrapped format (fallback):
+  code?: number
   msg?: string
   data?: {
     access_token?: string
   }
+}
+
+type FeishuAppAccessTokenResponse = {
+  code?: number
+  msg?: string
+  app_access_token?: string
 }
 
 type FeishuUserInfoResponse = {
@@ -74,26 +90,70 @@ async function exchangeCodeForUserAccessToken(request: Request, code: string) {
     throw new Error('Feishu callback URI is unavailable')
   }
 
-  const response = await fetch(`${FEISHU_BASE_URL}/open-apis/authen/v1/oidc/access_token`, {
+  const appAccessResponse = await fetch(`${FEISHU_BASE_URL}/open-apis/auth/v3/app_access_token/internal`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
     },
     body: JSON.stringify({
-      grant_type: 'authorization_code',
-      code,
       app_id: config.appId,
       app_secret: config.appSecret,
-      redirect_uri: redirectUri,
     }),
   })
 
-  const body = (await response.json().catch(() => ({}))) as FeishuTokenResponse
-  if (!response.ok || body.code !== 0 || !body.data?.access_token) {
-    throw new Error(`Failed to exchange Feishu OAuth code: ${body.msg || response.statusText}`)
+  const appAccessRawText = await appAccessResponse.text()
+  let appAccessBody: FeishuAppAccessTokenResponse = {}
+  try {
+    appAccessBody = JSON.parse(appAccessRawText) as FeishuAppAccessTokenResponse
+  } catch {
+    // non-json
   }
 
-  return body.data.access_token
+  const appAccessToken = appAccessBody.app_access_token
+  if (!appAccessResponse.ok || appAccessBody.code !== 0 || !appAccessToken) {
+    console.error('[feishu app access token FAILED]', {
+      httpStatus: appAccessResponse.status,
+      httpStatusText: appAccessResponse.statusText,
+      rawBody: appAccessRawText.slice(0, 500),
+      parsedBody: appAccessBody,
+    })
+    const err = appAccessBody.msg || appAccessResponse.statusText
+    throw new Error(`Failed to fetch Feishu app access token: ${err}`)
+  }
+
+  const response = await fetch(`${FEISHU_BASE_URL}/open-apis/authen/v1/access_token`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${appAccessToken}`,
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    body: JSON.stringify({
+      grant_type: 'authorization_code',
+      code,
+    }),
+  })
+
+  const rawText = await response.text()
+  let body: FeishuTokenResponse = {}
+  try {
+    body = JSON.parse(rawText) as FeishuTokenResponse
+  } catch {
+    // non-json
+  }
+
+  const accessToken = body.data?.access_token || body.access_token
+  if (!response.ok || body.code !== 0 || !accessToken) {
+    console.error('[feishu token exchange FAILED]', {
+      httpStatus: response.status,
+      httpStatusText: response.statusText,
+      rawBody: rawText.slice(0, 500),
+      parsedBody: body,
+    })
+    const err = body.error_description || body.error || body.msg || response.statusText
+    throw new Error(`Failed to exchange Feishu OAuth code: ${err}`)
+  }
+
+  return accessToken
 }
 
 async function fetchCurrentFeishuUser(accessToken: string) {
@@ -124,6 +184,12 @@ export async function resolveFeishuUserFromCallback(request: Request, code: stri
 
   const allowed = resolveWhitelistedUserByOpenId(openId)
   if (!allowed) {
+    console.error('[feishu whitelist MISS]', {
+      openId,
+      unionId: profile.union_id,
+      name: profile.name,
+      hint: '将 openId 加入 EMPLOYEE_WHITELIST 或改用 union_id 匹配',
+    })
     throw new Error('UNAUTHORIZED_WHITELIST')
   }
 

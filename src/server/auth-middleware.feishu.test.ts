@@ -14,12 +14,26 @@ import {
 
 const tempDirs: string[] = []
 const originalAuthDbPath = process.env.HERMES_AUTH_DB_PATH
+const originalFeishuAppId = process.env.FEISHU_APP_ID
+const originalFeishuAppSecret = process.env.FEISHU_APP_SECRET
 
 afterEach(() => {
   if (originalAuthDbPath === undefined) {
     delete process.env.HERMES_AUTH_DB_PATH
   } else {
     process.env.HERMES_AUTH_DB_PATH = originalAuthDbPath
+  }
+
+  if (originalFeishuAppId === undefined) {
+    delete process.env.FEISHU_APP_ID
+  } else {
+    process.env.FEISHU_APP_ID = originalFeishuAppId
+  }
+
+  if (originalFeishuAppSecret === undefined) {
+    delete process.env.FEISHU_APP_SECRET
+  } else {
+    process.env.FEISHU_APP_SECRET = originalFeishuAppSecret
   }
 
   while (tempDirs.length > 0) {
@@ -68,6 +82,7 @@ describe('auth middleware feishu session behavior', () => {
       id: 'ou_40ece573ca861adce640dc9ea5054460',
       feishu_open_id: 'ou_40ece573ca861adce640dc9ea5054460',
       feishu_union_id: 'on_123',
+      email: null,
       display_name: 'JC',
       role: 'owner',
       created_at: expect.any(String),
@@ -77,6 +92,8 @@ describe('auth middleware feishu session behavior', () => {
 
   it('revokes session token and rejects authentication afterward', () => {
     setupTempDbPath()
+    process.env.FEISHU_APP_ID = 'test-app-id'
+    process.env.FEISHU_APP_SECRET = 'test-app-secret'
     const store = createSessionStore()
     store.upsertUser({
       feishuOpenId: 'ou_40ece573ca861adce640dc9ea5054460',
@@ -113,5 +130,41 @@ describe('auth middleware feishu session behavior', () => {
   it('extracts session token from cookie header', () => {
     expect(getSessionTokenFromCookie('a=1; hermes-auth=abc123; c=3')).toBe('abc123')
     expect(getSessionTokenFromCookie(null)).toBeNull()
+  })
+
+  it('supports email-auth users in the same session store', () => {
+    setupTempDbPath()
+    const store = createSessionStore()
+
+    store.upsertUser({
+      email: 'jc@tangyuanjc.com',
+      displayName: 'JC',
+      role: 'owner',
+    })
+
+    storeSessionToken('email-token-1', {
+      userId: 'email:jc@tangyuanjc.com',
+      ttlSeconds: 7 * 24 * 60 * 60,
+    })
+
+    const req = new Request('http://localhost/api/hotboard/feed', {
+      headers: {
+        cookie: 'hermes-auth=email-token-1',
+      },
+    })
+
+    expect(isAuthenticated(req)).toBe(true)
+
+    const user = getSessionUser(req)
+    expect(user).toEqual({
+      id: 'email:jc@tangyuanjc.com',
+      email: 'jc@tangyuanjc.com',
+      feishu_open_id: null,
+      feishu_union_id: null,
+      display_name: 'JC',
+      role: 'owner',
+      created_at: expect.any(String),
+      last_login_at: expect.any(String),
+    })
   })
 })

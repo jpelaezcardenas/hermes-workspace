@@ -69,6 +69,7 @@ import { Route as AiHotboardSystemRouteImport } from './routes/ai-hotboard/syste
 import { Route as AiHotboardLogoutRouteImport } from './routes/ai-hotboard/logout'
 import { Route as AiHotboardIterationRouteImport } from './routes/ai-hotboard/iteration'
 import { Route as AuthFeishuCallbackRouteImport } from './routes/auth/feishu/callback'
+import { Route as AuthEmailVerifyRouteImport } from './routes/auth/email/verify'
 import { Route as ApiSkillsUninstallRouteImport } from './routes/api/skills/uninstall'
 import { Route as ApiSkillsToggleRouteImport } from './routes/api/skills/toggle'
 import { Route as ApiSkillsInstallRouteImport } from './routes/api/skills/install'
@@ -104,6 +105,7 @@ import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-ta
 import { Route as ApiHermesProxySplatRouteImport } from './routes/api/hermes-proxy/$'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
 import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
+import { Route as ApiAuthEmailRouteImport } from './routes/api/auth/email'
 import { Route as AiHotboardViewLowFollowerRouteImport } from './routes/ai-hotboard/view/low-follower'
 import { Route as AiHotboardViewBookmarksRouteImport } from './routes/ai-hotboard/view/bookmarks'
 import { Route as AiHotboardViewAllRouteImport } from './routes/ai-hotboard/view/all'
@@ -415,6 +417,11 @@ const AuthFeishuCallbackRoute = AuthFeishuCallbackRouteImport.update({
   path: '/auth/feishu/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthEmailVerifyRoute = AuthEmailVerifyRouteImport.update({
+  id: '/auth/email/verify',
+  path: '/auth/email/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSkillsUninstallRoute = ApiSkillsUninstallRouteImport.update({
   id: '/uninstall',
   path: '/uninstall',
@@ -590,6 +597,11 @@ const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
   path: '/logout',
   getParentRoute: () => ApiAuthRoute,
 } as any)
+const ApiAuthEmailRoute = ApiAuthEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => ApiAuthRoute,
+} as any)
 const AiHotboardViewLowFollowerRoute =
   AiHotboardViewLowFollowerRouteImport.update({
     id: '/view/low-follower',
@@ -714,6 +726,7 @@ export interface FileRoutesByFullPath {
   '/ai-hotboard/view/all': typeof AiHotboardViewAllRoute
   '/ai-hotboard/view/bookmarks': typeof AiHotboardViewBookmarksRoute
   '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
+  '/api/auth/email': typeof ApiAuthEmailRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
@@ -749,6 +762,7 @@ export interface FileRoutesByFullPath {
   '/api/skills/install': typeof ApiSkillsInstallRoute
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
+  '/auth/email/verify': typeof AuthEmailVerifyRoute
   '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
@@ -820,6 +834,7 @@ export interface FileRoutesByTo {
   '/ai-hotboard/view/all': typeof AiHotboardViewAllRoute
   '/ai-hotboard/view/bookmarks': typeof AiHotboardViewBookmarksRoute
   '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
+  '/api/auth/email': typeof ApiAuthEmailRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
@@ -855,6 +870,7 @@ export interface FileRoutesByTo {
   '/api/skills/install': typeof ApiSkillsInstallRoute
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
+  '/auth/email/verify': typeof AuthEmailVerifyRoute
   '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
@@ -928,6 +944,7 @@ export interface FileRoutesById {
   '/ai-hotboard/view/all': typeof AiHotboardViewAllRoute
   '/ai-hotboard/view/bookmarks': typeof AiHotboardViewBookmarksRoute
   '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
+  '/api/auth/email': typeof ApiAuthEmailRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
@@ -963,6 +980,7 @@ export interface FileRoutesById {
   '/api/skills/install': typeof ApiSkillsInstallRoute
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
+  '/auth/email/verify': typeof AuthEmailVerifyRoute
   '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
@@ -1037,6 +1055,7 @@ export interface FileRouteTypes {
     | '/ai-hotboard/view/all'
     | '/ai-hotboard/view/bookmarks'
     | '/ai-hotboard/view/low-follower'
+    | '/api/auth/email'
     | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
@@ -1072,6 +1091,7 @@ export interface FileRouteTypes {
     | '/api/skills/install'
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
+    | '/auth/email/verify'
     | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/active-run'
@@ -1143,6 +1163,7 @@ export interface FileRouteTypes {
     | '/ai-hotboard/view/all'
     | '/ai-hotboard/view/bookmarks'
     | '/ai-hotboard/view/low-follower'
+    | '/api/auth/email'
     | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
@@ -1178,6 +1199,7 @@ export interface FileRouteTypes {
     | '/api/skills/install'
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
+    | '/auth/email/verify'
     | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/active-run'
@@ -1250,6 +1272,7 @@ export interface FileRouteTypes {
     | '/ai-hotboard/view/all'
     | '/ai-hotboard/view/bookmarks'
     | '/ai-hotboard/view/low-follower'
+    | '/api/auth/email'
     | '/api/auth/logout'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
@@ -1285,6 +1308,7 @@ export interface FileRouteTypes {
     | '/api/skills/install'
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
+    | '/auth/email/verify'
     | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
     | '/api/sessions/$sessionKey/active-run'
@@ -1367,6 +1391,7 @@ export interface RootRouteChildren {
   ApiProfilesReadRoute: typeof ApiProfilesReadRoute
   ApiProfilesRenameRoute: typeof ApiProfilesRenameRoute
   ApiProfilesUpdateRoute: typeof ApiProfilesUpdateRoute
+  AuthEmailVerifyRoute: typeof AuthEmailVerifyRoute
   AuthFeishuCallbackRoute: typeof AuthFeishuCallbackRoute
 }
 
@@ -1792,6 +1817,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthFeishuCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/email/verify': {
+      id: '/auth/email/verify'
+      path: '/auth/email/verify'
+      fullPath: '/auth/email/verify'
+      preLoaderRoute: typeof AuthEmailVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/skills/uninstall': {
       id: '/api/skills/uninstall'
       path: '/uninstall'
@@ -2037,6 +2069,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthLogoutRouteImport
       parentRoute: typeof ApiAuthRoute
     }
+    '/api/auth/email': {
+      id: '/api/auth/email'
+      path: '/email'
+      fullPath: '/api/auth/email'
+      preLoaderRoute: typeof ApiAuthEmailRouteImport
+      parentRoute: typeof ApiAuthRoute
+    }
     '/ai-hotboard/view/low-follower': {
       id: '/ai-hotboard/view/low-follower'
       path: '/view/low-follower'
@@ -2159,10 +2198,12 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
 )
 
 interface ApiAuthRouteChildren {
+  ApiAuthEmailRoute: typeof ApiAuthEmailRoute
   ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
 }
 
 const ApiAuthRouteChildren: ApiAuthRouteChildren = {
+  ApiAuthEmailRoute: ApiAuthEmailRoute,
   ApiAuthLogoutRoute: ApiAuthLogoutRoute,
 }
 
@@ -2333,6 +2374,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesReadRoute: ApiProfilesReadRoute,
   ApiProfilesRenameRoute: ApiProfilesRenameRoute,
   ApiProfilesUpdateRoute: ApiProfilesUpdateRoute,
+  AuthEmailVerifyRoute: AuthEmailVerifyRoute,
   AuthFeishuCallbackRoute: AuthFeishuCallbackRoute,
 }
 export const routeTree = rootRouteImport

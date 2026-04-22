@@ -19,6 +19,10 @@ const VoteSchema = z.object({
   vote_type: z.enum(VOTE_TYPES),
 })
 
+function resolveUserId(sessionUser: NonNullable<ReturnType<typeof getSessionUser>>) {
+  return sessionUser.feishu_open_id || sessionUser.email || randomUUID()
+}
+
 export async function handleHotboardVotePost(request: Request): Promise<Response> {
   if (!isAuthenticated(request)) {
     return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
@@ -46,7 +50,7 @@ export async function handleHotboardVotePost(request: Request): Promise<Response
     }
 
     const body = parsed.data
-    const userId = sessionUser.feishu_open_id || randomUUID()
+    const userId = resolveUserId(sessionUser)
     const store = createHotboardVoteStore()
     const result = store.toggleVote({
       eventId: body.event_id,
@@ -82,7 +86,7 @@ export async function handleHotboardVoteAggregateGet(request: Request): Promise<
   }
 
   try {
-    const userId = sessionUser.feishu_open_id || randomUUID()
+    const userId = resolveUserId(sessionUser)
     const store = createHotboardVoteStore()
     return json({
       ok: true,

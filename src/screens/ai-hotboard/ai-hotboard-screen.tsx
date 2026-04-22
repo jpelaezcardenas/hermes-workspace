@@ -1123,8 +1123,8 @@ export function AiHotboardScreen({
         if (cancelled) return
 
         setAuthRequired(Boolean(auth.authRequired && !auth.authenticated))
-        if (auth.user?.feishu_open_id) {
-          userIdRef.current = auth.user.feishu_open_id
+        if (auth.user?.feishu_open_id || auth.user?.email) {
+          userIdRef.current = auth.user.feishu_open_id || auth.user.email || auth.user.id
           setAuthUser(auth.user)
         } else {
           setAuthUser(null)

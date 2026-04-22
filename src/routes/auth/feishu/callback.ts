@@ -10,7 +10,10 @@ import { resolveFeishuUserFromCallback } from '../../../server/feishu-auth'
 function redirectWithMessage(target: string, message: string) {
   const url = new URL(target, 'http://localhost')
   url.searchParams.set('auth_error', message)
-  return Response.redirect(url.pathname + url.search, 302)
+  return new Response(null, {
+    status: 302,
+    headers: { Location: url.pathname + url.search },
+  })
 }
 
 export const Route = createFileRoute('/auth/feishu/callback')({
@@ -48,6 +51,7 @@ export const Route = createFileRoute('/auth/feishu/callback')({
             },
           })
         } catch (error) {
+          console.error('[feishu callback error]', error)
           const message = error instanceof Error ? error.message : String(error)
           if (message.includes('UNAUTHORIZED_WHITELIST')) {
             return redirectWithMessage('/ai-hotboard', '未授权访问 ai-hotboard，请联系 JC')

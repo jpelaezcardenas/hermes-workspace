@@ -97,6 +97,60 @@ const themeColorScript = `
 })()
 `
 
+export function getRootLayoutMode(onboardingComplete: string | null): 'onboarding' | 'workspace' {
+  return onboardingComplete === 'true' ? 'workspace' : 'onboarding'
+}
+
+export function wrapInlineScript(script: string) {
+  return `
+try {
+${script}
+} catch (error) {
+  console.error('Inline bootstrap script failed', error)
+}
+`.trim()
+}
+
+export async function unregisterServiceWorkers(args: {
+  serviceWorker?: {
+    getRegistrations?: () => Promise<Array<{ unregister: () => unknown }>>
+  }
+  cachesApi?: {
+    keys?: () => Promise<string[]>
+    delete?: (key: string) => Promise<boolean> | boolean
+  }
+}) {
+  try {
+    const registrations = await args.serviceWorker?.getRegistrations?.()
+    if (Array.isArray(registrations)) {
+      for (const registration of registrations) {
+        try {
+          registration.unregister()
+        } catch {
+          // swallow per-registration failures
+        }
+      }
+    }
+  } catch {
+    // swallow getRegistrations failures
+  }
+
+  try {
+    const keys = await args.cachesApi?.keys?.()
+    if (Array.isArray(keys)) {
+      for (const key of keys) {
+        try {
+          await args.cachesApi?.delete?.(key)
+        } catch {
+          // swallow per-cache failures
+        }
+      }
+    }
+  } catch {
+    // swallow caches enumeration failures
+  }
+}
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -205,19 +259,10 @@ function RootLayout() {
     initializeSettingsAppearance()
 
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        for (const registration of registrations) {
-          registration.unregister()
-        }
+      void unregisterServiceWorkers({
+        serviceWorker: navigator.serviceWorker,
+        cachesApi: 'caches' in window ? caches : undefined,
       })
-      // Also clear any stale caches
-      if ('caches' in window) {
-        caches.keys().then((names) => {
-          for (const name of names) {
-            caches.delete(name)
-          }
-        })
-      }
     }
   }, [])
 
@@ -241,7 +286,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta httpEquiv="Content-Security-Policy" content={APP_CSP} />
-        <script dangerouslySetInnerHTML={{ __html: `
+        <script dangerouslySetInnerHTML={{ __html: wrapInlineScript(`
           // Polyfill crypto.randomUUID for non-secure contexts (HTTP access via LAN IP)
           if (typeof crypto !== 'undefined' && !crypto.randomUUID) {
             crypto.randomUUID = function() {
@@ -250,7 +295,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               });
             };
           }
-        ` }} />
+        `) }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <HeadContent />
         <script dangerouslySetInnerHTML={{ __html: themeColorScript }} />

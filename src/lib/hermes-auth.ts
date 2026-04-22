@@ -1,7 +1,8 @@
 export interface AuthUser {
   id: string
-  feishu_open_id: string
+  feishu_open_id: string | null
   feishu_union_id: string | null
+  email?: string | null
   display_name: string
   role: string
 }
@@ -9,7 +10,7 @@ export interface AuthUser {
 export interface AuthStatus {
   authenticated: boolean
   authRequired: boolean
-  authMode?: 'none' | 'password' | 'feishu_sso'
+  authMode?: 'none' | 'password' | 'feishu_sso' | 'email_magic_link'
   user?: AuthUser | null
   error?: string
 }

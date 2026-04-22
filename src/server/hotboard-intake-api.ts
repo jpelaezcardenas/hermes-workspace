@@ -49,6 +49,10 @@ function canWriteIntake(sessionRole: string, authorAgent: IntakeAgentKey) {
   return false
 }
 
+function resolveSubmittedById(sessionUser: NonNullable<ReturnType<typeof getSessionUser>>) {
+  return sessionUser.feishu_open_id || sessionUser.email || sessionUser.id
+}
+
 export async function handleHotboardIntakePost(request: Request): Promise<Response> {
   const authResult = ensureAuthenticated(request)
   if (authResult.error) return authResult.error
@@ -80,7 +84,7 @@ export async function handleHotboardIntakePost(request: Request): Promise<Respon
       title: body.title,
       body: body.body,
       tags: body.tags,
-      submittedByOpenId: authResult.sessionUser.feishu_open_id,
+      submittedByOpenId: resolveSubmittedById(authResult.sessionUser),
       submittedByName: authResult.sessionUser.display_name,
     })
 

@@ -8,7 +8,7 @@ const SESSION_COOKIE_NAME = 'hermes-auth'
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60
 
 const EMPLOYEE_WHITELIST: ReadonlyArray<{ openId: string; displayName: string; role: 'owner' | 'member' }> = [
-  { openId: 'ou_40ece573ca861adce640dc9ea5054460', displayName: 'JC', role: 'owner' },
+  { openId: 'ou_01e621b00ca6ba95e9a1e10bb444c9ae', displayName: 'JC', role: 'owner' },
   { openId: 'ou_d89d30f80a0cdd287cb77db6a1f0346f', displayName: '泡泡', role: 'member' },
   { openId: 'ou_3a1e620f3a86ac4bd8f5908e9c972eda', displayName: '皮皮', role: 'member' },
   { openId: 'ou_364c1a524046117645bfaf62ed812884', displayName: '奶思', role: 'member' },
@@ -22,8 +22,9 @@ const whitelistByOpenId = new Map(EMPLOYEE_WHITELIST.map((item) => [item.openId,
 
 type SessionUserRow = {
   id: string
-  feishu_open_id: string
+  feishu_open_id: string | null
   feishu_union_id: string | null
+  email: string | null
   display_name: string
   role: string
   created_at: string
@@ -37,8 +38,9 @@ type SessionRow = {
 }
 
 type UpsertUserInput = {
-  feishuOpenId: string
+  feishuOpenId?: string
   feishuUnionId?: string | null
+  email?: string
   displayName: string
   role: 'owner' | 'member'
 }
@@ -50,8 +52,9 @@ type StoreSessionTokenOptions = {
 
 export type SessionUser = {
   id: string
-  feishu_open_id: string
+  feishu_open_id: string | null
   feishu_union_id: string | null
+  email: string | null
   display_name: string
   role: string
   created_at: string
@@ -64,6 +67,10 @@ function resolveAuthDbPath() {
   const explicit = process.env.HERMES_AUTH_DB_PATH?.trim()
   if (explicit) return explicit
   return path.join(os.homedir(), '.hermes', 'data', 'auth.sqlite')
+}
+
+export function getAuthDbPath() {
+  return resolveAuthDbPath()
 }
 
 function nowIsoUtc() {
@@ -99,8 +106,9 @@ export class SessionStore {
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
-        feishu_open_id TEXT NOT NULL UNIQUE,
+        feishu_open_id TEXT UNIQUE,
         feishu_union_id TEXT,
+        email TEXT UNIQUE,
         display_name TEXT NOT NULL,
         role TEXT NOT NULL,
         created_at TEXT NOT NULL,
@@ -117,25 +125,53 @@ export class SessionStore {
 
       CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
       CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
+      CREATE INDEX IF NOT EXISTS idx_users_feishu_open_id ON users(feishu_open_id);
+    `)
+
+    // Backfill compatible schema for existing sqlite files.
+    const tableInfo = this.db.prepare("PRAGMA table_info('users')").all() as Array<{ name: string }>
+    const hasEmailColumn = tableInfo.some((column) => column.name === 'email')
+    if (!hasEmailColumn) {
+      this.db.exec(`
+        ALTER TABLE users ADD COLUMN email TEXT;
+      `)
+    }
+
+    this.db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     `)
   }
 
   upsertUser(input: UpsertUserInput): SessionUser {
+    const normalizedOpenId = input.feishuOpenId?.trim() || null
+    const normalizedEmail = input.email?.trim().toLowerCase() || null
+    if (!normalizedOpenId && !normalizedEmail) {
+      throw new Error('upsertUser requires feishuOpenId or email')
+    }
+
     const now = nowIsoUtc()
-    const existing = this.getUserByOpenId(input.feishuOpenId)
+    const existing = normalizedOpenId
+      ? this.getUserByOpenId(normalizedOpenId)
+      : normalizedEmail
+      ? this.getUserByEmail(normalizedEmail)
+      : null
 
     if (existing) {
       const update = this.db.prepare(`
         UPDATE users
         SET
+          feishu_open_id = ?,
           feishu_union_id = ?,
+          email = ?,
           display_name = ?,
           role = ?,
           last_login_at = ?
         WHERE id = ?
       `)
       update.run(
+        normalizedOpenId ?? existing.feishu_open_id ?? null,
         input.feishuUnionId ?? null,
+        normalizedEmail ?? existing.email ?? null,
         input.displayName,
         input.role,
         now,
@@ -144,15 +180,16 @@ export class SessionStore {
       return this.getUserById(existing.id) as SessionUser
     }
 
-    const id = input.feishuOpenId
+    const id = normalizedOpenId || `email:${normalizedEmail}`
     const insert = this.db.prepare(`
-      INSERT INTO users (id, feishu_open_id, feishu_union_id, display_name, role, created_at, last_login_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO users (id, feishu_open_id, feishu_union_id, email, display_name, role, created_at, last_login_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `)
     insert.run(
       id,
-      input.feishuOpenId,
+      normalizedOpenId,
       input.feishuUnionId ?? null,
+      normalizedEmail,
       input.displayName,
       input.role,
       now,
@@ -163,7 +200,7 @@ export class SessionStore {
 
   getUserByOpenId(openId: string): SessionUser | null {
     const stmt = this.db.prepare(`
-      SELECT id, feishu_open_id, feishu_union_id, display_name, role, created_at, last_login_at
+      SELECT id, feishu_open_id, feishu_union_id, email, display_name, role, created_at, last_login_at
       FROM users
       WHERE feishu_open_id = ?
       LIMIT 1
@@ -171,14 +208,28 @@ export class SessionStore {
     return (stmt.get(openId) as SessionUserRow | undefined) ?? null
   }
 
+  getUserByEmail(email: string): SessionUser | null {
+    const stmt = this.db.prepare(`
+      SELECT id, feishu_open_id, feishu_union_id, email, display_name, role, created_at, last_login_at
+      FROM users
+      WHERE email = ?
+      LIMIT 1
+    `)
+    return (stmt.get(email.trim().toLowerCase()) as SessionUserRow | undefined) ?? null
+  }
+
   getUserById(id: string): SessionUser | null {
     const stmt = this.db.prepare(`
-      SELECT id, feishu_open_id, feishu_union_id, display_name, role, created_at, last_login_at
+      SELECT id, feishu_open_id, feishu_union_id, email, display_name, role, created_at, last_login_at
       FROM users
       WHERE id = ?
       LIMIT 1
     `)
     return (stmt.get(id) as SessionUserRow | undefined) ?? null
+  }
+
+  getDatabase() {
+    return this.db
   }
 
   storeSessionToken(token: string, options: StoreSessionTokenOptions): void {
@@ -302,6 +353,12 @@ export function isFeishuSsoEnabled(): boolean {
   )
 }
 
+export function isEmailAuthEnabled(): boolean {
+  // Magic link should be available by default for ai-hotboard v2.1.
+  // Can be disabled via explicit env flag when needed.
+  return process.env.HERMES_EMAIL_AUTH_DISABLED?.trim() !== '1'
+}
+
 export function getFeishuAuthConfig() {
   const appId = process.env.FEISHU_APP_ID?.trim()
   const appSecret = process.env.FEISHU_APP_SECRET?.trim()
@@ -356,7 +413,8 @@ function isLocalRequest(request: Request): boolean {
  * - Request has a valid session token
  */
 export function isAuthenticated(request: Request): boolean {
-  const authRequired = isPasswordProtectionEnabled() || isFeishuSsoEnabled()
+  const authRequired =
+    isPasswordProtectionEnabled() || isFeishuSsoEnabled() || isEmailAuthEnabled()
   if (!authRequired) {
     return true
   }
@@ -372,7 +430,8 @@ export function isAuthenticated(request: Request): boolean {
 }
 
 export function requireLocalOrAuth(request: Request): boolean {
-  const authRequired = isPasswordProtectionEnabled() || isFeishuSsoEnabled()
+  const authRequired =
+    isPasswordProtectionEnabled() || isFeishuSsoEnabled() || isEmailAuthEnabled()
   if (!authRequired) {
     return isLocalRequest(request)
   }
