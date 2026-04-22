@@ -1,6 +1,7 @@
 import { HugeiconsIcon } from '@hugeicons/react'
 import { BrainIcon, CodeIcon, PuzzleIcon } from '@hugeicons/core-free-icons'
 import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 type SuggestionChip = {
   label: string
@@ -33,10 +34,42 @@ type ChatEmptyStateProps = {
   compact?: boolean
 }
 
+type ProfileInfo = {
+  name?: string
+  model?: string
+  provider?: string
+}
+
 export function ChatEmptyState({
   onSuggestionClick,
   compact = false,
 }: ChatEmptyStateProps) {
+  const [profileInfo, setProfileInfo] = useState<ProfileInfo>({})
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/profiles/list')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return
+        const active = data.activeProfile || 'default'
+        const profile = data.profiles?.find(
+          (p: { name: string }) => p.name === active,
+        )
+        if (profile) {
+          setProfileInfo({
+            name: profile.name,
+            model: profile.model,
+            provider: profile.provider,
+          })
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -74,6 +107,17 @@ export function ChatEmptyState({
         >
           Begin a session
         </h2>
+
+        {/* Active profile indicator */}
+        {profileInfo.name && (
+          <p
+            className="mt-1 text-xs font-medium"
+            style={{ color: 'var(--theme-accent)' }}
+          >
+            {profileInfo.name}
+            {profileInfo.model ? ` · ${profileInfo.model}` : ''}
+          </p>
+        )}
 
         {!compact && (
           <>
