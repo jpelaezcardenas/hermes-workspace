@@ -1,6 +1,6 @@
 /**
- * Hermes Config API — read/write ~/.hermes/config.yaml and ~/.hermes/.env
- * Gives the web UI the same config power as `hermes setup`
+ * Hermes Config API — read/write active profile's config.yaml and .env
+ * Honors $HERMES_HOME when set; falls back to ~/.hermes for single-profile users.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -16,9 +16,17 @@ import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
 type AuthResult = Response | true
 
-const HERMES_HOME = path.join(os.homedir(), '.hermes')
-const CONFIG_PATH = path.join(HERMES_HOME, 'config.yaml')
-const ENV_PATH = path.join(HERMES_HOME, '.env')
+function getHermesHome(): string {
+  return process.env.HERMES_HOME?.trim() || path.join(os.homedir(), '.hermes')
+}
+
+function getConfigPath(): string {
+  return path.join(getHermesHome(), 'config.yaml')
+}
+
+function getEnvPath(): string {
+  return path.join(getHermesHome(), '.env')
+}
 
 // Known Hermes providers
 const PROVIDERS = [
@@ -82,8 +90,9 @@ const PROVIDERS = [
 ]
 
 function readConfig(): Record<string, unknown> {
+  const configPath = getConfigPath()
   try {
-    const raw = fs.readFileSync(CONFIG_PATH, 'utf-8')
+    const raw = fs.readFileSync(configPath, 'utf-8')
     const parsed = YAML.parse(raw)
     return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
       ? (parsed as Record<string, unknown>)
@@ -94,13 +103,16 @@ function readConfig(): Record<string, unknown> {
 }
 
 function writeConfig(config: Record<string, unknown>): void {
-  fs.mkdirSync(HERMES_HOME, { recursive: true })
-  fs.writeFileSync(CONFIG_PATH, YAML.stringify(config), 'utf-8')
+  const hermesHome = getHermesHome()
+  const configPath = getConfigPath()
+  fs.mkdirSync(hermesHome, { recursive: true })
+  fs.writeFileSync(configPath, YAML.stringify(config), 'utf-8')
 }
 
 function readEnv(): Record<string, string> {
+  const envPath = getEnvPath()
   try {
-    const raw = fs.readFileSync(ENV_PATH, 'utf-8')
+    const raw = fs.readFileSync(envPath, 'utf-8')
     const env: Record<string, string> = {}
     for (const line of raw.split('\n')) {
       const trimmed = line.trim()
@@ -126,9 +138,11 @@ function readEnv(): Record<string, string> {
 }
 
 function writeEnv(env: Record<string, string>): void {
-  fs.mkdirSync(HERMES_HOME, { recursive: true })
+  const hermesHome = getHermesHome()
+  const envPath = getEnvPath()
+  fs.mkdirSync(hermesHome, { recursive: true })
   const lines = Object.entries(env).map(([k, v]) => `${k}=${v}`)
-  fs.writeFileSync(ENV_PATH, lines.join('\n') + '\n', 'utf-8')
+  fs.writeFileSync(envPath, lines.join('\n') + '\n', 'utf-8')
 }
 
 function maskKey(key: string): string {
@@ -141,9 +155,10 @@ function checkAuthStore(providerId: string): {
   source: string
   maskedKey?: string
 } {
+  const hermesHome = getHermesHome()
   // Check Hermes auth store
   for (const storePath of [
-    path.join(os.homedir(), '.hermes', 'auth-profiles.json'),
+    path.join(hermesHome, 'auth-profiles.json'),
     path.join(
       os.homedir(),
       '.openclaw',
@@ -188,7 +203,7 @@ export const Route = createFileRoute('/api/hermes-config')({
             providers: [],
             activeProvider: '',
             activeModel: '',
-            hermesHome: HERMES_HOME,
+            hermesHome: getHermesHome(),
           })
         }
 
@@ -242,7 +257,7 @@ export const Route = createFileRoute('/api/hermes-config')({
           providers: providerStatus,
           activeProvider,
           activeModel,
-          hermesHome: HERMES_HOME,
+          hermesHome: getHermesHome(),
         })
       },
 

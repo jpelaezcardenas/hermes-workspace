@@ -6,12 +6,13 @@
  *
  * - Probes on first request + re-probes every 30s
  * - Merges discovered models into /api/models response
- * - Auto-writes custom_providers to ~/.hermes/config.yaml if not already configured
+ * - Checks all profile configs (global + profiles slash) for provider configuration.
  */
 
 import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
+import YAML from 'yaml'
 
 // -------------------------------------------------------------------
 // Well-known local providers
@@ -79,6 +80,49 @@ const PROBE_TIMEOUT_MS = 800 // 800ms timeout per probe — local servers respon
 let discoveryState: Map<string, DiscoveredProvider> = new Map()
 let lastProbeAll = 0
 let probePromise: Promise<void> | null = null
+
+// -------------------------------------------------------------------
+// Config helpers (profile-aware)
+// -------------------------------------------------------------------
+
+function getHermesHome(): string {
+  return process.env.HERMES_HOME?.trim() || path.join(os.homedir(), '.hermes')
+}
+
+function getConfigPaths(): string[] {
+  const home = getHermesHome()
+  const paths: string[] = [path.join(home, 'config.yaml')]
+  const profilesDir = path.join(home, 'profiles')
+  if (fs.existsSync(profilesDir)) {
+    try {
+      for (const entry of fs.readdirSync(profilesDir, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+          paths.push(path.join(profilesDir, entry.name, 'config.yaml'))
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return paths
+}
+
+function hasProviderInConfig(configPath: string, providerId: string): boolean {
+  try {
+    if (!fs.existsSync(configPath)) return false
+    const raw = fs.readFileSync(configPath, 'utf-8')
+    const parsed = YAML.parse(raw)
+    if (!parsed || typeof parsed !== 'object') return false
+    const customProviders = (parsed as Record<string, unknown>).custom_providers
+    if (!Array.isArray(customProviders)) return false
+    return customProviders.some((cp: unknown) => {
+      if (!cp || typeof cp !== 'object') return false
+      return String((cp as Record<string, unknown>).name || '').trim() === providerId
+    })
+  } catch {
+    return false
+  }
+}
 
 // -------------------------------------------------------------------
 // Probe logic
@@ -239,28 +283,19 @@ export const LOCAL_PROVIDER_IDS = LOCAL_PROVIDERS.map((p) => p.id)
 void ensureDiscovery()
 
 // -------------------------------------------------------------------
-// Config auto-writer
+// Config checker (profile-aware)
 // -------------------------------------------------------------------
-
-const CONFIG_PATH = path.join(os.homedir(), '.hermes', 'config.yaml')
 
 /**
  * Check if a provider is already in custom_providers config.
- * Returns true if the provider already has a config entry.
+ * Returns true if the provider already has a config entry in
+ * the global config or any profile config.
  */
 export function isProviderConfigured(providerId: string): boolean {
-  try {
-    const raw = fs.readFileSync(CONFIG_PATH, 'utf-8')
-    // Simple check — look for the provider name in custom_providers
-    // Full YAML parsing would be better but this avoids adding a dep
-    const cpMatch = raw.match(
-      /custom_providers:\s*\n((?:\s+-[\s\S]*?)*)(?=\n\S|\n*$)/,
-    )
-    if (!cpMatch) return false
-    return cpMatch[0].includes(`name: ${providerId}`)
-  } catch {
-    return false
+  for (const configPath of getConfigPaths()) {
+    if (hasProviderInConfig(configPath, providerId)) return true
   }
+  return false
 }
 
 /**
@@ -276,9 +311,6 @@ export function ensureProviderInConfig(providerId: string): boolean {
   if (isProviderConfigured(providerId)) return false
   const def = LOCAL_PROVIDERS.find((p) => p.id === providerId)
   if (!def) return false
-  // Don't auto-write — just signal that config is needed
-  console.log(
-    `[local-discovery] ${def.name} detected but not in custom_providers. Gateway restart needed after adding it.`,
-  )
+  // Removed console.warn spam; auto-write is disabled by design.
   return false
 }

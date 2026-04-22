@@ -27,6 +27,10 @@ export type ProfileDetail = {
   skillsDir?: string
 }
 
+function getHermesHome(): string {
+  return process.env.HERMES_HOME?.trim() || path.join(os.homedir(), '.hermes')
+}
+
 function getHermesRoot(): string {
   return path.join(os.homedir(), '.hermes')
 }
@@ -304,6 +308,33 @@ export function deleteProfile(name: string): void {
   fs.renameSync(profilePath, path.join(trashDir, trashName))
 }
 
+/** Deep-merge two plain objects. */
+function deepMerge(
+  target: Record<string, unknown>,
+  source: Record<string, unknown>,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {}
+  for (const key of new Set([...Object.keys(target), ...Object.keys(source)])) {
+    const a = target[key]
+    const b = source[key]
+    if (b === undefined) {
+      result[key] = a
+    } else if (
+      b &&
+      typeof b === 'object' &&
+      !Array.isArray(b) &&
+      a &&
+      typeof a === 'object' &&
+      !Array.isArray(a)
+    ) {
+      result[key] = deepMerge(a as Record<string, unknown>, b as Record<string, unknown>)
+    } else {
+      result[key] = b
+    }
+  }
+  return result
+}
+
 export function updateProfileConfig(
   name: string,
   patch: Record<string, unknown>,
@@ -316,7 +347,7 @@ export function updateProfileConfig(
   if (!fs.existsSync(profilePath)) throw new Error('Profile not found')
   const configPath = path.join(profilePath, 'config.yaml')
   const current = readYamlConfig(configPath)
-  const merged = { ...current, ...patch }
+  const merged = deepMerge(current, patch)
   // Strip undefined keys
   for (const key of Object.keys(merged)) {
     if (merged[key] === undefined) delete merged[key]
