@@ -31,6 +31,12 @@ For multi-profile users (the primary Hermes use case), this means:
 
 **Solution**: The workspace maintains a **gateway pool** — one gateway process per active profile, each on its own port, all health-monitored, all routable from the UI.
 
+**Design principles:**
+1. **Profile-count agnostic**: Works for 1 profile or 100. No hardcoded limits, arrays, or switch statements enumerating specific profiles.
+2. **Privacy by design**: No PII, API keys, passwords, or secrets in code, logs, or PRs. All sensitive data stays in profile-local `.env` files.
+3. **Backward compatible**: Single-profile users unaffected. Pool mode is opt-in.
+4. **Fail-safe**: A dead gateway does not crash the workspace. Graceful fallback always available.
+
 ---
 
 ## 3. Architecture Overview
@@ -83,6 +89,8 @@ function getGatewayPort(profileName: string, profiles: string[]): number {
 ```
 
 Profiles are sorted alphabetically to ensure stable port assignment. A persistence file (`gateway-pool.json`) remembers assignments across restarts.
+
+**Profile-count agnostic**: The pool manager discovers profiles dynamically from the filesystem (`~/.hermes/profiles/*`). There is no hardcoded list, no maximum count, and no special-casing of specific profile names. A user with 2 profiles and a user with 50 profiles use the exact same code path.
 
 ### 4.2 Gateway Lifecycle States
 
@@ -328,12 +336,16 @@ HERMES_GATEWAY_HEALTH_INTERVAL=30  # Health check seconds
 
 ---
 
-## 11. Security Considerations
+## 11. Security & Privacy Considerations
 
 - Gateways bind to `127.0.0.1` only (already default)
 - No cross-profile memory leakage (each gateway has its own `HERMES_HOME`)
 - Profile selector respects auth middleware
 - Admin-only: ability to spawn/stop gateways
+- **No secrets in code or PRs**: API keys, passwords, tokens, and PII must never appear in source code, test fixtures, log output, or PR descriptions. All sensitive configuration lives in profile-local `.env` files which are `.gitignore`d.
+- **Sanitized examples**: Architecture diagrams and examples use fictional profile names (e.g., `agent-alpha`, `agent-beta`) or generic placeholders, never real user profile names, paths, or credentials.
+- **No hardcoded paths**: Port assignments, profile directories, and gateway URLs are resolved dynamically. No `/Users/...` or `C:\Users\...` paths in code.
+- **Log safety**: Gateway pool logs must redact any env vars containing `KEY`, `TOKEN`, `SECRET`, or `PASSWORD`.
 
 ---
 
