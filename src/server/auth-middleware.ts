@@ -129,7 +129,8 @@ export class SessionStore {
     `)
 
     // Backfill compatible schema for existing sqlite files.
-    const tableInfo = this.db.prepare("PRAGMA table_info('users')").all() as Array<{ name: string }>
+    type ColumnInfo = { name: string; notnull: number }
+    const tableInfo = this.db.prepare("PRAGMA table_info('users')").all() as ColumnInfo[]
     const hasEmailColumn = tableInfo.some((column) => column.name === 'email')
     if (!hasEmailColumn) {
       this.db.exec(`
@@ -137,7 +138,33 @@ export class SessionStore {
       `)
     }
 
+    // Drop legacy NOT NULL constraint on feishu_open_id to support email-only logins.
+    // SQLite cannot ALTER a column's constraints — we must rebuild the table.
+    const feishuColumn = tableInfo.find((column) => column.name === 'feishu_open_id')
+    if (feishuColumn && feishuColumn.notnull === 1) {
+      this.db.exec(`
+        BEGIN;
+        CREATE TABLE users_new (
+          id TEXT PRIMARY KEY,
+          feishu_open_id TEXT UNIQUE,
+          feishu_union_id TEXT,
+          email TEXT UNIQUE,
+          display_name TEXT NOT NULL,
+          role TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          last_login_at TEXT NOT NULL
+        );
+        INSERT INTO users_new (id, feishu_open_id, feishu_union_id, email, display_name, role, created_at, last_login_at)
+          SELECT id, feishu_open_id, feishu_union_id, email, display_name, role, created_at, last_login_at
+          FROM users;
+        DROP TABLE users;
+        ALTER TABLE users_new RENAME TO users;
+        COMMIT;
+      `)
+    }
+
     this.db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_users_feishu_open_id ON users(feishu_open_id);
       CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     `)
   }
