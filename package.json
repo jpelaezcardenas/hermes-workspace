@@ -10,6 +10,7 @@
     "dev": "NODE_OPTIONS=\"--max-old-space-size=2048\" vite dev",
     "build": "vite build",
     "start": "NODE_OPTIONS=\"--max-old-space-size=2048\" node .output/server/index.mjs",
+    "start:all": "node scripts/start-all.mjs",
     "start:dev": "NODE_OPTIONS=\"--max-old-space-size=2048\" vite dev",
     "preview": "vite preview",
     "test": "vitest run",

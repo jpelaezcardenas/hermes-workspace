@@ -23,12 +23,27 @@ function isBrowserMemoryPath(relativePath: string): boolean {
   )
 }
 
-function normalizeWorkspaceRoot(): string {
-  // Honor HERMES_HOME when set (e.g. ~/.hermes-vanilla for running alongside prod).
-  // Fall back to ~/.hermes for the default install location.
-  const envHome = process.env.HERMES_HOME?.trim()
-  if (envHome) return envHome
+function getHermesRoot(): string {
   return path.join(os.homedir(), '.hermes')
+}
+
+function getActiveProfileName(): string {
+  const activePath = path.join(getHermesRoot(), 'active_profile')
+  if (!fs.existsSync(activePath)) return 'default'
+  try {
+    const raw = fs.readFileSync(activePath, 'utf-8').trim()
+    return raw || 'default'
+  } catch {
+    return 'default'
+  }
+}
+
+function normalizeWorkspaceRoot(): string {
+  const activeProfile = getActiveProfileName()
+  if (activeProfile !== 'default') {
+    return path.join(getHermesRoot(), 'profiles', activeProfile)
+  }
+  return getHermesRoot()
 }
 
 export function getMemoryWorkspaceRoot(): string {

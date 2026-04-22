@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
+import YAML from 'yaml'
 import { json } from '@tanstack/react-start'
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
@@ -20,6 +21,10 @@ type ModelEntry = {
   id?: string
   name?: string
   [key: string]: unknown
+}
+
+function getHermesHome(): string {
+  return process.env.HERMES_HOME?.trim() || path.join(os.homedir(), '.hermes')
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -62,15 +67,10 @@ function normalizeModel(entry: unknown): ModelEntry | null {
 }
 
 /**
- * Read user-configured models from ~/.hermes/models.json.
- * This is the curated list the user manages via the Hermes CLI or UI.
- * Each entry has: { id, name, provider, model, baseUrl, createdAt }
+ * Read user-configured models from the active profile's models.json.
  */
 function readHermesModelsJson(): Array<ModelEntry> {
-  const modelsPath = path.join(
-    process.env.HERMES_HOME ?? path.join(os.homedir(), '.hermes'),
-    'models.json',
-  )
+  const modelsPath = path.join(getHermesHome(), 'models.json')
   try {
     if (!fs.existsSync(modelsPath)) return []
     const raw = fs.readFileSync(modelsPath, 'utf-8')
@@ -79,7 +79,6 @@ function readHermesModelsJson(): Array<ModelEntry> {
     return entries
       .map((entry: unknown): ModelEntry | null => {
         const record = asRecord(entry)
-        // models.json uses "model" field for the model ID
         const modelId = readString(record.model) || readString(record.id)
         if (!modelId) return null
         return {
@@ -95,23 +94,30 @@ function readHermesModelsJson(): Array<ModelEntry> {
 }
 
 /**
- * Read the default model from ~/.hermes/config.yaml without a YAML parser.
- * Looks for "default: <model-id>" under the "model:" section.
+ * Read the default model from the active profile's config.yaml using a proper YAML parser.
  */
 function readHermesDefaultModel(): ModelEntry | null {
-  const configPath = path.join(
-    process.env.HERMES_HOME ?? path.join(os.homedir(), '.hermes'),
-    'config.yaml',
-  )
+  const configPath = path.join(getHermesHome(), 'config.yaml')
   try {
     if (!fs.existsSync(configPath)) return null
     const raw = fs.readFileSync(configPath, 'utf-8')
-    const defaultMatch = raw.match(/^\s*default:\s*(.+)$/m)
-    const providerMatch = raw.match(/^\s*provider:\s*(.+)$/m)
-    if (!defaultMatch) return null
-    const modelId = defaultMatch[1].trim()
-    const provider = providerMatch ? providerMatch[1].trim() : 'unknown'
-    return { id: modelId, name: modelId, provider }
+    const parsed = asRecord(YAML.parse(raw))
+
+    let modelId = ''
+    let provider = ''
+
+    const modelField = parsed.model
+    if (typeof modelField === 'string') {
+      modelId = modelField
+      provider = readString(parsed.provider)
+    } else if (modelField && typeof modelField === 'object' && !Array.isArray(modelField)) {
+      const modelObj = modelField as Record<string, unknown>
+      modelId = readString(modelObj.default)
+      provider = readString(modelObj.provider) || readString(parsed.provider)
+    }
+
+    if (!modelId) return null
+    return { id: modelId, name: modelId, provider: provider || 'unknown' }
   } catch {
     return null
   }
@@ -147,7 +153,7 @@ export const Route = createFileRoute('/api/models')({
         await ensureGatewayProbed()
 
         try {
-          // Primary: read user-configured models from ~/.hermes/models.json
+          // Primary: read user-configured models from active profile's models.json
           let models = readHermesModelsJson()
           let source = 'models.json'
 
