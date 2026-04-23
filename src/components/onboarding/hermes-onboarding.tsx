@@ -450,8 +450,28 @@ export function HermesOnboarding() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    if (!localStorage.getItem(ONBOARDING_KEY)) {
-      setShow(true)
+
+    // Auto-skip feature for Admin Portal
+    const autoSkip = window.location.search.includes('skipOnboarding=true');
+    if (autoSkip) {
+       try {
+         localStorage.setItem(ONBOARDING_KEY, 'true');
+       } catch (e) {
+         // Ignore third-party storage blocks when embedded in iframe
+       }
+       dispatchOnboardingCompletionChanged(true);
+       setShow(false);
+       return;
+    }
+
+    try {
+      if (!localStorage.getItem(ONBOARDING_KEY)) {
+        setShow(true)
+      }
+    } catch (e) {
+      // If we can't read localStorage, assume onboarding isn't needed if skipOnboarding is present
+      // but otherwise just log err
+      console.warn('Could not read localStorage', e)
     }
   }, [])
 

@@ -37,6 +37,7 @@ COPY --from=build --chown=workspace:workspace /app/dist ./dist
 COPY --from=build --chown=workspace:workspace /app/node_modules ./node_modules
 COPY --from=build --chown=workspace:workspace /app/package.json ./package.json
 COPY --from=build --chown=workspace:workspace /app/skills ./skills
+COPY --from=build --chown=workspace:workspace /app/server-entry.js ./server-entry.js
 
 USER workspace
 ENV NODE_ENV=production \
