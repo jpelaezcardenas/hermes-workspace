@@ -450,6 +450,30 @@ const config = defineConfig(({ mode, command }) => {
       },
     },
     plugins: [
+      // Host-aware root redirect MUST run before tanstackStart registers its
+      // catch-all request handler, otherwise every request — including `/` —
+      // is served as SSR HTML and the redirect never fires.
+      {
+        name: 'host-aware-root-redirect',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            const requestPath = (req.url ?? '').split('?')[0]
+            if (req.method !== 'GET' && req.method !== 'HEAD') return next()
+            if (requestPath !== '/') return next()
+            const rawHost = (
+              req.headers['x-forwarded-host'] ?? req.headers.host ?? ''
+            ).toString()
+            const hostname = rawHost.split(',')[0].trim().split(':')[0]
+            if (hostname === 'aihotboard.tangyuanjc.com') {
+              res.statusCode = 302
+              res.setHeader('location', '/ai-hotboard')
+              res.end()
+              return
+            }
+            return next()
+          })
+        },
+      },
       // devtools(),
       // this is the plugin that enables path aliases
       viteTsConfigPaths({
