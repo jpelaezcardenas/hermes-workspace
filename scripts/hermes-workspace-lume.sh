@@ -16,7 +16,7 @@ set -euo pipefail
 #   uninstall      Delete the VM
 
 VM_NAME="${VM_NAME:-hermes-workspace}"
-VM_USER="${VM_USER:-}"
+VM_USER="${VM_USER:-hermes}"
 VM_HOST="${VM_HOST:-}"
 VM_PORT="${VM_PORT:-22}"
 SHARED_DIR="${SHARED_DIR:-$HOME/hermes-shared}"
@@ -100,7 +100,6 @@ detect_vm_host() {
 
 ssh_cmd() {
   local host="${1:-}"
-  [[ -n "$VM_USER" ]] || die "Set VM_USER"
   [[ -n "$host" ]] || die "Could not determine VM IP. Set VM_HOST explicitly."
   printf 'ssh -p %s -o StrictHostKeyChecking=accept-new %s@%s' "$VM_PORT" "$VM_USER" "$host"
 }
