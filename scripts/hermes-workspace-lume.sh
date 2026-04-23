@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Commands:
 #   create-vm      Create the VM and boot with display for first-time setup
-#   bootstrap      SSH into the VM and install Node.js/pnpm/hermes-workspace
+#   bootstrap   Install Node.js, pnpm, and hermes-workspace in the VM (safe to re-run)
 #   start          Start the VM headless (no VNC window)
 #   stop           Stop the running VM
 #   status         Show VM state
