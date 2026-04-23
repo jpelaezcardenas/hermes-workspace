@@ -297,6 +297,99 @@ All workspace features unlock automatically once both services are reachable —
 
 ---
 
+## 🍎 Lume VM Hosting
+
+Run hermes-workspace inside a macOS VM on Apple Silicon using [Lume](https://cua.ai).
+
+### Overview
+
+Lume uses Apple's Virtualization Framework to run macOS VMs at near-native speed on Apple Silicon. This is ideal for:
+- Isolated hosting (no host machine pollution)
+- Multiple workspace instances
+- CI/CD testing before deployment
+- Hosting alongside a Hermes gateway VM
+
+### Prerequisites
+
+- Apple Silicon Mac (M1/M2/M3/M4)
+- macOS 13+
+- Lume installed (handled by the script)
+
+### Quick Start
+
+```bash
+# 1. Create the VM and boot with display for first-time setup
+./scripts/hermes-workspace-lume.sh create-vm
+
+# 2. Inside the VM: finish macOS setup, enable SSH (System Settings > Sharing > Remote Login)
+# Then bootstrap:
+VM_USER=<vm-username> ./scripts/hermes-workspace-lume.sh bootstrap
+
+# 3. Start the VM headless (no VNC window)
+./scripts/hermes-workspace-lume.sh start
+
+# 4. Access workspace at http://<vm-ip>:3000
+```
+
+### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `create-vm` | Create VM from latest macOS IPSW, boot with display |
+| `bootstrap` | Install Node.js, pnpm, and hermes-workspace in VM |
+| `start` | Start VM headless (`--no-display`) |
+| `stop` | Stop the running VM |
+| `status` | Show VM state |
+| `ssh` | Print SSH command for the VM |
+| `uninstall` | Delete the VM |
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VM_NAME` | `hermes-workspace` | Name of the Lume VM |
+| `VM_USER` | (required) | VM username for SSH |
+| `VM_HOST` | (auto-detect) | VM IP address |
+| `VM_PORT` | `22` | SSH port |
+| `SHARED_DIR` | `~/hermes-shared` | Shared folder between host and VM |
+| `WORKSPACE_DIR` | `~/hermes-workspace` | Where to clone workspace in VM |
+| `AGENT_API_URL` | `http://127.0.0.1:8642` | Hermes gateway URL (from agent VM) |
+
+### Two-VM Setup (Recommended)
+
+For production use, run two separate VMs:
+
+1. **Agent VM** — hosts the Hermes gateway (`hermes gateway run`)
+2. **Workspace VM** — hosts hermes-workspace, connects to agent VM
+
+This keeps the agent's Python runtime isolated from the workspace's Node.js runtime:
+
+```bash
+# Agent VM (from hermes-cua-lume-agent.sh)
+AGENT_VM_NAME=hermes-agent ./scripts/hermes-cua-lume-agent.sh create-vm
+VM_USER=mark TARGET_VM=agent ./scripts/hermes-cua-lume-agent.sh bootstrap
+./scripts/hermes-cua-lume-agent.sh start
+
+# Workspace VM
+AGENT_API_URL=http://<agent-vm-ip>:8642 ./scripts/hermes-workspace-lume.sh create-vm
+VM_USER=mark ./scripts/hermes-workspace-lume.sh bootstrap
+./scripts/hermes-workspace-lume.sh start
+```
+
+### Accessing the VM
+
+After starting headless, connect via SSH:
+```bash
+VM_USER=mark ./scripts/hermes-workspace-lume.sh ssh
+```
+
+Or view via VNC (display must be enabled):
+```bash
+lume run hermes-workspace --shared-dir ~/hermes-shared
+```
+
+---
+
 ## 🐳 Docker Quickstart
 
 [![Open in GitHub Codespaces](https://img.shields.io/badge/GitHub%20Codespaces-Open-181717?logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=outsourc-e/hermes-workspace)
