@@ -7,7 +7,7 @@ export type SourcePageKey =
   | 'source-x-for_you'
   | 'source-wechat'
   | 'source-jc-human-talks'
-  | 'source-xiaohongshu'
+  | 'source-zara-youtube'
 
 export type AiHotboardPage =
   | 'featured'
@@ -34,7 +34,7 @@ export function resolveHotboardPageFromSource(source: string): AiHotboardPage {
   if (source === 'x-for_you') return 'source-x-for_you'
   if (source === 'wechat') return 'source-wechat'
   if (source === 'jc-human-talks') return 'source-jc-human-talks'
-  if (source === 'xiaohongshu') return 'source-xiaohongshu'
+  if (source === 'zara-youtube') return 'source-zara-youtube'
   return 'featured'
 }
 
@@ -44,10 +44,10 @@ export function resolveSourceByHotboardPage(page: AiHotboardPage, fallbackSource
   if (page === 'source-x-following') return 'x-following'
   if (page === 'source-x-for_you') return 'x-for_you'
   if (page === 'source-wechat') return 'wechat'
+  if (page === 'source-zara-youtube') return 'zara-youtube'
 
   if (
     page === 'source-jc-human-talks' ||
-    page === 'source-xiaohongshu' ||
     page === 'featured' ||
     page === 'view-all' ||
     page === 'view-low-follower' ||

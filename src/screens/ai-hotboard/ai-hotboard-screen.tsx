@@ -86,6 +86,18 @@ type WechatArticleSummary = {
   excerpt: string
 }
 
+type ZaraYoutubeSummary = {
+  videoId: string
+  url: string
+  title: string
+  channel?: string
+  tags: string[]
+  description?: string
+  thumbnailUrl?: string
+  firstSeenAt?: string
+  lastRefreshedAt?: string
+}
+
 type NavItem = {
   key: string
   label: string
@@ -98,8 +110,8 @@ export const SOURCE_ITEMS = [
   'X following',
   'X for_you',
   '公众号',
+  'Zara YouTube 精选',
   'JC的人类对谈',
-  '小红书',
 ] as const
 
 export const SOURCE_SUBMISSION_ITEMS = ['JC 苹果备忘录日记', '爱马仕战略发现', '小J 执行发现'] as const
@@ -120,13 +132,13 @@ const SOURCE_PLACEHOLDER_ROUTE_ITEMS = [
     owner: 'JC',
     dataSource: '飞书妙记精选片段 · JC 手工策展',
   },
+] as const
+
+const ZARA_SOURCE_ROUTE_ITEMS = [
   {
-    key: 'xiaohongshu',
-    label: '小红书',
-    to: '/ai-hotboard/source/xiaohongshu',
-    expectedWeek: '2026-W20',
-    owner: '小J',
-    dataSource: '小红书热门话题 + 爆文抓取',
+    key: 'zara-youtube',
+    label: 'Zara YouTube 精选',
+    to: '/ai-hotboard/source/zara-youtube',
   },
 ] as const
 
@@ -313,8 +325,8 @@ function isFeedPage(page: AiHotboardPage) {
   )
 }
 
-function isPlaceholderSourcePage(page: AiHotboardPage): page is Extract<SourcePageKey, 'source-jc-human-talks' | 'source-xiaohongshu'> {
-  return page === 'source-jc-human-talks' || page === 'source-xiaohongshu'
+function isPlaceholderSourcePage(page: AiHotboardPage): page is Extract<SourcePageKey, 'source-jc-human-talks'> {
+  return page === 'source-jc-human-talks'
 }
 
 function getFeedHeading(page: AiHotboardPage) {
@@ -378,6 +390,13 @@ function getFeedHeading(page: AiHotboardPage) {
     return {
       title: '信源 · 公众号',
       subtitle: '手工扔 URL 即时抓取 · owner 可直接投递微信文章',
+    }
+  }
+
+  if (page === 'source-zara-youtube') {
+    return {
+      title: 'Zara YouTube 精选',
+      subtitle: 'Zara Zhang AI 学习库 · YouTube curated library',
     }
   }
 
@@ -510,10 +529,10 @@ function SourceRouteItems({
       ? 'x-for_you'
       : highlightedPage === 'source-wechat'
       ? 'wechat'
+      : highlightedPage === 'source-zara-youtube'
+      ? 'zara-youtube'
       : highlightedPage === 'source-jc-human-talks'
       ? 'jc-human-talks'
-      : highlightedPage === 'source-xiaohongshu'
-      ? 'xiaohongshu'
       : undefined
 
   return (
@@ -528,6 +547,7 @@ function SourceRouteItems({
             items={[{ key: 'wechat', label: '公众号', to: '/ai-hotboard/source/wechat' }]}
             highlightedKey={highlightedKey}
           />
+          <LinkNavItems items={ZARA_SOURCE_ROUTE_ITEMS} highlightedKey={highlightedKey} />
           <LinkNavItems items={SOURCE_PLACEHOLDER_ROUTE_ITEMS} highlightedKey={highlightedKey} />
         </div>
       </li>
@@ -847,6 +867,105 @@ function WechatIngestPanel({
   )
 }
 
+function ZaraRefreshPanel({
+  authUser,
+  onRefresh,
+  refreshing,
+  requestError,
+}: {
+  authUser: AuthUser | null
+  onRefresh: () => void
+  refreshing: boolean
+  requestError: string | null
+}) {
+  if (authUser?.role !== 'owner') {
+    return (
+      <section className="rounded-2xl border border-slate-700/70 bg-slate-900/70 px-4 py-4">
+        <div className="text-sm text-slate-300">当前账号为只读身份，Zara 源刷新仅 owner 可用。</div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="rounded-2xl border border-slate-700/70 bg-slate-900/70 px-4 py-4">
+      <div className="text-sm font-medium text-slate-100">Zara YouTube 精选刷新</div>
+      <div className="mt-2 text-sm text-slate-300">通过 Playwright 抓取 Zara 学习库里的 YouTube 精选区，并同步到本地 SQLite。</div>
+      <div className="mt-3">
+        <button
+          type="button"
+          onClick={onRefresh}
+          disabled={refreshing}
+          className="rounded-lg border border-cyan-300/55 bg-cyan-300/20 px-3 py-2 text-sm text-cyan-100 transition-colors hover:border-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {refreshing ? '刷新中...' : '刷新 Zara 源'}
+        </button>
+      </div>
+      {requestError ? (
+        <div className="mt-2 rounded-md border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs text-rose-100">{requestError}</div>
+      ) : null}
+    </section>
+  )
+}
+
+function ZaraYoutubeTimeline({ items }: { items: ZaraYoutubeSummary[] }) {
+  if (items.length === 0) {
+    return (
+      <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+        <div className="text-sm text-slate-300">当前 Zara YouTube 精选还没有数据。</div>
+      </section>
+    )
+  }
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      {items.map((item) => (
+        <article
+          key={item.videoId}
+          className="overflow-hidden rounded-3xl border border-slate-700/65 bg-slate-900/70 shadow-[0_16px_36px_rgba(2,6,23,0.45)]"
+        >
+          <a href={item.url} target="_blank" rel="noreferrer" className="block">
+            {item.thumbnailUrl ? (
+              <img
+                src={item.thumbnailUrl}
+                alt={item.title}
+                className="aspect-video w-full object-cover"
+              />
+            ) : (
+              <div className="aspect-video w-full bg-slate-800" />
+            )}
+          </a>
+          <div className="space-y-3 px-4 py-4">
+            <div>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-lg font-semibold leading-7 text-slate-100 transition-colors hover:text-cyan-200"
+              >
+                {item.title}
+              </a>
+              <div className="mt-1 text-sm text-slate-400">
+                {item.channel || '未知频道'}
+                {item.firstSeenAt ? ` · ${formatEntryTime(item.firstSeenAt)}` : ''}
+              </div>
+            </div>
+            {item.description ? (
+              <p className="text-sm leading-6 text-slate-300">{item.description}</p>
+            ) : null}
+            <div className="flex flex-wrap gap-1.5">
+              {item.tags.map((tag) => (
+                <span key={`${item.videoId}-${tag}`} className={cn('rounded-full border px-2 py-0.5 text-[11px]', getTagTone(tag))}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  )
+}
+
 function BasicPagePanel({
   page,
   onLogout,
@@ -1088,6 +1207,11 @@ export function AiHotboardScreen({
   const [wechatDraftUrl, setWechatDraftUrl] = useState('')
   const [wechatSubmitting, setWechatSubmitting] = useState(false)
   const [wechatRequestError, setWechatRequestError] = useState<string | null>(null)
+  const [zaraItems, setZaraItems] = useState<ZaraYoutubeSummary[]>([])
+  const [zaraLoading, setZaraLoading] = useState(false)
+  const [zaraError, setZaraError] = useState<string | null>(null)
+  const [zaraRefreshing, setZaraRefreshing] = useState(false)
+  const [zaraRequestError, setZaraRequestError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -1149,6 +1273,62 @@ export function AiHotboardScreen({
         } finally {
           if (!cancelled) {
             setWechatLoading(false)
+          }
+        }
+      }
+
+      if (effectivePage === 'source-zara-youtube') {
+        if (!cancelled) {
+          setZaraLoading(true)
+          setZaraError(null)
+        }
+
+        try {
+          const response = await fetch('/api/hotboard/zara/feed?limit=50')
+          if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+          const body = (await response.json().catch(() => ({}))) as {
+            items?: ZaraYoutubeSummary[]
+          }
+          const items = Array.isArray(body.items) ? body.items : []
+
+          if (cancelled) return
+
+          setZaraItems(items)
+          setZaraError(null)
+          setRemotePayload({
+            generated_at: new Date().toISOString(),
+            note: 'source=zara-youtube',
+            events: items.map((item, index) =>
+              mapFeedEventToMockEvent(
+                {
+                  ...item,
+                  source: 'zara-youtube',
+                },
+                `api-zara-${index}`,
+                'zara-youtube',
+              ),
+            ),
+          })
+          setRemoteSourceLabel('hotboard-zara.sqlite')
+          setRemoteGeneratedAt(items[0]?.lastRefreshedAt || items[0]?.firstSeenAt || new Date().toISOString())
+          return
+        } catch (error) {
+          if (!cancelled) {
+            setZaraItems([])
+            setZaraError(error instanceof Error ? error.message : '加载失败')
+            setRemotePayload({
+              generated_at: new Date().toISOString(),
+              note: 'source=zara-youtube',
+              events: [],
+            })
+            setRemoteSourceLabel('hotboard-zara.sqlite')
+            setRemoteGeneratedAt(new Date().toISOString())
+          }
+          return
+        } finally {
+          if (!cancelled) {
+            setZaraLoading(false)
           }
         }
       }
@@ -1487,6 +1667,58 @@ export function AiHotboardScreen({
     }
   }
 
+  async function refreshZaraFeed() {
+    setZaraRequestError(null)
+    setZaraRefreshing(true)
+
+    try {
+      const response = await fetch('/api/hotboard/zara/refresh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+
+      const body = (await response.json().catch(() => ({}))) as {
+        ok?: boolean
+        error?: string
+      }
+
+      if (!response.ok || !body.ok) {
+        throw new Error(body.error || `HTTP ${response.status}`)
+      }
+
+      setZaraLoading(true)
+      const feedResponse = await fetch('/api/hotboard/zara/feed?limit=50')
+      if (!feedResponse.ok) throw new Error(`HTTP ${feedResponse.status}`)
+      const feedBody = (await feedResponse.json().catch(() => ({}))) as { items?: ZaraYoutubeSummary[] }
+      const items = Array.isArray(feedBody.items) ? feedBody.items : []
+      setZaraItems(items)
+      setRemotePayload({
+        generated_at: new Date().toISOString(),
+        note: 'source=zara-youtube',
+        events: items.map((item, index) =>
+          mapFeedEventToMockEvent(
+            {
+              ...item,
+              source: 'zara-youtube',
+            },
+            `api-zara-${index}`,
+            'zara-youtube',
+          ),
+        ),
+      })
+      setRemoteSourceLabel('hotboard-zara.sqlite')
+      setRemoteGeneratedAt(items[0]?.lastRefreshedAt || items[0]?.firstSeenAt || new Date().toISOString())
+    } catch (error) {
+      setZaraRequestError(error instanceof Error ? error.message : '刷新失败')
+    } finally {
+      setZaraRefreshing(false)
+      setZaraLoading(false)
+    }
+  }
+
   function resolveVoteAggregate(event: TimelineEvent): VoteAggregateEntry {
     const existing = voteAggregateByEvent[event.id]
     if (existing) return existing
@@ -1743,6 +1975,35 @@ export function AiHotboardScreen({
             resolveVoteAggregate={resolveVoteAggregate}
             handleVoteClick={handleVoteClick}
           />
+        </>
+      )
+    }
+
+    if (effectivePage === 'source-zara-youtube') {
+      return (
+        <>
+          <ZaraRefreshPanel
+            authUser={authUser}
+            onRefresh={() => {
+              void refreshZaraFeed()
+            }}
+            refreshing={zaraRefreshing}
+            requestError={zaraRequestError}
+          />
+
+          {zaraLoading ? (
+            <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+              <div className="text-sm text-slate-300">正在读取 Zara YouTube 精选...</div>
+            </section>
+          ) : null}
+
+          {zaraError ? (
+            <section className="rounded-3xl border border-rose-400/30 bg-rose-400/10 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+              <div className="text-sm text-rose-100">Zara 源读取失败：{zaraError}</div>
+            </section>
+          ) : null}
+
+          <ZaraYoutubeTimeline items={zaraItems} />
         </>
       )
     }

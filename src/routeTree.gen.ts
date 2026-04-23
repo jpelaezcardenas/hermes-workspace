@@ -117,6 +117,8 @@ import { Route as AiHotboardIntakeXiaojExecutionRouteImport } from './routes/ai-
 import { Route as AiHotboardIntakeHermesStrategyRouteImport } from './routes/ai-hotboard/intake/hermes-strategy'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
+import { Route as ApiHotboardZaraRefreshRouteImport } from './routes/api/hotboard/zara/refresh'
+import { Route as ApiHotboardZaraFeedRouteImport } from './routes/api/hotboard/zara/feed'
 import { Route as ApiHotboardWechatIngestRouteImport } from './routes/api/hotboard/wechat/ingest'
 import { Route as ApiHotboardWechatFeedRouteImport } from './routes/api/hotboard/wechat/feed'
 import { Route as ApiHotboardVoteAggregateRouteImport } from './routes/api/hotboard/vote/aggregate'
@@ -666,6 +668,16 @@ const ApiSessionsSessionKeyActiveRunRoute =
     path: '/$sessionKey/active-run',
     getParentRoute: () => ApiSessionsRoute,
   } as any)
+const ApiHotboardZaraRefreshRoute = ApiHotboardZaraRefreshRouteImport.update({
+  id: '/api/hotboard/zara/refresh',
+  path: '/api/hotboard/zara/refresh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHotboardZaraFeedRoute = ApiHotboardZaraFeedRouteImport.update({
+  id: '/api/hotboard/zara/feed',
+  path: '/api/hotboard/zara/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHotboardWechatIngestRoute = ApiHotboardWechatIngestRouteImport.update({
   id: '/api/hotboard/wechat/ingest',
   path: '/api/hotboard/wechat/ingest',
@@ -793,6 +805,8 @@ export interface FileRoutesByFullPath {
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/hotboard/wechat/feed': typeof ApiHotboardWechatFeedRoute
   '/api/hotboard/wechat/ingest': typeof ApiHotboardWechatIngestRoute
+  '/api/hotboard/zara/feed': typeof ApiHotboardZaraFeedRoute
+  '/api/hotboard/zara/refresh': typeof ApiHotboardZaraRefreshRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -904,6 +918,8 @@ export interface FileRoutesByTo {
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/hotboard/wechat/feed': typeof ApiHotboardWechatFeedRoute
   '/api/hotboard/wechat/ingest': typeof ApiHotboardWechatIngestRoute
+  '/api/hotboard/zara/feed': typeof ApiHotboardZaraFeedRoute
+  '/api/hotboard/zara/refresh': typeof ApiHotboardZaraRefreshRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1018,6 +1034,8 @@ export interface FileRoutesById {
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
   '/api/hotboard/wechat/feed': typeof ApiHotboardWechatFeedRoute
   '/api/hotboard/wechat/ingest': typeof ApiHotboardWechatIngestRoute
+  '/api/hotboard/zara/feed': typeof ApiHotboardZaraFeedRoute
+  '/api/hotboard/zara/refresh': typeof ApiHotboardZaraRefreshRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1133,6 +1151,8 @@ export interface FileRouteTypes {
     | '/api/hotboard/vote/aggregate'
     | '/api/hotboard/wechat/feed'
     | '/api/hotboard/wechat/ingest'
+    | '/api/hotboard/zara/feed'
+    | '/api/hotboard/zara/refresh'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
@@ -1244,6 +1264,8 @@ export interface FileRouteTypes {
     | '/api/hotboard/vote/aggregate'
     | '/api/hotboard/wechat/feed'
     | '/api/hotboard/wechat/ingest'
+    | '/api/hotboard/zara/feed'
+    | '/api/hotboard/zara/refresh'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   id:
@@ -1357,6 +1379,8 @@ export interface FileRouteTypes {
     | '/api/hotboard/vote/aggregate'
     | '/api/hotboard/wechat/feed'
     | '/api/hotboard/wechat/ingest'
+    | '/api/hotboard/zara/feed'
+    | '/api/hotboard/zara/refresh'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
@@ -1441,6 +1465,8 @@ export interface RootRouteChildren {
   AuthFeishuCallbackRoute: typeof AuthFeishuCallbackRoute
   ApiHotboardWechatFeedRoute: typeof ApiHotboardWechatFeedRoute
   ApiHotboardWechatIngestRoute: typeof ApiHotboardWechatIngestRoute
+  ApiHotboardZaraFeedRoute: typeof ApiHotboardZaraFeedRoute
+  ApiHotboardZaraRefreshRoute: typeof ApiHotboardZaraRefreshRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2201,6 +2227,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSessionsSessionKeyActiveRunRouteImport
       parentRoute: typeof ApiSessionsRoute
     }
+    '/api/hotboard/zara/refresh': {
+      id: '/api/hotboard/zara/refresh'
+      path: '/api/hotboard/zara/refresh'
+      fullPath: '/api/hotboard/zara/refresh'
+      preLoaderRoute: typeof ApiHotboardZaraRefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hotboard/zara/feed': {
+      id: '/api/hotboard/zara/feed'
+      path: '/api/hotboard/zara/feed'
+      fullPath: '/api/hotboard/zara/feed'
+      preLoaderRoute: typeof ApiHotboardZaraFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hotboard/wechat/ingest': {
       id: '/api/hotboard/wechat/ingest'
       path: '/api/hotboard/wechat/ingest'
@@ -2458,6 +2498,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthFeishuCallbackRoute: AuthFeishuCallbackRoute,
   ApiHotboardWechatFeedRoute: ApiHotboardWechatFeedRoute,
   ApiHotboardWechatIngestRoute: ApiHotboardWechatIngestRoute,
+  ApiHotboardZaraFeedRoute: ApiHotboardZaraFeedRoute,
+  ApiHotboardZaraRefreshRoute: ApiHotboardZaraRefreshRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

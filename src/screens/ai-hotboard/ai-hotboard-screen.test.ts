@@ -47,8 +47,8 @@ describe('ai-hotboard screen handoff constraints', () => {
       'X following',
       'X for_you',
       '公众号',
+      'Zara YouTube 精选',
       'JC的人类对谈',
-      '小红书',
     ])
 
     expect(SOURCE_SUBMISSION_ITEMS).toEqual(['JC 苹果备忘录日记', '爱马仕战略发现', '小J 执行发现'])
