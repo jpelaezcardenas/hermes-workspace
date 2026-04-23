@@ -28,6 +28,7 @@ describe('ai hotboard feed adapter', () => {
   it('normalizes unsupported route source to all', () => {
     expect(toSupportedHotboardSource('x-bookmarks')).toBe('x-bookmarks')
     expect(toSupportedHotboardSource('x-for_you')).toBe('x-for_you')
+    expect(toSupportedHotboardSource('wechat')).toBe('wechat')
     expect(toSupportedHotboardSource('bad-source')).toBe('all')
   })
 })

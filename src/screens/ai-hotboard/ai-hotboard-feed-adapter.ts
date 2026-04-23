@@ -1,4 +1,4 @@
-export type HotboardSource = 'x-bookmarks' | 'x-likes' | 'x-following' | 'x-for_you' | 'all'
+export type HotboardSource = 'x-bookmarks' | 'x-likes' | 'x-following' | 'x-for_you' | 'wechat' | 'all'
 
 export type MockEvent = {
   id: string
@@ -28,6 +28,7 @@ const SUPPORTED_SOURCES: HotboardSource[] = [
   'x-likes',
   'x-following',
   'x-for_you',
+  'wechat',
   'all',
 ]
 
@@ -57,6 +58,33 @@ export function mapFeedEventToMockEvent(
   fallbackId: string,
   fallbackSourceChannel: string,
 ): MockEvent {
+  if (String(item.source ?? fallbackSourceChannel) === 'wechat') {
+    const author = String(item.author ?? '').trim()
+    const publishedAt = String(item.publish_time ?? item.fetched_at ?? '')
+    return {
+      id: String(item.id ?? fallbackId),
+      event_id: String(item.id ?? fallbackId),
+      timestamp: publishedAt,
+      created_at: publishedAt,
+      source_type: '公众号',
+      source_name: author || '微信文章',
+      source_channel: 'wechat',
+      title: String(item.title ?? '公众号文章'),
+      summary: String(item.excerpt ?? ''),
+      tags: ['公众号', '手工投递'],
+      signal_category: '同行动作',
+      signal_score: 82,
+      aggregated_sources_count: 0,
+      engagement: {
+        likes: 0,
+        dislikes: 0,
+        bookmarks: 0,
+      },
+      recommend_reason: '推荐理由：来自公众号手工投递抓取',
+      suggested_action: '更新战略：判断这篇文章是否要进入热点看板精选流',
+    }
+  }
+
   const likes = Number(item.likes ?? 0)
   const signalScore = Number(item.signal_score ?? 0)
   const sourceLine = String(item.source_line ?? 'Signal Feed')

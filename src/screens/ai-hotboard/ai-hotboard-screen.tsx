@@ -77,6 +77,15 @@ type StrategyStatusItem = {
   priority: string
 }
 
+type WechatArticleSummary = {
+  id: string
+  url: string
+  title: string
+  author: string | null
+  publish_time: string | null
+  excerpt: string
+}
+
 type NavItem = {
   key: string
   label: string
@@ -103,14 +112,6 @@ export const X_SOURCE_ROUTE_ITEMS = [
 ] as const
 
 const SOURCE_PLACEHOLDER_ROUTE_ITEMS = [
-  {
-    key: 'wechat',
-    label: '公众号',
-    to: '/ai-hotboard/source/wechat',
-    expectedWeek: '2026-W18',
-    owner: '爱马仕',
-    dataSource: '微信公众号 API + 手工补录',
-  },
   {
     key: 'jc-human-talks',
     label: 'JC的人类对谈',
@@ -312,8 +313,8 @@ function isFeedPage(page: AiHotboardPage) {
   )
 }
 
-function isPlaceholderSourcePage(page: AiHotboardPage): page is Extract<SourcePageKey, 'source-wechat' | 'source-jc-human-talks' | 'source-xiaohongshu'> {
-  return page === 'source-wechat' || page === 'source-jc-human-talks' || page === 'source-xiaohongshu'
+function isPlaceholderSourcePage(page: AiHotboardPage): page is Extract<SourcePageKey, 'source-jc-human-talks' | 'source-xiaohongshu'> {
+  return page === 'source-jc-human-talks' || page === 'source-xiaohongshu'
 }
 
 function getFeedHeading(page: AiHotboardPage) {
@@ -370,6 +371,13 @@ function getFeedHeading(page: AiHotboardPage) {
     return {
       title: '信源 · X for_you',
       subtitle: '信源视角 · X for_you 同步',
+    }
+  }
+
+  if (page === 'source-wechat') {
+    return {
+      title: '信源 · 公众号',
+      subtitle: '手工扔 URL 即时抓取 · owner 可直接投递微信文章',
     }
   }
 
@@ -516,6 +524,10 @@ function SourceRouteItems({
       <li className="list-none">
         <div className="pl-2 space-y-1.5">
           <LinkNavItems items={X_SOURCE_ROUTE_ITEMS} highlightedKey={highlightedKey} />
+          <LinkNavItems
+            items={[{ key: 'wechat', label: '公众号', to: '/ai-hotboard/source/wechat' }]}
+            highlightedKey={highlightedKey}
+          />
           <LinkNavItems items={SOURCE_PLACEHOLDER_ROUTE_ITEMS} highlightedKey={highlightedKey} />
         </div>
       </li>
@@ -785,6 +797,56 @@ function IterationPanel() {
   )
 }
 
+function WechatIngestPanel({
+  authUser,
+  draftUrl,
+  onDraftUrlChange,
+  onSubmit,
+  submitting,
+  requestError,
+}: {
+  authUser: AuthUser | null
+  draftUrl: string
+  onDraftUrlChange: (value: string) => void
+  onSubmit: () => void
+  submitting: boolean
+  requestError: string | null
+}) {
+  if (authUser?.role !== 'owner') {
+    return (
+      <section className="rounded-2xl border border-slate-700/70 bg-slate-900/70 px-4 py-4">
+        <div className="text-sm text-slate-300">当前账号为只读身份，公众号 URL 投递仅 owner 可用。</div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="rounded-2xl border border-slate-700/70 bg-slate-900/70 px-4 py-4">
+      <div className="text-sm font-medium text-slate-100">粘贴微信公众号文章 URL</div>
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+        <input
+          type="url"
+          value={draftUrl}
+          onChange={(event) => onDraftUrlChange(event.target.value)}
+          placeholder="https://mp.weixin.qq.com/s/..."
+          className="min-w-0 flex-1 rounded-lg border border-slate-600/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300/70"
+        />
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={submitting}
+          className="rounded-lg border border-cyan-300/55 bg-cyan-300/20 px-3 py-2 text-sm text-cyan-100 transition-colors hover:border-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {submitting ? '抓取中...' : '抓取文章'}
+        </button>
+      </div>
+      {requestError ? (
+        <div className="mt-2 rounded-md border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs text-rose-100">{requestError}</div>
+      ) : null}
+    </section>
+  )
+}
+
 function BasicPagePanel({
   page,
   onLogout,
@@ -1020,6 +1082,12 @@ export function AiHotboardScreen({
   const [strategyStatus, setStrategyStatus] = useState<StrategyStatusItem | null>(null)
   const [strategyStatusLoading, setStrategyStatusLoading] = useState(false)
   const [strategyStatusError, setStrategyStatusError] = useState<string | null>(null)
+  const [wechatItems, setWechatItems] = useState<WechatArticleSummary[]>([])
+  const [wechatLoading, setWechatLoading] = useState(false)
+  const [wechatError, setWechatError] = useState<string | null>(null)
+  const [wechatDraftUrl, setWechatDraftUrl] = useState('')
+  const [wechatSubmitting, setWechatSubmitting] = useState(false)
+  const [wechatRequestError, setWechatRequestError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -1027,6 +1095,63 @@ export function AiHotboardScreen({
     async function loadFeed() {
       if (!isFeedPage(effectivePage)) return
       if (isPlaceholderSourcePage(effectivePage)) return
+
+      if (effectivePage === 'source-wechat') {
+        if (!cancelled) {
+          setWechatLoading(true)
+          setWechatError(null)
+        }
+
+        try {
+          const response = await fetch('/api/hotboard/wechat/feed?limit=50')
+          if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+          const body = (await response.json().catch(() => ({}))) as {
+            items?: WechatArticleSummary[]
+          }
+          const items = Array.isArray(body.items) ? body.items : []
+
+          if (cancelled) return
+
+          setWechatItems(items)
+          setWechatError(null)
+          setRemotePayload({
+            generated_at: new Date().toISOString(),
+            note: 'source=wechat',
+            events: items.map((item, index) =>
+              mapFeedEventToMockEvent(
+                {
+                  ...item,
+                  source: 'wechat',
+                  fetched_at: new Date().toISOString(),
+                },
+                `api-wechat-${index}`,
+                'wechat',
+              ),
+            ),
+          })
+          setRemoteSourceLabel('hotboard-wechat.sqlite')
+          setRemoteGeneratedAt(items[0]?.publish_time || new Date().toISOString())
+          return
+        } catch (error) {
+          if (!cancelled) {
+            setWechatItems([])
+            setWechatError(error instanceof Error ? error.message : '加载失败')
+            setRemotePayload({
+              generated_at: new Date().toISOString(),
+              note: 'source=wechat',
+              events: [],
+            })
+            setRemoteSourceLabel('hotboard-wechat.sqlite')
+            setRemoteGeneratedAt(new Date().toISOString())
+          }
+          return
+        } finally {
+          if (!cancelled) {
+            setWechatLoading(false)
+          }
+        }
+      }
 
       try {
         const response = await fetch(
@@ -1287,6 +1412,81 @@ export function AiHotboardScreen({
     }
   }
 
+  async function refreshWechatFeed() {
+    setWechatLoading(true)
+    setWechatError(null)
+
+    try {
+      const response = await fetch('/api/hotboard/wechat/feed?limit=50')
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      const body = (await response.json().catch(() => ({}))) as {
+        items?: WechatArticleSummary[]
+      }
+      const items = Array.isArray(body.items) ? body.items : []
+
+      setWechatItems(items)
+      setRemotePayload({
+        generated_at: new Date().toISOString(),
+        note: 'source=wechat',
+        events: items.map((item, index) =>
+          mapFeedEventToMockEvent(
+            {
+              ...item,
+              source: 'wechat',
+              fetched_at: new Date().toISOString(),
+            },
+            `api-wechat-${index}`,
+            'wechat',
+          ),
+        ),
+      })
+      setRemoteSourceLabel('hotboard-wechat.sqlite')
+      setRemoteGeneratedAt(items[0]?.publish_time || new Date().toISOString())
+    } catch (error) {
+      setWechatError(error instanceof Error ? error.message : '加载失败')
+    } finally {
+      setWechatLoading(false)
+    }
+  }
+
+  async function submitWechatUrl() {
+    const url = wechatDraftUrl.trim()
+    if (!url) {
+      setWechatRequestError('URL 不能为空')
+      return
+    }
+
+    setWechatRequestError(null)
+    setWechatSubmitting(true)
+
+    try {
+      const response = await fetch('/api/hotboard/wechat/ingest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      })
+
+      const body = (await response.json().catch(() => ({}))) as {
+        ok?: boolean
+        error?: string
+      }
+
+      if (!response.ok || !body.ok) {
+        throw new Error(body.error || `HTTP ${response.status}`)
+      }
+
+      setWechatDraftUrl('')
+      await refreshWechatFeed()
+    } catch (error) {
+      setWechatRequestError(error instanceof Error ? error.message : '提交失败')
+    } finally {
+      setWechatSubmitting(false)
+    }
+  }
+
   function resolveVoteAggregate(event: TimelineEvent): VoteAggregateEntry {
     const existing = voteAggregateByEvent[event.id]
     if (existing) return existing
@@ -1510,6 +1710,41 @@ export function AiHotboardScreen({
 
     if (effectivePage === 'system' || effectivePage === 'user' || effectivePage === 'logout') {
       return <BasicPagePanel page={effectivePage} onLogout={() => { void handleLogout() }} isLoggingOut={isLoggingOut} />
+    }
+
+    if (effectivePage === 'source-wechat') {
+      return (
+        <>
+          <WechatIngestPanel
+            authUser={authUser}
+            draftUrl={wechatDraftUrl}
+            onDraftUrlChange={setWechatDraftUrl}
+            onSubmit={() => {
+              void submitWechatUrl()
+            }}
+            submitting={wechatSubmitting}
+            requestError={wechatRequestError}
+          />
+
+          {wechatLoading ? (
+            <section className="rounded-3xl border border-slate-700/70 bg-slate-900/70 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+              <div className="text-sm text-slate-300">正在读取公众号 feed...</div>
+            </section>
+          ) : null}
+
+          {wechatError ? (
+            <section className="rounded-3xl border border-rose-400/30 bg-rose-400/10 px-5 py-5 shadow-[0_16px_36px_rgba(2,6,23,0.45)]">
+              <div className="text-sm text-rose-100">公众号 feed 读取失败：{wechatError}</div>
+            </section>
+          ) : null}
+
+          <FeedTimeline
+            timelineGroups={timelineGroups}
+            resolveVoteAggregate={resolveVoteAggregate}
+            handleVoteClick={handleVoteClick}
+          />
+        </>
+      )
     }
 
     return (

@@ -117,6 +117,8 @@ import { Route as AiHotboardIntakeXiaojExecutionRouteImport } from './routes/ai-
 import { Route as AiHotboardIntakeHermesStrategyRouteImport } from './routes/ai-hotboard/intake/hermes-strategy'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
+import { Route as ApiHotboardWechatIngestRouteImport } from './routes/api/hotboard/wechat/ingest'
+import { Route as ApiHotboardWechatFeedRouteImport } from './routes/api/hotboard/wechat/feed'
 import { Route as ApiHotboardVoteAggregateRouteImport } from './routes/api/hotboard/vote/aggregate'
 
 const TerminalRoute = TerminalRouteImport.update({
@@ -664,6 +666,16 @@ const ApiSessionsSessionKeyActiveRunRoute =
     path: '/$sessionKey/active-run',
     getParentRoute: () => ApiSessionsRoute,
   } as any)
+const ApiHotboardWechatIngestRoute = ApiHotboardWechatIngestRouteImport.update({
+  id: '/api/hotboard/wechat/ingest',
+  path: '/api/hotboard/wechat/ingest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHotboardWechatFeedRoute = ApiHotboardWechatFeedRouteImport.update({
+  id: '/api/hotboard/wechat/feed',
+  path: '/api/hotboard/wechat/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHotboardVoteAggregateRoute =
   ApiHotboardVoteAggregateRouteImport.update({
     id: '/aggregate',
@@ -779,6 +791,8 @@ export interface FileRoutesByFullPath {
   '/auth/email/verify': typeof AuthEmailVerifyRoute
   '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
+  '/api/hotboard/wechat/feed': typeof ApiHotboardWechatFeedRoute
+  '/api/hotboard/wechat/ingest': typeof ApiHotboardWechatIngestRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -888,6 +902,8 @@ export interface FileRoutesByTo {
   '/auth/email/verify': typeof AuthEmailVerifyRoute
   '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
+  '/api/hotboard/wechat/feed': typeof ApiHotboardWechatFeedRoute
+  '/api/hotboard/wechat/ingest': typeof ApiHotboardWechatIngestRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1000,6 +1016,8 @@ export interface FileRoutesById {
   '/auth/email/verify': typeof AuthEmailVerifyRoute
   '/auth/feishu/callback': typeof AuthFeishuCallbackRoute
   '/api/hotboard/vote/aggregate': typeof ApiHotboardVoteAggregateRoute
+  '/api/hotboard/wechat/feed': typeof ApiHotboardWechatFeedRoute
+  '/api/hotboard/wechat/ingest': typeof ApiHotboardWechatIngestRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1113,6 +1131,8 @@ export interface FileRouteTypes {
     | '/auth/email/verify'
     | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
+    | '/api/hotboard/wechat/feed'
+    | '/api/hotboard/wechat/ingest'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
@@ -1222,6 +1242,8 @@ export interface FileRouteTypes {
     | '/auth/email/verify'
     | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
+    | '/api/hotboard/wechat/feed'
+    | '/api/hotboard/wechat/ingest'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   id:
@@ -1333,6 +1355,8 @@ export interface FileRouteTypes {
     | '/auth/email/verify'
     | '/auth/feishu/callback'
     | '/api/hotboard/vote/aggregate'
+    | '/api/hotboard/wechat/feed'
+    | '/api/hotboard/wechat/ingest'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
@@ -1415,6 +1439,8 @@ export interface RootRouteChildren {
   ApiProfilesUpdateRoute: typeof ApiProfilesUpdateRoute
   AuthEmailVerifyRoute: typeof AuthEmailVerifyRoute
   AuthFeishuCallbackRoute: typeof AuthFeishuCallbackRoute
+  ApiHotboardWechatFeedRoute: typeof ApiHotboardWechatFeedRoute
+  ApiHotboardWechatIngestRoute: typeof ApiHotboardWechatIngestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2175,6 +2201,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSessionsSessionKeyActiveRunRouteImport
       parentRoute: typeof ApiSessionsRoute
     }
+    '/api/hotboard/wechat/ingest': {
+      id: '/api/hotboard/wechat/ingest'
+      path: '/api/hotboard/wechat/ingest'
+      fullPath: '/api/hotboard/wechat/ingest'
+      preLoaderRoute: typeof ApiHotboardWechatIngestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hotboard/wechat/feed': {
+      id: '/api/hotboard/wechat/feed'
+      path: '/api/hotboard/wechat/feed'
+      fullPath: '/api/hotboard/wechat/feed'
+      preLoaderRoute: typeof ApiHotboardWechatFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hotboard/vote/aggregate': {
       id: '/api/hotboard/vote/aggregate'
       path: '/aggregate'
@@ -2416,6 +2456,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesUpdateRoute: ApiProfilesUpdateRoute,
   AuthEmailVerifyRoute: AuthEmailVerifyRoute,
   AuthFeishuCallbackRoute: AuthFeishuCallbackRoute,
+  ApiHotboardWechatFeedRoute: ApiHotboardWechatFeedRoute,
+  ApiHotboardWechatIngestRoute: ApiHotboardWechatIngestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

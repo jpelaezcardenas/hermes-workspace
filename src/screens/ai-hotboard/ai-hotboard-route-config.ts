@@ -43,9 +43,9 @@ export function resolveSourceByHotboardPage(page: AiHotboardPage, fallbackSource
   if (page === 'source-x-likes') return 'x-likes'
   if (page === 'source-x-following') return 'x-following'
   if (page === 'source-x-for_you') return 'x-for_you'
+  if (page === 'source-wechat') return 'wechat'
 
   if (
-    page === 'source-wechat' ||
     page === 'source-jc-human-talks' ||
     page === 'source-xiaohongshu' ||
     page === 'featured' ||

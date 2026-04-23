@@ -8,5 +8,10 @@ export const Route = createFileRoute('/ai-hotboard/source/$source')({
 function AiHotboardSourceRoute() {
   const params = Route.useParams()
   const source = params.source || 'all'
-  return <AiHotboardRouteContent source={source} />
+  return (
+    <AiHotboardRouteContent
+      page={source === 'wechat' ? 'source-wechat' : undefined}
+      source={source}
+    />
+  )
 }
