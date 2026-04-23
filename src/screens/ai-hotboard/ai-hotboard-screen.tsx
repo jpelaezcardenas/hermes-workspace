@@ -26,7 +26,7 @@ type MockPayload = {
   events: MockEvent[]
 }
 
-type TimelineEvent = MockEvent & {
+export type TimelineEvent = MockEvent & {
   id: string
   signalScore: number
   actionLine: string
@@ -43,16 +43,16 @@ type TimelineGroup = {
 const payload = hotboardData as MockPayload
 const DATA_SOURCE_LABEL = 'ai_hotboard_mock_events.json'
 
-type VoteType = 'like' | 'dislike' | 'bookmark'
+export type VoteType = 'like' | 'dislike' | 'bookmark'
 
-type VoteAggregateEntry = {
+export type VoteAggregateEntry = {
   like_count: number
   dislike_count: number
   bookmark_count: number
   my_vote: VoteType[]
 }
 
-type VoteAggregateByEvent = Record<string, VoteAggregateEntry>
+export type VoteAggregateByEvent = Record<string, VoteAggregateEntry>
 
 type FeedMode = 'featured' | 'all' | 'low-follower' | 'bookmarks'
 
@@ -379,9 +379,18 @@ function getFeedHeading(page: AiHotboardPage) {
   }
 }
 
-function buildFeedStats(events: TimelineEvent[]) {
-  const totalLikes = events.reduce((sum, event) => sum + event.engagement.likes, 0)
-  const totalBookmarks = events.reduce((sum, event) => sum + event.engagement.bookmarks, 0)
+export function buildFeedStats(
+  events: TimelineEvent[],
+  voteAggregateByEvent: VoteAggregateByEvent = {},
+) {
+  const totalLikes = events.reduce((sum, event) => {
+    const aggregate = voteAggregateByEvent[event.id]
+    return sum + (aggregate ? aggregate.like_count : event.engagement.likes)
+  }, 0)
+  const totalBookmarks = events.reduce((sum, event) => {
+    const aggregate = voteAggregateByEvent[event.id]
+    return sum + (aggregate ? aggregate.bookmark_count : event.engagement.bookmarks)
+  }, 0)
   const averageSignalScore =
     events.length > 0
       ? Math.round(events.reduce((sum, event) => sum + event.signalScore, 0) / events.length)
@@ -1112,7 +1121,10 @@ export function AiHotboardScreen({
     return Array.from(groups.values())
   }, [filteredTimelineEvents])
 
-  const feedStats = useMemo(() => buildFeedStats(filteredTimelineEvents), [filteredTimelineEvents])
+  const feedStats = useMemo(
+    () => buildFeedStats(filteredTimelineEvents, voteAggregateByEvent),
+    [filteredTimelineEvents, voteAggregateByEvent],
+  )
 
   useEffect(() => {
     let cancelled = false
