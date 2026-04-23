@@ -322,7 +322,7 @@ Lume uses Apple's Virtualization Framework to run macOS VMs at near-native speed
 ./scripts/hermes-workspace-lume.sh create-vm
 
 # 2. Inside the VM: finish macOS setup, enable SSH (System Settings > Sharing > Remote Login)
-# Then bootstrap:
+# Then bootstrap (run once after create-vm, or to refresh environment):
 VM_USER=<vm-username> ./scripts/hermes-workspace-lume.sh bootstrap
 
 # 3. Start the VM headless (no VNC window)
@@ -330,6 +330,14 @@ VM_USER=<vm-username> ./scripts/hermes-workspace-lume.sh bootstrap
 
 # 4. Access workspace at http://<vm-ip>:3000
 ```
+
+### Idempotency Notes
+- `create-vm`: Safe to run multiple times (won't recreate existing VM)
+- `bootstrap`: 
+  - Safe to re-run (will `git pull` latest, re-install deps if needed)
+  - Will overwrite `.env` and `~/run-hermes-workspace.sh` each time
+  - For production, consider backing up `.env` if you make local changes
+- `start/stop/status/ssh/uninstall`: All idempotent
 
 ### Available Commands
 
