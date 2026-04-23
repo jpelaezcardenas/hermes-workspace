@@ -251,7 +251,12 @@ function RootLayout() {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
-  const suppressFirstOpenOverlays = pathname === '/dashboard'
+  // Suppress workspace-shell onboarding/tour overlays on routes that render
+  // their own full-screen experience (dashboard landing, ai-hotboard). The
+  // react-joyride overlay was silently intercepting clicks on the ai-hotboard
+  // left-rail for first-time visitors — hence "nav 点不动" for new users.
+  const suppressFirstOpenOverlays =
+    pathname === '/dashboard' || pathname.startsWith('/ai-hotboard')
 
   // Unregister any existing service workers — they cause stale asset issues
   // after Docker image updates and behind reverse proxies (Pangolin, Cloudflare, etc.)

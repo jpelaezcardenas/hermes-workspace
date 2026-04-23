@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { AiHotboardScreen } from '@/screens/ai-hotboard/ai-hotboard-screen'
@@ -11,12 +11,18 @@ const HIDDEN_SELECTOR_PAIRS = [
   ['button', 'Open navigation menu'],
 ]
 
+// Layout route: this component MUST render <Outlet /> so that matched child
+// routes (e.g. /ai-hotboard/view/all, /source/*, /strategy/*) actually show
+// up. Previously it rendered <AiHotboardRouteContent page="featured" />
+// directly, which meant every child route's URL updated but the main view
+// never re-rendered — the infamous "AI-89 能改 URL 但主内容没换" bug.
+// The featured (index) page now lives in routes/ai-hotboard/index.tsx.
 export const Route = createFileRoute('/ai-hotboard')({
-  component: AiHotboardRoute,
+  component: AiHotboardLayout,
 })
 
-function AiHotboardRoute() {
-  return <AiHotboardRouteContent source="all" page="featured" />
+function AiHotboardLayout() {
+  return <Outlet />
 }
 
 export function usePrepareAiHotboardPage() {

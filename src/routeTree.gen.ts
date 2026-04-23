@@ -25,6 +25,7 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
+import { Route as AiHotboardIndexRouteImport } from './routes/ai-hotboard/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as SettingsMcpRouteImport } from './routes/settings/mcp'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
@@ -196,6 +197,11 @@ const ChatIndexRoute = ChatIndexRouteImport.update({
   id: '/chat/',
   path: '/chat/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AiHotboardIndexRoute = AiHotboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AiHotboardRoute,
 } as any)
 const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
   id: '/providers',
@@ -717,6 +723,7 @@ export interface FileRoutesByFullPath {
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/ai-hotboard/': typeof AiHotboardIndexRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/ai-hotboard/intake/hermes-strategy': typeof AiHotboardIntakeHermesStrategyRoute
@@ -771,7 +778,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/ai-hotboard': typeof AiHotboardRouteWithChildren
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -825,6 +831,7 @@ export interface FileRoutesByTo {
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/ai-hotboard': typeof AiHotboardIndexRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/ai-hotboard/intake/hermes-strategy': typeof AiHotboardIntakeHermesStrategyRoute
@@ -935,6 +942,7 @@ export interface FileRoutesById {
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/ai-hotboard/': typeof AiHotboardIndexRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/ai-hotboard/intake/hermes-strategy': typeof AiHotboardIntakeHermesStrategyRoute
@@ -1046,6 +1054,7 @@ export interface FileRouteTypes {
     | '/chat/$sessionKey'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/ai-hotboard/'
     | '/chat/'
     | '/settings/'
     | '/ai-hotboard/intake/hermes-strategy'
@@ -1100,7 +1109,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
-    | '/ai-hotboard'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -1154,6 +1162,7 @@ export interface FileRouteTypes {
     | '/chat/$sessionKey'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/ai-hotboard'
     | '/chat'
     | '/settings'
     | '/ai-hotboard/intake/hermes-strategy'
@@ -1263,6 +1272,7 @@ export interface FileRouteTypes {
     | '/chat/$sessionKey'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/ai-hotboard/'
     | '/chat/'
     | '/settings/'
     | '/ai-hotboard/intake/hermes-strategy'
@@ -1508,6 +1518,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/chat/'
       preLoaderRoute: typeof ChatIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/ai-hotboard/': {
+      id: '/ai-hotboard/'
+      path: '/'
+      fullPath: '/ai-hotboard/'
+      preLoaderRoute: typeof AiHotboardIndexRouteImport
+      parentRoute: typeof AiHotboardRoute
     }
     '/settings/providers': {
       id: '/settings/providers'
@@ -2154,6 +2171,7 @@ interface AiHotboardRouteChildren {
   AiHotboardLogoutRoute: typeof AiHotboardLogoutRoute
   AiHotboardSystemRoute: typeof AiHotboardSystemRoute
   AiHotboardUserRoute: typeof AiHotboardUserRoute
+  AiHotboardIndexRoute: typeof AiHotboardIndexRoute
   AiHotboardIntakeHermesStrategyRoute: typeof AiHotboardIntakeHermesStrategyRoute
   AiHotboardIntakeXiaojExecutionRoute: typeof AiHotboardIntakeXiaojExecutionRoute
   AiHotboardSourceSourceRoute: typeof AiHotboardSourceSourceRoute
@@ -2168,6 +2186,7 @@ const AiHotboardRouteChildren: AiHotboardRouteChildren = {
   AiHotboardLogoutRoute: AiHotboardLogoutRoute,
   AiHotboardSystemRoute: AiHotboardSystemRoute,
   AiHotboardUserRoute: AiHotboardUserRoute,
+  AiHotboardIndexRoute: AiHotboardIndexRoute,
   AiHotboardIntakeHermesStrategyRoute: AiHotboardIntakeHermesStrategyRoute,
   AiHotboardIntakeXiaojExecutionRoute: AiHotboardIntakeXiaojExecutionRoute,
   AiHotboardSourceSourceRoute: AiHotboardSourceSourceRoute,
