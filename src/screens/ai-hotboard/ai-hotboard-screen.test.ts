@@ -47,7 +47,7 @@ describe('ai-hotboard screen handoff constraints', () => {
       'X following',
       'X for_you',
       '公众号',
-      '肖恩对谈',
+      'JC的人类对谈',
       '小红书',
     ])
 

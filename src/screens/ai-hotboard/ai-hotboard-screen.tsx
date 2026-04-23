@@ -89,7 +89,7 @@ export const SOURCE_ITEMS = [
   'X following',
   'X for_you',
   '公众号',
-  '肖恩对谈',
+  'JC的人类对谈',
   '小红书',
 ] as const
 
@@ -113,11 +113,11 @@ const SOURCE_PLACEHOLDER_ROUTE_ITEMS = [
   },
   {
     key: 'jc-human-talks',
-    label: '肖恩对谈',
+    label: 'JC的人类对谈',
     to: '/ai-hotboard/source/jc-human-talks',
-    expectedWeek: '2026-W19',
+    expectedWeek: '待定',
     owner: 'JC',
-    dataSource: '会议纪要 + 语音转写流',
+    dataSource: '飞书妙记精选片段 · JC 手工策展',
   },
   {
     key: 'xiaohongshu',
