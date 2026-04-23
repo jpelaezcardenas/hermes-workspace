@@ -50,6 +50,14 @@ type SessionsListResponse = Array<SessionMeta>
 export const DESKTOP_SIDEBAR_BACKDROP_CLASS =
   'fixed left-0 bottom-0 top-[var(--titlebar-h,0px)] w-[300px] z-10 bg-black/10 backdrop-blur-[1px]'
 
+// Routes that render their own full-screen experience and must not show the
+// Hermes-chat floating toggle / side panel. ai-hotboard has its own auth
+// (email magic link) and doesn't talk to the Hermes gateway, so the chat
+// panel's Hermes-token prompt is a dead-end UI there.
+export function isFullscreenExperienceRoute(pathname: string): boolean {
+  return pathname.startsWith('/ai-hotboard')
+}
+
 async function fetchSessions(): Promise<SessionsListResponse> {
   const res = await fetch('/api/sessions')
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -139,6 +147,7 @@ export function WorkspaceShell() {
   const activeFriendlyId = chatMatch ? chatMatch[1] : 'main'
   const isOnChatRoute = Boolean(chatMatch) || pathname === '/new'
   const isOnTerminalRoute = pathname.startsWith('/terminal')
+  const isOnFullscreenExperience = isFullscreenExperienceRoute(pathname)
   const suppressFirstOpenOverlays = pathname === '/dashboard'
   const hideChatSidebar = isOnChatRoute && chatFocusMode
   const showDesktopSidebarBackdrop =
@@ -358,12 +367,12 @@ export function WorkspaceShell() {
             </div>
           </main>
 
-          {/* Chat panel — visible on non-chat routes */}
-          {!isOnChatRoute && !isMobile && <ChatPanel />}
+          {/* Chat panel — visible on non-chat routes, except fullscreen experiences with their own auth */}
+          {!isOnChatRoute && !isMobile && !isOnFullscreenExperience && <ChatPanel />}
         </div>
 
-        {/* Floating chat toggle — visible on non-chat routes */}
-        {!isOnChatRoute && !isMobile && <ChatPanelToggle />}
+        {/* Floating chat toggle — visible on non-chat routes, except fullscreen experiences with their own auth */}
+        {!isOnChatRoute && !isMobile && !isOnFullscreenExperience && <ChatPanelToggle />}
 
         {showDesktopSidebarBackdrop ? (
           <button
