@@ -44,6 +44,8 @@ import { LogoLoader } from '@/components/logo-loader'
 import { BrailleSpinner } from '@/components/ui/braille-spinner'
 import { ThreeDotsSpinner } from '@/components/ui/three-dots-spinner'
 import BackendUnavailableState from '@/components/backend-unavailable-state'
+import { AdminOnlyState } from '@/components/admin-only-state'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { applyAccentColor } from '@/lib/accent-colors'
 import { getUnavailableReason } from '@/lib/feature-gates'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
@@ -69,17 +71,29 @@ type SectionId =
   | 'notifications'
   | 'language'
 
-const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
-  { id: 'hermes', label: 'Model & Provider', icon: CloudIcon },
-  { id: 'agent', label: 'Agent', icon: Settings02Icon },
-  { id: 'routing', label: 'Smart Routing', icon: SparklesIcon },
-  { id: 'voice', label: 'Voice', icon: VolumeHighIcon },
-  { id: 'display', label: 'Display', icon: PaintBoardIcon },
+const SECTIONS: Array<{ id: SectionId; label: string; icon: any; adminOnly?: boolean }> = [
+  { id: 'hermes', label: 'Model & Provider', icon: CloudIcon, adminOnly: true },
+  { id: 'agent', label: 'Agent', icon: Settings02Icon, adminOnly: true },
+  { id: 'routing', label: 'Smart Routing', icon: SparklesIcon, adminOnly: true },
+  { id: 'voice', label: 'Voice', icon: VolumeHighIcon, adminOnly: true },
+  { id: 'display', label: 'Display', icon: PaintBoardIcon, adminOnly: true },
   { id: 'appearance', label: 'Theme', icon: PaintBoardIcon },
   { id: 'chat', label: 'Chat', icon: MessageMultiple01Icon },
   { id: 'notifications', label: 'Alerts', icon: Notification03Icon },
   { id: 'language', label: 'Language', icon: MessageMultiple01Icon },
 ]
+
+const ADMIN_ONLY_SECTION_IDS: ReadonlySet<SectionId> = new Set([
+  'hermes',
+  'agent',
+  'routing',
+  'voice',
+  'display',
+])
+
+function isAdminOnlyDialogSection(id: SectionId): boolean {
+  return ADMIN_ONLY_SECTION_IDS.has(id)
+}
 
 const DARK_ENTERPRISE_THEMES = new Set<ThemeId>([
   'hermes-nous',
@@ -1943,16 +1957,26 @@ export function SettingsDialog({
   onOpenChange,
   initialSection = 'hermes',
 }: SettingsDialogProps) {
-  const [active, setActive] = useState<SectionId>(initialSection)
+  const { isAdmin } = useCurrentUser()
+  const visibleSections = isAdmin
+    ? SECTIONS
+    : SECTIONS.filter((s) => !s.adminOnly)
+  const fallbackSection: SectionId = isAdmin ? 'hermes' : 'appearance'
+  const resolvedInitialSection: SectionId =
+    !isAdmin && isAdminOnlyDialogSection(initialSection)
+      ? fallbackSection
+      : initialSection
+  const [active, setActive] = useState<SectionId>(resolvedInitialSection)
   const [mobileView, setMobileView] = useState<'nav' | 'content'>('nav')
-  const ActiveContent = CONTENT_MAP[active]
+  const activeIsAdminBlocked = !isAdmin && isAdminOnlyDialogSection(active)
+  const ActiveContent = activeIsAdminBlocked ? null : CONTENT_MAP[active]
 
   useEffect(() => {
     if (open) {
-      setActive(initialSection)
+      setActive(resolvedInitialSection)
       setMobileView('nav')
     }
-  }, [initialSection, open])
+  }, [resolvedInitialSection, open])
 
   function handleSectionSelect(sectionId: SectionId) {
     setActive(sectionId)
@@ -1999,7 +2023,7 @@ export function SettingsDialog({
                 )}
               >
                 <nav className="space-y-1">
-                  {SECTIONS.map((s) => (
+                  {visibleSections.map((s) => (
                     <button
                       key={s.id}
                       type="button"
@@ -2042,7 +2066,11 @@ export function SettingsDialog({
                     Back
                   </Button>
                 </div>
-                <ActiveContent />
+                {ActiveContent ? (
+                  <ActiveContent />
+                ) : (
+                  <AdminOnlyState featureLabel="Hermes Agent configuration" />
+                )}
               </div>
             </div>
           </SettingsErrorBoundary>

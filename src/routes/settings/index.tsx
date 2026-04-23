@@ -24,7 +24,10 @@ import {
   SETTINGS_NAV_ITEMS,
   SettingsMobilePills,
   SettingsSidebar,
+  isAdminOnlySection,
 } from '@/components/settings/settings-sidebar'
+import { useCurrentUser } from '@/hooks/use-current-user'
+import { AdminOnlyState } from '@/components/admin-only-state'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -301,8 +304,13 @@ function SettingsRoute() {
     void fetchModels()
   }, [])
 
+  const { isAdmin, isReady } = useCurrentUser()
   const { section } = Route.useSearch()
-  const activeSection: SettingsSectionId = section ?? 'hermes'
+  const defaultSection: SettingsSectionId = isAdmin ? 'hermes' : 'appearance'
+  const requestedSection: SettingsSectionId = section ?? defaultSection
+  const adminSectionBlocked =
+    isReady && !isAdmin && isAdminOnlySection(requestedSection)
+  const activeSection: SettingsSectionId = requestedSection
 
   return (
     <div className="min-h-screen bg-surface text-primary-900">
@@ -316,23 +324,29 @@ function SettingsRoute() {
 
         {/* Content area */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
+          {adminSectionBlocked ? (
+            <AdminOnlyState featureLabel="Hermes Agent configuration" />
+          ) : null}
+
           {/* -- Connection ------------------ */}
-          {activeSection === 'connection' && <ConnectionSection />}
+          {!adminSectionBlocked && activeSection === 'connection' && (
+            <ConnectionSection />
+          )}
 
           {/* ── Hermes Agent ──────────────────────────────────── */}
-          {activeSection === 'hermes' && (
+          {!adminSectionBlocked && activeSection === 'hermes' && (
             <HermesConfigSection activeView="hermes" />
           )}
-          {activeSection === 'agent' && (
+          {!adminSectionBlocked && activeSection === 'agent' && (
             <HermesConfigSection activeView="agent" />
           )}
-          {activeSection === 'routing' && (
+          {!adminSectionBlocked && activeSection === 'routing' && (
             <HermesConfigSection activeView="routing" />
           )}
-          {activeSection === 'voice' && (
+          {!adminSectionBlocked && activeSection === 'voice' && (
             <HermesConfigSection activeView="voice" />
           )}
-          {activeSection === 'display' && (
+          {!adminSectionBlocked && activeSection === 'display' && (
             <HermesConfigSection activeView="display" />
           )}
 

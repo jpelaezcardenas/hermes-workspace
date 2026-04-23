@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
+import { useCurrentUser } from '@/hooks/use-current-user'
 
 export type SettingsNavId =
   | 'connection'
@@ -14,21 +15,45 @@ export type SettingsNavId =
   | 'mcp'
   | 'language'
 
-type NavItem = { id: SettingsNavId; label: string }
+type NavItem = { id: SettingsNavId; label: string; adminOnly?: boolean }
+
+/**
+ * Sections that expose Hermes Agent provider / backend configuration. These
+ * must only be visible to users in `HERMES_ADMIN_EMAILS`.
+ */
+export const ADMIN_ONLY_SECTIONS: ReadonlyArray<SettingsNavId> = [
+  'connection',
+  'hermes',
+  'agent',
+  'routing',
+  'voice',
+  'display',
+  'mcp',
+]
 
 export const SETTINGS_NAV_ITEMS: Array<NavItem> = [
-  { id: 'connection', label: 'Connection' },
-  { id: 'hermes', label: 'Model & Provider' },
-  { id: 'agent', label: 'Agent Behavior' },
-  { id: 'routing', label: 'Smart Routing' },
-  { id: 'voice', label: 'Voice' },
-  { id: 'display', label: 'Display' },
+  { id: 'connection', label: 'Connection', adminOnly: true },
+  { id: 'hermes', label: 'Model & Provider', adminOnly: true },
+  { id: 'agent', label: 'Agent Behavior', adminOnly: true },
+  { id: 'routing', label: 'Smart Routing', adminOnly: true },
+  { id: 'voice', label: 'Voice', adminOnly: true },
+  { id: 'display', label: 'Display', adminOnly: true },
   { id: 'appearance', label: 'Appearance' },
   { id: 'chat', label: 'Chat' },
   { id: 'notifications', label: 'Notifications' },
-  { id: 'mcp', label: 'MCP Servers' },
+  { id: 'mcp', label: 'MCP Servers', adminOnly: true },
   { id: 'language', label: 'Language' },
 ]
+
+export function isAdminOnlySection(id: SettingsNavId): boolean {
+  return ADMIN_ONLY_SECTIONS.includes(id)
+}
+
+function useVisibleNavItems(): Array<NavItem> {
+  const { isAdmin } = useCurrentUser()
+  if (isAdmin) return SETTINGS_NAV_ITEMS
+  return SETTINGS_NAV_ITEMS.filter((item) => !item.adminOnly)
+}
 
 type ItemRendererArgs = {
   item: NavItem
@@ -75,6 +100,7 @@ function renderItem({
 }
 
 export function SettingsSidebar({ activeId }: { activeId: SettingsNavId }) {
+  const visible = useVisibleNavItems()
   const activeClass =
     'bg-[var(--theme-accent-subtle)] text-[var(--theme-accent)] font-semibold'
   const inactiveClass =
@@ -93,7 +119,7 @@ export function SettingsSidebar({ activeId }: { activeId: SettingsNavId }) {
           Settings
         </h1>
         <div className="flex flex-col gap-0.5">
-          {SETTINGS_NAV_ITEMS.map((item) =>
+          {visible.map((item) =>
             renderItem({
               item,
               isActive: activeId === item.id,
@@ -109,13 +135,14 @@ export function SettingsSidebar({ activeId }: { activeId: SettingsNavId }) {
 }
 
 export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
+  const visible = useVisibleNavItems()
   const activeClass =
     'bg-[var(--theme-accent)] text-[var(--theme-bg)] font-semibold'
   const inactiveClass =
     'bg-primary-100 text-primary-600 hover:bg-primary-200'
   return (
     <div className="scrollbar-none flex gap-1.5 overflow-x-auto pb-2 md:hidden">
-      {SETTINGS_NAV_ITEMS.map((item) => {
+      {visible.map((item) => {
         const isActive = activeId === item.id
         const className = cn(
           'shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',

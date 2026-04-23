@@ -46,6 +46,7 @@ import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
+import { Route as ApiMeRouteImport } from './routes/api/me'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
 import { Route as ApiHermesTasksAssigneesRouteImport } from './routes/api/hermes-tasks-assignees'
@@ -280,6 +281,11 @@ const ApiModelsRoute = ApiModelsRouteImport.update({
 const ApiMemoryRoute = ApiMemoryRouteImport.update({
   id: '/api/memory',
   path: '/api/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMeRoute = ApiMeRouteImport.update({
+  id: '/api/me',
+  path: '/api/me',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiLocalProvidersRoute = ApiLocalProvidersRouteImport.update({
@@ -567,6 +573,7 @@ export interface FileRoutesByFullPath {
   '/api/hermes-tasks-assignees': typeof ApiHermesTasksAssigneesRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
+  '/api/me': typeof ApiMeRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
@@ -655,6 +662,7 @@ export interface FileRoutesByTo {
   '/api/hermes-tasks-assignees': typeof ApiHermesTasksAssigneesRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
+  '/api/me': typeof ApiMeRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
@@ -745,6 +753,7 @@ export interface FileRoutesById {
   '/api/hermes-tasks-assignees': typeof ApiHermesTasksAssigneesRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
+  '/api/me': typeof ApiMeRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
@@ -836,6 +845,7 @@ export interface FileRouteTypes {
     | '/api/hermes-tasks-assignees'
     | '/api/history'
     | '/api/local-providers'
+    | '/api/me'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
@@ -924,6 +934,7 @@ export interface FileRouteTypes {
     | '/api/hermes-tasks-assignees'
     | '/api/history'
     | '/api/local-providers'
+    | '/api/me'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
@@ -1013,6 +1024,7 @@ export interface FileRouteTypes {
     | '/api/hermes-tasks-assignees'
     | '/api/history'
     | '/api/local-providers'
+    | '/api/me'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
@@ -1103,6 +1115,7 @@ export interface RootRouteChildren {
   ApiHermesTasksAssigneesRoute: typeof ApiHermesTasksAssigneesRoute
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
+  ApiMeRoute: typeof ApiMeRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
@@ -1404,6 +1417,13 @@ declare module '@tanstack/react-router' {
       path: '/api/memory'
       fullPath: '/api/memory'
       preLoaderRoute: typeof ApiMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/me': {
+      id: '/api/me'
+      path: '/api/me'
+      fullPath: '/api/me'
+      preLoaderRoute: typeof ApiMeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/local-providers': {
@@ -1883,6 +1903,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHermesTasksAssigneesRoute: ApiHermesTasksAssigneesRoute,
   ApiHistoryRoute: ApiHistoryRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
+  ApiMeRoute: ApiMeRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
