@@ -105,6 +105,7 @@ import { Route as ApiHotboardFeedRouteImport } from './routes/api/hotboard/feed'
 import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiHermesProxySplatRouteImport } from './routes/api/hermes-proxy/$'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
+import { Route as ApiAuthPasswordRouteImport } from './routes/api/auth/password'
 import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
 import { Route as ApiAuthEmailRouteImport } from './routes/api/auth/email'
 import { Route as AiHotboardViewLowFollowerRouteImport } from './routes/ai-hotboard/view/low-follower'
@@ -598,6 +599,11 @@ const ApiHermesJobsJobIdRoute = ApiHermesJobsJobIdRouteImport.update({
   path: '/$jobId',
   getParentRoute: () => ApiHermesJobsRoute,
 } as any)
+const ApiAuthPasswordRoute = ApiAuthPasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
+  getParentRoute: () => ApiAuthRoute,
+} as any)
 const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
   id: '/logout',
   path: '/logout',
@@ -735,6 +741,7 @@ export interface FileRoutesByFullPath {
   '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
   '/api/auth/email': typeof ApiAuthEmailRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/password': typeof ApiAuthPasswordRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
@@ -843,6 +850,7 @@ export interface FileRoutesByTo {
   '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
   '/api/auth/email': typeof ApiAuthEmailRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/password': typeof ApiAuthPasswordRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
@@ -954,6 +962,7 @@ export interface FileRoutesById {
   '/ai-hotboard/view/low-follower': typeof AiHotboardViewLowFollowerRoute
   '/api/auth/email': typeof ApiAuthEmailRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/password': typeof ApiAuthPasswordRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
@@ -1066,6 +1075,7 @@ export interface FileRouteTypes {
     | '/ai-hotboard/view/low-follower'
     | '/api/auth/email'
     | '/api/auth/logout'
+    | '/api/auth/password'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
     | '/api/hermes-tasks/$taskId'
@@ -1174,6 +1184,7 @@ export interface FileRouteTypes {
     | '/ai-hotboard/view/low-follower'
     | '/api/auth/email'
     | '/api/auth/logout'
+    | '/api/auth/password'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
     | '/api/hermes-tasks/$taskId'
@@ -1284,6 +1295,7 @@ export interface FileRouteTypes {
     | '/ai-hotboard/view/low-follower'
     | '/api/auth/email'
     | '/api/auth/logout'
+    | '/api/auth/password'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
     | '/api/hermes-tasks/$taskId'
@@ -2079,6 +2091,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesJobsJobIdRouteImport
       parentRoute: typeof ApiHermesJobsRoute
     }
+    '/api/auth/password': {
+      id: '/api/auth/password'
+      path: '/password'
+      fullPath: '/api/auth/password'
+      preLoaderRoute: typeof ApiAuthPasswordRouteImport
+      parentRoute: typeof ApiAuthRoute
+    }
     '/api/auth/logout': {
       id: '/api/auth/logout'
       path: '/logout'
@@ -2219,11 +2238,13 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
 interface ApiAuthRouteChildren {
   ApiAuthEmailRoute: typeof ApiAuthEmailRoute
   ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
+  ApiAuthPasswordRoute: typeof ApiAuthPasswordRoute
 }
 
 const ApiAuthRouteChildren: ApiAuthRouteChildren = {
   ApiAuthEmailRoute: ApiAuthEmailRoute,
   ApiAuthLogoutRoute: ApiAuthLogoutRoute,
+  ApiAuthPasswordRoute: ApiAuthPasswordRoute,
 }
 
 const ApiAuthRouteWithChildren =

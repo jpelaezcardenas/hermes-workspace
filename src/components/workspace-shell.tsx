@@ -383,7 +383,7 @@ export function WorkspaceShell() {
           />
         ) : null}
 
-        {!authState.checked ? (
+        {!authState.checked && !isOnFullscreenExperience ? (
           <ConnectionStartupScreen onConnected={handleStartupConnected} />
         ) : null}
       </div>
