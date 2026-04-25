@@ -25,9 +25,10 @@ RUN pnpm build
 # ─── runtime stage ────────────────────────────────────────────────────────
 FROM node:22-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      ca-certificates curl tini \
+      bash ca-certificates curl python3 tini \
     && rm -rf /var/lib/apt/lists/* \
-    && groupadd -r workspace && useradd -r -g workspace -u 10010 workspace
+    && groupadd -r workspace \
+    && useradd -r -m -d /home/workspace -s /bin/bash -g workspace -u 10010 workspace
 
 WORKDIR /app
 
@@ -44,6 +45,7 @@ COPY --from=build --chown=workspace:workspace /app/skills ./skills
 
 USER workspace
 ENV NODE_ENV=production \
+    HOME=/home/workspace \
     PORT=3000 \
     HOST=0.0.0.0 \
     HERMES_API_URL=http://hermes-agent:8642
