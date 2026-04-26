@@ -671,7 +671,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   appendLocalMessage(portableSessionKey, {
                     id: crypto.randomUUID(),
                     role: 'user',
-                    content: message,
+                    content: rawMessage,
                     timestamp: Date.now(),
                   })
                   // Use persisted history if available, otherwise fall back to client-sent history

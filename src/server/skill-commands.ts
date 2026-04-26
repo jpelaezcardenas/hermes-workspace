@@ -289,16 +289,13 @@ function buildSkillInvocationMessage(
     `[SYSTEM: The user has invoked the "${command.name}" skill, indicating they want you to follow its instructions. The full skill content is loaded below.]`,
     '',
     loadedSkill.content,
-    '',
-    `[Skill directory: ${command.skillDir}]`,
-    'Resolve any relative paths in this skill (for example scripts, templates, references, or assets) against that directory.',
   ]
 
   const supportingFiles = listSupportingFiles(command.skillDir)
   if (supportingFiles.length > 0) {
     parts.push('', '[This skill has supporting files:]')
     for (const file of supportingFiles) {
-      parts.push(`- ${file} -> ${path.join(command.skillDir, file)}`)
+      parts.push(`- ${file}`)
     }
   }
 
