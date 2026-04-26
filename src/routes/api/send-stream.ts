@@ -27,6 +27,7 @@ import {
   listSessions,
   streamChat,
 } from '../../server/hermes-api'
+import { preprocessSkillSlashCommand } from '../../server/skill-commands'
 import type {OpenAICompatContentPart, OpenAICompatMessage} from '../../server/openai-compat-api';
 // Hermes agent runs can take 5+ minutes with complex tool chains
 const SEND_STREAM_RUN_TIMEOUT_MS = 600_000
@@ -390,7 +391,11 @@ export const Route = createFileRoute('/api/send-stream')({
           typeof body.sessionKey === 'string' ? body.sessionKey.trim() : ''
         const requestedFriendlyId =
           typeof body.friendlyId === 'string' ? body.friendlyId.trim() : ''
-        const message = String(body.message ?? '')
+        const rawMessage = String(body.message ?? '')
+        const skillSlashCommand = preprocessSkillSlashCommand(rawMessage)
+        const message = skillSlashCommand.handled
+          ? skillSlashCommand.message
+          : rawMessage
         const thinking =
           typeof body.thinking === 'string' ? body.thinking : undefined
         const attachments = normalizeAttachments(body.attachments)
@@ -497,6 +502,37 @@ export const Route = createFileRoute('/api/send-stream')({
             }
 
             try {
+              if (
+                skillSlashCommand.handled &&
+                skillSlashCommand.kind === 'response'
+              ) {
+                const runId = crypto.randomUUID()
+                sendEvent('started', {
+                  runId,
+                  sessionKey,
+                  friendlyId: resolvedFriendlyId,
+                })
+                sendEvent('chunk', {
+                  text: skillSlashCommand.message,
+                  fullReplace: true,
+                  sessionKey,
+                  runId,
+                })
+                sendEvent('done', {
+                  state: 'complete',
+                  sessionKey,
+                  runId,
+                  message: {
+                    role: 'assistant',
+                    content: [
+                      { type: 'text', text: skillSlashCommand.message },
+                    ],
+                  },
+                })
+                closeStream()
+                return
+              }
+
               if (chatMode === 'portable') {
                 const runId = crypto.randomUUID()
                 const portableSessionKey = sessionKey
@@ -551,7 +587,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   appendLocalMessage(portableSessionKey, {
                     id: crypto.randomUUID(),
                     role: 'user',
-                    content: typeof body.message === 'string' ? body.message : '',
+                    content: message,
                     timestamp: Date.now(),
                   })
                   // Use persisted history if available, otherwise fall back to client-sent history

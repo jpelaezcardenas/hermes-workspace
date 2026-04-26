@@ -11,6 +11,7 @@ import type { Ref } from 'react'
 
 import { useAutocompleteFilter } from '@/components/ui/autocomplete'
 import { Command, CommandItem, CommandList } from '@/components/ui/command'
+import { HERMES_SLASH_COMMANDS } from '@/lib/hermes-slash-commands'
 import { cn } from '@/lib/utils'
 
 type SlashCommandDefinition = {
@@ -29,35 +30,78 @@ type SlashCommandMenuHandle = {
   selectActive: () => boolean
 }
 
-const SLASH_COMMANDS: Array<SlashCommandDefinition> = [
-  { command: '/new', description: 'Start new session' },
-  { command: '/clear', description: 'Clear screen and start fresh' },
-  { command: '/model', description: 'Show or change the current model' },
-  { command: '/save', description: 'Save the current conversation' },
-  { command: '/skills', description: 'Browse and manage skills' },
-  { command: '/skin', description: 'Change the display theme' },
-  { command: '/help', description: 'Show available commands' },
-]
+const SLASH_COMMANDS: Array<SlashCommandDefinition> = HERMES_SLASH_COMMANDS
+  .filter((command) => !command.gatewayOnly)
+  .map((command) => ({
+    command: `/${command.name}`,
+    description: command.description,
+  }))
 
 const SlashCommandMenu = forwardRef(function SlashCommandMenu(
   { open, query, onSelect }: SlashCommandMenuProps,
   ref: Ref<SlashCommandMenuHandle>,
 ) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [skillCommands, setSkillCommands] = useState<
+    Array<SlashCommandDefinition>
+  >([])
   const filter = useAutocompleteFilter({ sensitivity: 'base' })
+
+  useEffect(() => {
+    if (!open) return
+    let cancelled = false
+    fetch('/api/skill-commands')
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: unknown) => {
+        if (cancelled || !payload || typeof payload !== 'object') return
+        const commands = (payload as { commands?: unknown }).commands
+        if (!Array.isArray(commands)) return
+        setSkillCommands(
+          commands
+            .map((entry) => {
+              if (!entry || typeof entry !== 'object') return null
+              const record = entry as Record<string, unknown>
+              const command =
+                typeof record.command === 'string' ? record.command : ''
+              const description =
+                typeof record.description === 'string'
+                  ? record.description
+                  : 'Invoke skill'
+              if (!command.startsWith('/')) return null
+              return { command, description }
+            })
+            .filter((entry): entry is SlashCommandDefinition => entry !== null),
+        )
+      })
+      .catch(() => {
+        // Skills are an optional dynamic enhancement; built-ins still work.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [open])
+
+  const availableCommands = useMemo(() => {
+    const seen = new Set<string>()
+    return [...SLASH_COMMANDS, ...skillCommands].filter((command) => {
+      if (seen.has(command.command)) return false
+      seen.add(command.command)
+      return true
+    })
+  }, [skillCommands])
 
   const filteredCommands = useMemo(() => {
     const normalizedQuery = query.trim()
-    if (!normalizedQuery) return SLASH_COMMANDS
+    if (!normalizedQuery) return availableCommands
 
-    return SLASH_COMMANDS.filter((item) =>
+    return availableCommands.filter((item) =>
       filter.contains(
         item,
         normalizedQuery,
         (target) => `${target.command} ${target.description}`,
       ),
     )
-  }, [filter, query])
+  }, [availableCommands, filter, query])
 
   useEffect(() => {
     setActiveIndex(0)
