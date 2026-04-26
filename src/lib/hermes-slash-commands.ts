@@ -369,6 +369,10 @@ export function getSlashCommandAliases(
   return [command.name, ...(command.aliases ?? [])]
 }
 
+export function isWorkspaceSlashCommand(command: HermesSlashCommandDefinition) {
+  return !command.cliOnly && !command.gatewayOnly
+}
+
 export function resolveHermesSlashCommandExact(
   name: string,
 ): HermesSlashCommandDefinition | null {

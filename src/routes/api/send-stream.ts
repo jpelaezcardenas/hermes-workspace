@@ -2,23 +2,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { resolveSessionKey } from '../../server/session-utils'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
-import { publishChatEvent } from '../../server/chat-event-bus'
 import {
   registerActiveSendRun,
   unregisterActiveSendRun,
 } from '../../server/send-run-tracker'
 import { getChatMode } from '../../server/gateway-capabilities'
 import {
-  ensureLocalSession,
   appendLocalMessage,
+  ensureLocalSession,
   getLocalMessages,
 } from '../../server/local-session-store'
-import { getLocalProviderDef, getDiscoveredModels } from '../../server/local-provider-discovery'
-import {
-  
-  
-  openaiChat
-} from '../../server/openai-compat-api'
+import { getDiscoveredModels, getLocalProviderDef } from '../../server/local-provider-discovery'
+import { openaiChat } from '../../server/openai-compat-api'
 import {
   SESSIONS_API_UNAVAILABLE_MESSAGE,
   createSession,
@@ -28,7 +23,10 @@ import {
   streamChat,
 } from '../../server/hermes-api'
 import { preprocessSkillSlashCommand } from '../../server/skill-commands'
-import type {OpenAICompatContentPart, OpenAICompatMessage} from '../../server/openai-compat-api';
+import type {
+  OpenAICompatContentPart,
+  OpenAICompatMessage,
+} from '../../server/openai-compat-api'
 // Hermes agent runs can take 5+ minutes with complex tool chains
 const SEND_STREAM_RUN_TIMEOUT_MS = 600_000
 const SESSION_BOOTSTRAP_KEYS = new Set(['main', 'new'])
@@ -201,7 +199,15 @@ function readRecord(value: unknown): Record<string, unknown> | undefined {
     : undefined
 }
 
-function getToolName(data: Record<string, unknown>): string {
+function firstPresent(...values: Array<unknown>): unknown {
+  return values.find((value) => {
+    if (value === undefined || value === null) return false
+    if (typeof value === 'string') return value.trim().length > 0
+    return true
+  })
+}
+
+export function getToolName(data: Record<string, unknown>): string {
   const toolCall = readRecord(data.tool_call)
   const tool = readRecord(data.tool)
   const toolFunction = readRecord(toolCall?.function)
@@ -212,11 +218,12 @@ function getToolName(data: Record<string, unknown>): string {
     readString(tool?.name) ||
     readString(data.tool_name) ||
     readString(data.name) ||
+    readString(data.toolName) ||
     'tool'
   )
 }
 
-function getToolCallId(
+export function getToolCallId(
   data: Record<string, unknown>,
   runId: string | undefined,
   toolName: string,
@@ -227,7 +234,9 @@ function getToolCallId(
     readString(toolCall?.id) ||
     readString(tool?.id) ||
     readString(data.tool_call_id) ||
+    readString(data.toolCallId) ||
     readString(data.call_id) ||
+    readString(data.callId) ||
     readString(data.id) ||
     `${runId || 'run'}:${toolName}`
   )
@@ -250,16 +259,42 @@ function parseJsonIfPossible(value: unknown): unknown {
   return value
 }
 
-function getToolArgs(data: Record<string, unknown>): unknown {
+export function getToolArgs(data: Record<string, unknown>): unknown {
   const toolCall = readRecord(data.tool_call)
   const toolFunction = readRecord(toolCall?.function)
   return parseJsonIfPossible(
-    toolCall?.arguments ?? toolFunction?.arguments ?? data.args,
+    firstPresent(
+      toolCall?.arguments,
+      toolCall?.args,
+      toolCall?.input,
+      toolCall?.parameters,
+      toolFunction?.arguments,
+      toolFunction?.args,
+      toolFunction?.parameters,
+      data.arguments,
+      data.args,
+      data.input,
+      data.parameters,
+      data.params,
+      data.tool_input,
+      data.toolInput,
+      data.tool_args,
+      data.toolArgs,
+    ),
   )
 }
 
-function getToolResultPreview(data: Record<string, unknown>): string {
-  const raw = data.result_preview ?? data.result ?? data.output ?? data.message
+export function getToolResultPreview(data: Record<string, unknown>): string {
+  const raw = firstPresent(
+    data.result_preview,
+    data.resultPreview,
+    data.result,
+    data.output,
+    data.content,
+    data.stdout,
+    data.stderr,
+    data.message,
+  )
   if (typeof raw === 'string') return raw
   if (raw === undefined || raw === null) return ''
   try {
@@ -330,6 +365,55 @@ export function buildPortableDoneMessage(
           __streamToolCalls: toolCalls,
         }
       : {}),
+  }
+}
+
+export function buildRunStartedUserMessageEvent(
+  data: Record<string, unknown>,
+  sessionKey: string,
+  runId: string | undefined,
+  clientId?: string,
+): Record<string, unknown> | null {
+  const userMessage =
+    data.user_message && typeof data.user_message === 'object'
+      ? (data.user_message as Record<string, unknown>)
+      : null
+  if (!userMessage) return null
+
+  const rawContent = userMessage.content
+  const text =
+    typeof rawContent === 'string'
+      ? rawContent
+      : typeof userMessage.text === 'string'
+        ? userMessage.text
+        : typeof userMessage.message === 'string'
+          ? userMessage.message
+          : ''
+
+  return {
+    message: {
+      id: userMessage.id,
+      role: userMessage.role ?? 'user',
+      content: Array.isArray(rawContent)
+        ? rawContent
+        : [
+            {
+              type: 'text',
+              text,
+            },
+          ],
+      text,
+      ...(clientId
+        ? {
+            clientId,
+            client_id: clientId,
+            idempotencyKey: clientId,
+          }
+        : {}),
+    },
+    sessionKey,
+    source: 'hermes',
+    runId,
   }
 }
 
@@ -745,9 +829,8 @@ export const Route = createFileRoute('/api/send-stream')({
 
               let startedSent = false
               // In enhanced mode, the HTTP stream response delivers all events
-              // directly to useStreamingMessage. Skip publishChatEvent to prevent
-              // useRealtimeChatHistory from creating duplicate message bubbles.
-              const skipPublish = true
+              // directly to useStreamingMessage. Do not also publish to the
+              // global chat-event bus, or the UI can render duplicate bubbles.
               await streamChat(
                 sessionKey,
                 {
@@ -791,31 +874,14 @@ export const Route = createFileRoute('/api/send-stream')({
                     }
 
                     if (event === 'run.started') {
-                      const userMessage =
-                        data.user_message &&
-                        typeof data.user_message === 'object'
-                          ? (data.user_message as Record<string, unknown>)
-                          : null
-                      if (userMessage) {
-                        skipPublish ||
-                          publishChatEvent('user_message', {
-                            message: {
-                              id: userMessage.id,
-                              role: userMessage.role ?? 'user',
-                              content: [
-                                {
-                                  type: 'text',
-                                  text:
-                                    typeof userMessage.content === 'string'
-                                      ? userMessage.content
-                                      : '',
-                                },
-                              ],
-                            },
-                            sessionKey: sessionKeyFromEvent,
-                            source: 'hermes',
-                            runId,
-                          })
+                      const translated = buildRunStartedUserMessageEvent(
+                        data,
+                        sessionKeyFromEvent,
+                        runId,
+                        readString(body.idempotencyKey) || undefined,
+                      )
+                      if (translated) {
+                        sendEvent('user_message', translated)
                       }
                       return
                     }
@@ -835,7 +901,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('message', translated)
-                      skipPublish || publishChatEvent('message', translated)
                       return
                     }
 
@@ -852,7 +917,6 @@ export const Route = createFileRoute('/api/send-stream')({
                           runId,
                         }
                         sendEvent('chunk', translated)
-                        skipPublish || publishChatEvent('chunk', translated)
                       }
                       return
                     }
@@ -867,7 +931,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('chunk', translated)
-                      skipPublish || publishChatEvent('chunk', translated)
                       return
                     }
 
@@ -895,7 +958,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('tool', translated)
-                      skipPublish || publishChatEvent('tool', translated)
                       return
                     }
 
@@ -910,7 +972,6 @@ export const Route = createFileRoute('/api/send-stream')({
                           runId,
                         }
                         sendEvent('thinking', translated)
-                        skipPublish || publishChatEvent('thinking', translated)
                         return
                       }
                       const translated = {
@@ -923,7 +984,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('tool', translated)
-                      skipPublish || publishChatEvent('tool', translated)
                       return
                     }
 
@@ -940,7 +1000,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('tool', translated)
-                      skipPublish || publishChatEvent('tool', translated)
                       return
                     }
 
@@ -965,7 +1024,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('artifact', translated)
-                      skipPublish || publishChatEvent('artifact', translated)
                       return
                     }
 
@@ -981,7 +1039,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('tool', translated)
-                      skipPublish || publishChatEvent('tool', translated)
                       return
                     }
 
@@ -1002,7 +1059,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('tool', translated)
-                      skipPublish || publishChatEvent('tool', translated)
                       return
                     }
 
@@ -1022,7 +1078,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('tool', translated)
-                      skipPublish || publishChatEvent('tool', translated)
                       return
                     }
 
@@ -1050,7 +1105,6 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       }
                       sendEvent('done', translated)
-                      skipPublish || publishChatEvent('done', translated)
                       closeStream()
                     }
                   },

@@ -40,6 +40,27 @@ type PortableHistoryMessage = {
   content: string
 }
 
+function readPayloadString(
+  payload: Record<string, unknown>,
+  key: string,
+): string {
+  const value = payload[key]
+  return typeof value === 'string' && value.trim() ? value.trim() : ''
+}
+
+function getMessageClientId(message: ChatMessage): string {
+  const raw = message as Record<string, unknown>
+  for (const key of ['clientId', 'client_id', 'idempotencyKey', 'nonce']) {
+    const value = raw[key]
+    if (typeof value === 'string' && value.trim()) return value.trim()
+  }
+  return ''
+}
+
+function isHandoffPhase(phase: StreamLifecyclePhase): boolean {
+  return phase === 'handoff'
+}
+
 type UseStreamingMessageOptions = {
   onStarted?: (payload: { runId: string | null }) => void
   onChunk?: (text: string, fullText: string) => void
@@ -381,13 +402,10 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       switch (event) {
         case 'started': {
           const resolvedSessionKey =
-            typeof payload.sessionKey === 'string' && payload.sessionKey.trim()
-              ? payload.sessionKey.trim()
-              : activeSessionKeyRef.current
+            readPayloadString(payload, 'sessionKey') ||
+            activeSessionKeyRef.current
           const resolvedFriendlyId =
-            typeof payload.friendlyId === 'string' && payload.friendlyId.trim()
-              ? payload.friendlyId.trim()
-              : resolvedSessionKey
+            readPayloadString(payload, 'friendlyId') || resolvedSessionKey
           if (resolvedSessionKey !== activeSessionKeyRef.current) {
             activeSessionKeyRef.current = resolvedSessionKey
             onSessionResolved?.({
@@ -415,6 +433,47 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             transport: 'send-stream',
           })
           onStarted?.({ runId: runId ?? null })
+          break
+        }
+        case 'user_message': {
+          const message =
+            payload.message && typeof payload.message === 'object'
+              ? (payload.message as ChatMessage)
+              : null
+          if (!message) break
+
+          const resolvedSessionKey =
+            readPayloadString(payload, 'sessionKey') ||
+            activeSessionKeyRef.current
+          const resolvedFriendlyId =
+            readPayloadString(payload, 'friendlyId') || resolvedSessionKey
+          const runId =
+            readPayloadString(payload, 'runId') ||
+            activeRunIdRef.current ||
+            undefined
+
+          if (resolvedSessionKey !== activeSessionKeyRef.current) {
+            activeSessionKeyRef.current = resolvedSessionKey
+            onSessionResolved?.({
+              sessionKey: resolvedSessionKey,
+              friendlyId: resolvedFriendlyId,
+            })
+          }
+
+          markActivity()
+          processStoreEvent({
+            type: 'user_message',
+            message,
+            source: readPayloadString(payload, 'source') || undefined,
+            runId,
+            sessionKey: resolvedSessionKey,
+            transport: 'send-stream',
+          })
+
+          const clientId = getMessageClientId(message)
+          if (clientId) {
+            onMessageAccepted?.(resolvedSessionKey, resolvedFriendlyId, clientId)
+          }
           break
         }
         case 'assistant': {
@@ -819,8 +878,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           }
         }
 
-        const lifecyclePhase = lifecyclePhaseRef.current as StreamLifecyclePhase
-        if (!finishedRef.current && lifecyclePhase !== 'handoff') {
+        if (!isHandoffPhase(lifecyclePhaseRef.current)) {
           finishStream()
         }
       } catch (err) {

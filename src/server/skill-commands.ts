@@ -5,6 +5,7 @@ import YAML from 'yaml'
 import {
   HERMES_SLASH_COMMANDS,
   formatSlashCommand,
+  isWorkspaceSlashCommand,
   resolveHermesSlashCommand,
   resolveHermesSlashCommandExact,
 } from '../lib/hermes-slash-commands'
@@ -52,6 +53,15 @@ export type SlashCommandPreprocessResult =
 const SKILL_INVALID_CHARS = /[^a-z0-9-]/g
 const SKILL_MULTI_HYPHEN = /-{2,}/g
 const MAX_SUPPORTING_FILES = 50
+const SKILL_COMMAND_CACHE_TTL_MS = 30_000
+
+let skillCommandsCache:
+  | {
+      rootsKey: string
+      scannedAt: number
+      commands: Array<SkillCommand>
+    }
+  | null = null
 
 function readString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
@@ -136,10 +146,21 @@ function findSkillMarkdownFiles(root: string): Array<string> {
 }
 
 export function scanSkillCommands(): Array<SkillCommand> {
+  const roots = getSkillRoots()
+  const rootsKey = roots.join('\0')
+  const now = Date.now()
+  if (
+    skillCommandsCache &&
+    skillCommandsCache.rootsKey === rootsKey &&
+    now - skillCommandsCache.scannedAt < SKILL_COMMAND_CACHE_TTL_MS
+  ) {
+    return skillCommandsCache.commands
+  }
+
   const commands: Array<SkillCommand> = []
   const seen = new Set<string>()
 
-  for (const root of getSkillRoots()) {
+  for (const root of roots) {
     for (const skillMdPath of findSkillMarkdownFiles(root)) {
       let raw = ''
       try {
@@ -174,7 +195,15 @@ export function scanSkillCommands(): Array<SkillCommand> {
     }
   }
 
-  return commands.sort((left, right) => left.command.localeCompare(right.command))
+  const sortedCommands = commands.sort((left, right) =>
+    left.command.localeCompare(right.command),
+  )
+  skillCommandsCache = {
+    rootsKey,
+    scannedAt: now,
+    commands: sortedCommands,
+  }
+  return sortedCommands
 }
 
 export function getSkillSlashCommandDefinitions(): Array<SkillCommandSummary> {
@@ -298,10 +327,11 @@ function parseSlashInvocation(message: string): {
 }
 
 function buildHelpMessage(): string {
+  const workspaceCommands = HERMES_SLASH_COMMANDS.filter(isWorkspaceSlashCommand)
   const lines = [
     'Hermes slash commands available in Workspace:',
     '',
-    ...HERMES_SLASH_COMMANDS.map((command) => {
+    ...workspaceCommands.map((command) => {
       const aliases = command.aliases?.length
         ? ` (aliases: ${command.aliases.map((alias) => `/${alias}`).join(', ')})`
         : ''

@@ -11,7 +11,10 @@ import type { Ref } from 'react'
 
 import { useAutocompleteFilter } from '@/components/ui/autocomplete'
 import { Command, CommandItem, CommandList } from '@/components/ui/command'
-import { HERMES_SLASH_COMMANDS } from '@/lib/hermes-slash-commands'
+import {
+  HERMES_SLASH_COMMANDS,
+  isWorkspaceSlashCommand,
+} from '@/lib/hermes-slash-commands'
 import { cn } from '@/lib/utils'
 
 type SlashCommandDefinition = {
@@ -31,7 +34,7 @@ type SlashCommandMenuHandle = {
 }
 
 const SLASH_COMMANDS: Array<SlashCommandDefinition> = HERMES_SLASH_COMMANDS
-  .filter((command) => !command.gatewayOnly && !command.cliOnly)
+  .filter(isWorkspaceSlashCommand)
   .map((command) => ({
     command: `/${command.name}`,
     description: command.description,
