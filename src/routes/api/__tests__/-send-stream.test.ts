@@ -140,3 +140,61 @@ describe('buildPortableDoneMessage', () => {
     })
   })
 })
+
+describe('enhanced stream translation helpers', () => {
+  it('builds a user_message event from run.started payloads', async () => {
+    const { buildRunStartedUserMessageEvent } = await import('../send-stream')
+
+    const event = buildRunStartedUserMessageEvent(
+      {
+        user_message: {
+          id: 'msg-1',
+          role: 'user',
+          content: 'hello hermes',
+        },
+      },
+      'session-1',
+      'run-1',
+      'client-1',
+    )
+
+    expect(event).toMatchObject({
+      sessionKey: 'session-1',
+      source: 'hermes',
+      runId: 'run-1',
+      message: {
+        id: 'msg-1',
+        role: 'user',
+        text: 'hello hermes',
+        clientId: 'client-1',
+        client_id: 'client-1',
+        idempotencyKey: 'client-1',
+        content: [{ type: 'text', text: 'hello hermes' }],
+      },
+    })
+  })
+
+  it('extracts richer Hermes tool metadata shapes', async () => {
+    const {
+      getToolArgs,
+      getToolCallId,
+      getToolName,
+      getToolResultPreview,
+    } = await import('../send-stream')
+
+    const payload = {
+      toolCallId: 'call-1',
+      toolName: 'workspace_edit',
+      toolInput: '{"path":"/tmp/a.txt","newText":"ok"}',
+      stdout: 'wrote file',
+    }
+
+    expect(getToolName(payload)).toBe('workspace_edit')
+    expect(getToolCallId(payload, 'run-1', 'workspace_edit')).toBe('call-1')
+    expect(getToolArgs(payload)).toEqual({
+      path: '/tmp/a.txt',
+      newText: 'ok',
+    })
+    expect(getToolResultPreview(payload)).toBe('wrote file')
+  })
+})
