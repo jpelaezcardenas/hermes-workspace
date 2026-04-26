@@ -7,7 +7,6 @@ import {
   formatSlashCommand,
   resolveHermesSlashCommand,
 } from '../lib/hermes-slash-commands'
-import { resolveHermesSlashCommand } from '../lib/hermes-slash-commands'
 
 type SkillCommand = {
   command: string
@@ -175,6 +174,18 @@ export function scanSkillCommands(): Array<SkillCommand> {
   }
 
   return commands.sort((left, right) => left.command.localeCompare(right.command))
+}
+
+export function getSkillSlashCommandDefinitions(): Array<SkillCommandSummary> {
+  return scanSkillCommands().map(
+    ({ command, name, description, skillDir, skillMdPath }) => ({
+      command,
+      name,
+      description,
+      skillDir,
+      skillMdPath,
+    }),
+  )
 }
 
 function resolveSkillCommand(commandName: string): SkillCommand | null {
