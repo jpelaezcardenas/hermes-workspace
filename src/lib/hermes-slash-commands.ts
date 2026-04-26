@@ -363,14 +363,23 @@ export function formatSlashCommand(command: HermesSlashCommandDefinition) {
   return `/${command.name}${args}`
 }
 
-export function formatSlashCommandName(command: HermesSlashCommandDefinition) {
-  return `/${command.name}`
-}
-
 export function getSlashCommandAliases(
   command: HermesSlashCommandDefinition,
 ): Array<string> {
   return [command.name, ...(command.aliases ?? [])]
+}
+
+export function resolveHermesSlashCommandExact(
+  name: string,
+): HermesSlashCommandDefinition | null {
+  const normalized = name.trim().toLowerCase().replace(/^\/+/, '')
+  if (!normalized) return null
+
+  return (
+    HERMES_SLASH_COMMANDS.find((command) =>
+      getSlashCommandAliases(command).includes(normalized),
+    ) ?? null
+  )
 }
 
 export function resolveHermesSlashCommand(
@@ -379,11 +388,8 @@ export function resolveHermesSlashCommand(
   const normalized = name.trim().toLowerCase().replace(/^\/+/, '')
   if (!normalized) return null
 
-  for (const command of HERMES_SLASH_COMMANDS) {
-    if (getSlashCommandAliases(command).includes(normalized)) {
-      return command
-    }
-  }
+  const exact = resolveHermesSlashCommandExact(normalized)
+  if (exact) return exact
 
   return (
     HERMES_SLASH_COMMANDS.find((command) =>

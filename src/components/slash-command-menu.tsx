@@ -31,7 +31,7 @@ type SlashCommandMenuHandle = {
 }
 
 const SLASH_COMMANDS: Array<SlashCommandDefinition> = HERMES_SLASH_COMMANDS
-  .filter((command) => !command.gatewayOnly)
+  .filter((command) => !command.gatewayOnly && !command.cliOnly)
   .map((command) => ({
     command: `/${command.name}`,
     description: command.description,

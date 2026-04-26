@@ -6,6 +6,7 @@ import {
   HERMES_SLASH_COMMANDS,
   formatSlashCommand,
   resolveHermesSlashCommand,
+  resolveHermesSlashCommandExact,
 } from '../lib/hermes-slash-commands'
 
 type SkillCommand = {
@@ -178,12 +179,10 @@ export function scanSkillCommands(): Array<SkillCommand> {
 
 export function getSkillSlashCommandDefinitions(): Array<SkillCommandSummary> {
   return scanSkillCommands().map(
-    ({ command, name, description, skillDir, skillMdPath }) => ({
+    ({ command, name, description }) => ({
       command,
       name,
       description,
-      skillDir,
-      skillMdPath,
     }),
   )
 }
@@ -348,7 +347,7 @@ export function preprocessHermesSlashCommand(
     skillCommand = resolveSkillCommand(nested.commandName)
     instruction = nested.args
   } else {
-    if (resolveHermesSlashCommand(commandName)) return { handled: false }
+    if (resolveHermesSlashCommandExact(commandName)) return { handled: false }
     skillCommand = resolveSkillCommand(commandName)
   }
 
