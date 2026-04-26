@@ -278,7 +278,7 @@ export function summarizeToolGroup(
         ? `${errorCount} failed`
         : `${doneCount} done`
   const statusClassName =
-    runningCount > 0 || isStreaming
+    runningCount > 0
       ? 'text-indigo-500'
       : errorCount > 0
         ? 'text-red-500'

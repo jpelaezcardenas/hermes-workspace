@@ -177,4 +177,14 @@ describe('summarizeToolGroup', () => {
     expect(summary.statusLabel).toBe('1 running')
     expect(summary.statusClassName).toBe('text-indigo-500')
   })
+
+  it('keeps failed status red even if the assistant is still streaming', () => {
+    const summary = summarizeToolGroup(
+      [{ type: 'read_file', state: 'output-error' }],
+      true,
+    )
+
+    expect(summary.statusLabel).toBe('1 failed')
+    expect(summary.statusClassName).toBe('text-red-500')
+  })
 })
