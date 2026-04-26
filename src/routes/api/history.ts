@@ -39,26 +39,10 @@ function toLocalChatMessage(
   message: LocalMessage,
   historyIndex: number,
 ) {
-  const content: Array<Record<string, unknown>> = []
   const streamToolCalls = normalizeLocalToolCalls(message.toolCalls)
-
-  if (message.role === 'assistant' && streamToolCalls.length > 0) {
-    for (const toolCall of streamToolCalls) {
-      const args =
-        toolCall.args && typeof toolCall.args === 'object' ? toolCall.args : undefined
-      content.push({
-        type: 'toolCall',
-        id: toolCall.id,
-        name: toolCall.name,
-        arguments: args as Record<string, unknown> | undefined,
-        partialJson: typeof toolCall.args === 'string' ? toolCall.args : undefined,
-      })
-    }
-  }
-
-  if (message.content) {
-    content.push({ type: 'text', text: message.content })
-  }
+  const content = message.content
+    ? [{ type: 'text', text: message.content }]
+    : []
 
   return {
     id: `msg-${message.id}`,
