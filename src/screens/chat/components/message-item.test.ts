@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildInlineToolRenderPlan, compactInlineToolRenderPlan } from './message-item'
+import {
+  buildInlineToolRenderPlan,
+  compactInlineToolRenderPlan,
+  compactToolGroupKey,
+} from './message-item'
 import type { ChatMessage } from '../types'
 
 describe('buildInlineToolRenderPlan', () => {
@@ -143,5 +147,18 @@ describe('compactInlineToolRenderPlan', () => {
         ],
       },
     ])
+  })
+})
+
+describe('compactToolGroupKey', () => {
+  it('stays anchored to the first section when a compacted group grows', () => {
+    const initialKey = compactToolGroupKey([{ key: 'tc-1' }], 0)
+    const expandedKey = compactToolGroupKey(
+      [{ key: 'tc-1' }, { key: 'tc-2' }],
+      0,
+    )
+
+    expect(initialKey).toBe('tc-1')
+    expect(expandedKey).toBe('tc-1')
   })
 })

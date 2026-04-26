@@ -114,14 +114,6 @@ export function updateLocalSessionTitle(
   }
 }
 
-export function touchLocalSession(sessionId: string): void {
-  const session = store.sessions[sessionId]
-  if (session) {
-    session.updatedAt = Date.now()
-    saveToDisk()
-  }
-}
-
 export function deleteLocalSession(sessionId: string): void {
   delete store.sessions[sessionId]
   delete store.messages[sessionId]

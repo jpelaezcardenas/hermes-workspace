@@ -230,6 +230,13 @@ export function compactInlineToolRenderPlan(
   return compactPlan
 }
 
+export function compactToolGroupKey(
+  sections: Array<{ key: string }>,
+  index: number,
+): string {
+  return sections[0]?.key || `tools-${index}`
+}
+
 function extractToolResultText(msg: ChatMessage | undefined): string {
   if (!msg) return ''
   // Prefer text from content blocks (exec stdout, Read output, etc.)
@@ -2422,7 +2429,7 @@ function MessageItemComponent({
                 {compactInlineRenderPlan.map((item, index) =>
                   item.kind === 'tools' ? (
                     <ToolCallGroup
-                      key={item.sections.map((section) => section.key).join(':') || `tools-${index}`}
+                      key={compactToolGroupKey(item.sections, index)}
                       toolSections={item.sections}
                       expandAll={expandAllToolSections}
                       isStreaming={effectiveIsStreaming}
