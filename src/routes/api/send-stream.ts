@@ -12,7 +12,6 @@ import {
   ensureLocalSession,
   appendLocalMessage,
   getLocalMessages,
-  touchLocalSession,
 } from '../../server/local-session-store'
 import { getLocalProviderDef, getDiscoveredModels } from '../../server/local-provider-discovery'
 import {
@@ -278,6 +277,41 @@ type PortableToolCall = {
   result?: string
 }
 
+type PortableToolCallTracker = {
+  lastSignature: string | null
+  lastToolCallId: string | null
+  sequence: number
+}
+
+function getPortableToolSignature(name: string, label: string): string {
+  return `${name}\u0000${label}`
+}
+
+export function assignPortableToolCallId(
+  tracker: PortableToolCallTracker,
+  runId: string,
+  name: string,
+  label: string,
+): string {
+  const signature = getPortableToolSignature(name, label)
+  if (tracker.lastSignature === signature && tracker.lastToolCallId) {
+    return tracker.lastToolCallId
+  }
+
+  tracker.sequence += 1
+  const toolCallId = `${runId}:${name}:${tracker.sequence}`
+  tracker.lastSignature = signature
+  tracker.lastToolCallId = toolCallId
+  return toolCallId
+}
+
+export function resetPortableToolCallTracker(
+  tracker: PortableToolCallTracker,
+): void {
+  tracker.lastSignature = null
+  tracker.lastToolCallId = null
+}
+
 function upsertPortableToolCall(
   toolCalls: Array<PortableToolCall>,
   nextToolCall: PortableToolCall,
@@ -456,6 +490,11 @@ export const Route = createFileRoute('/api/send-stream')({
                   portableSessionKey
                 let accumulated = ''
                 const toolCalls: Array<PortableToolCall> = []
+                const toolCallTracker: PortableToolCallTracker = {
+                  lastSignature: null,
+                  lastToolCallId: null,
+                  sequence: 0,
+                }
 
                 activeRunId = runId
                 registerActiveSendRun(runId)
@@ -518,9 +557,9 @@ export const Route = createFileRoute('/api/send-stream')({
                   })
 
                   let thinking = ''
-                  let toolEventCount = 0
                   for await (const chunk of stream) {
                     if (chunk.type === 'reasoning') {
+                      resetPortableToolCallTracker(toolCallTracker)
                       thinking += chunk.text
                       sendEvent('thinking', {
                         text: thinking,
@@ -528,8 +567,12 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       })
                     } else if (chunk.type === 'tool') {
-                      toolEventCount += 1
-                      const toolCallId = `${runId}:${chunk.name}:${toolEventCount}`
+                      const toolCallId = assignPortableToolCallId(
+                        toolCallTracker,
+                        runId,
+                        chunk.name,
+                        chunk.label,
+                      )
                       upsertPortableToolCall(toolCalls, {
                         id: toolCallId,
                         name: chunk.name,
@@ -545,6 +588,7 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       })
                     } else {
+                      resetPortableToolCallTracker(toolCallTracker)
                       accumulated += chunk.text
                       sendEvent('chunk', {
                         text: accumulated,
@@ -567,7 +611,6 @@ export const Route = createFileRoute('/api/send-stream')({
                     timestamp: Date.now(),
                     toolCalls: completedToolCalls,
                   })
-                  touchLocalSession(portableSessionKey)
 
                   sendEvent('done', {
                     state: 'complete',
