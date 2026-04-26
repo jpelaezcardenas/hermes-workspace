@@ -137,4 +137,5 @@ __pycache__/
 .env.docker
 .env.bak
 .runtime/
+.migration-backups/
 workspace-final-markdown-review.md

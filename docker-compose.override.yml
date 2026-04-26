@@ -1,0 +1,136 @@
+# Dom-local Docker override for enhanced Hermes Workspace.
+# Keeps upstream docker-compose.yml intact while making the stack usable as:
+#   /usr/local/bin/docker-compose up -d
+#
+# Goals:
+# - workspace UI on http://127.0.0.1:3000
+# - Hermes gateway routed through Docker at http://hermes-agent:8642
+# - dashboard/enhanced APIs at http://hermes-dashboard:9119
+# - Docker Hermes data stored under ./.runtime/hermes-data, seeded from the host Hermes home
+# - local Docker Honcho reachable on honcho_default as http://honcho-api-1:8000
+
+services:
+  hermes-agent:
+    image: dom/hermes-agent-runtime:latest
+    build:
+      context: .
+      dockerfile: docker/dom-hermes-agent/Dockerfile
+    command: ["hermes", "gateway", "run"]
+    environment:
+      HERMES_HOME: /opt/data
+      API_SERVER_ENABLED: "true"
+      API_SERVER_HOST: 0.0.0.0
+      # The API server binds to 0.0.0.0 for Docker networking; Hermes requires
+      # API_SERVER_KEY for that mode. Host publication remains loopback-only.
+      API_SERVER_KEY: ${API_SERVER_KEY:-}
+      HONCHO_BASE_URL: http://honcho-api-1:8000
+      # Cursor Agent CLI authentication for headless PM/Cursor gates.
+      # Do not bake this into the image; set CURSOR_API_KEY in .env.
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
+    volumes:
+      - ./.runtime/hermes-data:/opt/data
+      # Legacy-path compatibility: these targets are inside the container and
+      # point at the Docker runtime/canonical host mounts, not bare-metal Hermes.
+      - ./.runtime/hermes-data:${HERMES_MACHINE_HOME:-/Users/eru}/.hermes
+      - ${HERMES_HOST_PROJECTS:-/Users/eru/Documents/projects}:/workspace/projects:rw
+      - ${HERMES_HOST_PROJECTS:-/Users/eru/Documents/projects}:${HERMES_MACHINE_HOME:-/Users/eru}/Documents/projects:rw
+      - ${HERMES_HOST_WIKI:-/Users/eru/wiki}:/workspace/wiki:rw
+      - ${HERMES_HOST_WIKI:-/Users/eru/wiki}:${HERMES_MACHINE_HOME:-/Users/eru}/wiki:rw
+      - ${HERMES_HOST_CONTEXT:-/Users/eru/.agents/context}:/workspace/context:rw
+      - ${HERMES_HOST_CONTEXT:-/Users/eru/.agents/context}:${HERMES_MACHINE_HOME:-/Users/eru}/.agents/context:rw
+      - ./.runtime/hermes-data/container-gh-config:${HERMES_MACHINE_HOME:-/Users/eru}/.config/gh:rw
+      - ${HERMES_HOST_GITCONFIG:-/Users/eru/.gitconfig}:${HERMES_MACHINE_HOME:-/Users/eru}/.gitconfig:ro
+    networks:
+      - default
+      - honcho_default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8642/health', timeout=5).read()\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 180s
+    ports: !override
+      - '127.0.0.1:8642:8642'
+
+  hermes-dashboard:
+    image: dom/hermes-agent-runtime:latest
+    build:
+      context: .
+      dockerfile: docker/dom-hermes-agent/Dockerfile
+    env_file:
+      - .env
+    environment:
+      HERMES_HOME: /opt/data
+      HONCHO_BASE_URL: http://honcho-api-1:8000
+    command: ["hermes", "dashboard", "--host", "0.0.0.0", "--no-open"]
+    volumes:
+      - ./.runtime/hermes-data:/opt/data
+      # Legacy-path compatibility: these targets are inside the container and
+      # point at the Docker runtime/canonical host mounts, not bare-metal Hermes.
+      - ./.runtime/hermes-data:${HERMES_MACHINE_HOME:-/Users/eru}/.hermes
+      - ${HERMES_HOST_PROJECTS:-/Users/eru/Documents/projects}:/workspace/projects:rw
+      - ${HERMES_HOST_PROJECTS:-/Users/eru/Documents/projects}:${HERMES_MACHINE_HOME:-/Users/eru}/Documents/projects:rw
+      - ${HERMES_HOST_WIKI:-/Users/eru/wiki}:/workspace/wiki:rw
+      - ${HERMES_HOST_WIKI:-/Users/eru/wiki}:${HERMES_MACHINE_HOME:-/Users/eru}/wiki:rw
+      - ${HERMES_HOST_CONTEXT:-/Users/eru/.agents/context}:/workspace/context:rw
+      - ${HERMES_HOST_CONTEXT:-/Users/eru/.agents/context}:${HERMES_MACHINE_HOME:-/Users/eru}/.agents/context:rw
+      - ./.runtime/hermes-data/container-gh-config:${HERMES_MACHINE_HOME:-/Users/eru}/.config/gh:rw
+      - ${HERMES_HOST_GITCONFIG:-/Users/eru/.gitconfig}:${HERMES_MACHINE_HOME:-/Users/eru}/.gitconfig:ro
+    ports:
+      - "127.0.0.1:9119:9119"
+    networks:
+      - default
+      - honcho_default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:9119/api/status', timeout=5).read()\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  hermes-workspace:
+    environment:
+      HERMES_HOME: /opt/data
+      HERMES_API_URL: http://hermes-agent:8642
+      HERMES_DASHBOARD_URL: http://hermes-dashboard:9119
+      # Gateway bearer token. The dashboard uses a separate ephemeral session
+      # token, scraped by the command wrapper below into HERMES_DASHBOARD_TOKEN.
+      HERMES_API_TOKEN: ${API_SERVER_KEY:-}
+      HERMES_PASSWORD: ${HERMES_PASSWORD:-}
+      HOST: 0.0.0.0
+    command: ["sh", "/usr/local/bin/dom-workspace-entrypoint.sh"]
+    volumes:
+      - ./.runtime/hermes-data:/opt/data
+      # The current Workspace image still reads profiles from os.homedir()/.hermes
+      # instead of HERMES_HOME, so mount the same runtime at both paths.
+      - ./.runtime/hermes-data:/home/workspace/.hermes
+      # Legacy-path compatibility for prompts/scripts that still reference
+      # machine-home paths. These targets are inside the container.
+      - ./.runtime/hermes-data:${HERMES_MACHINE_HOME:-/Users/eru}/.hermes
+      - ./scripts/dom-workspace-entrypoint.sh:/usr/local/bin/dom-workspace-entrypoint.sh:ro
+      - ${HERMES_HOST_PROJECTS:-/Users/eru/Documents/projects}:/workspace/projects:rw
+      - ${HERMES_HOST_PROJECTS:-/Users/eru/Documents/projects}:${HERMES_MACHINE_HOME:-/Users/eru}/Documents/projects:rw
+      - ${HERMES_HOST_WIKI:-/Users/eru/wiki}:/workspace/wiki:rw
+      - ${HERMES_HOST_WIKI:-/Users/eru/wiki}:${HERMES_MACHINE_HOME:-/Users/eru}/wiki:rw
+      - ${HERMES_HOST_CONTEXT:-/Users/eru/.agents/context}:/workspace/context:rw
+      - ${HERMES_HOST_CONTEXT:-/Users/eru/.agents/context}:${HERMES_MACHINE_HOME:-/Users/eru}/.agents/context:rw
+      - ./.runtime/hermes-data/container-gh-config:${HERMES_MACHINE_HOME:-/Users/eru}/.config/gh:rw
+      - ${HERMES_HOST_GITCONFIG:-/Users/eru/.gitconfig}:${HERMES_MACHINE_HOME:-/Users/eru}/.gitconfig:ro
+    depends_on:
+      hermes-agent:
+        condition: service_healthy
+      hermes-dashboard:
+        condition: service_healthy
+    ports: !override
+      - "127.0.0.1:3000:3000"
+      # Tailscale phone access. Override HERMES_TAILSCALE_IP in .env if this
+      # machine's Tailscale address changes.
+      - "${HERMES_TAILSCALE_IP:-100.78.140.84}:3000:3000"
+
+networks:
+  honcho_default:
+    external: true

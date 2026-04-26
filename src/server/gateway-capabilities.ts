@@ -321,7 +321,7 @@ export async function dashboardFetch(
 ): Promise<Response> {
   const requestPath = withDashboardBase(path)
   const method = (init.method || 'GET').toUpperCase()
-  const doFetch = async (forceToken = false) => {
+  const doFetch = async (includeAuth = false, forceToken = false) => {
     const headers = new Headers(init.headers)
     const isProtected =
       requestPath.includes('/api/') &&
@@ -333,7 +333,7 @@ export async function dashboardFetch(
       !requestPath.endsWith('/api/dashboard/plugins') &&
       !requestPath.endsWith('/api/dashboard/plugins/rescan')
 
-    if (isProtected && !headers.has('Authorization')) {
+    if (includeAuth && isProtected && !headers.has('Authorization')) {
       const auth = await dashboardAuthHeaders({ force: forceToken })
       for (const [key, value] of Object.entries(auth)) {
         headers.set(key, value)
@@ -350,7 +350,7 @@ export async function dashboardFetch(
   let res = await doFetch(false)
   if (res.status === 401) {
     dashboardTokenCache = ''
-    res = await doFetch(true)
+    res = await doFetch(true, true)
   }
   return res
 }

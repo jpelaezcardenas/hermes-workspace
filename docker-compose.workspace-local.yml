@@ -1,0 +1,23 @@
+# Dom-local Workspace development overlay.
+# Builds only the Workspace UI from this checkout while leaving the Hermes
+# Agent/Dashboard runtime wiring in docker-compose.override.yml untouched.
+#
+# Usage:
+#   /usr/local/bin/docker-compose \
+#     -f docker-compose.yml \
+#     -f docker-compose.override.yml \
+#     -f docker-compose.workspace-local.yml \
+#     build hermes-workspace
+#
+#   /usr/local/bin/docker-compose \
+#     -f docker-compose.yml \
+#     -f docker-compose.override.yml \
+#     -f docker-compose.workspace-local.yml \
+#     up -d hermes-workspace
+
+services:
+  hermes-workspace:
+    image: dom/hermes-workspace:local
+    build:
+      context: .
+      dockerfile: Dockerfile

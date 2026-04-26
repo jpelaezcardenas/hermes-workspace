@@ -412,6 +412,15 @@ const config = defineConfig(({ mode, command }) => {
   }
 
   return {
+    test: {
+      // Runtime Docker seed may contain a full workspace copy; never pick up duplicate tests.
+      exclude: [
+        '**/.runtime/**',
+        '**/.output/**',
+        '**/dist/**',
+        '**/node_modules/**',
+      ],
+    },
     define: {
       // Note: Do NOT set 'process.env': {} here — TanStack Start uses environment-based
       // builds where isSsrBuild is unreliable. Blanket process.env replacement breaks
