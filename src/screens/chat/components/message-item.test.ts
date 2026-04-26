@@ -4,6 +4,7 @@ import {
   buildInlineToolRenderPlan,
   compactInlineToolRenderPlan,
   compactToolGroupKey,
+  shouldAutoExpandToolGroup,
   summarizeToolGroup,
 } from './message-item'
 import type { ChatMessage } from '../types'
@@ -171,7 +172,6 @@ describe('summarizeToolGroup', () => {
         { type: 'shell', state: 'input-available' },
         { type: 'read_file', state: 'output-error' },
       ],
-      false,
     )
 
     expect(summary.statusLabel).toBe('1 running')
@@ -179,12 +179,31 @@ describe('summarizeToolGroup', () => {
   })
 
   it('keeps failed status red even if the assistant is still streaming', () => {
-    const summary = summarizeToolGroup(
-      [{ type: 'read_file', state: 'output-error' }],
-      true,
-    )
+    const summary = summarizeToolGroup([{ type: 'read_file', state: 'output-error' }])
 
     expect(summary.statusLabel).toBe('1 failed')
     expect(summary.statusClassName).toBe('text-red-500')
+  })
+})
+
+describe('shouldAutoExpandToolGroup', () => {
+  it('opens when a visible single tool becomes a multi-tool group during streaming', () => {
+    expect(
+      shouldAutoExpandToolGroup({
+        previousCount: 1,
+        nextCount: 2,
+        isStreaming: true,
+      }),
+    ).toBe(true)
+  })
+
+  it('does not reopen a group the user already collapsed later in the stream', () => {
+    expect(
+      shouldAutoExpandToolGroup({
+        previousCount: 2,
+        nextCount: 3,
+        isStreaming: true,
+      }),
+    ).toBe(false)
   })
 })

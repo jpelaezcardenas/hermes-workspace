@@ -243,7 +243,6 @@ export function summarizeToolGroup(
     type: string
     input?: Record<string, unknown>
   }>,
-  isStreaming?: boolean,
 ): {
   runningCount: number
   errorCount: number
@@ -293,6 +292,20 @@ export function summarizeToolGroup(
     statusLabel,
     statusClassName,
   }
+}
+
+export function shouldAutoExpandToolGroup(params: {
+  previousCount: number
+  nextCount: number
+  expandAll?: boolean
+  isStreaming?: boolean
+}): boolean {
+  if (params.expandAll) return true
+  return Boolean(
+    params.isStreaming &&
+      params.previousCount < 2 &&
+      params.nextCount > 1,
+  )
 }
 
 function extractToolResultText(msg: ChatMessage | undefined): string {
@@ -1675,9 +1688,22 @@ function ToolCallGroup({
   isStreaming?: boolean
 }) {
   const [open, setOpen] = useState(Boolean(expandAll))
+  const previousToolCountRef = useRef(toolSections.length)
   useEffect(() => {
-    if (expandAll) setOpen(true)
-  }, [expandAll])
+    const previousCount = previousToolCountRef.current
+    const nextCount = toolSections.length
+    if (
+      shouldAutoExpandToolGroup({
+        previousCount,
+        nextCount,
+        expandAll,
+        isStreaming,
+      })
+    ) {
+      setOpen(true)
+    }
+    previousToolCountRef.current = nextCount
+  }, [expandAll, isStreaming, toolSections.length])
 
   if (toolSections.length > 1) {
     const {
@@ -1685,7 +1711,7 @@ function ToolCallGroup({
       overflowLabel,
       statusLabel,
       statusClassName,
-    } = summarizeToolGroup(toolSections, isStreaming)
+    } = summarizeToolGroup(toolSections)
 
     return (
       <div className="my-3 w-full max-w-[min(100%,700px)] border-l-2 border-primary-200/60 pl-3">
