@@ -35,6 +35,7 @@ import { Route as ApiTerminalCloseRouteImport } from './routes/api/terminal-clos
 import { Route as ApiStartHermesRouteImport } from './routes/api/start-hermes'
 import { Route as ApiStartAgentRouteImport } from './routes/api/start-agent'
 import { Route as ApiSkillsRouteImport } from './routes/api/skills'
+import { Route as ApiSkillCommandsRouteImport } from './routes/api/skill-commands'
 import { Route as ApiSessionsRouteImport } from './routes/api/sessions'
 import { Route as ApiSessionStatusRouteImport } from './routes/api/session-status'
 import { Route as ApiSessionSendRouteImport } from './routes/api/session-send'
@@ -225,6 +226,11 @@ const ApiStartAgentRoute = ApiStartAgentRouteImport.update({
 const ApiSkillsRoute = ApiSkillsRouteImport.update({
   id: '/api/skills',
   path: '/api/skills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSkillCommandsRoute = ApiSkillCommandsRouteImport.update({
+  id: '/api/skill-commands',
+  path: '/api/skill-commands',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSessionsRoute = ApiSessionsRouteImport.update({
@@ -578,6 +584,7 @@ export interface FileRoutesByFullPath {
   '/api/session-send': typeof ApiSessionSendRoute
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
+  '/api/skill-commands': typeof ApiSkillCommandsRoute
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-hermes': typeof ApiStartHermesRoute
@@ -666,6 +673,7 @@ export interface FileRoutesByTo {
   '/api/session-send': typeof ApiSessionSendRoute
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
+  '/api/skill-commands': typeof ApiSkillCommandsRoute
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-hermes': typeof ApiStartHermesRoute
@@ -756,6 +764,7 @@ export interface FileRoutesById {
   '/api/session-send': typeof ApiSessionSendRoute
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
+  '/api/skill-commands': typeof ApiSkillCommandsRoute
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-hermes': typeof ApiStartHermesRoute
@@ -847,6 +856,7 @@ export interface FileRouteTypes {
     | '/api/session-send'
     | '/api/session-status'
     | '/api/sessions'
+    | '/api/skill-commands'
     | '/api/skills'
     | '/api/start-agent'
     | '/api/start-hermes'
@@ -935,6 +945,7 @@ export interface FileRouteTypes {
     | '/api/session-send'
     | '/api/session-status'
     | '/api/sessions'
+    | '/api/skill-commands'
     | '/api/skills'
     | '/api/start-agent'
     | '/api/start-hermes'
@@ -1024,6 +1035,7 @@ export interface FileRouteTypes {
     | '/api/session-send'
     | '/api/session-status'
     | '/api/sessions'
+    | '/api/skill-commands'
     | '/api/skills'
     | '/api/start-agent'
     | '/api/start-hermes'
@@ -1114,6 +1126,7 @@ export interface RootRouteChildren {
   ApiSessionSendRoute: typeof ApiSessionSendRoute
   ApiSessionStatusRoute: typeof ApiSessionStatusRoute
   ApiSessionsRoute: typeof ApiSessionsRouteWithChildren
+  ApiSkillCommandsRoute: typeof ApiSkillCommandsRoute
   ApiSkillsRoute: typeof ApiSkillsRouteWithChildren
   ApiStartAgentRoute: typeof ApiStartAgentRoute
   ApiStartHermesRoute: typeof ApiStartHermesRoute
@@ -1327,6 +1340,13 @@ declare module '@tanstack/react-router' {
       path: '/api/skills'
       fullPath: '/api/skills'
       preLoaderRoute: typeof ApiSkillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/skill-commands': {
+      id: '/api/skill-commands'
+      path: '/api/skill-commands'
+      fullPath: '/api/skill-commands'
+      preLoaderRoute: typeof ApiSkillCommandsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/sessions': {
@@ -1894,6 +1914,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSessionSendRoute: ApiSessionSendRoute,
   ApiSessionStatusRoute: ApiSessionStatusRoute,
   ApiSessionsRoute: ApiSessionsRouteWithChildren,
+  ApiSkillCommandsRoute: ApiSkillCommandsRoute,
   ApiSkillsRoute: ApiSkillsRouteWithChildren,
   ApiStartAgentRoute: ApiStartAgentRoute,
   ApiStartHermesRoute: ApiStartHermesRoute,
