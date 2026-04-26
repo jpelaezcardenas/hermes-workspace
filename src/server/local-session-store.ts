@@ -1,9 +1,22 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
 import { join } from 'node:path'
 
-const DATA_DIR = join(process.cwd(), '.runtime')
+const HERMES_HOME =
+  process.env.HERMES_HOME?.trim() || join(homedir(), '.hermes')
+const DATA_DIR = join(HERMES_HOME, 'workspace')
 const SESSIONS_FILE = join(DATA_DIR, 'local-sessions.json')
+const LEGACY_SESSIONS_FILE = join(process.cwd(), '.runtime', 'local-sessions.json')
 const MAX_MESSAGES_PER_SESSION = 500
+
+export type LocalToolCall = {
+  id?: string
+  name?: string
+  phase?: string
+  args?: unknown
+  preview?: string
+  result?: string
+}
 
 export type LocalSession = {
   id: string
@@ -19,7 +32,7 @@ export type LocalMessage = {
   role: string
   content: string
   timestamp: number
-  toolCalls?: unknown
+  toolCalls?: Array<LocalToolCall>
   toolCallId?: string
   toolName?: string
 }
@@ -33,8 +46,14 @@ let store: StoreData = { sessions: {}, messages: {} }
 
 function loadFromDisk(): void {
   try {
-    if (existsSync(SESSIONS_FILE)) {
-      const raw = readFileSync(SESSIONS_FILE, 'utf-8')
+    const targetFile = existsSync(SESSIONS_FILE)
+      ? SESSIONS_FILE
+      : existsSync(LEGACY_SESSIONS_FILE)
+        ? LEGACY_SESSIONS_FILE
+        : null
+
+    if (targetFile) {
+      const raw = readFileSync(targetFile, 'utf-8')
       const parsed = JSON.parse(raw) as StoreData
       if (parsed.sessions && parsed.messages) {
         store = parsed
@@ -97,7 +116,10 @@ export function updateLocalSessionTitle(
 
 export function touchLocalSession(sessionId: string): void {
   const session = store.sessions[sessionId]
-  if (session) session.updatedAt = Date.now()
+  if (session) {
+    session.updatedAt = Date.now()
+    saveToDisk()
+  }
 }
 
 export function deleteLocalSession(sessionId: string): void {
@@ -127,14 +149,5 @@ export function appendLocalMessage(
     session.messageCount = store.messages[sessionId].length
     session.updatedAt = Date.now()
   }
-  scheduleSave()
-}
-
-let saveTimer: ReturnType<typeof setTimeout> | null = null
-function scheduleSave(): void {
-  if (saveTimer) return
-  saveTimer = setTimeout(() => {
-    saveTimer = null
-    saveToDisk()
-  }, 2000)
+  saveToDisk()
 }

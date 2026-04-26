@@ -8,7 +8,12 @@ import {
   unregisterActiveSendRun,
 } from '../../server/send-run-tracker'
 import { getChatMode } from '../../server/gateway-capabilities'
-import { ensureLocalSession, appendLocalMessage, getLocalMessages, touchLocalSession } from '../../server/local-session-store'
+import {
+  ensureLocalSession,
+  appendLocalMessage,
+  getLocalMessages,
+  touchLocalSession,
+} from '../../server/local-session-store'
 import { getLocalProviderDef, getDiscoveredModels } from '../../server/local-provider-discovery'
 import {
   
@@ -264,6 +269,44 @@ function getToolResultPreview(data: Record<string, unknown>): string {
   }
 }
 
+type PortableToolCall = {
+  id: string
+  name: string
+  phase: string
+  args?: unknown
+  preview?: string
+  result?: string
+}
+
+function upsertPortableToolCall(
+  toolCalls: Array<PortableToolCall>,
+  nextToolCall: PortableToolCall,
+): void {
+  const existingIndex = toolCalls.findIndex(
+    (toolCall) => toolCall.id === nextToolCall.id,
+  )
+  if (existingIndex >= 0) {
+    toolCalls[existingIndex] = {
+      ...toolCalls[existingIndex],
+      ...nextToolCall,
+      args:
+        nextToolCall.args === undefined
+          ? toolCalls[existingIndex]?.args
+          : nextToolCall.args,
+      preview:
+        nextToolCall.preview === undefined
+          ? toolCalls[existingIndex]?.preview
+          : nextToolCall.preview,
+      result:
+        nextToolCall.result === undefined
+          ? toolCalls[existingIndex]?.result
+          : nextToolCall.result,
+    }
+    return
+  }
+  toolCalls.push(nextToolCall)
+}
+
 export const Route = createFileRoute('/api/send-stream')({
   server: {
     handlers: {
@@ -412,6 +455,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   rawSessionKey ||
                   portableSessionKey
                 let accumulated = ''
+                const toolCalls: Array<PortableToolCall> = []
 
                 activeRunId = runId
                 registerActiveSendRun(runId)
@@ -485,10 +529,17 @@ export const Route = createFileRoute('/api/send-stream')({
                       })
                     } else if (chunk.type === 'tool') {
                       toolEventCount += 1
+                      const toolCallId = `${runId}:${chunk.name}:${toolEventCount}`
+                      upsertPortableToolCall(toolCalls, {
+                        id: toolCallId,
+                        name: chunk.name,
+                        phase: 'calling',
+                        preview: chunk.label,
+                      })
                       sendEvent('tool', {
                         phase: 'start',
                         name: chunk.name,
-                        toolCallId: `${runId}:${chunk.name}:${toolEventCount}`,
+                        toolCallId,
                         preview: chunk.label,
                         sessionKey: portableSessionKey,
                         runId,
@@ -505,11 +556,16 @@ export const Route = createFileRoute('/api/send-stream')({
                   }
 
                   // Persist assistant response to local session store
+                  const completedToolCalls = toolCalls.map((toolCall) => ({
+                    ...toolCall,
+                    phase: toolCall.phase === 'error' ? 'error' : 'complete',
+                  }))
                   appendLocalMessage(portableSessionKey, {
                     id: crypto.randomUUID(),
                     role: 'assistant',
                     content: accumulated,
                     timestamp: Date.now(),
+                    toolCalls: completedToolCalls,
                   })
                   touchLocalSession(portableSessionKey)
 
