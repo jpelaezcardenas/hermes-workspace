@@ -312,6 +312,26 @@ export function resetPortableToolCallTracker(
   tracker.lastToolCallId = null
 }
 
+export function buildPortableDoneMessage(
+  accumulated: string,
+  thinking: string,
+  toolCalls: Array<PortableToolCall>,
+): Record<string, unknown> {
+  return {
+    role: 'assistant',
+    content: [
+      ...(thinking ? [{ type: 'thinking', thinking }] : []),
+      { type: 'text', text: accumulated },
+    ],
+    ...(toolCalls.length > 0
+      ? {
+          streamToolCalls: toolCalls,
+          __streamToolCalls: toolCalls,
+        }
+      : {}),
+  }
+}
+
 function upsertPortableToolCall(
   toolCalls: Array<PortableToolCall>,
   nextToolCall: PortableToolCall,
@@ -616,13 +636,11 @@ export const Route = createFileRoute('/api/send-stream')({
                     state: 'complete',
                     sessionKey: portableSessionKey,
                     runId,
-                    message: {
-                      role: 'assistant',
-                      content: [
-                        ...(thinking ? [{ type: 'thinking', thinking }] : []),
-                        { type: 'text', text: accumulated },
-                      ],
-                    },
+                    message: buildPortableDoneMessage(
+                      accumulated,
+                      thinking,
+                      completedToolCalls,
+                    ),
                   })
                   closeStream()
                 } catch (err) {

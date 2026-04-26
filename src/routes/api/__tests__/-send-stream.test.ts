@@ -102,3 +102,41 @@ describe('assignPortableToolCallId', () => {
     expect(second).not.toBe(first)
   })
 })
+
+describe('buildPortableDoneMessage', () => {
+  it('keeps completed tool activity on the final portable message', async () => {
+    const { buildPortableDoneMessage } = await import('../send-stream')
+
+    const message = buildPortableDoneMessage('Done', 'Thinking', [
+      {
+        id: 'tool-1',
+        name: 'shell',
+        phase: 'complete',
+        preview: 'ls -la',
+        result: 'file-a',
+      },
+    ])
+
+    expect(message).toMatchObject({
+      role: 'assistant',
+      streamToolCalls: [
+        {
+          id: 'tool-1',
+          name: 'shell',
+          phase: 'complete',
+          preview: 'ls -la',
+          result: 'file-a',
+        },
+      ],
+      __streamToolCalls: [
+        {
+          id: 'tool-1',
+          name: 'shell',
+          phase: 'complete',
+          preview: 'ls -la',
+          result: 'file-a',
+        },
+      ],
+    })
+  })
+})

@@ -4,6 +4,7 @@ import {
   buildInlineToolRenderPlan,
   compactInlineToolRenderPlan,
   compactToolGroupKey,
+  summarizeToolGroup,
 } from './message-item'
 import type { ChatMessage } from '../types'
 
@@ -160,5 +161,20 @@ describe('compactToolGroupKey', () => {
 
     expect(initialKey).toBe('tc-1')
     expect(expandedKey).toBe('tc-1')
+  })
+})
+
+describe('summarizeToolGroup', () => {
+  it('keeps running status text and color aligned when mixed states exist', () => {
+    const summary = summarizeToolGroup(
+      [
+        { type: 'shell', state: 'input-available' },
+        { type: 'read_file', state: 'output-error' },
+      ],
+      false,
+    )
+
+    expect(summary.statusLabel).toBe('1 running')
+    expect(summary.statusClassName).toBe('text-indigo-500')
   })
 })

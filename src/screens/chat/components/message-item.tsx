@@ -237,6 +237,64 @@ export function compactToolGroupKey(
   return sections[0]?.key || `tools-${index}`
 }
 
+export function summarizeToolGroup(
+  toolSections: Array<{
+    state: string
+    type: string
+    input?: Record<string, unknown>
+  }>,
+  isStreaming?: boolean,
+): {
+  runningCount: number
+  errorCount: number
+  doneCount: number
+  visibleLabels: string
+  overflowLabel: string
+  statusLabel: string
+  statusClassName: string
+} {
+  const runningCount = toolSections.filter(
+    (section) =>
+      section.state === 'input-available' ||
+      section.state === 'input-streaming',
+  ).length
+  const errorCount = toolSections.filter(
+    (section) => section.state === 'output-error',
+  ).length
+  const doneCount = toolSections.length - runningCount - errorCount
+  const labels = Array.from(
+    new Set(
+      toolSections.map((section) =>
+        formatToolDisplayLabel(section.type, section.input),
+      ),
+    ),
+  )
+  const visibleLabels = labels.slice(0, 3).join(', ')
+  const overflowLabel = labels.length > 3 ? ` +${labels.length - 3} more` : ''
+  const statusLabel =
+    runningCount > 0
+      ? `${runningCount} running`
+      : errorCount > 0
+        ? `${errorCount} failed`
+        : `${doneCount} done`
+  const statusClassName =
+    runningCount > 0 || isStreaming
+      ? 'text-indigo-500'
+      : errorCount > 0
+        ? 'text-red-500'
+        : 'text-green-600'
+
+  return {
+    runningCount,
+    errorCount,
+    doneCount,
+    visibleLabels,
+    overflowLabel,
+    statusLabel,
+    statusClassName,
+  }
+}
+
 function extractToolResultText(msg: ChatMessage | undefined): string {
   if (!msg) return ''
   // Prefer text from content blocks (exec stdout, Read output, etc.)
@@ -1622,18 +1680,12 @@ function ToolCallGroup({
   }, [expandAll])
 
   if (toolSections.length > 1) {
-    const runningCount = toolSections.filter((section) => section.state === 'input-available' || section.state === 'input-streaming').length
-    const errorCount = toolSections.filter((section) => section.state === 'output-error').length
-    const doneCount = toolSections.length - runningCount - errorCount
-    const labels = Array.from(new Set(toolSections.map((section) => formatToolDisplayLabel(section.type, section.input))))
-    const visibleLabels = labels.slice(0, 3).join(', ')
-    const overflowLabel = labels.length > 3 ? ` +${labels.length - 3} more` : ''
-    const statusLabel =
-      runningCount > 0
-        ? `${runningCount} running`
-        : errorCount > 0
-          ? `${errorCount} failed`
-          : `${doneCount} done`
+    const {
+      visibleLabels,
+      overflowLabel,
+      statusLabel,
+      statusClassName,
+    } = summarizeToolGroup(toolSections, isStreaming)
 
     return (
       <div className="my-3 w-full max-w-[min(100%,700px)] border-l-2 border-primary-200/60 pl-3">
@@ -1653,11 +1705,7 @@ function ToolCallGroup({
           <span
             className={cn(
               'shrink-0 text-[10px] tabular-nums',
-              errorCount > 0
-                ? 'text-red-500'
-                : runningCount > 0 || isStreaming
-                  ? 'text-indigo-500'
-                  : 'text-green-600',
+              statusClassName,
             )}
           >
             {statusLabel}
