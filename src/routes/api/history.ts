@@ -10,7 +10,57 @@ import {
 } from '../../server/hermes-api'
 import { resolveSessionKey } from '../../server/session-utils'
 import { isAuthenticated } from '@/server/auth-middleware'
-import { getLocalSession, getLocalMessages } from '../../server/local-session-store'
+import {
+  getLocalSession,
+  getLocalMessages,
+  type LocalMessage,
+  type LocalToolCall,
+} from '../../server/local-session-store'
+
+function normalizeLocalToolCalls(value: unknown): Array<LocalToolCall> {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter(
+      (entry): entry is LocalToolCall =>
+        Boolean(entry) && typeof entry === 'object',
+    )
+    .map((entry) => ({
+      id: typeof entry.id === 'string' ? entry.id : undefined,
+      name: typeof entry.name === 'string' ? entry.name : 'tool',
+      phase: typeof entry.phase === 'string' ? entry.phase : 'complete',
+      args: entry.args,
+      preview: typeof entry.preview === 'string' ? entry.preview : undefined,
+      result: typeof entry.result === 'string' ? entry.result : undefined,
+    }))
+}
+
+function toLocalChatMessage(
+  sessionKey: string,
+  message: LocalMessage,
+  historyIndex: number,
+) {
+  const streamToolCalls = normalizeLocalToolCalls(message.toolCalls)
+  const content = message.content
+    ? [{ type: 'text', text: message.content }]
+    : []
+
+  return {
+    id: `msg-${message.id}`,
+    role: message.role,
+    content,
+    text: message.content,
+    timestamp: message.timestamp,
+    createdAt: new Date(message.timestamp).toISOString(),
+    sessionKey,
+    __historyIndex: historyIndex,
+    ...(streamToolCalls.length > 0
+      ? {
+          streamToolCalls,
+          __streamToolCalls: streamToolCalls,
+        }
+      : {}),
+  }
+}
 
 export const Route = createFileRoute('/api/history')({
   server: {
@@ -106,13 +156,9 @@ export const Route = createFileRoute('/api/history')({
               return json({
                 sessionKey,
                 sessionId: sessionKey,
-                messages: localMessages.map((m, index) => ({
-                  id: m.id,
-                  role: m.role,
-                  content: [{ type: 'text', text: m.content }],
-                  timestamp: m.timestamp,
-                  historyIndex: index,
-                })),
+                messages: localMessages.map((message, index) =>
+                  toLocalChatMessage(sessionKey, message, index),
+                ),
               })
             }
           }

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildInlineToolRenderPlan } from './message-item'
+import {
+  buildInlineToolRenderPlan,
+  compactInlineToolRenderPlan,
+  compactToolGroupKey,
+  shouldAutoExpandToolGroup,
+  summarizeToolGroup,
+} from './message-item'
 import type { ChatMessage } from '../types'
 
 describe('buildInlineToolRenderPlan', () => {
@@ -44,5 +50,160 @@ describe('buildInlineToolRenderPlan', () => {
       },
       { kind: 'text', text: 'After tool.' },
     ])
+  })
+})
+
+describe('compactInlineToolRenderPlan', () => {
+  it('stacks consecutive tool calls without moving surrounding text', () => {
+    const plan = compactInlineToolRenderPlan([
+      { kind: 'text', text: 'Before. ' },
+      {
+        kind: 'tool',
+        section: {
+          key: 'tc-1',
+          type: 'read_file',
+          outputText: '',
+          state: 'output-available',
+        },
+      },
+      {
+        kind: 'tool',
+        section: {
+          key: 'tc-2',
+          type: 'search_files',
+          outputText: '',
+          state: 'output-available',
+        },
+      },
+      { kind: 'text', text: 'After.' },
+    ])
+
+    expect(plan).toEqual([
+      { kind: 'text', text: 'Before. ' },
+      {
+        kind: 'tools',
+        sections: [
+          {
+            key: 'tc-1',
+            type: 'read_file',
+            outputText: '',
+            state: 'output-available',
+          },
+          {
+            key: 'tc-2',
+            type: 'search_files',
+            outputText: '',
+            state: 'output-available',
+          },
+        ],
+      },
+      { kind: 'text', text: 'After.' },
+    ])
+  })
+
+  it('keeps separate stacks when text appears between tool calls', () => {
+    const plan = compactInlineToolRenderPlan([
+      {
+        kind: 'tool',
+        section: {
+          key: 'tc-1',
+          type: 'read_file',
+          outputText: '',
+          state: 'output-available',
+        },
+      },
+      { kind: 'text', text: 'Then ' },
+      {
+        kind: 'tool',
+        section: {
+          key: 'tc-2',
+          type: 'search_files',
+          outputText: '',
+          state: 'output-available',
+        },
+      },
+    ])
+
+    expect(plan).toEqual([
+      {
+        kind: 'tools',
+        sections: [
+          {
+            key: 'tc-1',
+            type: 'read_file',
+            outputText: '',
+            state: 'output-available',
+          },
+        ],
+      },
+      { kind: 'text', text: 'Then ' },
+      {
+        kind: 'tools',
+        sections: [
+          {
+            key: 'tc-2',
+            type: 'search_files',
+            outputText: '',
+            state: 'output-available',
+          },
+        ],
+      },
+    ])
+  })
+})
+
+describe('compactToolGroupKey', () => {
+  it('stays anchored to the first section when a compacted group grows', () => {
+    const initialKey = compactToolGroupKey([{ key: 'tc-1' }], 0)
+    const expandedKey = compactToolGroupKey(
+      [{ key: 'tc-1' }, { key: 'tc-2' }],
+      0,
+    )
+
+    expect(initialKey).toBe('tc-1')
+    expect(expandedKey).toBe('tc-1')
+  })
+})
+
+describe('summarizeToolGroup', () => {
+  it('keeps running status text and color aligned when mixed states exist', () => {
+    const summary = summarizeToolGroup(
+      [
+        { type: 'shell', state: 'input-available' },
+        { type: 'read_file', state: 'output-error' },
+      ],
+    )
+
+    expect(summary.statusLabel).toBe('1 running')
+    expect(summary.statusClassName).toBe('text-indigo-500')
+  })
+
+  it('keeps failed status red even if the assistant is still streaming', () => {
+    const summary = summarizeToolGroup([{ type: 'read_file', state: 'output-error' }])
+
+    expect(summary.statusLabel).toBe('1 failed')
+    expect(summary.statusClassName).toBe('text-red-500')
+  })
+})
+
+describe('shouldAutoExpandToolGroup', () => {
+  it('opens when a visible single tool becomes a multi-tool group during streaming', () => {
+    expect(
+      shouldAutoExpandToolGroup({
+        previousCount: 1,
+        nextCount: 2,
+        isStreaming: true,
+      }),
+    ).toBe(true)
+  })
+
+  it('does not reopen a group the user already collapsed later in the stream', () => {
+    expect(
+      shouldAutoExpandToolGroup({
+        previousCount: 2,
+        nextCount: 3,
+        isStreaming: true,
+      }),
+    ).toBe(false)
   })
 })

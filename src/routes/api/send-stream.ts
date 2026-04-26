@@ -8,7 +8,11 @@ import {
   unregisterActiveSendRun,
 } from '../../server/send-run-tracker'
 import { getChatMode } from '../../server/gateway-capabilities'
-import { ensureLocalSession, appendLocalMessage, getLocalMessages, touchLocalSession } from '../../server/local-session-store'
+import {
+  ensureLocalSession,
+  appendLocalMessage,
+  getLocalMessages,
+} from '../../server/local-session-store'
 import { getLocalProviderDef, getDiscoveredModels } from '../../server/local-provider-discovery'
 import {
   
@@ -264,6 +268,99 @@ function getToolResultPreview(data: Record<string, unknown>): string {
   }
 }
 
+type PortableToolCall = {
+  id: string
+  name: string
+  phase: string
+  args?: unknown
+  preview?: string
+  result?: string
+}
+
+type PortableToolCallTracker = {
+  lastSignature: string | null
+  lastToolCallId: string | null
+  sequence: number
+}
+
+function getPortableToolSignature(name: string, label: string): string {
+  return `${name}\u0000${label}`
+}
+
+export function assignPortableToolCallId(
+  tracker: PortableToolCallTracker,
+  runId: string,
+  name: string,
+  label: string,
+): string {
+  const signature = getPortableToolSignature(name, label)
+  if (tracker.lastSignature === signature && tracker.lastToolCallId) {
+    return tracker.lastToolCallId
+  }
+
+  tracker.sequence += 1
+  const toolCallId = `${runId}:${name}:${tracker.sequence}`
+  tracker.lastSignature = signature
+  tracker.lastToolCallId = toolCallId
+  return toolCallId
+}
+
+export function resetPortableToolCallTracker(
+  tracker: PortableToolCallTracker,
+): void {
+  tracker.lastSignature = null
+  tracker.lastToolCallId = null
+}
+
+export function buildPortableDoneMessage(
+  accumulated: string,
+  thinking: string,
+  toolCalls: Array<PortableToolCall>,
+): Record<string, unknown> {
+  return {
+    role: 'assistant',
+    content: [
+      ...(thinking ? [{ type: 'thinking', thinking }] : []),
+      { type: 'text', text: accumulated },
+    ],
+    ...(toolCalls.length > 0
+      ? {
+          streamToolCalls: toolCalls,
+          __streamToolCalls: toolCalls,
+        }
+      : {}),
+  }
+}
+
+function upsertPortableToolCall(
+  toolCalls: Array<PortableToolCall>,
+  nextToolCall: PortableToolCall,
+): void {
+  const existingIndex = toolCalls.findIndex(
+    (toolCall) => toolCall.id === nextToolCall.id,
+  )
+  if (existingIndex >= 0) {
+    toolCalls[existingIndex] = {
+      ...toolCalls[existingIndex],
+      ...nextToolCall,
+      args:
+        nextToolCall.args === undefined
+          ? toolCalls[existingIndex]?.args
+          : nextToolCall.args,
+      preview:
+        nextToolCall.preview === undefined
+          ? toolCalls[existingIndex]?.preview
+          : nextToolCall.preview,
+      result:
+        nextToolCall.result === undefined
+          ? toolCalls[existingIndex]?.result
+          : nextToolCall.result,
+    }
+    return
+  }
+  toolCalls.push(nextToolCall)
+}
+
 export const Route = createFileRoute('/api/send-stream')({
   server: {
     handlers: {
@@ -412,6 +509,12 @@ export const Route = createFileRoute('/api/send-stream')({
                   rawSessionKey ||
                   portableSessionKey
                 let accumulated = ''
+                const toolCalls: Array<PortableToolCall> = []
+                const toolCallTracker: PortableToolCallTracker = {
+                  lastSignature: null,
+                  lastToolCallId: null,
+                  sequence: 0,
+                }
 
                 activeRunId = runId
                 registerActiveSendRun(runId)
@@ -474,9 +577,9 @@ export const Route = createFileRoute('/api/send-stream')({
                   })
 
                   let thinking = ''
-                  let toolEventCount = 0
                   for await (const chunk of stream) {
                     if (chunk.type === 'reasoning') {
+                      resetPortableToolCallTracker(toolCallTracker)
                       thinking += chunk.text
                       sendEvent('thinking', {
                         text: thinking,
@@ -484,16 +587,28 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       })
                     } else if (chunk.type === 'tool') {
-                      toolEventCount += 1
+                      const toolCallId = assignPortableToolCallId(
+                        toolCallTracker,
+                        runId,
+                        chunk.name,
+                        chunk.label,
+                      )
+                      upsertPortableToolCall(toolCalls, {
+                        id: toolCallId,
+                        name: chunk.name,
+                        phase: 'calling',
+                        preview: chunk.label,
+                      })
                       sendEvent('tool', {
                         phase: 'start',
                         name: chunk.name,
-                        toolCallId: `${runId}:${chunk.name}:${toolEventCount}`,
+                        toolCallId,
                         preview: chunk.label,
                         sessionKey: portableSessionKey,
                         runId,
                       })
                     } else {
+                      resetPortableToolCallTracker(toolCallTracker)
                       accumulated += chunk.text
                       sendEvent('chunk', {
                         text: accumulated,
@@ -505,25 +620,27 @@ export const Route = createFileRoute('/api/send-stream')({
                   }
 
                   // Persist assistant response to local session store
+                  const completedToolCalls = toolCalls.map((toolCall) => ({
+                    ...toolCall,
+                    phase: toolCall.phase === 'error' ? 'error' : 'complete',
+                  }))
                   appendLocalMessage(portableSessionKey, {
                     id: crypto.randomUUID(),
                     role: 'assistant',
                     content: accumulated,
                     timestamp: Date.now(),
+                    toolCalls: completedToolCalls,
                   })
-                  touchLocalSession(portableSessionKey)
 
                   sendEvent('done', {
                     state: 'complete',
                     sessionKey: portableSessionKey,
                     runId,
-                    message: {
-                      role: 'assistant',
-                      content: [
-                        ...(thinking ? [{ type: 'thinking', thinking }] : []),
-                        { type: 'text', text: accumulated },
-                      ],
-                    },
+                    message: buildPortableDoneMessage(
+                      accumulated,
+                      thinking,
+                      completedToolCalls,
+                    ),
                   })
                   closeStream()
                 } catch (err) {
