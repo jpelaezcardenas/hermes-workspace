@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse, json, os, subprocess, sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LEGACY = ROOT / 'legacy' / 'abm-manager'
+ACTIVE = ROOT / 'active'
+OUTPUT = ROOT / 'output'
+RUN_SMOKE = ACTIVE / 'runtime-scripts' / 'run_smoke.py'
+RUN_GOLDEN = ACTIVE / 'runtime-scripts' / 'run_golden.py'
+RUN_QA = ACTIVE / 'runtime-scripts' / 'run_qa.py'
+SCRIPT_MAP = {
+    'status': None,
+    'smoke': RUN_SMOKE,
+    'golden-regressions': RUN_GOLDEN,
+    'final-qa': RUN_QA,
+    'run-pipeline': LEGACY / 'scripts' / 'run_pipeline.py',
+    'abm-for-rep': LEGACY / 'scripts' / 'abm_for_rep.py',
+    'research-account': LEGACY / 'scripts' / 'research_account.py',
+    'generate-sequences': LEGACY / 'scripts' / 'generate_sequences.py',
+}
+
+def ensure_layout():
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    ACTIVE.mkdir(parents=True, exist_ok=True)
+    RUN_SMOKE.parent.mkdir(parents=True, exist_ok=True)
+    RUN_GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+    RUN_QA.parent.mkdir(parents=True, exist_ok=True)
+    if not LEGACY.exists():
+        raise SystemExit(f'missing legacy source: {LEGACY}')
+
+def run(script, args):
+    ensure_layout()
+    env = os.environ.copy()
+    env.setdefault('ABM_MANAGER_HOME', str(ROOT))
+    env['PYTHONPATH'] = f"{LEGACY / 'scripts'}:{env.get('PYTHONPATH','')}"
+    return subprocess.call([sys.executable, str(script), *args], cwd=str(LEGACY), env=env)
+
+def cmd_status(_):
+    ensure_layout()
+    payload = {
+        'agent': 'abm-manager',
+        'root': str(ROOT),
+        'legacy_root': str(LEGACY),
+        'commands': sorted(k for k in SCRIPT_MAP if k != 'status'),
+        'surfaces': {
+            'legacy_files': sum(1 for _ in LEGACY.rglob('*')),
+            'runtime_scripts': sum(1 for _ in (ACTIVE / 'runtime-scripts').rglob('*.py')),
+        },
+    }
+    print(json.dumps(payload, indent=2))
+    return 0
+
+def cmd_smoke(_):
+    ensure_layout()
+    script_checks = []
+    for name, script in SCRIPT_MAP.items():
+        if not script:
+            continue
+        script_checks.append({'command': name, 'script': str(script), 'exists': script.exists()})
+    py_files = [p for p in [LEGACY/'scripts'/'run_pipeline.py', LEGACY/'scripts'/'abm_for_rep.py', LEGACY/'scripts'/'research_account.py', LEGACY/'scripts'/'generate_sequences.py', LEGACY/'scripts'/'credentials.py'] if p.exists()]
+    proc = subprocess.run([sys.executable, '-m', 'py_compile', *map(str, py_files)], cwd=str(ROOT), text=True, capture_output=True)
+    payload = {'agent':'abm-manager','script_checks':script_checks,'compiled':proc.returncode==0,'compile_stdout':proc.stdout,'compile_stderr':proc.stderr}
+    print(json.dumps(payload, indent=2))
+    return proc.returncode
+
+def main():
+    parser = argparse.ArgumentParser(prog='abm-manager')
+    sub = parser.add_subparsers(dest='cmd', required=True)
+    sub.add_parser('status')
+    sub.add_parser('smoke')
+    sub.add_parser('golden-regressions')
+    sub.add_parser('final-qa')
+    ns, rest = parser.parse_known_args()
+    if ns.cmd == 'status': return cmd_status(ns)
+    if ns.cmd == 'smoke': return cmd_smoke(ns)
+    if ns.cmd == 'golden-regressions': return run(RUN_GOLDEN, rest)
+    if ns.cmd == 'final-qa': return run(RUN_QA, rest)
+    return 2
+
+if __name__ == '__main__':
+    raise SystemExit(main())

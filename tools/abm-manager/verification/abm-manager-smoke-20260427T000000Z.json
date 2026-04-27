@@ -1,0 +1,43 @@
+{
+  "agent": "abm-manager",
+  "script_checks": [
+    {
+      "command": "smoke",
+      "script": "/root/hermes-workspace/tools/abm-manager/active/runtime-scripts/run_smoke.py",
+      "exists": true
+    },
+    {
+      "command": "golden-regressions",
+      "script": "/root/hermes-workspace/tools/abm-manager/active/runtime-scripts/run_golden.py",
+      "exists": true
+    },
+    {
+      "command": "final-qa",
+      "script": "/root/hermes-workspace/tools/abm-manager/active/runtime-scripts/run_qa.py",
+      "exists": true
+    },
+    {
+      "command": "run-pipeline",
+      "script": "/root/hermes-workspace/tools/abm-manager/legacy/abm-manager/scripts/run_pipeline.py",
+      "exists": true
+    },
+    {
+      "command": "abm-for-rep",
+      "script": "/root/hermes-workspace/tools/abm-manager/legacy/abm-manager/scripts/abm_for_rep.py",
+      "exists": true
+    },
+    {
+      "command": "research-account",
+      "script": "/root/hermes-workspace/tools/abm-manager/legacy/abm-manager/scripts/research_account.py",
+      "exists": true
+    },
+    {
+      "command": "generate-sequences",
+      "script": "/root/hermes-workspace/tools/abm-manager/legacy/abm-manager/scripts/generate_sequences.py",
+      "exists": true
+    }
+  ],
+  "compiled": true,
+  "compile_stdout": "",
+  "compile_stderr": ""
+}
