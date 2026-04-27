@@ -233,3 +233,5 @@
 - 2026-04-08T17:34:14Z | markdown_to_docx | gyan_pvara-application_2026-04-08/pvara-application.docx | model=unknown | failover=not-triggered
 - 2026-04-27T13:33:20Z | markdown_to_docx | smoke/smoke.docx | model=unknown | failover=not-triggered
 - 2026-04-27T13:34:12Z | csv_to_xlsx | smoke/questionnaire.xlsx | model=unknown | failover=not-triggered
+- 2026-04-27T13:46:27Z | markdown_to_docx | golden-20260427T134626Z/technical-compact.docx | model=unknown | failover=not-triggered
+- 2026-04-27T13:46:30Z | csv_to_xlsx | golden-20260427T134626Z/questionnaire-template.xlsx | model=unknown | failover=not-triggered

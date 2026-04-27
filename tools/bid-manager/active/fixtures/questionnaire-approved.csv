@@ -1,0 +1,2 @@
+Ref #,Category,Sub-Category,Question / Requirement,SettleMint Response,Status,Evidence / Reference,Notes
+Q1,Platform,Tokenization,Does the platform support EVM tokenization?,Yes. DALP supports EVM-based tokenization workflows.,Supported,DALP canon,Golden regression fixture
