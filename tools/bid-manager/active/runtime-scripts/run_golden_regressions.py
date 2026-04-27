@@ -80,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     cases.append(run_case("validator_generic_compact_expected_fail_visuals", [str(WRAPPER), "validate", str(generic_md), "compact", "--json"], expect_fail=True))
     cases.append(run_case("rfp_forge_generate_mea", [str(WRAPPER), "forge-generate-mea"]))
     cases.append(run_case("compact_forge_to_bid_checker_e2e", [str(WRAPPER), "e2e-regression", "--json"]))
+    cases.append(run_case("full_technical_commercial_render_regression", [str(WRAPPER), "full-regression", "--json"]))
 
     unexpected = [c for c in cases if not c["passed"]]
     payload = {

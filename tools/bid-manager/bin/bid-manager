@@ -29,6 +29,7 @@ SCRIPT_MAP = {
     "skeleton-audit": ACTIVE / "runtime-scripts" / "run_skeleton_audit.py",
     "golden-regressions": ACTIVE / "runtime-scripts" / "run_golden_regressions.py",
     "e2e-regression": ACTIVE / "runtime-scripts" / "run_e2e_regression.py",
+    "full-regression": ACTIVE / "runtime-scripts" / "run_full_regression.py",
     "md-to-docx": BID / "scripts" / "markdown_to_docx.py",
     "docx-to-md": BID / "scripts" / "docx_to_markdown.py",
     "xlsx-to-csv": BID / "scripts" / "xlsx_to_csv.py",
@@ -146,12 +147,7 @@ def cmd_smoke(_: argparse.Namespace) -> int:
     py_files.extend(str(p) for p in shared_helpers if p.exists())
     compile_cmd = [sys.executable, "-m", "py_compile", *py_files]
     proc = subprocess.run(compile_cmd, cwd=str(ROOT), text=True, capture_output=True)
-    known_legacy_regressions = [
-        {
-            "script": str(FORGE / "scripts" / "generate_mea_docs.py"),
-            "reason": "Preserved legacy helper has a syntax error and is not exposed by the active bid-manager wrapper yet.",
-        }
-    ]
+    known_legacy_regressions = []
     payload = {
         "agent": "bid-manager",
         "script_checks": checks,

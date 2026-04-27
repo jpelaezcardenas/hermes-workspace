@@ -1,0 +1,86 @@
+{
+  "agent": "bid-manager",
+  "script_checks": [
+    {
+      "command": "skeleton-audit",
+      "script": "/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_skeleton_audit.py",
+      "exists": true
+    },
+    {
+      "command": "golden-regressions",
+      "script": "/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_golden_regressions.py",
+      "exists": true
+    },
+    {
+      "command": "e2e-regression",
+      "script": "/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_e2e_regression.py",
+      "exists": true
+    },
+    {
+      "command": "full-regression",
+      "script": "/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_full_regression.py",
+      "exists": true
+    },
+    {
+      "command": "md-to-docx",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py",
+      "exists": true
+    },
+    {
+      "command": "docx-to-md",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/docx_to_markdown.py",
+      "exists": true
+    },
+    {
+      "command": "xlsx-to-csv",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/xlsx_to_csv.py",
+      "exists": true
+    },
+    {
+      "command": "csv-to-xlsx",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/csv_to_xlsx.py",
+      "exists": true
+    },
+    {
+      "command": "validate",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/validate_proposal.py",
+      "exists": true
+    },
+    {
+      "command": "render-mermaid",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/mermaid_to_images.py",
+      "exists": true
+    },
+    {
+      "command": "render-plantuml",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/plantuml_to_images.py",
+      "exists": true
+    },
+    {
+      "command": "check-proposal",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-checker/scripts/validate_proposal.py",
+      "exists": true
+    },
+    {
+      "command": "forge-generate-mea",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/scripts/generate_mea_docs.py",
+      "exists": true
+    },
+    {
+      "command": "forge-extract",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/scripts/extract-rfp.py",
+      "exists": true
+    },
+    {
+      "command": "forge-write",
+      "script": "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/scripts/write-response.py",
+      "exists": true
+    }
+  ],
+  "python_files_compiled": 19,
+  "compile_exit_code": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "known_legacy_regressions": [],
+  "ok": true
+}
