@@ -1,0 +1,39 @@
+%% DALP on-chain smart contract architecture.
+%% Use in smart contract design, token architecture, and extensibility sections.
+%% Keep the five-layer structure intact; add asset-specific addons only when they are in scope.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TB
+    SMART[SMART Protocol]
+    GLOBAL[Global Layer]
+    SYSTEM[System Layer]
+    ASSET[Asset Layer]
+    ADDON[Feature / Addon Layer]
+
+    SMART --> GLOBAL --> SYSTEM --> ASSET --> ADDON
+
+    SMARTC[ERC-3643 Token\nCompliance Engine\nOnchainID]
+    GLOBALC[Central Directory\nIdentity Factory\nIdentity Implementations]
+    SYSTEMC[Identity Registry\nCompliance Orchestration\nAccessManager\nFactory Registries]
+    ASSETC[DALPAsset\nBond\nEquity\nFund\nDeposit\nStableCoin]
+    ADDONC[Airdrop\nVault\nXvP Settlement\nToken Sale\nYield\n[CLIENT: Asset Addon]]
+
+    SMART --- SMARTC
+    GLOBAL --- GLOBALC
+    SYSTEM --- SYSTEMC
+    ASSET --- ASSETC
+    ADDON --- ADDONC
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+
+    class SMART,GLOBAL,SYSTEM,ASSET,ADDON dalp,rounded;
+    class SMARTC,GLOBALC,SYSTEMC,ASSETC,ADDONC compliance,rounded;

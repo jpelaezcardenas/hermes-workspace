@@ -1,0 +1,93 @@
+%% DALP disaster recovery and high availability topology.
+%% Shows primary/secondary regions, replication, failover, RPO/RTO targets.
+%% Use in deployment, resilience, SLA, business continuity, and infrastructure sections.
+%% Evaluator focus: proven resilience for a regulated financial platform.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Figtree, Inter, Arial, sans-serif",
+    "fontSize": "15px",
+    "textColor": "#1A1A2E",
+    "lineColor": "#6B7280",
+    "background": "#FFFFFF",
+    "clusterBkg": "#FAFAFA",
+    "clusterBorder": "#D0D7DE",
+    "edgeLabelBackground": "#FFFFFF"
+  },
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    subgraph PRIMARY[Primary Region - Active]
+        P_LB[Load Balancer<br/>Ingress]
+        P_K8S[Kubernetes Cluster<br/>DALP Services]
+        P_DB[(PostgreSQL<br/>Primary)]
+        P_REDIS[(Redis<br/>Primary)]
+        P_CHAIN[Blockchain Nodes<br/>Validator Set]
+        P_OBJ[Object Storage<br/>Primary]
+        P_MON[Observability<br/>Stack]
+    end
+
+    subgraph SECONDARY[Secondary Region - Standby]
+        S_LB[Load Balancer<br/>Standby]
+        S_K8S[Kubernetes Cluster<br/>Warm Standby]
+        S_DB[(PostgreSQL<br/>Replica)]
+        S_REDIS[(Redis<br/>Replica)]
+        S_CHAIN[Blockchain Nodes<br/>Non-Validator Sync]
+        S_OBJ[Object Storage<br/>Replicated]
+    end
+
+    subgraph FAILOVER[Failover Controls]
+        DNS[DNS Switchover<br/>Health-Based]
+        HEALTH[Health Monitor<br/>Continuous Check]
+        TRIGGER{Failover<br/>Trigger?}
+        RPO[RPO Target:<br/>< 1 minute]
+        RTO[RTO Target:<br/>< 15 minutes]
+    end
+
+    %% Primary internal flow
+    P_LB --> P_K8S
+    P_K8S --> P_DB
+    P_K8S --> P_REDIS
+    P_K8S --> P_CHAIN
+    P_K8S --> P_OBJ
+
+    %% Replication links (dashed for async)
+    P_DB -.->|Streaming<br/>Replication| S_DB
+    P_REDIS -.->|Async<br/>Replication| S_REDIS
+    P_CHAIN -.->|Block<br/>Sync| S_CHAIN
+    P_OBJ -.->|Cross-Region<br/>Replication| S_OBJ
+
+    %% Secondary internal
+    S_LB --> S_K8S
+    S_K8S --> S_DB
+    S_K8S --> S_REDIS
+    S_K8S --> S_CHAIN
+
+    %% Failover logic
+    P_MON --> HEALTH
+    HEALTH --> TRIGGER
+    TRIGGER -->|Primary Down| DNS
+    DNS -->|Switch Traffic| S_LB
+
+    %% Entry point
+    USERS[[CLIENT: Users +<br/>Applications]] --> DNS
+    DNS -->|Normal| P_LB
+
+    %% Styling
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class P_LB,P_K8S,S_LB,S_K8S dalp,rounded;
+    class P_DB,P_REDIS,P_OBJ,P_MON infra,rounded;
+    class S_DB,S_REDIS,S_OBJ infra,rounded;
+    class P_CHAIN,S_CHAIN dalp,rounded;
+    class DNS,HEALTH,TRIGGER dalp,rounded;
+    class RPO,RTO milestone,rounded;
+    class USERS client,rounded;

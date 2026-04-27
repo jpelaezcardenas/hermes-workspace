@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""Canonical bid-manager runtime wrapper.
+
+This wraps the recovered SettleMint office-agent Bid Manager scripts behind one
+stable command surface without renaming the agent or mutating the preserved
+legacy roots.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LEGACY = ROOT / "legacy"
+OFFICE_AGENTS = ROOT / "settlemint-office-agents"
+BID = LEGACY / "bid-manager"
+CHECKER = LEGACY / "bid-checker"
+FORGE = LEGACY / "rfp-forge"
+SHARED = LEGACY / "shared"
+OUTPUT = OFFICE_AGENTS / "bid-manager" / "output"
+
+SCRIPT_MAP = {
+    "md-to-docx": BID / "scripts" / "markdown_to_docx.py",
+    "docx-to-md": BID / "scripts" / "docx_to_markdown.py",
+    "xlsx-to-csv": BID / "scripts" / "xlsx_to_csv.py",
+    "csv-to-xlsx": BID / "scripts" / "csv_to_xlsx.py",
+    "validate": BID / "scripts" / "validate_proposal.py",
+    "render-mermaid": BID / "scripts" / "mermaid_to_images.py",
+    "render-plantuml": BID / "scripts" / "plantuml_to_images.py",
+    "check-proposal": CHECKER / "scripts" / "validate_proposal.py",
+    "forge-extract": FORGE / "scripts" / "extract-rfp.py",
+    "forge-write": FORGE / "scripts" / "write-response.py",
+}
+
+
+def ensure_layout() -> None:
+    """Create compatibility links expected by recovered office-agent scripts."""
+    ROOT.mkdir(parents=True, exist_ok=True)
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    if not OFFICE_AGENTS.exists():
+        OFFICE_AGENTS.symlink_to(LEGACY, target_is_directory=True)
+
+
+def normalize_args(args: list[str]) -> list[str]:
+    """Resolve path-like positional args from the bid-manager runtime root.
+
+    The recovered scripts historically ran inside the office-agent workspace.
+    The wrapper is now the stable entrypoint, so relative file paths should be
+    interpreted from ROOT, not from the nested recovered script directory.
+    """
+    out: list[str] = []
+    for arg in args:
+        if not arg or arg.startswith("-") or "://" in arg:
+            out.append(arg)
+            continue
+        looks_like_path = ("/" in arg) or ("\\" in arg) or Path(arg).suffix
+        if not looks_like_path:
+            out.append(arg)
+            continue
+        candidate = ROOT / arg
+        if candidate.exists() or candidate.parent.exists():
+            out.append(str(candidate.resolve()))
+        else:
+            out.append(arg)
+    return out
+
+
+def run_script(name: str, args: list[str]) -> int:
+    ensure_layout()
+    script = SCRIPT_MAP[name]
+    if not script.exists():
+        print(f"Missing script for {name}: {script}", file=sys.stderr)
+        return 2
+    env = os.environ.copy()
+    env.setdefault("BID_MANAGER_HOME", str(ROOT))
+    env.setdefault("PYTHONPATH", f"{SHARED / 'scripts'}:{BID / 'scripts'}:{env.get('PYTHONPATH','')}")
+    return subprocess.call([sys.executable, str(script), *normalize_args(args)], cwd=str(BID), env=env)
+
+
+def inventory(root: Path) -> dict:
+    files = dirs = symlinks = bytes_ = 0
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        for d in dirnames:
+            p = Path(dirpath) / d
+            if p.is_symlink():
+                symlinks += 1
+            else:
+                dirs += 1
+        for f in filenames:
+            p = Path(dirpath) / f
+            if p.is_symlink():
+                symlinks += 1
+            else:
+                files += 1
+                try:
+                    bytes_ += p.stat().st_size
+                except OSError:
+                    pass
+    return {"files": files, "dirs": dirs, "symlinks": symlinks, "bytes": bytes_}
+
+
+def cmd_status(_: argparse.Namespace) -> int:
+    ensure_layout()
+    payload = {
+        "agent": "bid-manager",
+        "root": str(ROOT),
+        "output_root": str(OUTPUT),
+        "surfaces": {
+            "bid-manager": inventory(BID),
+            "bid-checker": inventory(CHECKER),
+            "rfp-forge": inventory(FORGE),
+            "shared": inventory(SHARED),
+        },
+        "commands": sorted(SCRIPT_MAP),
+    }
+    print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_smoke(_: argparse.Namespace) -> int:
+    ensure_layout()
+    checks: list[dict] = []
+    for name, script in SCRIPT_MAP.items():
+        exists = script.exists()
+        checks.append({"command": name, "script": str(script), "exists": exists})
+    # Compile the scripts exposed by this wrapper plus their shared runtime helpers.
+    # Some preserved legacy helper/backfill scripts are intentionally not active until
+    # separately repaired and promoted.
+    py_files = sorted({str(p) for p in SCRIPT_MAP.values() if p.exists()})
+    shared_helpers = [
+        SHARED / "scripts" / "office_runtime_guard.py",
+        SHARED / "scripts" / "office_output_validation.py",
+        BID / "scripts" / "proposal_format_validator.py",
+        BID / "scripts" / "diagram_renderer.py",
+    ]
+    py_files.extend(str(p) for p in shared_helpers if p.exists())
+    compile_cmd = [sys.executable, "-m", "py_compile", *py_files]
+    proc = subprocess.run(compile_cmd, cwd=str(ROOT), text=True, capture_output=True)
+    known_legacy_regressions = [
+        {
+            "script": str(FORGE / "scripts" / "generate_mea_docs.py"),
+            "reason": "Preserved legacy helper has a syntax error and is not exposed by the active bid-manager wrapper yet.",
+        }
+    ]
+    payload = {
+        "agent": "bid-manager",
+        "script_checks": checks,
+        "python_files_compiled": len(py_files),
+        "compile_exit_code": proc.returncode,
+        "compile_stdout": proc.stdout[-2000:],
+        "compile_stderr": proc.stderr[-4000:],
+        "known_legacy_regressions": known_legacy_regressions,
+        "ok": all(c["exists"] for c in checks) and proc.returncode == 0,
+    }
+    print(json.dumps(payload, indent=2))
+    return 0 if payload["ok"] else 1
+
+
+def passthrough(name: str):
+    def _cmd(ns: argparse.Namespace) -> int:
+        return run_script(name, ns.args)
+    return _cmd
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="bid-manager", description="Canonical SettleMint bid-manager runtime wrapper")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p = sub.add_parser("status", help="Show active bid-manager wiring and inventory")
+    p.set_defaults(func=cmd_status)
+    p = sub.add_parser("smoke", help="Verify recovered script presence and Python syntax")
+    p.set_defaults(func=cmd_smoke)
+
+    for name in sorted(SCRIPT_MAP):
+        p = sub.add_parser(name, help=f"Run recovered {name} script")
+        p.add_argument("args", nargs=argparse.REMAINDER)
+        p.set_defaults(func=passthrough(name))
+
+    ns = parser.parse_args(argv)
+    return ns.func(ns)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

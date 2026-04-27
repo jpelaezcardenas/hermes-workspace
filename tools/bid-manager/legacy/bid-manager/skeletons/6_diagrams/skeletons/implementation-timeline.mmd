@@ -1,0 +1,43 @@
+%% DALP implementation timeline skeleton.
+%% Use in implementation plan, mobilization, and delivery sections.
+%% Adjust dates and durations to the bid; keep the phase structure stable unless scope is radically different.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "14px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "gantt": {"leftPadding": 90, "topPadding": 30, "gridLineStartPadding": 140, "fontSize": 14},
+  "securityLevel": "loose"
+}}%%
+gantt
+    title DALP Implementation Timeline
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d %b
+    excludes    weekends
+
+    section Phase 0
+    Discovery And Mobilization       :p0, 2026-04-01, 10d
+    Mobilization Sign-Off            :milestone, m0, after p0, 0d
+
+    section Phase 1
+    Solution Design                  :p1, after p0, 15d
+    Architecture Baseline Approved   :milestone, m1, after p1, 0d
+
+    section Phase 2
+    Environment And IAM Setup        :p2a, after p1, 10d
+    DALP Configuration               :p2b, after p1, 12d
+    Integration Design Finalized     :milestone, m2, after p2b, 0d
+
+    section Phase 3
+    Integration Build                :p3a, after p2b, 20d
+    Asset Model Configuration        :p3b, after p2b, 15d
+    Compliance Configuration         :p3c, after p2b, 15d
+
+    section Phase 4
+    SIT And UAT                      :p4, after p3a, 15d
+    Go-Live Readiness                :milestone, m4, after p4, 0d
+
+    section Phase 5
+    Production Cutover               :p5, after p4, 5d
+    Hypercare                        :p6, after p5, 10d
+    Go-Live                          :milestone, m5, after p5, 0d
+
+    %% [CLIENT: Add data migration, custody onboarding, or validator setup workstreams if they are in scope]

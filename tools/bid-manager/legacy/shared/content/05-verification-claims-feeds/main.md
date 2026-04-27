@@ -1,0 +1,585 @@
+# Section 5: Verification, Claims, and Data Feeds
+
+## Executive Summary
+
+Identity frameworks, compliance controls, and auditability are central to the complexity of doing tokenization right at production scale. DALP's verification and data feed infrastructure provides the trust layer that underpins every digital asset operation on the platform. Rather than treating identity verification and market data as external dependencies to be bolted on, DALP integrates them as first-class platform capabilities: on-chain identity via OnchainID, claims-based verification through a configurable Topic system, a multi-tier Trusted Issuers Registry, and a purpose-built feeds architecture for price, NAV, and corporate action data.
+
+This section details how these capabilities work together to create a verification ecosystem that enforces compliance ex-ante — before transactions execute — and provides reliable market data for asset valuation, distribution calculations, and regulatory reporting.
+
+---
+
+## 5.1 Identity Verification with OnchainID
+
+### 5.1.1 The Identity Model
+
+DALP implements on-chain identity verification through OnchainID, an identity protocol based on the ERC-734/ERC-735 standards. Every participant in the DALP ecosystem — whether an individual investor, an institutional entity, or a smart contract — is represented by an on-chain identity contract that stores verifiable claims about that participant.
+
+This identity model provides several critical properties for regulated financial operations:
+
+- **Self-sovereign identity anchoring**: Each participant's identity is represented by a dedicated smart contract deployed on-chain, providing a persistent, tamper-evident identity anchor. The identity contract is the canonical record of who a participant is and what has been attested about them — not a row in a centralized database that can be silently modified.
+- **Claim-based verification**: Identity attributes (KYC status, accreditation, jurisdiction, AML clearance) are represented as cryptographically signed claims attached to the identity contract, not as centralized database records. This means identity verification is verifiable by any on-chain participant, not just the platform operator.
+- **Issuer attribution**: Every claim is traceable to the trusted issuer that created the claim, creating a verifiable chain of trust from the claim consumer back to the original verification provider. Auditors can verify not only that a claim exists, but who attested to it and when.
+- **Cross-asset reusability**: Once an investor's identity is verified and claims are issued, those credentials are reusable across all assets and transactions on the platform — eliminating redundant KYC processes for multi-asset programs. An investor verified for Bond A does not need to re-verify for Bond B.
+- **Expiry-aware verification**: Claims include optional expiration timestamps, enabling automatic enforcement of re-verification requirements. An expired KYC claim will block transfers even if the claim topic matches — there is no "grandfather" exception for stale verification.
+
+### 5.1.2 Identity Lifecycle
+
+The identity lifecycle in DALP follows a structured progression:
+
+**Identity Creation**: When a participant is onboarded to the platform, DALP deploys an OnchainID identity contract through the Identity Factory. This factory is registered in the DALP Directory and produces deterministic, identity-bound contracts. For smart accounts (ERC-4337), the identity creation is atomic with account deployment, including automatic issuance of a `DALP_WALLET` claim that identifies the identity as a DALP-managed smart account.
+
+**Identity Registration**: The created identity is registered in the system's Identity Registry, establishing the binding between the participant's wallet address and their on-chain identity contract. DALP supports two registration models:
+- **Self-service registration**: The user holds the wallet's management key and registers their own identity. This uses `registerPendingIdentity` and requires `MANAGEMENT_KEY` authority.
+- **Admin-initiated registration**: Platform administrators register identities on behalf of invited users without requiring wallet key access. This uses `batchRegisterPendingIdentity`, enabling bulk onboarding without requiring each user to perform blockchain transactions during the invitation acceptance flow.
+
+**Claim Issuance**: Trusted issuers attach verifiable claims to the identity, attesting to specific attributes. Claims are topic-specific — each claim addresses a single verification dimension (KYC completion, AML clearance, accreditation status, jurisdictional eligibility). The claim issuance process is governed by the platform's trusted issuer registry and auto-claim validation rules. Claims can be issued through two pathways: auto-claims issued programmatically by the platform based on KYC review outcomes, and manual claims issued by trusted issuers through the API or dApp interface. Both pathways are subject to the same validation and queue semantics.
+
+**Identity Recovery**: DALP provides a durable, phase-tracked recovery workflow for cases where wallet access is lost or compromised. The recovery orchestration proceeds through deterministic phases: creating a new wallet, deploying a replacement identity, executing on-chain recovery through the Identity Registry, revoking existing sessions and credentials, and identifying tokens requiring manual recovery. This workflow is protected by system-level permissions (`SYSTEM_PERMISSIONS.identityRecover`) and executes as a durable Restate workflow that survives infrastructure failures.
+
+The recovery workflow is notably comprehensive compared to typical blockchain identity solutions. It includes:
+- Preflight recoverability checks (blocking reasons, current identity status, non-zero token balances)
+- Confirmation-gated destructive execution (requires text `RECOVER IDENTITY`)
+- Parallelized pre-checks (identity existence, directory factory lookup, token balance fetch)
+- Atomic local security reconciliation (session deletion, two-factor cleanup, passkey removal, wallet flag rewrite)
+- Best-effort per-token balance migration with logging for partial failures
+- Explicit phase persistence (`creating-wallet` → `deploying-identity` → `recovering-identity` → `revoking-sessions` → `recovering-tokens` → `completed|failed`)
+
+### 5.1.3 Contract Identity Integration
+
+DALP extends identity beyond human participants to include contract-level identity. When factory contracts, vault contracts, or smart accounts are deployed, they automatically receive an associated OnchainID contract. This pattern ensures that:
+
+- Every DALP-managed contract has a verifiable identity anchor
+- Claim-based authorization can apply to contracts, not just wallets
+- The Trusted Issuers Registry can authorize factory contracts as claim issuers based on their on-chain identity
+- The `CONTRACT` claim topic can distinguish between individual investors and legal entities in compliance logic
+
+The `IContractWithIdentity` interface standardizes this pattern, and DALP's claim authorization library (`DALPClaimAuthorization`) centralizes the rules for which actors can add or remove claims on contract identities. This centralization is important because it prevents ad hoc claim issuance logic from being scattered across different contract codepaths.
+
+### 5.1.4 Identity and the Compliance Pipeline
+
+Identity is not a standalone feature in DALP — it is the foundation of the compliance pipeline. Every compliance decision traces back to identity verification:
+
+1. A participant's **identity contract** holds their verifiable claims
+2. The **compliance engine** evaluates those claims against the token's configured verification expression
+3. If claims are insufficient, expired, or issued by an untrusted issuer, the transfer is **blocked at the protocol level**
+4. This enforcement happens on-chain, meaning it cannot be bypassed by application-layer modifications
+
+This creates an ex-ante compliance model: transfers that would violate compliance rules are prevented before they execute, not detected and remediated after the fact. The compliance pre-check via simulation (`eth_call`) provides immediate feedback, while the on-chain enforcement during actual execution provides the authoritative guarantee.
+
+---
+
+## 5.2 The Claim Topics System
+
+### 5.2.1 How Claims Work
+
+Claims are the atomic unit of verification in DALP. Each claim is an on-chain attestation stored on a participant's OnchainID contract, structured as:
+
+| Property | Description |
+|----------|-------------|
+| **Topic** | A numeric identifier representing the type of attestation (e.g., KYC, AML, ACCREDITED) |
+| **Issuer** | The address of the trusted issuer that created the claim |
+| **Data** | The claim payload, which may include a content hash for KYC verification |
+| **Signature** | Cryptographic proof from the issuer |
+| **Expiry** | Optional expiration timestamp after which the claim is no longer valid |
+
+The Topic is the key organizing concept. DALP uses a Topic Scheme Registry to manage the vocabulary of recognized claim topics across the platform. Standard topics include:
+
+| Topic | Purpose | Typical Issuer |
+|-------|---------|----------------|
+| **KYC** | Know Your Customer identity verification completed | KYC provider |
+| **AML** | Anti-Money Laundering screening passed | Compliance provider |
+| **ACCREDITED** | Investor meets accredited investor criteria (e.g., Reg D) | Compliance officer |
+| **CONTRACT** | Investor is a legal entity (not a natural person) | KYC provider |
+| **JURISDICTION** | Investor is resident in a qualifying jurisdiction | KYC provider |
+| **dalpWallet** | Identity is a DALP smart account (auto-issued by Identity Factory) | Identity Factory |
+
+Custom claim topics can be defined by the compliance team and registered in the Topic Scheme Registry, extending the verification vocabulary to address institution-specific or jurisdiction-specific requirements. For example, an institution operating under Swiss FINMA regulations could define a custom `QUALIFIED_INVESTOR` topic reflecting Swiss investor classification requirements that differ from US accreditation standards.
+
+### 5.2.2 Auto-Claim Validation
+
+DALP enforces server-side validation for auto-issued claims to prevent unauthorized or incorrect claim issuance. This validation runs at the DAPI layer before claims reach the blockchain, creating a trust boundary that constrains even trusted issuers to valid claim values for auto-claim topics:
+
+- **Boolean investor/compliance topics** (such as `ACCREDITED` or `AML`): The platform only accepts the literal string value `"true"`. Any other value is rejected, preventing trusted issuers from injecting arbitrary data into what should be binary attestations. This eliminates an entire class of data integrity issues where, for example, a KYC provider might accidentally issue an AML claim with a free-text value instead of a boolean attestation.
+- **KYC claims**: The claim value must exactly match the `contentHash` from the participant's approved KYC profile. This creates a deterministic binding between the off-chain KYC review outcome and the on-chain claim, ensuring that KYC claims cannot be issued without a corresponding approved review. The `contentHash` is computed from the approved KYC profile version, so updating a participant's KYC data produces a new hash, and the old claim value no longer matches.
+
+This validation is critically important because without it, a trusted issuer API key compromise could lead to arbitrary claim injection. With auto-claim validation, even a compromised issuer credential can only issue claims that match the platform's validated state.
+
+### 5.2.3 Claim Issuance During Asset Creation
+
+When a new asset is created on DALP, the issuance workflow automatically issues class-specific claims. This claim enrichment is deterministic and varies by asset class:
+
+- **Classification claims**: Asset type, category, and regulatory classification
+- **Location claims**: Country of issuance and applicable jurisdictions
+- **Pricing claims**: Base denomination, pricing parameters
+- **Identifier claims**: ISIN, CUSIP, or other security identifiers where applicable
+
+The claim issuance phase in the token creation workflow routes every claim through the shared claim issue service (`issue-claim-via-queue.ts`), ensuring that shared claim integrity rules are enforced as part of issuance semantics. If any claim in the batch fails, the entire issuance terminates — there is no partial claim state.
+
+The workflow tracks claim issuance as an explicit phase in the token creation lifecycle: `creating` → `granting-permissions` → `issuing-claims` → `unpausing` → `completed`. The claim issuance phase is not a side effect — it is a first-class workflow step with its own status tracking, error handling, and audit trail.
+
+### 5.2.4 Claim Revocation
+
+Claims are not permanent. DALP provides explicit claim revocation through `claim-revoke` operations, which are also routed through the transaction queue for durability and auditability. Claim revocation is a privileged operation requiring the appropriate token role and wallet verification.
+
+Revocation is important for several operational scenarios:
+- An investor's KYC status is rescinded after a compliance review
+- An accreditation expires or is downgraded
+- A trusted issuer discovers they issued a claim in error
+- Regulatory changes require re-verification of existing claims
+
+When a claim is revoked, any transfers that depend on that claim topic will be blocked on the next compliance check. This enforcement is immediate — there is no grace period for revoked claims.
+
+---
+
+## 5.3 Trusted Issuers Registry
+
+### 5.3.1 Multi-Tier Architecture
+
+DALP implements a sophisticated three-tier Trusted Issuers Registry that determines which entities are authorized to issue claims on the platform:
+
+**Tier 1 — Subject-Scoped Issuers**: Issuers authorized to issue claims for a specific identity or token. This is the most granular level, allowing fine-grained control over who can attest to what. For example, a specific KYC provider might be authorized as a trusted issuer only for a particular institutional fund, not for the entire platform.
+
+**Tier 2 — System-Scoped Issuers**: Issuers authorized across all identities within a specific DALP system (tenant). When a system is bootstrapped, default trusted issuers are registered at this level — for example, KYC providers authorized to issue identity claims for all participants in that organization.
+
+**Tier 3 — Global Issuers (DALPGlobalTrustedIssuersRegistry)**: Platform-wide issuers that apply across all systems. This tier was introduced to consolidate trusted issuers that must apply universally — most notably the Identity Factory, which issues CONTRACT claims when deploying contract identities. Previously, each system had to independently register the Identity Factory during bootstrap; the global registry eliminates this duplication and ensures consistent trust infrastructure across all tenants.
+
+The `DALPTrustedIssuersMetaRegistryImplementationV2` resolves trusted issuer queries through cascading lookup: subject-scoped → system-scoped → global, with the most specific match winning. This ensures that institution-specific issuers take precedence over platform defaults while maintaining a consistent baseline.
+
+### 5.3.2 Access Control
+
+The governance model for trusted issuer management reflects the tier structure:
+
+| Action | Required Role | Scope |
+|--------|--------------|-------|
+| Register global trusted issuer | `DIRECTORY_ADMIN_ROLE` | Platform-wide |
+| Register system trusted issuer | `SYSTEM_MANAGER_ROLE` | Per-system (tenant) |
+| Register subject-scoped issuer | Token governance role | Per-token |
+| Query trusted issuer status | Any caller | Unrestricted read access |
+
+The Global Trusted Issuers Registry intentionally uses `DIRECTORY_ADMIN_ROLE` rather than per-system roles, reflecting its platform-wide scope. Adding a global trusted issuer is a privileged operation that affects all tenants — the elevated privilege requirement is enforced architecturally, not by convention.
+
+This governance model prevents a common failure mode in multi-tenant environments: a tenant administrator accidentally or intentionally registering a trusted issuer whose claims would be accepted across other tenants. Global trust changes require platform-level authority.
+
+### 5.3.3 Operational Implications
+
+The Trusted Issuers Registry is not a static configuration. It has runtime implications for claim validity:
+
+- **Issuer removal**: If a trusted issuer is removed from the registry after claims were issued, existing claims from that issuer are **no longer accepted** during compliance verification. This is by design — revoking trust in an issuer invalidates all claims they have issued. This provides a hard revocation mechanism: if a KYC provider is found to have issued fraudulent claims, removing them from the trusted issuer registry immediately blocks all transfers that depend on their claims.
+- **Issuer addition**: New issuers can be added at any tier without affecting existing claims from other issuers. This is additive — adding a new KYC provider does not invalidate claims from existing providers.
+- **Claim expiry**: Claims can include expiration timestamps. Even if the issuer remains trusted, expired claims fail verification. This enforces periodic re-verification — an institution can require annual KYC renewal by issuing claims with 365-day expiry.
+
+### 5.3.4 Topic Scheme Coverage Statistics
+
+DALP's system statistics router exposes trusted issuer and claims coverage metrics as part of its operational reporting. These metrics allow compliance officers to monitor:
+
+- How many participants have active claims for each topic
+- Which trusted issuers have issued claims and how many
+- Coverage gaps — participants who lack required claims for certain asset classes
+- Claim expiry projections — how many claims will expire in the coming period
+
+This statistical reporting is built on the indexer's analytics views (claims stats, trusted issuer stats, topic scheme coverage), providing real-time visibility into the compliance posture of the entire platform without requiring manual data extraction. The four compliance analytics views cover: claims statistics (aggregated by topic, issuer, and status), trusted issuer statistics (issuance volume and coverage per issuer), topic scheme coverage (which topics are configured across which assets), and module statistics (module type distribution and configuration patterns across the platform).
+
+---
+
+## 5.4 Verification Workflows and Compliance Enforcement
+
+### 5.4.1 The Identity Verification Module (SMARTIdentityVerification)
+
+The SMARTIdentityVerification module is DALP's most expressive compliance mechanism. Rather than simple allow/block lists, it evaluates **logical expressions over identity claims** to determine whether a transfer is permitted.
+
+The module uses a **Reverse Polish Notation (RPN) expression system** that allows arbitrary logical combinations of claim checks:
+
+| Node Type | Behavior |
+|-----------|----------|
+| **TOPIC** | Push `true` if identity holds a valid, non-expired claim for that topic; `false` otherwise |
+| **AND** | Pop two values, push logical AND |
+| **OR** | Pop two values, push logical OR |
+| **NOT** | Pop one value, push logical inverse |
+
+This RPN approach was chosen over a traditional infix expression system because it eliminates ambiguity without requiring parentheses. The expression is evaluated as a stack machine, making both on-chain evaluation and off-chain validation straightforward and deterministic.
+
+This system enables sophisticated regulatory configurations:
+
+| Regulation | Expression | Meaning |
+|-----------|-----------|---------|
+| **MiCA EU Standard** | `[KYC, AML, AND]` | Both KYC and AML claims required |
+| **Reg D 506(b)** | `[ACCREDITED, KYC, AML, AND, OR]` | Accredited investors OR (KYC AND AML) — allows up to 35 non-accredited sophisticated investors |
+| **Reg D 506(c)** | `[ACCREDITED]` | Only accredited investors (strict) |
+| **Japan FSA** | `[CONTRACT, KYC, AML, AND, OR]` | QII (corporate entities) or (KYC AND AML) — Qualified Institutional Investor exemption |
+| **KYC but NOT sanctioned** | `[KYC, SANCTIONED, NOT, AND]` | KYC required and must not be sanctioned |
+| **Full KYC stack** | `[ACCREDITED, KYC, AML, AND, JURISDICTION, AND, OR]` | Accredited investors OR (KYC AND AML AND JURISDICTION) |
+
+**Critical invariants**:
+- **Both sender and recipient** must hold valid claims matching the configured expression — this prevents compliant investors from transferring to non-compliant counterparties
+- Claims are checked for expiry at evaluation time — expired claims fail verification even if the topic matches
+- Malformed expressions are rejected at configuration time through `validateParameters` — they never reach production enforcement
+- An empty expression (no claim topics) means all transfers pass verification, effectively disabling the module
+- Trusted issuers are configured globally (per the registry tiers), not per-token — a claim from any registered trusted issuer is accepted
+
+### 5.4.2 Exemption Expressions
+
+The same RPN expression system powers exemption logic across other compliance modules:
+
+- **TimeLock module**: Investors matching the exemption expression skip the holding period. Example: "QII investors are exempt from the 180-day lock, but retail investors must hold for the full period." This is configured as an exemption expression like `[CONTRACT]` or `[ACCREDITED, CONTRACT, OR]`.
+- **TransferApproval module**: Investors matching the exemption expression bypass the pre-approval requirement. This allows institutional investors with verified credentials to trade freely while retail investors require manual approval for each transfer.
+- **InvestorCount module**: The `topicFilter` expression determines which investors are **counted** toward the investor limit — not which are blocked. This allows institutional investors to be excluded from retail investor caps, enabling Reg D-style compliance where there may be a limit of 35 non-accredited investors but no limit on accredited investor count.
+
+### 5.4.3 KYC Review and Compliance Workflow
+
+DALP implements a complete KYC review workflow with deterministic remediation:
+
+**Submission**: Participants submit KYC profiles with identity documentation and verification data. The profile includes structured fields for personal information, documentation, and verification artifacts.
+
+**Review**: Compliance officers review submitted profiles. The review produces one of three outcomes:
+- **Approve**: The profile version is approved, and KYC claims can be issued on-chain based on the approved `contentHash`. The `contentHash` creates an auditable, deterministic link between the off-chain review and the on-chain attestation.
+- **Reject**: The profile version is rejected with a mandatory reason (minimum 10 characters). The participant sees the rejection feedback and can submit a corrected profile.
+- **Request Update**: The reviewer identifies specific fields requiring correction. An action request is created with `requiredFields` and an optional `dueAt` deadline. The profile status moves to `update_required`. This creates a structured remediation workflow rather than a free-text "please fix this" exchange.
+
+**Fulfillment**: When changes are requested, the participant fulfills the action request. The system cross-checks across all pending action requests — `hasPendingUpdate` is only cleared when no open requests remain across any of the user's KYC versions. This prevents a participant from addressing one update request while ignoring another.
+
+**Claim Issuance**: Upon approval, KYC claims are issued on-chain through the shared claim issue service. The claim value must match the approved KYC profile's `contentHash`, ensuring that KYC claims cannot be issued without a corresponding approved review. The claim issuance is routed through the transaction queue for durability and audit trail integrity.
+
+**Action Queue Integration**: KYC update requests appear in DALP's unified action queue alongside on-chain executable tasks (bond maturity, XvP settlements). This gives operators a single view of actionable items across the platform, with temporal constraints (`dueAt`) and executor authorization. On-chain action types include Mature (bond), Approve/Execute/WithdrawExpired (XvP settlements). Off-chain action types include UpdateKYCData with `requiredFields` and `dueDate`.
+
+### 5.4.4 18 Compliance Module Types
+
+DALP provides 18 configurable compliance module types, each addressing a specific regulatory requirement:
+
+**Eligibility modules**:
+- **Identity verification** (SMARTIdentityVerification): RPN expression-based claim verification — the most expressive module
+- **Country allow list**: Permits transfers only for investors with identity claims from specified countries
+- **Country block list**: Blocks transfers for investors with identity claims from specified countries
+- **Identity lists**: Explicit whitelist/blacklist of addresses — for cases where individual address-level control is needed
+
+**Restriction modules**:
+- **Transfer approval**: Requires pre-approval before transfers execute; supports exemption expressions for institutional investors
+- **Conditional transfer controls**: Flexible conditions on transfer execution based on configurable parameters
+
+**Transfer control modules**:
+- **Transfer amount limits**: Maximum transfer size per transaction
+- **Transaction frequency controls**: Rate limiting on transfer frequency per investor
+
+**Issuance and supply modules**:
+- **Supply cap enforcement**: Maximum total supply for the token
+- **Investor count limits**: Maximum number of investors with topic-based counting (e.g., only count non-accredited investors toward Reg D limits)
+
+**Time-based modules**:
+- **Holding period enforcement (TimeLock)**: Minimum holding period before transfers are allowed, with identity-based exemptions
+- **Time-windowed transfer restrictions**: Transfers allowed only during specified time windows
+
+**Settlement and collateral modules**:
+- **Collateral ratio requirements**: Minimum collateral backing ratio
+- **Collateral backing verification**: Verification that adequate collateral exists before operations proceed
+
+Each module operates independently but can be composed — multiple modules can be attached to a single token, and **all must pass** for a transfer to execute. This composability enables complex multi-jurisdictional compliance configurations. For example, a European bond might have:
+- `SMARTIdentityVerification` with `[KYC, AML, AND]` for MiCA compliance
+- `CountryBlockList` excluding sanctioned jurisdictions
+- `InvestorCount` with topic filter to cap non-institutional investors
+- `TimeLock` with exemption for qualified institutional investors
+
+All four modules are evaluated independently, and a transfer succeeds only if all four pass.
+
+### 5.4.5 Compliance Pre-Check via Simulation
+
+Before any transaction reaches the blockchain, DALP performs a compliance pre-check through simulation:
+
+1. The Execution Engine builds the transaction payload
+2. The engine simulates via `eth_call` against the SMART Protocol's `canTransfer`
+3. The compliance engine evaluates all attached modules: identity claims, transfer restrictions, supply limits
+4. If simulation reverts, the failure surfaces immediately with a structured error code from DALP's 534-code error catalog
+5. If simulation succeeds, the transaction proceeds to custody signing
+
+This pre-check serves two purposes: it prevents wasted gas on transactions that will fail compliance, and it provides immediate, actionable feedback to operators about why a transaction would fail. The error catalog ensures that compliance failures are reported with human-readable messages and suggested actions, not opaque Solidity revert data.
+
+**Important**: On-chain compliance is also enforced at actual execution time. The pre-check simulation prevents wasted gas, but the on-chain enforcement is the authoritative control. If compliance state changes between simulation and broadcast (e.g., a claim expires in the interval), the on-chain transaction will revert.
+
+### 5.4.6 Operational Signals for Compliance Monitoring
+
+The SMARTIdentityVerification module itself does not emit events — compliance verification is a view function, not a state-changing operation. However, compliance monitoring is supported through:
+
+- **`ComplianceCheckFailed` revert errors**: Captured in failed transaction receipts and decoded through DALP's contract error catalog with human-readable messages
+- **System statistics**: The stats router exposes claims coverage and trusted issuer metrics
+- **Compliance analytics views**: The indexer provides claims stats, trusted issuer stats, topic scheme coverage, and module stats views for direct SQL access
+- **Transfer event monitoring**: Successful transfers implicitly confirm compliance passage
+- **Compliance module stats**: Aggregated metrics for module configuration and enforcement across the platform
+
+---
+
+## 5.5 Data Feeds Architecture
+
+### 5.5.1 The FeedsDirectory
+
+DALP's data feed system is built around a central registry called the **FeedsDirectory**. The directory separates discovery (which feed serves a given data request) from delivery (the individual feed contracts), creating an indirection layer that allows feeds to be replaced, upgraded, or rotated without disrupting consumers.
+
+Each feed registration captures:
+
+| Field | Description |
+|-------|-------------|
+| **Subject** | Token address for asset-specific feeds, or address zero for global/economy-wide data |
+| **Topic** | Data type the feed provides (e.g., base price, FX rate, NAV) |
+| **Feed contract** | The on-chain address that consumers query for data |
+| **Feed kind** | Currently SCALAR (numeric values) |
+| **Schema hash** | Pins the expected data format for consistency; format changes require explicit feed replacement |
+
+The `(subject, topic)` pair is the primary key. The API computes the on-chain `topicId` (a `bytes32` keccak256 hash) from the human-readable topic name internally, abstracting the hashing from API consumers. This means integrators work with readable topic names like `"NAV"` or `"basePrice"` rather than raw bytes32 identifiers.
+
+### 5.5.2 Feed Types
+
+DALP supports two distinct feed types:
+
+#### Issuer-Signed Scalar Feed
+
+A factory-deployed capability where authorized parties cryptographically sign and publish data on-chain. Each feed instance is created through the `IssuerSignedScalarFeedFactory` addon, following the same factory pattern used for other DALP addons (Vault, XvP Settlement, Token Sale, Airdrop).
+
+Key properties:
+- **Deployment model**: Factory pattern — one instance per asset or subject
+- **Data format**: Fixed-point integer with configurable decimals
+- **Positive-value requirement**: Enforced at the contract level, preventing negative price submissions
+- **History modes**: Three storage modes depending on requirements:
+  - `LATEST_ONLY` — Only the most recent value is stored (suitable for real-time prices where historical data is not needed)
+  - `BOUNDED` — A fixed-size ring buffer of recent values (for sliding-window analysis, rate curve snapshots, or regulatory reporting windows)
+  - `FULL` — All historical values stored permanently (for complete audit trails where every value submission must be preserved)
+- **Security model**: Updates are authorized via EIP-712 typed data signatures from trusted issuers. Invalid signatures are rejected on-chain. This means feed values cannot be tampered with in transit — the on-chain contract verifies the signature before accepting the update.
+- **Drift allowance**: Configurable tolerance for value changes between updates. Excessive drift flags the value as an outlier, allowing consumers to apply their own risk tolerance. For example, a price feed with 5% drift allowance would flag a submission that changes the price by more than 5% from the previous value.
+
+Feed submission follows a specialized path in DALP's architecture. Unlike generic blockchain mutations that go through the standard transaction queue, feed updates are processed through the Restate feed service with EIP-712 signing. The submit path:
+1. Performs identity checks at the HTTP layer
+2. Delegates EIP-712 signing and submission to the durable Restate feed service
+3. Validates the returned transaction hash
+4. Returns machine-readable output including `transactionHash`, `feedAddress`, `value`, and `nonce`
+5. Uses a synthetic tracking UUID rather than a queue-backed status record
+
+#### Chainlink Aggregator Adapter
+
+A wrapper contract that presents any DALP feed through the Chainlink `AggregatorV3Interface` — the de facto standard consumed by DeFi protocols, lending platforms, and external analytics tools.
+
+**Why it exists**: External integrations require a stable address. If the underlying feed is replaced (new provider, upgraded contract), the adapter address remains the same. The adapter resolves the current feed from the FeedsDirectory on every call, so consumers never need to update their integration endpoints.
+
+| Property | Detail |
+|----------|--------|
+| **Interface** | Chainlink `AggregatorV3Interface` (`latestRoundData`, `decimals`, `description`) |
+| **Address stability** | Permanent — survives feed replacement in the directory |
+| **Resolution** | Dynamic — queries FeedsDirectory per call for current feed address |
+| **Deployment** | One adapter per (subject, topic) combination |
+
+**Use cases**: DeFi protocol integration, cross-platform data sharing, portfolio valuation by external trackers, oracle aggregation, audit and compliance feeds for external systems. Any system that already consumes Chainlink feeds can consume DALP feeds through these adapters without any integration changes.
+
+### 5.5.3 Feed Trust Model and Access Control
+
+The feed trust model separates read access (unrestricted) from write access (role-gated):
+
+| Action | Who Can Do It | Scope |
+|--------|--------------|-------|
+| Register / replace / remove feed | Feeds Manager role (system-level) | Any subject, including global feeds |
+| Create feed + adapter | GOVERNANCE role holder on a specific token | That token only (not global feeds) |
+| Submit feed update | Authorized signers (EIP-712) | Per-feed authorization |
+| Read feed data | Any contract or off-chain caller | Unrestricted |
+
+Feed registration is a privileged operation because unauthorized changes to pricing data could affect compliance decisions and valuations across the platform. Schema hash pinning ensures consumers always know the expected data format — format changes require explicit feed replacement through the Feeds Manager, not silent schema evolution.
+
+Global feeds (using address zero as the subject) can only be managed by the Feeds Manager, not by individual token governance roles. This prevents asset-level operators from affecting economy-wide data such as FX rates or benchmark interest rates.
+
+---
+
+## 5.6 Price Feeds, NAV Feeds, and Corporate Action Data
+
+### 5.6.1 Price Feeds
+
+DALP's price feed infrastructure supports multiple use cases:
+
+- **Token price reporting**: Publishing current token prices for collateral valuation, trading reference, and portfolio reporting. Prices are submitted through the issuer-signed feed mechanism with EIP-712 signature verification.
+- **Exchange rate data**: Foreign exchange rates synchronized from external providers (currently `open.er-api.com`), persisted in both historical (`fx_rates`) and latest (`fx_rates_latest`) database tables. The sync operation refreshes rates from the external provider on demand.
+- **Manual operator overrides**: Rates with `provider: "manual"` are first-class entities, allowing operators to override automated feeds when corrections are needed. This is important for scenarios where automated feeds lag or produce incorrect values — compliance officers can insert corrected rates immediately.
+
+Exchange rates are exposed through shared v1/v2 route families supporting read, list, history, update, delete, and sync operations. Delete operations are limited to manual latest-rate rows, preventing accidental deletion of automated data.
+
+### 5.6.2 NAV Feeds
+
+Net Asset Value reporting for fund tokens uses the same feeds infrastructure. NAV feeds are registered in the FeedsDirectory with appropriate topic names and can use any supported history mode:
+
+- `LATEST_ONLY` for funds where only the current NAV matters (open-ended funds with continuous redemption)
+- `BOUNDED` for regulatory reporting requiring a sliding window of recent NAV snapshots
+- `FULL` for complete NAV history preservation for audit and compliance
+
+NAV data flows through to the DALP indexer, which processes feed events and maintains feed-based price projections with fiat value views. This enables portfolio valuation in the investor's preferred currency without requiring separate valuation infrastructure.
+
+### 5.6.3 Interest Rate Feeds
+
+Variable-yield instruments can reference on-chain benchmark rate feeds. The same issuer-signed scalar feed mechanism supports interest rate publication, with the `BOUNDED` or `FULL` history mode providing the rate curve data needed for yield calculations.
+
+For fixed-yield instruments, DALP's Fixed Yield Schedule addon can reference feed data for denomination asset pricing — enabling coupon calculations denominated in one currency but valued in another through the feeds system. For example, a EUR-denominated bond paying coupons to USD-based investors can reference the EUR/USD exchange rate feed to compute settlement amounts in the investor's base currency.
+
+### 5.6.4 Corporate Action Data
+
+Corporate action feeds integrate with DALP's automated lifecycle operations:
+
+- **Coupon payment calculations**: Fixed-treasury-yield features reference feed data for denomination asset pricing
+- **Maturity redemption**: Maturity-redemption features use treasury and denomination asset configuration that can reference feed-provided valuations
+- **Yield distribution**: Fixed-yield schedule addons calculate distributions based on rate and denomination data available through the feeds system
+- **Collateral revaluation**: Collateral ratio modules can reference price feeds to verify that collateral backing meets minimum requirements at current market values
+
+### 5.6.5 Feed Consumption Across the Platform
+
+Feeds are consumed by multiple platform components, and feed failures have different impacts depending on the consumer:
+
+| Consumer | Purpose | Failure Impact |
+|----------|---------|----------------|
+| **Compliance modules** | Limit checks and valuation requirements | Transfer blocked if feed stale or missing |
+| **Yield / distribution** | Determine distribution amounts based on current prices | Distribution delayed or calculated on stale values |
+| **Asset Console** | Display current portfolio value in preferred currency | UI shows outdated valuations |
+| **Execution Engine** | Incorporate feed data into multi-step workflows | Workflow paused pending fresh data |
+| **External DeFi protocols** | Consume prices via Chainlink-compatible adapter | Integration returns stale round data |
+| **System statistics** | System value history and portfolio valuation | Statistics show last-known values |
+| **Indexer price projections** | Fiat value calculations and cross-currency reporting | Analytics views use last-indexed price |
+
+---
+
+## 5.7 Oracle Patterns for External Data
+
+### 5.7.1 Inbound Oracle Pattern (Issuer-Signed)
+
+DALP's primary oracle pattern is the issuer-signed scalar feed. In this model:
+
+1. An authorized data provider prepares the value off-chain (price, rate, NAV, or other scalar data)
+2. The provider signs the value using EIP-712 typed data signatures — this provides structured, human-readable signing that custody providers can display for approval
+3. The signed update is submitted to the feed contract on-chain through DALP's feed submit endpoint
+4. The contract verifies the signature against the authorized issuer list — invalid signatures are rejected on-chain
+5. If valid, the value is stored according to the feed's history mode
+6. Consumers read the latest (or historical) value directly from the contract
+
+This pattern provides strong security guarantees: values cannot be tampered with in transit (EIP-712 signature verification), unauthorized updates are rejected (issuer authorization check), and the on-chain storage provides an immutable audit trail of all submitted values.
+
+### 5.7.2 Adapter Pattern (Chainlink Compatibility)
+
+For external consumption, DALP deploys Chainlink aggregator adapters that wrap internal feeds in the standard `AggregatorV3Interface`. This adapter pattern:
+
+- Provides a stable address that survives underlying feed changes
+- Enables integration with any system that supports Chainlink price feeds
+- Supports dynamic resolution — the adapter resolves the current feed from the FeedsDirectory on every call
+
+### 5.7.3 External Feed Registration
+
+DALP can register external feed contracts (such as existing Chainlink feeds) in the FeedsDirectory. The directory stores only the address mapping; it does not manage the external feed's lifecycle. This enables hybrid deployments where some feeds are DALP-managed (issuer-signed) and others are externally sourced.
+
+For example, an institution might use:
+- DALP-managed feeds for proprietary NAV data and internal pricing that only the issuer knows
+- External Chainlink feeds for public market data (ETH/USD, EURIBOR, major FX rates)
+- Both registered in the same FeedsDirectory for uniform discovery and consumption
+
+The external feed registration operation (`register-external`) requires the Feeds Manager role at the system level. The registered feed address is treated as opaque — DALP does not validate the external feed's interface or data quality. This is intentional: external feeds have their own governance, and DALP's responsibility is limited to maintaining the directory mapping. Consumers should verify data freshness and quality through the external feed's own mechanisms.
+
+### 5.7.4 Feed Lifecycle and Failure Modes
+
+The feed system includes explicit handling for operational failures:
+
+| Failure | System Behavior |
+|---------|----------------|
+| Feed stale (no updates) | Consumers read last-known value; compliance modules may block transfers |
+| Feed removed from directory | Discovery returns zero address; consumers must handle gracefully |
+| Invalid signature | Issuer-signed feed rejects the update on-chain |
+| Drift exceeded | Value flagged as outlier; consumers decide risk tolerance |
+| Adapter target missing | Adapter call reverts; external integrations see failure |
+| Schema hash mismatch | Feed replacement required; format changes not silently accepted |
+
+---
+
+## 5.8 Async Feed Operations (API v2)
+
+DALP's v2 API surfaces async-capable mutation envelopes for feed operations. Feed mutations — including `register-external`, `replace`, `remove`, `issuer-signed/create`, and `adapters/create` — support the same async processing pattern used elsewhere in DALP:
+
+- Clients can request async processing via the `Prefer: respond-async` header
+- The API returns HTTP 202 with a `statusUrl` for polling
+- Feed operations participate in the platform-wide transaction queue contract
+
+This ensures that feed provisioning and directory changes benefit from the same durability, observability, and queue semantics as all other blockchain mutations on the platform.
+
+The feed submit path (value updates) remains specialized because EIP-712 signing is delegated through Restate rather than the generic queue executor.
+
+---
+
+## 5.9 Feed-Based Price Indexing and Fiat Value Projections
+
+The DALP indexer processes feed events and maintains price-indexed views that support fiat value projections across the platform:
+
+- **Real-time portfolio valuation**: Token holdings valued in the investor's preferred fiat currency
+- **Historical value tracking**: Time-series asset values based on historical feed data
+- **Cross-currency reporting**: Asset values projected across multiple fiat currencies using the FX rate feed data
+- **System value history**: Aggregate platform value normalized into a configured base currency with forward-filled series continuity
+
+These projections are exposed through PostgreSQL analytics views, providing direct SQL access for BI tools (Looker, Tableau, Power BI) without requiring custom integration development. The zero-downtime reindexing architecture ensures that feed-based analytics views remain available during indexer upgrades.
+
+---
+
+## 5.10 Capabilities Check and Feed Lifecycle API
+
+Before operating on feeds, integrators can verify which feed modules are installed:
+
+```
+GET /system/feeds/capabilities
+```
+
+The capabilities response indicates whether the FeedsDirectory, IssuerSignedScalarFeedFactory, and ScalarFeedAggregatorAdapterFactory are installed, along with their contract addresses and supported feed kinds.
+
+The complete feed lifecycle follows a defined progression:
+
+1. **Deploy addon** — Ensure the feed factory addons are registered on the system
+2. **Create feed** — Deploy an issuer-signed feed or register an external feed in the directory
+3. **Create adapter** (optional) — Deploy a Chainlink-compatible adapter for external consumption
+4. **Submit updates** — Publish signed values to the feed (ongoing)
+5. **Read data** — Query latest or historical values
+6. **Replace feed** — Swap the underlying feed contract while preserving the directory entry
+7. **Remove feed** — Deregister the feed from the directory when no longer needed
+
+Each step is exposed through the DALP API with appropriate role-based access controls, wallet verification for write operations, and comprehensive audit logging through the transaction request lifecycle. The API supports both synchronous and asynchronous processing patterns, with async operations returning HTTP 202 and a status URL for polling. This enables automated feed management workflows where provisioning scripts can fire-and-forget feed operations and later verify completion.
+
+The DALP CLI provides feed operations across the `feeds` command group, including create, submit, read, replace, remove, and capabilities check commands. All CLI commands use typed schemas and bind directly to the DALP SDK, ensuring consistent validation and error handling regardless of whether operations are executed through the web interface, API, or command line.
+
+---
+
+## 5.11 Verification and Feed Integration Points
+
+### 5.11.1 How Verification and Feeds Work Together
+
+The verification system and the feeds system are independent but complementary capabilities that converge in several important operational scenarios:
+
+**Collateral verification**: When a token has a collateral ratio compliance module, the module queries feed data to determine current collateral values. The feed provides the price, and the compliance module enforces the ratio.
+
+**Valuation-dependent compliance**: Some compliance configurations depend on asset valuations for limit calculations. Transfer amount limits expressed in fiat currency require converting token amounts to fiat values using feed data.
+
+**KYC-contingent feed access**: While feed reads are unrestricted at the smart contract level, the DAPI layer enforces additional access controls on feed management operations based on the caller's identity and role — ensuring that only authorized compliance personnel can modify the pricing data that affects compliance decisions.
+
+**Audit convergence**: Both verification events and feed value submissions are indexed by DALP's custom indexer and exposed through PostgreSQL analytics views. This means compliance officers can correlate transfer failures (caused by claim verification failures) with the feed values that were active at the time — providing a complete audit trail that spans both identity verification and market data.
+
+### 5.11.2 End-to-End Flow Example
+
+Consider a regulated bond token with the following configuration:
+- SMARTIdentityVerification: `[KYC, AML, AND]` (MiCA compliance)
+- TimeLock: 90-day holding period, exemption for `[ACCREDITED]` investors
+- Supply cap: 10 million tokens
+- Price feed: Issuer-signed scalar feed with FULL history mode
+
+When an accredited investor attempts to purchase tokens:
+1. The transfer triggers the compliance engine
+2. SMARTIdentityVerification checks the buyer's KYC and AML claims → **pass**
+3. TimeLock checks holding period → **exempted** (buyer has ACCREDITED claim)
+4. Supply cap checks total supply after transfer → **pass**
+5. DALP pre-checks the transaction via simulation (`eth_call`) — all modules pass
+6. Transaction proceeds to custody signing → MPC key shares combine
+7. Transaction broadcasts to the blockchain
+8. On-chain compliance re-verifies during execution → **confirmed**
+9. The price feed provides the price for valuation reporting
+10. The indexer processes the transfer event and updates portfolio valuations
+
+This end-to-end flow illustrates how identity verification, compliance enforcement, and data feeds work together as an integrated verification ecosystem — not as separate, bolted-on components.
+
+### 5.11.3 Practical Implications for Institutional Deployments
+
+The integration between verification and feeds has several practical implications for institutional deployments:
+
+**Single compliance configuration surface**: Compliance officers configure verification expressions, trusted issuers, and feed sources through a unified platform. They do not need to manage separate systems for identity verification and market data — DALP provides a single operational console for all trust infrastructure.
+
+**Consistent audit trail**: Both verification decisions and feed data are indexed into the same PostgreSQL analytics views. This means compliance audits can be conducted using standard SQL queries or BI tools, correlating transfer events with the identity claims and pricing data that were in effect at the time of the transaction.
+
+**Fail-safe defaults**: When verification or feed data is unavailable, DALP defaults to blocking rather than permitting. Missing claims block transfers. Stale feeds can trigger compliance module failures. This fail-safe behavior ensures that operational issues surface as blocked transactions (visible, auditable, remediable) rather than as compliance violations (invisible until audit time).
+
+**Multi-jurisdictional flexibility**: The combination of composable compliance modules and configurable verification expressions allows a single DALP deployment to serve assets across multiple regulatory jurisdictions. A European bond, a US Reg D offering, and a Japanese institutional fund can coexist on the same platform with different compliance configurations — all enforced at the protocol level.

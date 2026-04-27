@@ -1,0 +1,49 @@
+%% DALP asset creation and deployment flow.
+%% Use in issuance design, asset onboarding, and creation workflow sections.
+%% Replace client upstream source systems where needed.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    %% Configuration sources
+    DESIGN[Asset Designer]
+    API[Unified API]
+    SOURCE[[CLIENT: Product / Instrument Data]]
+
+    %% Creation workflow
+    VALID[Validate Asset Type\nFeatures And Modules]
+    FACTORY[Asset Factory Workflow]
+    IDREG[Identity Registry Binding]
+    CLAIMS[Class-Aware Claims]
+    FEATURE[Feature Attachment]
+    ROLES[Initial Role Assignment]
+    TOKEN[DALPAsset Proxy]
+    EVENT[TokenAssetCreated Event]
+    INDEX[Chain Indexer]
+    STATE[Queryable Asset State]
+
+    DESIGN --> API
+    SOURCE --> API
+    API --> VALID --> FACTORY
+    FACTORY --> TOKEN
+    FACTORY --> IDREG
+    FACTORY --> CLAIMS
+    FACTORY --> FEATURE
+    FACTORY --> ROLES
+    TOKEN --> EVENT --> INDEX --> STATE
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+
+    class DESIGN,API,TOKEN,STATE dalp,rounded;
+    class VALID,FACTORY,EVENT,INDEX infra,rounded;
+    class IDREG,CLAIMS compliance,rounded;
+    class FEATURE,ROLES dalp,rounded;
+    class SOURCE client,rounded;

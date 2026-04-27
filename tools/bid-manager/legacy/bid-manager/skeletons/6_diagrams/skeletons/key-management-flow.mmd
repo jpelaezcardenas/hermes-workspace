@@ -1,0 +1,69 @@
+%% DALP key management lifecycle.
+%% Shows key generation, storage, signing request, approval, execution, on-chain submission.
+%% Use in security, custody, key management, and cryptographic controls sections.
+%% Evaluator focus: separation of duties, no single point of compromise, cryptographic hygiene.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": false, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 28, "boxMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    autonumber
+    participant OP as Operator<br/>(Asset Console)
+    participant EE as Execution Engine
+    participant KG as Key Guardian
+    participant HSM as HSM / KMS
+    participant TS as Transaction Signer
+    participant BC as Blockchain
+
+    Note over OP,BC: Key Generation + Provisioning
+
+    OP->>EE: Request key provisioning
+    EE->>KG: Generate key pair
+    KG->>HSM: Create key in secure enclave
+    HSM-->>KG: Key reference (private key never leaves HSM)
+    KG->>KG: Store key metadata + access policy
+    KG-->>EE: Public key + key ID
+    EE-->>OP: Key provisioned (address assigned)
+
+    Note over OP,BC: Key Guardian holds metadata. HSM holds private key. No single component has both.
+
+    Note over OP,BC: Transaction Signing Request
+
+    OP->>EE: Submit transaction
+    EE->>KG: Request signing authorization
+    KG->>KG: Validate requester role (RBAC)
+    KG->>KG: Check signing policy (limits, whitelist)
+
+    alt Policy requires multi-approval
+        KG->>OP: Request second approver
+        OP->>KG: Second approval received
+    end
+
+    KG->>TS: Issue signing token (time-bound)
+
+    Note over KG,TS: Signing token is scoped: specific key, specific transaction, limited TTL.
+
+    TS->>HSM: Sign payload with key reference
+    HSM->>HSM: Validate signing policy
+    HSM-->>TS: Signed transaction
+
+    Note over TS,BC: Transaction Signer cannot choose which key to use. Key Guardian dictates.
+
+    TS->>BC: Broadcast signed transaction
+    BC-->>TS: Transaction receipt + block confirmation
+    TS-->>EE: Execution confirmed
+    EE-->>OP: Transaction success
+
+    Note over OP,BC: Key Rotation (Periodic)
+
+    OP->>EE: Initiate key rotation
+    EE->>KG: Rotate key
+    KG->>HSM: Generate new key pair
+    HSM-->>KG: New key reference
+    KG->>KG: Deprecate old key, update access policy
+    KG-->>EE: Rotation complete
+    EE-->>OP: New key active, old key archived
+
+    Note over KG: [CLIENT: Configure HSM provider, signing policies, and rotation schedule here]

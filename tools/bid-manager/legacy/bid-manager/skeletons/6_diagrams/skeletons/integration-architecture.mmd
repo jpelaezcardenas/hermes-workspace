@@ -1,0 +1,62 @@
+%% DALP enterprise integration architecture.
+%% Use in integration, interoperability, and target operating model sections.
+%% Replace [CLIENT: ...] nodes with actual systems in scope.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    %% DALP integration surface
+    subgraph DALP[DALP API And Middleware]
+        UAPI[Unified API]
+        SDK[TypeScript SDK]
+        WEB[Webhooks]
+        EE[Execution Engine]
+        CI[Chain Indexer]
+    end
+
+    %% Client landscape
+    CB[[CLIENT: Core Banking]]
+    CU[[CLIENT: Custody Ops]]
+    BI[[CLIENT: Reporting / BI]]
+    PORTAL[[CLIENT: Investor Portal]]
+
+    %% External services
+    KYC[KYC / AML]
+    CUST[Custody Provider]
+    MD[Market Data]
+    IDP[Identity Provider]
+    PAY[Payment Rails]
+
+    PORTAL --> UAPI
+    CB <--> UAPI
+    CU <--> UAPI
+    SDK --> UAPI
+    UAPI --> EE
+    EE --> WEB
+    CI --> BI
+
+    EE <--> KYC
+    EE <--> CUST
+    EE <--> MD
+    UAPI <--> IDP
+    EE <--> PAY
+
+    %% Optional interfaces
+    ERP[[CLIENT: ERP / Treasury]] <--> UAPI
+    CASE[[CLIENT: Compliance Case System]] <--> WEB
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+
+    class UAPI,SDK,WEB dalp,rounded;
+    class EE,CI infra,rounded;
+    class CB,CU,BI,PORTAL,ERP,CASE client,rounded;
+    class KYC,CUST,MD,PAY external,rounded;
+    class IDP compliance,rounded;

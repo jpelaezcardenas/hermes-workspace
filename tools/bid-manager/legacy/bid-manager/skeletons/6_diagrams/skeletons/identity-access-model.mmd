@@ -1,0 +1,49 @@
+%% DALP identity and access model.
+%% Use in IAM, RBAC, tenant isolation, and governance sections.
+%% Replace client identity source details without changing DALP role boundaries.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "securityLevel": "loose"
+}}%%
+classDiagram
+    class EnterpriseIdP {
+      +OIDC / SAML
+      +[CLIENT: Group Claims]
+    }
+
+    class Organisation {
+      +owner
+      +admin
+      +member
+    }
+
+    class AccessManager {
+      +systemManager
+      +identityManager
+      +tokenManager
+      +complianceManager
+      +claimIssuer
+      +auditor
+    }
+
+    class TokenRoleScope {
+      +admin
+      +governance
+      +supplyManagement
+      +custodian
+      +emergency
+      +saleAdmin
+      +fundsManager
+    }
+
+    class AssetConsole {
+      +Session Auth
+      +Wallet Verification
+    }
+
+    EnterpriseIdP --> Organisation : authenticates
+    Organisation --> AssetConsole : grants platform access
+    Organisation --> AccessManager : synchronizes roles
+    AccessManager --> TokenRoleScope : assigns per asset
+    TokenRoleScope --> AssetConsole : governs actions

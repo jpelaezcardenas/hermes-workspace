@@ -1,0 +1,65 @@
+%% DALP API gateway request lifecycle.
+%% Shows full request path: authentication, authorization, execution, response.
+%% Use in API architecture, security, integration, and developer experience sections.
+%% Evaluator focus: security-first design, RBAC enforcement, audit logging, error handling.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": false, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 28, "boxMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    autonumber
+    participant APP as Client Application
+    participant GW as API Gateway
+    participant AUTH as Auth Service<br/>(JWT + OIDC)
+    participant RBAC as AccessManager<br/>(RBAC / ABAC)
+    participant UAPI as Unified API
+    participant EE as Execution Engine
+    participant LOG as Audit Log
+    participant BC as Blockchain
+
+    APP->>GW: API request (Bearer token)
+    GW->>GW: Rate limit check
+
+    alt Rate limit exceeded
+        GW-->>APP: 429 Too Many Requests
+    end
+
+    GW->>AUTH: Validate JWT
+    AUTH->>AUTH: Verify signature + expiry
+    AUTH-->>GW: Token valid (tenant, roles, scopes)
+
+    GW->>RBAC: Authorize action
+    RBAC->>RBAC: Evaluate RBAC + ABAC policies
+    RBAC-->>GW: Authorization decision
+
+    alt Unauthorized
+        RBAC-->>GW: 403 Forbidden
+        GW->>LOG: Log denied request
+        GW-->>APP: 403 Forbidden
+    end
+
+    GW->>UAPI: Forward authorized request
+    GW->>LOG: Log request metadata
+    UAPI->>EE: Execute operation
+
+    alt Write operation (transaction)
+        EE->>BC: Submit transaction
+        BC-->>EE: Transaction receipt
+        EE-->>UAPI: Execution result
+        UAPI->>LOG: Log operation outcome
+        UAPI-->>GW: 200 Success + result
+        GW-->>APP: Response payload
+    else Read operation (query)
+        EE-->>UAPI: Query result
+        UAPI-->>GW: 200 Success + data
+        GW-->>APP: Response payload
+    else Execution error
+        EE-->>UAPI: Error details
+        UAPI->>LOG: Log error
+        UAPI-->>GW: 4xx/5xx Error
+        GW-->>APP: Error response
+    end
+
+    Note over APP,GW: [CLIENT: Configure OIDC provider, allowed scopes, and rate limit tiers here]

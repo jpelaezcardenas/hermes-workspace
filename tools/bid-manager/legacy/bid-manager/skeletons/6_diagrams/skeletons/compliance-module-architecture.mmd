@@ -1,0 +1,70 @@
+%% DALP compliance module system deep dive.
+%% Use in compliance architecture, regulatory design, and transfer control sections.
+%% Shows modular composition, runtime evaluation chain, and configurable policy model.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TB
+    subgraph ENGINE[Compliance Engine]
+        CE[Compliance<br/>Engine Core]
+    end
+
+    subgraph MODULES[Available Compliance Modules]
+        M1[Country<br/>Allowlist]
+        M2[Identity<br/>Verification]
+        M3[Transfer<br/>Limits]
+        M4[Supply Cap<br/>Enforcement]
+        M5[Investor Count<br/>Limit]
+        M6[Time Lock /<br/>Lock-up Period]
+        M7[Exchange<br/>Rules]
+    end
+
+    subgraph COMPOSE[Module Composition Per Asset]
+        ASSET[Asset Smart<br/>Contract]
+        BOUND[Bound Module<br/>Set]
+        NOTE1[Each asset binds a<br/>unique module combination<br/>configured at issuance]
+    end
+
+    subgraph RUNTIME[Runtime Evaluation Chain]
+        TX[Transfer Or<br/>Operation Request] --> EVAL1{Module 1:<br/>Country Check}
+        EVAL1 -->|Pass| EVAL2{Module 2:<br/>Identity Check}
+        EVAL1 -->|Fail| BLOCKED[Operation<br/>Blocked]
+        EVAL2 -->|Pass| EVAL3{Module 3:<br/>Transfer Limit}
+        EVAL2 -->|Fail| BLOCKED
+        EVAL3 -->|Pass| EVALN{Module N:<br/>Final Check}
+        EVAL3 -->|Fail| BLOCKED
+        EVALN -->|All Pass| APPROVED[Operation<br/>Approved]
+        EVALN -->|Fail| BLOCKED
+    end
+
+    CE --> M1
+    CE --> M2
+    CE --> M3
+    CE --> M4
+    CE --> M5
+    CE --> M6
+    CE --> M7
+
+    M1 -.-> BOUND
+    M2 -.-> BOUND
+    M3 -.-> BOUND
+    BOUND --> ASSET
+    ASSET --> TX
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+
+    class CE dalp,rounded;
+    class M1,M2,M3,M4,M5,M6,M7 compliance,rounded;
+    class ASSET,BOUND dalp,rounded;
+    class TX,EVAL1,EVAL2,EVAL3,EVALN compliance,rounded;
+    class APPROVED milestone,rounded;
+    class BLOCKED risk,rounded;
+    class NOTE1 infra,rounded;

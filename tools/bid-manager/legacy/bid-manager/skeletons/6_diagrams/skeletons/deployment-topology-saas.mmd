@@ -1,0 +1,58 @@
+%% DALP SaaS deployment topology.
+%% Use in managed deployment, SaaS hosting, and infrastructure sections.
+%% Add region or tenant notes only where relevant to the bid.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    USERS[Client Users]
+    APIAPP[Client API Consumers]
+    WAF[WAF / Ingress]
+    LB[Load Balancer]
+
+    subgraph SAAS[SettleMint SaaS Environment]
+        K8S[Multi-Tenant K8s Cluster]
+        APP[DALP Services]
+        IDX[Chain Indexer]
+        DB[Managed PostgreSQL]
+        OBJ[Object Storage]
+        KMS[KMS / HSM]
+        OBS[Observability Stack]
+    end
+
+    subgraph CHAIN[Blockchain Access]
+        GW[Chain Gateway]
+        RPC[RPC Providers]
+        NODE[Blockchain Nodes]
+    end
+
+    USERS --> WAF --> LB --> K8S
+    APIAPP --> WAF
+    K8S --> APP
+    K8S --> IDX
+    APP --> DB
+    APP --> OBJ
+    APP --> KMS
+    APP --> OBS
+    IDX --> DB
+    APP --> GW
+    IDX --> GW
+    GW --> RPC
+    RPC --> NODE
+
+    TENANT[[CLIENT: Tenant Configuration]] --> APP
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+
+    class USERS,APIAPP,TENANT client,rounded;
+    class APP dalp,rounded;
+    class WAF,LB,K8S,IDX,DB,OBJ,KMS,OBS,GW,NODE infra,rounded;
+    class RPC external,rounded;

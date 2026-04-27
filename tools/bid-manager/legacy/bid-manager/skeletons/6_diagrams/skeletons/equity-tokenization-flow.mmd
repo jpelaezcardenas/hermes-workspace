@@ -1,0 +1,64 @@
+%% Equity token lifecycle from share class definition through corporate actions.
+%% Use in equity use case, compliance, and cap table management sections.
+%% Shows Reg D / MiFID II compliance and corporate action handling.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": true, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 32, "boxMargin": 12, "boxTextMargin": 8, "noteMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    actor ISS as Issuer
+    participant AC as Asset Console
+    participant CE as Compliance Engine
+    participant EE as Execution Engine
+    participant BC as Blockchain
+    participant TA as [CLIENT: Transfer Agent]
+
+    rect rgb(232, 244, 253)
+        Note over ISS, CE: Share Class Design
+        ISS ->> AC: Define share class<br/>(class, par value, voting rights)
+        AC ->> CE: Configure compliance<br/>(Reg D / MiFID II modules)
+        CE ->> CE: Attach: Investor Count Limit,<br/>Country Allowlist, Lock-up Period
+        CE -->> AC: Compliance profile active
+    end
+
+    rect rgb(243, 229, 245)
+        Note over AC, BC: Smart Contract Deployment
+        AC ->> EE: Deploy equity contract<br/>(SMART Protocol Factory)
+        EE ->> BC: Deploy contract with<br/>compliance modules bound
+        BC -->> EE: Contract live
+        EE ->> BC: Assign roles via AccessManager<br/>(Issuer, Transfer Agent)
+        EE -->> AC: Deployment confirmed
+    end
+
+    rect rgb(232, 245, 233)
+        Note over ISS, TA: Primary Distribution
+        ISS ->> AC: Initiate primary issuance
+        AC ->> CE: Verify investor eligibility
+        CE -->> AC: Investors cleared
+        AC ->> EE: Mint equity tokens
+        EE ->> BC: Tokens minted and allocated
+        BC -->> EE: Allocation confirmed
+        EE ->> TA: Cap table updated
+    end
+
+    rect rgb(255, 243, 224)
+        Note over AC, TA: Secondary Transfer
+        AC ->> CE: Transfer compliance check<br/>(accreditation, jurisdiction, lock-up)
+        CE -->> AC: Transfer approved
+        AC ->> EE: Execute transfer
+        EE ->> BC: On-chain transfer
+        BC -->> EE: Transfer settled
+        EE ->> TA: Cap table reconciled
+    end
+
+    rect rgb(255, 248, 225)
+        Note over ISS, TA: Corporate Actions
+        ISS ->> AC: Declare dividend / call vote
+        AC ->> EE: Snapshot token holders
+        EE ->> BC: Read holder balances
+        BC -->> EE: Holder snapshot captured
+        EE ->> TA: Distribute dividend /<br/>record votes
+        Note right of TA: Cap table reflects all<br/>corporate actions in real time
+    end

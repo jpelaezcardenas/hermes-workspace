@@ -1,0 +1,62 @@
+%% DALP XVP (Exchange vs Payment) atomic settlement flow.
+%% Shows DVP settlement: trade matching, compliance pre-check, atomic lock, simultaneous delivery, finality.
+%% Use in settlement, DvP, post-trade, and counterparty risk sections.
+%% Evaluator focus: counterparty risk elimination, atomic finality, failure rollback.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": false, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 28, "boxMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    autonumber
+    participant BUY as Buyer
+    participant SELL as Seller
+    participant API as Unified API
+    participant XVP as XVP Engine
+    participant CE as Compliance Engine
+    participant ID as OnchainID
+    participant BC as Blockchain<br/>(SMART Protocol)
+
+    Note over BUY,BC: Trade Initiation and Matching
+
+    BUY->>API: Submit buy order (asset, quantity, payment)
+    SELL->>API: Submit sell order (asset, quantity, price)
+    API->>XVP: Match trade (buyer + seller)
+    XVP->>XVP: Validate trade terms
+
+    Note over BUY,BC: Compliance Pre-Check (Both Parties)
+
+    XVP->>CE: Pre-check buyer eligibility
+    CE->>ID: Verify buyer OnchainID + claims
+    ID-->>CE: Buyer identity valid
+    CE-->>XVP: Buyer approved
+
+    XVP->>CE: Pre-check seller eligibility
+    CE->>ID: Verify seller OnchainID + claims
+    ID-->>CE: Seller identity valid
+    CE-->>XVP: Seller approved
+
+    Note over BUY,BC: Atomic Settlement
+
+    XVP->>BC: Lock buyer payment (escrow)
+    BC-->>XVP: Payment locked
+    XVP->>BC: Lock seller asset (escrow)
+    BC-->>XVP: Asset locked
+
+    alt Both locks successful
+        XVP->>BC: Execute atomic swap (asset + payment)
+        BC-->>XVP: Settlement finality confirmed
+        XVP-->>API: Settlement complete
+        API-->>BUY: Asset received
+        API-->>SELL: Payment received
+    else Lock failure or timeout
+        XVP->>BC: Release buyer payment (rollback)
+        XVP->>BC: Release seller asset (rollback)
+        BC-->>XVP: Rollback confirmed
+        XVP-->>API: Settlement failed
+        API-->>BUY: Funds returned
+        API-->>SELL: Asset returned
+    end
+
+    Note over XVP: [CLIENT: Configure settlement window, payment rail, and escrow policies here]

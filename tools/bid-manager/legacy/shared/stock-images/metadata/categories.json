@@ -1,0 +1,320 @@
+[
+  {
+    "name": "abstract",
+    "count": 3,
+    "tags": [
+      "abstract",
+      "background",
+      "safe",
+      "data-viz"
+    ],
+    "recommended_usage": [
+      "cover backgrounds",
+      "section dividers",
+      "data-heavy slides"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "architecture",
+    "count": 3,
+    "tags": [
+      "city",
+      "infrastructure",
+      "enterprise",
+      "built-environment"
+    ],
+    "recommended_usage": [
+      "infrastructure context",
+      "regional market slides",
+      "real-world asset framing"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "blockchain",
+    "count": 3,
+    "tags": [
+      "blockchain",
+      "web3",
+      "network",
+      "digital-ledger"
+    ],
+    "recommended_usage": [
+      "network architecture",
+      "tokenization intro",
+      "ecosystem overview"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "business",
+    "count": 3,
+    "tags": [
+      "executive",
+      "meeting",
+      "enterprise",
+      "presentation"
+    ],
+    "recommended_usage": [
+      "exec summary",
+      "stakeholder slides",
+      "governance positioning"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "compliance",
+    "count": 6,
+    "tags": [
+      "compliance",
+      "policy",
+      "kyc",
+      "controls"
+    ],
+    "recommended_usage": [
+      "compliance section covers",
+      "policy operations",
+      "regulatory governance"
+    ],
+    "generated_assets": 3,
+    "photo_assets": 3,
+    "mixed": true,
+    "styles": [
+      "illustration",
+      "photo"
+    ]
+  },
+  {
+    "name": "custody",
+    "count": 3,
+    "tags": [
+      "custody",
+      "security",
+      "infrastructure",
+      "protection"
+    ],
+    "recommended_usage": [
+      "custody architecture",
+      "security posture",
+      "safe-keeping narratives"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "dalp",
+    "count": 3,
+    "tags": [
+      "dalp",
+      "platform",
+      "lifecycle",
+      "orchestration"
+    ],
+    "recommended_usage": [
+      "DALP narrative",
+      "lifecycle slides",
+      "platform orchestration"
+    ],
+    "generated_assets": 3,
+    "photo_assets": 0,
+    "mixed": false,
+    "styles": [
+      "illustration"
+    ]
+  },
+  {
+    "name": "digital-assets",
+    "count": 6,
+    "tags": [
+      "digital-assets",
+      "wallets",
+      "token-holders",
+      "markets"
+    ],
+    "recommended_usage": [
+      "asset servicing",
+      "wallet flows",
+      "market structure"
+    ],
+    "generated_assets": 3,
+    "photo_assets": 3,
+    "mixed": true,
+    "styles": [
+      "illustration",
+      "photo"
+    ]
+  },
+  {
+    "name": "finance",
+    "count": 3,
+    "tags": [
+      "finance",
+      "markets",
+      "capital",
+      "investors"
+    ],
+    "recommended_usage": [
+      "capital markets",
+      "issuance economics",
+      "investor-facing slides"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "fintech",
+    "count": 3,
+    "tags": [
+      "fintech",
+      "trading",
+      "analytics",
+      "market-data"
+    ],
+    "recommended_usage": [
+      "trading ops",
+      "market infrastructure",
+      "analytics-led storytelling"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "settlement",
+    "count": 3,
+    "tags": [
+      "settlement",
+      "payments",
+      "transactions",
+      "cashless"
+    ],
+    "recommended_usage": [
+      "payment rails",
+      "transaction flows",
+      "cash movement and settlement"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "software",
+    "count": 6,
+    "tags": [
+      "software",
+      "engineering",
+      "integration",
+      "api"
+    ],
+    "recommended_usage": [
+      "API/integration sections",
+      "engineering credibility",
+      "implementation slides"
+    ],
+    "generated_assets": 3,
+    "photo_assets": 3,
+    "mixed": true,
+    "styles": [
+      "illustration",
+      "photo"
+    ]
+  },
+  {
+    "name": "teamwork",
+    "count": 3,
+    "tags": [
+      "team",
+      "collaboration",
+      "delivery",
+      "operations"
+    ],
+    "recommended_usage": [
+      "delivery model",
+      "operating model",
+      "customer success"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "technology",
+    "count": 3,
+    "tags": [
+      "software",
+      "cloud",
+      "dashboard",
+      "engineering"
+    ],
+    "recommended_usage": [
+      "platform architecture",
+      "developer workflows",
+      "operations"
+    ],
+    "generated_assets": 0,
+    "photo_assets": 3,
+    "mixed": false,
+    "styles": [
+      "photo"
+    ]
+  },
+  {
+    "name": "tokenization",
+    "count": 3,
+    "tags": [
+      "tokenization",
+      "issuance",
+      "fractionalization",
+      "settlement"
+    ],
+    "recommended_usage": [
+      "issuance flow",
+      "fractional ownership",
+      "settlement lifecycle"
+    ],
+    "generated_assets": 3,
+    "photo_assets": 0,
+    "mixed": false,
+    "styles": [
+      "illustration"
+    ]
+  }
+]

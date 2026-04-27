@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoresearch - bid-manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafafa; color: #333; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { font-size: 24px; margin-bottom: 20px; color: #1a1a1a; }
+        .status { background: #e3f2fd; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; }
+        .status.running { background: #fff3e0; }
+        .status.complete { background: #e8f5e9; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card h2 { font-size: 14px; text-transform: uppercase; color: #666; margin-bottom: 12px; }
+        .score { font-size: 48px; font-weight: 700; color: #1976d2; }
+        .score-label { font-size: 14px; color: #666; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { font-size: 12px; text-transform: uppercase; color: #666; }
+        .keep { color: #2e7d32; }
+        .discard { color: #c62828; }
+        .baseline { color: #1565c0; }
+        .progress-bar { height: 24px; background: #eee; border-radius: 12px; overflow: hidden; margin: 8px 0; }
+        .progress-fill { height: 100%; background: #4caf50; transition: width 0.3s; }
+        .eval-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .eval-item { background: #f5f5f5; padding: 10px; border-radius: 6px; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Autoresearch: bid-manager</h1>
+        <div id="status" class="status">Initializing...</div>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>Current Score</h2>
+                <div class="score" id="currentScore">--</div>
+                <div class="score-label">out of <span id="maxScore">75</span> (15 evals × 5 runs)</div>
+            </div>
+            <div class="card">
+                <h2>Pass Rate</h2>
+                <div class="score" id="passRate">--%</div>
+                <div class="score-label" id="experimentCount">Experiment 0</div>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>Score Progression</h2>
+            <canvas id="chart" height="80"></canvas>
+        </div>
+        
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>Experiment Log</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Score</th>
+                        <th>Pass Rate</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="log"></tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h2>Eval Breakdown</h2>
+            <div class="eval-breakdown" id="evalBreakdown"></div>
+        </div>
+    </div>
+
+    <script>
+        const MAX_EVALS = 15;
+        const RUNS = 5;
+        const MAX_SCORE = MAX_EVALS * RUNS;
+        
+        let chart = null;
+        
+        async function loadResults() {
+            try {
+                const resp = await fetch('results.json');
+                return await resp.json();
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        async function render() {
+            const data = await loadResults();
+            if (!data) return;
+            
+            // Status
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = data.status === 'running' 
+                ? `Running experiment ${data.current_experiment}...` 
+                : data.status === 'complete' 
+                    ? '✅ Complete' 
+                    : 'Idle';
+            statusEl.className = 'status ' + data.status;
+            
+            // Current score
+            const current = data.experiments[data.experiments.length - 1];
+            if (current) {
+                document.getElementById('currentScore').textContent = current.score;
+                document.getElementById('passRate').textContent = current.pass_rate + '%';
+                document.getElementById('experimentCount').textContent = `Experiment ${current.id}`;
+            }
+            
+            document.getElementById('maxScore').textContent = MAX_SCORE;
+            
+            // Chart
+            const ctx = document.getElementById('chart').getContext('2d');
+            const labels = data.experiments.map(e => `Exp ${e.id}`);
+            const scores = data.experiments.map(e => e.pass_rate);
+            const colors = data.experiments.map(e => {
+                if (e.status === 'baseline') return '#1565c0';
+                return e.status === 'keep' ? '#2e7d32' : '#c62828';
+            });
+            
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pass Rate %',
+                        data: scores,
+                        borderColor: '#1976d2',
+                        backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                        fill: true,
+                        pointBackgroundColor: colors,
+                        pointRadius: 8
+                    }]
+                },
+                options: {
+                    scales: { y: { min: 0, max: 100 } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+            
+            // Log
+            const logEl = document.getElementById('log');
+            logEl.innerHTML = data.experiments.map(e => `
+                <tr>
+                    <td>${e.id}</td>
+                    <td>${e.score}/${MAX_SCORE}</td>
+                    <td>${e.pass_rate}%</td>
+                    <td class="${e.status}">${e.status}</td>
+                    <td>${e.description}</td>
+                </tr>
+            `).join('');
+            
+            // Eval breakdown
+            if (data.eval_breakdown.length > 0) {
+                document.getElementById('evalBreakdown').innerHTML = data.eval_breakdown.map(e => `
+                    <div class="eval-item">
+                        <strong>${e.name}</strong><br>
+                        ${e.pass_count}/${e.total} (${Math.round(e.pass_count/e.total*100)}%)
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Auto-refresh
+        render();
+        setInterval(render, 10000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "skill_name": "bid-manager",
+  "status": "complete",
+  "current_experiment": 0,
+  "baseline_score": 64.0,
+  "best_score": 64.0,
+  "experiments": [
+    {
+      "id": 0,
+      "score": 48,
+      "max_score": 75,
+      "pass_rate": 64.0,
+      "status": "baseline",
+      "description": "original skill — 5 diverse RFI scenarios"
+    }
+  ],
+  "eval_breakdown": [
+    {"name": "Full lifecycle narrative", "pass_count": 4, "total": 5},
+    {"name": "Asset-contracts distinction", "pass_count": 2, "total": 5},
+    {"name": "Integration-first", "pass_count": 5, "total": 5},
+    {"name": "Business-user focus", "pass_count": 1, "total": 5},
+    {"name": "Enterprise-grade positioning", "pass_count": 4, "total": 5},
+    {"name": "Data sovereignty", "pass_count": 4, "total": 5},
+    {"name": "Proven in regulated markets", "pass_count": 3, "total": 5},
+    {"name": "Settlement specification", "pass_count": 2, "total": 5},
+    {"name": "Compliance narrative", "pass_count": 4, "total": 5},
+    {"name": "No overselling", "pass_count": 4, "total": 5},
+    {"name": "Direct answer first", "pass_count": 5, "total": 5},
+    {"name": "Every requirement answered", "pass_count": 5, "total": 5},
+    {"name": "Specific to client", "pass_count": 2, "total": 5},
+    {"name": "Relevant references", "pass_count": 4, "total": 5},
+    {"name": "Scannable format", "pass_count": 5, "total": 5}
+  ]
+}

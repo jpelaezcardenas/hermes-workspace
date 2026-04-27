@@ -1,0 +1,64 @@
+%% DALP custody integration flow.
+%% Shows how DALP integrates with custody providers (Fireblocks, DFNS, HSM).
+%% Use in custody, key management, security architecture, and operational controls sections.
+%% Covers: key generation, transaction signing with maker-checker, balance reconciliation, custody attestation.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": false, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 28, "boxMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    autonumber
+    participant OP as Operator<br/>(Asset Console)
+    participant EE as Execution Engine
+    participant KG as Key Guardian
+    participant TS as Transaction Signer
+    participant HSM as HSM / KMS
+    participant CUST as Custody Provider<br/>(Fireblocks / DFNS)
+    participant BC as Blockchain
+
+    Note over OP,BC: Key Generation Flow
+
+    OP->>EE: Request new signing key
+    EE->>KG: Initiate key generation
+    KG->>HSM: Generate key pair (HSM policy check)
+    HSM-->>KG: Public key + key reference
+    KG->>CUST: Register vault / wallet
+    CUST-->>KG: Vault ID + address
+    KG-->>EE: Key provisioned
+    EE-->>OP: Wallet ready
+
+    Note over OP,BC: Transaction Signing Flow (Maker-Checker)
+
+    OP->>EE: Submit transaction request
+    EE->>KG: Request signing approval
+    KG->>KG: Validate RBAC + policy rules
+    KG->>OP: Maker-checker: await second approver
+
+    alt Approved by second operator
+        OP->>KG: Second approval granted
+        KG->>TS: Authorize signing
+        TS->>HSM: Sign transaction payload
+        HSM-->>TS: Signed transaction
+        TS->>CUST: Co-sign (if multi-sig policy)
+        CUST-->>TS: Co-signature
+        TS->>BC: Broadcast signed transaction
+        BC-->>TS: Transaction hash + receipt
+        TS-->>EE: Execution confirmed
+        EE-->>OP: Transaction success
+    else Rejected or timeout
+        KG-->>EE: Signing denied
+        EE-->>OP: Transaction rejected
+    end
+
+    Note over OP,BC: Balance Reconciliation (Scheduled)
+
+    EE->>CUST: Query custody balances
+    CUST-->>EE: Custody balance report
+    EE->>BC: Query on-chain balances
+    BC-->>EE: On-chain balance state
+    EE->>EE: Compare and flag discrepancies
+    EE-->>OP: Reconciliation report
+
+    Note over CUST: [CLIENT: Insert specific custody provider and policy configuration here]

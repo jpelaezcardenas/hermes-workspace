@@ -1,0 +1,74 @@
+[
+  {
+    "name": "bid-manager",
+    "match": true,
+    "source": {
+      "files": 2545,
+      "dirs": 408,
+      "symlinks": 2,
+      "bytes": 591888103,
+      "sha256": "7815cc7545cb4d12fb5ceeb2f8ab166d01a4c947517b8b723ec6d179fe057508"
+    },
+    "dest": {
+      "files": 2545,
+      "dirs": 408,
+      "symlinks": 2,
+      "bytes": 591888103,
+      "sha256": "7815cc7545cb4d12fb5ceeb2f8ab166d01a4c947517b8b723ec6d179fe057508"
+    }
+  },
+  {
+    "name": "bid-checker",
+    "match": true,
+    "source": {
+      "files": 38,
+      "dirs": 12,
+      "symlinks": 1,
+      "bytes": 44341794,
+      "sha256": "259d35a61c7cd453203be10759a835bb8943659392d265da75db22af32f3d6fe"
+    },
+    "dest": {
+      "files": 38,
+      "dirs": 12,
+      "symlinks": 1,
+      "bytes": 44341794,
+      "sha256": "259d35a61c7cd453203be10759a835bb8943659392d265da75db22af32f3d6fe"
+    }
+  },
+  {
+    "name": "rfp-forge",
+    "match": true,
+    "source": {
+      "files": 539,
+      "dirs": 89,
+      "symlinks": 2,
+      "bytes": 18107898,
+      "sha256": "c301e24225d565ba75c2702fb1887675009e7be22d3678bf2066ecbef46da2be"
+    },
+    "dest": {
+      "files": 539,
+      "dirs": 89,
+      "symlinks": 2,
+      "bytes": 18107898,
+      "sha256": "c301e24225d565ba75c2702fb1887675009e7be22d3678bf2066ecbef46da2be"
+    }
+  },
+  {
+    "name": "shared",
+    "match": true,
+    "source": {
+      "files": 2336,
+      "dirs": 172,
+      "symlinks": 0,
+      "bytes": 1893696946,
+      "sha256": "9ad63b10218e8fa4295b0f34fcf785c8665d30a2159d33891a404853f9360c4e"
+    },
+    "dest": {
+      "files": 2336,
+      "dirs": 172,
+      "symlinks": 0,
+      "bytes": 1893696946,
+      "sha256": "9ad63b10218e8fa4295b0f34fcf785c8665d30a2159d33891a404853f9360c4e"
+    }
+  }
+]

@@ -1,0 +1,58 @@
+%% Fund unit tokenization lifecycle with NAV integration.
+%% Use in fund use case, subscription/redemption, and transfer restriction sections.
+%% Shows NAV feed, investor eligibility, and reporting flows.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    subgraph SETUP[Fund Setup]
+        DEFINE[Define Fund<br/>Parameters] --> NAV[Integrate NAV<br/>Data Feed]
+        NAV --> DEPLOY[Deploy Fund<br/>Smart Contract]
+    end
+
+    subgraph SUB[Subscription Flow]
+        INVESTOR[Investor Request] --> ELIGIBLE{Investor<br/>Eligibility Check}
+        ELIGIBLE -->|Cleared| SUBSCRIBE[Subscription<br/>Confirmed]
+        ELIGIBLE -->|Failed| REJECTSUB[Reject:<br/>Not Eligible]
+        SUBSCRIBE --> MINT[Mint Fund Units<br/>At NAV Price]
+    end
+
+    subgraph RED[Redemption Flow]
+        REDEEMREQ[Redemption<br/>Request] --> WINDOW{Within<br/>Redemption Window?}
+        WINDOW -->|Yes| BURN[Burn Fund Units]
+        WINDOW -->|No| QUEUE[Queue For<br/>Next Window]
+        BURN --> SETTLE[Settle Redemption<br/>Proceeds]
+    end
+
+    subgraph TRANSFER[Transfer Controls]
+        XFER[Transfer Request] --> RESTRICT{Transfer<br/>Restrictions}
+        RESTRICT -->|Allowed| EXECUTE[Execute Transfer]
+        RESTRICT -->|Blocked| REJECTXFER[Reject:<br/>Restricted]
+    end
+
+    DEPLOY --> INVESTOR
+    MINT --> REDEEMREQ
+    MINT --> XFER
+    EXECUTE --> REPORT
+
+    FA[[CLIENT: Fund<br/>Administrator]] --> NAV
+    TA[[CLIENT: Transfer<br/>Agent]] --> ELIGIBLE
+    TA --> RESTRICT
+    SETTLE --> REPORT[Investor And<br/>Regulatory Reporting]
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+
+    class DEFINE,NAV,DEPLOY,MINT,BURN,SETTLE,EXECUTE,REPORT dalp,rounded;
+    class INVESTOR,SUBSCRIBE,REDEEMREQ,XFER dalp,rounded;
+    class ELIGIBLE,WINDOW,RESTRICT compliance,rounded;
+    class FA,TA client,rounded;
+    class REJECTSUB,REJECTXFER risk,rounded;
+    class QUEUE external,rounded;

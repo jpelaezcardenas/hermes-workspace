@@ -1,0 +1,248 @@
+{
+  "version": "1.0.0",
+  "description": "Agent registry for SettleMint office agents. Maps canonical names to aliases and provides detection patterns.",
+  "last_updated": "2026-03-16",
+  "agents": {
+    "bid-manager": {
+      "canonical_name": "bid-manager",
+      "folder_name": "bid-manager",
+      "description": "Writes proposals and responds to RFPs/RFIs",
+      "aliases": [
+        "proposal builder",
+        "RFP response",
+        "RFP response builder",
+        "bid writer",
+        "proposal writer",
+        "write a proposal",
+        "create a bid",
+        "respond to RFP",
+        "response builder"
+      ],
+      "detection_keywords": [
+        "RFP",
+        "request for proposal",
+        "proposal response",
+        "bid response",
+        "tender response",
+        "technical proposal",
+        "commercial proposal",
+        "write a proposal",
+        "respond to this RFP",
+        "prepare a proposal",
+        "bid for this",
+        "proposal document",
+        "tender submission",
+        "bid submission",
+        "RFI",
+        "request for information",
+        "information request",
+        "questionnaire",
+        "security questionnaire",
+        "vendor questionnaire",
+        "due diligence questionnaire"
+      ],
+      "acknowledgment": "Starting **bid-manager** to handle your proposal...",
+      "entry_point": "settlemint-office-agents/bid-manager/AGENTS.md"
+    },
+    "bid-checker": {
+      "canonical_name": "bid-checker",
+      "folder_name": "bid-checker",
+      "description": "Reviews and QA checks proposals before submission",
+      "aliases": [
+        "proposal checker",
+        "bid checker",
+        "bid reviewer",
+        "review proposal",
+        "check proposal",
+        "QA the bid",
+        "QA the proposal"
+      ],
+      "detection_keywords": [
+        "review proposal",
+        "check proposal",
+        "QA proposal",
+        "proposal QA",
+        "review bid",
+        "check bid",
+        "bid review",
+        "proposal review"
+      ],
+      "acknowledgment": "Starting **bid-checker** to review your proposal...",
+      "entry_point": "settlemint-office-agents/bid-checker/AGENTS.md"
+    },
+    "ppt-maker": {
+      "canonical_name": "ppt-maker",
+      "folder_name": "ppt-maker",
+      "description": "Builds PowerPoint presentations and slide decks",
+      "aliases": [
+        "deck-manager",
+        "deck builder",
+        "ppt builder",
+        "presentation builder",
+        "PPTX builder",
+        "slide builder",
+        "create a deck",
+        "create a presentation",
+        "create a ppt",
+        "make slides",
+        "build a deck",
+        "PowerPoint builder"
+      ],
+      "detection_keywords": [
+        "presentation",
+        "slide deck",
+        "powerpoint",
+        "pptx",
+        "deck",
+        "slides",
+        "build a deck",
+        "create presentation",
+        "make slides"
+      ],
+      "acknowledgment": "Starting **ppt-maker** to build your presentation...",
+      "entry_point": "settlemint-office-agents/ppt-maker/AGENTS.md"
+    },
+    "ppt-checker": {
+      "canonical_name": "ppt-checker",
+      "folder_name": "ppt-checker",
+      "description": "Reviews and QA checks PowerPoint decks",
+      "aliases": [
+        "deck-checker",
+        "ppt checker",
+        "presentation reviewer",
+        "deck reviewer",
+        "slide reviewer",
+        "review the deck",
+        "check the presentation",
+        "QA the slides",
+        "QA the deck"
+      ],
+      "detection_keywords": [
+        "review deck",
+        "check deck",
+        "review presentation",
+        "check presentation",
+        "deck review",
+        "presentation review",
+        "QA slides"
+      ],
+      "acknowledgment": "Starting **ppt-checker** to review your presentation...",
+      "entry_point": "settlemint-office-agents/ppt-checker/AGENTS.md"
+    },
+    "rfp-forge": {
+      "canonical_name": "rfp-forge",
+      "folder_name": "rfp-forge",
+      "description": "Generates RFPs, RFIs, and procurement documents",
+      "aliases": [
+        "RFP builder",
+        "RFP generator",
+        "RFP writer",
+        "build an RFP",
+        "write an RFP",
+        "generate an RFP",
+        "create an RFP"
+      ],
+      "detection_keywords": [
+        "generate RFP",
+        "create RFP",
+        "write RFP",
+        "build RFP",
+        "RFP generator",
+        "RFP builder",
+        "procurement document"
+      ],
+      "acknowledgment": "Starting **rfp-forge** to generate your procurement document...",
+      "entry_point": "settlemint-office-agents/rfp-forge/AGENTS.md"
+    },
+    "press-manager": {
+      "canonical_name": "press-manager",
+      "folder_name": "press-manager",
+      "description": "Handles press and media content - interview responses, talking points, press statements, media briefings, byline drafts, panel/podcast prep",
+      "aliases": [
+        "press manager",
+        "media manager",
+        "press writer",
+        "media writer",
+        "press release",
+        "media briefing",
+        "interview prep",
+        "panel prep",
+        "podcast prep",
+        "talking points",
+        "press statement",
+        "byline",
+        "sound bites",
+        "media Q&A"
+      ],
+      "detection_keywords": [
+        "press release",
+        "press statement",
+        "media briefing",
+        "interview prep",
+        "panel prep",
+        "podcast prep",
+        "talking points",
+        "byline article",
+        "sound bite",
+        "media mention",
+        "journalist",
+        "press coverage",
+        "media request",
+        "PR",
+        "public relations",
+        "media pack"
+      ],
+      "acknowledgment": "Starting **press-manager** to handle your media content...",
+      "entry_point": "settlemint-office-agents/press-manager/AGENTS.md"
+    },
+    "word-writer": {
+      "canonical_name": "word-writer",
+      "folder_name": "word-writer",
+      "description": "Generates generic DOCX documents - reports, memos, briefings, meeting summaries, Q&A packs (excludes proposals, RFPs, press)",
+      "aliases": [
+        "word writer",
+        "docx writer",
+        "document writer",
+        "word document",
+        "word doc",
+        "write a report",
+        "write a memo",
+        "briefing document",
+        "meeting summary",
+        "executive memo",
+        "write up"
+      ],
+      "detection_keywords": [
+        "word document",
+        "word doc",
+        "docx",
+        "report",
+        "memo",
+        "briefing",
+        "meeting summary",
+        "executive memo",
+        "Q&A pack",
+        "workshop notes",
+        "status update",
+        "internal document",
+        "write up",
+        "writeup"
+      ],
+      "acknowledgment": "Starting **word-writer** to create your document...",
+      "entry_point": "settlemint-office-agents/word-writer/AGENTS.md"
+    }
+  },
+  "detection_rules": {
+    "case_sensitive": false,
+    "match_partial": true,
+    "priority_order": [
+      "bid-manager",
+      "bid-checker",
+      "ppt-maker",
+      "ppt-checker",
+      "rfp-forge",
+      "press-manager",
+      "word-writer"
+    ]
+  }
+}

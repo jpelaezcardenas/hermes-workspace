@@ -1,0 +1,1638 @@
+{
+  "summary": {
+    "library": "SettleMint shared stock images",
+    "root": "workspace/settlemint-office-agents/shared/stock-images",
+    "formats": [
+      "jpg"
+    ],
+    "license": {
+      "legacy": "Pexels license",
+      "generated": "Workspace-generated SettleMint-safe abstract illustrations",
+      "photo_batch": "Pexels license (curated enterprise/fintech photography)"
+    }
+  },
+  "counts": {
+    "assets": 54,
+    "categories": 15,
+    "generated_assets": 15,
+    "pexels_photo_assets": 39
+  },
+  "categories": [
+    {
+      "name": "abstract",
+      "count": 3,
+      "tags": [
+        "abstract",
+        "background",
+        "safe",
+        "data-viz"
+      ],
+      "recommended_usage": [
+        "cover backgrounds",
+        "section dividers",
+        "data-heavy slides"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "architecture",
+      "count": 3,
+      "tags": [
+        "city",
+        "infrastructure",
+        "enterprise",
+        "built-environment"
+      ],
+      "recommended_usage": [
+        "infrastructure context",
+        "regional market slides",
+        "real-world asset framing"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "blockchain",
+      "count": 3,
+      "tags": [
+        "blockchain",
+        "web3",
+        "network",
+        "digital-ledger"
+      ],
+      "recommended_usage": [
+        "network architecture",
+        "tokenization intro",
+        "ecosystem overview"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "business",
+      "count": 3,
+      "tags": [
+        "executive",
+        "meeting",
+        "enterprise",
+        "presentation"
+      ],
+      "recommended_usage": [
+        "exec summary",
+        "stakeholder slides",
+        "governance positioning"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "compliance",
+      "count": 6,
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ],
+      "generated_assets": 3,
+      "photo_assets": 3,
+      "mixed": true,
+      "styles": [
+        "illustration",
+        "photo"
+      ]
+    },
+    {
+      "name": "custody",
+      "count": 3,
+      "tags": [
+        "custody",
+        "security",
+        "infrastructure",
+        "protection"
+      ],
+      "recommended_usage": [
+        "custody architecture",
+        "security posture",
+        "safe-keeping narratives"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "dalp",
+      "count": 3,
+      "tags": [
+        "dalp",
+        "platform",
+        "lifecycle",
+        "orchestration"
+      ],
+      "recommended_usage": [
+        "DALP narrative",
+        "lifecycle slides",
+        "platform orchestration"
+      ],
+      "generated_assets": 3,
+      "photo_assets": 0,
+      "mixed": false,
+      "styles": [
+        "illustration"
+      ]
+    },
+    {
+      "name": "digital-assets",
+      "count": 6,
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ],
+      "generated_assets": 3,
+      "photo_assets": 3,
+      "mixed": true,
+      "styles": [
+        "illustration",
+        "photo"
+      ]
+    },
+    {
+      "name": "finance",
+      "count": 3,
+      "tags": [
+        "finance",
+        "markets",
+        "capital",
+        "investors"
+      ],
+      "recommended_usage": [
+        "capital markets",
+        "issuance economics",
+        "investor-facing slides"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "fintech",
+      "count": 3,
+      "tags": [
+        "fintech",
+        "trading",
+        "analytics",
+        "market-data"
+      ],
+      "recommended_usage": [
+        "trading ops",
+        "market infrastructure",
+        "analytics-led storytelling"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "settlement",
+      "count": 3,
+      "tags": [
+        "settlement",
+        "payments",
+        "transactions",
+        "cashless"
+      ],
+      "recommended_usage": [
+        "payment rails",
+        "transaction flows",
+        "cash movement and settlement"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "software",
+      "count": 6,
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ],
+      "generated_assets": 3,
+      "photo_assets": 3,
+      "mixed": true,
+      "styles": [
+        "illustration",
+        "photo"
+      ]
+    },
+    {
+      "name": "teamwork",
+      "count": 3,
+      "tags": [
+        "team",
+        "collaboration",
+        "delivery",
+        "operations"
+      ],
+      "recommended_usage": [
+        "delivery model",
+        "operating model",
+        "customer success"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "technology",
+      "count": 3,
+      "tags": [
+        "software",
+        "cloud",
+        "dashboard",
+        "engineering"
+      ],
+      "recommended_usage": [
+        "platform architecture",
+        "developer workflows",
+        "operations"
+      ],
+      "generated_assets": 0,
+      "photo_assets": 3,
+      "mixed": false,
+      "styles": [
+        "photo"
+      ]
+    },
+    {
+      "name": "tokenization",
+      "count": 3,
+      "tags": [
+        "tokenization",
+        "issuance",
+        "fractionalization",
+        "settlement"
+      ],
+      "recommended_usage": [
+        "issuance flow",
+        "fractional ownership",
+        "settlement lifecycle"
+      ],
+      "generated_assets": 3,
+      "photo_assets": 0,
+      "mixed": false,
+      "styles": [
+        "illustration"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "abstract/abstract-01.jpg",
+      "category": "abstract",
+      "filename": "abstract-01.jpg",
+      "path": "abstract/abstract-01.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/1616403/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "abstract",
+        "background",
+        "safe",
+        "data-viz"
+      ],
+      "recommended_usage": [
+        "cover backgrounds",
+        "section dividers",
+        "data-heavy slides"
+      ]
+    },
+    {
+      "id": "abstract/abstract-02.jpg",
+      "category": "abstract",
+      "filename": "abstract-02.jpg",
+      "path": "abstract/abstract-02.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/1103970/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "abstract",
+        "background",
+        "safe",
+        "data-viz"
+      ],
+      "recommended_usage": [
+        "cover backgrounds",
+        "section dividers",
+        "data-heavy slides"
+      ]
+    },
+    {
+      "id": "abstract/abstract-03.jpg",
+      "category": "abstract",
+      "filename": "abstract-03.jpg",
+      "path": "abstract/abstract-03.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/7130557/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "abstract",
+        "background",
+        "safe",
+        "data-viz"
+      ],
+      "recommended_usage": [
+        "cover backgrounds",
+        "section dividers",
+        "data-heavy slides"
+      ]
+    },
+    {
+      "id": "architecture/architecture-01.jpg",
+      "category": "architecture",
+      "filename": "architecture-01.jpg",
+      "path": "architecture/architecture-01.jpg",
+      "width": 1920,
+      "height": 1337,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/1029614/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "city",
+        "infrastructure",
+        "enterprise",
+        "built-environment"
+      ],
+      "recommended_usage": [
+        "infrastructure context",
+        "regional market slides",
+        "real-world asset framing"
+      ]
+    },
+    {
+      "id": "architecture/architecture-02.jpg",
+      "category": "architecture",
+      "filename": "architecture-02.jpg",
+      "path": "architecture/architecture-02.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/532568/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "city",
+        "infrastructure",
+        "enterprise",
+        "built-environment"
+      ],
+      "recommended_usage": [
+        "infrastructure context",
+        "regional market slides",
+        "real-world asset framing"
+      ]
+    },
+    {
+      "id": "architecture/architecture-03.jpg",
+      "category": "architecture",
+      "filename": "architecture-03.jpg",
+      "path": "architecture/architecture-03.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/534174/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "city",
+        "infrastructure",
+        "enterprise",
+        "built-environment"
+      ],
+      "recommended_usage": [
+        "infrastructure context",
+        "regional market slides",
+        "real-world asset framing"
+      ]
+    },
+    {
+      "id": "blockchain/blockchain-01.jpg",
+      "category": "blockchain",
+      "filename": "blockchain-01.jpg",
+      "path": "blockchain/blockchain-01.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/9588213/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "blockchain",
+        "web3",
+        "network",
+        "digital-ledger"
+      ],
+      "recommended_usage": [
+        "network architecture",
+        "tokenization intro",
+        "ecosystem overview"
+      ]
+    },
+    {
+      "id": "blockchain/blockchain-02.jpg",
+      "category": "blockchain",
+      "filename": "blockchain-02.jpg",
+      "path": "blockchain/blockchain-02.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/7887800/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "blockchain",
+        "web3",
+        "network",
+        "digital-ledger"
+      ],
+      "recommended_usage": [
+        "network architecture",
+        "tokenization intro",
+        "ecosystem overview"
+      ]
+    },
+    {
+      "id": "blockchain/blockchain-03.jpg",
+      "category": "blockchain",
+      "filename": "blockchain-03.jpg",
+      "path": "blockchain/blockchain-03.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/5980739/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "blockchain",
+        "web3",
+        "network",
+        "digital-ledger"
+      ],
+      "recommended_usage": [
+        "network architecture",
+        "tokenization intro",
+        "ecosystem overview"
+      ]
+    },
+    {
+      "id": "business/business-01.jpg",
+      "category": "business",
+      "filename": "business-01.jpg",
+      "path": "business/business-01.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/3184291/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "executive",
+        "meeting",
+        "enterprise",
+        "presentation"
+      ],
+      "recommended_usage": [
+        "exec summary",
+        "stakeholder slides",
+        "governance positioning"
+      ]
+    },
+    {
+      "id": "business/business-02.jpg",
+      "category": "business",
+      "filename": "business-02.jpg",
+      "path": "business/business-02.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/1181304/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "executive",
+        "meeting",
+        "enterprise",
+        "presentation"
+      ],
+      "recommended_usage": [
+        "exec summary",
+        "stakeholder slides",
+        "governance positioning"
+      ]
+    },
+    {
+      "id": "business/business-03.jpg",
+      "category": "business",
+      "filename": "business-03.jpg",
+      "path": "business/business-03.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/1181396/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "executive",
+        "meeting",
+        "enterprise",
+        "presentation"
+      ],
+      "recommended_usage": [
+        "exec summary",
+        "stakeholder slides",
+        "governance positioning"
+      ]
+    },
+    {
+      "id": "compliance/compliance-01.jpg",
+      "category": "compliance",
+      "filename": "compliance-01.jpg",
+      "path": "compliance/compliance-01.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ]
+    },
+    {
+      "id": "compliance/compliance-02.jpg",
+      "category": "compliance",
+      "filename": "compliance-02.jpg",
+      "path": "compliance/compliance-02.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ]
+    },
+    {
+      "id": "compliance/compliance-03.jpg",
+      "category": "compliance",
+      "filename": "compliance-03.jpg",
+      "path": "compliance/compliance-03.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ]
+    },
+    {
+      "id": "compliance/compliance-04.jpg",
+      "category": "compliance",
+      "filename": "compliance-04.jpg",
+      "path": "compliance/compliance-04.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/man-and-women-sitting-at-table-checking-on-business-papers-7654117/",
+      "license": "pexels",
+      "title": "Diverse team collaborating with laptops and documents in a modern office",
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ]
+    },
+    {
+      "id": "compliance/compliance-05.jpg",
+      "category": "compliance",
+      "filename": "compliance-05.jpg",
+      "path": "compliance/compliance-05.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/women-in-meeting-at-office-7654488/",
+      "license": "pexels",
+      "title": "Professional women discussing documents in a modern office",
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ]
+    },
+    {
+      "id": "compliance/compliance-06.jpg",
+      "category": "compliance",
+      "filename": "compliance-06.jpg",
+      "path": "compliance/compliance-06.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/fashion-people-woman-desk-6538575/",
+      "license": "pexels",
+      "title": "Two professionals reviewing documents in a modern office setting",
+      "tags": [
+        "compliance",
+        "policy",
+        "kyc",
+        "controls"
+      ],
+      "recommended_usage": [
+        "compliance section covers",
+        "policy operations",
+        "regulatory governance"
+      ]
+    },
+    {
+      "id": "custody/custody-01.jpg",
+      "category": "custody",
+      "filename": "custody-01.jpg",
+      "path": "custody/custody-01.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/a-person-holding-a-silver-and-black-door-lever-7522609/",
+      "license": "pexels",
+      "title": "Fingerprint access on a digital security door lock",
+      "tags": [
+        "custody",
+        "security",
+        "infrastructure",
+        "protection"
+      ],
+      "recommended_usage": [
+        "custody architecture",
+        "security posture",
+        "safe-keeping narratives"
+      ]
+    },
+    {
+      "id": "custody/custody-02.jpg",
+      "category": "custody",
+      "filename": "custody-02.jpg",
+      "path": "custody/custody-02.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/server-racks-on-data-center-4508751/",
+      "license": "pexels",
+      "title": "Modern data center corridor with server racks and equipment",
+      "tags": [
+        "custody",
+        "security",
+        "infrastructure",
+        "protection"
+      ],
+      "recommended_usage": [
+        "custody architecture",
+        "security posture",
+        "safe-keeping narratives"
+      ]
+    },
+    {
+      "id": "custody/custody-03.jpg",
+      "category": "custody",
+      "filename": "custody-03.jpg",
+      "path": "custody/custody-03.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/engineer-holding-laptop-1181316/",
+      "license": "pexels",
+      "title": "Professional using a laptop in a mirrored data-center environment",
+      "tags": [
+        "custody",
+        "security",
+        "infrastructure",
+        "protection"
+      ],
+      "recommended_usage": [
+        "custody architecture",
+        "security posture",
+        "safe-keeping narratives"
+      ]
+    },
+    {
+      "id": "dalp/dalp-01.jpg",
+      "category": "dalp",
+      "filename": "dalp-01.jpg",
+      "path": "dalp/dalp-01.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "dalp",
+        "platform",
+        "lifecycle",
+        "orchestration"
+      ],
+      "recommended_usage": [
+        "DALP narrative",
+        "lifecycle slides",
+        "platform orchestration"
+      ]
+    },
+    {
+      "id": "dalp/dalp-02.jpg",
+      "category": "dalp",
+      "filename": "dalp-02.jpg",
+      "path": "dalp/dalp-02.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "dalp",
+        "platform",
+        "lifecycle",
+        "orchestration"
+      ],
+      "recommended_usage": [
+        "DALP narrative",
+        "lifecycle slides",
+        "platform orchestration"
+      ]
+    },
+    {
+      "id": "dalp/dalp-03.jpg",
+      "category": "dalp",
+      "filename": "dalp-03.jpg",
+      "path": "dalp/dalp-03.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "dalp",
+        "platform",
+        "lifecycle",
+        "orchestration"
+      ],
+      "recommended_usage": [
+        "DALP narrative",
+        "lifecycle slides",
+        "platform orchestration"
+      ]
+    },
+    {
+      "id": "digital-assets/digital-assets-01.jpg",
+      "category": "digital-assets",
+      "filename": "digital-assets-01.jpg",
+      "path": "digital-assets/digital-assets-01.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ]
+    },
+    {
+      "id": "digital-assets/digital-assets-02.jpg",
+      "category": "digital-assets",
+      "filename": "digital-assets-02.jpg",
+      "path": "digital-assets/digital-assets-02.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ]
+    },
+    {
+      "id": "digital-assets/digital-assets-03.jpg",
+      "category": "digital-assets",
+      "filename": "digital-assets-03.jpg",
+      "path": "digital-assets/digital-assets-03.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ]
+    },
+    {
+      "id": "digital-assets/digital-assets-04.jpg",
+      "category": "digital-assets",
+      "filename": "digital-assets-04.jpg",
+      "path": "digital-assets/digital-assets-04.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/man-in-white-dress-shirt-sitting-in-front-of-computer-monitor-7567593/",
+      "license": "pexels",
+      "title": "Adult man analyzing cryptocurrency data on a computer screen in an office setting",
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ]
+    },
+    {
+      "id": "digital-assets/digital-assets-05.jpg",
+      "category": "digital-assets",
+      "filename": "digital-assets-05.jpg",
+      "path": "digital-assets/digital-assets-05.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/marketing-man-laptop-technology-7567533/",
+      "license": "pexels",
+      "title": "Young professional analyzing financial charts at a modern office desk with a laptop",
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ]
+    },
+    {
+      "id": "digital-assets/digital-assets-06.jpg",
+      "category": "digital-assets",
+      "filename": "digital-assets-06.jpg",
+      "path": "digital-assets/digital-assets-06.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/man-taking-notes-with-stock-market-data-on-screen-36633860/",
+      "license": "pexels",
+      "title": "Analyst taking notes with stock-market data on screen",
+      "tags": [
+        "digital-assets",
+        "wallets",
+        "token-holders",
+        "markets"
+      ],
+      "recommended_usage": [
+        "asset servicing",
+        "wallet flows",
+        "market structure"
+      ]
+    },
+    {
+      "id": "finance/finance-01.jpg",
+      "category": "finance",
+      "filename": "finance-01.jpg",
+      "path": "finance/finance-01.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/4910951/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "finance",
+        "markets",
+        "capital",
+        "investors"
+      ],
+      "recommended_usage": [
+        "capital markets",
+        "issuance economics",
+        "investor-facing slides"
+      ]
+    },
+    {
+      "id": "finance/finance-02.jpg",
+      "category": "finance",
+      "filename": "finance-02.jpg",
+      "path": "finance/finance-02.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/12935051/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "finance",
+        "markets",
+        "capital",
+        "investors"
+      ],
+      "recommended_usage": [
+        "capital markets",
+        "issuance economics",
+        "investor-facing slides"
+      ]
+    },
+    {
+      "id": "finance/finance-03.jpg",
+      "category": "finance",
+      "filename": "finance-03.jpg",
+      "path": "finance/finance-03.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/7621140/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "finance",
+        "markets",
+        "capital",
+        "investors"
+      ],
+      "recommended_usage": [
+        "capital markets",
+        "issuance economics",
+        "investor-facing slides"
+      ]
+    },
+    {
+      "id": "fintech/fintech-01.jpg",
+      "category": "fintech",
+      "filename": "fintech-01.jpg",
+      "path": "fintech/fintech-01.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/graphs-and-charts-on-the-monitors-5833747/",
+      "license": "pexels",
+      "title": "Multi-monitor trading desk with charts and analytics",
+      "tags": [
+        "fintech",
+        "trading",
+        "analytics",
+        "market-data"
+      ],
+      "recommended_usage": [
+        "trading ops",
+        "market infrastructure",
+        "analytics-led storytelling"
+      ]
+    },
+    {
+      "id": "fintech/fintech-02.jpg",
+      "category": "fintech",
+      "filename": "fintech-02.jpg",
+      "path": "fintech/fintech-02.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/person-using-macbook-pro-on-white-table-5834212/",
+      "license": "pexels",
+      "title": "Desk setup with laptop displaying a stock chart and technology gadgets",
+      "tags": [
+        "fintech",
+        "trading",
+        "analytics",
+        "market-data"
+      ],
+      "recommended_usage": [
+        "trading ops",
+        "market infrastructure",
+        "analytics-led storytelling"
+      ]
+    },
+    {
+      "id": "fintech/fintech-03.jpg",
+      "category": "fintech",
+      "filename": "fintech-03.jpg",
+      "path": "fintech/fintech-03.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/person-writing-on-a-white-paper-5834208/",
+      "license": "pexels",
+      "title": "Business analyst writing beside laptop and smartphone with trend graphs",
+      "tags": [
+        "fintech",
+        "trading",
+        "analytics",
+        "market-data"
+      ],
+      "recommended_usage": [
+        "trading ops",
+        "market infrastructure",
+        "analytics-led storytelling"
+      ]
+    },
+    {
+      "id": "settlement/settlement-01.jpg",
+      "category": "settlement",
+      "filename": "settlement-01.jpg",
+      "path": "settlement/settlement-01.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/a-person-in-white-shirt-pressing-on-payment-terminal-5239867/",
+      "license": "pexels",
+      "title": "Cashless payment via terminal on a desk",
+      "tags": [
+        "settlement",
+        "payments",
+        "transactions",
+        "cashless"
+      ],
+      "recommended_usage": [
+        "payment rails",
+        "transaction flows",
+        "cash movement and settlement"
+      ]
+    },
+    {
+      "id": "settlement/settlement-02.jpg",
+      "category": "settlement",
+      "filename": "settlement-02.jpg",
+      "path": "settlement/settlement-02.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/a-person-holding-payment-terminal-5239874/",
+      "license": "pexels",
+      "title": "Card terminal next to a laptop and notebook",
+      "tags": [
+        "settlement",
+        "payments",
+        "transactions",
+        "cashless"
+      ],
+      "recommended_usage": [
+        "payment rails",
+        "transaction flows",
+        "cash movement and settlement"
+      ]
+    },
+    {
+      "id": "settlement/settlement-03.jpg",
+      "category": "settlement",
+      "filename": "settlement-03.jpg",
+      "path": "settlement/settlement-03.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/a-person-holding-a-bank-card-6627897/",
+      "license": "pexels",
+      "title": "Contactless payment with a bank card over a payment terminal",
+      "tags": [
+        "settlement",
+        "payments",
+        "transactions",
+        "cashless"
+      ],
+      "recommended_usage": [
+        "payment rails",
+        "transaction flows",
+        "cash movement and settlement"
+      ]
+    },
+    {
+      "id": "software/software-01.jpg",
+      "category": "software",
+      "filename": "software-01.jpg",
+      "path": "software/software-01.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ]
+    },
+    {
+      "id": "software/software-02.jpg",
+      "category": "software",
+      "filename": "software-02.jpg",
+      "path": "software/software-02.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ]
+    },
+    {
+      "id": "software/software-03.jpg",
+      "category": "software",
+      "filename": "software-03.jpg",
+      "path": "software/software-03.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ]
+    },
+    {
+      "id": "software/software-04.jpg",
+      "category": "software",
+      "filename": "software-04.jpg",
+      "path": "software/software-04.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/woman-sitting-in-front-of-computer-in-office-3861967/",
+      "license": "pexels",
+      "title": "Back view of a female software engineer working at a multi-monitor setup",
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ]
+    },
+    {
+      "id": "software/software-05.jpg",
+      "category": "software",
+      "filename": "software-05.jpg",
+      "path": "software/software-05.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/close-up-photo-of-person-typing-on-laptop-1181675/",
+      "license": "pexels",
+      "title": "Developer writing code on a laptop in front of multiple monitors",
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ]
+    },
+    {
+      "id": "software/software-06.jpg",
+      "category": "software",
+      "filename": "software-06.jpg",
+      "path": "software/software-06.jpg",
+      "width": 1920,
+      "height": 1080,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/photo-of-a-laptop-screen-7439127/",
+      "license": "pexels",
+      "title": "Laptop screen showing project management software interface",
+      "tags": [
+        "software",
+        "engineering",
+        "integration",
+        "api"
+      ],
+      "recommended_usage": [
+        "API/integration sections",
+        "engineering credibility",
+        "implementation slides"
+      ]
+    },
+    {
+      "id": "teamwork/teamwork-01.jpg",
+      "category": "teamwork",
+      "filename": "teamwork-01.jpg",
+      "path": "teamwork/teamwork-01.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/5256819/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "team",
+        "collaboration",
+        "delivery",
+        "operations"
+      ],
+      "recommended_usage": [
+        "delivery model",
+        "operating model",
+        "customer success"
+      ]
+    },
+    {
+      "id": "teamwork/teamwork-02.jpg",
+      "category": "teamwork",
+      "filename": "teamwork-02.jpg",
+      "path": "teamwork/teamwork-02.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/8636591/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "team",
+        "collaboration",
+        "delivery",
+        "operations"
+      ],
+      "recommended_usage": [
+        "delivery model",
+        "operating model",
+        "customer success"
+      ]
+    },
+    {
+      "id": "teamwork/teamwork-03.jpg",
+      "category": "teamwork",
+      "filename": "teamwork-03.jpg",
+      "path": "teamwork/teamwork-03.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/5257005/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "team",
+        "collaboration",
+        "delivery",
+        "operations"
+      ],
+      "recommended_usage": [
+        "delivery model",
+        "operating model",
+        "customer success"
+      ]
+    },
+    {
+      "id": "technology/tech-01.jpg",
+      "category": "technology",
+      "filename": "tech-01.jpg",
+      "path": "technology/tech-01.jpg",
+      "width": 1920,
+      "height": 1280,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/4597280/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "software",
+        "cloud",
+        "dashboard",
+        "engineering"
+      ],
+      "recommended_usage": [
+        "platform architecture",
+        "developer workflows",
+        "operations"
+      ]
+    },
+    {
+      "id": "technology/tech-02.jpg",
+      "category": "technology",
+      "filename": "tech-02.jpg",
+      "path": "technology/tech-02.jpg",
+      "width": 1920,
+      "height": 1282,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/1181354/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "software",
+        "cloud",
+        "dashboard",
+        "engineering"
+      ],
+      "recommended_usage": [
+        "platform architecture",
+        "developer workflows",
+        "operations"
+      ]
+    },
+    {
+      "id": "technology/tech-03.jpg",
+      "category": "technology",
+      "filename": "tech-03.jpg",
+      "path": "technology/tech-03.jpg",
+      "width": 1920,
+      "height": 1277,
+      "orientation": "landscape",
+      "style": "photo",
+      "source": "https://www.pexels.com/photo/5480781/",
+      "license": "pexels",
+      "title": null,
+      "tags": [
+        "software",
+        "cloud",
+        "dashboard",
+        "engineering"
+      ],
+      "recommended_usage": [
+        "platform architecture",
+        "developer workflows",
+        "operations"
+      ]
+    },
+    {
+      "id": "tokenization/tokenization-01.jpg",
+      "category": "tokenization",
+      "filename": "tokenization-01.jpg",
+      "path": "tokenization/tokenization-01.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "tokenization",
+        "issuance",
+        "fractionalization",
+        "settlement"
+      ],
+      "recommended_usage": [
+        "issuance flow",
+        "fractional ownership",
+        "settlement lifecycle"
+      ]
+    },
+    {
+      "id": "tokenization/tokenization-02.jpg",
+      "category": "tokenization",
+      "filename": "tokenization-02.jpg",
+      "path": "tokenization/tokenization-02.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "tokenization",
+        "issuance",
+        "fractionalization",
+        "settlement"
+      ],
+      "recommended_usage": [
+        "issuance flow",
+        "fractional ownership",
+        "settlement lifecycle"
+      ]
+    },
+    {
+      "id": "tokenization/tokenization-03.jpg",
+      "category": "tokenization",
+      "filename": "tokenization-03.jpg",
+      "path": "tokenization/tokenization-03.jpg",
+      "width": 1600,
+      "height": 900,
+      "orientation": "landscape",
+      "style": "illustration",
+      "source": "generated-in-workspace",
+      "license": "internal-generated",
+      "title": null,
+      "tags": [
+        "tokenization",
+        "issuance",
+        "fractionalization",
+        "settlement"
+      ],
+      "recommended_usage": [
+        "issuance flow",
+        "fractional ownership",
+        "settlement lifecycle"
+      ]
+    }
+  ]
+}

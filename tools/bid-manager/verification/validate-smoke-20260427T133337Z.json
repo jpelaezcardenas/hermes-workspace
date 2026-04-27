@@ -1,0 +1,69 @@
+{
+  "file": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/smoke/smoke.md",
+  "format": "markdown",
+  "variant": "compact",
+  "strict": false,
+  "passed": false,
+  "checks": {
+    "mermaid_blocks": {
+      "count": 0,
+      "minimum": 10,
+      "passed": false
+    },
+    "image_refs": {
+      "count": 0,
+      "minimum": 6,
+      "passed": false
+    },
+    "screenshot_policy": {
+      "caption_passed": true,
+      "missing_captions": [],
+      "section_count": 0,
+      "section_minimum": 2,
+      "section_passed": false,
+      "category_count": 0,
+      "category_minimum": 2,
+      "category_passed": false
+    },
+    "sequence_diagrams": {
+      "count": 0,
+      "minimum": 4,
+      "passed": false
+    },
+    "emoji": {
+      "count": 0,
+      "passed": true,
+      "positions": []
+    },
+    "word_count": 44,
+    "mandatory_diagram_sections": {
+      "missing": [
+        {
+          "section": "Platform",
+          "expected_diagram": "platform architecture",
+          "status": "section not found in document"
+        },
+        {
+          "section": "Solution",
+          "expected_diagram": "solution architecture",
+          "status": "section not found in document"
+        },
+        {
+          "section": "Compliance",
+          "expected_diagram": "compliance flow",
+          "status": "section not found in document"
+        }
+      ],
+      "passed": false
+    },
+    "placeholders": {
+      "remnants": [],
+      "passed": true
+    },
+    "banned_phrases": {
+      "findings": [],
+      "count": 0,
+      "passed": true
+    }
+  }
+}
