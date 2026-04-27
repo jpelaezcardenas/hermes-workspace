@@ -67,7 +67,6 @@ def main(argv: list[str] | None = None) -> int:
     generic_md = BID / "skeletons" / "7_generic" / "markdown" / "generic-compact.md"
     questionnaire_csv = ROOT / "active" / "fixtures" / "questionnaire-approved.csv"
     questionnaire_xlsx = BID / "skeletons" / "5_questionnaire" / "excel" / "settlemint-questionnaire-template.xlsx"
-    forge_broken = FORGE / "scripts" / "generate_mea_docs.py"
 
     cases: list[dict[str, Any]] = []
     cases.append(run_case("smoke_active_wrapper", [str(WRAPPER), "smoke"]))
@@ -79,7 +78,8 @@ def main(argv: list[str] | None = None) -> int:
     cases.append(run_case("bid_checker_technical_compact", [str(WRAPPER), "check-proposal", str(tech_md)]))
     cases.append(run_case("bid_checker_commercial_compact", [str(WRAPPER), "check-proposal", str(comm_md)]))
     cases.append(run_case("validator_generic_compact_expected_fail_visuals", [str(WRAPPER), "validate", str(generic_md), "compact", "--json"], expect_fail=True))
-    cases.append(run_case("rfp_forge_generate_mea_expected_syntax_fail", [sys.executable, "-m", "py_compile", str(forge_broken)], expect_fail=True))
+    cases.append(run_case("rfp_forge_generate_mea", [str(WRAPPER), "forge-generate-mea"]))
+    cases.append(run_case("compact_forge_to_bid_checker_e2e", [str(WRAPPER), "e2e-regression", "--json"]))
 
     unexpected = [c for c in cases if not c["passed"]]
     payload = {

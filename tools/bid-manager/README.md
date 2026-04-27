@@ -20,12 +20,15 @@ The active wrapper now exposes:
 
 - `bid-manager skeleton-audit --json` — checks recovered skeleton-family coverage.
 - `bid-manager golden-regressions --json` — runs curated converter/checker/regression cases and classifies known legacy fail baselines.
+- `bid-manager e2e-regression --json` — runs a compact RFP Forge → Bid Manager → Bid Checker regression.
+- `bid-manager forge-generate-mea` — regenerates the recovered MEA RFP/RFI bank.
 
 Current regression posture:
 
 - Skeleton coverage: 7/7 families OK.
-- Golden regressions: 10/10 cases matched expectation.
-- Known expected fail baselines: generic compact proposal visual validator failure, and preserved `rfp-forge/scripts/generate_mea_docs.py` syntax failure.
+- Golden regressions: 11/11 cases matched expectation.
+- Compact end-to-end regression: 5/5 cases passed.
+- Known expected fail baselines: generic compact proposal visual validator failure.
 
 ## Rule
 

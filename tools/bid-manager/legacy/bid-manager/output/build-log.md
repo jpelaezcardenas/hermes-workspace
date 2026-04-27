@@ -235,3 +235,9 @@
 - 2026-04-27T13:34:12Z | csv_to_xlsx | smoke/questionnaire.xlsx | model=unknown | failover=not-triggered
 - 2026-04-27T13:46:27Z | markdown_to_docx | golden-20260427T134626Z/technical-compact.docx | model=unknown | failover=not-triggered
 - 2026-04-27T13:46:30Z | csv_to_xlsx | golden-20260427T134626Z/questionnaire-template.xlsx | model=unknown | failover=not-triggered
+- 2026-04-27T13:55:36Z | markdown_to_docx | e2e-20260427T135535Z/forge-enbd-rfp.docx | model=unknown | failover=not-triggered
+- 2026-04-27T13:55:37Z | markdown_to_docx | e2e-20260427T135535Z/bid-manager-enbd-response.docx | model=unknown | failover=not-triggered
+- 2026-04-27T13:55:49Z | markdown_to_docx | golden-20260427T135547Z/technical-compact.docx | model=unknown | failover=not-triggered
+- 2026-04-27T13:55:52Z | csv_to_xlsx | golden-20260427T135547Z/questionnaire-template.xlsx | model=unknown | failover=not-triggered
+- 2026-04-27T13:55:54Z | markdown_to_docx | e2e-20260427T135553Z/forge-enbd-rfp.docx | model=unknown | failover=not-triggered
+- 2026-04-27T13:55:55Z | markdown_to_docx | e2e-20260427T135553Z/bid-manager-enbd-response.docx | model=unknown | failover=not-triggered

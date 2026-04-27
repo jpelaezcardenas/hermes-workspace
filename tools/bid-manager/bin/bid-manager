@@ -28,6 +28,7 @@ OUTPUT = OFFICE_AGENTS / "bid-manager" / "output"
 SCRIPT_MAP = {
     "skeleton-audit": ACTIVE / "runtime-scripts" / "run_skeleton_audit.py",
     "golden-regressions": ACTIVE / "runtime-scripts" / "run_golden_regressions.py",
+    "e2e-regression": ACTIVE / "runtime-scripts" / "run_e2e_regression.py",
     "md-to-docx": BID / "scripts" / "markdown_to_docx.py",
     "docx-to-md": BID / "scripts" / "docx_to_markdown.py",
     "xlsx-to-csv": BID / "scripts" / "xlsx_to_csv.py",
@@ -36,6 +37,7 @@ SCRIPT_MAP = {
     "render-mermaid": BID / "scripts" / "mermaid_to_images.py",
     "render-plantuml": BID / "scripts" / "plantuml_to_images.py",
     "check-proposal": CHECKER / "scripts" / "validate_proposal.py",
+    "forge-generate-mea": FORGE / "scripts" / "generate_mea_docs.py",
     "forge-extract": FORGE / "scripts" / "extract-rfp.py",
     "forge-write": FORGE / "scripts" / "write-response.py",
 }
