@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "title": "DALP for Oman",
+    "name": "SettleMint DALP for Oman, Digital Asset Platform for Omani Financial Institutions",
+    "slug": "for/oman",
+    "html_title": "SettleMint DALP for Oman: Digital Asset Platform for Omani Institutions",
+    "meta_description": "SettleMint DALP for Oman: CMA-aligned compliance, GCC interoperability, data residency, and full digital asset lifecycle for Omani institutions.",
+    "canonical_url": "https://www.settlemint.com/for/oman",
+    "hubspot_page_id": "387403601131"
+  },
+  "hero": {
+    "eyebrow": "DALP for Oman",
+    "h1": "Digital assets, built for Oman's evolving regulatory framework.",
+    "intro": "Omani financial institutions operate under the Capital Market Authority (CMA) as the country develops its VASP regulatory framework aligned with FATF standards. With Oman's digital roadmap targeting 2030, fintech licensing accelerating, and the broader GCC region leading global tokenization activity, Omani institutions need infrastructure that is ready today. DALP delivers the compliance controls, sovereign deployment, and lifecycle tooling required.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Omani institutions need vs. how DALP delivers",
+    "rows": [
+      {
+        "need": "CMA-aligned compliance for digital asset operations",
+        "dalp": "12 compliance module types covering eligibility, country restrictions, transfer controls, and time-based rules. Ex-ante enforcement validates every transfer before execution"
+      },
+      {
+        "need": "Sovereign deployment for Omani data residency",
+        "dalp": "Kubernetes/Helm deployment supports on-prem, hybrid, cloud, and air-gapped environments. All data stays within Oman's borders"
+      },
+      {
+        "need": "Sukuk and bond tokenization for Omani capital markets",
+        "dalp": "7 asset templates including bonds with maturity redemption and yield schedules. Configurable compliance per asset class supports Islamic finance structures"
+      },
+      {
+        "need": "Maker-checker governance for Omani banking operations",
+        "dalp": "RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions"
+      },
+      {
+        "need": "GCC interoperability for cross-border digital asset operations",
+        "dalp": "Standard APIs (REST, GraphQL, webhooks) and ISO 20022 payment rail connectivity. EVM-based architecture works across GCC blockchain initiatives"
+      },
+      {
+        "need": "Integration with existing custodians",
+        "dalp": "Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility, weighted multisig vaults"
+      },
+      {
+        "need": "Full audit trails for CMA oversight",
+        "dalp": "21 pre-built Grafana dashboards, VictoriaMetrics, Loki, and Tempo provide end-to-end audit trails"
+      },
+      {
+        "need": "KYC/AML integration for FATF-aligned requirements",
+        "dalp": "OnchainID identity registry with invitation-based KYC onboarding and configurable trusted issuer hierarchy for AML/KYC verification"
+      },
+      {
+        "need": "Atomic settlement for securities transactions",
+        "dalp": "XvP/DvP atomic settlement via HTLC hashlock: both legs complete together or both revert"
+      },
+      {
+        "need": "Operational resilience for financial infrastructure",
+        "dalp": "Velero-based backup and DR. Restate durable execution prevents workflow loss. 298 CLI commands for operational automation"
+      }
+    ]
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Omani Institutions Choose DALP",
+    "intro": "From national banks to regulated issuers, DALP gives Omani institutions the controls they need to operate digital assets under CMA oversight.",
+    "cards": [
+      {
+        "title": "Sovereign deployment and data residency",
+        "body": "On-premises and air-gapped deployment via Kubernetes and Helm. All data stays within Oman's borders, meeting CMA requirements for data sovereignty and regulatory control."
+      },
+      {
+        "title": "GCC-ready multi-asset lifecycle",
+        "body": "7 asset templates cover bonds, funds, stablecoins, equity, deposits, real estate, and precious metals. Sukuk-compatible bond templates support Islamic finance structures common across the GCC."
+      },
+      {
+        "title": "Compliance controls for Omani regulations",
+        "body": "12 on-chain compliance module types enforce transfer restrictions, investor eligibility, and jurisdiction controls. Configurable for CMA and FATF-aligned requirements."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Omani institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds and stablecoins most relevant for Oman's capital markets",
+      "On-premises and air-gapped deployment: full data sovereignty within Oman, Kubernetes and Helm packaged",
+      "Ex-ante compliance enforcement: 12 module types covering eligibility, transfer restrictions, and time-based controls",
+      "Maker-checker approval workflows: dual-control governance for Omani banking operations",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "ISO 20022 payment rail connectivity: supports GCC cross-border payment integration"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Oman?",
+    "body": "DALP covers the full digital asset lifecycle with sovereign deployment, compliance controls, and GCC interoperability. Talk to a product specialist.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Can DALP be deployed within Oman's borders?",
+        "a": "Yes. DALP supports on-premises, hybrid, cloud, and air-gapped deployment via Kubernetes and Helm. All data can remain within Oman to meet CMA data residency requirements."
+      },
+      {
+        "q": "Does DALP support sukuk and Islamic finance structures?",
+        "a": "DALP's bond template supports configurable yield schedules and maturity redemption that can be structured for sukuk. Compliance modules can enforce Sharia-aligned transfer restrictions and investor eligibility."
+      },
+      {
+        "q": "How does DALP fit into the broader GCC digital asset ecosystem?",
+        "a": "DALP's EVM-based architecture, standard APIs, and ISO 20022 connectivity enable interoperability with GCC blockchain initiatives. Institutions in Oman can operate alongside counterparts in UAE, Saudi Arabia, Qatar, Bahrain, and Kuwait."
+      },
+      {
+        "q": "How does DALP handle KYC/AML for Omani compliance?",
+        "a": "DALP uses OnchainID for verifiable on-chain investor identities with invitation-based KYC onboarding and a configurable trusted issuer hierarchy aligned with FATF AML/KYC standards."
+      }
+    ]
+  }
+}

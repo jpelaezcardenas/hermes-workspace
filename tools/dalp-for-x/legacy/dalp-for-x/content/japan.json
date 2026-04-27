@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Japan",
+    "name": "SettleMint DALP for Japan \u2014 Digital Asset Platform for Japanese Financial Institutions",
+    "slug": "for/japan",
+    "html_title": "SettleMint DALP for Japan: Digital Asset Platform for Japanese Institutions",
+    "meta_description": "SettleMint DALP for Japan: FSA-aligned compliance, data residency, atomic settlement, and full digital asset lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/japan"
+  },
+  "hero": {
+    "eyebrow": "DALP for Japan",
+    "h1": "Digital assets, built for Japan's regulatory framework.",
+    "intro": "Japanese financial institutions operate under FSA oversight, the Financial Instruments and Exchange Act, and Japan's stablecoin framework. DALP delivers the compliance controls, data residency options, and operational tooling that regulated asset issuers in Japan require.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Japanese institutions need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What Japanese institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">FSA-compliant investor eligibility and transfer controls</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types covering eligibility, country restrictions, transfer controls, and time-based rules enforced at the smart contract layer via ERC-3643</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maker-checker governance required by Japanese banking governance frameworks</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">On-premises or data-residency deployment for regulatory and data sovereignty requirements</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments; data residency is configurable at deployment level</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Support for bonds and fund tokenization under FIEA</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">7 out-of-the-box asset templates including bonds (with maturity redemption and yield schedules) and funds (with AUM fee servicing), both directly relevant to FIEA-regulated instruments</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin framework compliance under Japan's revised Payment Services Act</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks; two-layer compliance model enforces issuer-defined rules on every transfer</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Auditability and full transaction traceability for FSA oversight</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards, OpenTelemetry traces, VictoriaMetrics, Loki logs, and Tempo traces provide end-to-end audit trails for all platform operations</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Integration with existing custodians (domestic and international)</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility, weighted multisig vaults, no custody lock-in</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic settlement for DVP transactions (Japan Exchange Group context)</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">KYC/AML integration for VASP obligations under Japan's AML regime</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">OnchainID identity registry with invitation-based KYC onboarding, claim lifecycle management, and configurable trusted issuer hierarchy for AML/KYC claim verification</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Operational resilience and disaster recovery for financial infrastructure</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Velero-based backup and DR packaged in the DALP Helm chart; Restate durable execution prevents workflow loss on node failure; 298 CLI commands for operational automation</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Japanese Institutions Choose DALP",
+    "intro": "From megabanks to regulated issuers, DALP gives Japanese institutions the controls they need to operate digital assets within Japan's regulatory environment.",
+    "cards": [
+      {
+        "title": "Compliance that fits Japanese regulation",
+        "body": "12 on-chain compliance module types cover the transfer restrictions, investor eligibility, and holding period controls required under FIEA and FSA guidelines."
+      },
+      {
+        "title": "Data residency and sovereign deployment",
+        "body": "On-premises and air-gapped deployment via Kubernetes and Helm. Keep all data within Japan's borders to satisfy FSA data residency requirements."
+      },
+      {
+        "title": "Maker-checker governance built in",
+        "body": "Every critical operation requires dual approval. RBAC and ABAC access controls match the governance structures required by Japanese banking regulation."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Japanese institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds and funds most relevant for Japan's securities markets",
+      "Ex-ante compliance enforcement: 12 module types covering eligibility, transfer restrictions, and holding period controls",
+      "On-premises and air-gapped deployment: full data residency within Japan, Kubernetes and Helm packaged",
+      "Maker-checker approval workflows: dual-control governance required by Japanese banking standards",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "21 pre-built Grafana dashboards: full observability for operations and audit teams"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Japan?",
+    "body": "DALP covers the full digital asset lifecycle under Japanese regulatory constraints. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with Japanese financial regulations?",
+        "a": "DALP provides the technical infrastructure for compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and holding period enforcement. These can be configured to align with FSA guidelines and FIEA requirements. DALP is a platform, not a licensed financial institution. Regulatory approval for your specific use case is managed by your legal team."
+      },
+      {
+        "q": "Does DALP support data residency in Japan?",
+        "a": "Yes. DALP supports on-premises and air-gapped deployment via Kubernetes and Helm. All data, including blockchain node data, private keys, and transaction history, can be kept within Japan's borders to meet FSA data residency requirements."
+      },
+      {
+        "q": "Which asset types are most relevant for Japanese financial institutions?",
+        "a": "Bonds and funds are the primary use cases for Japan's securities markets. DALP ships purpose-built templates for both, including automated coupon payments, maturity redemption, fund subscription and redemption, and AUM fee collection. DALP also supports stablecoins, which are now regulated under Japan's revised Payment Services Act."
+      },
+      {
+        "q": "Does DALP support maker-checker governance?",
+        "a": "Yes. Every critical operation in DALP requires dual approval via maker-checker workflows. Combined with RBAC and ABAC access controls, this matches the governance structures required by Japanese banking regulation for digital asset operations."
+      },
+      {
+        "q": "How quickly can Japanese institutions deploy DALP?",
+        "a": "DALP is packaged as Helm charts for Kubernetes deployment. Institutions with existing infrastructure can deploy in weeks. The 7 asset templates ship with built-in lifecycle logic, reducing the time needed to configure business rules from months to days."
+      }
+    ]
+  }
+}

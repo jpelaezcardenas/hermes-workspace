@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for UK",
+    "name": "SettleMint DALP for UK — Digital Asset Platform for UK Financial Institutions",
+    "slug": "for/uk",
+    "html_title": "SettleMint DALP for UK: Digital Asset Platform for FCA-Regulated Institutions",
+    "meta_description": "SettleMint DALP for UK: FCA-aligned compliance, UK digital assets regulatory framework, data residency, atomic settlement, and full lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/uk"
+  },
+  "hero": {
+    "eyebrow": "DALP for UK",
+    "h1": "Digital assets built for the UK's evolving regulatory framework.",
+    "intro": "UK financial institutions operate under FCA supervision with the Financial Services and Markets Act 2000 (Digital Assets) Act expanding the regulatory perimeter to cover digital securities and stablecoins. DALP delivers the compliance controls, data residency options, and operational infrastructure that FCA-regulated institutions need to issue and operate digital assets under the UK's framework.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What UK institutions need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What UK institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">FCA-aligned investor eligibility and transfer controls for digital securities activities</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types covering investor eligibility, jurisdiction restrictions, transfer controls, and time-based rules enforced at smart contract layer. Configurable for FCA-regulated digital securities and crypto asset frameworks</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">UK stablecoin regulation under FSMA 2000 (Digital Assets) Act for fiat-backed stablecoins</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin template with configurable issuance controls, reserve attestation hooks, transfer restrictions, and redemption workflows aligned with the UK's stablecoin regulatory framework</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">UK GDPR and data residency within UK jurisdiction post-Brexit</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">On-premises and private cloud deployment via Kubernetes and Helm. All data including blockchain node data and transaction history can remain within UK borders for UK GDPR compliance</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">FCA operational resilience requirements for critical financial system providers</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Velero-based backup and DR, Restate durable execution for workflow resilience, automated alerting, and 21 pre-built Grafana dashboards aligned with FCA operational resilience standards for financial infrastructure</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">AML/CTF compliance under the UK Money Laundering Regulations for crypto asset businesses</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">OnchainID identity registry with KYC/AML claim verification, invitation-based onboarding, and configurable trusted issuer hierarchy for AML/CFT compliance</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Digital bond issuance under UK capital markets framework</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Purpose-built bond template with automated coupon payments, maturity redemption, and configurable issuance terms for UK regulated capital markets. Digital gilts and corporate bond programs supported</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement for UK institutional digital securities transactions</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk. Directly relevant to UK DLT sandbox settlement workflows</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maker-checker governance for UK banking and FMI governance standards</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows for all critical operations. Aligns with PRA/FCA governance expectations for senior manager responsibilities and operational controls</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons UK Institutions Choose DALP",
+    "intro": "From FCA-supervised digital securities issuers to UK stablecoin providers and DLT sandbox participants, DALP provides the controls UK institutions need.",
+    "cards": [
+      {
+        "title": "FCA-aligned compliance controls",
+        "body": "12 configurable compliance module types cover the investor eligibility, jurisdiction controls, and transfer restrictions required for FCA-regulated digital securities and stablecoin activities. Configure for your specific FCA authorization."
+      },
+      {
+        "title": "UK data residency for UK GDPR",
+        "body": "On-premises and private cloud deployment within the UK. All data stays within UK jurisdiction for UK GDPR compliance and FCA data governance expectations post-Brexit."
+      },
+      {
+        "title": "Operational resilience that meets FCA standards",
+        "body": "Velero backup/DR, Restate durable execution, automated alerting, and 21 pre-built dashboards provide the operational resilience infrastructure the FCA expects from financial system participants."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to UK institutions",
+    "items": [
+      "7 asset templates: bonds and stablecoins most critical for UK digital securities and stablecoin regulation",
+      "Ex-ante compliance: 12 module types covering FCA-aligned eligibility, transfer restrictions, and AML controls",
+      "UK data residency: on-premises and private cloud deployment, Kubernetes and Helm packaged",
+      "FCA operational resilience: Velero backup/DR, Restate durable execution, 21 Grafana dashboards",
+      "Atomic DvP/XvP settlement: both legs complete together or revert for UK institutional transactions",
+      "Maker-checker governance: PRA/FCA-aligned dual-control for all critical operations"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in the UK?",
+    "body": "DALP covers the full digital asset lifecycle under UK regulatory frameworks. Talk to a product specialist about your FCA use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Is SettleMint DALP aligned with FCA digital asset regulations?",
+        "a": "DALP provides the technical infrastructure for compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, and jurisdiction controls relevant to FCA-regulated digital securities and crypto asset activities. DALP is a platform provider; FCA authorization for your specific activity is managed by your legal team."
+      },
+      {
+        "q": "Does DALP support UK stablecoin regulation under the FSMA Digital Assets Act?",
+        "a": "DALP's stablecoin template includes configurable issuance controls, reserve attestation hooks, transfer restrictions, and redemption workflows relevant to the UK's fiat-backed stablecoin framework. The specific FCA authorization as a stablecoin issuer is a regulatory matter for your legal team and FCA engagement."
+      },
+      {
+        "q": "Does DALP support UK data residency requirements?",
+        "a": "Yes. DALP supports on-premises and private cloud deployment via Kubernetes and Helm. All data including blockchain node data, transaction history, and private keys can remain within UK borders for UK GDPR compliance and FCA data governance expectations."
+      },
+      {
+        "q": "How does DALP address FCA operational resilience requirements?",
+        "a": "DALP's operational infrastructure includes Velero-based backup and disaster recovery, Restate durable execution preventing workflow loss on node failure, automated alerting on error rate spikes, and 21 pre-built Grafana dashboards for continuous monitoring. These align with FCA Operational Resilience Policy Statement expectations for financial system participants."
+      },
+      {
+        "q": "Does DALP support digital bond issuance in the UK?",
+        "a": "Yes. DALP's bond template supports digital bond issuance with configurable face value, maturity, coupon schedule, and automated coupon payments. This is relevant to UK corporate digital bond programs and the UK government's exploration of digital gilts. The legal structure of UK regulated securities is a matter for your legal counsel."
+      }
+    ]
+  }
+}

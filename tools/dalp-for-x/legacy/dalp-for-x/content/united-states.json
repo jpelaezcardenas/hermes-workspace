@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "title": "DALP for United States",
+    "name": "SettleMint DALP for the United States, Digital Asset Platform for US Financial Institutions",
+    "slug": "for/united-states",
+    "html_title": "SettleMint DALP for the United States: Digital Asset Platform for US Institutions",
+    "meta_description": "SettleMint DALP for the US: SEC and CFTC aligned compliance, tokenized securities support, and full digital asset lifecycle for US institutions.",
+    "canonical_url": "https://www.settlemint.com/for/united-states",
+    "hubspot_page_id": "387403601127"
+  },
+  "hero": {
+    "eyebrow": "DALP for United States",
+    "h1": "Digital assets, built for the US regulatory landscape.",
+    "intro": "US financial institutions operate under SEC and CFTC oversight, with the 2026 joint guidance introducing a 5-category digital asset taxonomy and innovation exemptions. With DTCC and Nasdaq running tokenized securities pilots, institutional adoption is accelerating. DALP delivers the compliance controls, deployment flexibility, and lifecycle tooling that regulated US institutions require.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What US institutions need vs. how DALP delivers",
+    "rows": [
+      {
+        "need": "SEC-aligned transfer restrictions and investor eligibility controls",
+        "dalp": "12 compliance module types covering eligibility, accreditation, country restrictions, transfer controls, and time-based rules. Ex-ante enforcement validates every transfer before execution"
+      },
+      {
+        "need": "Support for tokenized securities under Regulation D, Reg S, and Reg A+",
+        "dalp": "7 asset templates with configurable compliance rules. Bond, equity, and fund templates support the transfer restrictions and holding periods required for exempt securities"
+      },
+      {
+        "need": "Maker-checker governance for institutional operations",
+        "dalp": "RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions"
+      },
+      {
+        "need": "Integration with existing custodians (qualified custodians, broker-dealers)",
+        "dalp": "Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility, weighted multisig vaults. No custody lock-in"
+      },
+      {
+        "need": "Atomic settlement for DvP transactions (DTCC pilot context)",
+        "dalp": "XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk"
+      },
+      {
+        "need": "Full audit trails for SEC and FINRA oversight",
+        "dalp": "21 pre-built Grafana dashboards, VictoriaMetrics metrics, Loki logs, and Tempo traces provide end-to-end audit trails for all platform operations"
+      },
+      {
+        "need": "On-premises deployment for data sovereignty and security requirements",
+        "dalp": "Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency is configurable at deployment level"
+      },
+      {
+        "need": "KYC/AML integration for BSA/AML and FinCEN obligations",
+        "dalp": "OnchainID identity registry with invitation-based KYC onboarding, claim lifecycle management, and configurable trusted issuer hierarchy for AML/KYC claim verification"
+      },
+      {
+        "need": "Stablecoin infrastructure for USD payment tokens",
+        "dalp": "Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Supports the payment stablecoin category in the SEC-CFTC taxonomy"
+      },
+      {
+        "need": "Operational resilience and disaster recovery",
+        "dalp": "Velero-based backup and DR packaged in the DALP Helm chart. Restate durable execution prevents workflow loss on node failure. 298 CLI commands for operational automation"
+      }
+    ]
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons US Institutions Choose DALP",
+    "intro": "From broker-dealers to asset managers, DALP gives US institutions the controls they need to operate digital assets under SEC and CFTC oversight.",
+    "cards": [
+      {
+        "title": "Compliance controls for US securities regulation",
+        "body": "12 on-chain compliance module types enforce transfer restrictions, investor accreditation, and holding period controls required under Reg D, Reg S, and Reg A+. Ex-ante validation checks every transfer before execution."
+      },
+      {
+        "title": "Multi-asset lifecycle from issuance to servicing",
+        "body": "7 asset templates cover bonds, equity, funds, stablecoins, deposits, real estate, and precious metals. Each template includes built-in lifecycle logic for coupon payments, maturity redemption, and corporate actions."
+      },
+      {
+        "title": "Deployment flexibility for US data sovereignty",
+        "body": "On-premises, hybrid, and cloud deployment via Kubernetes and Helm. Air-gapped environments supported. Full control over data residency and infrastructure."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to US institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds, equity, and funds most relevant for US capital markets",
+      "Ex-ante compliance enforcement: 12 module types covering accreditation, transfer restrictions, and holding period controls",
+      "On-premises and air-gapped deployment: full data sovereignty, Kubernetes and Helm packaged",
+      "Maker-checker approval workflows: dual-control governance for institutional operations",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "298 CLI commands for operational automation and infrastructure management"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in the United States?",
+    "body": "DALP covers the full digital asset lifecycle with the compliance controls, deployment flexibility, and operational tooling US institutions require. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Can SettleMint DALP support SEC-regulated tokenized securities?",
+        "a": "DALP provides the technical infrastructure for securities compliance: 12 configurable on-chain compliance module types cover investor accreditation, transfer restrictions, jurisdiction controls, and holding period enforcement. These can be configured for Reg D, Reg S, and Reg A+ requirements. DALP is a platform, not a licensed broker-dealer or transfer agent."
+      },
+      {
+        "q": "Does DALP support on-premises deployment in the US?",
+        "a": "Yes. DALP supports on-premises, hybrid, cloud, and air-gapped deployment via Kubernetes and Helm. All data, including blockchain node data, private keys, and transaction history, remains under the institution's control."
+      },
+      {
+        "q": "Which asset types are most relevant for US financial institutions?",
+        "a": "Bonds, equity, and funds are primary use cases for US capital markets. DALP ships purpose-built templates for each, including automated coupon payments, maturity redemption, fund subscription and redemption, and AUM fee collection."
+      },
+      {
+        "q": "How does DALP handle KYC/AML for US compliance?",
+        "a": "DALP uses OnchainID for verifiable on-chain investor identities with invitation-based KYC onboarding, claim lifecycle management, and a configurable trusted issuer hierarchy. This supports BSA/AML and FinCEN requirements for identity verification."
+      },
+      {
+        "q": "Does DALP support atomic settlement for DvP transactions?",
+        "a": "Yes. DALP provides XvP/DvP atomic settlement via HTLC hashlock. Both the asset and payment legs complete together or both revert, eliminating counterparty risk. This aligns with the settlement model used in DTCC and Nasdaq tokenized securities pilots."
+      }
+    ]
+  }
+}

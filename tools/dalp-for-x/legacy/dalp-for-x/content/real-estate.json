@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Real Estate",
+    "name": "SettleMint DALP for Real Estate — Real Estate Tokenization Platform",
+    "slug": "for/real-estate",
+    "html_title": "SettleMint DALP for Real Estate Tokenization: Institutional RWA Platform",
+    "meta_description": "Tokenize real estate with SettleMint DALP: national registry deployments, compliance enforcement, atomic settlement, and full real estate lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/real-estate"
+  },
+  "hero": {
+    "eyebrow": "DALP for Real Estate",
+    "h1": "Real estate tokenization at national scale, not just proof-of-concept.",
+    "intro": "SettleMint DALP powers national real estate tokenization programs in MENA, giving sovereign registries and institutional issuers the compliance controls, custody governance, and operational infrastructure needed to move real property onto the blockchain. Whether you are tokenizing a single development or an entire national property registry, DALP provides the platform to issue, manage, and service real estate tokens at scale.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What real estate programs need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What real estate programs need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">National-scale tokenization of property assets and ownership records</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP powers national real estate tokenization programs in MENA. Purpose-built real estate template supports ownership tokenization, transfer management, and registry integration at sovereign scale</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Fractional ownership and investor eligibility controls</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Configurable fractional ownership with minimum holding controls, investor eligibility verification via OnchainID, and jurisdiction restrictions. Transfer restrictions enforced ex-ante at the smart contract layer</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Rental income distribution to tokenized property holders</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP automates periodic income distributions to all token holders programmatically. Rental yield, dividend, or profit-sharing distributions execute on schedule with full on-chain audit trail</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Compliance with national real estate regulations and foreign ownership restrictions</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types enforce jurisdiction restrictions, national ownership limits, KYC/AML requirements, and holding period controls configured to local real estate regulations</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement for property token sales and transfers</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement: property token delivery and payment finalize simultaneously or both revert. Eliminates counterparty risk in property token transactions</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Sovereign data residency: property registry data stays within national borders</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">On-premises and air-gapped deployment via Kubernetes and Helm. National property registry data, ownership records, and transaction history remain within country borders</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Institutional custody for real estate token key management</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Bring-your-own-custodian model: Fireblocks, DFNS with HSM compatibility, maker-checker approval, and weighted multisig vaults. No custody lock-in for institutional programs</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Regulatory audit trail for property transfers and ownership changes</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards and full on-chain event logging provide complete audit trails for every ownership change, distribution, and compliance decision</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Real Estate Programs Choose DALP",
+    "intro": "National real estate registries and institutional property funds need more than a tokenization tool. They need sovereign infrastructure with compliance built in.",
+    "cards": [
+      {
+        "title": "Proven at national scale in MENA",
+        "body": "DALP powers national real estate tokenization programs in MENA. Sovereign registries and government digital asset programs get reference architecture from live programs, not proof-of-concept implementations."
+      },
+      {
+        "title": "Automated income distribution to all holders",
+        "body": "Rental income, dividend, and profit-sharing distributions execute programmatically across all registered token holders on schedule. No manual payment processing, no reconciliation risk."
+      },
+      {
+        "title": "National data sovereignty",
+        "body": "On-premises and air-gapped deployment via Kubernetes and Helm. All property registry data, ownership records, and transaction history remain within your country's borders."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP real estate capabilities in depth",
+    "items": [
+      "National-scale deployment: sovereign real estate registry programs in MENA at production scale",
+      "Automated income distribution: rental yield and profit-sharing to all token holders on schedule",
+      "12 compliance modules: jurisdiction restrictions, foreign ownership limits, KYC/AML enforced ex-ante",
+      "Atomic DvP settlement: property token delivery and payment complete together or revert",
+      "Sovereign data residency: on-premises and air-gapped deployment within national borders",
+      "Maker-checker custody: dual-control governance for all property token operations"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to tokenize real estate at institutional scale?",
+    "body": "DALP provides sovereign-ready real estate tokenization infrastructure: national registry programs, fractional ownership, automated distributions, and full compliance controls. Talk to a product specialist.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Does SettleMint DALP have experience with national real estate tokenization programs?",
+        "a": "Yes. DALP powers national real estate tokenization programs in MENA at sovereign scale, including government-backed property registry programs. These deployments provide reference architecture directly applicable to national real estate digitization initiatives in UAE, Saudi Arabia, and similar jurisdictions."
+      },
+      {
+        "q": "How does DALP handle rental income distribution for tokenized real estate?",
+        "a": "DALP automates periodic income distributions programmatically: rental income, dividend yields, or profit-sharing payments execute to all registered token holders on schedule. No manual payment processing. Every distribution is recorded on-chain with full audit trail including timestamps and per-holder amounts."
+      },
+      {
+        "q": "Does DALP support foreign ownership restrictions in real estate tokenization?",
+        "a": "Yes. DALP's 12 compliance module types include jurisdiction restrictions and eligibility controls configurable to national real estate regulations, including foreign ownership limits. These are enforced ex-ante: a transfer to a non-eligible holder is blocked before execution."
+      },
+      {
+        "q": "Can DALP be deployed within a country's sovereign infrastructure?",
+        "a": "Yes. DALP supports on-premises and air-gapped deployment via Kubernetes and Helm. All data including blockchain node data, ownership records, and transaction history can be deployed within a country's sovereign infrastructure, satisfying data residency and national security requirements for critical property registry programs."
+      },
+      {
+        "q": "Does DALP support fractional ownership of real estate assets?",
+        "a": "Yes. DALP's real estate template supports configurable fractional ownership: minimum holding amounts, maximum ownership concentration controls, and investor eligibility verification via OnchainID. Transfer restrictions enforce compliance on every fractional ownership change."
+      }
+    ]
+  }
+}

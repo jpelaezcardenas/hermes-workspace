@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Banks",
+    "name": "SettleMint DALP for Banks — Digital Asset Platform for Financial Institutions",
+    "slug": "for/banks",
+    "html_title": "SettleMint DALP for Banks: Digital Asset Platform for Financial Institutions",
+    "meta_description": "SettleMint DALP for banks: institutional governance, maker-checker custody, ex-ante compliance, atomic DvP settlement, and full digital asset lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/banks"
+  },
+  "hero": {
+    "eyebrow": "DALP for Banks",
+    "h1": "The digital asset platform banks actually need to go live.",
+    "intro": "Banks entering digital assets face the same requirements they apply to every other system: dual-control governance, auditable operations, regulatory-grade compliance, and integration with existing core banking infrastructure. DALP is designed from the ground up for this environment: maker-checker custody workflows, ex-ante compliance enforcement, atomic DvP settlement, and operational observability that satisfies internal risk, compliance, and audit teams.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What banks need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What banks need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maker-checker approval workflows for every sensitive operation</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows built into every critical operation: token issuance, transfers, compliance rule changes, custody key operations, and administrative actions</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Regulatory-grade compliance enforcement for investor eligibility and transfer controls</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types enforced ex-ante at the smart contract layer: investor eligibility, jurisdiction restrictions, transfer limits, holding period controls. Every transfer validated before execution via ERC-3643</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">HSM-compatible key management aligned with bank security standards</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Native HSM compatibility, weighted multisig vaults, and bring-your-own-custodian integrations (Fireblocks, DFNS). DALP orchestrates custody policy across existing custodian relationships without acting as custodian</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Integration with core banking systems, payment rails, and existing custody infrastructure</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">REST API, GraphQL, event webhooks, ISO 20022 connectivity (SWIFT, SEPA, RTGS). DALP integrates with core banking, custody, risk, and reporting systems via standard APIs without requiring a rebuild</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Multi-asset support: bonds, deposits, funds, stablecoins, and real estate in one platform</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">7 purpose-built asset templates: bonds, deposits, stablecoins, equity, funds, real estate, and precious metals. Each with full lifecycle logic, not generic smart contract templates</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement to eliminate counterparty risk in institutional trades</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: asset delivery and cash payment finalize simultaneously or both revert. Eliminates counterparty risk and reconciliation gaps</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">On-premises or private cloud deployment for data residency and IT governance</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Kubernetes/Helm deployment supports on-prem, private cloud, hybrid, and air-gapped environments. Banks keep all data within their own infrastructure, satisfying IT governance, data residency, and vendor risk requirements</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Audit trails and observability for internal audit and regulatory examination</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards, VictoriaMetrics, Loki, Tempo traces, and full on-chain event logging. Every operation — issuance, transfer, compliance check, custody action — is recorded and auditable</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Operational resilience: disaster recovery, workflow durability, automated alerting</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Velero-based backup and DR, Restate durable execution preventing workflow loss on node failure, automated alerting on error rate spikes and chain connectivity issues. 298 CLI commands for operational automation</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Banks Choose DALP for Digital Assets",
+    "intro": "Banks have seen vendor after vendor fail to clear their governance, compliance, and IT standards. DALP is built to clear them.",
+    "cards": [
+      {
+        "title": "Governance controls that match bank standards",
+        "body": "Maker-checker workflows, RBAC/ABAC access controls, HSM-compatible custody, and formal recovery procedures are built into every DALP deployment. These aren't add-ons. They are the platform."
+      },
+      {
+        "title": "Compliance that enforces itself at the smart contract layer",
+        "body": "12 module types validate every transfer ex-ante: investor eligibility, jurisdiction, transfer limits, holding periods. No compliance breach can occur at the transfer layer. Internal audit gets a full event log of every enforcement decision."
+      },
+      {
+        "title": "Your infrastructure, not a vendor's cloud",
+        "body": "DALP deploys on-premises, in your private cloud, or in hybrid configuration via Kubernetes and Helm. All data stays in your infrastructure. Vendor risk and data residency requirements satisfied from day one."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities designed for bank operating standards",
+    "items": [
+      "Maker-checker governance: dual control for every critical operation across issuance, custody, compliance, and administration",
+      "298 CLI commands and REST/GraphQL/webhook APIs: full operational and integration control for bank IT teams",
+      "21 pre-built Grafana dashboards: the observability stack your audit and risk teams need without custom build",
+      "12 compliance modules ex-ante: investor eligibility, jurisdictions, supply limits, and holding periods enforced before every transfer",
+      "HSM-compatible key management: Fireblocks, DFNS, and bring-your-own-custodian with no lock-in",
+      "On-premises and air-gapped deployment: Kubernetes and Helm packaged, Velero backup/DR included"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to get digital assets past your risk and IT teams?",
+    "body": "DALP is designed to satisfy bank governance, compliance, and IT standards. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "What makes DALP different from other digital asset platforms for banks?",
+        "a": "DALP is built around the requirements banks actually have: maker-checker approval workflows for dual-control governance, ex-ante compliance enforcement that prevents breaches before they occur, HSM-compatible key management, on-premises deployment, and full audit trails. Most platforms are built for crypto-native or startup issuers and add institutional controls as an afterthought. DALP is institutional-first."
+      },
+      {
+        "q": "How does DALP integrate with existing core banking systems?",
+        "a": "DALP provides REST API, GraphQL, event webhooks, oRPC, and ISO 20022 payment rail connectivity (SWIFT, SEPA, RTGS). Banks integrate DALP with existing core banking, custody, risk, and reporting systems via standard APIs. DALP is designed to operate within existing institutional environments, not replace them."
+      },
+      {
+        "q": "Does DALP satisfy bank IT governance requirements for vendor risk?",
+        "a": "DALP supports on-premises deployment, allowing banks to keep all data within their own infrastructure. This addresses vendor risk, data residency, and outsourcing concerns that cloud-SaaS-only platforms cannot satisfy. Helm-packaged deployment aligns with bank infrastructure teams' existing Kubernetes practices."
+      },
+      {
+        "q": "How does DALP handle custody for banks?",
+        "a": "DALP orchestrates custody policy across existing custodian relationships via a bring-your-own-custodian model. Native integrations with Fireblocks and DFNS, HSM compatibility, and weighted multisig vaults allow banks to maintain existing custodian relationships. DALP does not act as custodian itself."
+      },
+      {
+        "q": "What asset types can banks issue and manage with DALP?",
+        "a": "DALP ships 7 purpose-built asset templates: bonds (with automated coupon and maturity), deposits (with interest accrual), stablecoins (with reserve controls), equity, funds (with NAV and AUM fee servicing), real estate, and precious metals. Each template has lifecycle logic specific to that asset type, not a generic smart contract."
+      }
+    ]
+  }
+}

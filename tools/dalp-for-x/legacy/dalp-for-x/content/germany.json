@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Germany",
+    "name": "SettleMint DALP for Germany — Digital Asset Platform for German Financial Institutions",
+    "slug": "for/germany",
+    "html_title": "SettleMint DALP for Germany: Digital Asset Platform for German Institutions",
+    "meta_description": "SettleMint DALP for Germany: BaFin-aligned compliance, MiCA-ready controls, data residency, atomic settlement, and full digital asset lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/germany"
+  },
+  "hero": {
+    "eyebrow": "DALP for Germany",
+    "h1": "Digital assets built for German regulatory standards.",
+    "intro": "German financial institutions operate under BaFin supervision with MiCA now directly applicable and the eWpG (Electronic Securities Act) enabling digital securities issuance. DALP delivers the compliance controls, data residency options, and operational infrastructure that regulated issuers and custodians in Germany require to operate digital assets under BaFin oversight.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What German institutions need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What German institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">MiCA-aligned compliance for crypto-asset issuance and transfer controls under EU regulation</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types cover the transfer restrictions, investor eligibility, and supply controls relevant to MiCA's asset-referenced token and e-money token frameworks. ERC-3643 compliance model with configurable module registry</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">eWpG (Electronic Securities Act) support for digital bond and fund share issuance</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Purpose-built bond and fund templates with full lifecycle logic: configurable issuance terms, coupon automation, maturity redemption, and fund share servicing relevant to eWpG digital securities issuance</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">BaFin-supervised custody governance with maker-checker workflows and audit requirements</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows for all sensitive operations. HSM-compatible custody integration (Fireblocks, DFNS), weighted multisig vaults, and formal recovery procedures aligned with BaFin crypto custody requirements</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">German data residency and GDPR compliance for digital asset infrastructure</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Kubernetes/Helm deployment supports on-prem, hybrid, and private cloud within Germany. All data including blockchain node data and private keys can remain within German borders, satisfying GDPR and BaFin data governance requirements</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">KYC/AML compliance for EU Anti-Money Laundering requirements under AMLD6</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">OnchainID identity registry with invitation-based KYC onboarding, claim lifecycle management, and configurable trusted issuer hierarchy for AML/KYC claim verification aligned with AMLD requirements</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin issuance framework aligned with MiCA e-money token requirements</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model enforces MiCA-relevant rules on every transfer</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic settlement for institutional bilateral transactions and DvP requirements</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk. Relevant for eWpG digital securities settlement</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Full audit trail and regulatory reporting for BaFin examination</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards, VictoriaMetrics, Loki, Tempo provide end-to-end audit trails across all platform operations. Full event traceability supports BaFin examination requirements</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Integration with existing German core banking and custody systems</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">REST API, GraphQL, event webhooks, and ISO 20022 payment rail connectivity (SWIFT, SEPA, RTGS). DALP integrates with existing institutional systems without requiring a rebuild</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons German Institutions Choose DALP",
+    "intro": "From BaFin-supervised banks to eWpG digital securities issuers and MiCA-regulated stablecoin providers, DALP gives German institutions the controls they need to operate digital assets under German regulatory frameworks.",
+    "cards": [
+      {
+        "title": "MiCA and eWpG ready from day one",
+        "body": "12 on-chain compliance module types cover the transfer restrictions, investor eligibility, and supply controls relevant to MiCA. Bond and fund templates support eWpG digital securities issuance with full lifecycle logic."
+      },
+      {
+        "title": "German data residency and GDPR compliance",
+        "body": "On-premises and private cloud deployment via Kubernetes and Helm. Keep all data within Germany to satisfy GDPR and BaFin data governance requirements. Air-gapped deployment available for maximum data sovereignty."
+      },
+      {
+        "title": "BaFin-aligned custody governance",
+        "body": "Maker-checker approval workflows, HSM-compatible custody integration, and RBAC/ABAC access controls match the governance structures required by BaFin for crypto custody and digital securities operations."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to German institutions",
+    "items": [
+      "7 asset templates: bonds and stablecoins most critical for eWpG and MiCA compliance in Germany",
+      "Ex-ante compliance enforcement: 12 module types covering MiCA-relevant transfer restrictions and investor eligibility",
+      "On-premises deployment within Germany: full GDPR data residency, Kubernetes and Helm packaged",
+      "BaFin-aligned custody governance: maker-checker workflows, HSM compatibility, formal recovery procedures",
+      "Atomic DvP/XvP settlement: both legs complete together or both revert",
+      "ISO 20022 payment rail connectivity: SWIFT, SEPA, RTGS integration for German banking systems"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Germany?",
+    "body": "DALP covers the full digital asset lifecycle under German and EU regulatory constraints. Talk to a product specialist about your BaFin or MiCA use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with BaFin and MiCA requirements?",
+        "a": "DALP provides the technical infrastructure for compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and supply limits aligned with MiCA frameworks. DALP is a platform provider; regulatory licensing and approval for your specific use case is managed by your legal team and applicable BaFin authorization."
+      },
+      {
+        "q": "Does DALP support eWpG digital securities issuance?",
+        "a": "DALP ships purpose-built bond and fund templates with full lifecycle logic including configurable issuance terms, coupon automation, and maturity redemption. These templates are directly applicable to eWpG-compliant digital securities issuance. The specific legal structure of your eWpG securities is a matter for your legal team."
+      },
+      {
+        "q": "Does DALP support German data residency and GDPR?",
+        "a": "Yes. DALP supports on-premises and private cloud deployment via Kubernetes and Helm, keeping all data within Germany. This satisfies GDPR data residency requirements and BaFin data governance expectations for digital asset infrastructure operated under German law."
+      },
+      {
+        "q": "How does DALP handle MiCA stablecoin requirements?",
+        "a": "DALP's stablecoin template includes configurable issuance controls, transfer restrictions, and reserve attestation hooks relevant to MiCA's e-money token framework. The two-layer compliance model enforces issuer-defined rules on every transfer. MiCA authorization as an issuer is managed by your legal team and home-state national competent authority."
+      },
+      {
+        "q": "Can DALP integrate with German banking systems?",
+        "a": "Yes. DALP provides REST API, GraphQL, event webhooks, and ISO 20022 payment rail connectivity including SWIFT, SEPA, and RTGS. German institutions can integrate DALP with existing core banking, custody, and risk systems without requiring a technology rebuild."
+      }
+    ]
+  }
+}

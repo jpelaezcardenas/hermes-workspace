@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Bonds",
+    "name": "SettleMint DALP for Bonds — Bond Tokenization Platform",
+    "slug": "for/bonds",
+    "html_title": "SettleMint DALP for Bonds: Bond Tokenization Platform for Regulated Institutions",
+    "meta_description": "Tokenize bonds with SettleMint DALP: automated coupons, maturity redemption, ex-ante compliance, atomic DvP settlement, and full lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/bonds"
+  },
+  "hero": {
+    "eyebrow": "DALP for Bonds",
+    "h1": "Bond tokenization with full lifecycle management, not just issuance.",
+    "intro": "Most tokenization platforms stop at bond issuance. DALP covers the entire bond lifecycle: configurable issuance terms, automated coupon payments, yield schedules, interest accrual, maturity redemption, and early redemption workflows. With ex-ante compliance enforcement, atomic DvP settlement, and institutional custody controls, DALP gives bond issuers the operational infrastructure to run digital bonds at scale.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What bond issuers need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What bond issuers need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Configurable bond issuance: face value, maturity date, coupon rate, payment frequency, ISIN</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP's bond template ships with configurable issuance terms including face value, maturity, coupon schedule, accrual methodology, and metadata fields. Deploy a new bond structure in days, not months</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Automated coupon payments to all bondholders on schedule</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP automates coupon distribution programmatically across all registered holders on schedule. No manual payment processing, no reconciliation gaps. Coupon events are recorded on-chain with full audit trail</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maturity redemption: principal return to all bondholders at maturity date</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP handles maturity redemption programmatically: calculates redemption amounts, distributes principal to holders, and burns bond tokens at maturity. Full lifecycle event logged</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Investor eligibility and transfer restrictions for regulated bond markets</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types enforce investor eligibility, minimum holding amounts, jurisdiction restrictions, and holding period controls ex-ante at the smart contract layer via ERC-3643</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement for primary issuance and secondary market trades</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: bond delivery and cash payment finalize simultaneously. Zero counterparty risk for both legs. Applicable to primary subscription and secondary bilateral trading</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Custody integration with existing institutional custodians</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Bring-your-own-custodian: native Fireblocks and DFNS integration, HSM compatibility, maker-checker approval workflows. No custody lock-in for issuers with existing custodian relationships</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Regulatory audit trail for bond lifecycle events and investor transactions</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards, full OpenTelemetry observability, and on-chain event logs provide end-to-end audit trails for coupon payments, transfers, and lifecycle events</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Integration with core banking, payment rails, and CSD connectivity</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">REST API, GraphQL, event webhooks, ISO 20022 payment rail connectivity (SWIFT, SEPA, RTGS). DALP integrates with existing infrastructure without requiring a technology rebuild</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Bond Issuers Choose DALP",
+    "intro": "Bond tokenization creates operational obligations that last for the bond's entire life. DALP is built to fulfill them.",
+    "cards": [
+      {
+        "title": "Automated coupon and maturity servicing",
+        "body": "DALP executes coupon payments and maturity redemptions programmatically across all registered holders. Eliminate manual payment processing, reduce reconciliation risk, and maintain a complete on-chain audit trail of every lifecycle event."
+      },
+      {
+        "title": "Compliance that enforces itself",
+        "body": "12 compliance module types validate every bond transfer before execution: investor eligibility, jurisdiction restrictions, minimum holding amounts, and holding period controls. Ex-ante enforcement means no compliance breach can occur at the transfer layer."
+      },
+      {
+        "title": "Atomic settlement without counterparty risk",
+        "body": "DvP atomic settlement via HTLC hashlock: bond delivery and cash payment finalize together or both revert. Zero counterparty risk for primary subscriptions and secondary bilateral trades."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP bond capabilities in depth",
+    "items": [
+      "Purpose-built bond template: configurable face value, maturity, coupon rate, payment frequency, accrual methodology, and ISIN metadata",
+      "Automated coupon distribution: programmatic payment across all registered holders with on-chain event log",
+      "Maturity redemption: automatic principal distribution and bond token burn at maturity date",
+      "12 compliance modules: investor eligibility, jurisdiction restrictions, minimum holdings, holding periods enforced ex-ante",
+      "Atomic DvP/XvP settlement with HTLC hashlock: bond and cash legs complete together or revert",
+      "21 pre-built Grafana dashboards and full audit trail: every coupon, transfer, and lifecycle event logged"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to tokenize bonds with full lifecycle management?",
+    "body": "DALP covers the complete bond lifecycle: configurable issuance, automated coupons, maturity redemption, compliance, and atomic settlement. Talk to a product specialist.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "What bond types does DALP support?",
+        "a": "DALP's bond template supports fixed-rate bonds with scheduled coupon payments, configurable coupon frequency (annual, semi-annual, quarterly), maturity redemption, and early redemption mechanics. The template is designed for regulated institutions issuing digital bonds under frameworks like eWpG (Germany), PSA (Singapore), or equivalent national digital securities laws."
+      },
+      {
+        "q": "How does DALP automate coupon payments?",
+        "a": "DALP executes coupon distributions programmatically: at each coupon date, the platform calculates coupon amounts based on holdings, distributes payments to all registered bondholders, and logs the coupon event on-chain. No manual payment processing required. The full distribution is recorded with timestamps and transaction references for audit."
+      },
+      {
+        "q": "Does DALP support bond compliance requirements like minimum denomination and investor eligibility?",
+        "a": "Yes. DALP's 12 compliance module types enforce bond-specific controls ex-ante: minimum denomination controls, investor eligibility (accredited/professional only), jurisdiction restrictions for cross-border distribution, and holding period locks. These are configured at issuance and enforced on every transfer automatically."
+      },
+      {
+        "q": "How does atomic DvP settlement work for bond tokenization?",
+        "a": "DALP's XvP/DvP module uses HTLC hashlock semantics: both the bond delivery and the cash payment leg finalize simultaneously, or both revert. This applies to primary subscriptions (bond tokens issued against payment) and secondary bilateral trades. Zero counterparty risk: no scenario where bonds transfer without corresponding payment."
+      },
+      {
+        "q": "Can DALP bond infrastructure integrate with existing payment systems?",
+        "a": "Yes. DALP provides ISO 20022 payment rail connectivity including SWIFT, SEPA, and RTGS integration. Bond coupon payments and redemptions can be linked to existing institutional payment workflows without rebuilding core banking infrastructure."
+      }
+    ]
+  }
+}

@@ -1,0 +1,857 @@
+{
+  "domain": "",
+  "slug": "for/italy",
+  "name": "SettleMint DALP for Italy — Consob-Aligned Digital Asset Platform",
+  "htmlTitle": "SettleMint DALP for Italy: Consob-Aligned Digital Asset and Tokenized Securities Platform",
+  "metaDescription": "DALP for Italy: Consob-aligned compliance, EU DLT Pilot Regime asset templates, MiCA-ready stablecoins, and Italian data residency for tokenized assets.",
+  "linkRelCanonicalUrl": "https://www.settlemint.com/for/italy",
+  "templatePath": "Marketplace/One_Elements child-theme/templates/One - Competitors Comparison.html",
+  "headHtml": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"FAQPage\",\n  \"mainEntity\": [\n    {\n      \"@type\": \"Question\",\n      \"name\": \"What is DALP for Italy?\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"DALP is SettleMint's Digital Asset Lifecycle Platform for regulated financial institutions. For Italy, it provides Consob-aligned compliance controls, EU DLT Pilot Regime-compatible asset templates, MiCA-ready stablecoin infrastructure, and Italian data residency for tokenized asset operations.\"\n      }\n    },\n    {\n      \"@type\": \"Question\",\n      \"name\": \"Does DALP support the EU DLT Pilot Regime for Italian institutions?\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"DALP provides infrastructure compatible with the EU DLT Pilot Regime: bond and equity templates with full lifecycle logic for tokenized securities issuance, transfer, and servicing under the Consob-supervised DLT framework.\"\n      }\n    },\n    {\n      \"@type\": \"Question\",\n      \"name\": \"How does DALP support Consob and MiCA compliance requirements?\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"DALP enforces compliance ex-ante: 12 on-chain compliance module types cover Consob investor eligibility, transfer restrictions, country-based controls, and MiCA ART/EMT issuer requirements. Every transfer is validated before execution, not reviewed after.\"\n      }\n    },\n    {\n      \"@type\": \"Question\",\n      \"name\": \"Can DALP be deployed within Italian/EU data borders?\",\n      \"acceptedAnswer\": {\n        \"@type\": \"Answer\",\n        \"text\": \"Yes. DALP supports on-premises, Italian-hosted cloud, and hybrid deployment via Kubernetes and Helm. All data stays within Italy/EU for GDPR and Consob data sovereignty requirements.\"\n      }\n    }\n  ]\n}\n</script>\n<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"SoftwareApplication\",\n  \"name\": \"SettleMint DALP\",\n  \"description\": \"Digital Asset Lifecycle Platform for Italian financial institutions and fintechs. Covers issuance, compliance, servicing, settlement, and custody under Consob oversight and MiCA via a single EVM-based platform.\",\n  \"applicationCategory\": \"FinanceApplication\",\n  \"operatingSystem\": \"Cloud, On-Premises, Kubernetes\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"price\": \"0\",\n    \"priceCurrency\": \"USD\"\n  },\n  \"publisher\": {\n    \"@type\": \"Organization\",\n    \"name\": \"SettleMint\",\n    \"url\": \"https://www.settlemint.com\"\n  }\n}\n</script>",
+  "layoutSections": {
+    "section-1": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-1",
+      "name": "section-1",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 48},
+                  "top": {"units": "px", "value": 80}
+                }
+              },
+              "mobile": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 40},
+                  "top": {"units": "px", "value": 48}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-1-col",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Eyebrow Heading",
+                  "name": "widget_tokeny_hero_eyebrow",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "eyebrow_color": {"color": "#000017", "opacity": 100},
+                    "eyebrow_text": "DALP for Italy",
+                    "heading_color": {"color": "#000000", "opacity": 100},
+                    "heading_text": "Digital asset tokenization, built for Italy's regulatory framework.",
+                    "module_id": 374272770289,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Rich Text",
+                  "name": "widget_tokeny_hero_richtext",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "html": "<p style=\"color: #4C4C4C;\">Italian capital markets operate under Consob oversight, with MiCA now in full effect and the EU DLT Pilot Regime opening new pathways for tokenized securities. DALP delivers Consob-aligned compliance infrastructure, DLT Pilot-compatible asset templates, and the operational governance Italian institutions need to issue, manage, and settle digital assets at scale.</p>",
+                    "module_id": 1155639,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "One - Buttons",
+                  "name": "widget_tokeny_hero_button",
+                  "params": {
+                    "button": [
+                      {
+                        "button_text": "See DALP in Action",
+                        "class_button": "btn-primary-dark",
+                        "display_options": {
+                          "enable_on_desktop": true,
+                          "enable_on_mobile": true,
+                          "enable_on_tablet": true
+                        },
+                        "enable_icon": "right_icon",
+                        "icon_color": {"color": "#FFFFFF", "opacity": 100},
+                        "icon_color_hover": {"color": "#FFFFFF", "opacity": 100},
+                        "icon_field": {"name": "arrow-right", "type": "REGULAR", "unicode": "f061"},
+                        "icon_size_button": 12,
+                        "link_field": {
+                          "no_follow": false,
+                          "open_in_new_tab": false,
+                          "url": {"href": "/demo"}
+                        }
+                      }
+                    ],
+                    "css_class": "dnd-module",
+                    "module_id": 362517245155,
+                    "schema_version": 2,
+                    "settings": {
+                      "button_align_desktop": "left",
+                      "button_align_mobile": "left"
+                    }
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 12,
+            "x": 0
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    },
+    "section-2": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-2",
+      "name": "section-2",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 80},
+                  "top": {"units": "px", "value": 80}
+                }
+              },
+              "mobile": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 64},
+                  "top": {"units": "px", "value": 80}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-2-col",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Eyebrow Heading",
+                  "name": "widget_tokeny_table_heading",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "eyebrow_color": {"color": "#4c4c4c", "opacity": 100},
+                    "eyebrow_text": "Platform Fit",
+                    "heading_color": {"color": "#000000", "opacity": 100},
+                    "heading_text": "What Italian institutions need and how DALP delivers",
+                    "module_id": 374272770289,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Rich Text",
+                  "name": "widget_tokeny_table_richtext",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What Italian institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">Consob compliance for digital asset issuance and investor eligibility</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">12 on-chain compliance module types enforce Consob-aligned transfer restrictions, investor eligibility, and jurisdictional controls enforced ex-ante on every transaction</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">MiCA compliance for stablecoin and token issuers</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">Stablecoin template with supply limits, reserve-ratio enforcement, and MiCA-aligned compliance modules covering ART and EMT issuer requirements</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">EU DLT Pilot Regime participation for tokenized securities</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">Bond and equity templates with full lifecycle logic for issuance, distribution, and servicing under the EU DLT Pilot Regime framework</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">Atomic DvP settlement aligned with Borsa Italiana and Monte Titoli infrastructure</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">Atomic DvP/XvP settlement with HTLC hashlock; REST and ISO 20022 API connectivity for integration with Italian settlement infrastructure</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">DORA operational resilience for Banca d'Italia and Consob-regulated platforms</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">21 pre-built Grafana dashboards, three-pillar observability (VictoriaMetrics, Loki, Tempo), and durable workflows that survive infrastructure failures for DORA compliance</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">Italian and EU data residency, GDPR compliance</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">On-prem, Italian-cloud, and hybrid deployment via Kubernetes and Helm; all data stays within defined EU perimeters for GDPR compliance</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">Integration with Italian banking and core financial systems</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; background:#f8f8fc; color: #1a1a2e;\">REST, GraphQL, and webhook APIs; ISO 20022 connectivity for SEPA and Italian banking system integration with institutions such as Intesa Sanpaolo and UniCredit</td>\n</tr><tr style=\"border-bottom:1px solid #d9d9e3;\">\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">Maker-checker governance for regulated issuers</td>\n<td style=\"padding:12px 16px; border:1px solid #d9d9e3; color: #1a1a2e;\">Dual-approval workflows with RBAC/ABAC access controls for issuance, transfer approval, and corporate action processing under Consob oversight</td>\n</tr>\n</tbody>\n</table>",
+                    "module_id": 1155639,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 12,
+            "x": 0
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    },
+    "section-3": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-3",
+      "name": "section-3",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "backgroundColor": {"a": 1.0, "b": 248, "g": 248, "r": 247},
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 80},
+                  "top": {"units": "px", "value": 80}
+                }
+              },
+              "mobile": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 64},
+                  "top": {"units": "px", "value": 64}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-3-col",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Eyebrow Heading",
+                  "name": "widget_tokeny_reasons_heading",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "eyebrow_color": {"color": "#4c4c4c", "opacity": 100},
+                    "eyebrow_text": "Why Choose DALP",
+                    "heading_color": {"color": "#000000", "opacity": 100},
+                    "heading_text": "3 Reasons Italian Institutions Choose DALP",
+                    "module_id": 374272770289,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Rich Text",
+                  "name": "widget_tokeny_reasons_intro",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "html": "<p style=\"color: #4c4c4c;\">From Consob-regulated issuers to Mediobanca-style capital markets desks, DALP gives Italian institutions the compliance infrastructure for regulated digital asset operations under MiCA and the EU DLT Pilot Regime.</p>",
+                    "module_id": 1155639,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "One - Cards - Grid",
+                  "name": "widget_tokeny_reasons_cards",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "items": [
+                      {
+                        "cta_link": {"no_follow": false, "open_in_new_tab": false, "url": {"href": ""}},
+                        "cta_text": "",
+                        "description": "<p>12 on-chain compliance module types enforce Consob investor eligibility, transfer restrictions, and jurisdictional controls. Bond and equity templates support tokenized securities issuance under the EU DLT Pilot Regime with full lifecycle logic from issuance to redemption.</p>",
+                        "number_text": "Consob and DLT Pilot-aligned compliance"
+                      },
+                      {
+                        "cta_link": {"no_follow": false, "open_in_new_tab": false, "url": {"href": ""}},
+                        "cta_text": "",
+                        "description": "<p>Italy is a key MiCA jurisdiction. DALP ships a stablecoin template with supply limits, reserve-ratio controls, and 12 compliance module types covering ART and EMT issuer requirements under MiCA, enforced ex-ante on every transaction before execution.</p>",
+                        "number_text": "MiCA-ready from day one"
+                      },
+                      {
+                        "cta_link": {"no_follow": false, "open_in_new_tab": false, "url": {"href": ""}},
+                        "cta_text": "",
+                        "description": "<p>Deploy on-premises or in Italian-hosted cloud via Kubernetes and Helm. Data stays within Italy/EU. 21 Grafana dashboards and three-pillar observability directly support DORA operational resilience requirements for Consob and Banca d'Italia-regulated platforms.</p>",
+                        "number_text": "Italian data residency and DORA resilience"
+                      }
+                    ],
+                    "module_id": 376294640884,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 12,
+            "x": 0
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    },
+    "section-4": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-4",
+      "name": "section-4",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 80},
+                  "top": {"units": "px", "value": 80}
+                }
+              },
+              "mobile": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 64},
+                  "top": {"units": "px", "value": 64}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-4-col-left",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Eyebrow Heading",
+                  "name": "widget_tokeny_diff_heading",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "eyebrow_color": {"color": "#4c4c4c", "opacity": 100},
+                    "eyebrow_text": "Platform Capabilities",
+                    "heading_color": {"color": "#000000", "opacity": 100},
+                    "heading_text": "DALP capabilities for Italian institutions",
+                    "module_id": 374272770289,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 5,
+            "x": 0
+          },
+          "6": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-4-col-right",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "One - List Items",
+                  "name": "widget_tokeny_diff_list",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "items": [
+                      {
+                        "icon": {"alt": "checkmark", "height": 30, "loading": "disabled", "size_type": "exact", "src": "https://8639589.fs1.hubspotusercontent-eu1.net/hubfs/8639589/Icons/Tick_icon_blue.png", "width": 30},
+                        "icon_color": {"color": "#2253FF", "opacity": 100},
+                        "icon_field": {"name": "check", "type": "SOLID", "unicode": "f00c"},
+                        "icon_size": 20,
+                        "text": "<p style=\"color: #1a1a2e; font-weight: 500;\">Bond and equity templates with EU DLT Pilot Regime-compatible lifecycle logic for tokenized securities issuance</p>",
+                        "type_icon": "image"
+                      },
+                      {
+                        "icon": {"alt": "checkmark", "height": 30, "loading": "disabled", "size_type": "exact", "src": "https://8639589.fs1.hubspotusercontent-eu1.net/hubfs/8639589/Icons/Tick_icon_blue.png", "width": 30},
+                        "icon_color": {"color": "#2253FF", "opacity": 100},
+                        "icon_field": {"name": "check", "type": "SOLID", "unicode": "f00c"},
+                        "icon_size": 20,
+                        "text": "<p style=\"color: #1a1a2e; font-weight: 500;\">MiCA-aligned stablecoin template with supply limits, reserve-ratio enforcement, and ART/EMT compliance controls</p>",
+                        "type_icon": "image"
+                      },
+                      {
+                        "icon": {"alt": "checkmark", "height": 30, "loading": "disabled", "size_type": "exact", "src": "https://8639589.fs1.hubspotusercontent-eu1.net/hubfs/8639589/Icons/Tick_icon_blue.png", "width": 30},
+                        "icon_color": {"color": "#2253FF", "opacity": 100},
+                        "icon_field": {"name": "check", "type": "SOLID", "unicode": "f00c"},
+                        "icon_size": 20,
+                        "text": "<p style=\"color: #1a1a2e; font-weight: 500;\">Ex-ante compliance enforcement: 12 module types covering Consob investor eligibility, country restrictions, and transfer controls</p>",
+                        "type_icon": "image"
+                      },
+                      {
+                        "icon": {"alt": "checkmark", "height": 30, "loading": "disabled", "size_type": "exact", "src": "https://8639589.fs1.hubspotusercontent-eu1.net/hubfs/8639589/Icons/Tick_icon_blue.png", "width": 30},
+                        "icon_color": {"color": "#2253FF", "opacity": 100},
+                        "icon_field": {"name": "check", "type": "SOLID", "unicode": "f00c"},
+                        "icon_size": 20,
+                        "text": "<p style=\"color: #1a1a2e; font-weight: 500;\">DORA-ready observability: 21 Grafana dashboards, VictoriaMetrics, Loki, Tempo for Italian-regulated platforms</p>",
+                        "type_icon": "image"
+                      },
+                      {
+                        "icon": {"alt": "checkmark", "height": 30, "loading": "disabled", "size_type": "exact", "src": "https://8639589.fs1.hubspotusercontent-eu1.net/hubfs/8639589/Icons/Tick_icon_blue.png", "width": 30},
+                        "icon_color": {"color": "#2253FF", "opacity": 100},
+                        "icon_field": {"name": "check", "type": "SOLID", "unicode": "f00c"},
+                        "icon_size": 20,
+                        "text": "<p style=\"color: #1a1a2e; font-weight: 500;\">Italian/EU data residency: on-prem or cloud deployment via Kubernetes and Helm</p>",
+                        "type_icon": "image"
+                      },
+                      {
+                        "icon": {"alt": "checkmark", "height": 30, "loading": "disabled", "size_type": "exact", "src": "https://8639589.fs1.hubspotusercontent-eu1.net/hubfs/8639589/Icons/Tick_icon_blue.png", "width": 30},
+                        "icon_color": {"color": "#2253FF", "opacity": 100},
+                        "icon_field": {"name": "check", "type": "SOLID", "unicode": "f00c"},
+                        "icon_size": 20,
+                        "text": "<p style=\"color: #1a1a2e; font-weight: 500;\">ISO 20022 connectivity and API integration with Italian banking and capital market infrastructure</p>",
+                        "type_icon": "image"
+                      }
+                    ],
+                    "module_id": 362517245149,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 6,
+            "x": 6
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    },
+    "section-5": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-5",
+      "name": "section-5",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 0},
+                  "top": {"units": "px", "value": 0}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-5-col",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Divider",
+                  "name": "widget_tokeny_divider",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "module_id": 1155629,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 12,
+            "x": 0
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    },
+    "section-6": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-6",
+      "name": "section-6",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 80},
+                  "top": {"units": "px", "value": 80}
+                }
+              },
+              "mobile": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 64},
+                  "top": {"units": "px", "value": 64}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-6-col",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Eyebrow Heading",
+                  "name": "widget_tokeny_faq_heading",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "eyebrow_text": "",
+                    "heading_text": "Frequently Asked Questions",
+                    "module_id": 374272770289,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Accordion",
+                  "name": "widget_tokeny_faq_accordion",
+                  "params": {
+                    "accordions": [
+                      {
+                        "content": "<p>DALP is SettleMint's Digital Asset Lifecycle Platform for regulated financial institutions. For Italy, it provides Consob-aligned compliance controls, EU DLT Pilot Regime-compatible asset templates, MiCA-ready stablecoin infrastructure, and Italian data residency for tokenized asset operations.</p>",
+                        "open_by_default": false,
+                        "title": "What is DALP for Italy?"
+                      },
+                      {
+                        "content": "<p>DALP provides infrastructure compatible with the EU DLT Pilot Regime: bond and equity templates with full lifecycle logic for tokenized securities issuance, transfer, and servicing under the Consob-supervised DLT framework, including automated coupon payments, redemptions, and corporate actions.</p>",
+                        "open_by_default": false,
+                        "title": "Does DALP support the EU DLT Pilot Regime for Italian institutions?"
+                      },
+                      {
+                        "content": "<p>DALP enforces compliance ex-ante: 12 on-chain compliance module types cover Consob investor eligibility, transfer restrictions, country-based controls, and MiCA ART/EMT issuer requirements. Every transfer is validated against policy before execution, not reviewed after the fact.</p>",
+                        "open_by_default": false,
+                        "title": "How does DALP support Consob and MiCA compliance requirements?"
+                      },
+                      {
+                        "content": "<p>Yes. DALP supports on-premises, Italian-hosted cloud, and hybrid deployment via Kubernetes and Helm. All data stays within Italy/EU for GDPR and Consob data sovereignty requirements. Deployment is fully configurable to meet Banca d'Italia IT governance standards.</p>",
+                        "open_by_default": false,
+                        "title": "Can DALP be deployed within Italian/EU data borders?"
+                      }
+                    ],
+                    "css_class": "dnd-module",
+                    "module_id": 362517245157,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 12,
+            "x": 0
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    },
+    "section-7": {
+      "cells": [],
+      "cssClass": "",
+      "cssId": "",
+      "cssStyle": "",
+      "label": "section-7",
+      "name": "section-7",
+      "params": {},
+      "rowMetaData": [
+        {
+          "cssClass": "dnd-section",
+          "styles": {
+            "backgroundColor": {"a": 1.0, "b": 72, "g": 0, "r": 0},
+            "breakpointStyles": {
+              "default": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 80},
+                  "top": {"units": "px", "value": 80}
+                }
+              },
+              "mobile": {
+                "padding": {
+                  "bottom": {"units": "px", "value": 64},
+                  "top": {"units": "px", "value": 64}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rows": [
+        {
+          "0": {
+            "cells": [],
+            "cssClass": "",
+            "cssId": "",
+            "cssStyle": "",
+            "name": "section-7-col-left",
+            "params": {"css_class": "dnd-column"},
+            "rowMetaData": [{"cssClass": "dnd-row"}],
+            "rows": [
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Rich Text",
+                  "name": "widget_tokeny_ctah2_heading",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "html": "<h2 style=\"margin-bottom: 24px; color: #ffffff;\">Build digital asset operations that meet Italy's regulatory standards.</h2>",
+                    "module_id": 1155639,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "Rich Text",
+                  "name": "widget_tokeny_ctah2_subtext",
+                  "params": {
+                    "css_class": "dnd-module",
+                    "html": "<p style=\"color: #e0e0e0;\">DALP covers the full digital asset lifecycle under Consob and MiCA requirements. Talk to a product specialist about your Italian market use case.</p>",
+                    "module_id": 1155639,
+                    "schema_version": 2
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              },
+              {
+                "0": {
+                  "cells": [],
+                  "cssClass": "",
+                  "cssId": "",
+                  "cssStyle": "",
+                  "label": "One - Buttons",
+                  "name": "widget_tokeny_ctah2_buttons",
+                  "params": {
+                    "button": [
+                      {
+                        "button_text": "Book a Demo",
+                        "class_button": "btn-secondary-dark",
+                        "display_options": {
+                          "enable_on_desktop": true,
+                          "enable_on_mobile": true,
+                          "enable_on_tablet": true
+                        },
+                        "enable_icon": "right_icon",
+                        "icon_color": {"color": "#FFFFFF", "opacity": 100},
+                        "icon_color_hover": {"color": "#FFFFFF", "opacity": 100},
+                        "icon_field": {"name": "arrow-right", "type": "REGULAR", "unicode": "f061"},
+                        "icon_size_button": 12,
+                        "link_field": {
+                          "no_follow": false,
+                          "open_in_new_tab": false,
+                          "url": {"href": "https://www.settlemint.com/request-a-demo"}
+                        }
+                      }
+                    ],
+                    "css_class": "dnd-module",
+                    "module_id": 362517245155,
+                    "schema_version": 2,
+                    "settings": {
+                      "button_align_desktop": "left",
+                      "button_align_mobile": "left"
+                    }
+                  },
+                  "rowMetaData": [],
+                  "rows": [],
+                  "type": "custom_widget",
+                  "w": 12,
+                  "x": 0
+                }
+              }
+            ],
+            "type": "cell",
+            "w": 12,
+            "x": 0
+          }
+        }
+      ],
+      "w": 0,
+      "x": 0
+    }
+  }
+}

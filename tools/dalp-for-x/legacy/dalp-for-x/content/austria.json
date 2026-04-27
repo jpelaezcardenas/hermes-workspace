@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "title": "DALP for Austria",
+    "name": "SettleMint DALP for Austria, MiCA-Aligned Digital Asset Platform for Austrian Financial Institutions",
+    "slug": "for/austria",
+    "html_title": "SettleMint DALP for Austria: Digital Asset Platform for Austrian Institutions",
+    "meta_description": "SettleMint DALP for Austria: FMA-supervised MiCA compliance, Raiffeisen context, and full digital asset lifecycle for Austrian institutions.",
+    "canonical_url": "https://www.settlemint.com/for/austria",
+    "hubspot_page_id": "387402814668"
+  },
+  "hero": {
+    "eyebrow": "DALP for Austria",
+    "h1": "Digital assets, built for Austria's regulatory framework.",
+    "intro": "Austrian financial institutions operate under FMA supervision and the EU's MiCA regulation. With Raiffeisen Bank International joining the Qivalis consortium for a regulated euro stablecoin and Austrian banks like Wiener Privatbank exploring RWA tokenization, the market is moving to execution. DALP delivers the compliance controls, deployment flexibility, and lifecycle tooling required.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Austrian institutions need vs. how DALP delivers",
+    "rows": [
+      {
+        "need": "MiCA-compliant operations under FMA supervision",
+        "dalp": "12 compliance module types covering eligibility, country restrictions, transfer controls, and time-based rules. Ex-ante enforcement validates every transfer before execution"
+      },
+      {
+        "need": "Euro stablecoin infrastructure for Qivalis consortium participation",
+        "dalp": "Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model supports MiCA EMT rules"
+      },
+      {
+        "need": "Maker-checker governance for Austrian banking operations",
+        "dalp": "RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions"
+      },
+      {
+        "need": "Bond and fund tokenization under Austrian securities law",
+        "dalp": "7 asset templates including bonds with maturity redemption and yield schedules, funds with AUM fee servicing"
+      },
+      {
+        "need": "Integration with existing custodians and SEPA payment rails",
+        "dalp": "Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility. ISO 20022 connectivity for SEPA"
+      },
+      {
+        "need": "Audit trails for FMA oversight",
+        "dalp": "21 pre-built Grafana dashboards, VictoriaMetrics, Loki, and Tempo provide end-to-end audit trails"
+      },
+      {
+        "need": "Atomic settlement for securities transactions",
+        "dalp": "XvP/DvP atomic settlement via HTLC hashlock: both legs complete together or both revert"
+      },
+      {
+        "need": "EU data residency and deployment flexibility",
+        "dalp": "Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency within Austria or the EU"
+      },
+      {
+        "need": "KYC/AML compliance for Austrian AML framework",
+        "dalp": "OnchainID identity registry with invitation-based KYC onboarding and configurable trusted issuer hierarchy"
+      },
+      {
+        "need": "RWA tokenization support for real estate and securities",
+        "dalp": "Real estate template with fractional ownership support, plus equity template for tokenized shares. Configurable compliance for each asset class"
+      }
+    ]
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Austrian Institutions Choose DALP",
+    "intro": "From Raiffeisen to regulated issuers, DALP gives Austrian institutions the controls they need to operate digital assets under MiCA and FMA oversight.",
+    "cards": [
+      {
+        "title": "MiCA compliance enforced at every transfer",
+        "body": "12 on-chain compliance module types enforce transfer restrictions, investor eligibility, and jurisdiction controls under MiCA. Ex-ante validation ensures compliance before execution."
+      },
+      {
+        "title": "Multi-asset lifecycle for Austrian capital markets",
+        "body": "7 asset templates cover bonds, funds, stablecoins, equity, deposits, real estate, and precious metals. Each template includes purpose-built lifecycle logic for the Austrian and EU regulatory context."
+      },
+      {
+        "title": "EU deployment with Austrian data residency",
+        "body": "On-premises, hybrid, and cloud deployment via Kubernetes and Helm. Keep all data within Austria or the EU to meet FMA and MiCA requirements."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Austrian institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds, stablecoins, and real estate most relevant for Austria's markets",
+      "Ex-ante compliance enforcement: 12 module types covering eligibility, transfer restrictions, and holding period controls under MiCA",
+      "Stablecoin template with reserve attestation hooks: supports Qivalis euro stablecoin and MiCA EMT compliance",
+      "Maker-checker approval workflows: dual-control governance aligned with Austrian banking standards",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "On-premises and air-gapped deployment: full data residency within Austria, Kubernetes and Helm packaged"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Austria?",
+    "body": "DALP covers the full digital asset lifecycle under MiCA and FMA regulatory requirements. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with Austria's MiCA implementation?",
+        "a": "DALP provides the technical infrastructure for MiCA compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and holding period enforcement. These align with FMA requirements. DALP is a platform, not a licensed financial institution."
+      },
+      {
+        "q": "Can DALP support euro stablecoin issuance for Austrian banks?",
+        "a": "Yes. DALP includes a stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. This supports MiCA EMT requirements for regulated euro stablecoin initiatives like Qivalis."
+      },
+      {
+        "q": "Can DALP be deployed within Austrian data residency requirements?",
+        "a": "Yes. DALP supports on-premises, hybrid, and cloud deployment via Kubernetes and Helm. All data can remain within Austria or the EU."
+      },
+      {
+        "q": "Which asset types does DALP support for Austrian markets?",
+        "a": "DALP supports 7 asset classes: bonds, funds, stablecoins, equity, deposits, real estate, and precious metals. Each template ships with built-in lifecycle logic, compliance controls, and servicing automation."
+      }
+    ]
+  }
+}

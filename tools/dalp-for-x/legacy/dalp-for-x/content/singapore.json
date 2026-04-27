@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Singapore",
+    "name": "SettleMint DALP for Singapore — Digital Asset Platform for Singapore Financial Institutions",
+    "slug": "for/singapore",
+    "html_title": "SettleMint DALP for Singapore: Digital Asset Platform for MAS-Regulated Institutions",
+    "meta_description": "SettleMint DALP for Singapore: MAS-aligned compliance, PSA and digital asset licensing controls, data residency, atomic settlement, and full lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/singapore"
+  },
+  "hero": {
+    "eyebrow": "DALP for Singapore",
+    "h1": "Digital assets built for Singapore's MAS regulatory framework.",
+    "intro": "Singapore financial institutions operate under MAS oversight with the Payment Services Act governing digital payment tokens, a robust capital markets framework for digital securities, and Project Guardian driving institutional tokenization adoption. DALP delivers the compliance controls, data residency options, and operational infrastructure that MAS-regulated asset issuers in Singapore require.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Singapore institutions need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What Singapore institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">MAS-aligned investor eligibility and transfer controls for digital securities under the Securities and Futures Act</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types covering investor eligibility, accreditation verification, jurisdiction restrictions, and transfer controls enforced at smart contract layer via ERC-3643 and OnchainID</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Payment Services Act (PSA) framework for digital payment token service providers</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin and digital payment token templates with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model enforces PSA-relevant rules</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Project Guardian-aligned tokenization for institutional digital asset issuance and trading</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">7 asset templates covering bonds, funds, deposits, and real estate — the asset types most represented in MAS Project Guardian pilots. Full lifecycle management from issuance through redemption</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maker-checker governance for MAS Technology Risk Management Guidelines compliance</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes. Aligned with MAS TRM Guidelines for critical financial infrastructure</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">KYC/AML compliance for MAS AML/CFT requirements and FATF Travel Rule implementation</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">OnchainID identity registry with invitation-based KYC onboarding, claim lifecycle management, and configurable trusted issuer hierarchy for AML/KYC claim verification</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Data residency within Singapore for MAS outsourcing requirements and data governance</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency configurable to keep all data within Singapore</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement for institutional bilateral digital securities transactions</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk. Directly relevant to MAS Project Guardian settlement workflows</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Operational resilience and disaster recovery for MAS Technology Risk Management Guidelines</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Velero-based backup and DR in DALP Helm chart. Restate durable execution prevents workflow loss on node failure. 298 CLI commands for operational automation and incident response</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Singapore Institutions Choose DALP",
+    "intro": "From MAS-licensed digital payment token service providers to capital markets firms and Project Guardian participants, DALP gives Singapore institutions the controls they need.",
+    "cards": [
+      {
+        "title": "MAS-aligned compliance from day one",
+        "body": "12 on-chain compliance module types cover investor eligibility, accreditation verification, and transfer restrictions aligned with Singapore's SFA and PSA frameworks. Configure once, apply across all asset types."
+      },
+      {
+        "title": "Data residency within Singapore",
+        "body": "On-premises and private cloud deployment via Kubernetes and Helm. Keep all data within Singapore to satisfy MAS outsourcing requirements and data governance obligations."
+      },
+      {
+        "title": "Project Guardian-ready tokenization",
+        "body": "7 asset templates covering bonds, funds, deposits, and stablecoins map directly to the asset classes most active in MAS Project Guardian pilots. Full lifecycle management from issuance through redemption."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Singapore institutions",
+    "items": [
+      "7 asset templates: bonds, funds, deposits, and stablecoins aligned with MAS Project Guardian asset classes",
+      "Ex-ante compliance: 12 module types covering SFA and PSA-relevant eligibility, transfer restrictions, and accreditation verification",
+      "Singapore data residency: on-premises and private cloud deployment, Kubernetes and Helm packaged",
+      "MAS TRM-aligned governance: maker-checker workflows, RBAC/ABAC, formal recovery procedures",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "Operational resilience: Velero backup/DR, Restate durable execution, 298 CLI commands"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Singapore?",
+    "body": "DALP covers the full digital asset lifecycle under MAS regulatory constraints. Talk to a product specialist about your SFA, PSA, or Project Guardian use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with MAS digital asset regulations?",
+        "a": "DALP provides the technical infrastructure for compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, accreditation verification, and jurisdiction controls aligned with MAS SFA and PSA frameworks. DALP is a platform provider; your MAS licensing (CMS, Major Payment Institution, etc.) is managed by your legal team."
+      },
+      {
+        "q": "Does DALP support MAS Payment Services Act compliance for digital payment tokens?",
+        "a": "DALP's stablecoin and digital payment token templates include configurable issuance controls, transfer restrictions, and reserve attestation hooks. The two-layer compliance model enforces PSA-relevant rules on every transfer. Licensing as a Major Payment Institution or Digital Payment Token Service provider under the PSA is a regulatory matter for your legal team."
+      },
+      {
+        "q": "Is DALP being used in Project Guardian?",
+        "a": "DALP provides the infrastructure layer relevant to Project Guardian use cases: bond and fund tokenization, atomic DvP settlement, and institutional compliance controls. Project Guardian participation and specific consortium arrangements are established by institutions and MAS. DALP can serve as the technical infrastructure platform for these programs."
+      },
+      {
+        "q": "Does DALP support Singapore data residency?",
+        "a": "Yes. DALP supports on-premises and private cloud deployment via Kubernetes and Helm. All data including blockchain node data, private keys, and transaction history can be kept within Singapore to satisfy MAS outsourcing and data governance requirements."
+      },
+      {
+        "q": "How does DALP address MAS Technology Risk Management Guidelines?",
+        "a": "DALP's operational controls align with MAS TRM Guidelines: maker-checker approval workflows for dual-control governance, RBAC/ABAC access controls, Velero-based backup and disaster recovery, Restate durable execution for workflow resilience, and 21 pre-built Grafana dashboards for operational monitoring. These are included with every DALP deployment."
+      }
+    ]
+  }
+}

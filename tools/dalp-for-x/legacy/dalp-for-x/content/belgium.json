@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "title": "DALP for Belgium",
+    "name": "SettleMint DALP for Belgium, MiCA-Aligned Digital Asset Platform for Belgian Financial Institutions",
+    "slug": "for/belgium",
+    "html_title": "SettleMint DALP for Belgium: Digital Asset Platform for Belgian Institutions",
+    "meta_description": "SettleMint DALP for Belgium: FSMA-supervised MiCA compliance, KBC Qivalis participation, and full digital asset lifecycle for Belgian institutions.",
+    "canonical_url": "https://www.settlemint.com/for/belgium",
+    "hubspot_page_id": "387403601125"
+  },
+  "hero": {
+    "eyebrow": "DALP for Belgium",
+    "h1": "Digital assets, built for Belgium's regulatory framework.",
+    "intro": "Belgian financial institutions operate under FSMA supervision and the EU's MiCA regulation, implemented in Belgian law via the Act of 11 December 2025. With KBC joining the Qivalis consortium to build a regulated euro stablecoin, Belgium's institutions are moving from exploration to execution. DALP delivers the compliance controls, deployment flexibility, and lifecycle tooling required.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Belgian institutions need vs. how DALP delivers",
+    "rows": [
+      {
+        "need": "MiCA-compliant CASP operations under FSMA supervision",
+        "dalp": "12 compliance module types covering eligibility, country restrictions, transfer controls, and time-based rules. Ex-ante enforcement validates every transfer before execution, aligned with MiCA and FSMA requirements"
+      },
+      {
+        "need": "Euro stablecoin infrastructure for Qivalis consortium participation",
+        "dalp": "Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model supports MiCA EMT rules"
+      },
+      {
+        "need": "Maker-checker governance for Belgian banking operations",
+        "dalp": "RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions"
+      },
+      {
+        "need": "Bond tokenization under Belgian and EU securities law",
+        "dalp": "Purpose-built bond template with maturity redemption and yield schedules. Fund template with AUM fee servicing. 7 asset templates total"
+      },
+      {
+        "need": "Integration with existing custodians and SEPA payment rails",
+        "dalp": "Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility. ISO 20022 connectivity for SEPA payments"
+      },
+      {
+        "need": "Audit trails for FSMA oversight and regulatory reporting",
+        "dalp": "21 pre-built Grafana dashboards, VictoriaMetrics, Loki logs, and Tempo traces provide end-to-end audit trails"
+      },
+      {
+        "need": "Atomic settlement for securities transactions",
+        "dalp": "XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk"
+      },
+      {
+        "need": "EU data residency and deployment flexibility",
+        "dalp": "Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency configurable within Belgium or the EU"
+      },
+      {
+        "need": "KYC/AML compliance for Belgian AML framework",
+        "dalp": "OnchainID identity registry with invitation-based KYC onboarding, claim lifecycle management, and configurable trusted issuer hierarchy"
+      },
+      {
+        "need": "Operational resilience for financial infrastructure",
+        "dalp": "Velero-based backup and DR packaged in the DALP Helm chart. Restate durable execution prevents workflow loss on node failure. 298 CLI commands for operational automation"
+      }
+    ]
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Belgian Institutions Choose DALP",
+    "intro": "From KBC to regulated issuers, DALP gives Belgian institutions the controls they need to operate digital assets under MiCA and FSMA oversight.",
+    "cards": [
+      {
+        "title": "MiCA compliance enforced at every transfer",
+        "body": "12 on-chain compliance module types enforce transfer restrictions, investor eligibility, and jurisdiction controls required under MiCA. Every transfer is validated before execution via ex-ante enforcement."
+      },
+      {
+        "title": "Stablecoin and multi-asset lifecycle coverage",
+        "body": "7 asset templates cover bonds, funds, stablecoins, equity, deposits, real estate, and precious metals. The stablecoin template supports Qivalis euro stablecoin requirements with reserve attestation hooks."
+      },
+      {
+        "title": "EU deployment with Belgian data residency",
+        "body": "On-premises, hybrid, and cloud deployment via Kubernetes and Helm. Keep all data within Belgium or the EU to satisfy FSMA and MiCA requirements."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Belgian institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds and stablecoins most relevant for Belgium's capital markets",
+      "Ex-ante compliance enforcement: 12 module types covering eligibility, transfer restrictions, and holding period controls under MiCA",
+      "Stablecoin template with reserve attestation hooks: supports Qivalis euro stablecoin and MiCA EMT compliance",
+      "Maker-checker approval workflows: dual-control governance aligned with Belgian banking standards",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "21 pre-built Grafana dashboards: full observability for operations, compliance, and audit teams"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Belgium?",
+    "body": "DALP covers the full digital asset lifecycle under MiCA and FSMA regulatory requirements. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with Belgium's MiCA implementation?",
+        "a": "DALP provides the technical infrastructure for MiCA compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and holding period enforcement. These align with FSMA requirements under the Act of 11 December 2025. DALP is a platform, not a licensed financial institution."
+      },
+      {
+        "q": "Can DALP support euro stablecoin issuance for Belgian banks?",
+        "a": "Yes. DALP includes a stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. The two-layer compliance model supports MiCA EMT requirements for regulated euro stablecoin initiatives."
+      },
+      {
+        "q": "Which asset types are most relevant for Belgian financial institutions?",
+        "a": "Bonds, funds, and stablecoins are primary use cases. DALP ships purpose-built templates for each, including automated coupon payments, maturity redemption, fund AUM fee servicing, and stablecoin issuance with reserve controls."
+      },
+      {
+        "q": "Can DALP be deployed with EU data residency?",
+        "a": "Yes. DALP supports on-premises, hybrid, and cloud deployment via Kubernetes and Helm. All data can be kept within Belgium or the EU to meet FSMA and MiCA data handling requirements."
+      }
+    ]
+  }
+}

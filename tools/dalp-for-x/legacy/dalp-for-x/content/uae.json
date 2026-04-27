@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for UAE",
+    "name": "SettleMint DALP for UAE — Digital Asset Platform for UAE Financial Institutions",
+    "slug": "for/uae",
+    "html_title": "SettleMint DALP for UAE: Digital Asset Platform for UAE Institutions",
+    "meta_description": "SettleMint DALP for UAE: VARA, ADGM, DFSA-aligned compliance controls, data residency, atomic settlement, and full digital asset lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/uae"
+  },
+  "hero": {
+    "eyebrow": "DALP for UAE",
+    "h1": "Digital assets built for the UAE's regulatory frameworks.",
+    "intro": "UAE financial institutions operate across three distinct regulatory environments: VARA for virtual assets in Dubai, ADGM and FSRA in Abu Dhabi, and DFSA in the Dubai International Financial Centre. DALP delivers the compliance controls, data residency options, and operational infrastructure that regulated asset issuers in the UAE require across all three frameworks.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What UAE institutions need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What UAE institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">VARA-compliant investor eligibility and transfer controls for virtual asset activities in Dubai</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types covering investor eligibility, jurisdiction restrictions, transfer controls, and time-based rules enforced at smart contract layer via ERC-3643</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">ADGM FSRA regulatory alignment for capital markets activities in Abu Dhabi Global Market</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Configurable compliance modules align with FSRA-regulated investment token and digital security requirements: accreditation verification, jurisdictional transfer controls, and investor identity via OnchainID</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DFSA framework compliance for digital asset activities in the DIFC</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Two-layer compliance model supports DFSA-aligned transfer restrictions, investment token controls, and KYC/AML claim verification via the OnchainID trusted issuer registry</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Data residency within UAE borders to meet NESA and local regulatory requirements</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency configurable at deployment level to keep all data within UAE</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Sovereign and national-scale program support for Vision 2031 digital economy initiatives</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP has active sovereign-scale deployments in MENA including national real estate registries and government digital asset programs. Reference architecture available for UAE-specific implementations</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Real estate tokenization for UAE property market integration</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Purpose-built real estate asset template with issuance, transfer management, and servicing. National real estate registry deployments in MENA provide reference architecture for UAE programs</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maker-checker governance for dual-control requirements in UAE banking regulation</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Custodian integration for UAE-based and international custodians</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility, weighted multisig vaults, no custodian lock-in</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement for institutional bilateral transactions</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Full audit trail for VARA, FSRA, and DFSA regulatory reporting and examination</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards, VictoriaMetrics, Loki, Tempo traces provide end-to-end audit trails for all platform operations. 298 CLI commands for operational automation</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons UAE Institutions Choose DALP",
+    "intro": "From ADGM-regulated issuers to VARA-licensed platforms and sovereign entities, DALP gives UAE institutions the controls they need to operate digital assets within the UAE's multi-framework regulatory environment.",
+    "cards": [
+      {
+        "title": "Multi-framework compliance across VARA, ADGM, and DFSA",
+        "body": "12 configurable compliance module types cover the investor eligibility, transfer restrictions, and jurisdictional controls required across all three UAE regulatory frameworks without rebuilding for each."
+      },
+      {
+        "title": "Proven in MENA at sovereign scale",
+        "body": "DALP has active deployments in MENA at national scale, including real estate registry programs. UAE institutions get reference architecture from live production programs, not just product demos."
+      },
+      {
+        "title": "Data residency within UAE borders",
+        "body": "On-premises and air-gapped deployment via Kubernetes and Helm. Keep all data within UAE jurisdiction to satisfy NESA and local regulator data residency requirements."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to UAE institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: real estate and bonds most relevant for UAE capital markets programs",
+      "Ex-ante compliance enforcement: 12 module types covering VARA, ADGM, and DFSA-aligned eligibility and transfer controls",
+      "On-premises and UAE data residency deployment: full sovereign control, Kubernetes and Helm packaged",
+      "Proven MENA deployments: national-scale real estate and sovereign digital asset programs",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "21 pre-built Grafana dashboards: full audit trail observability for regulatory reporting"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in the UAE?",
+    "body": "DALP covers the full digital asset lifecycle under UAE regulatory frameworks. Talk to a product specialist about your VARA, ADGM, or DFSA use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with UAE regulations (VARA, ADGM, DFSA)?",
+        "a": "DALP provides the technical infrastructure for compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and holding period enforcement. These can be configured to align with VARA, FSRA/ADGM, and DFSA requirements. DALP is a platform, not a licensed financial entity. Regulatory approval for your specific use case is managed by your legal team."
+      },
+      {
+        "q": "Does DALP support data residency within the UAE?",
+        "a": "Yes. DALP supports on-premises and air-gapped deployment via Kubernetes and Helm. All data including blockchain node data, private keys, and transaction history can be kept within UAE borders to meet NESA and local regulator data residency requirements."
+      },
+      {
+        "q": "Does DALP have experience with MENA deployments?",
+        "a": "Yes. DALP has active sovereign-scale deployments in MENA including national real estate registry programs and government digital asset initiatives. UAE institutions can draw on reference architecture from live production programs rather than proof-of-concept implementations."
+      },
+      {
+        "q": "Which asset types are most relevant for UAE financial institutions?",
+        "a": "Real estate tokenization is the highest priority given the UAE property market scale and existing national registry programs. Bonds, funds, and stablecoins are also relevant given ADGM and DFSA capital markets activities. DALP ships purpose-built templates for all four, with built-in lifecycle logic for each asset type."
+      },
+      {
+        "q": "How quickly can UAE institutions deploy DALP?",
+        "a": "DALP is packaged as Helm charts for Kubernetes deployment. Institutions with existing infrastructure can deploy in weeks. The 7 asset templates ship with built-in lifecycle logic and the 12 compliance modules can be configured to UAE regulatory requirements without custom smart contract development."
+      }
+    ]
+  }
+}

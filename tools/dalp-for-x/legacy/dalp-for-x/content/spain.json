@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "title": "DALP for Spain",
+    "name": "SettleMint DALP for Spain, MiCA-Aligned Digital Asset Platform for Spanish Financial Institutions",
+    "slug": "for/spain",
+    "html_title": "SettleMint DALP for Spain: Digital Asset Platform for Spanish Institutions",
+    "meta_description": "SettleMint DALP for Spain: MiCA-aligned compliance, CNMV oversight, stablecoin support, and full digital asset lifecycle for Spanish institutions.",
+    "canonical_url": "https://www.settlemint.com/for/spain",
+    "hubspot_page_id": "387402814666"
+  },
+  "hero": {
+    "eyebrow": "DALP for Spain",
+    "h1": "Digital assets, built for Spain's MiCA-aligned regulatory framework.",
+    "intro": "Spanish financial institutions operate under CNMV supervision and the EU's MiCA regulation, now fully enforceable. With BBVA and CaixaBank joining the Qivalis consortium to build a regulated euro stablecoin, Spain is positioning itself as a MiCA leader. DALP delivers the compliance controls, deployment flexibility, and lifecycle tooling that regulated issuers in Spain require.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Spanish institutions need vs. how DALP delivers",
+    "rows": [
+      {
+        "need": "MiCA-compliant token issuance and CASP licensing support",
+        "dalp": "7 asset templates with configurable compliance rules aligned to MiCA requirements for ARTs, EMTs, and other crypto-assets; ERC-3643 transfer controls enforced at the smart contract layer"
+      },
+      {
+        "need": "CNMV-aligned investor eligibility and transfer restrictions",
+        "dalp": "12 compliance module types covering eligibility, country restrictions, transfer controls, and time-based rules. Ex-ante enforcement validates every transfer before execution"
+      },
+      {
+        "need": "Euro stablecoin infrastructure for Qivalis consortium participation",
+        "dalp": "Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model enforces issuer-defined rules on every transfer"
+      },
+      {
+        "need": "Maker-checker governance for banking-grade operations",
+        "dalp": "RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions"
+      },
+      {
+        "need": "Bond and fund tokenization under Spanish securities law",
+        "dalp": "Purpose-built bond template with maturity redemption and yield schedules, plus fund template with AUM fee servicing. Both aligned with FIEA-equivalent Spanish securities requirements"
+      },
+      {
+        "need": "Integration with existing custodians and payment rails",
+        "dalp": "Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility, weighted multisig vaults. ISO 20022 payment rail connectivity for SEPA"
+      },
+      {
+        "need": "Full audit trails for CNMV oversight and regulatory reporting",
+        "dalp": "21 pre-built Grafana dashboards, VictoriaMetrics metrics, Loki logs, and Tempo traces provide end-to-end audit trails for all platform operations"
+      },
+      {
+        "need": "Atomic settlement for DvP transactions",
+        "dalp": "XvP/DvP atomic settlement via HTLC hashlock: delivery and payment finalize simultaneously with zero counterparty risk"
+      },
+      {
+        "need": "Data residency options within EU borders",
+        "dalp": "Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency configurable to keep all data within Spain or the EU"
+      },
+      {
+        "need": "KYC/AML integration for Spanish AML obligations",
+        "dalp": "OnchainID identity registry with invitation-based KYC onboarding, claim lifecycle management, and configurable trusted issuer hierarchy for AML/KYC claim verification"
+      }
+    ]
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Spanish Institutions Choose DALP",
+    "intro": "From BBVA to regulated issuers, DALP gives Spanish institutions the controls they need to operate digital assets under MiCA and CNMV oversight.",
+    "cards": [
+      {
+        "title": "MiCA compliance built into every transfer",
+        "body": "12 on-chain compliance module types enforce transfer restrictions, investor eligibility, and jurisdiction controls required under MiCA. Ex-ante validation means every transfer is checked before execution, not after."
+      },
+      {
+        "title": "Euro stablecoin and multi-asset lifecycle support",
+        "body": "7 asset templates cover bonds, funds, stablecoins, equity, deposits, real estate, and precious metals. The stablecoin template supports reserve attestation hooks and issuer-defined transfer rules for MiCA-compliant EMTs."
+      },
+      {
+        "title": "Deployment flexibility for EU data residency",
+        "body": "On-premises, hybrid, and cloud deployment via Kubernetes and Helm. Keep all data within Spain or the EU to meet CNMV and MiCA data handling requirements."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Spanish institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds and stablecoins most relevant for Spain's MiCA-aligned securities and payments markets",
+      "Ex-ante compliance enforcement: 12 module types covering eligibility, transfer restrictions, and holding period controls under MiCA",
+      "Stablecoin template with reserve attestation hooks: supports Qivalis euro stablecoin and MiCA EMT requirements",
+      "Maker-checker approval workflows: dual-control governance aligned with Spanish banking standards",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "21 pre-built Grafana dashboards: full observability for operations, compliance, and audit teams"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Spain?",
+    "body": "DALP covers the full digital asset lifecycle under MiCA and CNMV regulatory requirements. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with Spain's MiCA framework?",
+        "a": "DALP provides the technical infrastructure for MiCA compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and holding period enforcement. These can be configured to align with CNMV guidelines and MiCA requirements for ARTs, EMTs, and other crypto-assets. DALP is a platform, not a licensed financial institution. Regulatory approval for your specific use case is managed by your legal team."
+      },
+      {
+        "q": "Can DALP support euro stablecoin issuance under MiCA?",
+        "a": "Yes. DALP includes a purpose-built stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. The two-layer compliance model enforces issuer-defined rules on every transfer, supporting MiCA EMT requirements."
+      },
+      {
+        "q": "Which asset types are most relevant for Spanish financial institutions?",
+        "a": "Bonds and stablecoins are primary use cases for Spain's capital markets. DALP ships purpose-built templates for both, including automated coupon payments, maturity redemption, and stablecoin issuance with reserve controls. DALP also supports funds, equity, deposits, real estate, and precious metals."
+      },
+      {
+        "q": "Can DALP be deployed within EU data residency requirements?",
+        "a": "Yes. DALP supports on-premises, hybrid, and cloud deployment via Kubernetes and Helm. All data, including blockchain node data, private keys, and transaction history, can be kept within Spain or the EU to meet CNMV and MiCA data handling requirements."
+      },
+      {
+        "q": "How does DALP support Qivalis consortium requirements?",
+        "a": "DALP's stablecoin template, compliance modules, and atomic settlement capabilities align with the infrastructure needs of regulated euro stablecoin initiatives. The platform supports multi-asset lifecycle management, ex-ante compliance enforcement, and integration with existing banking systems via standard APIs."
+      }
+    ]
+  }
+}

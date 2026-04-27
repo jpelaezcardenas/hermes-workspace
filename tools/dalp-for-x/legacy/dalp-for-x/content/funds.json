@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Funds",
+    "name": "SettleMint DALP for Funds — Tokenized Fund Platform",
+    "slug": "for/funds",
+    "html_title": "SettleMint DALP for Funds: Tokenized Fund Infrastructure for Regulated Asset Managers",
+    "meta_description": "Tokenize funds with SettleMint DALP: automated NAV distribution, AUM fee collection, subscription/redemption workflows, and full lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/funds"
+  },
+  "hero": {
+    "eyebrow": "DALP for Funds",
+    "h1": "Tokenized fund infrastructure with the lifecycle automation asset managers need.",
+    "intro": "Tokenizing a fund creates ongoing operational obligations: NAV-based distribution, subscription and redemption processing, AUM fee collection, and investor eligibility controls. DALP's fund template handles the entire lifecycle — from initial subscription through ongoing servicing to final redemption — with ex-ante compliance enforcement, atomic settlement, and full audit trails built in.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What tokenized fund programs need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What tokenized fund programs need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Investor subscription workflow with KYC/AML verification and eligibility checks</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">OnchainID identity registry provides invitation-based KYC onboarding, claim lifecycle management, and eligibility verification. Subscription workflows integrate identity verification before fund unit issuance</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">NAV-based distribution: yield and income payments to fund unit holders</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP automates NAV-based distribution programmatically: income payments execute to all registered unit holders on schedule with on-chain event logs and full audit trail</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">AUM-based fee collection for fund managers</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Configurable AUM fee accrual and collection: management fee, performance fee, and other fee structures can be configured in the fund template and collected automatically</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Investor eligibility controls for accredited/professional investor requirements</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types enforce accreditation verification, investor eligibility, minimum subscription amounts, jurisdiction restrictions, and transfer restrictions ex-ante at the smart contract layer</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Redemption processing: fund unit redemption at NAV with settlement</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Configurable redemption workflows: on-demand or scheduled redemption with NAV calculation, unit burn, and payment processing. Redemption approval controls and maker-checker workflows for operational governance</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Atomic DvP settlement for fund unit subscriptions and redemptions</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">XvP/DvP atomic settlement: fund unit delivery and payment finalize simultaneously or both revert. Zero counterparty risk for subscription and redemption transactions</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Cap table management: track all fund unit holders and ownership changes</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">On-chain investor registry tracks all unit holdings, ownership changes, subscription history, and income distributions. Full cap table visibility with exportable audit reports</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Regulatory audit trail for fund administrator and regulator oversight</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">21 pre-built Grafana dashboards and full on-chain event logging provide complete audit trails for every subscription, distribution, redemption, and compliance decision</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Asset Managers Choose DALP for Fund Tokenization",
+    "intro": "Fund tokenization creates ongoing servicing obligations that last for the fund's lifetime. DALP is built to handle them.",
+    "cards": [
+      {
+        "title": "Full lifecycle, not just issuance",
+        "body": "DALP covers the complete fund lifecycle: subscription with KYC/AML verification, NAV-based distributions, AUM fee collection, and redemption processing. The operational burden of running a tokenized fund is handled by the platform."
+      },
+      {
+        "title": "Investor eligibility enforced at the contract layer",
+        "body": "12 compliance module types validate accreditation, investor eligibility, and jurisdiction restrictions ex-ante. No unauthorized investor can receive or transfer fund units. Every compliance decision is logged for audit."
+      },
+      {
+        "title": "Atomic settlement for subscriptions and redemptions",
+        "body": "DvP atomic settlement: fund unit delivery and payment finalize simultaneously or both revert. Zero counterparty risk for every subscription and redemption transaction."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP fund capabilities in depth",
+    "items": [
+      "Automated NAV distribution: yield and income payments to all unit holders on schedule with on-chain audit trail",
+      "AUM fee collection: management fee and performance fee automation built into the fund template",
+      "12 compliance modules: accreditation verification, eligibility controls, jurisdiction restrictions enforced ex-ante",
+      "Redemption workflows: NAV-based redemption with configurable processing windows and maker-checker approval",
+      "Atomic DvP/XvP settlement: fund unit and payment legs complete together or revert",
+      "On-chain cap table: full investor registry with subscription history, distributions, and ownership changes"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to tokenize your fund with full lifecycle management?",
+    "body": "DALP covers the complete fund lifecycle: subscription, NAV distribution, fee collection, and redemption. Talk to a product specialist about your fund tokenization program.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "What fund types does DALP support?",
+        "a": "DALP's fund template supports regulated collective investment vehicles including money market funds, bond funds, equity funds, and real estate investment structures. The template includes configurable subscription mechanics, NAV-based distribution, AUM fee collection, and redemption workflows. Specific fund legal structures are designed with your legal team and fund administrator."
+      },
+      {
+        "q": "How does DALP automate NAV distributions?",
+        "a": "DALP executes NAV-based distributions programmatically: at each distribution date, the platform calculates payment amounts based on unit holdings and NAV, distributes to all registered unit holders, and logs the event on-chain. No manual payment processing. The full distribution is recorded with timestamps and per-holder amounts for fund administrator reconciliation."
+      },
+      {
+        "q": "Does DALP support fund investor eligibility requirements?",
+        "a": "Yes. DALP's compliance module types enforce accreditation verification, minimum subscription amounts, professional/institutional investor requirements, and jurisdiction restrictions ex-ante. The OnchainID identity registry manages KYC/AML claims and investor eligibility verification. Only verified, eligible investors can hold or transfer fund units."
+      },
+      {
+        "q": "How does fund redemption work in DALP?",
+        "a": "DALP supports configurable redemption workflows: on-demand redemption at NAV, scheduled redemption windows (monthly, quarterly), and redemption approval controls. The redemption process includes NAV calculation, unit burn, and payment settlement. Atomic DvP ensures fund units and payment finalize together with no counterparty risk."
+      },
+      {
+        "q": "Does DALP integrate with existing fund administration systems?",
+        "a": "Yes. DALP provides REST API, GraphQL, and event webhooks for integration with existing fund administration platforms. ISO 20022 payment rail connectivity supports SWIFT, SEPA, and RTGS for fund subscription and redemption payment flows. DALP fits into existing fund operations without replacing the fund administrator's systems."
+      }
+    ]
+  }
+}

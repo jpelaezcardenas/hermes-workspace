@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "title": "DALP for Saudi Arabia",
+    "name": "SettleMint DALP for Saudi Arabia — Digital Asset Platform for Saudi Financial Institutions",
+    "slug": "for/saudi-arabia",
+    "html_title": "SettleMint DALP for Saudi Arabia: Digital Asset Platform for KSA Institutions",
+    "meta_description": "SettleMint DALP for Saudi Arabia: CMA and SAMA-aligned compliance, Vision 2030 digital assets, data residency, atomic settlement, and full lifecycle management.",
+    "canonical_url": "https://www.settlemint.com/for/saudi-arabia"
+  },
+  "hero": {
+    "eyebrow": "DALP for Saudi Arabia",
+    "h1": "Digital assets built for Saudi Arabia's Vision 2030 capital markets.",
+    "intro": "Saudi Arabia's financial institutions operate under CMA and SAMA supervision, with Vision 2030's Financial Sector Development Program accelerating digital securities, tokenized real estate, and capital markets modernization. DALP delivers the compliance controls, sovereign deployment options, and operational infrastructure that regulated institutions in Saudi Arabia require to execute on the kingdom's digital asset agenda.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Saudi institutions need vs. how DALP delivers",
+    "html": "<table style=\"width:100%; border-collapse:collapse; color:#1a1a2e;\"><colgroup><col style=\"width:50%\"><col style=\"width:50%\"></colgroup>\n<thead style=\"background-color:#000048 !important; color:#ffffff !important;\">\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">What Saudi institutions need</th>\n<th style=\"padding:12px 16px; text-align:left; color:#ffffff !important; background-color:#000048 !important; border:1px solid #1a1a5e;\">How DALP delivers it</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">CMA-regulated digital securities compliance for bond and equity tokenization under Saudi capital markets law</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">12 compliance module types covering investor eligibility, transfer restrictions, and jurisdiction controls enforced at smart contract layer. Bond and equity templates with full lifecycle logic aligned with CMA securities frameworks</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">SAMA oversight for banking digital asset activities and stablecoin/digital payment frameworks</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Stablecoin and deposit templates with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model supports SAMA digital asset regulatory requirements</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Real estate tokenization for Vision 2030 property sector transformation and NEOM programs</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Purpose-built real estate template with issuance, transfer management, and servicing. Sovereign-scale real estate registry deployments in MENA provide reference architecture for Saudi programs</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Saudi data sovereignty for national digital infrastructure programs</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Kubernetes/Helm deployment supports on-prem, hybrid, and air-gapped environments within Saudi Arabia. Full data residency within KSA borders for compliance with NDMO data residency regulations</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Sovereign-scale program deployment for national digital capital markets initiatives</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP has active sovereign-scale deployments in MENA including national real estate programs and government digital asset initiatives. Reference architecture available for Saudi-specific sovereign deployments</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Maker-checker governance aligned with Saudi banking governance standards</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">RBAC/ABAC with maker-checker approval workflows for all critical operations: issuance, transfers, compliance changes, and administrative actions</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Sukuk tokenization and Islamic finance instrument support</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">DALP's bond template supports configurable issuance structures including profit rate schedules and periodic distribution mechanics applicable to sukuk tokenization. Compliant structure definition is a matter for Shariah advisory</td>\n</tr>\n<tr style=\"border-bottom:1px solid #e5e5e5;\">\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Custodian integration for Saudi-based and international custodians</td>\n<td style=\"padding:12px 16px; border-bottom:1px solid #e5e5e5; color:#1a1a2e;\">Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility, weighted multisig vaults. No custodian lock-in for Saudi institutions with existing custodian relationships</td>\n</tr>\n</tbody>\n</table>"
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Saudi Institutions Choose DALP",
+    "intro": "From CMA-regulated capital markets to SAMA-supervised banking and Vision 2030 sovereign programs, DALP provides Saudi institutions with the operational infrastructure their digital asset mandates require.",
+    "cards": [
+      {
+        "title": "Proven MENA sovereign deployments",
+        "body": "DALP has active deployments in MENA at national scale, including real estate registry programs. Saudi institutions get reference architecture from live sovereign programs, not proof-of-concept implementations."
+      },
+      {
+        "title": "Data sovereignty within Saudi Arabia",
+        "body": "On-premises and air-gapped deployment via Kubernetes and Helm. Keep all data within Saudi Arabia to meet NDMO data residency requirements and national digital sovereignty objectives."
+      },
+      {
+        "title": "Multi-asset support for Vision 2030",
+        "body": "7 asset templates covering bonds, real estate, funds, and stablecoins map to the priority digital asset use cases in Saudi Arabia's Financial Sector Development Program. Deploy across use cases without rebuilding."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Saudi institutions",
+    "items": [
+      "7 asset templates: real estate, bonds, and deposits most relevant for Saudi Vision 2030 programs",
+      "Ex-ante compliance enforcement: 12 module types covering CMA and SAMA-aligned controls",
+      "Saudi data sovereignty: on-premises and air-gapped deployment, full NDMO data residency",
+      "Proven MENA sovereign deployments: national-scale real estate and government digital asset programs",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "Maker-checker governance: dual-control workflows for all critical operations"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital assets aligned with Vision 2030?",
+    "body": "DALP covers the full digital asset lifecycle under Saudi regulatory frameworks. Talk to a product specialist about your CMA or SAMA use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "eyebrow": "",
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with CMA and SAMA requirements in Saudi Arabia?",
+        "a": "DALP provides the technical infrastructure for compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, and jurisdiction controls applicable to CMA and SAMA frameworks. DALP is a platform provider; your CMA licensing and SAMA regulatory approval is managed by your legal and compliance team."
+      },
+      {
+        "q": "Does DALP support Vision 2030 digital asset priorities?",
+        "a": "DALP's 7 asset templates cover the priority use cases in Saudi Arabia's Financial Sector Development Program: real estate tokenization, bond (sukuk) tokenization, fund tokenization, and stablecoins. DALP has active sovereign-scale deployments in MENA including national real estate programs, providing direct reference architecture for Saudi programs."
+      },
+      {
+        "q": "Can DALP support sukuk tokenization?",
+        "a": "DALP's bond template supports configurable issuance structures including profit rate schedules and periodic distribution mechanics applicable to sukuk tokenization. The template handles the technical lifecycle: issuance, profit distribution, and redemption. The specific Shariah-compliant legal structure of sukuk instruments is a matter for your Shariah advisory board and legal team."
+      },
+      {
+        "q": "Does DALP support Saudi data residency requirements?",
+        "a": "Yes. DALP supports on-premises and air-gapped deployment via Kubernetes and Helm. All data can remain within Saudi Arabia to meet NDMO data residency regulations and national digital sovereignty objectives for critical financial infrastructure."
+      },
+      {
+        "q": "What MENA deployment experience does SettleMint have?",
+        "a": "SettleMint has active deployments in MENA at national scale, including sovereign real estate tokenization programs and government digital asset initiatives. These programs provide reference architecture directly applicable to Saudi Vision 2030 digital capital markets programs."
+      }
+    ]
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "title": "DALP for Denmark",
+    "name": "SettleMint DALP for Denmark, MiCA-Aligned Digital Asset Platform for Danish Financial Institutions",
+    "slug": "for/denmark",
+    "html_title": "SettleMint DALP for Denmark: Digital Asset Platform for Danish Institutions",
+    "meta_description": "SettleMint DALP for Denmark: Finanstilsynet-supervised MiCA compliance, Danske Bank context, and full digital asset lifecycle for Danish institutions.",
+    "canonical_url": "https://www.settlemint.com/for/denmark",
+    "hubspot_page_id": "387402814670"
+  },
+  "hero": {
+    "eyebrow": "DALP for Denmark",
+    "h1": "Digital assets, built for Denmark's regulatory framework.",
+    "intro": "Danish financial institutions operate under Finanstilsynet supervision and the EU's MiCA regulation. With Danske Bank joining the Qivalis consortium for a regulated euro stablecoin and now offering crypto ETPs to its 5 million customers, Denmark's largest bank signals that institutional digital asset adoption has arrived. DALP delivers the compliance controls, deployment flexibility, and lifecycle tooling required.",
+    "cta_text": "See DALP in Action",
+    "cta_href": "/demo"
+  },
+  "table": {
+    "eyebrow": "Platform Fit",
+    "heading": "What Danish institutions need vs. how DALP delivers",
+    "rows": [
+      {
+        "need": "MiCA-compliant CASP operations under Finanstilsynet",
+        "dalp": "12 compliance module types covering eligibility, country restrictions, transfer controls, and time-based rules. Ex-ante enforcement validates every transfer before execution"
+      },
+      {
+        "need": "Euro stablecoin infrastructure for Qivalis consortium participation",
+        "dalp": "Stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. Two-layer compliance model supports MiCA EMT rules"
+      },
+      {
+        "need": "Maker-checker governance for Danish banking operations",
+        "dalp": "RBAC/ABAC with maker-checker approval workflows for all sensitive operations: issuance, transfers, compliance changes, and administrative actions"
+      },
+      {
+        "need": "Bond tokenization under Danish and EU securities law",
+        "dalp": "Purpose-built bond template with maturity redemption and yield schedules. Fund template with AUM fee servicing. 7 asset templates total"
+      },
+      {
+        "need": "Integration with existing custodians and payment rails",
+        "dalp": "Bring-your-own-custodian model: native Fireblocks and DFNS integration, HSM compatibility. ISO 20022 connectivity for SEPA/Nordic payments"
+      },
+      {
+        "need": "Audit trails for Finanstilsynet oversight",
+        "dalp": "21 pre-built Grafana dashboards, VictoriaMetrics, Loki, and Tempo provide end-to-end audit trails"
+      },
+      {
+        "need": "Atomic settlement for securities transactions",
+        "dalp": "XvP/DvP atomic settlement via HTLC hashlock: both legs complete together or both revert"
+      },
+      {
+        "need": "EU data residency and deployment flexibility",
+        "dalp": "Kubernetes/Helm deployment supports cloud, on-prem, hybrid, and air-gapped environments. Data residency within Denmark or the EU"
+      },
+      {
+        "need": "KYC/AML compliance for Danish AML framework",
+        "dalp": "OnchainID identity registry with invitation-based KYC onboarding and configurable trusted issuer hierarchy"
+      },
+      {
+        "need": "Operational resilience for critical financial infrastructure",
+        "dalp": "Velero-based backup and DR. Restate durable execution prevents workflow loss. 298 CLI commands for operational automation"
+      }
+    ]
+  },
+  "reasons": {
+    "eyebrow": "Why Choose DALP",
+    "heading": "3 Reasons Danish Institutions Choose DALP",
+    "intro": "From Danske Bank to regulated issuers, DALP gives Danish institutions the controls they need to operate digital assets under MiCA and Finanstilsynet oversight.",
+    "cards": [
+      {
+        "title": "MiCA compliance enforced at every transfer",
+        "body": "12 on-chain compliance module types enforce transfer restrictions, investor eligibility, and jurisdiction controls under MiCA. Every transfer is validated before execution via ex-ante enforcement."
+      },
+      {
+        "title": "Stablecoin and multi-asset lifecycle coverage",
+        "body": "7 asset templates cover bonds, funds, stablecoins, equity, deposits, real estate, and precious metals. The stablecoin template supports Qivalis euro stablecoin requirements."
+      },
+      {
+        "title": "EU deployment with Danish data residency",
+        "body": "On-premises, hybrid, and cloud deployment via Kubernetes and Helm. Keep all data within Denmark or the EU to meet Finanstilsynet and MiCA requirements."
+      }
+    ]
+  },
+  "differentiators": {
+    "eyebrow": "Platform Capabilities",
+    "heading": "DALP capabilities most relevant to Danish institutions",
+    "items": [
+      "7 asset templates with built-in lifecycle logic: bonds and stablecoins most relevant for Denmark's capital markets",
+      "Ex-ante compliance enforcement: 12 module types covering eligibility, transfer restrictions, and holding period controls under MiCA",
+      "Stablecoin template with reserve attestation hooks: supports Qivalis euro stablecoin and MiCA EMT compliance",
+      "Maker-checker approval workflows: dual-control governance aligned with Danish banking standards",
+      "Atomic DvP/XvP settlement with HTLC hashlock: both legs complete together or both revert",
+      "21 pre-built Grafana dashboards: full observability for operations, compliance, and audit teams"
+    ]
+  },
+  "cta": {
+    "h2": "Ready to launch digital asset operations in Denmark?",
+    "body": "DALP covers the full digital asset lifecycle under MiCA and Finanstilsynet regulatory requirements. Talk to a product specialist about your use case.",
+    "button_text": "Book a Demo",
+    "button_href": "/request-a-demo"
+  },
+  "faq": {
+    "items": [
+      {
+        "q": "Is SettleMint DALP compliant with Denmark's MiCA framework?",
+        "a": "DALP provides the technical infrastructure for MiCA compliance: 12 configurable on-chain compliance module types cover investor eligibility, transfer restrictions, jurisdiction controls, and holding period enforcement. These align with Finanstilsynet requirements. DALP is a platform, not a licensed financial institution."
+      },
+      {
+        "q": "Can DALP support euro stablecoin issuance for Danish banks?",
+        "a": "Yes. DALP includes a stablecoin asset template with configurable issuance controls, transfer restrictions, and reserve attestation hooks. The two-layer compliance model supports MiCA EMT requirements for regulated euro stablecoin initiatives like Qivalis."
+      },
+      {
+        "q": "Can DALP be deployed within EU data residency requirements?",
+        "a": "Yes. DALP supports on-premises, hybrid, and cloud deployment via Kubernetes and Helm. All data can remain within Denmark or the EU to meet Finanstilsynet and MiCA data handling requirements."
+      },
+      {
+        "q": "Which asset types are most relevant for Danish financial institutions?",
+        "a": "Bonds, funds, and stablecoins are primary use cases. DALP ships purpose-built templates for each, with automated coupon payments, maturity redemption, fund AUM fee servicing, and stablecoin issuance with reserve controls."
+      }
+    ]
+  }
+}
