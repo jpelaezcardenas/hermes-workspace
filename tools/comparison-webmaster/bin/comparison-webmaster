@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+PYTHON_BIN="${PYTHON_BIN:-/root/.hermes/hermes-agent/venv/bin/python3}"
+exec "$PYTHON_BIN" /root/hermes-workspace/tools/comparison-webmaster/scripts/comparison_webmaster.py "$@"
