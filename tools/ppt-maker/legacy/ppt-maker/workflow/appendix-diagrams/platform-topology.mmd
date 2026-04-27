@@ -1,0 +1,37 @@
+graph TB
+    subgraph Channels[Experience layer]
+        A1[Issuer ops dashboard]
+        A2[Distributor / portal]
+        A3[Partner APIs]
+    end
+
+    subgraph Services[DALP business services]
+        B1[Asset designer]
+        B2[Compliance engine]
+        B3[Identity & permissions]
+        B4[Servicing workflows]
+        B5[Reporting & audit]
+    end
+
+    subgraph Network[Execution layer]
+        C1[Smart contracts]
+        C2[Event processing]
+        C3[Data store]
+    end
+
+    subgraph External[External control points]
+        D1[Custodian]
+        D2[KYC / AML provider]
+        D3[Pricing / FX feeds]
+        D4[Settlement rails]
+    end
+
+    Channels --> Services
+    Services --> Network
+    Services --> External
+    External --> Services
+
+    style Channels fill:#E8E8FF,stroke:#0000FF,stroke-width:2px
+    style Services fill:#E8F5E8,stroke:#187848,stroke-width:2px
+    style Network fill:#F0E8F8,stroke:#8848C8,stroke-width:2px
+    style External fill:#E8F0F8,stroke:#1E4868,stroke-width:2px

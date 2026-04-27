@@ -1,0 +1,15 @@
+graph TD
+    A[Asset Designer\nDeposit parameters, metadata,\ntoken standards] --> B[Compliance Engine\nKYC / AML, whitelist,\npolicy rules, jurisdiction]
+    B --> C[Token Ledger\nEVM smart contracts,\nERC-3643 deposit tokens]
+    C --> D[Data Feeds\nFiat oracle, FX rates,\nbank reconciliation]
+    D --> E[Reporting Layer\nAudit logs, FSA reports,\nanalytic dashboards]
+    A --> F[Deposits Module\nMint, transfer, hold,\nredeem, burn controls]
+    F --> C
+    B --> F
+
+    style A fill:#0000FF,color:#fff
+    style B fill:#183060,color:#fff
+    style C fill:#0000FF,color:#fff
+    style D fill:#183060,color:#fff
+    style E fill:#4A90E8,color:#fff
+    style F fill:#1A5BDC,color:#fff

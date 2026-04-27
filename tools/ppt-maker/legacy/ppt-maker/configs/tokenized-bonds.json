@@ -1,0 +1,138 @@
+{
+  "project": "tokenized-bonds",
+  "output": "output/tokenized-bonds.pptx",
+  "description": "Tokenized Bonds presentation using DALP",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Tokenized Bonds",
+      "subtitle": "Revolutionizing Fixed Income\nPowered by SettleMint DALP"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "1. Market Opportunity",
+      "item_1": "2. Traditional Bond Challenges",
+      "item_2": "3. DALP Solution",
+      "item_3": "4. Benefits",
+      "item_4": "5. Technical Architecture",
+      "item_5": "6. Bond Structures",
+      "item_6": "7. Use Cases",
+      "item_7": "8. Next Steps"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Market Opportunity",
+      "subtitle": "$130 Trillion Waiting"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "The $130T Opportunity",
+      "body": "\u2022 Global bond market: $130+ trillion\n\u2022 Annual issuance: $5-7 trillion\n\u2022 Traditional settlement: T+2 to T+3\n\nTokenization unlocks:\n\u2022 Fractional ownership\n\u2022 24/7 trading\n\u2022 Instant settlement"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "The Problem",
+      "subtitle": "Why Bonds Need Disruption"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Challenges with Traditional Bonds",
+      "body": "\u2022 High minimum investment\n\u2022 Slow settlement (T+2/T+3)\n\u2022 Limited retail access\n\u2022 Manual coupon payments\n\u2022 Complex custody infrastructure"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "The Solution",
+      "subtitle": "DALP Bond Tokenization"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "SettleMint DALP Solution",
+      "body": "\u2022 Issue bonds as digital tokens\n\u2022 Smart contracts automate coupon payments\n\u2022 Fractionalize for broader investor access\n\u2022 Real-time settlement on-chain\n\u2022 Multi-chain deployment"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Benefits for Issuers",
+      "col1": "Lower costs\n\u2022 Reduce manual issuance steps across teams.\n\u2022 Automate compliance and investor controls.\n\u2022 Cut reconciliation and reporting overhead.\n\u2022 Preserve stronger audit evidence across the workflow.",
+      "col2": "Broader access\n\u2022 Reach more investor segments with smaller ticket sizes.\n\u2022 Support distribution through governed onboarding flows.\n\u2022 Expand placement options without rebuilding the product.\n\u2022 Give treasury and legal teams clearer control points."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Benefits for Investors",
+      "col1": "Faster liquidity\n\u2022 Support secondary transfer processes with clearer rules.\n\u2022 Reduce settlement delays and manual handoffs.\n\u2022 Improve visibility into holding and transfer status.\n\u2022 Create a more usable investor experience.",
+      "col2": "More transparency\n\u2022 Keep transaction history and servicing events visible.\n\u2022 Link policy checks to the transfer workflow itself.\n\u2022 Improve confidence through governed controls.\n\u2022 Reduce ambiguity around who can hold and trade."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Technical Architecture",
+      "subtitle": "How DALP Works"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP Technical Architecture",
+      "body": "Token Standard: ERC-1400\n\nSmart Contracts:\n\u2022 Atomic issuance\n\u2022 Transfer restrictions (SBT)\n\u2022 Coupon payment automation\n\u2022 Multi-currency support\n\nOracle Integration:\n\u2022 Price feeds\n\u2022 Interest rate benchmarks"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Lifecycle Management",
+      "body": "Complete bond lifecycle on-chain:\n\u2022 Issuance & onboarding\n\u2022 Coupon calculations\n\u2022 Corporate actions\n\u2022 Interest payments\n\u2022 Principal repayment\n\u2022 Burn/retirement"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Supported Bond Structures",
+      "table_data": [
+        [
+          "Type",
+          "Description",
+          "Status"
+        ],
+        [
+          "Fixed Rate",
+          "Traditional coupon bonds",
+          "Supported"
+        ],
+        [
+          "Floating Rate",
+          "Variable rate bonds",
+          "Supported"
+        ],
+        [
+          "Zero Coupon",
+          "Discount bonds",
+          "Supported"
+        ],
+        [
+          "Convertible",
+          "Equity-linked bonds",
+          "Supported"
+        ],
+        [
+          "Green Bonds",
+          "ESG-compliant bonds",
+          "Supported"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Use Cases",
+      "item1": "Corporate bonds\nStructure issuance, distribution, and servicing on one governed platform for repeatable fixed-income launches.",
+      "item2": "Sovereign debt\nSupport treasury-style instruments with policy controls, investor eligibility, and auditable operating steps.",
+      "item3": "Green bonds\nPair sustainability-linked issuance narratives with compliance controls and clearer lifecycle governance.",
+      "item4": "Structured products\nModel more complex debt programs without forcing every launch back into bespoke operational handling."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Case: FAB Digital Bond",
+      "body": "First Abu Dhabi Bank $100M digital bond:\n\nResults:\n\u2022 50% reduction in issuance costs\n\u2022 Settlement in minutes vs. days\n\u2022 3x increase in investor reach\n\u2022 Full regulatory compliance"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why SettleMint DALP?",
+      "body": "\u2022 Proven platform: $1B+ digital assets issued\n\u2022 Enterprise-grade security\n\u2022 Multi-chain deployment\n\u2022 Seamless integration\n\u2022 Expert support"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

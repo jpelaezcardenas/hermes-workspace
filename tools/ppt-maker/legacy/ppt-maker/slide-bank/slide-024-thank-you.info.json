@@ -1,0 +1,38 @@
+{
+  "slide_number": 24,
+  "filename": "slide-024-thank-you.pptx",
+  "layout_name": "Closing - Thank You",
+  "layout_slug": "closing-thank-you",
+  "template_layout_name": "Thank You",
+  "template_layout_slug": "thank-you",
+  "layout_category": "closing",
+  "description": "Branded closing/thank you slide with CTA area. Matches the cover in branding. Always the last slide of any deck.",
+  "usage": "Use as the final slide. Include a call to action, contact information, or next steps. Title = 'Thank You' or equivalent.",
+  "potential_usage": "Can also be used as a Q&A invitation slide or a 'contact us' closing slide in sales contexts.",
+  "content_capacity": "light",
+  "has_image_area": false,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 1,
+  "placeholders": [],
+  "elements": [],
+  "word_counts": {},
+  "total_word_count": 0,
+  "placeholder_summary": {},
+  "content_suggestions": {},
+  "fill_hints": {},
+  "do_not_modify": [
+    "background image",
+    "logo",
+    "footer"
+  ],
+  "selection_tags": [
+    "closing",
+    "executive",
+    "sales",
+    "investor",
+    "product-overview"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3425206441\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+}

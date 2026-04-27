@@ -1,0 +1,118 @@
+{
+  "last_updated": "2026-04-03",
+  "competitors": [
+    {
+      "name": "Archax",
+      "aliases": ["archax"],
+      "source": "product/dalp/competitors/archax.md",
+      "differentiators": [
+        "DALP provides deeper full-lifecycle coverage from issuance through servicing and redemption.",
+        "DALP has stronger developer and API-led platform positioning with documented integration depth.",
+        "DALP offers deployment flexibility across cloud, on-prem, and hybrid models."
+      ],
+      "where_they_win": [
+        "Archax has strong UK regulatory credibility as an FCA-regulated exchange, custodian, and broker.",
+        "Archax has direct secondary market and major asset-manager relationship proof."
+      ],
+      "last_updated": "2026-03-14"
+    },
+    {
+      "name": "Securitize",
+      "aliases": ["securitize"],
+      "source": "product/dalp/competitors/securitize.md",
+      "differentiators": [
+        "DALP is a neutral infrastructure platform rather than a marketplace-led model.",
+        "DALP has stronger positioning for sovereign, MENA, and APAC infrastructure use cases.",
+        "DALP supports deployment sovereignty with on-prem, hybrid, and multi-cloud options."
+      ],
+      "where_they_win": [
+        "Securitize has direct U.S./EU licensing and in-house trading venue advantages.",
+        "Securitize has stronger publicly visible scale metrics and institutional brand backing."
+      ],
+      "last_updated": "2026-03-14"
+    },
+    {
+      "name": "Tokeny",
+      "aliases": ["tokeny", "t-rex", "erc-3643"],
+      "source": "product/dalp/competitors/tokeny.md",
+      "differentiators": [
+        "DALP implements ERC-3643 with additional operational controls: atomic DvP/XvP settlement, maker-checker approvals, HSM custody workflows, and operational incident management.",
+        "DALP has demonstrated sovereign and national-scale deployments; Tokeny's proof points are predominantly corporate and private issuers.",
+        "DALP ships 21 pre-built Grafana dashboards and 3-pillar observability (metrics, logs, traces) for institutional SLA requirements that Tokeny does not publicly document.",
+        "DALP integrates ISO 20022 payment rails, reconciliation tooling, and finance-ops connectivity, positioning it as financial infrastructure beyond tokenization."
+      ],
+      "where_they_win": [
+        "Tokeny created ERC-3643, giving it standards-body credibility and ecosystem gravity with 120+ use cases and $32B+ claimed tokenized value.",
+        "Apex Group acquisition ($3.5T AUA parent) provides deep institutional fund administration distribution.",
+        "SOC2 Type I certified with strong no-code deployment positioning for rapid onboarding."
+      ],
+      "last_updated": "2026-03-28"
+    },
+    {
+      "name": "Digital Asset (Canton)",
+      "aliases": ["digital asset", "canton", "daml", "canton network"],
+      "source": "product/dalp/competitors/digital-asset-canton.md",
+      "differentiators": [
+        "DALP delivers end-to-end lifecycle packaging (issuance, compliance, servicing, operations) without requiring deep smart contract language engineering like Daml.",
+        "DALP's chain-flexible platform reduces perceived network lock-in risk compared to Canton's proprietary network model.",
+        "DALP enables faster production deployment for teams that do not want Daml/network engineering lift, with out-of-the-box asset templates and workflows."
+      ],
+      "where_they_win": [
+        "Digital Asset has institutional signaling power with backers including Goldman Sachs, BNY, Nasdaq, and S&P Global.",
+        "Canton Network's privacy-preserving architecture and collateral mobility program are strong in top-tier capital markets contexts.",
+        "Cumulative funding in the high hundreds of millions ($135M June 2025 + $50M Dec 2025 strategic rounds)."
+      ],
+      "last_updated": "2026-03-28"
+    },
+    {
+      "name": "R3 Corda",
+      "aliases": ["r3", "corda", "corda protocol"],
+      "source": "product/dalp/competitors/r3-corda.md",
+      "differentiators": [
+        "DALP provides turnkey lifecycle tooling (issuance through servicing and redemption) rather than requiring implementation-heavy enterprise builds on top of a DLT layer.",
+        "DALP offers standardized compliance policy layers and servicing automation that R3 leaves to implementation partners.",
+        "DALP ships integrated observability and operational tooling, while Corda monitoring depends on the enterprise implementation stack."
+      ],
+      "where_they_win": [
+        "R3 has a mature enterprise developer ecosystem and longstanding institutional integration track record ($10B+ claimed on-chain RWA).",
+        "Corda Protocol initiative on Solana positions R3 at the TradFi-to-DeFi intersection with a 2026 launch path.",
+        "Strong governance controls and permissioned transaction model are core design attributes valued in institutional network contexts."
+      ],
+      "last_updated": "2026-03-28"
+    },
+    {
+      "name": "Taurus",
+      "aliases": ["taurus", "taurus-protect", "taurus-capital", "tdx"],
+      "source": "product/dalp/competitors/taurus.md",
+      "differentiators": [
+        "DALP covers the full asset lifecycle from issuance through servicing, distribution scheduling, and redemption with 7 out-of-the-box templates; Taurus lacks publicly documented distribution, claim management, and redemption workflows.",
+        "DALP ships 21 pre-built Grafana dashboards, full-stack observability (metrics, logs, traces), and incident management tooling that Taurus does not publicly evidence.",
+        "DALP provides 18 compliance modules with a deterministic policy evaluation engine and compliance templates; Taurus references compliance controls without detailing a module registry or policy authoring model.",
+        "DALP supports identity recovery, forced movement recovery, and settlement incident tracking as native platform capabilities; none are publicly documented for Taurus."
+      ],
+      "where_they_win": [
+        "Taurus has FINMA-supervised status and a Deutsche Bank global partnership, providing strong regulatory credibility in Swiss and European banking contexts.",
+        "Taurus offers an integrated trading venue (TDX) alongside custody and issuance, creating a vertically integrated exchange-to-custody stack.",
+        "Taurus-NETWORK positions interbank settlement and collateral routes with growing validator partnerships (Canton Network, Solana, Stellar connectivity)."
+      ],
+      "last_updated": "2026-04-03"
+    },
+    {
+      "name": "Polymath / Polymesh",
+      "aliases": ["polymath", "polymesh", "poly"],
+      "source": "product/dalp/competitors/polymath-polymesh.md",
+      "differentiators": [
+        "DALP provides native operational tooling for incident management, reconciliation, and recovery workflows; Polymath relies on partner integrations for these capabilities.",
+        "DALP supports multi-chain deployment flexibility; Polymesh is a single purpose-built Layer 1, limiting deployment options for institutions with multi-chain strategies.",
+        "DALP ships complete lifecycle state control with distribution scheduling, claim fulfillment, and redemption mechanics; Polymath's public docs lack evidence of these workflows.",
+        "DALP's regulatory standing is directly held; Polymath depends on partnerships (tZERO) for broker-dealer and ATS access."
+      ],
+      "where_they_win": [
+        "Polymesh's identity-first architecture with protocol-level compliance (CDD, verified participants) is a genuine differentiator at the base layer for risk-conscious regulated issuers.",
+        "Capital Platform offers white-label depth for broker-dealers and banks to embed branded tokenization workflows.",
+        "Start-Me-Up freemium tier lowers the barrier for smaller issuers to experiment before committing to enterprise contracts."
+      ],
+      "last_updated": "2026-04-03"
+    }
+  ]
+}

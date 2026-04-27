@@ -1,0 +1,12 @@
+graph LR
+    A[Developer] --> B[DALP CLI\nDevice Auth]
+    A --> C[DALP SDK\nTyped Ops]
+    B --> D[Token Ops\nDeploy / Mint]
+    B --> E[Monitor\nStream Events]
+    C --> F[Asset Issuance\nAPI]
+    C --> G[Compliance\nEnforcement]
+    D --> H[DALP\nRuntime]
+    E --> H
+    F --> H
+    G --> H
+    H --> I[On-Chain\nState]

@@ -1,0 +1,64 @@
+{
+  "project": "dalp-overview",
+  "output": "output/dalp-overview-10-slides.pptx",
+  "description": "DALP Platform Overview - 10 slides",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Digital Asset Lifecycle Platform",
+      "subtitle": "Enterprise-Grade Asset Tokenization\nSettleMint"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "1. What is DALP?",
+      "item_1": "2. Core Capabilities",
+      "item_2": "3. Asset Lifecycle",
+      "item_3": "4. Compliance & Security",
+      "item_4": "5. Integration Options",
+      "item_5": "6. Next Steps"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "What is DALP?",
+      "subtitle": "The foundation for digital asset management"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "A Complete Platform",
+      "body": "The Digital Asset Lifecycle Platform (DALP) enables organizations to issue, manage, and transfer digital assets on blockchain networks.\n\n\u2022 Tokenization of real-world assets\n\u2022 Automated lifecycle management\n\u2022 Built-in compliance controls\n\u2022 Enterprise-grade security"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Core Capabilities",
+      "subtitle": "Powerful features for asset management"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four Key Capabilities",
+      "item1": "Token issuance\nCreate governed digital assets with configurable parameters, issuance controls, and reusable launch patterns for new products.",
+      "item2": "Lifecycle management\nRun transfers, servicing events, approvals, and operational changes on one platform instead of scattered tooling.",
+      "item3": "Compliance engine\nLink identity, eligibility, and transfer restrictions so policy is enforced before execution, not checked afterward.",
+      "item4": "Operational visibility\nGive teams monitoring, audit evidence, and runtime insight into asset activity once products are live."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Asset Lifecycle",
+      "subtitle": "From creation to settlement"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "End-to-End Lifecycle",
+      "col1": "Creation & Issuance\n\u2022 Define asset parameters\n\u2022 Set transfer rules\n\u2022 Configure compliance checks\n\u2022 Deploy on blockchain",
+      "col2": "Ongoing Management\n\u2022 Transfer & settlement\n\u2022 Corporate actions\n\u2022 Compliance monitoring\n\u2022 Reporting & audit"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why SettleMint?",
+      "subtitle": "Enterprise-grade infrastructure"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

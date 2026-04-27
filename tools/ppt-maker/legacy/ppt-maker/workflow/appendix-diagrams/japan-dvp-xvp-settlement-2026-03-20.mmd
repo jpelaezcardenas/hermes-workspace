@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant Buyer
+    participant DALP
+    participant Custodian
+    participant Counterparty
+
+    Buyer->>DALP: Submit DvP instruction (deposit token + security)
+    DALP->>DALP: Validate KYC, whitelist & policy checks
+    DALP->>Custodian: Lock deposit token in escrow
+    Custodian-->>DALP: Escrow confirmed
+    DALP->>Counterparty: Lock security token in escrow
+    Counterparty-->>DALP: Escrow confirmed
+    DALP->>DALP: XVP atomic swap — T+0 execution
+    DALP->>Buyer: Security token delivered
+    DALP->>Counterparty: Deposit token delivered
+    DALP->>Custodian: Release escrow records
+    DALP->>Buyer: Settlement confirmation + audit log
+    DALP->>Counterparty: Settlement confirmation + audit log

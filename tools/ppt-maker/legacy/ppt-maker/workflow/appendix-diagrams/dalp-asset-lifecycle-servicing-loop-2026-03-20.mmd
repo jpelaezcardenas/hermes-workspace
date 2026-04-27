@@ -1,0 +1,27 @@
+flowchart LR
+    classDef stage fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef anchor fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef control fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef evidence fill:#f5f5f5,stroke:#9aa0a6,color:#1f2937,stroke-width:1.2px;
+
+    Design[Design asset\nclass + terms + permissions]:::anchor --> Onboard[Onboard participants\nidentity + claims]:::stage
+    Onboard --> Issue[Issue / distribute\ncontrolled launch]:::stage
+    Issue --> Transfer[Transfer / settle\nex-ante checks stay active]:::stage
+    Transfer --> Service[Service asset\ndistributions • corporate actions • redemptions]:::stage
+    Service --> Close[Close out / redeem\nfinal ownership state]:::stage
+
+    Registry[Unified registry\nownership + compliance state]:::control
+    Audit[Audit trail + monitoring\nactivity, evidence, exceptions]:::evidence
+
+    Design --> Registry
+    Onboard --> Registry
+    Issue --> Registry
+    Transfer --> Registry
+    Service --> Registry
+    Close --> Registry
+
+    Registry --> Audit
+    Audit --> Design
+
+    Note[DALP stays involved after issuance; servicing and redemption remain part of the same governed lifecycle.]:::evidence
+    Note -.-> Service

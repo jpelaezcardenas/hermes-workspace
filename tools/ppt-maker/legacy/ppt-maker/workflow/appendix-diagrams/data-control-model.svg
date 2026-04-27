@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1100" viewBox="0 0 1100 1100">
+  <rect width="1100" height="1100" fill="#ffffff"/>
+  <text x="550" y="70" text-anchor="middle" font-family="Figtree, Arial, sans-serif" font-size="34" font-weight="700" fill="#111111">Programme data and control model</text>
+  <g font-family="Figtree, Arial, sans-serif" font-size="20" text-anchor="middle" fill="#111111">
+    <rect x="410" y="130" width="280" height="100" rx="18" fill="#E8E8FF" stroke="#0000FF" stroke-width="4"/>
+    <text x="550" y="185">Programme</text>
+    <text x="550" y="215" font-size="16">issuer • jurisdiction • governance</text>
+
+    <rect x="160" y="320" width="240" height="100" rx="18" fill="#E8F5E8" stroke="#187848" stroke-width="4"/>
+    <text x="280" y="375">Asset</text><text x="280" y="405" font-size="16">metal • unit • redemption</text>
+
+    <rect x="700" y="320" width="240" height="100" rx="18" fill="#FFF0E8" stroke="#C05030" stroke-width="4"/>
+    <text x="820" y="375">Policy</text><text x="820" y="405" font-size="16">whitelist • limits • servicing</text>
+
+    <rect x="160" y="540" width="240" height="100" rx="18" fill="#F0E8F8" stroke="#8848C8" stroke-width="4"/>
+    <text x="280" y="595">Investor</text><text x="280" y="625" font-size="16">classification • country</text>
+
+    <rect x="700" y="540" width="240" height="100" rx="18" fill="#E8F0F8" stroke="#1E4868" stroke-width="4"/>
+    <text x="820" y="595">Identity record</text><text x="820" y="625" font-size="16">KYC • sanctions • claims</text>
+
+    <rect x="410" y="760" width="280" height="100" rx="18" fill="#E8F5E8" stroke="#187848" stroke-width="4"/>
+    <text x="550" y="815">Token holding</text><text x="550" y="845" font-size="16">wallet • balance</text>
+
+    <rect x="160" y="930" width="240" height="90" rx="18" fill="#FFF0E8" stroke="#C05030" stroke-width="4"/>
+    <text x="280" y="985">Transfer event</text>
+
+    <rect x="700" y="930" width="240" height="90" rx="18" fill="#E8E8FF" stroke="#0000FF" stroke-width="4"/>
+    <text x="820" y="985">Custody account</text>
+  </g>
+  <g stroke="#787878" stroke-width="5" fill="none" marker-end="url(#arrow)">
+    <path d="M480 230 L340 320"/>
+    <path d="M620 230 L760 320"/>
+    <path d="M280 420 V540"/>
+    <path d="M820 420 V540"/>
+    <path d="M400 590 H700"/>
+    <path d="M280 640 L460 760"/>
+    <path d="M820 640 L640 760"/>
+    <path d="M480 860 L340 930"/>
+    <path d="M620 860 L760 930"/>
+  </g>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#787878"/></marker></defs>
+</svg>

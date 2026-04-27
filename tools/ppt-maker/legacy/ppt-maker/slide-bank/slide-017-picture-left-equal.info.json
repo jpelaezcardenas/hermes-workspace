@@ -1,0 +1,120 @@
+{
+  "slide_number": 17,
+  "filename": "slide-017-picture-left-equal.pptx",
+  "layout_name": "Image Left + Text Right",
+  "layout_slug": "image-left-text-right",
+  "template_layout_name": "Picture Left Equal",
+  "template_layout_slug": "picture-left-equal",
+  "layout_category": "visual",
+  "description": "Equal split with image/photo on the left and text content on the right. The visual and text carry equal visual weight.",
+  "usage": "Use for team introductions with photos, customer stories with client photos, or any visual-text pairing where both sides are equally important. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+  "potential_usage": "Works for people-centric slides, location/facility shots with descriptions, or event/conference imagery with context.",
+  "content_capacity": "medium",
+  "has_image_area": true,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 2,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 12,
+      "type": "BODY"
+    },
+    {
+      "idx": 13,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 10,
+      "type": "SLIDE_NUMBER"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 12,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 13,
+      "word_count": 0
+    },
+    {
+      "type": "SLIDE_NUMBER",
+      "idx": 10,
+      "word_count": 4
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "BODY_12": 0,
+    "CLIPART_13": 0,
+    "SLIDE_NUMBER_10": 4
+  },
+  "total_word_count": 4,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title \u2014 states the key message or topic",
+    "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+    "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+    "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3\u20138 words describing Image Left + Text Right)",
+    "BODY_12": "Body content (bullets or paragraphs)",
+    "CLIPART_13": "Insert stock image or square-ish Mermaid diagram",
+    "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3\u201310 words",
+    "BODY_12": "~30\u201380 words",
+    "CLIPART_13": "Replace with approved image asset",
+    "SLIDE_NUMBER_10": "Do not modify"
+  },
+  "do_not_modify": [
+    "footer",
+    "slide number"
+  ],
+  "selection_tags": [
+    "image",
+    "two-column",
+    "team",
+    "people",
+    "sales"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{BFC161AC-3994-0B19-2B8A-F7FB99618CA4}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{76597F1E-BFEB-651E-C818-CF9842E37236}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{EB5D3E09-2635-0148-1546-5CCA7FE263E2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{681AE55B-B61A-826C-B77C-04E3956E3D9E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>15</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3389079493\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+  "image_slot_policy": [
+    {
+      "placeholder_idx": 13,
+      "placeholder_kind": "generic_image",
+      "allowed_asset_kinds": [
+        "generic_image",
+        "diagram"
+      ],
+      "preferred_asset_kinds": [
+        "generic_image",
+        "diagram"
+      ],
+      "fit_mode_by_asset_kind": {
+        "generic_image": "cover",
+        "diagram": "contain"
+      },
+      "background_by_asset_kind": {
+        "generic_image": "transparent",
+        "diagram": "transparent"
+      },
+      "round_corners": true,
+      "corner_radius_px": 8,
+      "aspect_ratio_class": "equal"
+    }
+  ]
+}

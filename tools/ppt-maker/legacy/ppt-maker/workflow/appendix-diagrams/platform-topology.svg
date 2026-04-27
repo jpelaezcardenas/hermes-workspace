@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <text x="800" y="80" text-anchor="middle" font-family="Figtree, Arial, sans-serif" font-size="34" font-weight="700" fill="#111111">Platform topology for metals programmes</text>
+  <g font-family="Figtree, Arial, sans-serif" text-anchor="middle" fill="#111111">
+    <rect x="120" y="210" width="320" height="170" rx="22" fill="#E8E8FF" stroke="#0000FF" stroke-width="4"/>
+    <text x="280" y="250" font-size="26" font-weight="700">Channels</text>
+    <text x="280" y="295" font-size="20">Issuer ops dashboard</text>
+    <text x="280" y="330" font-size="20">Distributor portal</text>
+    <text x="280" y="365" font-size="20">Partner APIs</text>
+
+    <rect x="530" y="160" width="520" height="270" rx="22" fill="#E8F5E8" stroke="#187848" stroke-width="4"/>
+    <text x="790" y="205" font-size="28" font-weight="700">DALP business services</text>
+    <text x="790" y="255" font-size="20">Asset designer • Compliance engine • Identity</text>
+    <text x="790" y="295" font-size="20">Permissions • Servicing workflows • Reporting</text>
+    <text x="790" y="335" font-size="20">Observability • Audit evidence</text>
+
+    <rect x="620" y="520" width="340" height="170" rx="22" fill="#F0E8F8" stroke="#8848C8" stroke-width="4"/>
+    <text x="790" y="560" font-size="26" font-weight="700">Execution layer</text>
+    <text x="790" y="605" font-size="20">Smart contracts</text>
+    <text x="790" y="640" font-size="20">Event processing</text>
+    <text x="790" y="675" font-size="20">Data store</text>
+
+    <rect x="1120" y="210" width="330" height="260" rx="22" fill="#E8F0F8" stroke="#1E4868" stroke-width="4"/>
+    <text x="1285" y="250" font-size="28" font-weight="700">External control points</text>
+    <text x="1285" y="300" font-size="20">Custodian</text>
+    <text x="1285" y="335" font-size="20">KYC / AML provider</text>
+    <text x="1285" y="370" font-size="20">Pricing &amp; FX feeds</text>
+    <text x="1285" y="405" font-size="20">Settlement rails</text>
+  </g>
+  <g stroke="#787878" stroke-width="6" fill="none" marker-end="url(#arrow)">
+    <path d="M440 295 H530"/>
+    <path d="M790 430 V520"/>
+    <path d="M1050 295 H1120"/>
+    <path d="M1120 430 C1060 500 980 540 960 560"/>
+  </g>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#787878"/></marker></defs>
+</svg>

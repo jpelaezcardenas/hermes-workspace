@@ -1,0 +1,35 @@
+flowchart TB
+    classDef core fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef layer fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef control fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef guard fill:#fff4e5,stroke:#f39c12,color:#1f2937,stroke-width:1.5px;
+    classDef ext fill:#f5f5f5,stroke:#9aa0a6,color:#1f2937,stroke-width:1.2px;
+
+    Product[Product template / asset class\nBond • Equity • Fund • Deposit • Stablecoin • Metals • Real Estate]:::core
+    Terms[Instrument terms\nmetadata • issuance window • supply rules]:::layer
+    Features[Runtime feature chain\nrestrictions • fees • tax • rewards • analytics]:::layer
+    Identity[Identity model\nOnchainID • claim topics • trusted issuers]:::control
+    Compliance[Compliance modules\ncountry • accreditation • holding period • supply • collateral]:::control
+    Permissions[Permissions bootstrap\nrole grants • emergency controls • operational rights]:::control
+    Custody[Custody policy\nBYO custodian • quorum • signer flow]:::guard
+    APIs[API / SDK / webhooks]:::ext
+    Unified[Unified asset record\nreviewed, approved, launched, serviced]:::core
+
+    Product --> Terms
+    Product --> Features
+    Product --> Identity
+    Product --> Compliance
+    Product --> Permissions
+    Product --> Custody
+    Terms --> Unified
+    Features --> Unified
+    Identity --> Unified
+    Compliance --> Unified
+    Permissions --> Unified
+    Custody --> Unified
+    APIs --> Unified
+
+    Note1[Configurable token in DALP is not just contract deployment.]:::ext
+    Note2[It assembles product terms, compliance, identity, permissions, and custody policy into one governed asset definition.]:::ext
+    Note1 -.-> Unified
+    Note2 -.-> Unified

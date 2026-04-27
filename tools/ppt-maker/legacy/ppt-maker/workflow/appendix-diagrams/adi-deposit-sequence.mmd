@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Issuer
+    participant DALP as DALP Platform
+    participant Chain as ADI Chain
+    participant Investor
+
+    Issuer->>DALP: Create deposit asset
+    DALP->>DALP: Compliance check
+    DALP->>Chain: Issue on-chain token
+    Chain->>Investor: Token delivered
+    DALP->>Chain: Accrue interest
+    Investor->>DALP: Redeem request
+    DALP->>DALP: Redemption compliance check
+    DALP->>Chain: Burn token
+    DALP->>Investor: Fiat settlement confirmed

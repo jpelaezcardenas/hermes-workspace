@@ -1,0 +1,83 @@
+{
+  "slide_number": 5,
+  "filename": "slide-005-single-column.pptx",
+  "layout_name": "1-Column Content",
+  "layout_slug": "1-column-content",
+  "template_layout_name": "Single Column",
+  "template_layout_slug": "single-column",
+  "layout_category": "content",
+  "description": "Standard single-column content slide with a title and full-width body area. The default workhorse slide for any narrative, bullet list, or short paragraph content.",
+  "usage": "Use for any single-topic slide: explaining a concept, listing features, presenting a narrative. Title states the takeaway; body carries 3–6 bullets or 2–3 short paragraphs.",
+  "potential_usage": "Works for introductory explanations, product overviews, how-it-works sections, and policy/compliance summaries.",
+  "content_capacity": "medium",
+  "has_image_area": false,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 1,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 11,
+      "type": "BODY"
+    },
+    {
+      "idx": 10,
+      "type": "SLIDE_NUMBER"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 11,
+      "word_count": 0
+    },
+    {
+      "type": "SLIDE_NUMBER",
+      "idx": 10,
+      "word_count": 4
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "BODY_11": 0,
+    "SLIDE_NUMBER_10": 4
+  },
+  "total_word_count": 4,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title — states the key message or topic",
+    "BODY_11": "Subtitle, date, presenter name, or event description",
+    "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3–8 words describing 1-Column Content)",
+    "BODY_11": "Subtitle text, date, or event name (1–2 lines)",
+    "SLIDE_NUMBER_10": "Auto-populated — do not modify"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3–10 words",
+    "BODY_11": "~5–20 words",
+    "SLIDE_NUMBER_10": "Do not modify"
+  },
+  "do_not_modify": [
+    "footer",
+    "slide number"
+  ],
+  "selection_tags": [
+    "text-content",
+    "bullets",
+    "narrative",
+    "executive",
+    "sales",
+    "product-overview"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{40A1B65A-0063-1E59-6478-09CD463AB9E8}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{84D4824B-98E7-C165-0A72-1D31631EA2D4}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{057839E1-AE66-AE1F-0C55-8F70131BDFCA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>5</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"1201236963\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+}

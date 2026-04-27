@@ -1,0 +1,333 @@
+{
+  "project": "moj-qatar-xvp-escrow",
+  "output": "output/moj-qatar-xvp-escrow.pptx",
+  "description": "31-slide executive deck: DALP XvP Real Estate Escrow for Ministry of Justice Qatar (with DALP screenshots)",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "XvP Escrow for Real Estate",
+      "subtitle": "Tokenized Title Deed Transfer with DALP | Ministry of Justice Qatar | 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Market Challenge",
+      "item_1": "Tokenization Opportunity",
+      "item_2": "XvP Settlement Model",
+      "item_3": "Transaction Lifecycle",
+      "item_4": "Technology Architecture",
+      "item_5": "Legal and Compliance",
+      "item_6": "Implementation Roadmap",
+      "icon1": "icon-library/lucide/building.512x512.png",
+      "icon2": "icon-library/lucide/coins.512x512.png",
+      "icon3": "icon-library/lucide/briefcase.512x512.png",
+      "icon4": "icon-library/lucide/bar-chart.512x512.png",
+      "icon5": "icon-library/lucide/settings.512x512.png",
+      "icon6": "icon-library/lucide/shield.512x512.png",
+      "icon7": "icon-library/lucide/trending-up.512x512.png"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Atomic Title Transfers",
+      "body": "* Qatar real estate transfers currently involve 15-30 day settlement cycles, multiple intermediaries, and manual escrow processes that introduce delay, cost, and counterparty risk.\n* DALP enables tokenization of title deeds as digital assets with embedded compliance controls, creating a verifiable on-chain representation of property ownership.\n* The XvP (Exchange vs Payment) settlement addon ensures the real estate token and tokenized deposit exchange atomically: both legs settle simultaneously or neither does.\n* Settlement time drops from weeks to minutes while maintaining full regulatory controls, identity verification, and audit trails.\n* This proposal outlines how the Ministry of Justice can modernize property transfer using DALP's tokenization and atomic settlement capabilities."
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "Real Estate Transfer Today",
+      "recipe": "comparison-columns",
+      "left_title": "Current State",
+      "left_body": "* Manual title deed registration\n* 15-30 day settlement cycle\n* Paper-based escrow process\n* Multiple intermediaries required\n* Reconciliation overhead\n* Counterparty risk exposure",
+      "right_title": "With DALP",
+      "right_body": "* Tokenized title deeds on-chain\n* Atomic settlement in minutes\n* Programmable escrow via XvP\n* Single shared ledger\n* Automated compliance checks\n* Zero counterparty risk"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Tokenization Creates Value",
+      "item_0": "Fractional Ownership\nEnable partial ownership of real estate assets. Investors can hold token fractions representing proportional title deed interests.",
+      "item_1": "Programmable Rules\nCompliance and transfer controls are embedded directly in the token. Restrictions enforce themselves at every transaction.",
+      "item_2": "Atomic Settlement\nSimultaneous exchange of asset and payment with zero timing gap. No delivery-vs-payment mismatch possible.",
+      "item_3": "Full Audit Trail\nEvery transfer, approval, and state change is recorded on-chain. Complete transparency for regulators and participants."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Designer",
+      "body": "DALP's Asset Designer enables tokenized real estate instruments with configurable compliance, metadata, and issuance parameters",
+      "image_path": "../shared/brand/dalp-screenshots/04 - Asset Designer/Real Estate Tokenisation/jpg/02 Step Tokenised real Estate.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Cash Leg: Tokenized Deposits",
+      "col1": "Tokenized Deposits\n* Issued by a licensed bank\n* Represent actual bank deposits\n* Subject to banking regulation\n* Deposit insurance applies\n* Known issuer and legal recourse\n* Suitable for regulated settlement",
+      "col2": "Why Not Stablecoins\n* Algorithmic or collateral-backed\n* Variable regulatory status\n* Limited legal recourse\n* Not bank-supervised\n* Unsuitable for institutional real estate settlement\n* No deposit insurance coverage"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Exchange vs Payment",
+      "body": "XvP ensures the asset leg (real estate token) and cash leg (tokenized deposit) exchange atomically. Either both legs settle or neither does.\n\nThis eliminates three critical risks:\n* Delivery without payment, where the seller transfers the title deed but never receives funds\n* Payment without delivery, where the buyer pays but never receives the deed\n* Settlement timing mismatch, where one leg settles hours or days before the other\n\nDALP's built-in XvP addon supports named settlements, multi-party approvals, configurable cutoff dates, auto-execution triggers, and HTLC hashlock for cross-chain settlement scenarios."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Settlement Dashboard",
+      "body": "Configure and monitor XvP settlements with multi-party approval tracking, settlement states, and execution controls",
+      "image_path": "../shared/brand/dalp-screenshots/16 - XVP Settlement/jpg/XVP Setup 1.jpg"
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Why XvP Escrow Works",
+      "item1": "Atomic Exchange\nBoth legs settle simultaneously or not at all. No partial execution risk.",
+      "item2": "Multi-Party Approval\nAll parties must approve before execution. Assets locked in contract.",
+      "item3": "Programmable Conditions\nCutoff dates, auto-execute triggers, and compliance gates built in.",
+      "item4": "Cancel Safeguards\nVoting-based cancellation requires consensus. No unilateral withdrawal.",
+      "item5": "Expiry Protection\nAutomatic asset return if settlement expires past the cutoff date.",
+      "item6": "Cross-Chain Ready\nHTLC hashlock support enables settlement across multiple ledgers."
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "Settlement Journey",
+      "recipe": "process-flow",
+      "step1_number": "01",
+      "step1_title": "Onboarding",
+      "step1_body": "KYC/AML, identity verification, wallet provisioning for buyer, seller, and escrow agent",
+      "step2_number": "02",
+      "step2_title": "Asset Setup",
+      "step2_body": "Tokenize title deed as real estate token, issue tokenized deposit, configure compliance",
+      "step3_number": "03",
+      "step3_title": "Create Settlement",
+      "step3_body": "Create named XvP settlement with two flows: RE token and deposit transfer",
+      "step4_number": "04",
+      "step4_title": "Approve and Execute",
+      "step4_body": "Parties approve and lock assets. Atomic execution transfers both legs simultaneously. Title deed registry updated."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Settlement State Machine",
+      "body": "The XvP settlement follows a deterministic lifecycle:\n\n* PENDING: Settlement created with named flows. Awaiting approvals from all senders.\n* READY: All parties have approved and locked their assets in the settlement contract.\n* EXECUTED: Atomic transfer complete. Both the real estate token and deposit have changed hands.\n* CANCELLED: Multi-party vote to cancel succeeded. All locked assets returned to original holders.\n* EXPIRED: Cutoff date passed without execution. Withdrawal of locked assets enabled for all parties.\n* WAITING_SECRET (HTLC only): For cross-chain scenarios, the hashlock secret must be revealed before execution can proceed. If the secret is not revealed before timeout, the settlement expires."
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Roles and Responsibilities",
+      "body": "Key participants in the XvP real estate settlement and their responsibilities",
+      "table_data": [
+        [
+          "Participant",
+          "Role",
+          "Responsibilities"
+        ],
+        [
+          "Buyer",
+          "Token Receiver",
+          "Approves deposit lock, receives RE token"
+        ],
+        [
+          "Seller",
+          "Token Sender",
+          "Approves RE token lock, receives deposit"
+        ],
+        [
+          "Escrow Agent",
+          "Settlement Creator",
+          "Creates and monitors XvP settlement"
+        ],
+        [
+          "Bank",
+          "Deposit Issuer",
+          "Issues and redeems tokenized deposits"
+        ],
+        [
+          "Notary",
+          "Registry Witness",
+          "Validates transfer, updates land registry"
+        ],
+        [
+          "SettleMint",
+          "Platform Operator",
+          "Deploys and maintains DALP instance"
+        ],
+        [
+          "Regulator",
+          "Oversight",
+          "Reviews compliance, audits settlement trail"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "DALP Technology Stack",
+      "recipe": "architecture-stack",
+      "layer1_title": "Operations",
+      "layer1_body": "Asset Designer, XvP Settlement Dashboard, Compliance Console, User Management",
+      "layer2_title": "Platform",
+      "layer2_body": "Token Lifecycle Engine, XvP Settlement Factory, Identity Service (OnchainID)",
+      "layer3_title": "Compliance",
+      "layer3_body": "12 Pluggable Modules: Country Lists, Identity Verification, Transfer Approval, Collateral",
+      "layer4_title": "Blockchain",
+      "layer4_body": "Besu (Permissioned EVM), Smart Contracts, Event Indexing, Multi-chain Support",
+      "layer5_title": "Infrastructure",
+      "layer5_body": "Kubernetes, HSM Integration, Observability (Grafana, Loki, Tempo), API Gateway"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Smart Contract Components",
+      "item_0": "DALPAsset Contract\nSingle configurable token for any instrument. Real estate token with compliance modules attached at deployment.",
+      "item_1": "XvP Settlement Factory\nCreates settlement instances. Configures flows, cutoff dates, hashlock, and auto-execute parameters.",
+      "item_2": "Compliance Modules\nCountry Allow List, Identity Verification, Transfer Approval. Enforced at every transfer automatically.",
+      "item_3": "Identity (OnchainID)\nERC-3643 compliant identity. KYC/AML claims, issuer verification, claim-based access control."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Compliance by Design",
+      "col1": "Legal Framework\n* Token-to-title linkage via smart contract and off-chain registry\n* Notarial witnessing of transfer\n* Qatar Civil Code and real estate law alignment\n* Regulatory sandbox potential",
+      "col2": "DALP Controls\n* 12 compliance modules enforced on-chain\n* Country Allow/Block Lists for jurisdiction\n* Identity verification for all parties\n* Transfer Approval for manual override\n* Collateral module for encumbrances"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Policy",
+      "body": "Pre-configured compliance modules with country restrictions, identity verification, investor limits, and transfer controls",
+      "image_path": "../shared/brand/dalp-screenshots/14 - Compliance and Policy Templates/jpg/Policy Template - Qatar Real Estate Token - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Risk Control Matrix",
+      "body": "The following matrix maps the primary risks associated with tokenized real estate settlement to the specific DALP controls that address each one. Risk severity reflects the potential impact on settlement integrity, regulatory standing, and participant confidence. Each mitigation control is already available within the DALP platform and does not require custom development.",
+      "table_data": [
+        [
+          "Risk",
+          "Impact",
+          "DALP Mitigation"
+        ],
+        [
+          "Legal Recognition",
+          "High",
+          "Off-chain registry link, notarial process"
+        ],
+        [
+          "Smart Contract Bug",
+          "High",
+          "Formal verification, audit, upgradeability"
+        ],
+        [
+          "Counterparty Default",
+          "Medium",
+          "Atomic XvP, escrow lock, auto-expiry"
+        ],
+        [
+          "Privacy / Data",
+          "Medium",
+          "Permissioned chain, RBAC/ABAC, encrypted identity"
+        ],
+        [
+          "Operational Error",
+          "Medium",
+          "Maker-checker, approval voting, audit trail"
+        ],
+        [
+          "Adoption Barriers",
+          "Medium",
+          "Phased rollout, sandbox approach"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Disputes and Exceptions",
+      "body": "* Failed Settlement: Assets remain locked in the XvP contract until a cancellation vote passes or the settlement expires past its cutoff date.\n* Cancellation: Multi-party voting is required. All parties must consent before assets are returned to their original holders.\n* Expired Settlement: Assets become automatically available for withdrawal once the cutoff date passes without execution.\n* Approval Revocation: Any party can revoke their approval before execution, unlocking their assets from the settlement contract.\n* Dispute Resolution: The platform provides a complete audit trail of every action. Off-chain arbitration can reference on-chain evidence.\n* HTLC Timeout: If the hashlock secret is not revealed before the expiry window, all parties can withdraw their locked assets."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Lifecycle View",
+      "body": "Real-time view of tokenized real estate assets with full event history, verification status, and integrated data feeds. Track ownership transfers, compliance events, and valuation updates across the entire asset lifecycle from issuance through settlement and redemption.",
+      "image_path": "../shared/brand/dalp-screenshots/12 - Real Estate/jpg/Real Estate - Doha Business Towers - Asset Details.jpg"
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "Measurable Impact",
+      "recipe": "stat-callouts",
+      "stat1_number": "15d to <1hr",
+      "stat1_label": "Settlement Time",
+      "stat1_body": "From weeks of manual escrow to near-instant atomic settlement",
+      "stat2_number": "60%+",
+      "stat2_label": "Cost Reduction",
+      "stat2_body": "Fewer intermediaries, automated compliance, reduced reconciliation",
+      "stat3_number": "Zero",
+      "stat3_label": "Counterparty Risk",
+      "stat3_body": "Atomic XvP eliminates delivery vs payment mismatch",
+      "stat4_number": "100%",
+      "stat4_label": "Audit Coverage",
+      "stat4_body": "Every approval, transfer, and state change recorded on-chain"
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "Phased Rollout",
+      "recipe": "timeline-horizontal",
+      "milestone1_date": "Months 1-2",
+      "milestone1_title": "Discovery",
+      "milestone1_body": "Requirements, legal framework alignment, stakeholder mapping",
+      "milestone2_date": "Months 3-4",
+      "milestone2_title": "Pilot Setup",
+      "milestone2_body": "DALP deployment, token configuration, XvP setup, integration testing",
+      "milestone3_date": "Months 5-6",
+      "milestone3_title": "Controlled Pilot",
+      "milestone3_body": "5-10 test transactions with real parties, regulatory review",
+      "milestone4_date": "Months 7+",
+      "milestone4_title": "Launch and Scale",
+      "milestone4_body": "Full deployment, training, bank integration, additional asset types, cross-border"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Operations Dashboard",
+      "body": "Centralized monitoring across all tokenized assets, active settlements, compliance events, and platform metrics. The dashboard provides geographic distribution, portfolio analytics, and real-time alerts for settlement milestones, compliance breaches, and system health indicators.",
+      "image_path": "../shared/brand/dalp-screenshots/02 - Dashboard/jpg/Dashboard - Map and Statistics.jpg"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Strategic Recommendations",
+      "col1": "For Ministry of Justice\n* Lead digital transformation of property transfer\n* Reduce fraud risk with immutable records\n* Enable faster, cheaper real estate transactions",
+      "col2": "For Banks\n* New revenue from tokenized deposit issuance\n* Position as settlement infrastructure provider\n* Reduce operational cost of escrow management",
+      "col3": "For the Market\n* Shorter settlement attracts foreign investment\n* Transparency builds market confidence\n* Foundation for broader asset tokenization"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Technical Reference Diagrams"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "XvP Settlement States",
+      "body": "Settlement lifecycle from creation through execution, cancellation, or expiry",
+      "image_path": "output/diagrams/moj-xvp-settlement-state-machine.png"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Transaction Flow",
+      "body": "End-to-end sequence: buyer, seller, escrow agent, bank, and registry interactions",
+      "image_path": "output/diagrams/moj-xvp-transaction-flow.png"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Architecture Layers",
+      "body": "DALP platform stack from operations UI through blockchain infrastructure",
+      "image_path": "output/diagrams/moj-dalp-architecture-layers.png"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Compliance Decision Tree",
+      "body": "Transfer request validation through country, identity, investor, and collateral checks",
+      "image_path": "output/diagrams/moj-compliance-decision-tree.png"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Real Estate Token Lifecycle",
+      "body": "Token states from configuration through issuance, settlement, and redemption",
+      "image_path": "output/diagrams/moj-real-estate-token-lifecycle.png"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "HTLC Cross-Chain Flow",
+      "body": "Hash time-locked contract sequence for multi-ledger atomic settlement",
+      "image_path": "output/diagrams/moj-htlc-cross-chain-flow.png"
+    }
+  ]
+}

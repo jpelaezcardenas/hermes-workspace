@@ -1,0 +1,15 @@
+graph TD
+    A[Governance Layer] --> B[RBAC + ABAC Controls]
+    A --> C[Maker-Checker Approvals]
+    B --> D[Role Assignment]
+    B --> E[Action Permissions]
+    C --> F[Initiate Action]
+    C --> G[Approve Action]
+    D --> H[Identity + KYC/AML]
+    E --> H
+    F --> H
+    G --> H
+    H --> I[Investor Whitelisting: ERC-3643]
+    H --> J[Jurisdiction Controls]
+    I --> K[Audit Trail + Reporting]
+    J --> K

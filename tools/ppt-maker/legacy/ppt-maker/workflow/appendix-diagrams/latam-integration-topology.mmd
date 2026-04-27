@@ -1,0 +1,43 @@
+graph TB
+    subgraph DALP_CORE["DALP Platform"]
+        API[REST and GraphQL APIs]
+        WEBHOOK[Event Webhooks]
+        ORPC[oRPC Interface]
+    end
+
+    subgraph CUSTODY_LAYER["Custody Integration"]
+        FB[Fireblocks]
+        DFNS[DFNS]
+        HSM[HSM Providers]
+    end
+
+    subgraph BANKING["Core Banking"]
+        CBS[Core Banking System]
+        SEPA[SEPA Rails]
+        SWIFT[ISO 20022 SWIFT]
+        RTGS[RTGS Systems]
+    end
+
+    subgraph COMPLIANCE_EXT["Compliance Services"]
+        KYC[KYC and AML Providers]
+        REG[Regulatory Reporting]
+        AUDIT[Audit Systems]
+    end
+
+    subgraph MONITORING["Observability"]
+        GRAFANA[Grafana Dashboards]
+        VM[VictoriaMetrics]
+        LOKI[Loki Logs]
+        TEMPO[Tempo Traces]
+    end
+
+    API --> CUSTODY_LAYER
+    API --> BANKING
+    WEBHOOK --> COMPLIANCE_EXT
+    ORPC --> MONITORING
+
+    style DALP_CORE fill:#000099,color:#fff,stroke:#000099
+    style CUSTODY_LAYER fill:#037352,color:#fff,stroke:#037352
+    style BANKING fill:#0000FF,color:#fff,stroke:#0000FF
+    style COMPLIANCE_EXT fill:#333,color:#fff,stroke:#333
+    style MONITORING fill:#555,color:#fff,stroke:#555

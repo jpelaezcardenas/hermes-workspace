@@ -1,0 +1,21 @@
+flowchart LR
+    classDef actor fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef process fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef decision fill:#fff4e5,stroke:#f39c12,color:#1f2937,stroke-width:1.5px;
+    classDef result fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef fail fill:#fdecea,stroke:#cc0000,color:#1f2937,stroke-width:1.5px;
+
+    Request[Transfer / issuance / servicing request]:::actor --> Resolve[Resolve asset policy set\nand applicable restrictions]:::process
+    Resolve --> Identity[Load investor identity\nand verified claims]:::process
+    Identity --> Check1{Identity valid?}:::decision
+    Check1 -- No --> Block1[Reject before execution\nreason code + audit event]:::fail
+    Check1 -- Yes --> Check2{Jurisdiction / accreditation /\nholding / supply rules pass?}:::decision
+    Check2 -- No --> Block2[Block movement\nno state change on-chain]:::fail
+    Check2 -- Yes --> Approval{Approval step needed?}:::decision
+    Approval -- Yes --> Review[Maker-checker review\nfor sensitive operations]:::process
+    Review --> Approved{Approved?}:::decision
+    Approved -- No --> Block3[Denied with evidence trail]:::fail
+    Approved -- Yes --> Execute[Execute transaction\nthrough DALP workflow]:::process
+    Approval -- No --> Execute
+    Execute --> Record[Update unified registry\nactivity log + monitoring]:::result
+    Record --> Outcome[Compliant completion]:::actor

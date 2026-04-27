@@ -1,0 +1,395 @@
+{
+  "file": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/dalp-overview-10-slides.pptx",
+  "ok": true,
+  "rules": {
+    "body_pt_range": [
+      16,
+      24
+    ],
+    "title_pt_range": [
+      24,
+      36
+    ],
+    "brand_font": "Figtree"
+  },
+  "summary": {
+    "slide_count": 10,
+    "logo_present": null,
+    "font_sets_observed": []
+  },
+  "findings": [],
+  "inspection": {
+    "file": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/dalp-overview-10-slides.pptx",
+    "slide_count": 10,
+    "slides": [
+      {
+        "slide": 1,
+        "title": "Digital Asset Lifecycle Platform",
+        "text_count": 3,
+        "word_count": 8,
+        "char_count": 77,
+        "shape_count": 2,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": true,
+        "background": {
+          "source": "ppt/slideLayouts/slideLayout1.xml",
+          "type": "blipFill",
+          "image": null,
+          "classification": "brand/image background"
+        },
+        "is_cover_or_closing": true,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [],
+        "sample_text": [
+          "Digital Asset Lifecycle Platform",
+          "Enterprise-Grade Asset Tokenization",
+          "SettleMint"
+        ]
+      },
+      {
+        "slide": 2,
+        "title": "Agenda",
+        "text_count": 9,
+        "word_count": 23,
+        "char_count": 145,
+        "shape_count": 14,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": false,
+        "background": {
+          "source": "ppt/slideMasters/slideMaster1.xml",
+          "type": "background-present",
+          "classification": "unknown"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [],
+        "sample_text": [
+          "Agenda",
+          "1. What is DALP?",
+          "SettleMint Confidential |",
+          "2",
+          "2. Core Capabilities",
+          "3. Asset Lifecycle"
+        ]
+      },
+      {
+        "slide": 3,
+        "title": "What is DALP?",
+        "text_count": 2,
+        "word_count": 9,
+        "char_count": 56,
+        "shape_count": 2,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": true,
+        "background": {
+          "source": "ppt/slideLayouts/slideLayout3.xml",
+          "type": "blipFill",
+          "image": null,
+          "classification": "brand/image background"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [
+          "dark/brand background on content slide (blipFill)"
+        ],
+        "sample_text": [
+          "What is DALP?",
+          "The foundation for digital asset management"
+        ]
+      },
+      {
+        "slide": 4,
+        "title": "A Complete Platform",
+        "text_count": 8,
+        "word_count": 36,
+        "char_count": 304,
+        "shape_count": 3,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": false,
+        "background": {
+          "source": "ppt/slideMasters/slideMaster1.xml",
+          "type": "background-present",
+          "classification": "unknown"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [],
+        "sample_text": [
+          "A Complete Platform",
+          "The Digital Asset Lifecycle Platform (DALP) enables organizations to issue, manage, and transfer digital assets on blockchain networks.",
+          "\u2022 Tokenization of real-world assets",
+          "\u2022 Automated lifecycle management",
+          "\u2022 Built-in compliance controls",
+          "\u2022 Enterprise-grade security"
+        ]
+      },
+      {
+        "slide": 5,
+        "title": "Core Capabilities",
+        "text_count": 2,
+        "word_count": 7,
+        "char_count": 55,
+        "shape_count": 2,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": true,
+        "background": {
+          "source": "ppt/slideLayouts/slideLayout3.xml",
+          "type": "blipFill",
+          "image": null,
+          "classification": "brand/image background"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [
+          "dark/brand background on content slide (blipFill)"
+        ],
+        "sample_text": [
+          "Core Capabilities",
+          "Powerful features for asset management"
+        ]
+      },
+      {
+        "slide": 6,
+        "title": "Four Key Capabilities",
+        "text_count": 11,
+        "word_count": 75,
+        "char_count": 578,
+        "shape_count": 6,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": false,
+        "background": {
+          "source": "ppt/slideMasters/slideMaster1.xml",
+          "type": "background-present",
+          "classification": "unknown"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [],
+        "sample_text": [
+          "Four Key Capabilities",
+          "Token issuance",
+          "Create governed digital assets with configurable parameters, issuance controls, and reusable launch patterns for new products.",
+          "SettleMint Confidential |",
+          "11",
+          "Lifecycle management"
+        ]
+      },
+      {
+        "slide": 7,
+        "title": "Asset Lifecycle",
+        "text_count": 2,
+        "word_count": 6,
+        "char_count": 42,
+        "shape_count": 2,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": true,
+        "background": {
+          "source": "ppt/slideLayouts/slideLayout3.xml",
+          "type": "blipFill",
+          "image": null,
+          "classification": "brand/image background"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [
+          "dark/brand background on content slide (blipFill)"
+        ],
+        "sample_text": [
+          "Asset Lifecycle",
+          "From creation to settlement"
+        ]
+      },
+      {
+        "slide": 8,
+        "title": "End-to-End Lifecycle",
+        "text_count": 13,
+        "word_count": 29,
+        "char_count": 263,
+        "shape_count": 4,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": false,
+        "background": {
+          "source": "ppt/slideMasters/slideMaster1.xml",
+          "type": "background-present",
+          "classification": "unknown"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [],
+        "sample_text": [
+          "End-to-End Lifecycle",
+          "Creation & Issuance",
+          "\u2022 Define asset parameters",
+          "\u2022 Set transfer rules",
+          "\u2022 Configure compliance checks",
+          "\u2022 Deploy on blockchain"
+        ]
+      },
+      {
+        "slide": 9,
+        "title": "Why SettleMint?",
+        "text_count": 2,
+        "word_count": 4,
+        "char_count": 46,
+        "shape_count": 2,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": true,
+        "background": {
+          "source": "ppt/slideLayouts/slideLayout3.xml",
+          "type": "blipFill",
+          "image": null,
+          "classification": "brand/image background"
+        },
+        "is_cover_or_closing": false,
+        "empty": false,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [
+          "dark/brand background on content slide (blipFill)"
+        ],
+        "sample_text": [
+          "Why SettleMint?",
+          "Enterprise-grade infrastructure"
+        ]
+      },
+      {
+        "slide": 10,
+        "title": null,
+        "text_count": 0,
+        "word_count": 0,
+        "char_count": 0,
+        "shape_count": 0,
+        "image_count": 0,
+        "table_count": 0,
+        "chart_count": 0,
+        "smartart_count": 0,
+        "fonts": [],
+        "non_figtree_fonts": [],
+        "dark_or_blue_detected": true,
+        "background": {
+          "source": "ppt/slideLayouts/slideLayout22.xml",
+          "type": "blipFill",
+          "image": null,
+          "classification": "brand/image background"
+        },
+        "is_cover_or_closing": true,
+        "empty": true,
+        "too_dense": false,
+        "placeholder_matches": [],
+        "notes_text": "",
+        "duplicate_text_blocks": [],
+        "issues": [
+          "empty slide"
+        ],
+        "sample_text": []
+      }
+    ],
+    "issues": [
+      "Deck aspect ratio differs from expected 16:9 (12192000 x 6858000 vs 9144000 x 5143500 EMU)."
+    ],
+    "presentation": {
+      "slide_dimensions": {
+        "cx": 12192000,
+        "cy": 6858000,
+        "expected_cx": 9144000,
+        "expected_cy": 5143500,
+        "matches_expected": false
+      }
+    },
+    "duplicate_text_blocks": [],
+    "summary": {
+      "slides_with_images": 0,
+      "slides_over_100_words": 0,
+      "empty_slides": 1,
+      "slides_with_non_figtree_fonts": 0,
+      "slides_with_dark_or_blue_bg": 6,
+      "dark_or_blue_content_slides": 4,
+      "dark_or_blue_cover_or_closing_slides": 2,
+      "total_word_count": 197,
+      "avg_words_per_slide": 19.7,
+      "slides_with_tables": 0,
+      "slides_with_charts": 0,
+      "slides_with_placeholders": 0,
+      "slides_with_notes": 0
+    }
+  }
+}

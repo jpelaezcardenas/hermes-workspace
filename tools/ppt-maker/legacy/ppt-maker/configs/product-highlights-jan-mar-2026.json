@@ -1,0 +1,35 @@
+{
+  "project": "product-highlights-jan-mar-2026",
+  "output": "output/product-highlights-jan-mar-2026.pptx",
+  "description": "5-slide product update deck for Gyan — what shipped in the last 2 months (Jan–Mar 2026)",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Product Highlights: Last 2 Months",
+      "subtitle": "SettleMint Engineering Update | January – March 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "What We Shipped",
+      "item_0": "Indexer Migration & API Modernisation",
+      "item_1": "Smart Contract Security & Account Abstraction",
+      "item_2": "Governance, UX & Feature Delivery",
+      "icon0": "icon-library/lucide/database.svg",
+      "icon1": "icon-library/lucide/shield-check.svg",
+      "icon2": "icon-library/lucide/git-branch.svg"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Indexer Migration & API Modernisation",
+      "body": "• Completed 8-phase migration of all DAPI routes from The Graph to Postgres indexer (PRD-6170 to PRD-6177), covering token core, stats, system activity, user domain, and addons\n• Migrated M4 compliance layer: identity, claim, trusted issuer, topic, and compliance module routes now served from indexer (PRD-6669–6674)\n• v2 API hardened with full filtering, sorting, and pagination across all collection endpoints (PRD-6582, PRD-6583)\n• All v2 routes aligned to JSON:API URL structure for consistency (PRD-6581)\n• Durable worker application created to support background job reliability (PRD-6264)\n• End-to-end system stats test coverage added to DAPI test suite (PRD-5070)"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Smart Contract Security & Account Abstraction",
+      "body": "• Resolved 13 account-abstraction security findings from static analysis (Slither) including high-severity controlled-delegatecall issue (PRD-6600–6613)\n• Fixed high-severity multisig signer privilege escalation in identity claim management (PRD-6613)\n• Remediated medium-severity compliance module findings: TimeLock DoS, TokenSupplyLimit tracker, TransferApproval authority overwrite (PRD-6449–6455)\n• System V4 implementation shipped with directory keys and MIGRATION_ROLE support (PRD-6514, PRD-6513, PRD-6516)\n• Ported SMARTMultisigWeightedValidator and SMARTPaymasterSigner as org addons with Ignition modules (PRD-6402, PRD-6403)\n• ISMARTV2 interface with ERC165 detection added to smart-core (PRD-6517)"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

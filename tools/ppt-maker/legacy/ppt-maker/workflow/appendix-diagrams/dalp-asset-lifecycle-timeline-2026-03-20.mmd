@@ -1,0 +1,9 @@
+flowchart LR
+    classDef stage fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef active fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+
+    Configure[Configure\nAsset class\nterms & rules]:::active --> Issue[Issue\nSmart contract\ndeploy & mint]:::stage
+    Issue --> Distribute[Distribute\nInvestor alloc\n& custody credit]:::stage
+    Distribute --> Service[Service\nCoupons · corp\nactions · reports]:::stage
+    Service --> Settle[Settle\nXVP atomic\nDvP settlement]:::stage
+    Settle --> Redeem[Redeem\nBurn tokens\nfinal payout]:::stage

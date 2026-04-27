@@ -1,0 +1,41 @@
+{
+  "project": "2026-03-20-team-update-product-v2",
+  "output": "output/2026-03-20-product-slides-v2.pptx",
+  "description": "Product section rebuild: Jan-Mar 2026. Runtime split, indexer migration, transaction queue, smart contracts, and developer surface.",
+  "slides": [
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Product",
+      "subtitle": "Runtime split · Indexer migration · Transaction queue · ERC-4337 + Compliance V2 · SDK & observability"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "DALP Runtime Split: DAPI / DDWF / DIDX",
+      "col1": "**kit/dapi - HTTP API Service**\n• Independently deployable HTTP API + auth service (PR #6121)\n• Middleware layered: auth, token hydration, queue preference, wallet verification\n• Hono replaced Bun.serve() across all services (PR #6352)\n• PostgreSQL notification bridge preserves read-after-write coordination\n• Clean service boundary enables targeted, isolated scaling",
+      "col2": "**kit/ddwf - Durable Workflow Engine**\n• Independently deployable durable workflow engine (PR #6353)\n• Manages long-running operations with resumable execution\n• Durable transaction processor and approval polling shipped (PR #6181)\n• E2E latency cut via fast-path confirmation and event-driven sync (PR #6331)\n• Operates without state loss across process restarts or infra failures",
+      "col3": "**kit/didx - Standalone Indexer**\n• Independently deployable indexer service (PR #6359)\n• Owns full read model lifecycle: PostgreSQL-backed, no external graph dependency\n• ERC-4337 account abstraction indexer tables and handlers added (PR #6379)\n• Directory entity projections added (PR #6370)\n• Subgraph retained as DALP_USE_SUBGRAPH=true rollback path only"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Indexer Migration: The Graph → DALP-owned Postgres",
+      "item1": "**Token & Stats Routes Migrated**\nToken list, search, holders, events, and compliance routes moved from The Graph to Postgres-backed read models (PR #6221). Token stats moved to Postgres (PR #6286). All token data now owned and served by DALP without third-party graph dependency.",
+      "item2": "**Addon & Operator Routes Migrated**\nXvP settlement and fixed-yield addon routes moved to the indexer (PR #6397). Activity, entity, actions, and account routes migrated to SQL-backed operator read models (PR #6396). User domain routes also migrated (PR #6395).",
+      "item3": "**Directory & ERC-4337 Indexing Added**\nDirectory entity projections added to the indexer (PR #6370). ERC-4337 account abstraction indexer tables and handlers added, enabling full on-chain account tracking within DALP-owned Postgres (PR #6379).",
+      "item4": "**Rollback-Safe Migration Pattern**\nSubgraph retained as opt-in rollback path via DALP_USE_SUBGRAPH=true flag. Migration framework ensures zero-downtime route-by-route cutover. Each migrated route is validated against the prior graph output before cutover is confirmed."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Transaction Queue: Observable Operational Plane",
+      "col1": "**Queue Architecture**\n• executeViaQueue established as the shared runtime execution pattern (PR #6204)\n• Durable transaction processor with approval polling shipped (PR #6181)\n• Nonce recovery, reconciliation, and cancellation workflow hardened (PR #6193)\n• All major mutation routes converted: feeds, XvP, token-sale, fixed-yield, system (PR #6287-#6306)\n• OpenTelemetry spans added across the full transaction lifecycle (PR #6314)\n• E2E latency reduced via fast-path confirmation + event-driven sync (PR #6331)",
+      "col2": "**Operator Controls**\n• Transaction list, cancel, and admin routes exposed (PR #6284)\n• Force-retry, force-fail, and force-nonce admin operations available to operators\n• Full transaction lifecycle now observable: queue state, execution status, confirmation\n• Every mutation route produces OTel spans for latency and failure tracking\n• Operators have direct visibility and intervention capability without manual chain inspection\n• Reconciliation workflow ensures no stuck or ghost transactions survive across restarts"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Contracts, Compliance V2, SDK, and Error Catalog",
+      "item1": "**ERC-4337 Account Abstraction**\nEntryPoint-aware smart accounts with stable CREATE2 addresses shipped (PR #6317). Weighted multisig validator and paymaster sponsorship added (PR #6329). EntryPoint directory registration and dalpWallet topic wired (PR #6325). DALP wallet claims supported natively.",
+      "item2": "**Compliance V2**\nPer-token compliance deployment with migration framework and V4 lifecycle shipped (PR #6318). Upgrade-safe binding preserves compliance state across contract upgrades. Transfer approval v2 mutation routes and split compliance interfaces added (PR #6328, #6330). Token feature mutation routes and redeem feature expanded (PR #6272).",
+      "item3": "**@settlemint/dalp-sdk Released**\nTyped client SDK package with serializers shipped as @settlemint/dalp-sdk (PR #6228). Covers all DALP APIs with typed interfaces. Enables developers to integrate DALP capabilities directly into their own applications without using the operator portal. Ships alongside CLI as a complete programmatic toolset.",
+      "item4": "**Error Catalog & Observability**\nFull DALP error catalog with typed code unions and localized contract errors generated (PR #6290, #6303-#6309). Error codes surfaced in Dapp UI with support codes and suggested actions (PR #6300). OpenTelemetry tracing across DAPI and signer integrations (PR #6089). Observability dashboards covering namespace resources, Tempo slow-requests, and OTLP metrics pipeline (PR #6174, #6176, #6276)."
+    }
+  ]
+}

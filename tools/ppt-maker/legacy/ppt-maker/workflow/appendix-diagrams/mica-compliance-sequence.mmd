@@ -1,0 +1,11 @@
+flowchart TD
+    A[Investor Onboarding] --> B[KYC Verification]
+    B --> C[AML Check]
+    C --> D[Country Allowlist]
+    D --> E[Investor Classification]
+    E --> F{Eligible?}
+    F -->|Yes| G[Grant Access]
+    F -->|No| H[Reject]
+    G --> I[Transfer Request]
+    I --> J[Policy Evaluation]
+    J --> K[Execute Transfer]

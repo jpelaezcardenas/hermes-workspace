@@ -1,0 +1,13 @@
+stateDiagram-v2
+    [*] --> Designed : Asset Designer\nconfiguration
+    Designed --> PendingApproval : Maker submits\nfor review
+    PendingApproval --> Approved : Checker approves\n(maker-checker)
+    PendingApproval --> Rejected : Checker rejects
+    Rejected --> Designed : Revise and\nresubmit
+    Approved --> Active : Deploy to\nproduction ledger
+    Active --> Suspended : CBE directive\nor limit breach
+    Active --> Redeemed : Redemption\nworkflow complete
+    Suspended --> Active : Reinstatement\napproved
+    Suspended --> Redeemed : Forced redemption
+    Redeemed --> Archived : Post-trade\nrecords retained
+    Archived --> [*]

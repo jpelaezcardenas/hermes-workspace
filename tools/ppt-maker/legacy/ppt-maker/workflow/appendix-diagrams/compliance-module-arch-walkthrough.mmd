@@ -1,0 +1,16 @@
+graph LR
+    A[Transfer Request] --> B[Compliance Policy]
+    B --> C[Investor Cap]
+    B --> D[Supply Limit]
+    B --> E[Country Blocklist]
+    B --> F[Transfer Approval]
+    B --> G[Time Lock]
+    B --> H[KYC Check]
+    C --> I{All Pass?}
+    D --> I
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+    I -->|Yes| J[Transfer Allowed]
+    I -->|No| K[Transfer Blocked]

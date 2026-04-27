@@ -1,0 +1,56 @@
+{
+  "base": "#0000FF",
+  "primary": "#0000FF",
+  "palette_groups": {
+    "yellow": ["#F5F0B0", "#E8E07A", "#C8B830", "#BCA820"],
+    "orange": ["#F2B8A0", "#E89870", "#D07848", "#C05030"],
+    "green": ["#C0F0C0", "#90E8A0", "#60C8A0", "#187848"],
+    "purple": ["#C8A8E8", "#A878D8", "#8848C8", "#482068"],
+    "steel_blue": ["#D8E8F0", "#B8D8E0", "#506878", "#1E4868"],
+    "bright_blue": ["#58A0E0", "#0050D0", "#003898", "#102848"],
+    "light_blue": ["#B0C0D8", "#C0E0F0", "#80E0F8", "#5898E8"],
+    "grey_blue": ["#A0A8B0", "#8898A8", "#284878", "#183060"]
+  },
+  "semantic": {
+    "text_dark": "#111111",
+    "text_gray": "#787878",
+    "text_light": "#A0A0A0",
+    "card_bg": "#FAFAFA",
+    "divider": "#E0E0E0",
+    "light_bg": "#F7F7F7",
+    "white": "#FFFFFF"
+  },
+  "theme": {
+    "dk1": "#111111",
+    "lt1": "#FFFFFF",
+    "dk2": "#183060",
+    "lt2": "#F7F7F7",
+    "accent1": "#0000FF",
+    "accent2": "#187848",
+    "accent3": "#8848C8",
+    "accent4": "#C05030",
+    "accent5": "#1E4868",
+    "accent6": "#BCA820",
+    "hlink": "#0000FF",
+    "folHlink": "#482068"
+  },
+  "status": {
+    "success": "#187848",
+    "warning": "#C8B830",
+    "error": "#C05030"
+  },
+  "ui": {
+    "primary_button_bg": "#0000FF",
+    "primary_button_text": "#FFFFFF",
+    "outline_button_bg": "#FFFFFF",
+    "outline_button_border": "#0000FF",
+    "outline_button_text": "#0000FF",
+    "badge_bg": "#E0E0FF",
+    "badge_text": "#0000FF",
+    "blue_card_bg": "#0000FF",
+    "blue_card_text": "#FFFFFF",
+    "dark_card_bg": "#111111",
+    "dark_card_text": "#FFFFFF"
+  },
+  "font_family": "Figtree"
+}

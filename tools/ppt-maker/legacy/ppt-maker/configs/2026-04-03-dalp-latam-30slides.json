@@ -1,0 +1,191 @@
+{
+  "project": "2026-04-03-dalp-latam-30slides",
+  "output": "output/2026-04-03-dalp-latam-30slides.pptx",
+  "description": "30-slide DALP deck for Latin American financial institutions, banks, asset managers, exchanges, and regulators",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Latin America",
+      "subtitle": "Digital Asset Lifecycle Platform for LatAm Financial Institutions | April 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "LatAm regulatory landscape",
+      "item_1": "What is DALP",
+      "item_2": "Why DALP for LatAm",
+      "item_3": "Core capabilities",
+      "item_4": "Use cases",
+      "item_5": "Deployment and security",
+      "item_6": "Next steps",
+      "icon1": "icon-library/lucide/map.svg",
+      "icon2": "icon-library/lucide/layers.svg",
+      "icon3": "icon-library/lucide/target.svg",
+      "icon4": "icon-library/lucide/settings.svg",
+      "icon5": "icon-library/lucide/briefcase.svg",
+      "icon6": "icon-library/lucide/shield.svg",
+      "icon7": "icon-library/lucide/flag.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "LatAm Market Context",
+      "subtitle": "Digital asset regulation across the region"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Latin America's digital asset landscape",
+      "body": "Latin America is moving rapidly from experimentation to regulation in digital assets. Brazil's CVM published its tokenization framework in December 2024, establishing rules for tokenized securities under CVM Resolution 88 and the Digital Asset Act (Law 14,478). Drex, the Brazilian CBDC pilot, is driving institutional adoption of on-chain settlement.\nMexico's CNBV and Banco de Mexico regulate virtual assets under the Fintech Law (2018), making Mexico the first major LatAm economy to legislate digital assets. Argentina's CNV has issued guidance on tokenized securities while the central bank explores wholesale CBDC options.\nColombia's SFC has established a regulatory sandbox for digital asset services, with full regulation expected by 2026. Chile's CMF enacted the Fintech Law in 2023, covering crypto asset service providers and tokenized instruments.\nThe common thread: regulators across LatAm are demanding compliance controls, investor protection, and audit trails as prerequisites for licensed digital asset operations."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four key LatAm regulatory frameworks",
+      "item1": "Brazil: CVM and Drex\nCVM Resolution 88 governs tokenized securities. The Drex CBDC pilot enables atomic settlement with commercial bank participation. Law 14,478 establishes the licensing framework for virtual asset service providers.",
+      "item2": "Mexico: CNBV and Fintech Law\nThe 2018 Fintech Law was LatAm's first comprehensive digital asset regulation. CNBV supervises exchanges and virtual asset platforms. Banco de Mexico maintains oversight of permissible digital assets.",
+      "item3": "Colombia: SFC Sandbox\nThe SFC regulatory sandbox has tested tokenized securities and digital asset custody models. Full regulation is in progress, with investor protection and AML controls as central requirements.",
+      "item4": "Argentina and Chile\nArgentina's CNV is developing a tokenized securities framework. Chile's CMF Fintech Law (2023) covers crypto service providers. Both markets are aligning toward compliance-first digital asset infrastructure."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "What is DALP",
+      "subtitle": "Digital Asset Lifecycle Platform overview"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP: the full asset lifecycle on one platform",
+      "body": "DALP is SettleMint's Digital Asset Lifecycle Platform. It provides a single control plane for designing, issuing, managing, and servicing digital assets across the full lifecycle, from instrument definition to maturity or redemption.\nThe platform covers five core lifecycle pillars: issuance, compliance, custody, settlement, and servicing. These share a unified registry, identity layer, and governance model.\nDALP uses ERC-3643 as the compliance token standard, SMART extensions for instrument-specific lifecycle logic, OnchainID for verified on-chain identity and claims, and ISMARTCustodian for custody-level controls. All execution is EVM-based: Hyperledger Besu, Ethereum, or any compatible EVM network.\nSeven asset types are supported out of the box: bonds, deposits, stablecoins, equity, funds, real estate, and precious metals. A single operational model applies across all of them."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Five lifecycle pillars and three foundations",
+      "item1": "Issuance\nRapid deployment of tokenized assets across seven asset classes with configurable business rules, compliance controls, and integration into existing core systems.",
+      "item2": "Compliance\nEx-ante enforcement ensures every transfer is validated before execution. 12 compliance module types model multi-jurisdictional requirements including country restrictions and investor eligibility.",
+      "item3": "Custody\nKey management workflows with maker-checker approvals, RBAC, HSM compatibility, and recovery procedures. Bring-your-own-custodian integrations with Fireblocks and DFNS.",
+      "item4": "Settlement\nAtomic DvP and XvP settlement for asset and cash legs. Both complete together or revert together, eliminating counterparty risk and reconciliation gaps.",
+      "item5": "Servicing\nAutomated lifecycle operations: coupon payments, yield distribution, dividend processing, redemptions, and maturity handling executed programmatically across every asset type.",
+      "item6": "Platform Foundations\nIdentity and access management via OnchainID, integration APIs (REST, GraphQL, webhooks, oRPC), and full observability with metrics, logs, and traces."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why DALP for LatAm",
+      "subtitle": "Regional value proposition for financial institutions"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Three reasons DALP fits the LatAm market",
+      "col1": "Compliance-first architecture\nERC-3643 and OnchainID enforce investor eligibility, transfer restrictions, and jurisdiction rules at the protocol level. CVM, CNBV, and SFC requirements map directly to DALP's built-in policy modules. Compliance is part of every on-chain action, not an afterthought.",
+      "col2": "Full lifecycle coverage\nDesign, issuance, servicing, settlement, and redemption on one platform. LatAm institutions avoid fragmented tooling and manual handoffs. One record, one audit trail from issuance to retirement.",
+      "col3": "Multi-asset flexibility\nSeven asset types on one operational model. Start with tokenized bonds for CVM and extend to stablecoins, fund units, or real estate tokens without redesigning governance."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Composable token architecture",
+      "col1": "DALPAsset contract model\nOne contract type represents any financial instrument. Token features and compliance modules are runtime-pluggable building blocks. Reconfiguration happens without redeployment. 11 token features cover fees, governance, snapshots, lifecycle, and yield. 12 compliance modules cover geographic restrictions, identity access, claim verification, supply limits, time locks, and transfer controls.",
+      "col2": "Seven regulatory templates\nMiCA EU Standard, Reg D 506(b), Reg D 506(c), MAS Singapore, UK FCA Securities, Japan FSA Crypto, and Reg CF Crowdfunding ship as starting points. LatAm regulators can be mapped to these templates and extended with local policy modules for CVM, CNBV, SFC, CMF, and CNV requirements."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Identity and compliance on-chain",
+      "col1": "OnchainID for LatAm investors\nOnchainID provides a reusable verified identity layer for all participants. Claims issued by accredited KYC, AML, and identity providers are stored on-chain and evaluated at transaction time. Local identity systems (CPF in Brazil, CURP in Mexico, RUT in Chile) can be integrated as claim sources.",
+      "col2": "Policy modules for LatAm jurisdictions\nSMART policy extensions translate regulatory obligations into executable on-chain logic. Country rules restrict distribution to approved jurisdictions. Holding limits enforce regulator thresholds. Accreditation claims gate access to restricted instruments. Configurable per instrument and per jurisdiction."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Custody, settlement, and data feeds",
+      "body": "DALP does not act as a custodian. It orchestrates custody policy across existing custodian relationships. Key management workflows use maker-checker approvals: sensitive actions require multi-role sign-off. HSM compatibility ensures private keys meet institutional security requirements. Integrations with Fireblocks and DFNS are built in.\nThe settlement engine supports atomic DvP and XvP. Asset and cash legs execute together in a single atomic transaction, or both revert. For LatAm markets where Drex and other CBDC initiatives create on-chain cash legs, atomic DvP becomes immediately practical. Settlement finality is T+0.\nDALP integrates external data feeds for NAV calculations, pricing, and benchmarks. Oracle integration supports exchange rates for multi-currency assets, commodity prices for precious metals, and rate benchmarks. For LatAm, this means SELIC rate feeds, TIIE benchmarks, and USD/BRL or USD/MXN exchange rates."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Use Cases for LatAm",
+      "subtitle": "Where DALP fits strongest in the region"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Tokenized bonds for Brazil and Mexico",
+      "body": "Brazil and Mexico represent the two largest fixed-income markets in Latin America. DALP enables compliant digital bond issuance that meets CVM and CNBV requirements without building custom smart contract infrastructure.\nThe bond lifecycle is fully covered: instrument design with term sheet metadata, investor eligibility gating via OnchainID claims, primary issuance with regulatory audit records, coupon payment processing, and maturity redemption.\nERC-3643 ensures every bond token has built-in transfer restrictions. Only verified investors in approved jurisdictions can hold and trade the instrument. Forced transfer and freeze capabilities support regulatory intervention.\nFor Brazil, Drex integration enables atomic DvP settlement for BRL-denominated bonds, connecting the on-chain asset leg with the CBDC cash leg."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four more LatAm use cases",
+      "item1": "Real estate tokenization\nLatAm's real estate market is large but illiquid. DALP provides fractional ownership tokens with eligibility controls, rental income distribution, and collateral management. Markets like Mexico, Colombia, and Brazil have active demand.",
+      "item2": "Digital fund units\nNAV-linked fund tokens with subscription, redemption, and distribution events governed by OnchainID eligibility and SMART policy modules. Distribution calculations and investor reporting run on the same platform record.",
+      "item3": "Stablecoins and e-money\nCompliant stablecoin issuance with reserve management, redemption processing, and regulatory reporting. Drex compatibility for BRL settlement. ISMARTCollateral manages reserve coverage for USD and local currency tokens.",
+      "item4": "Tokenized deposits\nCommercial banks can issue deposit tokens representing client balances on-chain. Programmable settlement, automated interest distribution, and interbank transfers with full compliance controls on one platform."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Deployment and Security",
+      "subtitle": "Infrastructure for LatAm institutions"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Deployment options for LatAm data residency",
+      "col1": "Cloud deployment\nSettleMint-managed SaaS or dedicated cloud instances. Regional cloud providers in Brazil and Mexico meet data residency requirements. Managed updates, monitoring, and SLA-backed availability included.",
+      "col2": "On-premises deployment\nSelf-hosted on the institution's infrastructure. Full control over data, keys, and network configuration. Required by central banks and regulators with strict data sovereignty policies. Air-gapped environments supported.",
+      "col3": "Hybrid deployment\nControl plane in the cloud, data plane on-premises. Combines operational convenience with data sovereignty compliance. The institution retains physical control of keys and transaction data."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Security, audit, and observability",
+      "body": "DALP ships with full operational tooling. Pre-built Grafana dashboards cover operations overview, transaction monitoring, compliance activity, and security events.\nThree-pillar observability: metrics via VictoriaMetrics, logs via Loki, traces via Tempo. Automated alerting covers error rate spikes, latency degradation, and chain connectivity issues.\nIntegration points for SSO/IAM, SIEM, and audit logging ensure DALP fits institutional security frameworks. Multi-step workflows survive process restarts and infrastructure failures.\nEvery platform action generates immutable audit records. On-chain event logs combined with platform activity history create a regulator-ready audit trail for CVM, CNBV, SFC, and other LatAm regulatory requirements."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Role-based access control",
+      "body": "DALP implements RBAC and ABAC across every platform action. Roles are configurable per institution and per asset program.\nPlatform administrators control system configuration. Asset issuers design and propose instruments. Compliance officers review and approve configurations. Operations teams execute approved actions within role boundaries. External auditors have read-only access.\nMaker-checker workflows ensure sensitive actions require approval from a separate authorized role before execution. This separation of duties aligns with LatAm regulatory governance expectations.\nAll role assignments and permission changes are logged with timestamps and actor attribution."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "SettleMint track record",
+      "body": "SettleMint has over 10 years of experience delivering blockchain infrastructure for enterprises and regulated institutions. Multiple tier-1 and tier-2 financial institutions use SettleMint technology for tokenization, payments, and capital markets workflows in live settings.\nDeployments include asset issuance and lifecycle management, high-volume transactional flows, and real-world asset tokenization across multiple jurisdictions. These operate under institutional SLAs with 24/7 uptime and disaster recovery.\nPlatforms have passed security reviews, penetration testing, and vendor risk assessments. Active sovereign and national-scale programs validate the platform's capabilities.\nSettleMint's experience across Europe, the Middle East, and Asia-Pacific directly informs DALP's lifecycle management, integration depth, and operational sustainability."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Proposed next steps for LatAm",
+      "body": "Technical workshop: A structured session with the institution's technology and compliance teams to map DALP architecture against specific instrument types and local regulatory obligations. Output: confirmed integration and compliance mapping document.\nPilot program: A focused pilot covering one priority asset type, such as a BRL-denominated bond or a stablecoin, within a defined scope and timeline. The pilot validates DALP's fit with local requirements and establishes the operational baseline.\nCompliance mapping session: A targeted review of CVM, CNBV, or SFC requirements against DALP's controls. Output: gap analysis confirming platform coverage versus operator-side process needs.\nPilot scope and timeline can be agreed within two weeks of the initial alignment session."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Technical architecture diagrams"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Platform Architecture",
+      "image_path": "workflow/appendix-diagrams/latam-dalp-platform-architecture.mmd",
+      "diagram_target_class": "full-width"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Asset Lifecycle Flow",
+      "image_path": "workflow/appendix-diagrams/latam-asset-lifecycle-flow.mmd",
+      "diagram_target_class": "full-width"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Compliance Architecture",
+      "image_path": "workflow/appendix-diagrams/latam-compliance-architecture.mmd",
+      "diagram_target_class": "full-width"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Integration Topology",
+      "image_path": "workflow/appendix-diagrams/latam-integration-topology.mmd",
+      "diagram_target_class": "full-width"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Token Lifecycle States",
+      "image_path": "workflow/appendix-diagrams/latam-token-lifecycle.mmd",
+      "diagram_target_class": "full-width"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "DvP Settlement Flow",
+      "image_path": "workflow/appendix-diagrams/latam-settlement-dvp-flow.mmd",
+      "diagram_target_class": "full-width"
+    }
+  ]
+}

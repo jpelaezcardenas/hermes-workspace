@@ -1,0 +1,147 @@
+{
+  "slide_number": 14,
+  "filename": "slide-014-text-2x3.pptx",
+  "layout_name": "Icon Grid - 3 Column",
+  "layout_slug": "icon-grid-3-column",
+  "template_layout_name": "Text 2x3",
+  "template_layout_slug": "text-2x3",
+  "layout_category": "content",
+  "description": "2×3 grid of six equal text blocks arranged in two rows and three columns. Maximizes content density for feature-rich slides.",
+  "usage": "Use for six key features, six integration partners, six compliance standards, or any collection of six parallel items.",
+  "potential_usage": "Works for feature grids, capability overviews, six-step summaries, or a comprehensive capability matrix.",
+  "content_capacity": "medium",
+  "has_image_area": false,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 3,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 10,
+      "type": "SLIDE_NUMBER"
+    },
+    {
+      "idx": 15,
+      "type": "BODY"
+    },
+    {
+      "idx": 16,
+      "type": "BODY"
+    },
+    {
+      "idx": 17,
+      "type": "BODY"
+    },
+    {
+      "idx": 18,
+      "type": "BODY"
+    },
+    {
+      "idx": 19,
+      "type": "BODY"
+    },
+    {
+      "idx": 20,
+      "type": "BODY"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "SLIDE_NUMBER",
+      "idx": 10,
+      "word_count": 4
+    },
+    {
+      "type": "BODY",
+      "idx": 15,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 16,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 17,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 18,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 19,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 20,
+      "word_count": 0
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "SLIDE_NUMBER_10": 4,
+    "BODY_15": 0,
+    "BODY_16": 0,
+    "BODY_17": 0,
+    "BODY_18": 0,
+    "BODY_19": 0,
+    "BODY_20": 0
+  },
+  "total_word_count": 4,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title — states the key message or topic",
+    "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+    "BODY_15": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_16": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_17": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_18": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_19": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_20": "Main content area — bullets, paragraphs, or structured content"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3–8 words describing Icon Grid - 3 Column)",
+    "SLIDE_NUMBER_10": "Auto-populated — do not modify",
+    "BODY_15": "Body content (bullets or paragraphs)",
+    "BODY_16": "Body content (bullets or paragraphs)",
+    "BODY_17": "Body content (bullets or paragraphs)",
+    "BODY_18": "Body content (bullets or paragraphs)",
+    "BODY_19": "Body content (bullets or paragraphs)",
+    "BODY_20": "Body content (bullets or paragraphs)"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3–10 words",
+    "SLIDE_NUMBER_10": "Do not modify",
+    "BODY_15": "~30–80 words",
+    "BODY_16": "~30–80 words",
+    "BODY_17": "~30–80 words",
+    "BODY_18": "~30–80 words",
+    "BODY_19": "~30–80 words",
+    "BODY_20": "~30–80 words"
+  },
+  "do_not_modify": [
+    "footer",
+    "slide number"
+  ],
+  "selection_tags": [
+    "three-column",
+    "multi-column",
+    "icons",
+    "features",
+    "product-overview"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{614A400F-A2C0-149C-61A4-218C608C2FCC}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Slide Number Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{61B141B0-A64F-2B68-99D9-22B5893E3CDD}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>12</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Text Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6A6FC701-69F4-DD95-4294-5F3A3721F30B}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"15\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Text Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{58B454E3-AD22-A5B2-86DF-7CFEF19F0E0F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"16\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{BF083551-4699-EDD2-AEAB-9C3C86EB31E6}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"17\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"7\" name=\"Text Placeholder 6\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6BF0DABF-DF54-1A64-212B-19E438CE363E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"18\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"8\" name=\"Text Placeholder 7\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C3D89414-D5A3-9F59-7F5F-2759614F1475}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"19\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"9\" name=\"Text Placeholder 8\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{CBE55341-71D6-2BD8-6334-AF75B2A033D8}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"20\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"4033625771\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+}

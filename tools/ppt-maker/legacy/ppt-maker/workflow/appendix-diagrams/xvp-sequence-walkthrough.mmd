@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant S as Seller
+    participant D as DALP
+    participant B as Buyer
+    S->>D: Initiate settlement leg
+    B->>D: Confirm payment leg
+    D->>D: Validate both legs
+    alt Both legs valid
+        D->>S: Execute asset transfer
+        D->>B: Execute payment transfer
+        D->>S: Confirm finality
+        D->>B: Confirm finality
+    else Either leg fails
+        D->>S: Reject: settlement cancelled
+        D->>B: Reject: settlement cancelled
+    end

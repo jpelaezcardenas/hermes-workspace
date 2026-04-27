@@ -1,0 +1,122 @@
+{
+  "agent": "ppt-maker",
+  "root": "/root/hermes-workspace/tools/ppt-maker",
+  "artifact_dir": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z",
+  "pptx": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx",
+  "pdf": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pdf",
+  "case_count": 6,
+  "passed_count": 6,
+  "gate_count": 2,
+  "gate_passed_count": 2,
+  "unexpected": [],
+  "failed_gates": [],
+  "cases": [
+    {
+      "name": "smoke",
+      "cmd": [
+        "/root/hermes-workspace/tools/ppt-maker/bin/ppt-maker",
+        "smoke"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.168,
+      "stdout_tail": "{\n  \"agent\": \"ppt-maker\",\n  \"script_checks\": [\n    {\n      \"command\": \"build-config\",\n      \"script\": \"/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/scripts/build_from_config.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"inspect\",\n      \"script\": \"/root/hermes-workspace/tools/ppt-maker/legacy/ppt-checker/scripts/inspect-pptx.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"validate\",\n      \"script\": \"/root/hermes-workspace/tools/ppt-maker/legacy/ppt-checker/scripts/validate_deck.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"golden-regressions\",\n      \"script\": \"/root/hermes-workspace/tools/ppt-maker/active/runtime-scripts/run_golden_regressions.py\",\n      \"exists\": true\n    }\n  ],\n  \"template_exists\": true,\n  \"slide_bank_pptx_count\": 22,\n  \"compile_exit_code\": 0,\n  \"compile_stdout\": \"\",\n  \"compile_stderr\": \"\",\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "build_config",
+      "cmd": [
+        "/root/hermes-workspace/tools/ppt-maker/bin/ppt-maker",
+        "build-config",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.config.json"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 1.177,
+      "stdout_tail": "Building ppt-maker-golden-dalp-overview with 10 slides...\n  1: slide-001-cover-slide.pptx\n  2: slide-002-agenda.pptx\n  3: slide-003-section-separator.pptx\n  4: slide-005-single-column.pptx\n  5: slide-003-section-separator.pptx\n  6: slide-013-text-2x2.pptx\n  7: slide-003-section-separator.pptx\n  8: slide-010-two-column.pptx\n  9: slide-003-section-separator.pptx\n  10: slide-024-thank-you.pptx\n\nMerging into Master Template...\nMerged slides: 10\nApplying typography and fit validation...\n\nSaved: /root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx\nFit report: /root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview-fit-report.json\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "inspect",
+      "cmd": [
+        "/root/hermes-workspace/tools/ppt-maker/bin/ppt-maker",
+        "inspect",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx",
+        "--json"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.2,
+      "stdout_tail": "[],\n      \"dark_or_blue_detected\": true,\n      \"background\": {\n        \"source\": \"ppt/slideLayouts/slideLayout3.xml\",\n        \"type\": \"blipFill\",\n        \"image\": null,\n        \"classification\": \"brand/image background\"\n      },\n      \"is_cover_or_closing\": false,\n      \"empty\": false,\n      \"too_dense\": false,\n      \"placeholder_matches\": [],\n      \"notes_text\": \"\",\n      \"duplicate_text_blocks\": [],\n      \"issues\": [\n        \"dark/brand background on content slide (blipFill)\"\n      ],\n      \"sample_text\": [\n        \"Asset Lifecycle\",\n        \"From creation to settlement\"\n      ]\n    },\n    {\n      \"slide\": 8,\n      \"title\": \"End-to-End Lifecycle\",\n      \"text_count\": 13,\n      \"word_count\": 29,\n      \"char_count\": 263,\n      \"shape_count\": 4,\n      \"image_count\": 0,\n      \"table_count\": 0,\n      \"chart_count\": 0,\n      \"smartart_count\": 0,\n      \"fonts\": [],\n      \"non_figtree_fonts\": [],\n      \"dark_or_blue_detected\": false,\n      \"background\": {\n        \"source\": \"ppt/slideMasters/slideMaster1.xml\",\n        \"type\": \"background-present\",\n        \"classification\": \"unknown\"\n      },\n      \"is_cover_or_closing\": false,\n      \"empty\": false,\n      \"too_dense\": false,\n      \"placeholder_matches\": [],\n      \"notes_text\": \"\",\n      \"duplicate_text_blocks\": [],\n      \"issues\": [],\n      \"sample_text\": [\n        \"End-to-End Lifecycle\",\n        \"Creation & Issuance\",\n        \"\u2022 Define asset parameters\",\n        \"\u2022 Set transfer rules\",\n        \"\u2022 Configure compliance checks\",\n        \"\u2022 Deploy on blockchain\"\n      ]\n    },\n    {\n      \"slide\": 9,\n      \"title\": \"Why SettleMint?\",\n      \"text_count\": 2,\n      \"word_count\": 4,\n      \"char_count\": 46,\n      \"shape_count\": 2,\n      \"image_count\": 0,\n      \"table_count\": 0,\n      \"chart_count\": 0,\n      \"smartart_count\": 0,\n      \"fonts\": [],\n      \"non_figtree_fonts\": [],\n      \"dark_or_blue_detected\": true,\n      \"background\": {\n        \"source\": \"ppt/slideLayouts/slideLayout3.xml\",\n        \"type\": \"blipFill\",\n        \"image\": null,\n        \"classification\": \"brand/image background\"\n      },\n      \"is_cover_or_closing\": false,\n      \"empty\": false,\n      \"too_dense\": false,\n      \"placeholder_matches\": [],\n      \"notes_text\": \"\",\n      \"duplicate_text_blocks\": [],\n      \"issues\": [\n        \"dark/brand background on content slide (blipFill)\"\n      ],\n      \"sample_text\": [\n        \"Why SettleMint?\",\n        \"Enterprise-grade infrastructure\"\n      ]\n    },\n    {\n      \"slide\": 10,\n      \"title\": null,\n      \"text_count\": 0,\n      \"word_count\": 0,\n      \"char_count\": 0,\n      \"shape_count\": 0,\n      \"image_count\": 0,\n      \"table_count\": 0,\n      \"chart_count\": 0,\n      \"smartart_count\": 0,\n      \"fonts\": [],\n      \"non_figtree_fonts\": [],\n      \"dark_or_blue_detected\": true,\n      \"background\": {\n        \"source\": \"ppt/slideLayouts/slideLayout22.xml\",\n        \"type\": \"blipFill\",\n        \"image\": null,\n        \"classification\": \"brand/image background\"\n      },\n      \"is_cover_or_closing\": true,\n      \"empty\": true,\n      \"too_dense\": false,\n      \"placeholder_matches\": [],\n      \"notes_text\": \"\",\n      \"duplicate_text_blocks\": [],\n      \"issues\": [\n        \"empty slide\"\n      ],\n      \"sample_text\": []\n    }\n  ],\n  \"issues\": [\n    \"Deck aspect ratio differs from expected 16:9 (12192000 x 6858000 vs 9144000 x 5143500 EMU).\"\n  ],\n  \"presentation\": {\n    \"slide_dimensions\": {\n      \"cx\": 12192000,\n      \"cy\": 6858000,\n      \"expected_cx\": 9144000,\n      \"expected_cy\": 5143500,\n      \"matches_expected\": false\n    }\n  },\n  \"duplicate_text_blocks\": [],\n  \"summary\": {\n    \"slides_with_images\": 0,\n    \"slides_over_100_words\": 0,\n    \"empty_slides\": 1,\n    \"slides_with_non_figtree_fonts\": 0,\n    \"slides_with_dark_or_blue_bg\": 6,\n    \"dark_or_blue_content_slides\": 4,\n    \"dark_or_blue_cover_or_closing_slides\": 2,\n    \"total_word_count\": 197,\n    \"avg_words_per_slide\": 19.7,\n    \"slides_with_tables\": 0,\n    \"slides_with_charts\": 0,\n    \"slides_with_placeholders\": 0,\n    \"slides_with_notes\": 0\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "validate",
+      "cmd": [
+        "/root/hermes-workspace/tools/ppt-maker/bin/ppt-maker",
+        "validate",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.222,
+      "stdout_tail": ": false,\n        \"placeholder_matches\": [],\n        \"notes_text\": \"\",\n        \"duplicate_text_blocks\": [],\n        \"issues\": [\n          \"dark/brand background on content slide (blipFill)\"\n        ],\n        \"sample_text\": [\n          \"Asset Lifecycle\",\n          \"From creation to settlement\"\n        ]\n      },\n      {\n        \"slide\": 8,\n        \"title\": \"End-to-End Lifecycle\",\n        \"text_count\": 13,\n        \"word_count\": 29,\n        \"char_count\": 263,\n        \"shape_count\": 4,\n        \"image_count\": 0,\n        \"table_count\": 0,\n        \"chart_count\": 0,\n        \"smartart_count\": 0,\n        \"fonts\": [],\n        \"non_figtree_fonts\": [],\n        \"dark_or_blue_detected\": false,\n        \"background\": {\n          \"source\": \"ppt/slideMasters/slideMaster1.xml\",\n          \"type\": \"background-present\",\n          \"classification\": \"unknown\"\n        },\n        \"is_cover_or_closing\": false,\n        \"empty\": false,\n        \"too_dense\": false,\n        \"placeholder_matches\": [],\n        \"notes_text\": \"\",\n        \"duplicate_text_blocks\": [],\n        \"issues\": [],\n        \"sample_text\": [\n          \"End-to-End Lifecycle\",\n          \"Creation & Issuance\",\n          \"\\u2022 Define asset parameters\",\n          \"\\u2022 Set transfer rules\",\n          \"\\u2022 Configure compliance checks\",\n          \"\\u2022 Deploy on blockchain\"\n        ]\n      },\n      {\n        \"slide\": 9,\n        \"title\": \"Why SettleMint?\",\n        \"text_count\": 2,\n        \"word_count\": 4,\n        \"char_count\": 46,\n        \"shape_count\": 2,\n        \"image_count\": 0,\n        \"table_count\": 0,\n        \"chart_count\": 0,\n        \"smartart_count\": 0,\n        \"fonts\": [],\n        \"non_figtree_fonts\": [],\n        \"dark_or_blue_detected\": true,\n        \"background\": {\n          \"source\": \"ppt/slideLayouts/slideLayout3.xml\",\n          \"type\": \"blipFill\",\n          \"image\": null,\n          \"classification\": \"brand/image background\"\n        },\n        \"is_cover_or_closing\": false,\n        \"empty\": false,\n        \"too_dense\": false,\n        \"placeholder_matches\": [],\n        \"notes_text\": \"\",\n        \"duplicate_text_blocks\": [],\n        \"issues\": [\n          \"dark/brand background on content slide (blipFill)\"\n        ],\n        \"sample_text\": [\n          \"Why SettleMint?\",\n          \"Enterprise-grade infrastructure\"\n        ]\n      },\n      {\n        \"slide\": 10,\n        \"title\": null,\n        \"text_count\": 0,\n        \"word_count\": 0,\n        \"char_count\": 0,\n        \"shape_count\": 0,\n        \"image_count\": 0,\n        \"table_count\": 0,\n        \"chart_count\": 0,\n        \"smartart_count\": 0,\n        \"fonts\": [],\n        \"non_figtree_fonts\": [],\n        \"dark_or_blue_detected\": true,\n        \"background\": {\n          \"source\": \"ppt/slideLayouts/slideLayout22.xml\",\n          \"type\": \"blipFill\",\n          \"image\": null,\n          \"classification\": \"brand/image background\"\n        },\n        \"is_cover_or_closing\": true,\n        \"empty\": true,\n        \"too_dense\": false,\n        \"placeholder_matches\": [],\n        \"notes_text\": \"\",\n        \"duplicate_text_blocks\": [],\n        \"issues\": [\n          \"empty slide\"\n        ],\n        \"sample_text\": []\n      }\n    ],\n    \"issues\": [\n      \"Deck aspect ratio differs from expected 16:9 (12192000 x 6858000 vs 9144000 x 5143500 EMU).\"\n    ],\n    \"presentation\": {\n      \"slide_dimensions\": {\n        \"cx\": 12192000,\n        \"cy\": 6858000,\n        \"expected_cx\": 9144000,\n        \"expected_cy\": 5143500,\n        \"matches_expected\": false\n      }\n    },\n    \"duplicate_text_blocks\": [],\n    \"summary\": {\n      \"slides_with_images\": 0,\n      \"slides_over_100_words\": 0,\n      \"empty_slides\": 1,\n      \"slides_with_non_figtree_fonts\": 0,\n      \"slides_with_dark_or_blue_bg\": 6,\n      \"dark_or_blue_content_slides\": 4,\n      \"dark_or_blue_cover_or_closing_slides\": 2,\n      \"total_word_count\": 197,\n      \"avg_words_per_slide\": 19.7,\n      \"slides_with_tables\": 0,\n      \"slides_with_charts\": 0,\n      \"slides_with_placeholders\": 0,\n      \"slides_with_notes\": 0\n    }\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "render_pdf",
+      "cmd": [
+        "/root/hermes-workspace/tools/ppt-maker/bin/ppt-maker",
+        "render-pdf",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 40.5,
+      "stdout_tail": "{\n  \"input\": \"/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx\",\n  \"out_dir\": \"/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z\",\n  \"exit\": 0,\n  \"stdout\": \"convert /root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx as a Impress document -> /root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pdf using filter : impress_pdf_Export\\n\",\n  \"stderr\": \"Warning: failed to launch javaldx - java may not function correctly\\n\",\n  \"pdf\": \"/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pdf\",\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "render_first_slide_image",
+      "cmd": [
+        "pdftoppm",
+        "-png",
+        "-r",
+        "100",
+        "-f",
+        "1",
+        "-l",
+        "1",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pdf",
+        "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/slide"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 1.59,
+      "stdout_tail": "",
+      "stderr_tail": ""
+    }
+  ],
+  "gates": [
+    {
+      "path": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pptx",
+      "exists": true,
+      "ok": true,
+      "zip_ok": true,
+      "has_presentation_xml": true,
+      "slide_count": 10,
+      "text_chars": 1617,
+      "has_dalp_text": true,
+      "placeholder_hits": []
+    },
+    {
+      "path": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/golden-20260427T143629Z/ppt-maker-golden-dalp-overview.pdf",
+      "exists": true,
+      "ok": true,
+      "pdfinfo_ok": true,
+      "pages": 10
+    }
+  ],
+  "ok": true
+}

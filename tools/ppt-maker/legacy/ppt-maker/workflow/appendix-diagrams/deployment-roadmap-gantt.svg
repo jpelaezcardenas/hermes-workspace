@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <text x="800" y="80" text-anchor="middle" font-family="Figtree, Arial, sans-serif" font-size="34" font-weight="700" fill="#111111">Precious metals DALP launch path</text>
+  <g font-family="Figtree, Arial, sans-serif" font-size="20" fill="#111111">
+    <text x="120" y="190">Foundation</text><text x="120" y="320">Build</text><text x="120" y="470">Readiness</text><text x="120" y="620">Launch</text>
+    <text x="320" y="135">Apr</text><text x="560" y="135">May</text><text x="800" y="135">Jun</text><text x="1040" y="135">Jul</text><text x="1280" y="135">Aug</text>
+  </g>
+  <g stroke="#E0E0E0" stroke-width="2">
+    <line x1="260" y1="150" x2="1440" y2="150"/>
+    <line x1="260" y1="240" x2="1440" y2="240"/>
+    <line x1="260" y1="390" x2="1440" y2="390"/>
+    <line x1="260" y1="540" x2="1440" y2="540"/>
+    <line x1="260" y1="690" x2="1440" y2="690"/>
+    <line x1="500" y1="150" x2="500" y2="690"/>
+    <line x1="740" y1="150" x2="740" y2="690"/>
+    <line x1="980" y1="150" x2="980" y2="690"/>
+    <line x1="1220" y1="150" x2="1220" y2="690"/>
+  </g>
+  <g font-family="Figtree, Arial, sans-serif" font-size="18" fill="#111111">
+    <text x="280" y="220">Scope programme &amp; issuer setup</text>
+    <text x="280" y="270">Define asset &amp; servicing rules</text>
+    <text x="280" y="350">Configure DALP templates</text>
+    <text x="280" y="400">Integrate custody / settlement</text>
+    <text x="280" y="450">Configure compliance modules</text>
+    <text x="280" y="520">UAT with operations</text>
+    <text x="280" y="570">Controls &amp; sign-off</text>
+    <text x="280" y="650">Pilot issuance</text>
+    <text x="280" y="700">Production rollout</text>
+  </g>
+  <rect x="720" y="198" width="170" height="34" rx="10" fill="#E8E8FF" stroke="#0000FF" stroke-width="3"/>
+  <rect x="860" y="248" width="170" height="34" rx="10" fill="#E8F5E8" stroke="#187848" stroke-width="3"/>
+  <rect x="910" y="328" width="220" height="34" rx="10" fill="#F0E8F8" stroke="#8848C8" stroke-width="3"/>
+  <rect x="910" y="378" width="280" height="34" rx="10" fill="#E8F0F8" stroke="#1E4868" stroke-width="3"/>
+  <rect x="1120" y="428" width="150" height="34" rx="10" fill="#FFF0E8" stroke="#C05030" stroke-width="3"/>
+  <rect x="1180" y="498" width="170" height="34" rx="10" fill="#E8E8FF" stroke="#0000FF" stroke-width="3"/>
+  <rect x="1320" y="548" width="90" height="34" rx="10" fill="#E8F5E8" stroke="#187848" stroke-width="3"/>
+  <rect x="1340" y="628" width="80" height="34" rx="10" fill="#F0E8F8" stroke="#8848C8" stroke-width="3"/>
+  <rect x="1360" y="678" width="80" height="34" rx="10" fill="#E8F0F8" stroke="#1E4868" stroke-width="3"/>
+</svg>

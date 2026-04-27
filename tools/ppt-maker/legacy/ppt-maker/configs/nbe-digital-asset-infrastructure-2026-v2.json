@@ -1,0 +1,353 @@
+{
+  "project": "nbe-digital-asset-infrastructure-2026-v2",
+  "output": "output/2026-04-03-nbe-digital-asset-infrastructure-v2.pptx",
+  "description": "30-slide technical proposal deck v2: SettleMint DALP for National Bank of Egypt Digital Asset Core Infrastructure (CBE/FRA regulated, with appendix diagrams, parallel render pipeline)",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Digital Asset Core Infrastructure",
+      "subtitle": "SettleMint Proposal for National Bank of Egypt | DALP Platform | April 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Executive Summary",
+      "item_1": "NBE Requirements",
+      "item_2": "DALP Platform",
+      "item_3": "Compliance and Security",
+      "item_4": "Integration and Operations",
+      "item_5": "Deployment Approach",
+      "item_6": "Commercial and References",
+      "icon1": "icon-library/lucide/briefcase.512x512.png",
+      "icon2": "icon-library/lucide/building.512x512.png",
+      "icon3": "icon-library/lucide/layout.512x512.png",
+      "icon4": "icon-library/lucide/shield.512x512.png",
+      "icon5": "icon-library/lucide/settings.512x512.png",
+      "icon6": "icon-library/lucide/trending-up.512x512.png",
+      "icon7": "icon-library/lucide/award.512x512.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Executive Summary",
+      "subtitle": "Why SettleMint for National Bank of Egypt"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "SettleMint Is the Right Partner for NBE",
+      "body": "* SettleMint's Digital Asset Lifecycle Platform (DALP) is purpose-built for regulated financial institutions operating under CBE and FRA frameworks, delivering production-grade digital asset infrastructure without bespoke development risk.\n* DALP is already live with regulated banks and financial institutions across the Middle East and Africa region, supporting tokenized bonds, deposits, funds, and structured products under institutional-grade control environments.\n* The platform meets every mandatory requirement in NBE's RFP: segregated multi-environment architecture, API-first enterprise integration, RBAC with maker-checker controls, configurable asset lifecycle management, and CBE-aligned regulatory evidence export.\n* SettleMint's implementation model is built around NBE's operational realities: existing core banking systems, CBE supervisory obligations, FRA capital markets rules, data sovereignty requirements, and Arabic reporting needs.\n* Our phased delivery approach moves NBE from controlled launch to scaled operations without platform reset, protecting the institution's investment and ensuring audit continuity from day one."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four Pillars of NBE Readiness",
+      "item_0": "Regulatory Alignment\nCBE and FRA control mapping built into the platform. AML/CFT, sanctions, data residency, and audit evidence delivered as standard configuration, not custom build.",
+      "item_1": "Institutional-Grade Controls\nRBAC, maker-checker, full audit logs, and configurable policy limits meet NBE's internal audit and board governance expectations without compromise.",
+      "item_2": "Enterprise Integration\nISO 20022-compatible API layer connects to NBE's core banking, identity, AML, and reporting systems. No isolated digital-asset island, no reconciliation debt.",
+      "item_3": "Proven Delivery Model\nPhased rollout with NBE teams embedded in design authority. Fixed milestones, transparent dependencies, documented runbooks, and a clear operational handoff path."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "NBE Requirements",
+      "subtitle": "RFP Coverage and DALP Response"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Mandatory Requirements Coverage",
+      "body": "SettleMint responds to every mandatory requirement in NATIONAL-BANK-OF-EGYPT-RFP-DIGITAL-ASSET-INFRASTRUCTURE-202603 with production-ready capability, not roadmap intent.",
+      "table_data": [
+        ["Req ID", "Requirement", "DALP Status", "Evidence"],
+        ["REQ-01", "Segregated dev, test, UAT, DR, prod environments", "Fully Met", "Architecture Ref A-01"],
+        ["REQ-02", "API-first interfaces, eventing, version governance", "Fully Met", "API Catalogue v3.2"],
+        ["REQ-03", "RBAC, segregation of duties, maker-checker, audit logs", "Fully Met", "Control Pack CC-03"],
+        ["REQ-04", "Configurable lifecycle states, policy controls, limits", "Fully Met", "Asset Designer Demo"],
+        ["REQ-06", "Resilience, recovery, backup, monitoring", "Fully Met", "DR Evidence Pack"],
+        ["REQ-08", "Evidence extraction for audit and supervisory review", "Fully Met", "Audit Log Samples"],
+        ["REQ-18", "Observability and phased environment promotion", "Fully Met", "Monitoring Screenshots"],
+        ["REQ-19", "Participant supervision and policy analytics", "Fully Met", "Compliance Engine Ref"]
+      ]
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Key Procurement Dimensions Addressed",
+      "col1": "Control Integrity\n* Full transaction provenance: who initiated, which policy applied, who approved\n* Immutable audit ledger for every state change\n* Maker-checker enforced at platform level, not application layer\n* Complete event replay for regulatory reconstruction\n* Arabic-language audit reports available on demand",
+      "col2": "Enterprise Coexistence\n* REST and event-based APIs align with NBE's integration standards\n* ISO 20022 message format support for core banking connectivity\n* No reconciliation sinkhole: all settlement events write back to CBS\n* Shared identity with NBE's IAM via SAML 2.0 / OIDC\n* Observability stack feeds into NBE's SIEM without middleware"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP Platform",
+      "subtitle": "Architecture, API Design, and Asset Management"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "DALP Platform Overview",
+      "body": "DALP is the production-grade digital asset lifecycle platform for regulated institutions. Configure, issue, manage, and settle any regulated digital asset class within a single governed environment. Used by banks and capital markets firms across the Middle East, Africa, and Europe.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/jpg/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Multi-Environment Architecture",
+      "item1": "Development\nIsolated sandbox for configuration and feature development. No production data. CBE-compliant access controls apply from day one.",
+      "item2": "Test Environment\nFunctional and regression test bed. Mirrors production schema. Used by NBE's QA and integration teams.",
+      "item3": "UAT Environment\nUser acceptance testing with NBE business teams. Full lifecycle execution, compliance rule validation, and reporting checks.",
+      "item4": "DR Environment\nHot-standby or warm-standby in secondary data centre. RTO and RPO targets tested quarterly. CBE notification protocols integrated.",
+      "item5": "Production\nLive regulated environment. Change-controlled promotion only. Zero-downtime deployments via blue-green strategy.",
+      "item6": "Environment Promotion\nGoverned promotion pipeline: Dev to Test to UAT to Production. Approval gates at each stage. Full audit trail of configuration changes."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "API-First Integration Design",
+      "body": "DALP exposes a versioned REST API with webhook eventing for all asset operations. Every action is API-accessible, enabling NBE's CBS, reporting, and compliance systems to consume platform events without tight coupling. OpenAPI specification and sandbox available from day one.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/jpg/API Monitoring - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "RBAC, Maker-Checker, and Audit Controls",
+      "item_0": "Role-Based Access Control\nGranular roles across system admin, product owner, operations, compliance, auditor, and regulator viewer. Roles assigned at platform, product, and environment level. No privilege creep.",
+      "item_1": "Maker-Checker Enforcement\nAll material actions require a second authoriser with a different role. Configurable approval chains for asset design, limit changes, and settlement operations. No single-point override.",
+      "item_2": "Immutable Audit Logs\nEvery action recorded with actor identity, timestamp, IP, role, and policy outcome. Logs are tamper-evident and exportable in structured formats for CBE and internal audit use.",
+      "item_3": "Segregation of Duties\nPlatform enforces SoD policies: the same user cannot design, approve, and execute an asset or transaction. SoD configuration is reviewable by NBE's internal audit team."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Lifecycle Management",
+      "body": "DALP's Asset Designer supports configurable lifecycle states, supply limits, transfer restrictions, maturity rules, and compliance policy assignment. Every asset class — bonds, deposits, funds, sukuk — follows a deterministic state machine visible to all authorised parties.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/jpg/Asset Designer.jpg"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Settlement and Post-Trade Processing",
+      "body": "* DALP supports delivery-versus-payment (DVP) settlement with atomic execution: both the asset leg and the cash leg settle simultaneously or neither does, eliminating principal risk in institutional transactions.\n* The platform integrates with NBE's core banking system to trigger debit-credit instructions at settlement completion, writing confirmed settlement events back to the CBS general ledger without manual intervention.\n* Post-trade processing includes automated reconciliation against CBS positions, exception flagging with maker-checker resolution workflow, and structured settlement reports exportable in Arabic and English.\n* Settlement states (pending, locked, executed, cancelled, expired) are all auditable and reconstructable. Every settlement can be replayed from the audit log for regulatory review or dispute resolution.\n* NSCC and CBE domestic payment rail connectivity is supported via the API integration layer. SettleMint will work with NBE's integration team to confirm specific rail protocols during the design phase."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Compliance and Security",
+      "subtitle": "Regulatory Alignment, AML/CFT, and Data Governance"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Regulatory Alignment for Egypt",
+      "col1": "CBE Framework\n* Central Bank of Egypt licensing requirements mapped to platform controls\n* Digital asset classification support: payment, deposit analogue, security\n* CBE evidence extraction: structured exports for supervisory review\n* Outsourcing governance documentation aligned to CBE guidelines",
+      "col2": "FRA Capital Markets\n* Financial Regulatory Authority obligations for capital markets instruments\n* Investor eligibility and allowlisting for regulated securities\n* Disclosure and documentation controls at instrument level\n* Reporting formats aligned to FRA submission requirements",
+      "col3": "Islamic Finance\n* Sharia governance lineage tracked: board approval, product classification, AAOIFI reference\n* Sukuk and Islamic deposit product templates available\n* Profit distribution and rate-reset mechanics configurable\n* Documentation controls for Sharia audit trail and fatwa evidence"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "AML/CFT and Sanctions Integration",
+      "body": "DALP's compliance engine runs pre-trade and post-trade screening against configurable watchlists including OFAC, UN Security Council, and CBE-mandated lists. Integration with NBE's existing AML platform via API ensures no duplication of screening infrastructure. Alert workflows include maker-checker resolution and full case management evidence.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/jpg/Compliance Policy Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Data Governance and Encryption",
+      "col1": "Data Residency and Sovereignty\n* All NBE data hosted in Egypt-based infrastructure (on-premises or CBE-approved cloud region)\n* No transaction or customer data processed outside the designated jurisdiction\n* Cross-border data transfer restrictions enforced at platform layer\n* Data maps and DPIA available for CBE and legal review\n* Arabic character set support across all data fields and reports",
+      "col2": "Retention, Encryption, and Access\n* Data retained per CBE and Egyptian banking law schedules (minimum 10 years for audit records)\n* AES-256 encryption at rest; TLS 1.3 in transit across all layers\n* Key management via HSM with NBE-held master keys: SettleMint cannot access data without NBE authorisation\n* Access logging on every data export, including regulator access and bulk extraction events\n* Deletion workflows compliant with retention policy before cryptographic erasure"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Operational Resilience and DR",
+      "item_0": "Recovery Objectives\nRTO of 4 hours and RPO of 1 hour for production environment. DR environment maintained in secondary data centre with continuous replication. Tested quarterly with documented evidence.",
+      "item_1": "Backup and Restore\nAutomated daily snapshots with point-in-time recovery. Backup integrity validated weekly. Restore exercises conducted quarterly with NBE operations team participation.",
+      "item_2": "Incident Management\nITIL-aligned incident classification with P1 response within 30 minutes. Escalation matrix includes NBE, SettleMint, and CBE notification as required. Post-incident reports within 48 hours.",
+      "item_3": "Third-Party Risk\nAll cloud, HSM, and managed-service dependencies disclosed in the Dependency Register (Appendix D). Each dependency has a named owner, SLA commitment, and continuity plan reviewed annually."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Observability Stack",
+      "body": "DALP ships with a production-ready observability layer covering metrics, structured logs, and distributed traces. Grafana dashboards are pre-configured for asset volumes, API latency, settlement throughput, compliance alert rates, and blockchain node health. Arabic-language dashboard variants available for NBE operations teams.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/jpg/Blockchain Monitoring.jpg"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Security Architecture",
+      "col1": "Identity and Access\n* SAML 2.0 and OIDC federation with NBE's enterprise IAM\n* Multi-factor authentication enforced for all privileged roles\n* Just-in-time access provisioning for break-glass scenarios\n* Session management with configurable timeout and IP binding\n* Privileged access workstations for admin operations",
+      "col2": "Encryption and Key Management\n* AES-256 encryption at rest for all data stores\n* TLS 1.3 for all data in transit, including internal service mesh\n* HSM-backed key management with NBE as primary key custodian\n* Key rotation schedule aligned to CBE cybersecurity guidelines\n* Cryptographic evidence of key custody in audit logs",
+      "col3": "Vulnerability and Penetration\n* Annual third-party penetration test with findings shared with NBE CISO\n* Continuous vulnerability scanning via integrated SIEM feed\n* OWASP Top 10 remediation SLA: critical within 24 hours\n* Secure SDLC: SAST, DAST, and dependency scanning in CI/CD pipeline\n* CBE cybersecurity framework alignment documented in Security Pack"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Integration and Operations",
+      "subtitle": "Enterprise Connectivity, Reconciliation, and Onboarding"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Enterprise Integration Blueprint",
+      "body": "DALP integrates with NBE's enterprise stack through a combination of REST APIs, event streams, and batch interfaces. All integration points are documented in the Dependency Register and tested during WS-03.",
+      "table_data": [
+        ["System", "Integration Type", "Protocol", "Direction", "Status"],
+        ["Core Banking System", "Real-time + batch", "REST / ISO 20022", "Bi-directional", "Standard"],
+        ["Identity (IAM)", "Federated SSO", "SAML 2.0 / OIDC", "Inbound", "Standard"],
+        ["AML / Sanctions", "Pre-trade screen API", "REST webhook", "Bi-directional", "Standard"],
+        ["SIEM / Observability", "Log and metric export", "Syslog / Prometheus", "Outbound", "Standard"],
+        ["Regulatory Reporting", "Structured export", "REST / SFTP", "Outbound", "Configurable"],
+        ["CBS Reconciliation", "Daily position file", "ISO 20022 camt", "Bi-directional", "Standard"],
+        ["Arabic Reporting Layer", "Localised report API", "REST / PDF", "Outbound", "Standard"]
+      ]
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Reconciliation Framework",
+      "body": "* DALP maintains a continuous position ledger for every digital asset and participant account, enabling real-time reconciliation against NBE's core banking system without batch dependency.\n* End-of-day reconciliation reports compare DALP token positions against CBS general ledger entries. Discrepancies are automatically flagged in a structured exception register with severity classification.\n* Maker-checker resolution workflow handles all reconciliation breaks: operations staff investigate, compliance officer reviews, and the outcome is recorded in the immutable audit log with supporting evidence.\n* Bulk correction capability allows authorised administrators to apply position adjustments with a complete audit trail, CBE-reportable reason codes, and mandatory second-line sign-off.\n* Reconciliation dashboards in Arabic and English give NBE's operations team live visibility into outstanding breaks, resolution status, and historical accuracy metrics."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Participant Onboarding and KYC Workflow",
+      "body": "DALP's identity and verification module supports structured participant onboarding with configurable KYC tiers, document collection workflows, approval chains, and ongoing monitoring triggers. Integration with NBE's existing KYC platform ensures no duplication of identity data or compliance processes.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/jpg/Verification Topics.jpg"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Islamic Finance Governance Support",
+      "item_0": "Sharia Board Lineage\nApproval chain from Sharia board to product configuration is captured in DALP. Product cannot be deployed without documented board sign-off. AAOIFI standard references attached to each instrument record.",
+      "item_1": "Sukuk and Islamic Deposit Templates\nPre-configured instrument templates for sukuk, murabaha deposits, wakala structures, and profit-sharing instruments. Compliance rules enforce Sharia restrictions at transaction execution.",
+      "item_2": "Profit Distribution Controls\nProfit calculation and distribution mechanics are configurable and auditable. Rate-reset events require maker-checker approval. Distribution records are exportable for Sharia audit and FRA reporting.",
+      "item_3": "Documentation Controls\nAll Sharia-related documentation (fatwa, product approval, audit reports) attached to the instrument record in DALP. Immutable timestamping ensures integrity. Arabic-language document support throughout."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Deployment Approach",
+      "subtitle": "Phased Rollout, Testing, Transition, and Training"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Phased Deployment Approach",
+      "body": "* SettleMint's deployment model for NBE is structured in two phases to reduce initial risk, validate controls in a live environment, and build NBE's operational confidence before scaling to full production capacity.\n* Phase 0 (Mobilisation, Weeks 1-4) establishes programme governance, design authority, RAID management, and environment provisioning. NBE's architecture, compliance, and operations teams are embedded from day one.\n* Phase 1 (Controlled Launch, Months 2-5) delivers core platform configuration, identity and RBAC integration, AML/CFT connector, functional testing, CBE sandbox notification, and go-live with a limited asset scope and participant set.\n* Phase 2 (Scaled Operations, Months 6-8) expands to full asset class coverage, Arabic reporting dashboards, complete observability stack, DR certification, and production-scale performance validation.\n* At each phase gate, NBE's design authority reviews evidence packs, signs off on acceptance criteria, and formally approves promotion to the next stage. No phase proceeds without explicit gate approval."
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Phase 1 Controlled Launch Scope",
+      "body": "Phase 1 delivers core infrastructure with controlled participant set and limited asset scope, validated against CBE requirements before broader rollout.",
+      "table_data": [
+        ["Workstream", "Deliverable", "Owner", "Timeline", "Acceptance Gate"],
+        ["WS-01 Mobilisation", "Governance setup, design authority, RAID", "SettleMint + NBE", "Weeks 1-4", "Steering committee sign-off"],
+        ["WS-02 Configuration", "Core asset types, RBAC, lifecycle rules", "SettleMint", "Weeks 5-10", "UAT test pack pass"],
+        ["WS-03 Integration", "CBS, IAM, AML/CFT connectors deployed", "SettleMint + NBE IT", "Weeks 6-12", "Integration test results"],
+        ["WS-04 Testing", "Functional, security, UAT, CBE sandbox", "SettleMint + NBE QA", "Weeks 11-16", "UAT sign-off document"],
+        ["WS-05 Transition", "Runbooks, ops handoff, P1 support model", "SettleMint", "Week 16-18", "Ops team signed acceptance"],
+        ["Go-Live Phase 1", "Limited asset classes, controlled participants", "Joint", "Month 5", "CBE notification confirmed"]
+      ]
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Phase 2 Scaled Operations Scope",
+      "body": "Phase 2 expands the platform to full production capacity with additional asset classes, Arabic reporting, DR certification, and performance-validated scale.",
+      "table_data": [
+        ["Capability", "Description", "Dependencies", "Timeline"],
+        ["Full asset class coverage", "Bonds, deposits, funds, sukuk, stablecoins", "Phase 1 go-live stable", "Months 6-7"],
+        ["Arabic reporting dashboards", "Localised Grafana and export reports", "Observability stack complete", "Month 6"],
+        ["Full observability stack", "All metrics, logs, traces, Arabic dashboards", "SIEM integration live", "Month 7"],
+        ["DR certification", "DR test conducted, results documented for CBE", "DR environment provisioned", "Month 7"],
+        ["Production scale validation", "Load test to 10x Phase 1 volumes", "Full asset scope live", "Month 8"],
+        ["FRA reporting integration", "Capital markets regulatory export", "FRA format confirmed", "Month 8"],
+        ["Go-Live Phase 2", "Full production state, scaled participant set", "All above complete", "Month 8"]
+      ]
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Implementation Timeline and Milestones",
+      "body": "Key milestones from programme initiation through Phase 2 go-live. All dates are indicative pending contract execution and confirmed environment access.",
+      "table_data": [
+        ["Milestone", "Description", "Target Date", "Gate Owner"],
+        ["M0 — Programme Start", "Contract signed, governance established", "Month 1, Week 1", "NBE Programme Director"],
+        ["M1 — Environments Ready", "Dev, test, UAT environments provisioned", "Month 1, Week 4", "SettleMint Delivery Lead"],
+        ["M2 — Core Config Complete", "Asset types, RBAC, lifecycle rules configured", "Month 2, Week 4", "NBE Product Owner"],
+        ["M3 — Integrations Live", "CBS, IAM, AML/CFT connectors tested", "Month 3, Week 2", "NBE IT Architecture"],
+        ["M4 — UAT Complete", "All UAT test cases passed, issues resolved", "Month 4, Week 2", "NBE Compliance + Ops"],
+        ["M5 — Phase 1 Go-Live", "Limited live operations, CBE notified", "End of Month 5", "NBE CEO / Board"],
+        ["M6 — Full Scope Live", "All asset classes, Arabic reporting active", "End of Month 7", "NBE Programme Director"],
+        ["M7 — Phase 2 Certified", "DR certified, scale validated, FRA reporting live", "End of Month 8", "NBE COO"]
+      ]
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Testing and Assurance Programme",
+      "item1": "Functional Testing\nAll asset lifecycle states, compliance rules, RBAC flows, and settlement scenarios tested against NBE's acceptance criteria. Test evidence pack provided to NBE's QA team.",
+      "item2": "Non-Functional Testing\nLoad tests to 10x expected Phase 1 volumes. Latency benchmarks for API and settlement flows. Failover timing measured against RTO/RPO targets.",
+      "item3": "Security Testing\nThird-party penetration test scoped to NBE environment. OWASP Top 10 coverage. CBE cybersecurity framework compliance review. Results shared with NBE CISO.",
+      "item4": "UAT Programme\nNBE business, compliance, and operations teams run structured UAT with pre-approved test scripts. Issues tracked in JIRA with SLA-bound resolution by SettleMint.",
+      "item5": "Resilience Testing\nControlled DR failover test conducted in UAT environment. Backup restore validated. Incident simulation with full escalation path exercised before go-live.",
+      "item6": "Assurance Artefacts\nTest summary reports, penetration test findings, UAT sign-off documents, DR test results, and CBE notification packs provided as contractual deliverables."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Operational Transition and Runbooks",
+      "col1": "Runbook Coverage\n* Platform startup, shutdown, and failover procedures\n* Incident classification and escalation matrix (P1-P4)\n* AML alert investigation and case closure workflow\n* Reconciliation break identification and resolution steps\n* Maker-checker exception handling for stuck approvals\n* CBE evidence request fulfilment procedure\n* Arabic-language runbook versions for NBE operations team",
+      "col2": "Support Model Handoff\n* Hypercare period of 4 weeks post Phase 1 go-live with SettleMint on-site support\n* Service desk integration with NBE's ITSM platform (ServiceNow or equivalent)\n* Escalation path: NBE L1/L2 to SettleMint L3 with 4-hour P1 response SLA\n* Weekly operational review meetings during first 3 months post-launch\n* Quarterly service reviews with NBE COO and SettleMint Customer Success\n* Knowledge base in Arabic and English maintained by SettleMint throughout contract"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Training and Knowledge Transfer",
+      "col1": "Audience: Operations\n* Platform navigation and daily operations workflow\n* Reconciliation and exception management\n* Incident reporting and escalation procedure\n* Arabic-language training materials\n* On-site delivery during UAT phase\n* Competency assessment included",
+      "col2": "Audience: Compliance\n* AML alert investigation and case management\n* Regulatory evidence extraction and formatting\n* Audit log review and export procedures\n* CBE and FRA reporting workflow walkthrough\n* Policy configuration and limit management\n* Sharia governance documentation controls",
+      "col3": "Audience: IT and Architecture\n* API integration design and testing guide\n* Environment management and promotion pipeline\n* Observability stack configuration and alerting\n* DR procedure and failover execution\n* Security controls configuration and review\n* SDK and developer tooling onboarding"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Commercial Overview and TCO",
+      "body": "SettleMint's commercial model is structured for total-cost-of-ownership clarity across implementation, licensing, support, and operational scaling. All price drivers are disclosed upfront.",
+      "table_data": [
+        ["Cost Component", "Description", "Driver", "Notes"],
+        ["Implementation Fee", "WS-01 through WS-05 delivery", "Fixed scope per phase", "Split by phase gate acceptance"],
+        ["Platform Licence", "Annual DALP platform licence", "Environment count + asset classes", "Scales with Phase 2 expansion"],
+        ["Support Tier", "24x7 P1, 8x5 P2-P4 response", "SLA tier selected", "Upgrade options available"],
+        ["Infrastructure", "Cloud or on-premises hosting", "Data residency choice", "NBE-controlled or SettleMint managed"],
+        ["Third-Party Pass-Through", "HSM, AML connector, monitoring stack", "Usage-based components listed", "All disclosed in Dependency Register"],
+        ["Additional Training", "Beyond standard knowledge transfer", "Days and audience count", "Available on demand"],
+        ["Change Control", "Post-contract scope changes", "Time and materials or fixed", "Change board approval required"]
+      ]
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "SettleMint Company and References",
+      "body": "* SettleMint was founded in 2016 and is headquartered in Brussels, Belgium, with offices in Singapore, the UAE, and India. The company focuses exclusively on enterprise blockchain and digital asset infrastructure for regulated financial institutions.\n* SettleMint has deployed production digital asset platforms for central banks, commercial banks, capital markets firms, and payment infrastructure operators across Europe, Asia-Pacific, and the Middle East and Africa region.\n* Reference deployments available for NBE's review include regulated tokenized deposit programmes, bond issuance platforms, and Islamic finance instrument infrastructure — all in live institutional environments.\n* SettleMint is well-capitalised with strategic institutional investors, no material litigation, and a direct contractual model. NBE will contract directly with SettleMint BV as the primary legal entity.\n* Full financial stability documentation, including audited accounts, funding posture, insurance coverage, and key-person risk mitigation, is available in Appendix F of the proposal package."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Technical Architecture Diagrams"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Platform Architecture Overview",
+      "body": "DALP platform architecture showing NBE enterprise systems, DALP core components, and multi-environment rings connected through the API gateway and event bus.",
+      "image_path": "output/diagrams/nbe-platform-architecture.png"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Asset Lifecycle State Machine",
+      "body": "Digital asset lifecycle from initial design through active operations to redemption and archival, showing all state transitions and control checkpoints enforced by DALP.",
+      "image_path": "output/diagrams/nbe-asset-lifecycle.png"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "RBAC and Maker-Checker Control Flow",
+      "body": "Role hierarchy and maker-checker workflow showing how NBE's governance structure is enforced at the platform level, from role assignment through action approval and audit recording.",
+      "image_path": "output/diagrams/nbe-rbac-maker-checker.png"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "AML and Compliance Check Sequence",
+      "body": "Pre-trade compliance and AML/CFT screening sequence for every DALP transaction, showing integration with NBE's external AML platform and the alert investigation workflow.",
+      "image_path": "output/diagrams/nbe-aml-compliance-flow.png"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Settlement Sequence DVP Execution",
+      "body": "Delivery-versus-payment settlement sequence from instruction initiation through atomic execution, CBS debit-credit notification, and regulatory reporting event generation.",
+      "image_path": "output/diagrams/nbe-settlement-sequence.png"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Observability Stack Architecture",
+      "body": "End-to-end observability stack from DALP platform layers through collection, storage, and visualisation, including Arabic-language reporting and alerting integration with NBE's SIEM.",
+      "image_path": "output/diagrams/nbe-observability-stack.png"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Implementation Timeline — Gantt View",
+      "body": "Phased implementation timeline from programme mobilisation through Phase 1 go-live and Phase 2 scaled operations, showing all workstream activities and milestone gates.",
+      "image_path": "output/diagrams/nbe-implementation-gantt.png"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+flowchart LR
+    subgraph Channels
+        A[Web Portal]
+        B[API Gateway]
+        C[SDK/CLI]
+    end
+    subgraph DALP Core
+        D[Asset Designer]
+        E[Compliance Engine]
+        F[Identity Manager]
+        G[Operations Hub]
+    end
+    subgraph Infrastructure
+        H[Blockchain Node]
+        I[Indexer]
+        J[Monitoring]
+    end
+    subgraph External
+        K[Custodian]
+        L[Core Banking]
+        M[KYC/AML Provider]
+    end
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    D --> F
+    E --> G
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    G --> K
+    G --> L
+    F --> M

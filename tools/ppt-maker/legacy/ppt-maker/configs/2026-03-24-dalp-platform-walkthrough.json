@@ -1,0 +1,209 @@
+{
+  "project": "2026-03-24-dalp-platform-walkthrough",
+  "output": "output/2026-03-24-dalp-platform-walkthrough.pptx",
+  "description": "DALP Platform Walkthrough deck covering all major platform features from login through governance and audit.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Platform Walkthrough",
+      "subtitle": "Digital Asset Lifecycle Platform, Feature Overview"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Platform Entry",
+      "item_1": "Asset Creation",
+      "item_2": "Token Operations",
+      "item_3": "Settlement and Add-ons",
+      "item_4": "Governance and Audit",
+      "icon1": "icon-library/lucide/log-in.svg",
+      "icon2": "icon-library/lucide/package.svg",
+      "icon3": "icon-library/lucide/coins.svg",
+      "icon4": "icon-library/lucide/zap.svg",
+      "icon5": "icon-library/lucide/shield.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Platform Entry",
+      "subtitle": "Secure access and real-time command centre"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Secure Authentication",
+      "body": "DALP supports passwordless passkey login alongside email/password. Access is role-gated from the first click, ensuring only authorised participants reach the platform.",
+      "image_path": "templates/dalp-screenshots/01 - Login/Login.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real-Time Operations Dashboard",
+      "body": "The dashboard gives operators a live command centre: portfolio valuation, AUM tracking, pending action alerts, and a blockchain activity feed. The sidebar exposes all asset classes and compliance tools from one interface.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Asset Creation",
+      "subtitle": "Guided wizard for tokenising fixed income and equity"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Tokenisation Wizard",
+      "body": "The Asset Designer walks issuers through a structured bond tokenisation workflow. Every required parameter, compliance, pricing, supply, is configured before deployment.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/01 Step Bond Tokenisation.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Instrument Details and Parameters",
+      "body": "Issuers configure ISIN, maturity date, coupon structure, and denomination. All parameters feed directly into the smart contract being deployed, no separate developer step required.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/04 Step Instrument Details .jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Pricing and Valuation Config",
+      "body": "Each asset is configured with a pricing model and NAV methodology. The platform handles both market-priced instruments and NAV-based assets like funds or deposits with equal precision.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/05 Step Bond pricing and valuation .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Modular Compliance Framework",
+      "body": "Compliance is selected at design time. Operators choose from: investor count caps, supply limits, country blocklists and allowlists, transfer approvals, and time locks. Each module is independently configurable.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/06 Step Complaince Modules.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Investor Count Controls",
+      "body": "DALP enforces hard investor count caps directly on-chain, supporting the 500-investor rule for private bonds, Reg D exemptions, and equivalent local requirements without manual tracking.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/14 Step Investor count.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Jurisdiction Controls",
+      "body": "Country-level blocklists and allowlists restrict investors based on country of residence. Supports sanctions compliance, MiFID II geographic restrictions, and domestic-only issuance, enforced at the smart contract level.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/12 Step Country Blocklist.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Review, Approve and Deploy",
+      "body": "Before deployment, the wizard presents a full review summary for operator sign-off. Once confirmed, the asset deploys on-chain in a single transaction. No separate developer pipeline.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/20 Step Review and Deploy.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Equity Tokenisation",
+      "body": "The same Asset Designer supports equity instruments. Share class configuration, voting rights, and dividend parameters follow the same guided wizard, ensuring consistent compliance across all asset types.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/01 Step.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Token Operations",
+      "subtitle": "Minting, transfers, freeze, and forced transfer controls"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Minting",
+      "body": "Authorised operators initiate token minting through a step-by-step workflow. Each minting action is subject to the asset's configured approval rules, supporting maker-checker controls in regulated environments.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Mint Tokens/step 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Transfers",
+      "body": "Token transfers include built-in compliance checks. The platform validates investor eligibility, jurisdiction rules, and transfer approval requirements before any transfer settles, preventing non-compliant movements.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Freeze and Unfreeze Controls",
+      "body": "Operators freeze token holdings in response to AML alerts, regulatory holds, or court orders. Frozen tokens remain visible but non-transferable. The unfreeze workflow requires explicit approval, creating a full audit trail.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Freeze/step 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Forced Transfer",
+      "body": "DALP supports court-ordered and regulatory forced transfers, allowing competent authorities to move tokens between holders. The multi-step workflow ensures full governance controls on this power-action.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Settlement and Add-ons",
+      "subtitle": "Atomic XvP settlement and yield distribution"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Settlement Overview",
+      "body": "DALP's XvP add-on enables atomic delivery-versus-payment settlement. Both legs of the trade settle simultaneously on-chain, eliminating counterparty risk and manual reconciliation.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/0 XvP .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Settlement Flow",
+      "body": "The settlement workflow guides both parties through asset leg configuration, counterparty confirmation, and atomic execution. Each step requires explicit approval, maintaining a complete audit trail.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Asset flow step 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Settlement Finality",
+      "body": "Once both parties confirm, settlement executes atomically. Both legs succeed or neither does. The completed flow is permanently recorded on-chain, instant finality, no central clearing party needed.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Asset flow step final .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Yield and Income Distribution",
+      "body": "The Yield add-on manages coupon payments, dividend distributions, and periodic income events. The dashboard shows distribution schedules, pending payments, and historical yield events linked to on-chain positions.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Yield/Income yield.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Governance and Audit",
+      "subtitle": "Action tracking, approvals, and immutable audit trails"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Action Queue and Approvals",
+      "body": "Pending actions requiring approval are queued and visible to authorised users. Maker-checker workflows ensure sensitive operations are reviewed before execution, supporting four-eyes principle requirements.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Actions/0.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Activity Log and Audit Trail",
+      "body": "Every platform event is logged: identity verifications, token transfers, compliance changes, settlement events. Regulators and auditors get a complete, tamper-proof record of all platform activity.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Activity/Recent Activities.jpg"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Technical architecture and process flow references"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "DALP Token Lifecycle",
+      "body": "This diagram traces the complete token lifecycle from asset design and compliance configuration through on-chain deployment, token minting, holder transfers, income distribution events, ongoing compliance checks, and final redemption. Each stage maps to a governed workflow within DALP.",
+      "image_path": "workflow/appendix-diagrams/token-lifecycle-walkthrough.mmd"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Modular Compliance Architecture",
+      "body": "Every transfer request passes through a configurable compliance policy layer. Six independent modules, investor count caps, supply limits, country blocklists, allowlists, transfer approvals, and time locks, each evaluate the request. The transfer proceeds only when all active modules approve it. A single rejection blocks the transaction.",
+      "image_path": "workflow/appendix-diagrams/compliance-module-arch-walkthrough.mmd"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Atomic XvP Settlement Sequence",
+      "body": "The sequence diagram shows the interaction between Seller, DALP, and Buyer during atomic settlement. Both parties submit their respective legs. DALP validates both simultaneously. If validation passes, asset and payment transfers execute atomically. If either leg fails, the entire settlement is cancelled and both parties are notified.",
+      "image_path": "workflow/appendix-diagrams/xvp-sequence-walkthrough.mmd"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Lifecycle Operations",
+      "body": "Operators initiate token actions including minting, transfers, and freeze operations. Each action passes through a configurable approval gate supporting maker-checker workflows. Approved actions execute on-chain and generate a permanent audit record. Rejected actions are blocked and logged for governance review.",
+      "image_path": "workflow/appendix-diagrams/token-operations-walkthrough.mmd"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "DALP Platform Architecture",
+      "body": "The platform follows a layered architecture. The web application connects through an API layer to the core platform, which orchestrates five key modules: Asset Manager, Compliance Engine, Identity and KYC, Settlement XvP, and Yield Manager. All modules write to and read from the underlying EVM blockchain for finality and transparency.",
+      "image_path": "workflow/appendix-diagrams/platform-arch-walkthrough.mmd"
+    }
+  ]
+}

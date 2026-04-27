@@ -1,0 +1,136 @@
+{
+  "project": "2026-04-03-dalp-estonia-digital-assets-20",
+  "output": "output/2026-04-03-dalp-estonia-digital-assets-20.pptx",
+  "description": "20-slide executive DALP deck on digital assets for the Estonia market",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Estonia's Digital Asset Market",
+      "subtitle": "How SettleMint's platform fits Estonia's MiCA-ready digital asset infrastructure | April 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Estonia market context",
+      "item_1": "Why DALP",
+      "item_2": "Operating model",
+      "item_3": "Use cases",
+      "item_4": "Next steps",
+      "icon1": "icon-library/lucide/map.svg",
+      "icon2": "icon-library/lucide/layers.svg",
+      "icon3": "icon-library/lucide/settings.svg",
+      "icon4": "icon-library/lucide/briefcase.svg",
+      "icon5": "icon-library/lucide/flag.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Estonia Market Context",
+      "subtitle": "Digital assets regulation and opportunity in the Baltic gateway"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Estonia: the EU gateway for digital asset issuers",
+      "body": "Estonia was among the first EU member states to regulate crypto asset service providers, issuing FIU-based licenses from 2017 and building a digital-first infrastructure that includes e-Residency, national digital ID, and the X-Road data exchange layer.\nMiCA now supersedes the old FIU framework. All CASPs operating in Estonia must obtain an FSA license by July 1, 2026 or cease operations. The Estonian Financial Supervision Authority is the designated competent authority under MiCA for all in-scope services.\nEntities licensed in Estonia gain EU passporting rights, enabling them to offer services across all EU and EEA member states from a single regulatory base. This makes Estonia an attractive domicile for digital asset programs targeting the broader European market.\nThe fintech ecosystem is mature and digital-first. Operational and compliance infrastructure is aligned to EU standards, shortening the path from product design to licensed operations compared to many other EU jurisdictions."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four digital asset opportunities in Estonia",
+      "item1": "Tokenized securities\nCompliant bond and equity token issuance under MiCA and EU prospectus rules. ERC-3643 with OnchainID for investor eligibility and transfer control across EU jurisdictions.",
+      "item2": "E-money tokens\nEUR-denominated stablecoin infrastructure aligned to MiCA Title III. Reserve management, redemption rights, and FSA reporting built into the issuance platform from day one.",
+      "item3": "Cross-border settlement\nXVP settlement for EUR-denominated instruments across EEA counterparties. Atomic delivery-versus-payment with policy-governed transfer conditions and full audit trail.",
+      "item4": "Fund administration\nDigital fund units with NAV-linked lifecycle management. Subscription, redemption, and distribution events governed by OnchainID eligibility checks and SMART policy modules."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why DALP",
+      "subtitle": "Lifecycle control for regulated digital asset operations"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP is the operating layer, not just an issuance tool",
+      "body": "DALP is SettleMint's Digital Asset Lifecycle Platform. It provides a single control plane for designing, issuing, managing, and servicing digital assets across the full lifecycle, from instrument definition to maturity or redemption.\nFor Estonia-based operators, DALP covers the requirements that MiCA compliance introduces: investor eligibility enforcement, transfer restrictions, approval workflows, audit evidence, and FSA reporting readiness. These are built into the platform, not added as custom code.\nThe platform uses ERC-3643 as the compliance token standard, SMART extensions for instrument-specific lifecycle logic, OnchainID for verified on-chain identity and claims, ISMARTCustodian for custody-level controls, and ISMARTCollateral for collateral management workflows. All execution is EVM-based.\nSeven asset types are supported: bonds, deposits, stablecoins, equity, funds, real estate, and precious metals. A single operational model applies across all of them, so an issuer who starts with bonds can extend to funds or stablecoins without rebuilding governance and integration patterns."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Six DALP building blocks for Estonian operators",
+      "item1": "Asset templates\nStart from proven ERC-3643 asset structures for bonds, stablecoins, deposits, equity, and funds. Reuse across programs without rebuilding compliance logic.",
+      "item2": "Identity and claims\nOnchainID provides verified on-chain identity. Claims from KYC, AML, and accreditation checks govern who can hold and transfer each instrument.",
+      "item3": "Policy modules\nSMART policy extensions enforce transfer restrictions, investor eligibility, country rules, and MiCA compliance conditions before any on-chain state change.",
+      "item4": "Operational approvals\nMaker-checker and RBAC workflows separate design authority from issuance authority. Sensitive lifecycle actions require multi-role sign-off.",
+      "item5": "Lifecycle actions\nIssuance, coupon payment, redemption, forced transfer, and freeze actions are governed platform operations, not ad hoc contract calls. All activity is logged.",
+      "item6": "Integration readiness\nAPIs and event streams connect DALP to custody providers, KYC platforms, core banking systems, and FSA reporting pipelines without custom middleware."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Three platform value propositions for Estonian issuers",
+      "col1": "Compliance-First Architecture\nERC-3643 and OnchainID enforce investor eligibility, transfer restrictions, and jurisdiction rules at the protocol level. Compliance is not a wrapper: it is part of every on-chain action. MiCA requirements map directly to platform controls.",
+      "col2": "Full Lifecycle Coverage\nDesign, issuance, servicing, settlement, and redemption live on one platform. Estonian issuers avoid fragmented tooling and manual handoffs between issuance systems, custody providers, and compliance teams. One record, one audit trail.",
+      "col3": "Multi-Asset Flexibility\nSeven asset types on one operational model. Start with a compliant EUR bond program and extend to e-money tokens, fund units, or real estate tokens without redesigning governance. EU passporting opens each new product to the full EEA market."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Operating Model",
+      "subtitle": "How DALP maps EU and Estonian requirements into live execution"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Estonian and EU requirements mapped to DALP",
+      "body": "Each requirement below reflects a specific FSA licensing or MiCA CASP obligation. The DALP mechanism column shows how the platform addresses the requirement through configuration, not custom development.",
+      "table_data": [
+        ["Requirement", "Why it matters in Estonia", "DALP mechanism", "Business outcome"],
+        ["MiCA compliance", "FSA license requires MiCA-aligned CASP controls by July 2026", "ERC-3643 policy modules and audit logging", "License-ready operations"],
+        ["Investor eligibility", "MiCA and prospectus rules restrict who may hold each instrument", "OnchainID verified claims and transfer guards", "Governed distribution"],
+        ["Approval discipline", "FSA expects clear separation of design, approval, and execution authority", "RBAC and maker-checker workflow engine", "Auditable accountability"],
+        ["Audit evidence", "Internal and FSA review requires complete activity records", "Immutable on-chain logs and platform event history", "Regulatory defensibility"],
+        ["EU passporting", "Estonia license unlocks all EEA markets for compliant products", "Multi-jurisdiction policy modules and country rules", "Scalable market access"],
+        ["Integration readiness", "KYC, custody, and core systems must connect without bespoke builds", "REST APIs, webhooks, and event stream connectors", "Operational fit from day one"]
+      ]
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP maps directly to MiCA compliance requirements",
+      "body": "MiCA introduces specific obligations for CASPs that go beyond general KYC and AML. DALP addresses these at the platform level, not as configuration add-ons.\nTransfer restrictions: ERC-3643 enforces transfer conditions on every token movement. Only wallets holding valid OnchainID claims that satisfy the instrument's policy module can receive a transfer. This satisfies MiCA requirements for controlled distribution of e-money tokens and asset-referenced tokens.\nInvestor eligibility: OnchainID claims carry verified KYC, AML, accreditation, and country attributes. SMART policy modules evaluate these claims before any issuance, transfer, or redemption event. Eligibility is checked on-chain, not in a separate off-chain process.\nReporting and audit: Every platform action generates a timestamped log entry. DALP's monitoring layer provides FSA-ready activity records covering issuance, transfer, servicing, and redemption events. Reporting pipelines connect directly to compliance and regulatory reporting systems via API."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Identity and compliance are on-chain, not afterthoughts",
+      "col1": "OnchainID and KYC for Estonian operators\nOnchainID provides a reusable verified identity layer for all participants: issuers, investors, and intermediaries. Claims issued by accredited KYC, AML, and identity providers are stored on-chain and evaluated at transaction time. Estonian e-Residency and national digital ID attributes can be integrated as claim sources. Investor onboarding becomes a one-time verified claim event rather than a per-instrument manual check.",
+      "col2": "Policy modules for EU jurisdiction rules\nSMART policy extensions translate MiCA compliance obligations into executable on-chain logic. Country rules restrict distribution to approved EEA jurisdictions. Holding limits enforce MiCA thresholds for e-money tokens. Accreditation claims gate access to instruments restricted to professional investors. Policy modules are configurable per instrument and per jurisdiction, enabling EU passporting without rebuilding compliance logic for each target market."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Use Cases",
+      "subtitle": "Where DALP fits strongest in Estonia"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Tokenized EUR-denominated bonds for EU capital markets",
+      "body": "Estonian corporate and government issuers can use DALP to issue digital bonds directly accessible to EU investors under MiCA and EU prospectus regulation, without building custom smart contract infrastructure.\nThe bond lifecycle is fully covered: instrument design with term sheet metadata, investor eligibility gating via OnchainID claims, primary issuance with FSA-notifiable audit records, coupon payment processing, and maturity redemption. All on one platform.\nERC-3643 ensures every bond token has built-in transfer restrictions. Only verified investors in approved EEA jurisdictions can hold and trade the instrument. Forced transfer and freeze capabilities support regulatory intervention requirements.\nEU passporting means an Estonia-licensed issuer can offer the same bond to investors across all EEA member states from a single regulatory filing. DALP's multi-jurisdiction policy modules handle country-level distribution rules without rebuilding the product for each market."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "E-money tokens and EUR stablecoin infrastructure",
+      "body": "MiCA Title III introduces a clear licensing framework for e-money tokens. Estonia-licensed EMT issuers can use DALP to build compliant EUR stablecoin infrastructure with reserve management, redemption processing, and FSA reporting built into the platform.\nReserve management: DALP tracks the relationship between circulating token supply and reserve asset holdings. ISMARTCollateral manages collateral positions and ensures reserve coverage requirements are met and auditable at any point.\nCompliance: Every token transfer enforces OnchainID eligibility checks. MiCA holding limits, country restrictions, and redemption rights are implemented as SMART policy modules. No custom contract development is required to satisfy FSA license conditions.\nInstant settlement: EUR stablecoin transfers settle in seconds on the EVM layer. XVP settlement connects payment and delivery legs atomically for institutional use cases. Integration connectors link DALP to banking core systems and SEPA infrastructure for fiat on-ramp and off-ramp processing."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Three more use cases with strong Estonian fit",
+      "col1": "Real estate fractional ownership\nEstonia's digital land registry and e-governance infrastructure supports tokenized real estate programs. DALP provides compliant fractional ownership tokens with investor eligibility controls, rental income distribution, and asset metadata management. ISMARTCollateral handles property-backed collateral positions.",
+      "col2": "Fund administration with digital NAV\nDigital fund units with NAV-linked lifecycle management. Subscription and redemption events are governed by OnchainID eligibility and SMART policy modules. Distribution calculations and investor reporting run on the same platform record. EU fund passporting applies to all registered EEA investors.",
+      "col3": "Cross-border EUR settlement via XVP\nAtomic delivery-versus-payment for EUR-denominated instruments across EEA counterparties. XVP settlement eliminates settlement risk between buyer and seller by linking asset delivery and payment in a single atomic transaction. Policy-governed transfer conditions ensure MiCA compliance on every settlement leg."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why SettleMint: platform depth, not consulting breadth",
+      "body": "SettleMint delivers a platform. The engagement model is not advisory hours: it is a deployed, configurable system that Estonian operators own and operate.\nSeven asset types are supported out of the box: bonds, deposits, stablecoins, equity, funds, real estate, and precious metals. Each asset type shares the same governance, identity, compliance, and servicing infrastructure. Issuers do not pay for re-implementation when they expand to a second or third product.\nDeployment timelines are measured in weeks, not quarters. DALP is available as a self-hosted deployment on the operator's own infrastructure, a SettleMint-managed cloud instance, or a hybrid configuration. Operators choose based on their regulatory, data residency, and operational requirements.\nThe platform is EVM-native throughout. Smart contracts are audited, versioned, and upgradeable within the SMART extension framework. Estonian operators get full technical ownership of their deployed instance without dependency on SettleMint for ongoing contract management."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Proposed next steps for Estonia",
+      "body": "Pilot program: SettleMint can support a focused pilot covering one priority asset type, such as a EUR-denominated bond or an e-money token, within a defined scope and timeline. The pilot validates DALP's fit with FSA licensing requirements and establishes the operational baseline for a full rollout.\nTechnical workshop: A structured session with the Estonian operator's technology and compliance teams to map DALP's ERC-3643, OnchainID, and SMART policy architecture against the specific instrument types and MiCA obligations in scope. Output is a confirmed integration and compliance mapping document.\nCompliance mapping session: A targeted review of the FSA license conditions and MiCA CASP obligations against DALP's built-in controls. Output is a gap analysis confirming which requirements are covered by platform configuration and which require operator-side process design.\nTo proceed, contact the SettleMint team to schedule the initial technical and compliance alignment session. Pilot scope and timeline can be agreed within two weeks of that session."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

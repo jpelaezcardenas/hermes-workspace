@@ -1,0 +1,141 @@
+{
+  "project": "community-engagement-plan",
+  "output": "/Users/quark/Public/quark/workspace/quark-unsorted-output/community-engagement-plan.pptx",
+  "description": "Community Engagement Plan: Digital Asset Thought Leadership Strategy",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Community Engagement Plan",
+      "subtitle": "Digital Asset Thought Leadership Strategy"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Specialist Publications",
+      "item_1": "Regulatory Bodies",
+      "item_2": "Real Estate Tokenization",
+      "item_3": "Digital Asset Influencers",
+      "item_4": "Roadmap and Budget",
+      "item_5": "ROI Framework"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Specialist Publications",
+      "subtitle": "Reaching buyers through trusted trade media"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "The Digital Banker",
+      "col1": "Global B2B media with 67K subscribers targeting C-suite banking and financial services leaders.\n\nEngagement: branded content, thought leadership interviews, awards nominations, event sponsorship.\n\nCost: EUR 10K-25K initial investment.",
+      "col2": "Actions:\n- Request media kit from editorial team\n- Pitch CEO interview on digital assets\n- Nominate for annual industry awards\n\nTimeline: Month 1-4"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Ledger Insights",
+      "col1": "Most credible enterprise blockchain publication globally. Focused exclusively on institutional digital assets, DLT, and tokenization.\n\nEngagement: guest articles, news coverage (free if accepted), long-term editorial relationships.\n\nCost: EUR 0-5K. Highest ROI channel in this plan.",
+      "col2": "Actions:\n- Pitch first guest article on DALP use cases\n- Build direct relationships with editors\n- Include in all press outreach going forward\n\nTimeline: Month 1-4, then ongoing"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "The Tokenizer",
+      "col1": "European tokenization-focused publication. Publishes the annual Who's Who guide listing 85+ issuance platforms. Strong reach across European asset managers and issuers.\n\nEngagement: Who's Who directory listing, editorial coverage, RegRadar subscription for regulatory intelligence.\n\nCost: EUR 5K-12K/year.",
+      "col2": "Actions:\n- Contact CEO Michael Juul Rugaard directly\n- Confirm DALP listing in Who's Who 2026 guide\n- Explore editorial partnership\n\nTimeline: Month 1-4"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Digital Asset Research",
+      "col1": "Institutional data provider serving Bloomberg, FTSE Russell, and similar clients. Not a media outlet. Value lies in data taxonomy alignment and B2B referral potential.\n\nEngagement: data integration partnership, co-webinar, mutual referral network.\n\nCost: EUR 0-10K. Relationship play, lower urgency.",
+      "col2": "Actions:\n- Explore data taxonomy integration with DALP\n- Propose a co-hosted institutional webinar\n\nTimeline: Month 2-6, lower priority"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Blockworks",
+      "col1": "Leading crypto media and events company. 2M+ monthly visitors, 100K+ newsletter subscribers. Strong institutional and crypto-native audience overlap.\n\nEngagement: newsletter sponsorship, sponsored content, DAS conference presence, podcast appearances.\n\nCost: EUR 20K-60K.",
+      "col2": "Actions:\n- Book advertising call with sales team\n- Start with On the Margin newsletter sponsorship\n- Explore DAS London speaking or sponsorship\n\nTimeline: Month 1-6"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Regulatory Bodies",
+      "subtitle": "Building credibility through standards participation"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "ITSA Token Standards",
+      "col1": "International Token Standardization Association. Manages ITIN, ITC, and TOKENBASE global token standards. Active ISO participation for digital asset classification.\n\nEngagement: Active Membership, PWG1/PWG2 technical working groups, TOKENBASE listing for DALP asset templates.\n\nCost: EUR 3K-10K/year plus time investment.",
+      "col2": "Actions:\n- Apply for Active Membership\n- Submit DALP asset templates to TOKENBASE database\n- Join PWG1 or PWG2 working group\n\nTimeline: Month 1-4"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "GDF Global Digital Finance",
+      "col1": "Industry standards body with member firms including Fireblocks, Circle, PayPal, EY, and Deloitte. Strong EU regulatory focus and MiCA working groups.\n\nEngagement: Tokenization Forum, EU Policy Working Group, co-authored whitepapers.\n\nCost: EUR 8K-20K/year plus time. Highest ROI regulatory body for MiCA relevance.",
+      "col2": "Actions:\n- Enquire about membership requirements and fees\n- Attend Digital Payments Forum as observer\n- Join EU Policy Working Group on tokenization\n\nTimeline: Month 1-6"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Real Estate Tokenization",
+      "subtitle": "Engaging the tokenized property ecosystem"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "FIBREE",
+      "col1": "Foundation for International Blockchain and Real Estate Expertise. 12K+ members, 80+ chapters globally. Hosts annual Global Blockchain Real Estate Summit and publishes the Industry Report.\n\nEngagement: Company Membership, local meetup sponsorship, summit speaking, Industry Report contributor.\n\nCost: EUR 3K-8K/year.",
+      "col2": "Actions:\n- Secure Company Membership\n- Present at meetups in London, Amsterdam, Dubai\n- Submit to Industry Report as contributor\n\nTimeline: Month 1-6"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "PropTech and Telegram Communities",
+      "col1": "Future Proptech events: 10K+ attendees, strong institutional property audience. MetaProp: leading real estate VC network with broad industry reach.\n\nTelegram communities: @RWA_COMMUNITY (51K members), @rwaboliorg (3K members), @tokenizedrwa (growing).\n\nCost: EUR 5K-18K combined for events and organic participation.",
+      "col2": "Actions:\n- Join all three Telegram groups, participate organically\n- Pitch speaking slot at Future Proptech conference\n- Propose AMA session in RWA Community\n\nTimeline: Month 1-6"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Digital Asset Influencers",
+      "subtitle": "Reaching institutional buyers through trusted voices"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Newsletter Sponsorships",
+      "col1": "Key newsletters with institutional reach:\n- Fintech Blueprint by Lex Sokolin: 200K+ subscribers, institutional focus\n- SmartBlocks/Mark Fidelman: crypto-native audience with corporate crossover\n- Integra Layer: tokenization-specific newsletter, early-adopter audience\n\nCost: EUR 8K-20K for a 6-month campaign across newsletters.",
+      "col2": "Actions:\n- Sponsor Fintech Blueprint for 3-6 months\n- Pitch interview to SmartBlocks on DALP capabilities\n- Explore Integra Layer co-published research\n\nTimeline: Month 1-6"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "51.xyz",
+      "col1": "B2B marketing agency with 100K+ institutional network and 20K executive newsletter subscribers. Specializes in GTM campaigns for digital asset infrastructure.\n\nEngagement: research distribution, newsletter sponsorship, targeted GTM campaigns.\n\nCost: EUR 20K-60K for a 3-month campaign.\n\nHighest single-channel ROI: one DALP deal conversion exceeds entire campaign cost.",
+      "col2": "Actions:\n- Book intro call with 51.xyz team\n- Test newsletter sponsorship at EUR 5K\n- Commission a co-branded research piece\n\nTimeline: Month 1-6"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Roadmap and Budget",
+      "subtitle": "Sequenced activation over 180 days"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "30/90/180-Day Roadmap",
+      "col1": "30 Days: Quick Wins\n- Request Digital Banker media kit\n- Contact Ledger Insights editors\n- Apply for ITSA and GDF membership\n- Join all three Telegram groups\n- Book 51.xyz intro call\n- Secure FIBREE Company Membership",
+      "col2": "90 Days: Build Momentum\n- Publish first thought leadership article via Ledger Insights\n- Launch first newsletter sponsorship (Blockworks or 51.xyz)\n- Present at first FIBREE local meetup\n- Join GDF EU Policy Working Group",
+      "col3": "180 Days: Measured Impact\n- 3 published articles across trade media\n- 2 active standards working groups\n- 10+ qualified leads from newsletter campaigns\n- 1 major event sponsorship confirmed"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Year 1 Budget",
+      "body": "Recommended starting budget: EUR 80K-120K. Full range reflects channel mix and negotiated rates.",
+      "table_data": [
+        ["Category", "Year 1 Investment"],
+        ["Specialist Publications", "EUR 35K-80K"],
+        ["Regulatory Bodies", "EUR 20K-40K"],
+        ["Real Estate Tokenization", "EUR 8K-20K"],
+        ["Digital Asset Influencers", "EUR 30K-70K"],
+        ["TOTAL", "EUR 93K-210K"]
+      ]
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "ROI Framework",
+      "body": "Key metrics per channel:\n- Newsletter: click-through rate, demo requests, UTM-attributed traffic\n- Events: leads captured, meetings booked, pipeline value generated\n- Working groups: partnerships seeded, regulatory access, co-authored content\n- Content: article views, LinkedIn shares, inbound inquiries\n\nTarget: At DALP deal sizes of EUR 100K-1M+, 1-2 conversions cover the entire Year 1 program.\n\nTrack monthly. Review channel mix at 90 days. Reallocate budget to top-performing channels."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

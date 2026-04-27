@@ -1,0 +1,12 @@
+flowchart LR
+    classDef portal fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef dalp fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef chain fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef custody fill:#fff8e1,stroke:#f9a825,color:#1f2937,stroke-width:1.5px;
+
+    Investor[Investor\nPortal]:::portal --> KYC[Identity &\nKYC Check]:::dalp
+    KYC --> Whitelist[Whitelist\nVerification]:::dalp
+    Whitelist --> Subscribe[Subscription\nOrder Entry]:::portal
+    Subscribe --> DALP[DALP\nOrchestration]:::dalp
+    DALP --> Contract[Smart Contract\nToken Mint]:::chain
+    Contract --> Custody[Digital Custody\nWallet Credit]:::custody

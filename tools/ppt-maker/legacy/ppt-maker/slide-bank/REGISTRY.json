@@ -1,0 +1,2423 @@
+{
+  "version": 2,
+  "generated_at": "2026-03-19T20:12:26Z",
+  "template_source": "templates/Master Template 2026.pptx",
+  "slide_count": 22,
+  "slides": [
+    {
+      "slide_number": 1,
+      "filename": "slide-001-cover-slide.pptx",
+      "layout_name": "Title - Standard",
+      "layout_slug": "title-standard",
+      "template_layout_name": "Cover Slide",
+      "template_layout_slug": "cover-slide",
+      "layout_category": "opening",
+      "description": "Opening/cover slide with a large title and subtitle area. Branded background with SettleMint logo. Always the first slide of any deck.",
+      "usage": "Use as the very first slide of every presentation. Enter the deck title and subtitle (date, event name, presenter).",
+      "potential_usage": "Can also be used as a re-opening slide after a major break or change in speaker.",
+      "content_capacity": "light",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0
+      },
+      "total_word_count": 0,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Title - Standard)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words"
+      },
+      "do_not_modify": [
+        "background image",
+        "logo",
+        "footer"
+      ],
+      "selection_tags": [
+        "cover",
+        "executive",
+        "investor",
+        "sales",
+        "product-overview",
+        "technical-deep-dive"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{ACFB61FE-7094-9FD7-36D3-8974595120DA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C4FE56E4-328C-D15F-C5C7-1699C0003D6A}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"601454250\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 2,
+      "filename": "slide-002-agenda.pptx",
+      "layout_name": "Agenda / TOC",
+      "layout_slug": "agenda-toc",
+      "template_layout_name": "Agenda",
+      "template_layout_slug": "agenda",
+      "layout_category": "opening",
+      "description": "Table of contents or meeting agenda slide with a full-width body area for listing sections or agenda items.",
+      "usage": "Use after the cover slide to preview the structure of the presentation. List 3\u20136 agenda items or sections.",
+      "potential_usage": "Can appear at the start of each major section as a 'where we are' recap slide.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "BODY"
+        },
+        {
+          "idx": 14,
+          "type": "BODY"
+        },
+        {
+          "idx": 15,
+          "type": "BODY"
+        },
+        {
+          "idx": 16,
+          "type": "BODY"
+        },
+        {
+          "idx": 17,
+          "type": "BODY"
+        },
+        {
+          "idx": 18,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 19,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 20,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 21,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 22,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 23,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 24,
+          "type": "CLIPART"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 14,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 15,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 16,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 17,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 18,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 19,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 20,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 21,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 22,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 23,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 24,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "BODY_12": 0,
+        "BODY_13": 0,
+        "BODY_14": 0,
+        "BODY_15": 0,
+        "BODY_16": 0,
+        "BODY_17": 0,
+        "CLIPART_18": 0,
+        "CLIPART_19": 0,
+        "CLIPART_20": 0,
+        "CLIPART_21": 0,
+        "CLIPART_22": 0,
+        "CLIPART_23": 0,
+        "CLIPART_24": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_13": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_14": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_15": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_16": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_17": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_18": "Content placeholder (CLIPART)",
+        "CLIPART_19": "Content placeholder (CLIPART)",
+        "CLIPART_20": "Content placeholder (CLIPART)",
+        "CLIPART_21": "Content placeholder (CLIPART)",
+        "CLIPART_22": "Content placeholder (CLIPART)",
+        "CLIPART_23": "Content placeholder (CLIPART)",
+        "CLIPART_24": "Content placeholder (CLIPART)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Agenda / TOC)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "BODY_13": "Body content (bullets or paragraphs)",
+        "BODY_14": "Body content (bullets or paragraphs)",
+        "BODY_15": "Body content (bullets or paragraphs)",
+        "BODY_16": "Body content (bullets or paragraphs)",
+        "BODY_17": "Body content (bullets or paragraphs)",
+        "CLIPART_18": "Content for this area",
+        "CLIPART_19": "Content for this area",
+        "CLIPART_20": "Content for this area",
+        "CLIPART_21": "Content for this area",
+        "CLIPART_22": "Content for this area",
+        "CLIPART_23": "Content for this area",
+        "CLIPART_24": "Content for this area"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "BODY_12": "~30\u201380 words",
+        "BODY_13": "~30\u201380 words",
+        "BODY_14": "~30\u201380 words",
+        "BODY_15": "~30\u201380 words",
+        "BODY_16": "~30\u201380 words",
+        "BODY_17": "~30\u201380 words",
+        "CLIPART_18": "~10\u201350 words",
+        "CLIPART_19": "~10\u201350 words",
+        "CLIPART_20": "~10\u201350 words",
+        "CLIPART_21": "~10\u201350 words",
+        "CLIPART_22": "~10\u201350 words",
+        "CLIPART_23": "~10\u201350 words",
+        "CLIPART_24": "~10\u201350 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "agenda",
+        "executive",
+        "sales",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{472C5CBE-893D-1048-BE2F-FC5B170BAF9E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{F5D7B995-A918-2918-9234-5D6BFA9A9C8D}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6098C686-DA6F-2A35-E99B-8D8707AC5400}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>2</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Text Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{DD67E3FE-2F3D-54DA-2C02-74F4C7DD16A1}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{5F6A76D1-24D9-396D-E7F0-FBB8D18C60EA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"7\" name=\"Text Placeholder 6\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FD2865E8-7ED1-6BCF-3AB7-C70102301489}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"14\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"8\" name=\"Text Placeholder 7\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{EF892835-F196-ACB4-5464-9EA222825766}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"15\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"9\" name=\"Text Placeholder 8\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{23C84730-46FC-CAC5-68CC-A121F3342FC0}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"16\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"10\" name=\"Text Placeholder 9\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FA5401A5-60DC-2ADA-84BD-B02913BD73D1}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"17\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"11\" name=\"Online Image Placeholder 10\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{CD568E3A-9BC9-1DE2-7C3E-D31C025F4A4E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"18\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"12\" name=\"Online Image Placeholder 11\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{0CC1CC56-1037-10EB-51C9-725DEC900211}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"19\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"13\" name=\"Online Image Placeholder 12\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{38E19919-05E1-E6BD-CE0C-6ABB4B0BD841}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"20\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"14\" name=\"Online Image Placeholder 13\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{9A2E5A46-0FF1-2CD0-C5F7-E83416E28B82}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"21\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"15\" name=\"Online Image Placeholder 14\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{91862681-7D84-88A3-3982-C6D4ED6D80E3}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"22\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"16\" name=\"Online Image Placeholder 15\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{113A01C5-EBC1-E511-72BE-E5361DAB4205}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"23\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"17\" name=\"Online Image Placeholder 16\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{CA85E0EB-A354-8B09-5780-3D75ED9011EC}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"24\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"944292981\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 3,
+      "filename": "slide-003-section-separator.pptx",
+      "layout_name": "Section Divider - Bold",
+      "layout_slug": "section-divider-bold",
+      "template_layout_name": "Section Separator",
+      "template_layout_slug": "section-separator",
+      "layout_category": "opening",
+      "description": "Major section break slide with a bold branded background. Marks the start of a new major section in the deck.",
+      "usage": "Place between major sections (e.g., before 'Problem', 'Solution', 'Pricing'). Title = section name, body = optional short description.",
+      "potential_usage": "Can also be used as a chapter divider in long workshop or training decks.",
+      "content_capacity": "light",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0
+      },
+      "total_word_count": 0,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Section Divider - Bold)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words"
+      },
+      "do_not_modify": [
+        "background image",
+        "logo",
+        "footer"
+      ],
+      "selection_tags": [
+        "section-break",
+        "executive",
+        "sales",
+        "product-overview",
+        "technical-deep-dive"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{A21063E1-D7C5-3A52-6800-85E3F1F625DE}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{8E4C6864-4A02-93E3-B034-EF59818165BA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3847931372\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 4,
+      "filename": "slide-004-blank.pptx",
+      "layout_name": "1-Column Content",
+      "layout_slug": "1-column-content",
+      "template_layout_name": "Blank",
+      "template_layout_slug": "blank",
+      "layout_category": "content",
+      "description": "Blank content slide with footer only. Fully flexible canvas for custom layouts or single-column narrative content.",
+      "usage": "Use when no pre-built layout fits your content. Works for narrative text, single-image placements, or custom diagrams.",
+      "potential_usage": "Can host a single large image, a diagram, or serve as a transition slide.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing 1-Column Content)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "text-content",
+        "narrative"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{73891F8D-9358-7100-4000-5452A7413252}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Slide Number Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{139F3429-29E1-16E5-1FB4-91FD6035EEAB}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>4</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"2939998203\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 5,
+      "filename": "slide-005-single-column.pptx",
+      "layout_name": "1-Column Content",
+      "layout_slug": "1-column-content",
+      "template_layout_name": "Single Column",
+      "template_layout_slug": "single-column",
+      "layout_category": "content",
+      "description": "Standard single-column content slide with a title and full-width body area. The default workhorse slide for any narrative, bullet list, or short paragraph content.",
+      "usage": "Use for any single-topic slide: explaining a concept, listing features, presenting a narrative. Title states the takeaway; body carries 3\u20136 bullets or 2\u20133 short paragraphs.",
+      "potential_usage": "Works for introductory explanations, product overviews, how-it-works sections, and policy/compliance summaries.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing 1-Column Content)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "text-content",
+        "bullets",
+        "narrative",
+        "executive",
+        "sales",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{40A1B65A-0063-1E59-6478-09CD463AB9E8}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{84D4824B-98E7-C165-0A72-1D31631EA2D4}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{057839E1-AE66-AE1F-0C55-8F70131BDFCA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>5</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"1201236963\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 6,
+      "filename": "slide-006-table.pptx",
+      "layout_name": "Table - Simple",
+      "layout_slug": "table-simple",
+      "template_layout_name": "Table",
+      "template_layout_slug": "table",
+      "layout_category": "data",
+      "description": "Full-width table layout for structured data presentation. No supplementary text area \u2014 the table is the focus.",
+      "usage": "Use for feature matrices, pricing tiers, specification tables, or any structured data with rows and columns. Max 6 rows \u00d7 5 columns.",
+      "potential_usage": "Works for technical comparison tables, API endpoint references, or compliance requirement lists.",
+      "content_capacity": "heavy",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": true,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "TBL"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "TBL",
+          "idx": 12,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "TBL_12": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "TBL_12": "Content placeholder (TBL)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Table - Simple)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "TBL_12": "Content for this area"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "TBL_12": "~10\u201350 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "table",
+        "comparison",
+        "matrix",
+        "technical-deep-dive",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{662648B7-1082-13D4-CA83-48362910CFDF}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{17893562-49FA-BFFC-A920-A82DE37F744B}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{62612D9C-FF17-24E8-DB28-667280316C30}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>6</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Table Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{72287062-8D16-3297-C35F-CCA18BB114E8}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"tbl\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"1198586711\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 7,
+      "filename": "slide-007-table-with-text.pptx",
+      "layout_name": "Table - Comparison",
+      "layout_slug": "table-comparison",
+      "template_layout_name": "Table with Text",
+      "template_layout_slug": "table-with-text",
+      "layout_category": "data",
+      "description": "Table layout with accompanying text area for adding context or narrative alongside the data. Ideal for feature comparison tables.",
+      "usage": "Use when a table needs interpretation \u2014 place the table and use the text area for callouts, caveats, or the key insight.",
+      "potential_usage": "Works for vendor comparison, feature-by-tier tables with explanatory notes, or compliance matrices with commentary.",
+      "content_capacity": "heavy",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": true,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "TBL"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "TBL",
+          "idx": 12,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "TBL_12": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "TBL_12": "Content placeholder (TBL)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Table - Comparison)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "TBL_12": "Content for this area"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "TBL_12": "~10\u201350 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "table",
+        "comparison",
+        "matrix",
+        "technical-deep-dive",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{5F7C2E02-C12D-46ED-BEA1-6CC8198AB626}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{3D111450-D3CB-F9BD-C36A-9D30AF147E7D}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{387CBD8F-0D50-28D9-4097-1734076FDDFD}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>7</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Table Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{3AE35F52-AC07-BF81-D11D-B8AF269227D4}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"tbl\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3682265045\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 8,
+      "filename": "slide-008-chart-with-text.pptx",
+      "layout_name": "Chart Left + Text",
+      "layout_slug": "chart-left-text",
+      "template_layout_name": "Chart with Text",
+      "template_layout_slug": "chart-with-text",
+      "layout_category": "data",
+      "description": "Split layout with a chart on one side and explanatory text on the other. The data visualization is paired with narrative context.",
+      "usage": "Use when a chart needs interpretation. Place the chart and use the text area to state the insight in 2\u20134 bullets. Always lead with the 'so what'.",
+      "potential_usage": "Works for market size charts, growth trend visualizations, adoption curves, or any data that tells a story.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": true,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "CHART"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "CHART",
+          "idx": 12,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "CHART_12": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "CHART_12": "Content placeholder (CHART)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Chart Left + Text)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "CHART_12": "Content for this area"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "CHART_12": "~10\u201350 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "chart",
+        "data-visualization",
+        "executive",
+        "investor",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{26278879-5EAD-9B50-ED46-E4585ECF990E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{119E20DD-E328-7D98-F5F5-FA86C1687830}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{954E2978-786E-95FD-BD87-1CC971931535}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>8</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Chart Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6E85D6BD-D11A-CBE0-B0A4-E41732C3E626}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"chart\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3855233479\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 10,
+      "filename": "slide-010-two-column.pptx",
+      "layout_name": "2-Column Wide-Narrow",
+      "layout_slug": "2-column-wide-narrow",
+      "template_layout_name": "Two column",
+      "template_layout_slug": "two-column",
+      "layout_category": "content",
+      "description": "Two-column layout with equal columns but without separate column headers. Flexible dual-column layout for side-by-side content.",
+      "usage": "Use for two parallel content areas where no column titles are needed. Works for split narratives, dual lists, or paired content blocks.",
+      "potential_usage": "Good for quick two-topic summaries, left-right content pairing, or supplementary detail alongside main content.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "BODY_12": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing 2-Column Wide-Narrow)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "BODY_12": "Body content (bullets or paragraphs)"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "BODY_12": "~30\u201380 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "two-column",
+        "text-content",
+        "product-overview",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{B687FE3E-11EE-F8B3-D508-257E45B9A682}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C94BAE15-5E93-1C0D-2CE1-BC9B96CB6F10}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6DFE995D-74BC-0FD8-4807-121708BC8A3D}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>9</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Text Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{2D97DAA2-A267-F83C-DB99-B0CF335A81A2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"902605931\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 12,
+      "filename": "slide-012-three-column.pptx",
+      "layout_name": "3-Column Content",
+      "layout_slug": "3-column-content",
+      "template_layout_name": "Three Column",
+      "template_layout_slug": "three-column",
+      "layout_category": "content",
+      "description": "Three equal-width columns without a separate slide title \u2014 the columns carry all content. Maximizes content area for three parallel topics.",
+      "usage": "Use when you have three parallel content areas and want to maximize real estate. Suitable for feature comparisons, step-by-step breakdowns, or three key messages.",
+      "potential_usage": "Works for three-tier architecture overviews, three-pillar strategy frames, or three product highlights.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 3,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 13,
+          "type": "BODY"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "BODY",
+          "idx": 13,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "BODY_12": 0,
+        "SLIDE_NUMBER_10": 4,
+        "BODY_13": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "BODY_13": "Main content area \u2014 bullets, paragraphs, or structured content"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing 3-Column Content)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "BODY_13": "Body content (bullets or paragraphs)"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "BODY_12": "~30\u201380 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "BODY_13": "~30\u201380 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "three-column",
+        "multi-column",
+        "text-content",
+        "product-overview",
+        "technical-deep-dive"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{4ED1D822-F44B-9D57-5F0B-1D24BFEA2BB9}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{E7C34577-45F9-AB46-B992-26A878DD3D28}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Text Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C68BD504-BAFA-2B18-5239-453C6392A329}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{2ED39FC7-453F-A0F5-B2B5-85065F2D1C03}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>10</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{B3EEE461-6552-CC4E-84BF-5738D6C6DCF2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"4058168305\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 13,
+      "filename": "slide-013-text-2x2.pptx",
+      "layout_name": "Icon Grid - 4 Column",
+      "layout_slug": "icon-grid-4-column",
+      "template_layout_name": "Text 2x2",
+      "template_layout_slug": "text-2x2",
+      "layout_category": "content",
+      "description": "2\u00d72 grid of four equal text blocks arranged in two rows and two columns. Each block can contain a heading and body text.",
+      "usage": "Use for four key points, four product features, four customer benefits, or a 2\u00d72 matrix framework (e.g., effort/impact, risk/reward).",
+      "potential_usage": "Works for four pillars, four platform components, four use cases, or a 2\u00d72 strategic framing.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 14,
+          "type": "BODY"
+        },
+        {
+          "idx": 15,
+          "type": "BODY"
+        },
+        {
+          "idx": 16,
+          "type": "BODY"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "BODY",
+          "idx": 14,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 15,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 16,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "BODY_14": 0,
+        "BODY_15": 0,
+        "BODY_16": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "BODY_14": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_15": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_16": "Main content area \u2014 bullets, paragraphs, or structured content"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Icon Grid - 4 Column)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "BODY_14": "Body content (bullets or paragraphs)",
+        "BODY_15": "Body content (bullets or paragraphs)",
+        "BODY_16": "Body content (bullets or paragraphs)"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "BODY_14": "~30\u201380 words",
+        "BODY_15": "~30\u201380 words",
+        "BODY_16": "~30\u201380 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "multi-column",
+        "icons",
+        "features",
+        "product-overview",
+        "executive"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{663B4616-7581-06F9-A612-85DA4430633F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{93C9E74B-A6E7-F2FC-B974-C6357303434A}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{F6A8A205-DFE2-33A3-4C70-92608184AD10}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>11</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Text Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{1E563E0E-740B-C418-6ADD-838754A4C5C0}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"14\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{E4D15BFF-B8CD-A4A3-3F26-D2177B9FA304}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"15\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"7\" name=\"Text Placeholder 6\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{38BAA91D-E782-1BEA-52EB-D06FDC4E6B35}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"16\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"523674231\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 14,
+      "filename": "slide-014-text-2x3.pptx",
+      "layout_name": "Icon Grid - 3 Column",
+      "layout_slug": "icon-grid-3-column",
+      "template_layout_name": "Text 2x3",
+      "template_layout_slug": "text-2x3",
+      "layout_category": "content",
+      "description": "2\u00d73 grid of six equal text blocks arranged in two rows and three columns. Maximizes content density for feature-rich slides.",
+      "usage": "Use for six key features, six integration partners, six compliance standards, or any collection of six parallel items.",
+      "potential_usage": "Works for feature grids, capability overviews, six-step summaries, or a comprehensive capability matrix.",
+      "content_capacity": "medium",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 3,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 15,
+          "type": "BODY"
+        },
+        {
+          "idx": 16,
+          "type": "BODY"
+        },
+        {
+          "idx": 17,
+          "type": "BODY"
+        },
+        {
+          "idx": 18,
+          "type": "BODY"
+        },
+        {
+          "idx": 19,
+          "type": "BODY"
+        },
+        {
+          "idx": 20,
+          "type": "BODY"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "BODY",
+          "idx": 15,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 16,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 17,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 18,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 19,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 20,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "SLIDE_NUMBER_10": 4,
+        "BODY_15": 0,
+        "BODY_16": 0,
+        "BODY_17": 0,
+        "BODY_18": 0,
+        "BODY_19": 0,
+        "BODY_20": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "BODY_15": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_16": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_17": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_18": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_19": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "BODY_20": "Main content area \u2014 bullets, paragraphs, or structured content"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Icon Grid - 3 Column)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "BODY_15": "Body content (bullets or paragraphs)",
+        "BODY_16": "Body content (bullets or paragraphs)",
+        "BODY_17": "Body content (bullets or paragraphs)",
+        "BODY_18": "Body content (bullets or paragraphs)",
+        "BODY_19": "Body content (bullets or paragraphs)",
+        "BODY_20": "Body content (bullets or paragraphs)"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "BODY_15": "~30\u201380 words",
+        "BODY_16": "~30\u201380 words",
+        "BODY_17": "~30\u201380 words",
+        "BODY_18": "~30\u201380 words",
+        "BODY_19": "~30\u201380 words",
+        "BODY_20": "~30\u201380 words"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "three-column",
+        "multi-column",
+        "icons",
+        "features",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{614A400F-A2C0-149C-61A4-218C608C2FCC}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Slide Number Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{61B141B0-A64F-2B68-99D9-22B5893E3CDD}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>12</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Text Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6A6FC701-69F4-DD95-4294-5F3A3721F30B}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"15\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Text Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{58B454E3-AD22-A5B2-86DF-7CFEF19F0E0F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"16\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{BF083551-4699-EDD2-AEAB-9C3C86EB31E6}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"17\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"7\" name=\"Text Placeholder 6\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6BF0DABF-DF54-1A64-212B-19E438CE363E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"18\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"8\" name=\"Text Placeholder 7\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C3D89414-D5A3-9F59-7F5F-2759614F1475}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"19\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"9\" name=\"Text Placeholder 8\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{CBE55341-71D6-2BD8-6334-AF75B2A033D8}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"20\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"4033625771\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    },
+    {
+      "slide_number": 15,
+      "filename": "slide-015-screenshot-right.pptx",
+      "layout_name": "Text Left + Image Right",
+      "layout_slug": "text-left-image-right",
+      "template_layout_name": "Screenshot Right",
+      "template_layout_slug": "screenshot-right",
+      "layout_category": "visual",
+      "description": "Left side carries title and text content; right side holds a screenshot or image. The text leads and the visual supports.",
+      "usage": "Use this layout for DALP/browser screenshots. It is the approved browser-frame slot for screenshots; diagrams or stock art can be used only when the slide still makes sense visually.",
+      "potential_usage": "Works for product feature demos, architecture diagrams with explanation, or any slide where the visual is proof of the text.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "PICTURE"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "PICTURE",
+          "idx": 12,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "PICTURE_12": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "PICTURE_12": "Browser-frame placeholder \u2014 DALP screenshots belong here; diagrams and stock art are allowed when needed"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Text Left + Image Right)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "PICTURE_12": "Insert DALP screenshot, browser mockup, or diagram framed for browser view"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "PICTURE_12": "Replace with approved image asset"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "screenshot",
+        "two-column",
+        "product-overview",
+        "technical-deep-dive",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{5D107528-2C1E-DADE-4A9B-658E6F60A059}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FDBF4128-84A8-FF84-85DC-7658E24EBDB2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{A23D5DAA-70F0-1AF1-B90C-789B3D874B5F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>13</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Picture Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{AE14320A-72C6-12FA-F8FA-FD3C7CD03BAB}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"pic\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"1716155327\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 12,
+          "placeholder_kind": "browser_frame",
+          "allowed_asset_kinds": [
+            "dalp_screenshot",
+            "diagram",
+            "generic_image"
+          ],
+          "preferred_asset_kinds": [
+            "dalp_screenshot"
+          ],
+          "fit_mode_by_asset_kind": {
+            "dalp_screenshot": "cover",
+            "diagram": "contain",
+            "generic_image": "cover"
+          },
+          "background_by_asset_kind": {
+            "dalp_screenshot": "transparent",
+            "diagram": "transparent",
+            "generic_image": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "screenshot-browser-frame"
+        }
+      ]
+    },
+    {
+      "slide_number": 16,
+      "filename": "slide-016-screenshot-left.pptx",
+      "layout_name": "Image Left + Text Right",
+      "layout_slug": "image-left-text-right",
+      "template_layout_name": "Screenshot Left",
+      "template_layout_slug": "screenshot-left",
+      "layout_category": "visual",
+      "description": "Left side holds a screenshot or image; right side carries title and text content. The visual leads and the text explains.",
+      "usage": "Use this layout for DALP/browser screenshots. It is the approved browser-frame slot for screenshots; diagrams or stock art can be used only when the slide still makes sense visually.",
+      "potential_usage": "Works for UI-first presentations, visual-led product stories, or any slide where the image is the hook.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 11,
+          "type": "BODY"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        },
+        {
+          "idx": 12,
+          "type": "PICTURE"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 11,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        },
+        {
+          "type": "PICTURE",
+          "idx": 12,
+          "word_count": 0
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_11": 0,
+        "SLIDE_NUMBER_10": 4,
+        "PICTURE_12": 0
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_11": "Subtitle, date, presenter name, or event description",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+        "PICTURE_12": "Browser-frame placeholder \u2014 DALP screenshots belong here; diagrams and stock art are allowed when needed"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Image Left + Text Right)",
+        "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+        "PICTURE_12": "Insert DALP screenshot, browser mockup, or diagram framed for browser view"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_11": "~5\u201320 words",
+        "SLIDE_NUMBER_10": "Do not modify",
+        "PICTURE_12": "Replace with approved image asset"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "screenshot",
+        "two-column",
+        "product-overview",
+        "technical-deep-dive",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{60D2B237-D1FE-2B80-9559-7B2E13933955}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{AF7EF051-A58D-B817-DA7F-80821C454F6D}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C777EA7E-556F-25CB-E407-278F6ED3828E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>14</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Picture Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{41F4632F-C0CB-FE2F-AEB8-8281428936CF}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"pic\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"1380930688\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 12,
+          "placeholder_kind": "browser_frame",
+          "allowed_asset_kinds": [
+            "dalp_screenshot",
+            "diagram",
+            "generic_image"
+          ],
+          "preferred_asset_kinds": [
+            "dalp_screenshot"
+          ],
+          "fit_mode_by_asset_kind": {
+            "dalp_screenshot": "cover",
+            "diagram": "contain",
+            "generic_image": "cover"
+          },
+          "background_by_asset_kind": {
+            "dalp_screenshot": "transparent",
+            "diagram": "transparent",
+            "generic_image": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "screenshot-browser-frame"
+        }
+      ]
+    },
+    {
+      "slide_number": 17,
+      "filename": "slide-017-picture-left-equal.pptx",
+      "layout_name": "Image Left + Text Right",
+      "layout_slug": "image-left-text-right",
+      "template_layout_name": "Picture Left Equal",
+      "template_layout_slug": "picture-left-equal",
+      "layout_category": "visual",
+      "description": "Equal split with image/photo on the left and text content on the right. The visual and text carry equal visual weight.",
+      "usage": "Use for team introductions with photos, customer stories with client photos, or any visual-text pairing where both sides are equally important. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for people-centric slides, location/facility shots with descriptions, or event/conference imagery with context.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Image Left + Text Right)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or square-ish Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "two-column",
+        "team",
+        "people",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{BFC161AC-3994-0B19-2B8A-F7FB99618CA4}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{76597F1E-BFEB-651E-C818-CF9842E37236}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{EB5D3E09-2635-0148-1546-5CCA7FE263E2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{681AE55B-B61A-826C-B77C-04E3956E3D9E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>15</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3389079493\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "equal"
+        }
+      ]
+    },
+    {
+      "slide_number": 18,
+      "filename": "slide-018-picture-right-equal.pptx",
+      "layout_name": "Text Left + Image Right",
+      "layout_slug": "text-left-image-right",
+      "template_layout_name": "Picture Right Equal",
+      "template_layout_slug": "picture-right-equal",
+      "layout_category": "visual",
+      "description": "Equal split with text content on the left and image/photo on the right. The visual and text carry equal visual weight.",
+      "usage": "Use for team introductions with photos, product images with descriptions, or any visual-text pairing where both sides are equally important. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for customer case study photos, product lifestyle imagery, or any content that benefits from a strong visual alongside the narrative.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Text Left + Image Right)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or square-ish Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "two-column",
+        "team",
+        "people",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{46300593-E801-AC44-28BC-88031B1284C8}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{ADBA6404-052C-C893-BEBF-CBAA2F9C4ACE}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{9DDFF524-1070-BDE6-8791-5431DAD2C544}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{B1C3AB9B-FA2C-9C16-BEBF-EF94C3F68F81}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>16</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"650829253\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "equal"
+        }
+      ]
+    },
+    {
+      "slide_number": 19,
+      "filename": "slide-019-picture-left-wide.pptx",
+      "layout_name": "Image Left + Text Right",
+      "layout_slug": "image-left-text-right",
+      "template_layout_name": "Picture Left Wide",
+      "template_layout_slug": "picture-left-wide",
+      "layout_category": "visual",
+      "description": "Wide image panel on the left (larger than text area) with text content on the right. The image is dominant.",
+      "usage": "Use when the visual is the primary communication element \u2014 large product screenshots, architectural diagrams, or impactful photography that needs to breathe. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for full-product-view screenshots, dramatic imagery, or any case where the visual should dominate the narrative.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Image Left + Text Right)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or landscape Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "two-column",
+        "product-overview",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{91598248-96D5-AA40-EF40-431FA503A63F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{BA99F9A3-1A34-1F0E-A533-FD9C4E805AE3}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{F72DD1B3-0355-B8B3-FD0A-078776FB2BF7}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{2542EBD1-1666-5ED0-09E2-836AF574D065}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>17</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"470948985\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "wide"
+        }
+      ]
+    },
+    {
+      "slide_number": 20,
+      "filename": "slide-020-picture-right-wide.pptx",
+      "layout_name": "Text Left + Image Right",
+      "layout_slug": "text-left-image-right",
+      "template_layout_name": "Picture Right Wide",
+      "template_layout_slug": "picture-right-wide",
+      "layout_category": "visual",
+      "description": "Text content on the left with a wide image panel on the right (larger than text area). The image is dominant.",
+      "usage": "Use when the visual is the primary communication element on the right side \u2014 large screenshots, product UIs, or impactful imagery that sets the mood. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for product showcase slides, dramatic visual statements, or any content where the right-side image dominates.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Text Left + Image Right)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or landscape Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "two-column",
+        "product-overview",
+        "sales"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{707160E9-303E-8F26-EF17-8C6E0D825C68}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{382FC663-6837-CB71-174D-5E96AFBA11B2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{78F844BB-7864-9749-3E9E-B22289758947}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{D7C3FF33-378E-F8D0-8BCB-42A547642D5F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>18</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3121095935\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "wide"
+        }
+      ]
+    },
+    {
+      "slide_number": 21,
+      "filename": "slide-021-picture-left-one-third.pptx",
+      "layout_name": "Image Left + Text Right",
+      "layout_slug": "image-left-text-right",
+      "template_layout_name": "Picture Left One Third",
+      "template_layout_slug": "picture-left-one-third",
+      "layout_category": "visual",
+      "description": "Narrow one-third image panel on the left with a wide text area on the right. The image is a supporting accent.",
+      "usage": "Use when you want a visual accent alongside substantial text \u2014 a small product image, logo, or illustration that supports but doesn't dominate the content. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for partner/integration logos with descriptions, small illustrative images with long narrative, or icon-sized visuals with text.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Image Left + Text Right)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or portrait Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "two-column",
+        "narrative",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{5EB80FB0-B413-1AF1-53AB-D3037D6187C3}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{56247B20-BAFF-4EE7-D812-B84E517B1228}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{83BF3218-F71A-85E2-5E71-6893BCDC0E5C}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{2AA910B0-648D-4DFE-007C-37401FF3953F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>19</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"2186674753\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "one-third"
+        }
+      ]
+    },
+    {
+      "slide_number": 22,
+      "filename": "slide-022-picture-right-one-third.pptx",
+      "layout_name": "Text Left + Image Right",
+      "layout_slug": "text-left-image-right",
+      "template_layout_name": "Picture Right One Third",
+      "template_layout_slug": "picture-right-one-third",
+      "layout_category": "visual",
+      "description": "Wide text area on the left with a narrow one-third image panel on the right. The text is dominant with a visual accent.",
+      "usage": "Use when you want a visual accent that supports substantial text \u2014 place a small product image, icon, or illustration on the right without overwhelming the content. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for narrative-heavy slides that benefit from a subtle visual reference, or for logo/brand accent alongside text.",
+      "content_capacity": "medium",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 2,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Text Left + Image Right)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or portrait Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "two-column",
+        "narrative",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{9C8FB46F-2BA7-EE7E-01F9-43829AECC88F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6244C6D8-A465-7B99-C1B3-542315DB955A}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{AE8A4494-E58A-8B8C-A015-79AD9C93CD16}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{9E47192A-9A2C-E32F-AAE8-1E05406D8A96}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>20</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"4015344394\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": true,
+          "corner_radius_px": 8,
+          "aspect_ratio_class": "one-third"
+        }
+      ]
+    },
+    {
+      "slide_number": 23,
+      "filename": "slide-023-picture-full-width.pptx",
+      "layout_name": "Full Visual - Bleed",
+      "layout_slug": "full-visual-bleed",
+      "template_layout_name": "Picture Full Width",
+      "template_layout_slug": "picture-full-width",
+      "layout_category": "visual",
+      "description": "Full-bleed image or visual that occupies the entire slide with minimal text overlay. Maximum visual impact.",
+      "usage": "Use for hero statements, dramatic section openers, full-product screenshots, or any moment where the image should do all the talking. Use this for stock images or Mermaid diagrams; DALP screenshots should go on screenshot-left/right browser-frame slides.",
+      "potential_usage": "Works for opening a section with a powerful visual, showing a city/event backdrop, or making an emotional impact before a key message.",
+      "content_capacity": "light",
+      "has_image_area": true,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE"
+        },
+        {
+          "idx": 12,
+          "type": "BODY"
+        },
+        {
+          "idx": 13,
+          "type": "CLIPART"
+        },
+        {
+          "idx": 10,
+          "type": "SLIDE_NUMBER"
+        }
+      ],
+      "elements": [
+        {
+          "type": "TITLE",
+          "idx": 0,
+          "word_count": 0
+        },
+        {
+          "type": "BODY",
+          "idx": 12,
+          "word_count": 0
+        },
+        {
+          "type": "CLIPART",
+          "idx": 13,
+          "word_count": 0
+        },
+        {
+          "type": "SLIDE_NUMBER",
+          "idx": 10,
+          "word_count": 4
+        }
+      ],
+      "word_counts": {
+        "TITLE_0": 0,
+        "BODY_12": 0,
+        "CLIPART_13": 0,
+        "SLIDE_NUMBER_10": 4
+      },
+      "total_word_count": 4,
+      "placeholder_summary": {
+        "TITLE_0": "Main slide title \u2014 states the key message or topic",
+        "BODY_12": "Main content area \u2014 bullets, paragraphs, or structured content",
+        "CLIPART_13": "Generic visual placeholder \u2014 use stock art or Mermaid diagrams, not DALP screenshots",
+        "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)"
+      },
+      "content_suggestions": {
+        "TITLE_0": "Slide title (3\u20138 words describing Full Visual - Bleed)",
+        "BODY_12": "Body content (bullets or paragraphs)",
+        "CLIPART_13": "Insert stock image or wide Mermaid diagram",
+        "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify"
+      },
+      "fill_hints": {
+        "TITLE_0": "~3\u201310 words",
+        "BODY_12": "~30\u201380 words",
+        "CLIPART_13": "Replace with approved image asset",
+        "SLIDE_NUMBER_10": "Do not modify"
+      },
+      "do_not_modify": [
+        "footer",
+        "slide number"
+      ],
+      "selection_tags": [
+        "image",
+        "full-bleed",
+        "executive",
+        "sales",
+        "investor"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FAC13CD0-BF7D-7E30-E3DE-1B80630E61F3}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6F5CC641-5B87-CE26-236F-F6513349C59D}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Online Image Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{3141E0E9-9006-02DC-7B0B-24E087F13475}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{AADD65BC-FFDE-E843-3D91-BE5B422C03B4}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>21</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3349327172\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+      "image_slot_policy": [
+        {
+          "placeholder_idx": 13,
+          "placeholder_kind": "generic_image",
+          "allowed_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "preferred_asset_kinds": [
+            "generic_image",
+            "diagram"
+          ],
+          "fit_mode_by_asset_kind": {
+            "generic_image": "cover",
+            "diagram": "contain"
+          },
+          "background_by_asset_kind": {
+            "generic_image": "transparent",
+            "diagram": "transparent"
+          },
+          "round_corners": false,
+          "corner_radius_px": 0,
+          "aspect_ratio_class": "full-width"
+        }
+      ]
+    },
+    {
+      "slide_number": 24,
+      "filename": "slide-024-thank-you.pptx",
+      "layout_name": "Closing - Thank You",
+      "layout_slug": "closing-thank-you",
+      "template_layout_name": "Thank You",
+      "template_layout_slug": "thank-you",
+      "layout_category": "closing",
+      "description": "Branded closing/thank you slide with CTA area. Matches the cover in branding. Always the last slide of any deck.",
+      "usage": "Use as the final slide. Include a call to action, contact information, or next steps. Title = 'Thank You' or equivalent.",
+      "potential_usage": "Can also be used as a Q&A invitation slide or a 'contact us' closing slide in sales contexts.",
+      "content_capacity": "light",
+      "has_image_area": false,
+      "has_icon_area": false,
+      "has_chart_area": false,
+      "has_table_area": false,
+      "column_count": 1,
+      "placeholders": [],
+      "elements": [],
+      "word_counts": {},
+      "total_word_count": 0,
+      "placeholder_summary": {},
+      "content_suggestions": {},
+      "fill_hints": {},
+      "do_not_modify": [
+        "background image",
+        "logo",
+        "footer"
+      ],
+      "selection_tags": [
+        "closing",
+        "executive",
+        "sales",
+        "investor",
+        "product-overview"
+      ],
+      "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"3425206441\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+    }
+  ]
+}

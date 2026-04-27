@@ -1,0 +1,44 @@
+{
+  "project": "2026-03-20-dalp-custom-diagram-deck",
+  "output": "output/2026-03-20-dalp-custom-diagram-deck.pptx",
+  "description": "Compact DALP appendix-style deck with four newly-authored custom diagrams",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Custom Diagram Deck",
+      "subtitle": "Four newly-authored DALP-specific diagrams | March 2026"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "New DALP architecture and operating diagrams"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Configurable token control stack",
+      "body": "A fresh DALP-specific view of how one governed asset definition combines product terms, runtime features, identity, compliance modules, permissions, and custody policy. The point is simple: DALP does not stop at token deployment; it assembles an institutional operating model around the asset.",
+      "image_path": "workflow/appendix-diagrams/dalp-configurable-token-control-stack-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Ex-ante compliance control flow",
+      "body": "This new control-flow diagram shows the DALP decision path before a transfer, issuance, or servicing action executes. Identity, claims, policy modules, and optional maker-checker review are resolved first, so blocked actions fail before any on-chain state change.",
+      "image_path": "workflow/appendix-diagrams/dalp-ex-ante-compliance-control-flow-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Asset lifecycle and servicing loop",
+      "body": "This diagram reframes DALP as a lifecycle platform rather than an issuance tool. Design, onboarding, issuance, transfer, servicing, and redemption all update the same unified registry and produce the evidence operators need after launch.",
+      "image_path": "workflow/appendix-diagrams/dalp-asset-lifecycle-servicing-loop-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "RBAC and maker-checker operating model",
+      "body": "A new DALP operating-model view showing how makers, approvers, operators, compliance officers, and platform admins intersect with queueing, policy gates, permission bootstrap, and evidence capture. It makes separation of duties visible instead of implied.",
+      "image_path": "workflow/appendix-diagrams/dalp-rbac-maker-checker-operating-model-2026-03-20.mmd"
+    }
+  ]
+}

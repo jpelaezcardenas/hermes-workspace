@@ -1,0 +1,193 @@
+{
+  "project": "2026-03-20-team-update-v2",
+  "output": "output/2026-03-20-team-update-v2.pptx",
+  "description": "SettleMint - What We Built: Jan-Mar 2026 | Internal team review deck covering Product, Marketing, and Business.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "What We Built: Jan-Mar 2026",
+      "subtitle": "SettleMint Internal Review - March 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Product",
+      "item_1": "Marketing",
+      "item_2": "Business",
+      "icon_0": "icon-library/lucide/cpu.svg",
+      "icon_1": "icon-library/lucide/trending-up.svg",
+      "icon_2": "icon-library/lucide/briefcase.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Product",
+      "subtitle": "Runtime split · Indexer migration · Transaction queue · ERC-4337 + Compliance V2 · SDK & observability"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "DALP Runtime Split: DAPI / DDWF / DIDX",
+      "col1": "**kit/dapi - HTTP API Service**\n• Independently deployable HTTP API + auth service (PR #6121)\n• Middleware layered: auth, token hydration, queue preference, wallet verification\n• Hono replaced Bun.serve() across all services (PR #6352)\n• PostgreSQL notification bridge preserves read-after-write coordination\n• Clean service boundary enables targeted, isolated scaling",
+      "col2": "**kit/ddwf - Durable Workflow Engine**\n• Independently deployable durable workflow engine (PR #6353)\n• Manages long-running operations with resumable execution\n• Durable transaction processor and approval polling shipped (PR #6181)\n• E2E latency cut via fast-path confirmation and event-driven sync (PR #6331)\n• Operates without state loss across process restarts or infra failures",
+      "col3": "**kit/didx - Standalone Indexer**\n• Independently deployable indexer service (PR #6359)\n• Owns full read model lifecycle: PostgreSQL-backed, no external graph dependency\n• ERC-4337 account abstraction indexer tables and handlers added (PR #6379)\n• Directory entity projections added (PR #6370)\n• Subgraph retained as DALP_USE_SUBGRAPH=true rollback path only"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Indexer Migration: The Graph → DALP-owned Postgres",
+      "item1": "**Token & Stats Routes Migrated**\nToken list, search, holders, events, and compliance routes moved from The Graph to Postgres-backed read models (PR #6221). Token stats moved to Postgres (PR #6286). All token data now owned and served by DALP without third-party graph dependency.",
+      "item2": "**Addon & Operator Routes Migrated**\nXvP settlement and fixed-yield addon routes moved to the indexer (PR #6397). Activity, entity, actions, and account routes migrated to SQL-backed operator read models (PR #6396). User domain routes also migrated (PR #6395).",
+      "item3": "**Directory & ERC-4337 Indexing Added**\nDirectory entity projections added to the indexer (PR #6370). ERC-4337 account abstraction indexer tables and handlers added, enabling full on-chain account tracking within DALP-owned Postgres (PR #6379).",
+      "item4": "**Rollback-Safe Migration Pattern**\nSubgraph retained as opt-in rollback path via DALP_USE_SUBGRAPH=true flag. Migration framework ensures zero-downtime route-by-route cutover. Each migrated route is validated against the prior graph output before cutover is confirmed."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Transaction Queue: Observable Operational Plane",
+      "col1": "**Queue Architecture**\n• executeViaQueue established as the shared runtime execution pattern (PR #6204)\n• Durable transaction processor with approval polling shipped (PR #6181)\n• Nonce recovery, reconciliation, and cancellation workflow hardened (PR #6193)\n• All major mutation routes converted: feeds, XvP, token-sale, fixed-yield, system (PR #6287-#6306)\n• OpenTelemetry spans added across the full transaction lifecycle (PR #6314)\n• E2E latency reduced via fast-path confirmation + event-driven sync (PR #6331)",
+      "col2": "**Operator Controls**\n• Transaction list, cancel, and admin routes exposed (PR #6284)\n• Force-retry, force-fail, and force-nonce admin operations available to operators\n• Full transaction lifecycle now observable: queue state, execution status, confirmation\n• Every mutation route produces OTel spans for latency and failure tracking\n• Operators have direct visibility and intervention capability without manual chain inspection\n• Reconciliation workflow ensures no stuck or ghost transactions survive across restarts"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Contracts, Compliance V2, SDK, and Error Catalog",
+      "item1": "**ERC-4337 Account Abstraction**\nEntryPoint-aware smart accounts with stable CREATE2 addresses shipped (PR #6317). Weighted multisig validator and paymaster sponsorship added (PR #6329). EntryPoint directory registration and dalpWallet topic wired (PR #6325). DALP wallet claims supported natively.",
+      "item2": "**Compliance V2**\nPer-token compliance deployment with migration framework and V4 lifecycle shipped (PR #6318). Upgrade-safe binding preserves compliance state across contract upgrades. Transfer approval v2 mutation routes and split compliance interfaces added (PR #6328, #6330). Token feature mutation routes and redeem feature expanded (PR #6272).",
+      "item3": "**@settlemint/dalp-sdk Released**\nTyped client SDK package with serializers shipped as @settlemint/dalp-sdk (PR #6228). Covers all DALP APIs with typed interfaces. Enables developers to integrate DALP capabilities directly into their own applications without using the operator portal. Ships alongside CLI as a complete programmatic toolset.",
+      "item4": "**Error Catalog & Observability**\nFull DALP error catalog with typed code unions and localized contract errors generated (PR #6290, #6303-#6309). Error codes surfaced in Dapp UI with support codes and suggested actions (PR #6300). OpenTelemetry tracing across DAPI and signer integrations (PR #6089). Observability dashboards covering namespace resources, Tempo slow-requests, and OTLP metrics pipeline (PR #6174, #6176, #6276)."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Marketing",
+      "subtitle": "DALP narrative, launch packaging, competitor intelligence, and pipeline automation"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "DALP Narrative and Launch Package",
+      "col1": "**Composable Tokens + Compliance**\n• DALP positioning refined around composable token architecture with built-in compliance modules\n• Messaging sharpened to lead with outcomes: regulated token issuance without fragmented infrastructure\n• Narrative tested against buyer language from active enterprise deals\n• Positions SettleMint as the platform for compliant, configurable digital asset issuance at scale",
+      "col2": "**CLI / SDK Launch Package**\n• Dedicated launch package built for the DALP CLI and SDK experimental releases\n• Covers developer-facing positioning, feature narrative, and channel copy for announcements\n• Documentation, quickstart materials, and API reference aligned to the launch package framing\n• Coordinated with product release timing to ensure consistent messaging across channels",
+      "col3": "**Competitor Intelligence System**\n• Competitor intelligence coverage built and structured for ongoing use\n• Key platform competitors mapped on feature depth, compliance posture, and go-to-market positioning\n• Intelligence feeds directly into sales enablement materials and positioning updates\n• Designed as a living system: new entrants and feature shifts are tracked and integrated continuously"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Pipeline Intelligence and CRM Enrichment",
+      "col1": "**HubSpot Enrichment and Target Accounts**\n• HubSpot enriched with target account intelligence: company size, sector, decision-maker mapping, and deal-relevant context\n• Target account list built from ICP criteria and validated against current pipeline\n• Enrichment feeds are automated to keep data fresh without manual CRM hygiene work\n• Sales team has structured account context at the point of outreach and proposal generation",
+      "col2": "**MEDDPICC Automation and Release Scanner**\n• MEDDPICC qualification criteria embedded into CRM workflows to enforce consistent deal scoring\n• Release scanner cron monitors product and ecosystem releases, feeding the content pipeline automatically\n• Marketing intelligence automation surfaces timely signals for positioning and content updates\n• Removes manual monitoring as a bottleneck: the system reacts to releases within hours rather than days"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Business",
+      "subtitle": "Live pipeline, strategic partnerships, and pipeline discipline"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Live Pipeline Highlights",
+      "body": "Active opportunities across banking, infrastructure, insurance, and real estate tokenization",
+      "table_data": [
+        [
+          "Deal",
+          "Domain",
+          "Type",
+          "Status"
+        ],
+        [
+          "Swift DLT Layer",
+          "Payments Infrastructure",
+          "Strategic Platform",
+          "Active"
+        ],
+        [
+          "OCBC",
+          "Banking",
+          "2yr Besu License",
+          "Active"
+        ],
+        [
+          "aXedras",
+          "Precious Metals",
+          "Pilot Engagement",
+          "Active"
+        ],
+        [
+          "KBC Solar",
+          "Green Finance",
+          "Tokenization Pilot",
+          "Active"
+        ],
+        [
+          "BNP Paribas Cardif",
+          "Insurance",
+          "Digital Asset Integration",
+          "Active"
+        ],
+        [
+          "DBS",
+          "Banking",
+          "Asset Tokenization",
+          "Active"
+        ],
+        [
+          "UOB",
+          "Banking",
+          "Digital Assets",
+          "Active"
+        ],
+        [
+          "Japan Cluster",
+          "Banking Consortium",
+          "Tokenized Deposits",
+          "Active"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Strategic Partnerships",
+      "col1": "**aXedras - Precious Metals**\n• Partnership confirmed for precious metals tokenization on DALP\n• BIL engaged as issuing institution\n• Asset parameters in active scoping\n• First precious metals tokenization partnership in production scope",
+      "col2": "**CMA / DEPO-X - Bond POC**\n• SettleMint confirmed as the tokenization platform\n• 835-line technical spec mapped to DALP capabilities\n• Four-week POC timeline agreed\n• Covers issuance, compliance, settlement, investor lifecycle",
+      "col3": "**KSA Real Estate Registry**\n• Strategic engagement for tokenized real estate infrastructure\n• SettleMint as the core tokenization platform layer\n• Regulatory alignment with KSA digital asset framework ongoing\n• Flagship public-sector registry use case in the Gulf region"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Pipeline Discipline: MEDDPICC Standard",
+      "item1": "**200+ Zombie Deals Removed**\nOver 200 stale, unqualified deals cleared from the CRM. The pipeline is now an accurate picture of real activity - not a graveyard of dead leads inflating the numbers and obscuring forecasting.",
+      "item2": "**15-20 Live Deals Preserved**\nFifteen to twenty qualified opportunities retained with clear owners, defined next steps, and realistic close dates. Each deal has a named contact, documented economic buyer, and a confirmed decision process.",
+      "item3": "**MEDDPICC Adopted as Standard**\nMEDDPICC qualification framework applied across all live deals. Distinguishes qualified opportunities from noise, gives leadership confidence in pipeline coverage, and sets a consistent bar for deal entry.",
+      "item4": "**Board Reporting Cadence**\nRegular board-level pipeline reporting established. Executive visibility is delivered on a consistent schedule, replacing ad hoc updates with structured review tied to the live deal set."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Architecture and process diagrams for reference"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "DALP Runtime Architecture Split",
+      "body": "The DALP runtime was decomposed into three independently deployable services in Jan-Mar 2026.\n\n• DAPI: API surface, auth control plane, and org-scoped key management\n• DDWF: durable workflow engine with resumable long-running operations\n• DIDX: standalone indexer with its own deployment lifecycle\n\nThe split enables targeted scaling, cleaner failure isolation, and independent release cadences for each service layer.",
+      "image_path": "workflow/appendix-diagrams/dalp-runtime-split-jan-mar-2026.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Token Feature Expansion - Capability Map",
+      "body": "Six new token features shipped in Q1 2026: conversion, voting, yield, maturity, AUM fee, and transaction fees. All features are applied at the token configuration layer and execute through the same on-chain compliance gate.",
+      "image_path": "workflow/appendix-diagrams/token-feature-expansion-jan-mar-2026.mmd"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "DALP CLI / SDK Developer Flow",
+      "body": "The CLI and SDK give developers a complete programmatic toolset for DALP without requiring portal interaction.",
+      "image_path": "workflow/appendix-diagrams/dalp-cli-sdk-flow-jan-mar-2026.mmd"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Live Pipeline by Segment",
+      "body": "The 15-20 active deals span six segments:\n\n• Banking: OCBC, DBS, UOB\n• Payments infrastructure: Swift DLT Layer\n• Insurance: BNP Paribas Cardif\n• Commodities: aXedras pilot\n• Real estate: KSA Registry\n• Regional cluster: Japan, KBC Solar\n\nAll deals MEDDPICC-qualified with named owners and agreed next actions.",
+      "image_path": "workflow/appendix-diagrams/pipeline-deals-jan-mar-2026.mmd"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Pipeline Hygiene Timeline - Jan-Mar 2026",
+      "body": "Zombie deal removal, MEDDPICC rollout, and board reporting cadence established across January through March.",
+      "image_path": "workflow/appendix-diagrams/pipeline-hygiene-gantt-jan-mar-2026.mmd"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "last_updated": "2026-03-14",
+  "clients": [
+    {"name": "HSBC", "logo": "logos/hsbc.png", "industry": "banking", "region": "global", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "Standard Chartered", "logo": "logos/standard-chartered.png", "industry": "banking", "region": "global", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "Commerzbank", "logo": "logos/commerzbank.png", "industry": "banking", "region": "europe", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "Mizuho", "logo": "logos/mizuho.png", "industry": "banking", "region": "apac", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "Maybank", "logo": "logos/maybank.png", "industry": "banking", "region": "apac", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "OCBC", "logo": "logos/ocbc.png", "industry": "banking", "region": "apac", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "KBC Securities", "logo": "logos/kbc-securities.png", "industry": "capital_markets", "region": "europe", "tier": "enterprise", "last_updated": "2026-03-14"},
+    {"name": "Saudi RER", "logo": "logos/saudi-rer.png", "industry": "sovereign", "region": "middle east", "tier": "strategic", "last_updated": "2026-03-14"},
+    {"name": "ADI", "logo": "logos/adi.png", "industry": "government", "region": "middle east", "tier": "strategic", "last_updated": "2026-03-14"}
+  ]
+}

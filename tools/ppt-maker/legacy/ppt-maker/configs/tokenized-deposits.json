@@ -1,0 +1,65 @@
+{
+  "project": "tokenized-deposits",
+  "output": "output/tokenized-deposits.pptx",
+  "description": "Tokenized Deposits - 10 slides",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Tokenized Deposits",
+      "subtitle": "Revolutionizing Banking with Digital Assets\nPowered by SettleMint DALP"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "1. Market Opportunity",
+      "item_1": "2. What Are Tokenized Deposits?",
+      "item_2": "3. Benefits",
+      "item_3": "4. Technical Architecture",
+      "item_4": "5. Use Cases",
+      "item_5": "6. Why SettleMint?",
+      "item_6": "7. Next Steps"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Market Opportunity",
+      "body": "The global deposits market represents $50+ trillion.\n\nKey Drivers:\n\u2022 $12T cross-border payments annually\n\u2022 200M+ businesses need B2B payments\n\u2022 Growing demand for 24/7 settlement\n\u2022 DeFi integration demands\n\nBanks are tokenizing to modernize infrastructure and reduce costs."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "What Are Tokenized Deposits?",
+      "body": "Digital representation of traditional bank deposits on blockchain.\n\nKey Characteristics:\n\u2022 1:1 backing with fiat currency\n\u2022 Issued by licensed banks\n\u2022 Instant transfer capability\n\u2022 Programmable via smart contracts\n\u2022 Full regulatory compliance\n\nUnlike stablecoins - issued by banks under banking regulations."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Benefits",
+      "col1": "For Banks\n\u2022 90% cross-border cost reduction\n\u2022 Instant settlement\n\u2022 New revenue streams\n\u2022 Automated compliance",
+      "col2": "For Customers\n\u2022 Faster payments\n\u2022 Lower fees\n\u2022 24/7 availability\n\u2022 Transparent transactions"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Technical Architecture",
+      "body": "SettleMint DALP provides bank-grade infrastructure.\n\nCore Components:\n\u2022 ERC-1400 compliant tokens\n\u2022 Multi-chain deployment\n\u2022 Oracle integration for fiat\n\u2022 KYC/AML compliance modules\n\u2022 Custody solutions\n\nIntegrates with core banking systems and payment gateways."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Use Cases",
+      "item1": "B2B cross-border\nMove commercial payment flows toward faster settlement with clearer policy checks and distribution controls.",
+      "item2": "Supply chain\nCoordinate programmable release conditions with bank-issued value and auditable workflow steps.",
+      "item3": "Treasury operations\nImprove internal liquidity movement, visibility, and approval discipline across legal entities and accounts.",
+      "item4": "Escrow and milestone release\nTie release conditions to governed events instead of manual reconciliation and exception handling."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Regulatory Framework",
+      "body": "Tokenized deposits operate within existing banking regulations.\n\nCompliance Pillars:\n\u2022 Bank-issued (not protocol)\n\u2022 Full KYC/AML integration\n\u2022 Capital requirements met\n\u2022 Consumer protection laws\n\u2022 Data privacy (GDPR)\n\nSettleMint provides regulatory expertise across jurisdictions."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why SettleMint?",
+      "body": "Trusted partner for bank-grade tokenization.\n\nOur Track Record:\n\u2022 $1B+ digital assets issued\n\u2022 SOC 2 Type II certified\n\u2022 Multi-chain support\n\u2022 Global regulatory expertise\n\u2022 Proven banking integrations\n\nWe help banks navigate requirements and scale to production."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

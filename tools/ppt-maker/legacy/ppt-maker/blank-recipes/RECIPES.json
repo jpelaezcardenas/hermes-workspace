@@ -1,0 +1,306 @@
+{
+  "_meta": {
+    "version": "2.0.0",
+    "description": "Micro-template recipes for blank slides. Design system: DESIGN_SYSTEM.md",
+    "slide_size": { "width_in": 13.333, "height_in": 7.5 },
+    "content_area": {
+      "x_in": 0.50, "y_in": 1.35, "width_in": 12.35, "height_in": 5.25,
+      "right_edge_in": 12.85, "bottom_edge_in": 6.60
+    },
+    "colors": {
+      "title": "0000FF",
+      "body": "000000",
+      "accent1": "000099",
+      "accent1_tint": "3333BB",
+      "accent3": "0000ED",
+      "light_gray": "E8E8E8",
+      "white": "FFFFFF",
+      "black": "000000"
+    },
+    "font": "Figtree",
+    "typography": {
+      "heading":    { "size": 14, "bold": true,  "color": "0000FF" },
+      "subheading": { "size": 13, "bold": true,  "color": "000099" },
+      "body":       { "size": 11, "bold": false, "color": "000000" },
+      "small_body": { "size": 10, "bold": false, "color": "000000" },
+      "stat_number":{ "size": 48, "bold": true,  "color": "000099" },
+      "stat_number_sm": { "size": 36, "bold": true, "color": "000099" },
+      "step_number":{ "size": 20, "bold": true,  "color": "FFFFFF" },
+      "date_label": { "size": 10, "bold": true,  "color": "000099" }
+    }
+  },
+
+  "architecture-stack": {
+    "description": "4-5 horizontal layers stacked vertically. Full-width rounded rectangles with title left, description right.",
+    "required_fields": ["layer1_title", "layer2_title"],
+    "optional_fields": ["layer1_body", "layer2_body", "layer3_title", "layer3_body", "layer4_title", "layer4_body", "layer5_title", "layer5_body"],
+    "char_limits": { "title": 30, "body": 90 },
+    "layout": {
+      "layer_defaults": {
+        "x_in": 0.50,
+        "width_in": 12.35,
+        "height_in": 1.05,
+        "gap_in": 0.10,
+        "start_y_in": 1.35,
+        "preset": "roundRect"
+      },
+      "centering": "vertical",
+      "layer_colors": [
+        { "fill": "000099", "title_color": "FFFFFF", "body_color": "FFFFFF" },
+        { "fill": "3333BB", "title_color": "FFFFFF", "body_color": "FFFFFF" },
+        { "fill": "000099", "title_color": "FFFFFF", "body_color": "FFFFFF" },
+        { "fill": "3333BB", "title_color": "FFFFFF", "body_color": "FFFFFF" },
+        { "fill": "000099", "title_color": "FFFFFF", "body_color": "FFFFFF" }
+      ],
+      "title_box": {
+        "x_offset_in": 0.15,
+        "width_in": 3.00,
+        "font_size": 13,
+        "bold": true,
+        "valign": "center",
+        "align": "left"
+      },
+      "body_box": {
+        "x_offset_in": 3.30,
+        "width_in": 8.80,
+        "font_size": 11,
+        "bold": false,
+        "valign": "center",
+        "align": "left"
+      }
+    }
+  },
+
+  "process-flow": {
+    "description": "3-5 step boxes with arrow connectors between them. Light gray boxes, accent header, step numbers in circles.",
+    "required_fields": ["step1_title", "step2_title", "step3_title"],
+    "optional_fields": ["step1_number", "step1_body", "step2_number", "step2_body", "step3_number", "step3_body", "step4_number", "step4_title", "step4_body", "step5_number", "step5_title", "step5_body"],
+    "char_limits": { "number": 2, "title": 20, "body": 80 },
+    "layout": {
+      "content_area": { "x_in": 0.50, "y_in": 1.60, "width_in": 12.35 },
+      "step_configs": {
+        "3": { "box_width_in": 3.40, "box_height_in": 3.50, "gap_in": 0.30, "connector_width_in": 0.28 },
+        "4": { "box_width_in": 2.60, "box_height_in": 3.50, "gap_in": 0.20, "connector_width_in": 0.27 },
+        "5": { "box_width_in": 2.10, "box_height_in": 3.50, "gap_in": 0.15, "connector_width_in": 0.22 }
+      },
+      "centering": "horizontal",
+      "box_style": {
+        "preset": "roundRect",
+        "fill": "E8E8E8",
+        "border": "E8E8E8"
+      },
+      "number_circle": {
+        "diameter_in": 0.50,
+        "y_offset_in": 0.20,
+        "fill": "000099",
+        "text_color": "FFFFFF",
+        "font_size": 20,
+        "preset": "ellipse"
+      },
+      "title_box": {
+        "y_offset_in": 0.85,
+        "height_in": 0.50,
+        "font_size": 13,
+        "bold": true,
+        "color": "000099",
+        "align": "center"
+      },
+      "body_box": {
+        "y_offset_in": 1.40,
+        "height_in": 1.80,
+        "font_size": 11,
+        "bold": false,
+        "color": "000000",
+        "align": "center",
+        "valign": "top"
+      },
+      "connector": {
+        "y_center_offset_in": 1.75,
+        "line_color": "0000ED",
+        "line_width": "2pt",
+        "tail_end": "triangle",
+        "preset": "straight"
+      }
+    }
+  },
+
+  "stat-callouts": {
+    "description": "2-4 large numbers with labels and descriptions. Centered cards on white background.",
+    "required_fields": ["stat1_number", "stat1_label"],
+    "optional_fields": ["stat1_body", "stat2_number", "stat2_label", "stat2_body", "stat3_number", "stat3_label", "stat3_body", "stat4_number", "stat4_label", "stat4_body"],
+    "char_limits": { "number": 8, "label": 25, "body": 70 },
+    "layout": {
+      "content_area": { "x_in": 0.50, "y_in": 1.35, "width_in": 12.35, "height_in": 5.25 },
+      "card_configs": {
+        "2": { "card_width_in": 5.50, "gap_in": 0.80 },
+        "3": { "card_width_in": 3.78, "gap_in": 0.20 },
+        "4": { "card_width_in": 2.79, "gap_in": 0.20 }
+      },
+      "card_height_in": 4.50,
+      "centering": "horizontal_and_vertical",
+      "card_style": {
+        "preset": "roundRect",
+        "fill": "FFFFFF",
+        "border": "E8E8E8",
+        "border_width": "1pt"
+      },
+      "number_text": {
+        "y_offset_in": 0.30,
+        "height_in": 1.20,
+        "font_size_large": 48,
+        "font_size_small": 36,
+        "bold": true,
+        "color": "000099",
+        "align": "center",
+        "valign": "center"
+      },
+      "label_text": {
+        "y_offset_in": 1.60,
+        "height_in": 0.60,
+        "font_size": 13,
+        "bold": true,
+        "color": "000099",
+        "align": "center",
+        "valign": "center"
+      },
+      "body_text": {
+        "y_offset_in": 2.30,
+        "height_in": 1.80,
+        "font_size": 11,
+        "bold": false,
+        "color": "000000",
+        "align": "center",
+        "valign": "top"
+      }
+    }
+  },
+
+  "comparison-columns": {
+    "description": "Two side-by-side columns with accent header bars and body areas below.",
+    "required_fields": ["left_title", "left_body", "right_title", "right_body"],
+    "char_limits": { "title": 25, "body": 400 },
+    "layout": {
+      "content_area": { "x_in": 0.50, "y_in": 1.35, "width_in": 12.35, "height_in": 5.25 },
+      "column_width_in": 5.88,
+      "gap_in": 0.59,
+      "centering": "horizontal",
+      "header_bar": {
+        "height_in": 0.55,
+        "fill": "000099",
+        "text_color": "FFFFFF",
+        "font_size": 14,
+        "bold": true,
+        "align": "center",
+        "valign": "center",
+        "preset": "rect"
+      },
+      "body_area": {
+        "y_offset_in": 0.60,
+        "height_in": 4.60,
+        "fill": "FFFFFF",
+        "border": "E8E8E8",
+        "border_width": "1pt",
+        "text_color": "000000",
+        "font_size": 11,
+        "bold": false,
+        "align": "left",
+        "valign": "top",
+        "margin": "0.15in",
+        "preset": "rect"
+      }
+    }
+  },
+
+  "timeline-horizontal": {
+    "description": "4-5 milestones on a horizontal line with dates above and descriptions below.",
+    "required_fields": ["milestone1_date", "milestone1_title"],
+    "optional_fields": ["milestone1_body", "milestone2_date", "milestone2_title", "milestone2_body", "milestone3_date", "milestone3_title", "milestone3_body", "milestone4_date", "milestone4_title", "milestone4_body", "milestone5_date", "milestone5_title", "milestone5_body"],
+    "char_limits": { "date": 15, "title": 20, "body": 60 },
+    "layout": {
+      "content_area": { "x_in": 0.50, "y_in": 1.35, "width_in": 12.35, "height_in": 5.25 },
+      "timeline_y_in": 3.50,
+      "marker_diameter_in": 0.30,
+      "marker_fill": "000099",
+      "line_color": "0000ED",
+      "line_width": "2pt",
+      "line_x_start_in": 0.70,
+      "line_x_end_in": 12.63,
+      "centering": "horizontal",
+      "milestone_configs": {
+        "4": { "spacing_in": 3.20 },
+        "5": { "spacing_in": 2.55 }
+      },
+      "date_text": {
+        "y_offset_in": -0.60,
+        "height_in": 0.40,
+        "width_in": 2.00,
+        "font_size": 10,
+        "bold": true,
+        "color": "000099",
+        "align": "center"
+      },
+      "title_text": {
+        "y_offset_in": 0.30,
+        "height_in": 0.40,
+        "width_in": 2.40,
+        "font_size": 13,
+        "bold": true,
+        "color": "000099",
+        "align": "center"
+      },
+      "body_text": {
+        "y_offset_in": 0.75,
+        "height_in": 1.50,
+        "width_in": 2.40,
+        "font_size": 10,
+        "bold": false,
+        "color": "000000",
+        "align": "center",
+        "valign": "top"
+      }
+    }
+  },
+
+  "icon-text-grid": {
+    "description": "2x2 or 2x3 grid of titled text blocks. Cards with light border on white background.",
+    "required_fields": ["item1_title", "item1_body", "item2_title", "item2_body"],
+    "optional_fields": ["item3_title", "item3_body", "item4_title", "item4_body", "item5_title", "item5_body", "item6_title", "item6_body"],
+    "char_limits": { "title": 25, "body": 100, "body_small": 80 },
+    "layout": {
+      "content_area": { "x_in": 0.50, "y_in": 1.35, "width_in": 12.35, "height_in": 5.25 },
+      "grid_configs": {
+        "2": { "cols": 2, "rows": 1, "cell_width_in": 5.88, "cell_height_in": 3.50, "h_gap_in": 0.59, "v_gap_in": 0.40 },
+        "3": { "cols": 3, "rows": 1, "cell_width_in": 3.78, "cell_height_in": 3.50, "h_gap_in": 0.20, "v_gap_in": 0.40 },
+        "4": { "cols": 2, "rows": 2, "cell_width_in": 5.88, "cell_height_in": 2.30, "h_gap_in": 0.59, "v_gap_in": 0.40 },
+        "5": { "cols": 3, "rows": 2, "cell_width_in": 3.78, "cell_height_in": 2.30, "h_gap_in": 0.20, "v_gap_in": 0.40 },
+        "6": { "cols": 3, "rows": 2, "cell_width_in": 3.78, "cell_height_in": 2.30, "h_gap_in": 0.20, "v_gap_in": 0.40 }
+      },
+      "centering": "horizontal_and_vertical",
+      "card_style": {
+        "preset": "roundRect",
+        "fill": "FFFFFF",
+        "border": "E8E8E8",
+        "border_width": "1pt"
+      },
+      "title_text": {
+        "y_offset_in": 0.15,
+        "height_in": 0.45,
+        "font_size": 13,
+        "bold": true,
+        "color": "000099",
+        "align": "left",
+        "x_padding_in": 0.15
+      },
+      "body_text": {
+        "y_offset_in": 0.65,
+        "font_size": 11,
+        "font_size_small": 10,
+        "bold": false,
+        "color": "000000",
+        "align": "left",
+        "valign": "top",
+        "x_padding_in": 0.15
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "project": "2026-03-20-business-update",
+  "output": "output/2026-03-20-business-update.pptx",
+  "description": "Business Update: Jan–Mar 2026 — Commercial Activity deck for SettleMint leadership (Gyan, exec team)",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Business Update: Jan–Mar 2026",
+      "subtitle": "Commercial Activity — SettleMint"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "60-Day Pipeline Snapshot",
+      "item1": "**22 New Deals**\nTotal pipeline created: ~$1.8M in 60 days across APAC, Middle East, and Europe. New opportunities span banking, real estate tokenization, and government RFP programmes.",
+      "item2": "**2 Deals Won**\n$70,691 closed revenue: Maybank Tokenization Pilot ($60K, Jan 30) and NTT East Phase 2 ($10.7K, Feb 18). Two validated production engagements in APAC.",
+      "item3": "**$1.3M Renewal**\nOCBC 2-year on-prem Besu license at Contract Sent stage — 80% probability. Most critical deal in the current pipeline. Close imminent.",
+      "item4": "**$300K RFP**\nQatar Ministry of Justice Real Estate Tokenization RFP at 80% probability. Proposal/Contract stage. Closing March 31, 2026. Advanced Middle East government opportunity."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Deal Highlights",
+      "subtitle": "New opportunities across APAC and the Middle East dominate the 60-day period"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "New Opportunities: Jan–Mar 2026",
+      "body": "22 new deals · ~$1.8M pipeline · Jan–Mar 2026 · APAC, Middle East & Europe",
+      "table_data": [
+        ["Deal", "Region", "Amount", "Stage", "Close"],
+        ["OCBC Hong Kong", "APAC", "$600K", "Early", "Oct 2026"],
+        ["MoJ Qatar RFP", "Middle East", "$300K", "Advanced", "Mar 2026"],
+        ["Neptune Leasing", "Europe", "$120K", "Mid", "Apr 2026"],
+        ["MiPool Mortgage", "APAC", "$120K", "Advanced", "May 2026"],
+        ["aXedras", "Europe", "$96K", "Mid", "Mar 2026"],
+        ["Espeo (Saudi RWA)", "Middle East", "$96K", "Early", "May 2026"],
+        ["Japan Banks (×4)", "APAC", "$40K", "Mid", "Dec 2026"],
+        ["Hong Leong Bank", "APAC", "$50K", "Early", "Jun 2026"],
+        ["Danial Telecom", "APAC", "$50K", "Advanced", "Mar 2026"],
+        ["Belfius Bank", "Europe", "$30K", "Early", "Dec 2026"]
+      ]
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Closed & Key Themes",
+      "col1": "**Deals Won (60 Days)**\n• Maybank Tokenization Pilot — $60K — Jan 30\n• NTT East Phase 2 — $10.7K — Feb 18\n• Total: $70,691 revenue recognized\n• Win rate context: 2 out of 32 deals active in the period",
+      "col2": "**Commercial Themes**\n• APAC expansion underway — Japan, Malaysia, HK, India in pipeline\n• Real estate tokenization emerging as vertical — Qatar, Botswana, MiPool\n• OCBC as anchor — $1.9M combined renewal + HK expansion\n• Middle East government RFP activity accelerating\n• Japanese community banking: new cluster of 4 banks entered pipeline"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

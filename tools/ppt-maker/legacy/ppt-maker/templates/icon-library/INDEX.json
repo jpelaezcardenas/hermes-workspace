@@ -1,0 +1,1499 @@
+{
+  "version": "1.0.0",
+  "source": "Lucide Icons (MIT License)",
+  "source_url": "https://lucide.dev",
+  "icon_count": 70,
+  "color_count": 7,
+  "total_pngs": 490,
+  "png_size": "512x512",
+  "icons": [
+    {
+      "name": "building-2",
+      "category": "business",
+      "tags": [
+        "building",
+        "office",
+        "company",
+        "enterprise",
+        "institution"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/building-2.svg",
+      "png_pattern": "png/{color}/building-2.png"
+    },
+    {
+      "name": "briefcase",
+      "category": "business",
+      "tags": [
+        "business",
+        "work",
+        "portfolio",
+        "professional"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/briefcase.svg",
+      "png_pattern": "png/{color}/briefcase.png"
+    },
+    {
+      "name": "wallet",
+      "category": "business",
+      "tags": [
+        "wallet",
+        "payment",
+        "money",
+        "finance"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/wallet.svg",
+      "png_pattern": "png/{color}/wallet.png"
+    },
+    {
+      "name": "credit-card",
+      "category": "business",
+      "tags": [
+        "payment",
+        "card",
+        "transaction",
+        "purchase"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/credit-card.svg",
+      "png_pattern": "png/{color}/credit-card.png"
+    },
+    {
+      "name": "banknote",
+      "category": "business",
+      "tags": [
+        "money",
+        "cash",
+        "currency",
+        "payment"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/banknote.svg",
+      "png_pattern": "png/{color}/banknote.png"
+    },
+    {
+      "name": "coins",
+      "category": "business",
+      "tags": [
+        "money",
+        "currency",
+        "tokens",
+        "assets"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/coins.svg",
+      "png_pattern": "png/{color}/coins.png"
+    },
+    {
+      "name": "receipt",
+      "category": "business",
+      "tags": [
+        "invoice",
+        "billing",
+        "transaction",
+        "record"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/receipt.svg",
+      "png_pattern": "png/{color}/receipt.png"
+    },
+    {
+      "name": "trending-up",
+      "category": "business",
+      "tags": [
+        "growth",
+        "increase",
+        "performance",
+        "chart"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/trending-up.svg",
+      "png_pattern": "png/{color}/trending-up.png"
+    },
+    {
+      "name": "trending-down",
+      "category": "business",
+      "tags": [
+        "decline",
+        "decrease",
+        "loss",
+        "chart"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/trending-down.svg",
+      "png_pattern": "png/{color}/trending-down.png"
+    },
+    {
+      "name": "pie-chart",
+      "category": "business",
+      "tags": [
+        "analytics",
+        "data",
+        "statistics",
+        "breakdown"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/pie-chart.svg",
+      "png_pattern": "png/{color}/pie-chart.png"
+    },
+    {
+      "name": "bar-chart-3",
+      "category": "business",
+      "tags": [
+        "analytics",
+        "data",
+        "statistics",
+        "comparison"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/bar-chart-3.svg",
+      "png_pattern": "png/{color}/bar-chart-3.png"
+    },
+    {
+      "name": "landmark",
+      "category": "business",
+      "tags": [
+        "bank",
+        "institution",
+        "government",
+        "finance"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/landmark.svg",
+      "png_pattern": "png/{color}/landmark.png"
+    },
+    {
+      "name": "calculator",
+      "category": "business",
+      "tags": [
+        "calculation",
+        "math",
+        "compute",
+        "estimate"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/calculator.svg",
+      "png_pattern": "png/{color}/calculator.png"
+    },
+    {
+      "name": "dollar-sign",
+      "category": "business",
+      "tags": [
+        "money",
+        "price",
+        "cost",
+        "revenue"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/dollar-sign.svg",
+      "png_pattern": "png/{color}/dollar-sign.png"
+    },
+    {
+      "name": "percent",
+      "category": "business",
+      "tags": [
+        "percentage",
+        "discount",
+        "rate",
+        "ratio"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/percent.svg",
+      "png_pattern": "png/{color}/percent.png"
+    },
+    {
+      "name": "shield-check",
+      "category": "technology",
+      "tags": [
+        "security",
+        "verified",
+        "protection",
+        "safe"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/shield-check.svg",
+      "png_pattern": "png/{color}/shield-check.png"
+    },
+    {
+      "name": "lock",
+      "category": "technology",
+      "tags": [
+        "security",
+        "encryption",
+        "private",
+        "protected"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/lock.svg",
+      "png_pattern": "png/{color}/lock.png"
+    },
+    {
+      "name": "server",
+      "category": "technology",
+      "tags": [
+        "infrastructure",
+        "hosting",
+        "backend",
+        "hardware"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/server.svg",
+      "png_pattern": "png/{color}/server.png"
+    },
+    {
+      "name": "cloud",
+      "category": "technology",
+      "tags": [
+        "cloud",
+        "saas",
+        "hosting",
+        "storage"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/cloud.svg",
+      "png_pattern": "png/{color}/cloud.png"
+    },
+    {
+      "name": "database",
+      "category": "technology",
+      "tags": [
+        "data",
+        "storage",
+        "records",
+        "backend"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/database.svg",
+      "png_pattern": "png/{color}/database.png"
+    },
+    {
+      "name": "cpu",
+      "category": "technology",
+      "tags": [
+        "processor",
+        "computing",
+        "hardware",
+        "performance"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/cpu.svg",
+      "png_pattern": "png/{color}/cpu.png"
+    },
+    {
+      "name": "circuit-board",
+      "category": "technology",
+      "tags": [
+        "hardware",
+        "electronics",
+        "technology",
+        "chip"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/circuit-board.svg",
+      "png_pattern": "png/{color}/circuit-board.png"
+    },
+    {
+      "name": "code-2",
+      "category": "technology",
+      "tags": [
+        "development",
+        "programming",
+        "software",
+        "code"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/code-2.svg",
+      "png_pattern": "png/{color}/code-2.png"
+    },
+    {
+      "name": "terminal",
+      "category": "technology",
+      "tags": [
+        "cli",
+        "command",
+        "developer",
+        "shell"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/terminal.svg",
+      "png_pattern": "png/{color}/terminal.png"
+    },
+    {
+      "name": "globe",
+      "category": "technology",
+      "tags": [
+        "internet",
+        "global",
+        "web",
+        "worldwide"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/globe.svg",
+      "png_pattern": "png/{color}/globe.png"
+    },
+    {
+      "name": "network",
+      "category": "technology",
+      "tags": [
+        "connectivity",
+        "nodes",
+        "distributed",
+        "mesh"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/network.svg",
+      "png_pattern": "png/{color}/network.png"
+    },
+    {
+      "name": "wifi",
+      "category": "technology",
+      "tags": [
+        "wireless",
+        "connectivity",
+        "internet",
+        "signal"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/wifi.svg",
+      "png_pattern": "png/{color}/wifi.png"
+    },
+    {
+      "name": "key",
+      "category": "technology",
+      "tags": [
+        "access",
+        "authentication",
+        "credential",
+        "unlock"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/key.svg",
+      "png_pattern": "png/{color}/key.png"
+    },
+    {
+      "name": "fingerprint",
+      "category": "technology",
+      "tags": [
+        "biometric",
+        "identity",
+        "authentication",
+        "unique"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/fingerprint.svg",
+      "png_pattern": "png/{color}/fingerprint.png"
+    },
+    {
+      "name": "scan",
+      "category": "technology",
+      "tags": [
+        "scanning",
+        "detection",
+        "analysis",
+        "inspection"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/scan.svg",
+      "png_pattern": "png/{color}/scan.png"
+    },
+    {
+      "name": "blocks",
+      "category": "blockchain",
+      "tags": [
+        "blockchain",
+        "block",
+        "chain",
+        "ledger"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/blocks.svg",
+      "png_pattern": "png/{color}/blocks.png"
+    },
+    {
+      "name": "link-2",
+      "category": "blockchain",
+      "tags": [
+        "chain",
+        "connection",
+        "linked",
+        "reference"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/link-2.svg",
+      "png_pattern": "png/{color}/link-2.png"
+    },
+    {
+      "name": "hexagon",
+      "category": "blockchain",
+      "tags": [
+        "token",
+        "crypto",
+        "module",
+        "structure"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/hexagon.svg",
+      "png_pattern": "png/{color}/hexagon.png"
+    },
+    {
+      "name": "layers",
+      "category": "blockchain",
+      "tags": [
+        "stack",
+        "layers",
+        "protocol",
+        "multi-layer"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/layers.svg",
+      "png_pattern": "png/{color}/layers.png"
+    },
+    {
+      "name": "git-branch",
+      "category": "blockchain",
+      "tags": [
+        "fork",
+        "branch",
+        "version",
+        "split"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/git-branch.svg",
+      "png_pattern": "png/{color}/git-branch.png"
+    },
+    {
+      "name": "workflow",
+      "category": "blockchain",
+      "tags": [
+        "process",
+        "automation",
+        "flow",
+        "pipeline"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/workflow.svg",
+      "png_pattern": "png/{color}/workflow.png"
+    },
+    {
+      "name": "repeat",
+      "category": "blockchain",
+      "tags": [
+        "cycle",
+        "loop",
+        "recurring",
+        "refresh"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/repeat.svg",
+      "png_pattern": "png/{color}/repeat.png"
+    },
+    {
+      "name": "arrow-left-right",
+      "category": "blockchain",
+      "tags": [
+        "exchange",
+        "swap",
+        "transfer",
+        "bidirectional"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/arrow-left-right.svg",
+      "png_pattern": "png/{color}/arrow-left-right.png"
+    },
+    {
+      "name": "check-circle",
+      "category": "blockchain",
+      "tags": [
+        "verified",
+        "confirmed",
+        "approved",
+        "valid"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/check-circle.svg",
+      "png_pattern": "png/{color}/check-circle.png"
+    },
+    {
+      "name": "zap",
+      "category": "blockchain",
+      "tags": [
+        "lightning",
+        "instant",
+        "fast",
+        "energy"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/zap.svg",
+      "png_pattern": "png/{color}/zap.png"
+    },
+    {
+      "name": "scale",
+      "category": "compliance",
+      "tags": [
+        "justice",
+        "balance",
+        "legal",
+        "fairness"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/scale.svg",
+      "png_pattern": "png/{color}/scale.png"
+    },
+    {
+      "name": "clipboard-check",
+      "category": "compliance",
+      "tags": [
+        "checklist",
+        "audit",
+        "review",
+        "compliance"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/clipboard-check.svg",
+      "png_pattern": "png/{color}/clipboard-check.png"
+    },
+    {
+      "name": "file-check",
+      "category": "compliance",
+      "tags": [
+        "document",
+        "verified",
+        "approved",
+        "report"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/file-check.svg",
+      "png_pattern": "png/{color}/file-check.png"
+    },
+    {
+      "name": "badge-check",
+      "category": "compliance",
+      "tags": [
+        "certified",
+        "verified",
+        "credential",
+        "badge"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/badge-check.svg",
+      "png_pattern": "png/{color}/badge-check.png"
+    },
+    {
+      "name": "gavel",
+      "category": "compliance",
+      "tags": [
+        "legal",
+        "regulation",
+        "court",
+        "ruling"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/gavel.svg",
+      "png_pattern": "png/{color}/gavel.png"
+    },
+    {
+      "name": "book-open",
+      "category": "compliance",
+      "tags": [
+        "documentation",
+        "manual",
+        "reference",
+        "knowledge"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/book-open.svg",
+      "png_pattern": "png/{color}/book-open.png"
+    },
+    {
+      "name": "stamp",
+      "category": "compliance",
+      "tags": [
+        "approval",
+        "official",
+        "certified",
+        "notarized"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/stamp.svg",
+      "png_pattern": "png/{color}/stamp.png"
+    },
+    {
+      "name": "scroll",
+      "category": "compliance",
+      "tags": [
+        "contract",
+        "agreement",
+        "terms",
+        "document"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/scroll.svg",
+      "png_pattern": "png/{color}/scroll.png"
+    },
+    {
+      "name": "list-checks",
+      "category": "compliance",
+      "tags": [
+        "requirements",
+        "checklist",
+        "tasks",
+        "compliance"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/list-checks.svg",
+      "png_pattern": "png/{color}/list-checks.png"
+    },
+    {
+      "name": "shield",
+      "category": "compliance",
+      "tags": [
+        "protection",
+        "security",
+        "defense",
+        "guard"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/shield.svg",
+      "png_pattern": "png/{color}/shield.png"
+    },
+    {
+      "name": "settings",
+      "category": "process",
+      "tags": [
+        "configuration",
+        "preferences",
+        "setup",
+        "admin"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/settings.svg",
+      "png_pattern": "png/{color}/settings.png"
+    },
+    {
+      "name": "cog",
+      "category": "process",
+      "tags": [
+        "gear",
+        "mechanism",
+        "engine",
+        "configuration"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/cog.svg",
+      "png_pattern": "png/{color}/cog.png"
+    },
+    {
+      "name": "refresh-cw",
+      "category": "process",
+      "tags": [
+        "refresh",
+        "reload",
+        "sync",
+        "update"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/refresh-cw.svg",
+      "png_pattern": "png/{color}/refresh-cw.png"
+    },
+    {
+      "name": "play-circle",
+      "category": "process",
+      "tags": [
+        "start",
+        "begin",
+        "execute",
+        "run"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/play-circle.svg",
+      "png_pattern": "png/{color}/play-circle.png"
+    },
+    {
+      "name": "timer",
+      "category": "process",
+      "tags": [
+        "countdown",
+        "duration",
+        "deadline",
+        "time"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/timer.svg",
+      "png_pattern": "png/{color}/timer.png"
+    },
+    {
+      "name": "clock",
+      "category": "process",
+      "tags": [
+        "time",
+        "schedule",
+        "hours",
+        "deadline"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/clock.svg",
+      "png_pattern": "png/{color}/clock.png"
+    },
+    {
+      "name": "rocket",
+      "category": "process",
+      "tags": [
+        "launch",
+        "deploy",
+        "fast",
+        "startup"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/rocket.svg",
+      "png_pattern": "png/{color}/rocket.png"
+    },
+    {
+      "name": "target",
+      "category": "process",
+      "tags": [
+        "goal",
+        "objective",
+        "aim",
+        "focus"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/target.svg",
+      "png_pattern": "png/{color}/target.png"
+    },
+    {
+      "name": "flag",
+      "category": "process",
+      "tags": [
+        "milestone",
+        "mark",
+        "signal",
+        "checkpoint"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/flag.svg",
+      "png_pattern": "png/{color}/flag.png"
+    },
+    {
+      "name": "send",
+      "category": "process",
+      "tags": [
+        "deliver",
+        "submit",
+        "dispatch",
+        "transmit"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/send.svg",
+      "png_pattern": "png/{color}/send.png"
+    },
+    {
+      "name": "users",
+      "category": "people",
+      "tags": [
+        "team",
+        "group",
+        "people",
+        "organization"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/users.svg",
+      "png_pattern": "png/{color}/users.png"
+    },
+    {
+      "name": "user-check",
+      "category": "people",
+      "tags": [
+        "verified",
+        "approved",
+        "authenticated",
+        "confirmed"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/user-check.svg",
+      "png_pattern": "png/{color}/user-check.png"
+    },
+    {
+      "name": "message-square",
+      "category": "people",
+      "tags": [
+        "chat",
+        "communication",
+        "conversation",
+        "message"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/message-square.svg",
+      "png_pattern": "png/{color}/message-square.png"
+    },
+    {
+      "name": "mail",
+      "category": "people",
+      "tags": [
+        "email",
+        "letter",
+        "inbox",
+        "correspondence"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/mail.svg",
+      "png_pattern": "png/{color}/mail.png"
+    },
+    {
+      "name": "phone",
+      "category": "people",
+      "tags": [
+        "call",
+        "contact",
+        "telephone",
+        "mobile"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/phone.svg",
+      "png_pattern": "png/{color}/phone.png"
+    },
+    {
+      "name": "headphones",
+      "category": "people",
+      "tags": [
+        "support",
+        "audio",
+        "customer-service",
+        "listen"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/headphones.svg",
+      "png_pattern": "png/{color}/headphones.png"
+    },
+    {
+      "name": "presentation",
+      "category": "people",
+      "tags": [
+        "slides",
+        "deck",
+        "pitch",
+        "meeting"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/presentation.svg",
+      "png_pattern": "png/{color}/presentation.png"
+    },
+    {
+      "name": "award",
+      "category": "people",
+      "tags": [
+        "achievement",
+        "prize",
+        "recognition",
+        "trophy"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/award.svg",
+      "png_pattern": "png/{color}/award.png"
+    },
+    {
+      "name": "star",
+      "category": "people",
+      "tags": [
+        "favorite",
+        "rating",
+        "premium",
+        "featured"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/star.svg",
+      "png_pattern": "png/{color}/star.png"
+    },
+    {
+      "name": "heart",
+      "category": "people",
+      "tags": [
+        "favorite",
+        "love",
+        "like",
+        "health"
+      ],
+      "colors": [
+        "blue",
+        "white",
+        "black",
+        "green",
+        "purple",
+        "orange",
+        "steel"
+      ],
+      "svg": "svg/heart.svg",
+      "png_pattern": "png/{color}/heart.png"
+    }
+  ],
+  "colors": {
+    "blue": "#0000FF",
+    "white": "#FFFFFF",
+    "black": "#111111",
+    "green": "#187848",
+    "purple": "#8848C8",
+    "orange": "#C05030",
+    "steel": "#1E4868"
+  },
+  "categories": [
+    "business",
+    "technology",
+    "blockchain",
+    "compliance",
+    "process",
+    "people"
+  ]
+}

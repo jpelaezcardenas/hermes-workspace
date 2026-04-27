@@ -1,0 +1,276 @@
+{
+  "project": "2026-03-19-dalp-composable-token-configurable-compliance",
+  "output": "output/2026-03-19-dalp-composable-token-configurable-compliance.pptx",
+  "description": "30-slide DALP deck on composable token design and configurable compliance",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Token Design Controls",
+      "subtitle": "Composable tokens and configurable compliance | March 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Why basic tokens fall short",
+      "item_1": "Composable token architecture",
+      "item_2": "Configurable compliance in practice",
+      "item_3": "Lifecycle and operating model",
+      "item_4": "Institutional use cases",
+      "item_5": "Why DALP",
+      "icon0": "icon-library/lucide/file-text.svg",
+      "icon1": "icon-library/lucide/layers.svg",
+      "icon2": "icon-library/lucide/shield.svg",
+      "icon3": "icon-library/lucide/arrow-right.svg",
+      "icon4": "icon-library/lucide/briefcase.svg",
+      "icon5": "icon-library/lucide/award.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why Basic Tokens",
+      "subtitle": "Why institutions need more control"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Minting is not enough",
+      "body": "\u2022 Tokenization in production includes issuance, compliance, custody coordination, settlement, servicing, and redemption, not only minting.\n\u2022 Institutions need an operating model that connects product, risk, operations, and technology teams around the same asset record.\n\u2022 Fragmented point solutions create manual review, reconciliation risk, and weak evidence trails once a pilot goes live.\n\u2022 DALP is positioned around the full lifecycle so teams can move from pilot to production without re-architecting."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "What institutions must control",
+      "item1": "Investor eligibility\nWho can subscribe, hold, and transfer cannot be left to off-chain checklists once regulated assets move into production.",
+      "item2": "Transfer permissions\nJurisdiction, restriction, holding, and supply conditions need enforcement before the asset state changes on-chain.",
+      "item3": "Servicing events\nCoupons, redemptions, distributions, and corporate actions require repeatable workflows after issuance, not ad hoc spreadsheets.",
+      "item4": "Operational evidence\nApprovals, audit trails, monitoring, and integration outputs must support internal governance and external review."
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Basic token vs DALP",
+      "table_data": [
+        [
+          "Requirement",
+          "Basic token",
+          "DALP approach",
+          "Institutional impact"
+        ],
+        [
+          "Asset setup",
+          "Code a contract",
+          "Use governed asset classes and templates",
+          "Less bespoke design work"
+        ],
+        [
+          "Compliance",
+          "Manual checks beside transfer",
+          "Policy logic enforced before execution",
+          "Fewer exceptions and breaches"
+        ],
+        [
+          "Identity",
+          "Wallet only",
+          "OnchainID and verified claims",
+          "Controlled investor distribution"
+        ],
+        [
+          "Servicing",
+          "Custom scripts after issuance",
+          "Lifecycle events on one platform",
+          "Lower day-two operations burden"
+        ],
+        [
+          "Operations",
+          "Limited runtime evidence",
+          "RBAC, approvals, monitoring, audit trails",
+          "Stronger governance and auditability"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Composable Architecture",
+      "subtitle": "How DALP assembles digital assets"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "What composable means",
+      "body": "\u2022 In DALP terms, a token is not treated as a single fixed contract template with hard-coded behavior for every use case.\n\u2022 DALP models assets through configurable building blocks: asset class flows, metadata, supply rules, permissions, identity requirements, and compliance modules.\n\u2022 That lets teams start from pre-built asset classes such as bonds, equity, funds, deposits, stablecoins, precious metals, and real estate.\n\u2022 The platform can then adapt the operating logic without forcing a full rebuild for each new product."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Configurable token building blocks",
+      "item1": "Asset class\nChoose a governed starting point for the product.",
+      "item2": "Metadata\nDefine fields that shape the instrument record.",
+      "item3": "Supply rules\nSet issuance windows, caps, and controlled expansion logic.",
+      "item4": "Permissions\nAssign roles and execution rights by workflow.",
+      "item5": "Compliance\nAttach policy modules and transfer conditions.",
+      "item6": "Identity\nRequire verified claims before distribution and transfer."
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Composable token model",
+      "body": "This Mermaid view shows the DALP asset model as a governed composition problem. A supported asset class becomes the anchor, then terms, metadata, supply controls, permissions, compliance modules, and identity requirements are added as configurable layers. The result is not a generic token with manual overlays; it is a product definition that can be reviewed, approved, launched, and reused.",
+      "image_path": "output/diagrams/dalp-composable-token-model-padded.png"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset design in DALP",
+      "body": "The DALP asset designer shows how product teams move through structured setup instead of free-form contract work. Screens in the platform expose instrument details, pricing inputs, compliance modules, permissions, and final review. That matters because the product design, control model, and deployment workflow stay connected in one governed process.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Why composability matters",
+      "col1": "Reuse across assets\n\u2022 Start from supported asset classes.\n\u2022 Avoid redesign for every launch.\n\u2022 Extend one platform across programs.",
+      "col2": "Faster approvals\n\u2022 Make controls visible during design.\n\u2022 Review policy choices before issuance.\n\u2022 Reduce last-minute exceptions.",
+      "col3": "Cleaner integration\n\u2022 Keep APIs, events, and workflows aligned.\n\u2022 Connect custody and core systems.\n\u2022 Preserve one operating model."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Configurable Compliance",
+      "subtitle": "Policy logic before transfer"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Compliance is ex ante",
+      "body": "\u2022 DALP enforces compliance before execution, so blocked transfers fail before the token state changes.\n\u2022 Identity is anchored through OnchainID and reusable verified claims rather than wallet addresses alone.\n\u2022 Policies can model jurisdiction, eligibility, holding periods, supply limits, and transfer conditions without rewriting the whole platform.\n\u2022 That lets legal, compliance, and operations teams configure controls close to the product workflow instead of bolting them on later."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy templates in DALP",
+      "body": "Policy templates make compliance reusable. Teams can create, review, and apply predefined rules instead of rebuilding control logic for each program. In practice, that supports faster product launches, clearer governance, and more consistent transfer behavior across asset classes and jurisdictions.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - List.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Identity gates distribution",
+      "body": "Verified identity is part of the token operating model, not a separate filing cabinet. DALP links identities and claims to transfer eligibility so institutions can control who may receive, hold, and move an instrument. That is central for regulated distribution, onboarding reuse, and auditable policy enforcement.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Compliance control families",
+      "item1": "Policy templates\nStandardize controls for common products and jurisdictions so teams launch faster without losing review discipline.",
+      "item2": "Transfer restrictions\nEvaluate jurisdiction, holder status, supply, or holding conditions before execution instead of after the fact.",
+      "item3": "Roles and approvals\nUse RBAC and maker-checker style controls to separate design, approval, and operational actions.",
+      "item4": "Identity checks\nBind verified claims to transaction permissions so eligibility can be reused across workflows."
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Transfer decision flow",
+      "body": "This Mermaid diagram illustrates the DALP compliance path around a transfer. The platform looks up the applicable token policy, checks identity and claims, evaluates transfer restrictions, and then either approves execution or blocks the movement before it settles. The important point for institutions is that compliance logic is operationalized inside the platform workflow, with an audit trail after the decision.",
+      "image_path": "output/diagrams/dalp-transfer-decision-flow-padded.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Lifecycle Model",
+      "subtitle": "From setup to redemption"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Lifecycle on one platform",
+      "body": "DALP is designed around the full digital asset lifecycle. Asset design, issuance setup, onboarding, distribution, transfers, settlement, servicing events, redemption, and reporting are treated as connected operating stages rather than separate tools. That is what makes the platform useful after launch, when control, evidence, and servicing work matter as much as issuance.",
+      "image_path": "output/diagrams/dalp-lifecycle-operating-model-padded.png"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Operations after issuance",
+      "body": "Production credibility depends on what happens after the asset goes live. DALP includes monitoring and operational visibility so teams can track requests, activity, and runtime behavior. Combined with auditability, durable workflows, and integration outputs, that helps institutions manage live programs instead of stopping at issuance day.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/API Monitoring - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Who owns what",
+      "col1": "Design and issuance\n\u2022 Product defines the asset structure and terms.\n\u2022 Risk and legal review policy choices.\n\u2022 Operations prepare onboarding and approvals.\n\u2022 Technology connects the target systems.",
+      "col2": "Servicing and control\n\u2022 Operations manage transfers and exceptions.\n\u2022 Treasury or servicing teams run payouts and redemptions.\n\u2022 Compliance monitors policy outcomes.\n\u2022 Technology supports observability and integrations."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Lifecycle control points",
+      "body": "Each lifecycle stage has a control objective, a DALP mechanism, and an output that institutions can evidence. The point is not just automation. It is making design, issuance, transfer, servicing, and redemption auditable across the same operating model.",
+      "table_data": [
+        [
+          "Stage",
+          "Control objective",
+          "DALP mechanism",
+          "Output"
+        ],
+        [
+          "Design",
+          "Define instrument and rules",
+          "Asset classes, templates, metadata",
+          "Approved product setup"
+        ],
+        [
+          "Onboarding",
+          "Verify participant eligibility",
+          "OnchainID and claims",
+          "Reusable investor profile"
+        ],
+        [
+          "Issuance",
+          "Control who can receive",
+          "Policies, permissions, approvals",
+          "Governed distribution event"
+        ],
+        [
+          "Transfer",
+          "Enforce runtime restrictions",
+          "Ex-ante compliance checks",
+          "Approved or blocked movement"
+        ],
+        [
+          "Servicing",
+          "Run post-issuance events",
+          "Lifecycle workflows and monitoring",
+          "Auditable payout or event record"
+        ],
+        [
+          "Redemption",
+          "Close out correctly",
+          "Redemption logic and reporting",
+          "Final state and evidence trail"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Institutional Use Cases",
+      "subtitle": "Reusable model across asset classes"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Core regulated assets",
+      "col1": "Bonds\n\u2022 Bond is a pre-built asset class.\n\u2022 Support issuance, settlement, and servicing.\n\u2022 Keep coupon and maturity logic governed.",
+      "col2": "Funds\n\u2022 Fund workflows support subscriptions and redemptions.\n\u2022 Reuse investor controls across distribution.\n\u2022 Connect valuation and servicing processes.",
+      "col3": "Equity\n\u2022 Control who can hold and transfer.\n\u2022 Keep issuance and servicing aligned.\n\u2022 Extend with governance-related features."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Cash and alternatives",
+      "col1": "Deposits\n\u2022 Supported as a DALP asset class.\n\u2022 Use permissions and policy logic for issuance.\n\u2022 Fit institutional cash workflows.",
+      "col2": "Stablecoins\n\u2022 Supported as a DALP asset class.\n\u2022 Configure supply and transfer controls.\n\u2022 Operate with identity-aware distribution.",
+      "col3": "Precious metals\n\u2022 Supported as a DALP asset class.\n\u2022 Link ownership to governed records.\n\u2022 Apply policy and servicing controls."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real estate programs",
+      "body": "Real estate shows why composable tokens and configurable compliance belong together. The token is only one part of the operating model. Institutions also need verified ownership, transfer restrictions, approvals, servicing events, and integration with external records. DALP positions real estate as a governed asset class rather than an ad hoc smart-contract project.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Asset Details.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why DALP",
+      "subtitle": "Platformized and production-ready"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Why institutions choose DALP",
+      "item1": "Platformized model\nDALP covers issuance, compliance, settlement, servicing, and reporting in one operating model instead of siloed point tools.",
+      "item2": "Configurable controls\nTeams combine asset classes, policies, permissions, and identity checks without rebuilding the stack for each use case.",
+      "item3": "Compliance first\nRBAC, approvals, identity-linked rules, and ex-ante transfer checks fit regulated institutions better than generic token tooling.",
+      "item4": "Production ready\nAPIs, webhooks, custody integration, observability, and deployment flexibility support live institutional programs."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

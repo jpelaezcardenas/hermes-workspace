@@ -1,0 +1,8 @@
+# Heavy recovered PPT assets kept locally for runtime use; do not commit by default.
+legacy/ppt-maker/templates/dalp-screenshots/
+legacy/ppt-maker/output/
+legacy/ppt-checker/output/
+
+# Keep explicit active verification artifacts commit-addressable when added intentionally.
+!verification/
+!verification/**

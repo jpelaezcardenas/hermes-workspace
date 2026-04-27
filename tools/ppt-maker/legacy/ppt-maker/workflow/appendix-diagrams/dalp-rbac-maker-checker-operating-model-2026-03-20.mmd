@@ -1,0 +1,22 @@
+flowchart TB
+    classDef role fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef action fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef control fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef evidence fill:#f5f5f5,stroke:#9aa0a6,color:#1f2937,stroke-width:1.2px;
+
+    Maker[Maker\nprepares asset or transaction request]:::role --> Queue[DALP workflow queue]:::action
+    Approver[Approver\nreviews policy, limits, and evidence]:::role --> Gate[Approval gate]:::control
+    Operator[Operator\nexecutes allowed day-two actions]:::role --> Queue
+    Compliance[Compliance officer\nmaintains policies and exceptions]:::role --> Policies[Policy templates\nand restriction settings]:::action
+    Admin[Platform admin\nassigns rights and emergency controls]:::role --> Access[RBAC assignments\nand permission bootstrap]:::action
+
+    Queue --> Gate
+    Policies --> Gate
+    Access --> Gate
+    Gate --> Decision{Authorized and approved?}:::control
+    Decision -- No --> Reject[Stop request\nlog denial / reason]:::evidence
+    Decision -- Yes --> Execute[Execute governed action\nissue • transfer • service • pause • redeem]:::action
+    Execute --> Logs[Activity log + audit trail\nmonitoring + evidence]:::evidence
+
+    Logs --> Compliance
+    Logs --> Admin

@@ -1,0 +1,93 @@
+{
+  "last_updated": "2026-03-23",
+  "case_studies": [
+    {
+      "client": "Saudi RER",
+      "industry": "sovereign",
+      "region": "middle east",
+      "use_case": "real_estate_registry",
+      "challenge": "Needed a national-scale digital registry model with governance, auditability, and operational control.",
+      "result": "Demonstrated DALP credibility for sovereign-grade digital asset infrastructure and controlled lifecycle operations.",
+      "quote": "Proof that digital asset infrastructure needs governance and lifecycle control, not just token minting.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-14"
+    },
+    {
+      "client": "Commerzbank",
+      "industry": "banking",
+      "region": "europe",
+      "use_case": "hybrid_etp_issuance",
+      "challenge": "Required bank-grade issuance support with compliance and operational rigor beyond a demo workflow.",
+      "result": "Hybrid on/off-chain ETP issuance with Boerse Stuttgart listing; settlement under 10 seconds; projected savings of EUR 7M/year.",
+      "quote": "Bank deployments care about servicing, controls, and auditability as much as issuance.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    },
+    {
+      "client": "Maybank Project Photon",
+      "industry": "banking",
+      "region": "apac",
+      "use_case": "fx_tokenization",
+      "challenge": "Needed a programmable transaction banking foundation that fit regulated institutional workflows.",
+      "result": "FX tokenization (MYRT) and cross-border settlement via Exchange-versus-Payment (XvP); atomic cross-currency swaps.",
+      "quote": "The platform has to fit existing bank controls, not force a side-project architecture.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    },
+    {
+      "client": "KBC Securities / Bolero",
+      "industry": "capital_markets",
+      "region": "europe",
+      "use_case": "crowdfunding_lifecycle",
+      "challenge": "Needed a compliant path to bring digital securities into an existing investor distribution motion.",
+      "result": "Smart contract backend for crowdfunding issuance, lifecycle, corporate actions, and redemption with fiat-backed stable token.",
+      "quote": "Distribution matters when digital assets need to reach real investors, not just test wallets.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    },
+    {
+      "client": "OCBC Bank",
+      "industry": "banking",
+      "region": "apac",
+      "use_case": "security_token_engine",
+      "challenge": "Required a security token engine for securitization, tokenization, and fractionalization of off-chain assets targeting HNWIs.",
+      "result": "Live security token engine enabling fractionalization to 10K SGD, expanding HNWI access to previously illiquid instruments.",
+      "quote": "Fractionalization opens institutional-grade products to investors who were previously locked out by minimum thresholds.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    },
+    {
+      "client": "Standard Chartered Bank",
+      "industry": "banking",
+      "region": "multi_region",
+      "use_case": "digital_virtual_exchange",
+      "challenge": "Settlement process involved multiple custody intermediaries, creating counterparty risk and settlement delays impacting liquidity across Asia, Africa, and the Middle East.",
+      "result": "Blockchain-based Digital Virtual Exchange with fractional tokenization of securities, instant on-chain settlement, and elimination of custody intermediaries.",
+      "quote": "Instant settlement and custody elimination — that's the efficiency gain institutional investors actually care about.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    },
+    {
+      "client": "Mizuho Bank",
+      "industry": "banking",
+      "region": "apac",
+      "use_case": "bond_tokenization",
+      "challenge": "Needed bond tokenization with standard platform capabilities for East Asian markets, supporting cross-currency settlement between AED and JPY.",
+      "result": "Bond tokenization PoC completed with emphasis on standard platform capabilities; production planning stage underway.",
+      "quote": "Cross-currency bond settlement on a single platform — that's what multi-jurisdiction deployment looks like.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    },
+    {
+      "client": "ADI-Finstreet",
+      "industry": "capital_markets",
+      "region": "middle east",
+      "use_case": "tokenized_equity",
+      "challenge": "Required tokenized equity issuance on a dedicated mainnet with corporate actions, on-chain voting, and institutional custody integration.",
+      "result": "Regulated equity tokenization on ADI mainnet with full corporate action support and institutional custody integration.",
+      "quote": "Equity tokenization needs corporate actions and voting built in — not bolted on after the fact.",
+      "tier": "enterprise",
+      "last_updated": "2026-03-23"
+    }
+  ]
+}

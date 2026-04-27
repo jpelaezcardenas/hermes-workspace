@@ -1,0 +1,108 @@
+{
+  "slide_number": 12,
+  "filename": "slide-012-three-column.pptx",
+  "layout_name": "3-Column Content",
+  "layout_slug": "3-column-content",
+  "template_layout_name": "Three Column",
+  "template_layout_slug": "three-column",
+  "layout_category": "content",
+  "description": "Three equal-width columns without a separate slide title — the columns carry all content. Maximizes content area for three parallel topics.",
+  "usage": "Use when you have three parallel content areas and want to maximize real estate. Suitable for feature comparisons, step-by-step breakdowns, or three key messages.",
+  "potential_usage": "Works for three-tier architecture overviews, three-pillar strategy frames, or three product highlights.",
+  "content_capacity": "medium",
+  "has_image_area": false,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 3,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 11,
+      "type": "BODY"
+    },
+    {
+      "idx": 12,
+      "type": "BODY"
+    },
+    {
+      "idx": 10,
+      "type": "SLIDE_NUMBER"
+    },
+    {
+      "idx": 13,
+      "type": "BODY"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 11,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 12,
+      "word_count": 0
+    },
+    {
+      "type": "SLIDE_NUMBER",
+      "idx": 10,
+      "word_count": 4
+    },
+    {
+      "type": "BODY",
+      "idx": 13,
+      "word_count": 0
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "BODY_11": 0,
+    "BODY_12": 0,
+    "SLIDE_NUMBER_10": 4,
+    "BODY_13": 0
+  },
+  "total_word_count": 4,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title — states the key message or topic",
+    "BODY_11": "Subtitle, date, presenter name, or event description",
+    "BODY_12": "Main content area — bullets, paragraphs, or structured content",
+    "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+    "BODY_13": "Main content area — bullets, paragraphs, or structured content"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3–8 words describing 3-Column Content)",
+    "BODY_11": "Subtitle text, date, or event name (1–2 lines)",
+    "BODY_12": "Body content (bullets or paragraphs)",
+    "SLIDE_NUMBER_10": "Auto-populated — do not modify",
+    "BODY_13": "Body content (bullets or paragraphs)"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3–10 words",
+    "BODY_11": "~5–20 words",
+    "BODY_12": "~30–80 words",
+    "SLIDE_NUMBER_10": "Do not modify",
+    "BODY_13": "~30–80 words"
+  },
+  "do_not_modify": [
+    "footer",
+    "slide number"
+  ],
+  "selection_tags": [
+    "three-column",
+    "multi-column",
+    "text-content",
+    "product-overview",
+    "technical-deep-dive"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{4ED1D822-F44B-9D57-5F0B-1D24BFEA2BB9}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{E7C34577-45F9-AB46-B992-26A878DD3D28}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Text Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C68BD504-BAFA-2B18-5239-453C6392A329}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Slide Number Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{2ED39FC7-453F-A0F5-B2B5-85065F2D1C03}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>10</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{B3EEE461-6552-CC4E-84BF-5738D6C6DCF2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"4058168305\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+}

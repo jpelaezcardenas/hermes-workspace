@@ -1,0 +1,17 @@
+flowchart TD
+    DALP["DALP Platform\nDigital Asset Lifecycle"]
+
+    DALP --> Design["Design\nToken standards,\nasset types & rules"]
+    DALP --> Operate["Operate\nIssue, transfer\n& settle on-chain"]
+    DALP --> Govern["Govern\nKYC/AML, audit trail\n& regulatory reporting"]
+
+    Design --> Config["Configure\nCompliance modules\n& state machines"]
+    Operate --> Settle["Settle\nAtomic settlement\n& redemption"]
+    Govern --> Report["Report\nOn-chain evidence\n& dashboards"]
+
+    classDef root fill:#000099,stroke:#000099,color:#ffffff,font-weight:bold
+    classDef pillar fill:#E8EAF6,stroke:#000099,color:#000099,stroke-width:2px
+    classDef leaf fill:#F5F5FF,stroke:#000099,color:#000099,stroke-width:1px
+    class DALP root
+    class Design,Operate,Govern pillar
+    class Config,Settle,Report leaf

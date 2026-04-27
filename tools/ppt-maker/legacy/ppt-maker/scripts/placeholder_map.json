@@ -1,0 +1,365 @@
+{
+  "slide-001-cover-slide": {
+    "layout": "Cover Slide",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-002-agenda": {
+    "layout": "Agenda",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 4"
+      },
+      {
+        "idx": 13,
+        "name": "Text Placeholder 5"
+      },
+      {
+        "idx": 14,
+        "name": "Text Placeholder 6"
+      },
+      {
+        "idx": 15,
+        "name": "Text Placeholder 7"
+      },
+      {
+        "idx": 16,
+        "name": "Text Placeholder 8"
+      },
+      {
+        "idx": 17,
+        "name": "Text Placeholder 9"
+      }
+    ],
+    "count": 8
+  },
+  "slide-003-section-separator": {
+    "layout": "Section Separator",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-004-blank": {
+    "layout": "Blank",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      }
+    ],
+    "count": 1
+  },
+  "slide-005-single-column": {
+    "layout": "Single Column",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-006-table": {
+    "layout": "Table",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-007-table-with-text": {
+    "layout": "Table with Text",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-008-chart-with-text": {
+    "layout": "Chart with Text",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-010-two-column": {
+    "layout": "Two column",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 4"
+      }
+    ],
+    "count": 3
+  },
+  "slide-012-three-column": {
+    "layout": "Three Column",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 3"
+      },
+      {
+        "idx": 13,
+        "name": "Text Placeholder 5"
+      }
+    ],
+    "count": 4
+  },
+  "slide-013-text-2x2": {
+    "layout": "Text 2x2",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      },
+      {
+        "idx": 14,
+        "name": "Text Placeholder 4"
+      },
+      {
+        "idx": 15,
+        "name": "Text Placeholder 5"
+      },
+      {
+        "idx": 16,
+        "name": "Text Placeholder 6"
+      }
+    ],
+    "count": 5
+  },
+  "slide-014-text-2x3": {
+    "layout": "Text 2x3",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 15,
+        "name": "Text Placeholder 3"
+      },
+      {
+        "idx": 16,
+        "name": "Text Placeholder 4"
+      },
+      {
+        "idx": 17,
+        "name": "Text Placeholder 5"
+      },
+      {
+        "idx": 18,
+        "name": "Text Placeholder 6"
+      },
+      {
+        "idx": 19,
+        "name": "Text Placeholder 7"
+      },
+      {
+        "idx": 20,
+        "name": "Text Placeholder 8"
+      }
+    ],
+    "count": 7
+  },
+  "slide-015-screenshot-right": {
+    "layout": "Screenshot Right",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-016-screenshot-left": {
+    "layout": "Screenshot Left",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 11,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-017-picture-left-equal": {
+    "layout": "Picture Left Equal",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-018-picture-right-equal": {
+    "layout": "Picture Right Equal",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-019-picture-left-wide": {
+    "layout": "Picture Left Wide",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-020-picture-right-wide": {
+    "layout": "Picture Right Wide",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-021-picture-left-one-third": {
+    "layout": "Picture Left One Third",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-022-picture-right-one-third": {
+    "layout": "Picture Right One Third",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-023-picture-full-width": {
+    "layout": "Picture Full Width",
+    "placeholders": [
+      {
+        "idx": 0,
+        "name": "Title 1"
+      },
+      {
+        "idx": 12,
+        "name": "Text Placeholder 2"
+      }
+    ],
+    "count": 2
+  },
+  "slide-024-thank-you": {
+    "layout": "Thank You",
+    "placeholders": [],
+    "count": 0
+  }
+}

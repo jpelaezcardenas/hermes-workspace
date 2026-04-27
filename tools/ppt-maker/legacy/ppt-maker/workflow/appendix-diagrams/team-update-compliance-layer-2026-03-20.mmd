@@ -1,0 +1,7 @@
+graph LR
+    Action["Token Action\nTransfer / Mint / Redeem"] --> ID["Identity Check\nKYC / DID"]
+    ID --> WL["Whitelist Check\nCounterparty Eligible"]
+    WL --> Policy["Policy Templates\nConfigurable Rules"]
+    Policy --> Limits["Holding Caps\nTx Fee Enforcement"]
+    Limits --> Pass["Action Approved\nOn-Chain"]
+    Limits -->|"Rule violation"| Reject["Action Rejected\nLogged"]

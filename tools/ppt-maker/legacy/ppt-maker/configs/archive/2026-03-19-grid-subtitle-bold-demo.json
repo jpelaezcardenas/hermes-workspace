@@ -1,0 +1,38 @@
+{
+  "project": "grid-subtitle-bold-demo-2026-03-19",
+  "output": "output/grid-subtitle-bold-demo-2026-03-19.pptx",
+  "description": "Focused regression deck proving that the leading grid-cell subtitle line renders bold by default on the 2x2 and 2x3 text layouts.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Grid subtitle bold demo",
+      "subtitle": "2x2 and 2x3 default behavior"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Grid templates",
+      "subtitle": "Regression proof for structural subtitle bolding"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four-box text grid",
+      "item1": "Control model\nOne governed workflow keeps product, legal, compliance, and operations aligned inside the same execution lane.",
+      "item2": "Delivery speed\nLaunch teams move faster because approved templates and review gates reduce reinvention across each new product.",
+      "item3": "Runtime rules\nTransfer, holding, and servicing controls execute systematically instead of depending on manual interpretation.",
+      "item4": "Scale potential\nThe operating model expands across products and jurisdictions without forcing a redesign every time."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Six-box text grid",
+      "item1": "Templates\nReusable starting points reduce setup time and keep asset launches anchored to approved patterns.",
+      "item2": "Policy first\nTeams see core constraints before issuance so governance decisions happen earlier in the workflow.",
+      "item3": "Identity linked\nVerified investor status drives who can hold, receive, or service the instrument in production.",
+      "item4": "Event driven\nOperational signals keep servicing, settlement, and downstream systems synchronized during runtime.",
+      "item5": "Audit evidence\nApprovals, policy outcomes, and execution traces remain inspectable for risk and compliance review.",
+      "item6": "Native output\nCommercial and delivery teams can still edit the slide natively without rebuilding it from scratch."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

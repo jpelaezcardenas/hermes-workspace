@@ -1,0 +1,11 @@
+flowchart LR
+    Intake["Intake &\nonboarding"] --> Model["Asset model\ndesign"]
+    Model --> Template["Policy &\ntemplate config"]
+    Template --> Issue["Issuance &\nminting"]
+    Issue --> Trade["Secondary\ntrading"]
+    Trade --> Settle["Atomic\nsettlement"]
+    Settle --> Service["Lifecycle\nservicing"]
+    Service --> Redeem["Redemption\n& burn"]
+    Redeem --> Report["Reporting &\naudit trail"]
+    classDef stage fill:#E8EAF6,stroke:#000099,color:#000099,stroke-width:2px;
+    class Intake,Model,Template,Issue,Trade,Settle,Service,Redeem,Report stage;

@@ -1,0 +1,9 @@
+{
+  "input": "/root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/dalp-overview-10-slides.pptx",
+  "out_dir": "/root/hermes-workspace/tools/ppt-maker/verification",
+  "exit": 0,
+  "stdout": "convert /root/hermes-workspace/tools/ppt-maker/legacy/ppt-maker/output/dalp-overview-10-slides.pptx as a Impress document -> /root/hermes-workspace/tools/ppt-maker/verification/dalp-overview-10-slides.pdf using filter : impress_pdf_Export\n",
+  "stderr": "Warning: failed to launch javaldx - java may not function correctly\n",
+  "pdf": "/root/hermes-workspace/tools/ppt-maker/verification/dalp-overview-10-slides.pdf",
+  "ok": true
+}

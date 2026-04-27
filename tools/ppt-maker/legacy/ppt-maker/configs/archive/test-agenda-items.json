@@ -1,0 +1,50 @@
+{
+  "project": "test-agenda",
+  "output": "output/test-agenda-items.pptx",
+  "description": "Test agenda slide with individual items",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Platform Overview",
+      "subtitle": "Digital Asset Lifecycle Management\nMarch 2026 | SettleMint"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "1. Platform Capabilities",
+      "item_1": "2. Asset Lifecycle Management",
+      "item_2": "3. Tokenization Features",
+      "item_3": "4. Compliance & Security",
+      "item_4": "5. Integration Options",
+      "item_5": "6. Next Steps"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Platform Capabilities",
+      "body": "The DALP platform provides comprehensive digital asset management across the entire lifecycle.\n\n\u2022 Asset creation and issuance\n\u2022 Lifecycle management\n\u2022 Transfer and settlement\n\u2022 Compliance monitoring\n\u2022 Reporting and analytics"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Key Benefits",
+      "col1": "For Issuers\n\u2022 Simplified asset issuance\n\u2022 Automated compliance\n\u2022 Real-time visibility\n\u2022 Reduced operational costs",
+      "col2": "For Investors\n\u2022 Secure asset custody\n\u2022 Instant settlement\n\u2022 Full transparency\n\u2022 Regulatory compliance"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Two Column Simple",
+      "col1": "Left column content here.\n\n\u2022 Point one\n\u2022 Point two\n\u2022 Point three",
+      "col2": "Right column content here.\n\n\u2022 Point A\n\u2022 Point B\n\u2022 Point C"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Four Core Pillars",
+      "item1": "Security\nEnterprise-grade controls with role-based access, approvals, and governed release management for sensitive operations.",
+      "item2": "Speed\nMove from setup to launch faster because asset configuration, policy logic, and deployment steps stay connected.",
+      "item3": "Compliance\nApply KYC, eligibility, and transfer restrictions systematically so regulated behavior does not rely on manual checks.",
+      "item4": "Interoperability\nIntegrate existing systems through APIs, events, and structured workflows instead of rebuilding the operating model."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

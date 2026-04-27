@@ -1,0 +1,186 @@
+{
+  "project": "2026-03-20-tokenized-deposits-japan",
+  "output": "output/2026-03-20-tokenized-deposits-japan.pptx",
+  "description": "Tokenized Deposits in Japan — Executive / Sales deck — 15 content slides + Thank You + 5 Mermaid appendix diagrams",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Tokenized Deposits in Japan",
+      "subtitle": "SettleMint DALP | Executive Briefing"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Japan Context",
+      "item_1": "Tokenized Deposits Explained",
+      "item_2": "DALP Platform",
+      "item_3": "Use Cases & Business Value",
+      "item_4": "Next Steps",
+      "icon1": "icon-library/lucide/flag.svg",
+      "icon2": "icon-library/lucide/coins.svg",
+      "icon3": "icon-library/lucide/cpu.svg",
+      "icon4": "icon-library/lucide/bar-chart.svg",
+      "icon5": "icon-library/lucide/chevron-right.svg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Japan's Banking & Payments Landscape",
+      "col1": "Market Scale & Shift\n• $5T+ total banking assets — one of the world's largest markets\n• Historically cash-dominant culture now accelerating toward digital\n• Government-led push: CBDC pilot programme underway since 2022\n• JBA (Japan Banking Association) driving industry-wide digital innovation\n• Over 100 million retail bank accounts — scale ready for tokenization",
+      "col2": "Digital Momentum\n• BOJ CBDC Phase 2 pilot engaging major city banks\n• Payment Services Act reforms enabling e-money and new entrants\n• Tokyo Stock Exchange infrastructure primed for digital securities\n• Rising corporate demand for T+0 cross-border settlement\n• Fintech Act exemptions lowering barriers for digital asset pilots"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Japan Regulatory Framework",
+      "body": "Japan has one of Asia-Pacific's most mature digital-asset regulatory stacks. The FSA's layered framework gives licensed banks a clear path to issue tokenized deposits under existing banking rules — without needing a new licence or stablecoin designation.",
+      "table_data": [
+        ["Regulation", "Regulator", "Relevance to Tokenized Deposits"],
+        ["Payment Services Act", "FSA", "Governs fund transfers, e-money, and prepaid instruments — baseline for deposit tokens"],
+        ["Stablecoin Act 2022", "FSA", "Establishes electronic payment instrument rules; banks exempt as deposit issuers"],
+        ["FIEA (Financial Instruments)", "FSA / JFSA", "Covers security token offerings; relevant for DvP and settlement interoperability"],
+        ["Banking Act", "FSA", "Licensed banks retain deposit primacy; tokenized deposits remain bank liabilities"],
+        ["AML/CFT Framework", "JAFIC / FSA", "KYC, CDD, and transaction monitoring obligations apply to tokenized instruments"]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Tokenized Deposits Explained",
+      "subtitle": "What they are, how they differ, and why they matter"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Tokenized Deposits vs Stablecoins vs CBDCs",
+      "body": "Three digital forms of money — but with fundamentally different issuers, backing, and regulatory treatment.",
+      "table_data": [
+        ["Attribute", "Tokenized Deposits", "Stablecoins", "CBDC"],
+        ["Issuer", "Licensed bank", "Private company / protocol", "Central bank"],
+        ["Backing", "Bank deposit liability (fiat 1:1)", "Reserve assets or algorithm", "Central bank liability"],
+        ["Regulatory status", "Covered by Banking Act / PSA", "Stablecoin Act / unregulated", "Sovereign currency"],
+        ["Use case", "B2B settlement, DvP, treasury", "Cross-border, DeFi, retail", "Retail / wholesale CBDC pilots"],
+        ["Settlement finality", "Atomic on-chain (T+0)", "Varies by design", "Varies by CBDC design"],
+        ["Counterparty risk", "Bank balance sheet risk", "Issuer / reserve risk", "Sovereign — near zero"]
+      ]
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Why Tokenized Deposits Matter",
+      "item1": "**Programmable Money**\nSmart contract controls enable conditional release, scheduled payments, and automated compliance checks — without manual intervention at each step.",
+      "item2": "**24/7 Settlement**\nTokenized deposits settle on-chain at any hour, eliminating cut-off times and end-of-day batch processing that delay corporate treasury cycles.",
+      "item3": "**Reduced Counterparty Risk**\nDvP atomicity ensures delivery and payment happen simultaneously — eliminating the settlement lag that creates counterparty exposure in traditional rails.",
+      "item4": "**Cross-Border Efficiency**\nInstant bilateral settlement between Japanese banks and global counterparties replaces multi-day SWIFT chains and correspondent bank queues."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP for Tokenized Deposits",
+      "subtitle": "End-to-end lifecycle management, compliance built in"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "DALP: Digital Asset Lifecycle Platform",
+      "body": "DALP is SettleMint's production-grade platform for issuing, managing, and servicing tokenized financial instruments.\n\n• EVM-native — deploys on public, private, or consortium chains\n• Compliance-first — KYC, AML, and policy controls baked into every action\n• Deposit-class support — native module for bank-issued deposit tokens\n• API-first architecture — integrates with core banking, SWIFT, and RTGS\n• Proven at scale — deployed across regulated institutions in EMEA and Asia",
+      "image_path": "templates/dalp-screenshots/07 - Deposits/Deposits Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance & Policy Controls",
+      "body": "Every issuance, transfer, and redemption on DALP passes through a configurable compliance gate before touching on-chain state.\n\n• Whitelist enforcement — only KYC-verified wallets can hold or receive tokens\n• Jurisdiction rules — FSA-aligned policies applied per transaction\n• Freeze and seizure — regulatory hold and account suspension in one action\n• Audit trail — immutable log of every decision, rejection, and approval\n• Maker-checker — dual-control for high-value operations",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Templates.jpg"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Deposit Issuance & Lifecycle on DALP",
+      "col1": "Mint\n• Bank configures deposit token parameters in Asset Designer\n• FSA-compliant metadata and token standards set at creation\n• KYC and whitelist checks gate every minting action\n• Supply cap and issuance velocity rules enforced on-chain\n• Maker-checker approval for institutional issuance events",
+      "col2": "Transfer & Hold\n• On-chain transfer subject to real-time policy engine checks\n• Hold instruction freezes specific tokens pending dispute or compliance review\n• Partial transfer and fractional ownership fully supported\n• Cross-entity and cross-jurisdiction rules applied automatically\n• Every event timestamped and stored in immutable audit log",
+      "col3": "Redeem & Burn\n• Redemption request triggers bank-side fiat return workflow\n• DALP burns token supply on confirmed fiat settlement\n• Automated reconciliation matches on-chain and off-chain records\n• Redemption audit trail available for FSA reporting\n• Full lifecycle closed atomically — no manual reconciliation gap"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Use Cases & Business Value",
+      "subtitle": "Where tokenized deposits deliver measurable impact"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Settlement & Interoperability",
+      "body": "DALP's XVP engine enables atomic delivery-versus-payment across heterogeneous asset classes and settlement rails — connecting deposit tokens directly to Japan's existing securities and payments infrastructure.",
+      "table_data": [
+        ["Capability", "How It Works", "Japan Integration"],
+        ["Atomic DvP", "Deposit token ↔ security token swap in one transaction", "BOJ-NET, TSE digital securities infrastructure"],
+        ["XVP settlement", "Cross-vehicle protocol: cash, securities, FX in single atomic event", "Multi-asset settlement across Japanese CCPs"],
+        ["T+0 finality", "On-chain settlement replaces T+2 batch settlement windows", "Eliminates intraday credit exposure"],
+        ["SWIFT integration", "ISO 20022 message bridge into DALP for instruction flow", "Compatible with ZENGIN and SWIFT gpi"],
+        ["RTGS linkage", "Real-time gross settlement hook for high-value transactions", "BOJ-NET RTGS connection layer"]
+      ]
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Key Benefits & Business Case",
+      "body": "Tokenized deposits on DALP deliver measurable operational improvements across settlement, compliance, and treasury operations — with a deployment model that fits Japanese banking infrastructure.",
+      "table_data": [
+        ["Metric", "Before Tokenization", "After DALP Deployment"],
+        ["Settlement time", "T+2 (48 hours, batch)", "T+0 — atomic, real-time"],
+        ["Cross-border cost", "1–3% of transaction value", "60–90% reduction via on-chain rails"],
+        ["Reconciliation overhead", "Manual, 2–5 business days", "Automated, same-session"],
+        ["Compliance checks", "Manual review queues", "Policy engine: sub-second automated gate"],
+        ["Audit readiness", "Spreadsheet + email trail", "Immutable on-chain audit log"],
+        ["Operational errors", "~2% of cross-border transactions", "Near-zero via atomic execution"]
+      ]
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Deployment & Integration Options",
+      "col1": "Cloud & On-Premise\n• Full cloud deployment on AWS, Azure, or GCP\n• On-premise or private cloud for air-gapped banking environments\n• Hybrid topology: compliance logic on-prem, settlement on-chain\n• Managed SaaS with 99.9% SLA for core banking integration\n• Data residency controls aligned to Japanese regulatory requirements",
+      "col2": "API-First Integration\n• RESTful APIs for core banking system connectors\n• Webhook-based event streaming for real-time reconciliation\n• SDK for Japanese banking middleware (NTT Data, Hitachi, Fujitsu)\n• Pre-built connectors for ISO 20022 messaging standards\n• Sandbox environment for pre-production integration testing",
+      "col3": "Japan Market Fit\n• BOJ-NET RTGS integration layer for high-value settlement\n• Tokyo Stock Exchange digital securities infrastructure alignment\n• ZENGIN payment network bridge for retail-side flows\n• JBA Digital Innovation framework compliance mapping\n• Localised support team and Japanese-language documentation"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Implementation Roadmap",
+      "body": "A phased approach reduces regulatory risk and ensures production readiness before full launch.\n\n**Phase 1 — Discovery (Months 1–2)**\n• Map use cases to Japan's regulatory framework\n• Define token parameters, compliance rules, and integration scope\n• Stakeholder alignment across legal, risk, and technology teams\n\n**Phase 2 — Pilot (Months 3–5)**\n• DALP environment provisioned and configured for deposit asset class\n• KYC/AML integration with existing identity infrastructure\n• Controlled pilot issuance with select counterparties\n• FSA regulatory review and sandbox engagement\n\n**Phase 3 — Production (Months 6–9)**\n• Full compliance sign-off and audit trail validated\n• Core banking integration completed and load-tested\n• Live production launch with BOJ-NET and SWIFT connectivity"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Why SettleMint",
+      "item1": "**Regulated-First Platform**\nDALP was built for regulated financial instruments from the start — not retrofitted. Compliance, audit trails, and policy controls are architectural, not optional modules.",
+      "item2": "**Global Deployments**\nLive in production across banks, exchanges, and custodians in Europe, Middle East, and Asia. Deposit tokenization programmes running at scale in multiple jurisdictions.",
+      "item3": "**EVM Expertise**\nDeep EVM protocol knowledge: ERC-3643 compliant tokens, multi-chain deployment, and integration with public and private blockchain infrastructure.",
+      "item4": "**Enterprise Support & SLAs**\n24/7 technical support, 99.9% uptime SLA, dedicated solution engineering for Japan market onboarding, and FSA regulatory engagement support."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Reference diagrams: architecture, settlement flow, regulatory mapping, and roadmap"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Diagram 1: Tokenized Deposit Lifecycle",
+      "body": "End-to-end flow from bank origination through KYC screening, on-chain minting, lifecycle controls (transfer, hold, freeze), redemption, and token burn. Each transition is governed by DALP's policy engine.",
+      "image_path": "output/diagrams/japan-tokenized-deposit-lifecycle-2026-03-20-wide.png"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Diagram 2: DALP Platform Architecture",
+      "body": "DALP's five-layer architecture for tokenized deposits: Asset Designer configures parameters, the Compliance Engine enforces KYC and policy rules, the Token Ledger holds EVM smart contracts, Data Feeds connect fiat oracles and reconciliation, and the Reporting Layer delivers FSA-ready audit output.",
+      "image_path": "output/diagrams/dalp-architecture-tokenized-deposits-2026-03-20-equal.png"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Diagram 3: DvP Settlement with XVP",
+      "body": "Atomic T+0 settlement sequence between Buyer, DALP, Custodian, and Counterparty. DALP's XVP engine locks both legs of the trade in escrow before executing the atomic swap — eliminating settlement risk entirely.",
+      "image_path": "output/diagrams/japan-dvp-xvp-settlement-2026-03-20-screenshot-browser-frame.png"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Diagram 4: Japan Regulatory Mapping",
+      "body": "FSA regulatory hierarchy mapped to DALP's compliance layer. The Payment Services Act, Stablecoin Act, and FIEA each impose specific obligations — DALP's policy engine and audit infrastructure map directly to these requirements.",
+      "image_path": "output/diagrams/japan-regulatory-mapping-2026-03-20-equal.png"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Diagram 5: Implementation Roadmap",
+      "body": "Three-phase delivery plan from Discovery through Pilot to Production over 9 months. Phase 1 covers regulatory mapping and use-case definition. Phase 2 runs a controlled pilot. Phase 3 achieves live production with full FSA compliance and core banking integration.",
+      "image_path": "output/diagrams/japan-implementation-roadmap-2026-03-20-wide.png"
+    }
+  ]
+}

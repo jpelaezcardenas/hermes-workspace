@@ -1,0 +1,224 @@
+{
+  "project": "2026-03-20-team-update",
+  "output": "output/2026-03-20-team-update-jan-mar-2026.pptx",
+  "description": "SettleMint Jan-Mar 2026: What We Built  -  internal team update covering Product, Marketing, and Business",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Q1 2026 Update",
+      "subtitle": "What We Built · Product · Marketing · Business"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Product",
+      "item_1": "Marketing",
+      "item_2": "Business",
+      "icon1": "icon-library/lucide/cpu.svg",
+      "icon2": "icon-library/lucide/trending-up.svg",
+      "icon3": "icon-library/lucide/briefcase.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Product",
+      "subtitle": "Platform evolution, developer tooling, compliance, and infrastructure"
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "DALP Platform Evolution",
+      "item1": "**Tripartite Runtime Split**\nDALP now runs as three distinct runtimes: DAPI (API gateway), DDWF (durable workflow execution), and DIDX (indexer). Each runtime is independently deployable for HA and self-hosted configurations.",
+      "item2": "**Standalone Indexer (DIDX)**\nDALP Indexer extracted as an independent service. Token read surface exposed via DIDX  -  event-driven, chain-synced, and queryable without coupling to the workflow runtime.",
+      "item3": "**Token Features Expansion**\nSix new token feature modules shipped: conversion, voting, yield, maturity, AUM fee, and transaction fee. Composable per asset class with configurable parameters at issuance time.",
+      "item4": "**Auth Control Plane**\nDevice authentication flows tightened across the control plane. Session management, permission scopes, and API key lifecycle strengthened to enterprise security standards.",
+      "item5": "**Durable Execution Substrate**\nWorkflow runtime redesigned around durable execution primitives. Long-running token operations survive process restarts without state loss or duplicate on-chain effects.",
+      "item6": "**HA and Self-Hosting**\nHigh-availability deployment configuration validated. Self-hosted enterprise installs now supported with documented reference architecture and automated health checks."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Developer Surface Released",
+      "body": "Full programmatic asset control now available.\n\n**DALP CLI**\n• Device auth: secure token-based login\n• Typed ops for assets and compliance\n• Live event streaming and monitoring\n\n**DALP SDK**\n• Programmatic access to all DALP APIs\n• Covers issuance, compliance, settlement\n• CI/CD and custom connector support",
+      "image_path": "image-bank/technology/code.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Compliance and AI",
+      "col1": "**Composable Compliance Tokens**\n• Tokens ship with configurable compliance rule sets attached at design time\n• Policy templates codify jurisdiction-specific requirements as reusable modules\n• Identity deepening: DID-gated participation, KYC enforced on-chain\n• Token-indexer read surface exposes compliance state for audit\n• Rules applied at transfer, issuance, and redemption",
+      "col2": "**DALP AI Assistant R&D**\n• AI assistant specifications advanced through Q1 research phase\n• Scope: natural language querying of token state and compliance status\n• Architecture reviewed for secure AI access to DALP data surfaces\n• Integration aligned with DIDX read surface  -  query the index directly\n• Specifications ready for Q2 engineering sprint planning"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Infrastructure and Ops",
+      "item1": "**Runtime Telemetry**\nAll three DALP runtimes (DAPI, DDWF, DIDX) now emit structured telemetry. Latency, throughput, error rates, and execution traces captured and forwarded to the observability stack.",
+      "item2": "**API Log Warehouse**\nAPI access logs and event traces warehoused for long-term retention and audit. Queryable by time window, endpoint, and operation type for both compliance and debugging use cases.",
+      "item3": "**Grafana Alerting**\nGrafana alerting configured across all runtime metrics. Alert thresholds defined for latency spikes, error rate increases, and service degradation. Notifications route to Slack via templated messages.",
+      "item4": "**Durable Execution**\nWorkflow substrate supports at-least-once execution guarantees for all token operations. Failed operations retry deterministically without duplicating on-chain effects. History queryable for audit."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Marketing",
+      "subtitle": "Positioning, content systems, and pipeline intelligence"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Content and Positioning",
+      "body": "DALP narrative sharpened around composable tokens and compliance.\n\n• Core messaging reframed for executive and technical audiences\n• Content aligned to Q1 features: token features, CLI/SDK, policy templates\n• CLI/SDK launch package created: LinkedIn, Twitter, blog\n• 230+ competitor profiles catalogued and monitored\n• AI SEO positioning completed for AI-generated answer surfaces\n• Intelligence feeds positioning updates and proposal language",
+      "image_path": "image-bank/technology/dashboard.jpg"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Pipeline Intelligence",
+      "body": "HubSpot enrichment, MEDDPICC qualification, and automated monitoring now operational",
+      "table_data": [
+        [
+          "System",
+          "What It Does",
+          "Q1 Output"
+        ],
+        [
+          "HubSpot Enrichment",
+          "Pulls firmographic and contact data into CRM automatically",
+          "Live  -  all active deals enriched"
+        ],
+        [
+          "MEDDPICC Qualification",
+          "Enforces qualification standard across every deal",
+          "200+ zombies closed; ~15 live preserved"
+        ],
+        [
+          "Target Dossiers",
+          "Pre-built intelligence for strategic target accounts",
+          "Dossiers created for priority accounts"
+        ],
+        [
+          "Release Scanner",
+          "Monitors releases weekly; feeds content pipeline",
+          "Live  -  weekly automated scan"
+        ],
+        [
+          "Competitor Intel",
+          "Tracks 230+ competitors on positioning and product",
+          "230+ profiles structured and searchable"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Business",
+      "subtitle": "Live pipeline, partnerships, and process discipline"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Live Pipeline Highlights",
+      "body": "Qualified opportunities with named owners, next steps, and commercial clarity",
+      "table_data": [
+        [
+          "Deal",
+          "Status",
+          "Value / Note",
+          "Owner"
+        ],
+        [
+          "Swift DLT Layer",
+          "Full MEDDPICC  -  #1 priority",
+          "Strategic flagship deal",
+          "Roderik"
+        ],
+        [
+          "OCBC 2yr Besu License",
+          "Contract Sent  -  70 days",
+          "$1.3M renewal",
+          "TBD"
+        ],
+        [
+          "aXedras BIL Metals",
+          "Full MEDDPICC",
+          "$60K pilot  -  BIL Luxembourg",
+          "TBD"
+        ],
+        [
+          "KBC Solar",
+          "Full MEDDPICC",
+          "Solar asset tokenization",
+          "TBD"
+        ],
+        [
+          "BNP Paribas Cardif",
+          "Active",
+          "Insurance-linked assets",
+          "TBD"
+        ],
+        [
+          "DBS Bank Singapore",
+          "Active",
+          "Digital asset infrastructure",
+          "TBD"
+        ],
+        [
+          "UOB Blockchain RFP",
+          "Active",
+          "Regional bank RFP",
+          "TBD"
+        ],
+        [
+          "Japan Cluster (x4)",
+          "Active",
+          "Shizuoka / Tokyo Century / Minna / Orix",
+          "TBD"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Strategic Partnerships",
+      "col1": "**aXedras + BIL**\nPrecious metals provenance and tokenization. DALP handles tokenization, compliance enforcement, and atomic settlement. Network: 100+ LBMA refiners, Royal Canadian Mint, World Gold Council. BIL is the issuing institution for the Luxembourg pilot at $60K.",
+      "col2": "**CMA / DEPO-X**\nBond tokenization demonstration. Technical spec review complete  -  835-line spec mapped to DALP. POC scope delivered: 4-week proof of concept covering issuance, compliance, settlement, and investor lifecycle. Execution pending regulatory approvals.",
+      "col3": "**KSA Real Estate**\nNation-scale digital real estate registry for Saudi Vision 2030. SettleMint engaged for tokenization infrastructure. Scope: national land and property title digitisation. Largest single-country opportunity. Technical and commercial terms in discussion."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Pipeline Hygiene",
+      "item1": "**200+ Deals Cleaned**\nPipeline reduced from 200+ zombie deals to approximately 15 live, qualified opportunities. Each preserved deal has a named owner, defined next action, and realistic close date.",
+      "item2": "**MEDDPICC Adopted**\nMEDDPICC adopted as the qualification standard across the sales team. Every deal must satisfy all seven criteria before entering the qualified pipeline.",
+      "item3": "**Partner Channel Audited**\nFull partner channel audit completed. Investor entries separated from sales pipeline. Big Four SIs moved to client-deal-led engagement only. No more inflated metrics.",
+      "item4": "**Process Discipline**\nBoard reporting cadence established. Pipeline reviews run against MEDDPICC criteria. Smaller, cleaner, more credible pipeline  -  every number means something."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Architecture and process diagrams"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "DALP Runtime Architecture",
+      "body": "Tripartite runtime split: DAPI handles the API gateway and auth control plane; DDWF runs durable workflow execution; DIDX is the standalone indexer exposing the token read surface. CLI and SDK connect through DAPI. All three runtimes emit telemetry to Grafana.",
+      "image_path": "workflow/appendix-diagrams/team-update-dalp-runtime-arch-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Token Lifecycle Flow",
+      "body": "From token design through issuance, distribution, servicing, and final redemption. Compliance modules intercept at every action gate. New Q1 features plug into the servicing phase. Audit log maintained throughout the full lifecycle.",
+      "image_path": "workflow/appendix-diagrams/team-update-token-lifecycle-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Pipeline Funnel",
+      "body": "MEDDPICC-driven qualification reduced the pipeline from 200+ zombie deals to ~15 live qualified.\n\n• Raw pipeline: all CRM entries including stale and investor records\n• MEDDPICC gate: all seven criteria must be met to progress\n• Zombie removal: no champion, no pain, no process  -  closed out\n• Live qualified: Swift, OCBC, aXedras, KBC, BNP, DBS, UOB, Japan\n\nSmaller pipeline. Higher conviction.",
+      "image_path": "workflow/appendix-diagrams/team-update-pipeline-funnel-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Compliance Layer Model",
+      "body": "Every token action passes through a sequential compliance gate stack before touching on-chain state. Identity check confirms KYC/DID status. Whitelist validates counterparty eligibility. Policy templates apply jurisdiction rules. Limit enforcement caps holdings and fees. Blocked actions rejected with logged reason.",
+      "image_path": "workflow/appendix-diagrams/team-update-compliance-layer-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Partnership Ecosystem",
+      "body": "Three strategic partnerships anchor the Q1 pipeline.\n\n**aXedras + BIL**: Precious metals tokenization. 100+ LBMA refiners, Royal Canadian Mint, World Gold Council.\n\n**CMA / DEPO-X**: Bond tokenization POC. Tech spec reviewed, scope delivered.\n\n**KSA Real Estate**: Nation-scale Vision 2030 digital property title initiative.",
+      "image_path": "workflow/appendix-diagrams/team-update-partnership-ecosystem-2026-03-20.mmd"
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "project": "settlemint-slide-bank-showcase-2026-03-19-v4",
+  "output": "output/settlemint-slide-bank-showcase-2026-03-19-v4.pptx",
+  "description": "Showcase deck regenerated with hard fail-closed title rules: main slide titles max 7 words, titled 2-column/3-column mini-title boxes max 5 words, exactly one non-bullet line only.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Slide Bank Showcase",
+      "subtitle": "22 production layouts | March 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Platform overview and positioning",
+      "item_1": "Workflow and operating model",
+      "item_2": "Product modules and controls",
+      "item_3": "Implementation and evidence",
+      "item_4": "User experience and interfaces",
+      "item_5": "Delivery options and impact",
+      "item_6": "Close",
+      "icon0": "icon-library/lucide/bar-chart.svg",
+      "icon1": "icon-library/lucide/briefcase.svg",
+      "icon2": "icon-library/lucide/shield.svg",
+      "icon3": "icon-library/lucide/file-text.svg",
+      "icon4": "icon-library/lucide/coins.svg",
+      "icon5": "icon-library/lucide/award.svg",
+      "icon6": "icon-library/lucide/arrow-right.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Platform Overview",
+      "subtitle": "Why DALP fits enterprise tokenization"
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "What This Showcase Validates",
+      "body": "This deck demonstrates the active SettleMint slide bank exactly as it exists today: one slide for each approved format, realistic DALP-focused placeholder content, conservative text fitting, and native PowerPoint output built through the current XML-merge workflow. The objective is not sales storytelling alone; it is proof that each template can be populated credibly without touching protected header, footer, numbering, or branded background zones."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP makes asset design repeatable",
+      "body": "\u2022 DALP gives issuers a controlled path from product design to servicing, with configurable asset templates, policy modules, identity checks, distribution rules, and settlement orchestration managed in one operating environment.\n\u2022 Teams replace fragmented spreadsheets, custom scripts, and case-by-case legal interpretation with reusable workflows that product, compliance, operations, and engineering can govern together.\n\u2022 The result is faster launch cycles, stronger auditability, clearer ownership across functions, and a delivery model suited to banks, market infrastructure providers, and enterprise tokenization programs.\n\u2022 This showcase uses business-grade placeholder content to stress the layouts close to capacity while preserving readability and editability."
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Representative DALP capability matrix",
+      "body": "Illustrative capability table used to prove the table layout renders plausibly with dense but readable structured content.",
+      "table_data": [
+        [
+          "Domain",
+          "Primary user",
+          "Core control",
+          "Typical output",
+          "Why it matters"
+        ],
+        [
+          "Asset design",
+          "Product team",
+          "Template governance",
+          "Approved instrument setup",
+          "Reduces one-off structuring work"
+        ],
+        [
+          "Compliance",
+          "Risk & legal",
+          "Policy rules",
+          "Transfer and holder restrictions",
+          "Enforces rules at runtime"
+        ],
+        [
+          "Identity",
+          "Operations",
+          "KYC and eligibility",
+          "Verified investor registry",
+          "Supports controlled distribution"
+        ],
+        [
+          "Lifecycle",
+          "Servicing desk",
+          "Events and actions",
+          "Coupons, maturities, redemptions",
+          "Keeps post-issuance workflows consistent"
+        ],
+        [
+          "Integration",
+          "IT & engineering",
+          "APIs and events",
+          "Connected downstream systems",
+          "Fits enterprise operating models"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Delivery models by operating requirement",
+      "body": "The table compares how organizations typically stage production adoption. Pilot programs optimize for speed and learning. Controlled launches emphasize policy depth, operations readiness, and integration discipline. Enterprise scale focuses on repeatability across multiple products, jurisdictions, and internal teams. DALP is strongest where a client needs governance and reuse, not a one-off proof of concept.",
+      "table_data": [
+        [
+          "Model",
+          "Time to first launch",
+          "Governance depth",
+          "Integration scope",
+          "Best fit"
+        ],
+        [
+          "Sandbox pilot",
+          "4-8 weeks",
+          "Light",
+          "Minimal",
+          "Internal validation and demos"
+        ],
+        [
+          "Business pilot",
+          "8-12 weeks",
+          "Medium",
+          "Targeted",
+          "Single product with clear sponsor"
+        ],
+        [
+          "Controlled production",
+          "12-20 weeks",
+          "High",
+          "Core systems",
+          "Live issuance with defined controls"
+        ],
+        [
+          "Scaled platform",
+          "20+ weeks",
+          "Very high",
+          "Enterprise-wide",
+          "Multi-asset operating model"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Value scales as controls become reusable",
+      "body": "A typical DALP journey starts with a single issuance use case, then compounds value as approved templates, compliance modules, identity checks, and downstream integrations are reused across new products. The chart area is intentionally populated after build with a visual asset so this layout demonstrates a fully occupied content zone rather than an empty placeholder.",
+      "image_path": "image-bank/abstract/data-viz.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Why teams adopt DALP",
+      "col1": "Bespoke build path\n\u2022 High dependence on specialist engineers and external counsel for each launch.\n\u2022 Rules, data models, and investor constraints are reinterpreted repeatedly.\n\u2022 Operations teams inherit fragmented tooling and weak evidence trails.\n\u2022 Scaling to new products or jurisdictions increases cost disproportionately.",
+      "col2": "DALP operating model\n\u2022 Product, legal, and ops teams work from governed templates and policy modules.\n\u2022 Eligibility, transfer checks, servicing events, and audit traces become repeatable.\n\u2022 Integration points are explicit, making enterprise controls easier to own.\n\u2022 New launches benefit from reuse instead of starting from zero."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Three core DALP pillars",
+      "col1": "Design and issuance\n\u2022 Model products with reusable parameters.\n\u2022 Standardize approvals before deployment.\n\u2022 Launch new assets with less manual rework.",
+      "col2": "Compliance and identity\n\u2022 Bind investor eligibility to policy logic.\n\u2022 Keep rule enforcement visible and auditable.\n\u2022 Reduce manual screening bottlenecks.",
+      "col3": "Operations and integration\n\u2022 Orchestrate servicing events consistently.\n\u2022 Connect APIs, monitoring, and downstream systems.\n\u2022 Support scale without losing control."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "What enterprise buyers usually evaluate",
+      "item1": "Control model\nCan product, legal, compliance, and operations share one governed workflow without falling back to email approvals and spreadsheet reconciliation?",
+      "item2": "Delivery speed\nCan teams configure a launchable product quickly while preserving review gates, evidence capture, and downstream integration quality?",
+      "item3": "Runtime enforcement\nAre transfer, holding, onboarding, and servicing controls applied systematically rather than left to manual interpretation?",
+      "item4": "Scale potential\nWill the platform support additional products, jurisdictions, and client programs without a full redesign every time?"
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Six design principles behind production readiness",
+      "item1": "Reusable templates\nStandardize asset setup, approval checkpoints, and launch packaging so each new program starts from governed building blocks.",
+      "item2": "Policy first\nExpose transfer constraints, investor rules, and servicing conditions early so design decisions stay aligned with controls.",
+      "item3": "Identity linked\nConnect onboarding status and eligibility evidence directly to runtime permissions instead of relying on offline checks.",
+      "item4": "Event driven\nKeep issuance, servicing, settlement, and downstream notifications synchronized through explicit operational triggers and reviewable flows.",
+      "item5": "Operational evidence\nCapture approvals, rule context, and execution traces in a form that risk, compliance, and audit teams can inspect.",
+      "item6": "Human editable\nPreserve native slides and clear structure so commercial, product, and delivery teams can refine content without redesign work."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset design workflow in practice",
+      "body": "The asset designer experience gives product and operations teams a guided path from instrument setup to policy configuration and review. In client conversations, this layout works well when the story is process-led: explain the operating benefit on the left, then anchor credibility with an actual DALP interface on the right. The content is intentionally dense enough to prove the text box can carry meaningful context without overwhelming the slide.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Review and Deploy 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance policies stay close to execution",
+      "body": "DALP is strongest when compliance is not treated as a document set that lives outside the product workflow. Policy templates, eligibility logic, and rule configuration become part of the operating model, which reduces handoffs and makes review more transparent. This slide pairs a live-looking compliance screen with narrative explaining why governed reuse matters more than one-time customization.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - List.jpg"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Executive conversations need business context",
+      "body": "When the audience is commercial, strategy, or transformation leadership, visuals do not need to be product screenshots only. A balanced image-plus-text layout can frame the boardroom problem: institutions want tokenization programs that reduce launch friction, keep control functions comfortable, and create a repeatable path to additional products. This format gives room for narrative without looking text-heavy.",
+      "image_path": "image-bank/business/meeting.jpg"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Monitoring and operations matter after launch",
+      "body": "Production readiness is not proven at issuance alone. Teams also need visibility into requests, events, servicing activity, and exceptions once products are live. This slide is designed to communicate that the operating model extends beyond setup screens: monitoring and auditability are part of what makes a platform credible in enterprise environments.",
+      "image_path": "image-bank/technology/dashboard.jpg"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Real-estate assets need governed workflows",
+      "body": "Wide visual layouts work well when the asset itself is tangible and context-rich. For real-estate tokenization, DALP helps structure the asset record, investor constraints, servicing events, and downstream reporting around one controlled model rather than a patchwork of custom handling.",
+      "image_path": "image-bank/city/skyline.jpg"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Identity-led onboarding supports cleaner distribution",
+      "body": "A narrow text area forces prioritization: identity, eligibility, and verification need to be clear, not verbose. This layout is effective when the message is that token distribution quality depends on who is allowed to hold, transfer, and service the instrument, not just on how quickly tokens can be minted.",
+      "image_path": "image-bank/technology/cloud.jpg"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Technology positioning can stay business-readable",
+      "body": "One-third image layouts are useful when the visual is supportive rather than dominant. Here the image reinforces a platform narrative while the text carries the main message: DALP gives institutions a structured way to connect product configuration, controls, servicing logic, and integration patterns without turning every client program into a custom engineering project. The slide stays readable for mixed executive and technical audiences.",
+      "image_path": "image-bank/technology/dashboard.jpg"
+    },
+    {
+      "bank_file": "slide-022-picture-right-one-third.pptx",
+      "title": "Deployment choices should reflect governance maturity",
+      "body": "Clients typically move through phases: prove the use case, establish control ownership, integrate with target systems, then scale. This layout gives more room to explain that progression while still carrying a supporting image. It works well for delivery discussions because it keeps the story focused on sequencing, readiness, and ownership rather than on abstract architecture alone.",
+      "image_path": "image-bank/technology/cloud.jpg"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "SettleMint pairs platform depth with discipline",
+      "body": "Full-width visual slides are best when the audience needs a momentum moment rather than another dense content block. This one reinforces the idea that DALP is not simply a feature set; it is a disciplined operating model for institutions that want to move from isolated experiments to governed, repeatable digital-asset delivery.",
+      "image_path": "image-bank/city/skyline.jpg"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

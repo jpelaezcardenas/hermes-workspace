@@ -1,0 +1,38 @@
+graph TB
+    subgraph ROLES["Role-Based Access Control"]
+        ADMIN[Platform Admin]
+        ISSUER[Asset Issuer]
+        COMPLIANCE[Compliance Officer]
+        OPERATOR[Operations Team]
+        AUDITOR[External Auditor]
+    end
+
+    subgraph ACTIONS["Governed Actions"]
+        DESIGN[Design Asset]
+        APPROVE[Approve Issuance]
+        ISSUE[Execute Issuance]
+        FREEZE[Freeze or Unfreeze]
+        TRANSFER[Forced Transfer]
+        VIEW[View Audit Logs]
+    end
+
+    subgraph CUSTODY["Custody Controls"]
+        MC[Maker Checker Flow]
+        HSM_KEY[HSM Key Signing]
+        RECOVERY[Key Recovery Procedure]
+    end
+
+    ADMIN --> DESIGN
+    ISSUER --> APPROVE
+    COMPLIANCE --> FREEZE
+    COMPLIANCE --> TRANSFER
+    OPERATOR --> ISSUE
+    AUDITOR --> VIEW
+    APPROVE --> MC
+    ISSUE --> HSM_KEY
+    MC --> HSM_KEY
+    HSM_KEY --> RECOVERY
+
+    style ROLES fill:#000099,color:#fff,stroke:#000099
+    style ACTIONS fill:#037352,color:#fff,stroke:#037352
+    style CUSTODY fill:#0000FF,color:#fff,stroke:#0000FF

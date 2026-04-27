@@ -1,0 +1,16 @@
+flowchart LR
+    Browser["Browser\nshell"] --> Auth["Auth &\nidentity"]
+    Auth --> Studio["DALP\nworkspace"]
+    Studio --> Designer["Asset\ndesigner"]
+    Studio --> Policy["Compliance\npolicy mgr"]
+    Designer --> Chain["On-chain\noperations"]
+    Policy --> Chain
+    Chain --> Events["Event\nstream"]
+    Events --> Audit["Audit\nevidence"]
+    Events --> Monitor["Monitoring\n& alerts"]
+    classDef ui fill:#E8F0F8,stroke:#1E4868,color:#1E4868,stroke-width:2px
+    classDef core fill:#E8EAF6,stroke:#000099,color:#000099,stroke-width:2px
+    classDef output fill:#E8F5E8,stroke:#187848,color:#187848,stroke-width:2px
+    class Browser,Auth ui
+    class Studio,Designer,Policy,Chain core
+    class Events,Audit,Monitor output

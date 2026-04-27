@@ -1,0 +1,30 @@
+graph LR
+    subgraph CLOUD["Cloud Deployment"]
+        SAAS[SettleMint Managed SaaS]
+        DEDICATED[Dedicated Cloud Instance]
+    end
+
+    subgraph ONPREM["On-Premises Deployment"]
+        SELF[Self-Hosted Infrastructure]
+        AIRGAP[Air-Gapped Environment]
+    end
+
+    subgraph HYBRID["Hybrid Deployment"]
+        CONTROL[Control Plane: Cloud]
+        DATA[Data Plane: On-Premises]
+    end
+
+    subgraph NETWORKS["EVM Networks"]
+        BESU[Hyperledger Besu]
+        ETH[Ethereum]
+        PRIVATE[Private EVM Chain]
+    end
+
+    CLOUD --> NETWORKS
+    ONPREM --> NETWORKS
+    HYBRID --> NETWORKS
+
+    style CLOUD fill:#000099,color:#fff,stroke:#000099
+    style ONPREM fill:#037352,color:#fff,stroke:#037352
+    style HYBRID fill:#0000FF,color:#fff,stroke:#0000FF
+    style NETWORKS fill:#333,color:#fff,stroke:#333

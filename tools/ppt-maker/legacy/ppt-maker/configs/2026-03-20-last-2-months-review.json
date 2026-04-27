@@ -1,0 +1,108 @@
+{
+  "project": "2026-03-20-last-2-months-review",
+  "output": "output/2026-03-20-last-2-months-review.pptx",
+  "description": "SettleMint: Last 2 Months — Product, Marketing, Business review for executive team",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "SettleMint: Last 2 Months",
+      "subtitle": "Product · Marketing · Business"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Product",
+      "item_1": "Marketing",
+      "item_2": "Business",
+      "icon1": "icon-library/lucide/cpu.svg",
+      "icon2": "icon-library/lucide/trending-up.svg",
+      "icon3": "icon-library/lucide/briefcase.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Product",
+      "subtitle": "Platform releases, compliance modules, and the office agent system"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Platform Tooling Released",
+      "col1": "**DALP CLI**\n• Experimental release enabling developer automation of platform operations from the command line\n• Scripted deployment, asset configuration, and token lifecycle management without portal interaction\n• Reduces setup and iteration time for development teams building on DALP\n• Designed as the primary interface for CI/CD pipeline integration\n• Shipped alongside SDK to give developers a complete programmatic toolset",
+      "col2": "**DALP SDK**\n• Experimental release enabling programmatic access to all DALP platform APIs and event streams\n• Supports custom connector development, workflow automation, and third-party system integration\n• Targets engineering teams embedding DALP capabilities inside existing financial infrastructure\n• Covers asset issuance, compliance enforcement, and settlement event subscription\n• Allows builders to compose DALP functions without relying on the platform portal"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Demo & Compliance in Production",
+      "item1": "**Neptune Demo Live**\nFull Neptune demo environment is operational with the NMLHANDY token deployed end to end. Prospects can see a real tokenization workflow running on live infrastructure, not slides.",
+      "item2": "**Country Allow Module**\nRestricts token transfers and investor participation by jurisdiction. Geographic compliance rules are enforced at the ledger layer, removing the need for manual eligibility checks.",
+      "item3": "**Identity and Investor Controls**\nIdentity-verification module gates participation on confirmed KYC status. Investor-count module enforces hard limits on the number of token holders per issuance.",
+      "item4": "**Transfer Approval Module**\nAdds an explicit governance sign-off layer before any token movement is finalized on-chain. Every transfer is held in a pending state until an authorized approver confirms it."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Office Agent System Built",
+      "item1": "**Six Production Agents**\nBid manager, PPT maker, PPT checker, RFP forge, bid checker, and press manager are live. Each agent operates within a defined scope with its own workflow, instructions, and output standard.",
+      "item2": "**69 Files and 130K+ Words**\nThe system spans 69 source files and over 130,000 words of structured content, skills, prompt scaffolding, and process documentation. It is the largest internal knowledge infrastructure SettleMint has built.",
+      "item3": "**Document Automation at Scale**\nProposal generation, RFI responses, bid qualification, and press content are handled by the agents. What took days now takes minutes, with consistent structure and brand voice throughout.",
+      "item4": "**Built-In Quality Validation**\nChecker agents run automated quality validation against SettleMint standards before any output is delivered. Nothing leaves the system without being reviewed against defined acceptance criteria."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Marketing",
+      "subtitle": "Brand positioning, content systems, and competitive intelligence"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Brand and Positioning",
+      "col1": "**Complexity of Doing It Right**\n• New positioning frames SettleMint around execution depth\n• Fragmented stacks are a seller problem, not a buyer problem\n• SettleMint removes that burden by consolidating the stack\n• Resonates with sophisticated enterprise buyers who have tried and failed",
+      "col2": "**Figtree Standardized**\n• Figtree adopted as the single brand font across all materials\n• 35+ files swept and updated for typographic consistency\n• Design system locked, documented, and enforced in every output\n• Eliminates font drift and off-brand presentation artifacts",
+      "col3": "**Messaging Architecture Updated**\n• Core message hierarchy defined for executive and technical audiences\n• Buyer-facing language restructured around outcomes, not platform features\n• Competitive framing updated to reflect current market positioning\n• Consistent voice applied across proposals, web, and sales materials"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Content and Social Capability",
+      "col1": "**LinkedIn Post Skill**\n• Structured skill generating on-brand LinkedIn posts at speed\n• Covers executive voice, product updates, and thought leadership formats\n• Reduces drafting time from 30 minutes to under five minutes per post\n• Integrated into the content workflow for rapid social publishing",
+      "col2": "**Release Scanner Cron**\n• Automated cron monitors product and ecosystem releases continuously\n• Feeds the content pipeline with timely, factual update material\n• Ensures marketing reacts to releases within hours rather than days\n• Removes manual monitoring as a bottleneck in the content process",
+      "col3": "**Competitive and SWIFT Intel**\n• Competitor intelligence coverage built into the content workflow\n• SWIFT interview preparation material produced and structured\n• Ongoing market signal capture embedded in the content system\n• Intelligence feeds directly into positioning updates and proposal language"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Business",
+      "subtitle": "RFI wins, partnerships, proposals, and pipeline health"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "RFI Wins: Three Mandates",
+      "body": "Three strategic RFI responses delivered and accepted across post-trade, digital assets, and real estate tokenization",
+      "table_data": [
+        ["Client", "Domain", "Requirements", "Workaround Docs", "Status"],
+        ["NGEX Digital", "Post-Trade FMI", "22 requirements", "--", "Won"],
+        ["ENBD Digital Assets", "Digital Assets", "100+ requirements", "28 docs", "Won"],
+        ["MoJ Qatar", "Real Estate Tokenization", "51 requirements", "19 docs", "Won"]
+      ]
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Key Partnerships Progressed",
+      "col1": "**aXedras + BIL: DALP Tokenization**\n• aXedras partnership confirmed with BIL as the issuing institution\n• DALP selected as the tokenization platform for the joint initiative\n• Precious metals tokenization use case in active scoping with defined asset parameters\n• Joint go-to-market approach in development with shared commercial model\n• Represents SettleMint's first precious metals tokenization partnership in production scope",
+      "col2": "**CMA / DEPO-X: Bond Tokenization POC**\n• Technical specification review completed: 835 lines assessed and mapped to DALP capabilities\n• SettleMint confirmed as the platform for bond tokenization in the POC scope\n• 4-week proof-of-concept timeline defined and agreed with the counterparty\n• Covers issuance, compliance, settlement, and investor lifecycle management\n• Execution timeline locked pending regulatory and organizational approvals"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Proposals Delivered",
+      "col1": "**BIS Project Kairos**\n• Proposal submitted to the Bank for International Settlements\n• Framed exclusively on EVM stack: Besu and Ethereum\n• Positions SettleMint as infrastructure for cross-border settlement\n• Demonstrates regulatory-grade compliance and settlement finality",
+      "col2": "**Neptune / NML**\n• Full proposal delivered for Neptune Leasing and NML\n• Aligned to the live Neptune demo environment already operational\n• NMLHANDY token used as the reference asset throughout the proposal\n• Combines product evidence with commercial terms in a single package",
+      "col3": "**NDAX Contract**\n• NDAX contract proposal finalized and submitted to the client\n• EVM-only framing applied consistently with other active proposals\n• Covers technical architecture, compliance approach, and commercial terms\n• Part of a coordinated EVM positioning strategy across all open proposals"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Pipeline Health and Governance",
+      "item1": "**CRM Cleaned and Focused**\nOver 200 zombie deals removed from the pipeline. The 15 to 20 live, qualified opportunities are preserved with clear owners, defined next steps, and realistic close dates.",
+      "item2": "**Board Reporting Cadence**\nMatthew established a regular board reporting rhythm. Executive-level pipeline visibility is now delivered on a consistent cadence, replacing ad hoc updates with structured review.",
+      "item3": "**MEDDPICC as Differentiator**\nMEDDPICC qualification adopted as the commercial discipline across the sales team. It distinguishes serious opportunities from noise and gives leadership confidence in the numbers.",
+      "item4": "**Live Deal Concentration**\nSales energy is concentrated on the active deal set. Each qualified opportunity has a named owner, agreed next action, and an expected close date tied to the board cadence."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

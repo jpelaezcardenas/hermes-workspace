@@ -1,0 +1,33 @@
+graph LR
+    subgraph NBE["NBE Enterprise Environment"]
+        CBS["Core Banking\nSystem"]
+        IAM["Identity &\nAccess Mgmt"]
+        AML["AML / CFT\nScreening"]
+        SIEM["SIEM &\nObservability"]
+    end
+    subgraph DALP["DALP Platform"]
+        API["API Gateway\n& Eventing"]
+        ASSET["Asset\nDesigner"]
+        COMP["Compliance\nEngine"]
+        SETTLE["Settlement\n& Post-Trade"]
+        ADMIN["Admin &\nAudit Logs"]
+    end
+    subgraph ENV["Environment Rings"]
+        DEV["Dev"]
+        TEST["Test / UAT"]
+        DR["DR Standby"]
+        PROD["Production"]
+    end
+    CBS -->|"REST / ISO20022"| API
+    IAM -->|"SAML / OIDC"| API
+    AML -->|"Screening API"| COMP
+    SIEM -->|"Metrics & Logs"| ADMIN
+    API --> ASSET
+    API --> COMP
+    API --> SETTLE
+    ASSET --> COMP
+    COMP --> SETTLE
+    SETTLE --> ADMIN
+    DEV -->|"Promote"| TEST
+    TEST -->|"Promote"| PROD
+    DR -.->|"Failover"| PROD

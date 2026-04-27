@@ -1,0 +1,30 @@
+graph TD
+    subgraph Roles["RBAC Role Hierarchy"]
+        SA["System Admin\n(platform config)"]
+        PO["Product Owner\n(asset design)"]
+        OPS["Operations Manager\n(transaction ops)"]
+        COMP["Compliance Officer\n(policy + AML)"]
+        AUD["Internal Auditor\n(read-only audit)"]
+        REG["Regulatory Viewer\n(evidence export)"]
+    end
+    subgraph MC["Maker-Checker Workflow"]
+        DRAFT["Draft\n(Maker creates)"]
+        REVIEW["Pending Review\n(sent to Checker)"]
+        APPROVE["Approved\n(Checker signs)"]
+        REJECT["Rejected\n(back to Maker)"]
+        EXEC["Executed\n(ledger updated)"]
+    end
+    SA --> PO
+    SA --> OPS
+    SA --> COMP
+    SA --> AUD
+    SA --> REG
+    PO -->|"initiates"| DRAFT
+    DRAFT --> REVIEW
+    COMP -->|"reviews"| REVIEW
+    REVIEW --> APPROVE
+    REVIEW --> REJECT
+    REJECT --> DRAFT
+    APPROVE --> EXEC
+    AUD -->|"reads"| EXEC
+    REG -->|"exports"| EXEC

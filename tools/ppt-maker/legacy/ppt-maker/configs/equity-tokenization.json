@@ -1,0 +1,141 @@
+{
+  "project": "equity-tokenization",
+  "output": "output/equity-tokenization.pptx",
+  "description": "Equity Tokenization - 15 slides",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Equity Tokenization",
+      "subtitle": "Transforming Private Equity with Blockchain"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "icon1": "icon-library/lucide/bar-chart.svg",
+      "icon2": "icon-library/lucide/coins.svg",
+      "icon3": "icon-library/lucide/trending-up.svg",
+      "icon4": "icon-library/lucide/settings.svg",
+      "icon5": "icon-library/lucide/layout.svg",
+      "icon6": "icon-library/lucide/briefcase.svg",
+      "icon7": "icon-library/lucide/file-text.svg",
+      "icon8": "icon-library/lucide/shield.svg",
+      "icon9": "icon-library/lucide/award.svg",
+      "icon10": "icon-library/lucide/arrow-right.svg",
+      "item_0": "1. Market Overview",
+      "item_1": "2. Equity Tokenization Basics",
+      "item_2": "3. Benefits for Issuers and Investors",
+      "item_3": "4. Technical Architecture and DALP",
+      "item_4": "5. Use Cases and Case Study",
+      "item_5": "6. Regulatory Framework",
+      "item_6": "7. Why SettleMint and Next Steps"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Market Overview",
+      "subtitle": "The $13T+ Private Equity Opportunity"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Market Overview",
+      "body": "The private equity market is ripe for transformation.\n\nMarket Size:\n\u2022 $13T+ in private equity AUM\n\u2022 $2T+ annual transaction volume\n\u2022 10M+ private companies globally\n\nCurrent Challenges:\n\u2022 Illiquid investments\n\u2022 Slow settlement (weeks)\n\u2022 High minimums ($250K+)\n\u2022 Limited secondary markets"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "What is Equity Tokenization?",
+      "subtitle": "Converting Ownership into Digital Assets"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "What is Equity Tokenization?",
+      "body": "Converting ownership shares into digital tokens on blockchain.\n\nHow It Works:\n\u2022 Issue equity as blockchain tokens\n\u2022 Smart contracts automate transfers\n\u2022 Real-time ownership tracking\n\u2022 Programmable dividend payments\n\u2022 Fractional ownership enabled"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Benefits",
+      "subtitle": "Value for Issuers and Investors"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Benefits",
+      "col1": "For Issuers\n\u2022 Access global investors\n\u2022 Faster capital raise\n\u2022 Automated compliance\n\u2022 Reduced admin costs",
+      "col2": "For Investors\n\u2022 Lower minimums ($1K)\n\u2022 Secondary market liquidity\n\u2022 Instant transfer\n\u2022 Transparent pricing"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Technical Architecture",
+      "subtitle": "Enterprise-Grade Tokenization"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Technical Architecture",
+      "body": "DALP provides enterprise-grade tokenization infrastructure.\n\nToken Standard:\n\u2022 ERC-1400 compliant equity tokens\n\u2022 Transfer restrictions built-in\n\u2022 Multi-sig governance\n\nIntegration:\n\u2022 Cap table systems\n\u2022 Investor relations platforms\n\u2022 Custody solutions"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "DALP Dashboard",
+      "body": "Complete platform for equity token issuance and management.\n\nFeatures:\n\u2022 Asset creation wizard\n\u2022 Investor onboarding\n\u2022 Transfer management\n\u2022 Dividend distribution",
+      "image_path": "templates/dalp-screenshots/05 - Equity/Equity Listing.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP Capabilities",
+      "subtitle": "Full Lifecycle Management"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP Capabilities",
+      "body": "Full lifecycle management for tokenized equity.\n\nIssuance:\n\u2022 Multi-tier share structures\n\u2022 Voting rights encoding\n\u2022 Dividend preferences\n\nManagement:\n\u2022 Automated corporate actions\n\u2022 Cap table automation\n\u2022 Investor communications"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Use Cases",
+      "item1": "Venture capital\nTokenize fund interests and ownership records with stronger governance, investor eligibility controls, and clearer servicing.",
+      "item2": "Growth companies\nSupport broader shareholder access while keeping cap-table updates, approvals, and communications more structured.",
+      "item3": "Real-estate equity\nRepresent ownership stakes in property vehicles with policy-led transfer controls and auditable investor onboarding.",
+      "item4": "Private-equity funds\nImprove distribution discipline, reporting clarity, and operational reuse across portfolio and fund structures."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Case Study",
+      "subtitle": "$500M Tokenized in 6 Months"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Case Study",
+      "body": "Global PE firm tokenized $500M in fund interests.\n\nResults:\n\u2022 40% faster capital raise\n\u2022 3x investor base expansion\n\u2022 $2M annual admin savings\n\u2022 Secondary market launched"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Regulatory Framework",
+      "subtitle": "Compliant with Global Securities Laws"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Regulatory Framework",
+      "body": "Compliant with major securities regulations.\n\nKey Regulations:\n\u2022 SEC (Rule 144A, Reg D)\n\u2022 EU (MiCA, Prospectus Regulation)\n\u2022 MAS (SFA)\n\u2022 FCA (FPO)\n\nFeatures:\n\u2022 Accredited investor verification\n\u2022 KYC/AML integration\n\u2022 Transfer restrictions"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why SettleMint?",
+      "subtitle": "Trusted Partner for Tokenization"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why SettleMint?",
+      "body": "Trusted partner for equity tokenization.\n\nOur Strengths:\n\u2022 $1B+ assets tokenized\n\u2022 Enterprise security (SOC 2)\n\u2022 Global regulatory expertise\n\u2022 Proven integration track record"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Next Steps",
+      "subtitle": "Start Your Tokenization Journey"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Next Steps",
+      "body": "Start your equity tokenization journey.\n\n1. Discovery Call\n\u2022 Discuss requirements\n\u2022 Assess readiness\n\n2. Pilot Program\n\u2022 Test use case\n\u2022 Validate compliance"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

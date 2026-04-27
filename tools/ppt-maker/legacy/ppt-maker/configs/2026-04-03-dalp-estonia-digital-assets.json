@@ -1,0 +1,172 @@
+{
+  "project": "2026-04-03-dalp-estonia-digital-assets",
+  "output": "output/2026-04-03-dalp-estonia-digital-assets.pptx",
+  "description": "DALP for Estonia's Digital Assets Market: regulatory alignment, platform capabilities, and MiCA compliance for the Estonian market.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Estonia's Digital Assets Market",
+      "subtitle": "Regulated digital asset operations for the Baltic region"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Estonia market context",
+      "item_1": "DALP platform overview",
+      "item_2": "Compliance and MiCA",
+      "item_3": "Technical architecture",
+      "item_4": "Commercial fit",
+      "item_5": "Appendix",
+      "icon1": "icon-library/lucide/bar-chart.512x512.png",
+      "icon2": "icon-library/lucide/coins.512x512.png",
+      "icon3": "icon-library/lucide/shield.512x512.png",
+      "icon4": "icon-library/lucide/settings.512x512.png",
+      "icon5": "icon-library/lucide/briefcase.512x512.png",
+      "icon6": "icon-library/lucide/file-text.512x512.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Estonia Market Context",
+      "subtitle": "A digital-first economy ready for regulated tokenization"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Estonia's Regulatory Landscape",
+      "body": "Regulatory Foundation\n\n\u2022 Estonia was among the first EU states to issue VASP licenses, establishing early credibility in digital asset regulation.\n\u2022 Finantsinspektsioon (FI) now oversees virtual asset service providers under tightened 2022 rules.\n\u2022 Full MiCA alignment is underway, replacing national VASP frameworks with harmonized EU standards.\n\u2022 The e-Residency program demonstrates Estonia's commitment to digital-first governance.",
+      "body_right": "MiCA Transition\n\n\u2022 Existing VASP license holders must transition to MiCA-compliant authorization by end of 2025.\n\u2022 MiCA introduces standardized requirements for asset-referenced tokens, e-money tokens, and crypto-asset service providers.\n\u2022 Estonia's digital infrastructure gives it a head start: e-ID, X-Road interoperability, and a mature fintech ecosystem.\n\u2022 DALP aligns directly with MiCA's compliance, reporting, and governance requirements."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Market Opportunity in Estonia",
+      "body": "\u2022 Estonia hosts 400+ fintech companies and 30+ licensed VASPs, making it one of the densest digital asset markets in Europe per capita.\n\u2022 The Baltic bond market is growing, with Nasdaq Baltic providing a regional listing venue for fixed income instruments.\n\u2022 Cross-border capital flows between Estonia, Latvia, and Lithuania create demand for compliant digital transfer mechanisms.\n\u2022 Estonian institutions are exploring tokenized deposits and stablecoins as alternatives to traditional settlement.\n\u2022 The e-Residency program attracts global entrepreneurs who need compliant digital asset infrastructure."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP Platform",
+      "subtitle": "Full lifecycle management for digital assets"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP Platform Overview",
+      "body": "\u2022 DALP covers the full digital asset lifecycle: design, issuance, compliance, servicing, and operations.\n\u2022 Seven asset classes supported out of the box: bonds, equities, funds, stablecoins, deposits, precious metals, and real estate.\n\u2022 Compliance is built into the asset configuration, not bolted on after deployment.\n\u2022 Maker-checker approval workflows, RBAC/ABAC access controls, and full audit trails are native to every operation.\n\u2022 White-label deployment allows institutions to present DALP under their own brand."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Operational Dashboard",
+      "body": "The DALP dashboard provides a real-time command center: portfolio valuation, asset tracking, pending action alerts, and a live blockchain activity feed. Operators see their entire digital asset portfolio, identity verifications, and compliance status in one view.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/jpg/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Asset Classes for the Estonian Market",
+      "col1": "Fixed Income\n\u2022 Tokenize Baltic bonds with automated yield schedules and maturity redemption.\n\u2022 ISIN support for Nasdaq Baltic listed instruments.\n\u2022 Multi-currency denomination across EUR and regional currencies.\n\u2022 Full coupon lifecycle managed on-chain.",
+      "col2": "Cash Equivalents\n\u2022 Issue EUR-pegged stablecoins compliant with MiCA e-money token rules.\n\u2022 Tokenize bank deposits for institutional cash management.\n\u2022 1:1 fiat peg with on-chain collateral tracking.\n\u2022 Rolling supply caps aligned to MiCA limits.",
+      "col3": "Equity and Funds\n\u2022 Tokenize common, preferred, and voting shares with transfer restrictions.\n\u2022 Fund tokenization with fractional ownership at 18-decimal precision.\n\u2022 Collateral coverage tracking and investor count controls.\n\u2022 Configurable compliance per share class."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Designer: Step-by-Step Tokenization",
+      "body": "DALP's Asset Designer guides issuers through tokenization with a step-by-step wizard. Each asset is configured with its compliance modules, pricing, permissions, and governance before deployment. The same wizard supports all seven asset classes.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/jpg/Asset Designer.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Compliance and MiCA",
+      "subtitle": "Regulatory controls built into every asset"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "MiCA Compliance in DALP",
+      "body": "Built-in Controls\n\n\u2022 Pre-built MiCA EU Standard compliance template with SMART identity verification, country allowlists, and rolling supply caps.\n\u2022 8,000,000 EUR per 12-month rolling window supply cap for e-money tokens, enforced at the smart contract level.\n\u2022 Investor count limits, identity allowlists/blocklists, and transfer approval workflows.\n\u2022 Every compliance control change is permanently logged on-chain.",
+      "body_right": "Operational Governance\n\n\u2022 Maker-checker workflows ensure no single operator can execute critical actions alone.\n\u2022 Role-based access control separates admin, issuer, custodian, and operator permissions.\n\u2022 On-chain identity contracts (ONCHAINID) provide cryptographic attestation for KYC, AML, and investor classification.\n\u2022 Custom compliance templates can be built for Estonian-specific requirements alongside MiCA standards."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Policy Templates",
+      "body": "DALP ships with pre-built compliance templates for MiCA EU, Japan FSA, MAS Singapore, SEC Reg D, and UK FCA. Each template bundles the controls required by that regulatory framework. Custom templates can be created for Estonian-specific rules.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/jpg/Compliance Policy Templates.jpg"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Identity and Verification",
+      "body": "\u2022 Every platform participant has an on-chain identity contract with cryptographic verifications for KYC, AML, and investor classification.\n\u2022 DALP supports integration with Estonian e-ID and Smart-ID for seamless investor onboarding.\n\u2022 Verification topics are configurable: system defaults cover accredited investor, AML, and asset classification, with custom topics for Estonian requirements.\n\u2022 Trusted issuer registry controls who can issue identity claims, establishing a permissioned trust framework.\n\u2022 384+ active verifications managed across the platform with full audit trail."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Technical Architecture",
+      "subtitle": "Deployment, integration, and operations"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Deployment Model",
+      "body": "\u2022 DALP deploys on private or consortium blockchains with full infrastructure control.\n\u2022 Self-hosted or managed deployment options for Estonian institutions.\n\u2022 Kubernetes-native architecture with automated scaling and high availability.\n\u2022 Full-stack observability: metrics (VictoriaMetrics), logs (Loki), traces (Tempo), and pre-built Grafana dashboards.\n\u2022 API-first design with REST endpoints for all platform operations."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Integration Capabilities",
+      "body": "DALP integrates with existing Estonian financial infrastructure through standard APIs and identity protocols. The table below maps key integration points.",
+      "table_data": [
+        ["Integration Point", "Protocol", "Estonian Context", "DALP Mechanism"],
+        ["Identity", "OIDC / SAML", "Estonian e-ID, Smart-ID", "Identity Manager + ONCHAINID"],
+        ["Core Banking", "REST API", "Local banks, Nasdaq Baltic", "Asset operations API"],
+        ["Custody", "ISO 20022", "Licensed custodians", "Governed workflows"],
+        ["Reporting", "XBRL / CSV", "Finantsinspektsioon filings", "Event export + data feeds"],
+        ["Settlement", "HTLC", "Cross-border Baltic transfers", "XvP Settlement module"]
+      ]
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Infrastructure Monitoring",
+      "body": "DALP includes built-in monitoring for both blockchain infrastructure and API health. Chain RPC status, indexer sync, request volumes, error rates, and response times are tracked in real time with 24-hour trend visualization.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/jpg/Blockchain Monitoring.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Commercial",
+      "subtitle": "Why SettleMint for Estonia"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why SettleMint for Estonia",
+      "body": "\u2022 DALP is a platform, not a consulting engagement: institutions configure and operate their own digital asset programs.\n\u2022 MiCA compliance is native, not an afterthought. The same compliance engine covers Estonia's transition from VASP to MiCA.\n\u2022 Seven asset classes out of the box means institutions can start with bonds and expand to deposits, stablecoins, or equity without re-platforming.\n\u2022 White-label deployment lets Estonian institutions present the platform under their own brand.\n\u2022 SettleMint has deep European regulatory experience and active deployments across EU jurisdictions."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Reference diagrams for the Estonian deployment model"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Estonian Bond Lifecycle",
+      "body": "End-to-end bond lifecycle from term definition through compliance configuration, smart contract deployment, minting, distribution, yield scheduling, and maturity redemption. Each stage maps to a governed DALP workflow step with on-chain audit evidence.",
+      "image_path": "output/diagrams/estonia-bond-lifecycle.png"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "MiCA Compliance Flow",
+      "body": "The MiCA compliance flow shows how investor onboarding, KYC verification, AML checks, country allowlisting, and investor classification work together to gate access and transfer eligibility. Policy evaluation happens at every transfer request before blockchain execution.",
+      "image_path": "output/diagrams/mica-compliance-sequence.png"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Estonia Deployment Roadmap",
+      "body": "Implementation timeline from discovery through configuration, integration, validation, and launch. Covers regulatory mapping, compliance policy setup, core banking integration, and FI submission milestones.",
+      "image_path": "output/diagrams/estonia-deployment-roadmap.png"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "DALP Platform Topology",
+      "body": "Platform architecture showing the relationship between access channels (web portal, API, SDK), DALP core services (asset designer, compliance engine, identity manager, operations hub), blockchain infrastructure, and external integration points.",
+      "image_path": "output/diagrams/dalp-platform-topology.png"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Estonian Integration Model",
+      "body": "Integration architecture connecting DALP with Estonian market infrastructure: e-ID for identity verification, Finantsinspektsioon for regulatory reporting, Baltic CSD for settlement bridging, and local custodians for asset safekeeping. The model supports both domestic operations and cross-border Baltic transfers.",
+      "image_path": "output/diagrams/estonia-integration-model.png"
+    }
+  ]
+}

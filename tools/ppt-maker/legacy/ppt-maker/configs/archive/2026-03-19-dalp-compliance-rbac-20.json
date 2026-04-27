@@ -1,0 +1,148 @@
+{
+  "project": "2026-03-19-dalp-compliance-rbac-20",
+  "output": "output/2026-03-19-dalp-compliance-rbac-20.pptx",
+  "description": "20-slide DALP deck on compliance controls and role-based governance",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Compliance and RBAC",
+      "subtitle": "Policy-led controls for issuance, servicing, and redemption | March 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Compliance control model",
+      "item_1": "Role-based governance",
+      "item_2": "Lifecycle enforcement",
+      "item_3": "Operating evidence",
+      "item_4": "Asset-class application",
+      "icon0": "icon-library/lucide/shield-check.svg",
+      "icon1": "icon-library/lucide/users.svg",
+      "icon2": "icon-library/lucide/git-branch.svg",
+      "icon3": "icon-library/lucide/file-search.svg",
+      "icon4": "icon-library/lucide/briefcase.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Control Model",
+      "subtitle": "How DALP moves policy into execution"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Control is productized",
+      "body": "• DALP positions compliance, identity, permissions, settlement coordination, and servicing as part of one operating model rather than bolt-on checks beside a token contract.\n• The platform is built for regulated institutions that need governance, auditability, and production reliability across the full lifecycle.\n• Compliance is enforced before execution, so blocked actions fail before the asset state changes on-chain.\n• DALP sits between institutional systems and EVM-compatible networks, keeping the control plane explicit while integrating with existing core, custody, and risk environments."
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Control requirements mapped",
+      "table_data": [
+        ["Requirement", "DALP mechanism", "Why it matters", "Source basis"],
+        ["Policy definition", "Templates and compliance modules", "Reuse approved rule sets", "compliance-modules.md"],
+        ["Identity binding", "OnchainID and verified claims", "Gate who may receive or transfer", "compliance-modules.md"],
+        ["Permission scope", "RBAC and tenant-aware operations", "Separate operational authority", "security.md / architecture.md"],
+        ["Approvals", "Maker-checker governance", "Control release of sensitive actions", "security.md"],
+        ["Lifecycle servicing", "Issuance, servicing, redemption flows", "Keep day-two events governed", "bonds.md / funds-etfs.md"],
+        ["Evidence", "Activity, monitoring, audit trails", "Support review and investigation", "security.md / architecture.md"]
+      ]
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Templates structure controls",
+      "body": "Instrument templates and metadata schemas make product setup repeatable. DALP captures structured fields, policy choices, and required attributes inside governed design flows, so teams review the asset definition before launch instead of reconstructing it later from custom smart-contract changes.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Qatar Real Estate - Metadata Schema.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Governance",
+      "subtitle": "Separation of duties in live operations"
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Governance by separation",
+      "item1": "Product setup\nDefine the asset structure, terms, and rule baseline in a governed workflow. The configuration stays reviewable before launch.",
+      "item2": "Policy review\nCompliance and legal teams inspect restrictions before the product goes live. That reduces rule drift across programs and jurisdictions.",
+      "item3": "Approval gate\nMaker-checker controls add explicit authorization before sensitive actions execute. Release responsibility is clear rather than implied.",
+      "item4": "Execution rights\nPermissions scope who may issue, transfer, service, pause, or redeem assets. Operational authority stays bounded by role.",
+      "item5": "Emergency response\nNative control options reduce exposure when an incident or exception appears. Teams can react without abandoning governance discipline.",
+      "item6": "Evidence trail\nActivity, monitoring, and audit records make responsibility visible after each step. Investigations do not depend on memory or email chains."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Permissions stay explicit",
+      "body": "DALP exposes permissions during asset design so operational authority is visible before deployment. That supports cleaner separation between configuration, approval, and execution teams, and reduces the risk that governance logic lives only in off-platform procedures.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 7 - Asset Permissions Config.jpg"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Transfer decision flow",
+      "body": "This diagram illustrates the DALP compliance path around a transfer. The platform looks up the applicable token policy, checks identity and claims, evaluates transfer restrictions, and then either approves execution or blocks the movement before it settles. For institutional teams, the key point is ex-ante enforcement with an evidence trail after the decision.",
+      "image_path": "output/diagrams/dalp-transfer-decision-flow-padded.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Lifecycle",
+      "subtitle": "Controls that persist after issuance"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Lifecycle on one platform",
+      "body": "DALP is useful because compliance and governance do not stop at issuance. Asset design, identity onboarding, issuance, transfer, servicing, redemption, and reporting operate as connected stages. Metadata templates, claims, permissions, and ex-ante policy checks remain attached to the operating model instead of becoming manual controls once the asset is live.",
+      "image_path": "output/diagrams/dalp-lifecycle-operating-model-padded.png"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Lifecycle control points",
+      "body": "Each lifecycle step has a specific control objective. DALP matters when those objectives stay visible from setup through redemption, with operational outputs that product, compliance, and operations teams can evidence. The value is not only automation; it is a governed record of how the asset was designed, distributed, serviced, and closed out.",
+      "table_data": [
+        ["Stage", "Control objective", "DALP mechanism", "Operational output"],
+        ["Design", "Define terms and rules", "Asset classes, templates, metadata", "Approved product setup"],
+        ["Onboarding", "Verify participant eligibility", "OnchainID and reusable claims", "Qualified investor profile"],
+        ["Issuance", "Control initial distribution", "Policies, permissions, approvals", "Governed launch event"],
+        ["Transfer", "Enforce runtime restrictions", "Ex-ante compliance checks", "Approved or blocked movement"],
+        ["Servicing / redemption", "Run events with evidence", "Lifecycle workflows and monitoring", "Auditable payout or close-out" ]
+      ]
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Identity gates transfers",
+      "body": "DALP ties verified identity and claims to transaction permissions so wallet addresses alone are not the control model. That is central for regulated distribution, transfer restrictions, and reusable onboarding across asset programs.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Auditability is operational",
+      "body": "Auditability in DALP spans more than transaction history. Operational activity, request logs, and monitoring views help teams investigate what was requested, what was executed, and which controls were involved. That makes governance usable for day-two operations, not just for architecture diagrams.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Activity Log.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Use Cases",
+      "subtitle": "How controls compose by asset class"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Regulated asset patterns",
+      "col1": "Bonds\n• Govern issuance with verified investor eligibility.\n• Keep coupon and maturity events on-platform.\n• Apply redemption logic with audit evidence.\n• Reduce manual exception handling after launch.",
+      "col2": "Funds\n• Control who may subscribe, hold, and redeem.\n• Reuse identity and compliance across distribution.\n• Support servicing around fees and events.\n• Keep day-two fund operations governed.",
+      "col3": "Equity\n• Enforce transfer restrictions before execution.\n• Keep issuance and servicing on one control plane.\n• Extend governance for regulated ownership models.\n• Support auditable ownership change controls."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Cash and alternatives",
+      "col1": "Deposits\n• Use governed issuance with permissioned operations.\n• Fit bank-grade control boundaries and integrations.\n• Keep evidence for live treasury workflows.\n• Support repeatable approval-led operating models.",
+      "col2": "Stablecoins\n• Configure supply and transfer controls explicitly.\n• Bind identity rules to distribution pathways.\n• Operate on the same governed lifecycle model.\n• Keep policy changes visible to operations teams.",
+      "col3": "Real estate\n• Combine ownership controls with verified identity.\n• Apply approvals and transfer restrictions to live assets.\n• Keep servicing and reporting audit-ready.\n• Make registry-facing workflows easier to evidence."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Why DALP for teams",
+      "item1": "One control plane\nDALP connects asset setup, compliance, identity, execution, servicing, and reporting instead of leaving teams to stitch them together after launch.",
+      "item2": "Configurable governance\nTemplates, metadata schemas, permissions, and policy modules let teams adapt controls without rebuilding the operating stack for each program.",
+      "item3": "Operational evidence\nRBAC, maker-checker controls, activity logs, and monitoring make governance visible to product, operations, risk, and audit stakeholders.",
+      "item4": "EVM deployment boundary\nApproved wording is EVM-compatible network support. The deck does not imply DALP runs across non-EVM chains, and that boundary is explicit for sales and product discussions."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

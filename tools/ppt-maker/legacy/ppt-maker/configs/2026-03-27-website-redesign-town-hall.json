@@ -1,0 +1,108 @@
+{
+  "project": "website-redesign-town-hall",
+  "output": "output/website-redesign-town-hall.pptx",
+  "description": "Website Redesign Town Hall - Company update on the website transformation project",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Website Redesign",
+      "subtitle": "From Legacy to Leader"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Today's Agenda",
+      "agenda_items": [
+        "Why We Did This",
+        "What We Built",
+        "Performance & Visibility",
+        "Content & DALP Narrative",
+        "Long-Term Success"
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why We Did This",
+      "subtitle": "The business case for change"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Legacy System Limitations",
+      "body": "• Outdated architecture — couldn't scale with our growth\n• Poor mobile experience — 40% mobile bounce rate\n• No integration with HubSpot — manual lead processes\n• Limited SEO foundation — losing organic traffic to competitors\n• Security vulnerabilities — end-of-life CMS components"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Market Expectations & Brand Alignment",
+      "body": "• Buyers expect modern, fast-loading digital experiences\n• Competitors invested heavily in content & SEO presence\n• Brand had evolved — website didn't reflect who we are today\n• Lead generation gap — competitors capturing market share\n• DALP needed a showcase — our product deserved a better stage"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "What We Built",
+      "subtitle": "A new digital foundation"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "HubSpot CMS · Visual Identity · Programmatic Pages",
+      "col1": "HubSpot CMS\n• Enterprise-grade content management\n• Native marketing automation integration\n• Dynamic personalization\n• Security & compliance built-in",
+      "col2": "Visual Identity\n• Complete brand refresh\n• Consistent messaging across 177+ pages\n• Mobile-first responsive design\n• Speed-optimized components",
+      "col3": "177 Programmatic Pages\n• Automated landing pages\n• Use-case specific paths\n• Compliance & regulatory pages\n• Regional/localized versions"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Content Infrastructure",
+      "body": "• Blog infrastructure — structured content publishing workflow\n• Schema markup — Organization, Product, Article, FAQ schemas\n• Structured data for rich search results\n• XML sitemap architecture for crawlers\n• Internal linking framework for SEO"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Performance & Visibility",
+      "subtitle": "Results in the first 90 days"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "SEO Performance: Before vs After",
+      "col1": "Before\n• 120 indexed pages\n• No schema markup\n• No programmatic content\n• Limited keyword targeting\n• Slow page loads (4.2s avg)",
+      "col2": "After\n• 310+ indexed pages\n• Full schema implementation\n• 177 programmatic pages\n• Targeted keyword clusters\n• Fast loads (1.8s avg)"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Visibility & Early Traffic",
+      "col1": "GEO Strategy\n• Location-specific landing pages\n• Regional compliance content\n• Local language variants (EN, AR, ZH)\n• Hyperlocal keyword targeting",
+      "col2": "Early Results\n• 45% increase in organic sessions\n• 60% more pages indexed\n• 2.3x improvement in SERP positions\n• 35% reduction in bounce rate"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Content & DALP Narrative",
+      "subtitle": "How we tell the SettleMint story"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "DALP Storytelling: Platform · Value · Use Cases",
+      "col1": "Platform Story\n• Unified digital asset platform\n• Asset class depth — Bonds, Equity, Funds, Real Estate\n• Compliance & governance as pillar\n• Security & trust differentiation",
+      "col2": "Value Propositions\n• Speed to market — launch in days\n• Compliance by design\n• Multi-asset capability\n• Enterprise-grade scale",
+      "col3": "Use Cases\n• Tokenized Deposits — stablecoins\n• Asset Backed Tokens\n• Fund Tokenization\n• Precious Metals"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Content Governance",
+      "body": "• Editorial calendar — monthly content planning\n• Review workflows — marketing + product sign-off\n• Version control — HubSpot CMS workflow automation\n• Performance monitoring — monthly traffic reviews\n• Content refresh cycles — quarterly audit"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Long-Term Success",
+      "subtitle": "Roadmap & business impact"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Roadmap & Maintenance",
+      "body": "• Q2 2026 — Additional programmatic pages for new asset classes\n• Q3 2026 — Advanced personalization & A/B testing\n• Q4 2026 — Multi-language expansion (DE, FR, ES)\n• Ongoing — Monthly content refresh, quarterly technical updates\n• Maintenance — Shared responsibility marketing & dev"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Sales & Marketing Impact",
+      "col1": "Marketing Enablement\n• HubSpot integration — full funnel visibility\n• Lead scoring — content engagement signals\n• Campaign landing pages — customized paths\n• Analytics — real-time performance dashboard",
+      "col2": "Sales Support\n• Dynamic content — personalized experiences\n• Resource library — gated content for prospects\n• Case study pages — social proof at scale\n• Demo request flows — streamlined conversion"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+flowchart TD
+    Draft["Draft\nrequest"]
+    Review["Compliance\nreview"]
+    Risk["Risk\nsign-off"]
+    Legal["Legal\ncheck"]
+    Final["Final\napproval"]
+    Execute["Execute\non-chain"]
+    Draft --> Review
+    Review --> Risk
+    Risk --> Legal
+    Legal --> Final
+    Final --> Execute
+    classDef primary fill:#E8EAF6,stroke:#000099,color:#000099,stroke-width:2px;
+    class Draft,Review,Risk,Legal,Final,Execute primary;

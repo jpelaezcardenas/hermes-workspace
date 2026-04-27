@@ -1,0 +1,33 @@
+PPTX review summary: ppt-maker/output/golden-showcase-20.pptx
+Slide count: 20
+
+Headline checks
+- Dense slides (>100 words): 0
+- Empty slides: 0
+- Slides with non-Figtree fonts: 0
+- Slides with dark/blue backgrounds detected: 2
+- Dark/blue content slides flagged: 0
+- Dark/blue cover/closing slides allowed: 2
+- Slides with images: 0
+
+Per-slide snapshot
+- Slide 1: 15 words, 112 chars, 0 images, bg=dark/brand (ppt/media/image1.png), fonts=Figtree, sample=SettleMint DALP | The Digital Asset Lifecycle Platform | SettleMint DALP
+- Slide 3: 19 words, 116 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=SettleMint DALP | SettleMint DALP | Agenda
+- Slide 4: 24 words, 171 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=02 The DALP Platform | 02 The DALP Platform | One platform for issuance, compliance, settlement, and servicing.
+- Slide 6: 40 words, 342 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=DALP overview | DALP is SettleMint's Digital Asset Lifecycle Platform for designing, launching, and operating tokenized assets. | Covers issuance, compliance, custody integration, settlement, and servicing
+- Slide 8: 58 words, 407 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Bond tokenization | Bond issuance still breaks across too many systems; DALP treats it as a governed lifecycle instead of a one-off mint. | Pre-built bond asset class with class-specific issuance handling
+- Slide 9: 48 words, 348 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=The traditional approach | Issuance, compliance, settlement, and servicing are usually split across too many systems. | Manual investor checks and transfer exceptions slow every workflow
+- Slide 10: 38 words, 300 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Compliance by design | Compliance framework | 18 configurable module types
+- Slide 11: 39 words, 258 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=01 | Cloud | Managed SaaS for teams that want speed without giving up lifecycle scope
+- Slide 15: 65 words, 446 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Why SettleMint | 01 Production focus | Built for regulated financial markets and sovereign use cases
+- Slide 16: 40 words, 255 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=The complexity of doing it right | 01 Issuance is only the start | 02 Compliance must be enforced before transfer
+- Slide 18: 43 words, 297 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Fund and ETF tokenization | 01 Govern subscription and redemption workflows | 02 Reuse identity and compliance across distribution channels
+- Slide 20: 32 words, 260 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Lifecycle coverage | Issuance and asset setup | Compliance and identity checks
+- Slide 22: 75 words, 559 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Configurable token engine | ERC-3643 and multi-asset support | 7 pre-built asset classes
+- Slide 23: 30 words, 229 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Security architecture | Controls and evidence across the operating stack | 5
+- Slide 24: 36 words, 265 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Architecture | Core systems, custody, cash, and reporting | DALP control plane
+- Slide 26: 48 words, 366 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=Implementation approach | Phased delivery from architecture to launch | 01
+- Slide 29: 14 words, 99 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=04 Getting Started | Move from first asset to production operating model without re-architecting. | START
+- Slide 30: 14 words, 89 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=03 Real-World Impact | Use cases that show why lifecycle coverage matters in practice. | IMPACT
+- Slide 31: 34 words, 228 chars, 0 images, bg=white/light #FFFFFF, fonts=Figtree, sample=01 The Challenge | Why tokenization breaks once institutions leave the demo stage. | Issuance alone is not enough
+- Slide 38: 17 words, 114 chars, 0 images, bg=dark/brand (ppt/media/image3.png), fonts=Figtree, sample=SettleMint DALP | The Digital Asset Lifecycle Platform | Thank you

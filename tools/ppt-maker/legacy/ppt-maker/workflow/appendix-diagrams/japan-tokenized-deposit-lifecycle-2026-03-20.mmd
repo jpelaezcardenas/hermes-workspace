@@ -1,0 +1,18 @@
+graph LR
+    A[Bank originates\ndeposit claim] -->|Initiate issuance| B[KYC / AML\nscreening]
+    B -->|Identity verified| C[Token minted\non-chain]
+    B -->|Rejected| Z[Issuance\nblocked]
+    C --> D{Lifecycle\ncontrols}
+    D -->|Transfer approved| E[Transfer to\ncounterparty]
+    D -->|Hold instruction| F[Token held\nfrozen]
+    D -->|Compliance freeze| G[Account\nseized / locked]
+    E --> H[Redemption\nrequested]
+    F -->|Hold lifted| E
+    H -->|Bank confirms\nfiat return| I[Token burned\non-chain]
+    I --> J[Settlement\ncomplete — T+0]
+
+    style A fill:#0000FF,color:#fff
+    style C fill:#0000FF,color:#fff
+    style I fill:#183060,color:#fff
+    style J fill:#183060,color:#fff
+    style Z fill:#E0E0E0,color:#111

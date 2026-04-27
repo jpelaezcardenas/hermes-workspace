@@ -1,0 +1,143 @@
+{
+  "project": "2026-03-25-settlemint-adi-partnership",
+  "output": "output/2026-03-25-settlemint-adi-partnership.pptx",
+  "description": "SettleMint and ADI partnership deck for FAB stablecoin initiative. Executive, commercial tone targeting ADI Head of Stablecoin BD.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "SettleMint and ADI: Digital Assets",
+      "subtitle": "March 2026 | Confidential"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "About SettleMint",
+      "item_1": "DALP: The Platform",
+      "item_2": "Proven track record",
+      "item_3": "SettleMint + ADI partnership",
+      "item_4": "Proposed next steps",
+      "icon1": "icon-library/lucide/building.svg",
+      "icon2": "icon-library/lucide/cpu.svg",
+      "icon3": "icon-library/lucide/award.svg",
+      "icon4": "icon-library/lucide/users.svg",
+      "icon5": "icon-library/lucide/rocket.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "About SettleMint",
+      "subtitle": "Who we are and why it matters"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Built for Digital Assets",
+      "body_11": "**Founded in 2016**\nHeadquartered in Brussels, Belgium. Global team of 100+ across Europe, Asia, and the Middle East.",
+      "body_14": "**150+ Enterprise Clients**\nDeployed across banking, asset management, central banks, and sovereign institutions across 30+ countries.",
+      "body_15": "**Platform Company**\nSettleMint sells a platform, not consulting. DALP is the single product: full digital asset lifecycle management, deployed in weeks.",
+      "body_16": "**Regulated Industry Focus**\nDeep expertise in compliance-first deployments: AML/KYC integration, RBAC/ABAC controls, regulatory reporting, and audit trail by design."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP: The Platform",
+      "subtitle": "Full lifecycle digital asset management"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "One Platform, Full Lifecycle",
+      "body": "DALP covers every stage of a digital asset's life, from issuance to redemption.\n\n• Asset issuance: seven out-of-the-box templates including stablecoins, tokenized deposits, bonds, equity, and funds\n• Compliance controls: maker-checker approvals, RBAC/ABAC, KYC/AML integration, investor whitelisting via ERC-3643\n• Lifecycle management: interest accrual, coupon payments, redemptions, transfers, and corporate actions automated via smart contracts\n• Interoperability: standard REST/GraphQL APIs for core banking, custody, and payment rail integration",
+      "image_path": "templates/dalp-screenshots/08 - Stablecoins/jpg/Stablecoins.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Proven Track Record",
+      "subtitle": "Regulated financial institutions globally"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Sony Bank: Tokenized Deposits",
+      "body": "SettleMint powered Sony Bank's digital deposit token initiative, one of the first commercial tokenized deposit programs in Japan.\n\nUsing DALP: full deposit token lifecycle on Ethereum with smart contract-based issuance, RBAC-controlled access, automated compliance checks, and redemption workflows.\n\nRelevance for FAB: demonstrates readiness to deploy tokenized deposit infrastructure for a Tier 1 regulated bank, with compliance controls and operational reliability required by financial regulators.",
+      "image_path": "templates/dalp-screenshots/07 - Deposits/jpg/Deposits Listing.jpg"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "KBC: Digital Asset Issuance",
+      "body": "• Client: KBC Group, Belgium, a Top 5 European bank\n• Built a digital asset issuance capability for institutional clients, including structured products and digital bonds\n• Belgium's financial regulator (FSMA) operates one of Europe's stricter frameworks for digital securities\n• SettleMint's compliance-first architecture was central to KBC's ability to deploy under FSMA oversight\n• Directly applicable to the CBUAE and ADGM regulatory environment that FAB operates within"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "OCBC: MAS Project Guardian",
+      "body": "• Client: OCBC Bank, Singapore, Southeast Asia's second-largest bank by assets\n• OCBC deployed DALP as part of MAS Project Guardian, Singapore's flagship institutional digital asset initiative\n• SettleMint provided tokenized deposit infrastructure enabling OCBC to issue and manage deposit tokens on a compliant blockchain platform\n• Standards met: ERC-3643 (T-REX) for compliance, full KYC/AML integration, atomic settlement capability\n• MAS Project Guardian is the closest comparable initiative to CBUAE's digital dirham program and FAB's stablecoin initiative"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "KSA: Sovereign Digital Assets",
+      "body": "• Client: Kingdom of Saudi Arabia, regulated real estate tokenization initiative\n• SettleMint deployed DALP to support tokenization of real estate assets for a sovereign-level initiative, one of the most strategically significant digital asset programs in the Gulf region\n• Scope: asset tokenization with full compliance controls, investor management, regulatory reporting, and audit trail under Saudi Capital Markets Authority oversight\n• SettleMint has direct experience in the Gulf regulatory environment, working with sovereign-level institutions\n• This is not a market we are entering. It is a market where we have delivered."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Track Record at a Glance",
+      "body": "SettleMint has delivered digital asset infrastructure for regulated institutions across four continents. Each program required compliance-first architecture and institutional-scale operations.",
+      "table_data": [
+        ["Client", "Region", "Use Case", "Regulatory Context"],
+        ["Sony Bank", "Japan", "Tokenized deposits", "FSA Japan, banking license"],
+        ["KBC Group", "Belgium", "Digital bond issuance", "FSMA, strict EU framework"],
+        ["OCBC Bank", "Singapore", "MAS Project Guardian", "MAS, institutional digital assets"],
+        ["KSA RER", "Saudi Arabia", "Real estate tokenization", "Saudi CMA, sovereign program"],
+        ["ADI Chain", "Abu Dhabi", "Ecosystem partnership", "ADGM, via Finstreet"]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "SettleMint + ADI Together",
+      "subtitle": "A natural partnership for stablecoins and programmable money"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Complementary by Design",
+      "body_11": "**What SettleMint Brings**\n• DALP: proven stablecoin and tokenized deposit platform\n• Compliance-first architecture ready for CBUAE and ADGM\n• Tier 1 bank relationships: Sony Bank, KBC, OCBC\n• Full lifecycle: issuance, servicing, redemption\n• Delivered in the Gulf via KSA sovereign program\n• Trusted ADI chain partner via Finstreet",
+      "body_12": "**What ADI Brings**\n• Strategic access to FAB and UAE financial institutions\n• Deep knowledge of CBUAE stablecoin regulation\n• Relationships with UAE digital currency builders\n• ADI chain: purpose-built blockchain for Abu Dhabi\n• Sovereign-linked credibility in the UAE\n\nTogether: the fastest, most credible path to deploying FAB's stablecoin on proven, compliant infrastructure."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Proposed Next Steps",
+      "body": "We propose a regular BD cadence with ADI: a structured partnership where both parties bring opportunities and align on a joint commercial approach.\n\n**Immediate:**\n• ADI facilitates a warm introduction to FAB's stablecoin lead\n• SettleMint provides a tailored DALP stablecoin overview for FAB\n\n**BD Cadence Proposal:**\n• Bi-weekly or monthly alignment calls\n• Each party brings 1 to 2 new opportunities per session\n• Joint commercial framework with clear revenue share and co-sell model\n• Quarterly review of pipeline and partnership health\n\nFAB's stablecoin initiative is active. The CBUAE framework is maturing. The window is open."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Reference diagrams and technical architecture"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Stablecoin Lifecycle in DALP",
+      "body": "End-to-end stablecoin lifecycle from asset design through compliance setup, issuance, distribution, servicing, and redemption. Each stage is governed by DALP's compliance engine and smart contract automation, ensuring that every action from minting to burning follows the configured rules and produces an auditable record.",
+      "image_path": "workflow/appendix-diagrams/adi-stablecoin-lifecycle.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "DALP Platform Architecture",
+      "body": "DALP's layered architecture connects user channels and APIs to business services, smart contract execution, compliance controls, and identity management. The platform integrates with blockchain networks and external systems including core banking, custody, and payment rails via standard APIs.",
+      "image_path": "workflow/appendix-diagrams/adi-dalp-architecture.mmd"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Tokenized Deposit Workflow",
+      "body": "The sequence from bank configuration through investor onboarding, minting, and redemption. Shows how DALP orchestrates each participant's actions.",
+      "image_path": "workflow/appendix-diagrams/adi-tokenized-deposit-workflow.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Partnership Model",
+      "body": "SettleMint's platform capabilities combined with ADI's strategic relationships create a joint solution targeting FAB, UAE banks, and the broader CBUAE ecosystem.",
+      "image_path": "workflow/appendix-diagrams/adi-partnership-model.mmd"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Compliance Controls Stack",
+      "body": "The full compliance controls architecture in DALP: governance layer with RBAC/ABAC and maker-checker approvals, identity integration with KYC/AML, investor whitelisting via ERC-3643, jurisdiction controls, and a complete audit trail with automated reporting. This stack is what makes DALP ready for regulated environments like CBUAE and ADGM without requiring custom compliance development.",
+      "image_path": "workflow/appendix-diagrams/adi-compliance-stack.mmd"
+    }
+  ]
+}

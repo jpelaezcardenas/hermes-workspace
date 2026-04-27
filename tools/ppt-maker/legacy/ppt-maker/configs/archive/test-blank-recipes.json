@@ -1,0 +1,105 @@
+{
+  "project": "test-blank-recipes",
+  "output": "output/test-blank-recipes.pptx",
+  "description": "Test deck showcasing all 6 blank slide recipes",
+  "slides": [
+  {
+    "bank_file": "slide-001-cover-slide.pptx",
+    "title": "Blank Slide Recipe Showcase",
+    "subtitle": "Demonstrating all 6 layout recipes for blank slides | SettleMint"
+  },
+  {
+    "bank_file": "slide-004-blank.pptx",
+    "title": "DALP Architecture",
+    "recipe": "architecture-stack",
+    "layer1_title": "Operations & UI",
+    "layer1_body": "Asset Designer, Compliance Dashboard, Monitoring Console, Portfolio Tracker",
+    "layer2_title": "Platform Services",
+    "layer2_body": "Token Lifecycle Engine, Compliance Rule Engine, OnchainID, Fee Manager",
+    "layer3_title": "Integration Layer",
+    "layer3_body": "REST APIs, Custody Connectors, XVP Settlement, Core Banking Adapters",
+    "layer4_title": "Smart Contracts",
+    "layer4_body": "ERC-3643 tokens, 13 SMART extensions, Compliance Modules, Transfer Restrictions"
+  },
+  {
+    "bank_file": "slide-004-blank.pptx",
+    "title": "Onboarding in 4 Steps",
+    "recipe": "process-flow",
+    "step1_number": "01",
+    "step1_title": "Connect",
+    "step1_body": "Link your existing custody provider via standard API connectors",
+    "step2_number": "02",
+    "step2_title": "Configure",
+    "step2_body": "Define asset templates, compliance rules, and user roles",
+    "step3_number": "03",
+    "step3_title": "Issue",
+    "step3_body": "Deploy ERC-3643 tokens with full compliance enforcement",
+    "step4_number": "04",
+    "step4_title": "Operate",
+    "step4_body": "Monitor, service, and report across the full token lifecycle"
+  },
+  {
+    "bank_file": "slide-004-blank.pptx",
+    "title": "DALP by the Numbers",
+    "recipe": "stat-callouts",
+    "stat1_number": "13",
+    "stat1_label": "SMART Extensions",
+    "stat1_body": "Configurable compliance and token behavior modules, no custom dev required",
+    "stat2_number": "7",
+    "stat2_label": "Asset Templates",
+    "stat2_body": "Bonds, deposits, stablecoins, equity, funds, real estate, precious metals",
+    "stat3_number": "99.9%",
+    "stat3_label": "Uptime SLA",
+    "stat3_body": "High-availability deployment with multi-region failover and automated recovery",
+    "stat4_number": "<4wk",
+    "stat4_label": "Time to First Issuance",
+    "stat4_body": "From contract signature to live token issuance with a dedicated implementation team"
+  },
+  {
+    "bank_file": "slide-004-blank.pptx",
+    "title": "Build vs Buy",
+    "recipe": "comparison-columns",
+    "left_title": "In-House Development",
+    "left_body": "• 12-18 months minimum build time\n• Dedicated blockchain and compliance engineering team required\n• Ongoing maintenance burden for regulatory updates\n• Custom audit trail implementation\n• No institutional reference customers\n• Full infrastructure ownership",
+    "right_title": "DALP Platform",
+    "right_body": "• First issuance in under 4 weeks\n• SettleMint team maintains compliance library\n• Automatic updates for ERC-3643 standard changes\n• Built-in audit trail and reporting\n• Proven with global financial institutions\n• SaaS or self-hosted options"
+  },
+  {
+    "bank_file": "slide-004-blank.pptx",
+    "title": "DALP Roadmap 2026",
+    "recipe": "timeline-horizontal",
+    "milestone1_date": "Q1 2026",
+    "milestone1_title": "XVP Settlement",
+    "milestone1_body": "Cross-asset atomic settlement across custodians and blockchains",
+    "milestone2_date": "Q2 2026",
+    "milestone2_title": "Yield Engine",
+    "milestone2_body": "Automated coupon, dividend, and yield distribution for tokenized assets",
+    "milestone3_date": "Q3 2026",
+    "milestone3_title": "Fund Module",
+    "milestone3_body": "NAV-linked tokenized fund issuance with subscription and redemption flows",
+    "milestone4_date": "Q4 2026",
+    "milestone4_title": "Multi-Chain",
+    "milestone4_body": "Cross-chain asset transfer with unified compliance enforcement layer"
+  },
+  {
+    "bank_file": "slide-004-blank.pptx",
+    "title": "Core Platform Capabilities",
+    "recipe": "icon-text-grid",
+    "item1_title": "Token Lifecycle",
+    "item1_body": "Issuance, transfer, corporate actions, redemption, and burn — fully automated with compliance enforcement at every step",
+    "item2_title": "Compliance Engine",
+    "item2_body": "On-chain rule enforcement via SMART extensions. KYC/AML, transfer restrictions, holding limits, and investor eligibility",
+    "item3_title": "Custody Integration",
+    "item3_body": "Connectors for Fireblocks, Metaco, Copper, and other institutional custodians via standardized API layer",
+    "item4_title": "Reporting & Audit",
+    "item4_body": "Immutable audit trail, regulatory reporting templates, and real-time portfolio analytics for issuers and investors",
+    "item5_title": "Identity (OnchainID)",
+    "item5_body": "ERC-735/ERC-734 compliant on-chain identity with verifiable claims from trusted claim issuers",
+    "item6_title": "Operability",
+    "item6_body": "Grafana dashboards, Loki log aggregation, Tempo tracing, and automated alerting for full-stack observability"
+  },
+  {
+    "bank_file": "slide-024-thank-you.pptx"
+  }
+  ]
+}

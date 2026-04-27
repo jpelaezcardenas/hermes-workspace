@@ -1,0 +1,13 @@
+graph TD
+    A[Policy Engine] --> B[Identity Check]
+    A --> C[Transfer Rules]
+    A --> D[Supply Controls]
+    B --> E[Execution Layer]
+    C --> E
+    D --> E
+
+    style A fill:#0000FF,color:#fff,stroke:#0000FF
+    style B fill:#183060,color:#fff,stroke:#183060
+    style C fill:#183060,color:#fff,stroke:#183060
+    style D fill:#183060,color:#fff,stroke:#183060
+    style E fill:#0000FF,color:#fff,stroke:#0000FF

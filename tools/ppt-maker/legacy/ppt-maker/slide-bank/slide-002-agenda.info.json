@@ -1,0 +1,250 @@
+{
+  "slide_number": 2,
+  "filename": "slide-002-agenda.pptx",
+  "layout_name": "Agenda / TOC",
+  "layout_slug": "agenda-toc",
+  "template_layout_name": "Agenda",
+  "template_layout_slug": "agenda",
+  "layout_category": "opening",
+  "description": "Table of contents or meeting agenda slide with a full-width body area for listing sections or agenda items.",
+  "usage": "Use after the cover slide to preview the structure of the presentation. List 3–6 agenda items or sections.",
+  "potential_usage": "Can appear at the start of each major section as a 'where we are' recap slide.",
+  "content_capacity": "medium",
+  "has_image_area": false,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 1,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 11,
+      "type": "BODY"
+    },
+    {
+      "idx": 10,
+      "type": "SLIDE_NUMBER"
+    },
+    {
+      "idx": 12,
+      "type": "BODY"
+    },
+    {
+      "idx": 13,
+      "type": "BODY"
+    },
+    {
+      "idx": 14,
+      "type": "BODY"
+    },
+    {
+      "idx": 15,
+      "type": "BODY"
+    },
+    {
+      "idx": 16,
+      "type": "BODY"
+    },
+    {
+      "idx": 17,
+      "type": "BODY"
+    },
+    {
+      "idx": 18,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 19,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 20,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 21,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 22,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 23,
+      "type": "CLIPART"
+    },
+    {
+      "idx": 24,
+      "type": "CLIPART"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 11,
+      "word_count": 0
+    },
+    {
+      "type": "SLIDE_NUMBER",
+      "idx": 10,
+      "word_count": 4
+    },
+    {
+      "type": "BODY",
+      "idx": 12,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 13,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 14,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 15,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 16,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 17,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 18,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 19,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 20,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 21,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 22,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 23,
+      "word_count": 0
+    },
+    {
+      "type": "CLIPART",
+      "idx": 24,
+      "word_count": 0
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "BODY_11": 0,
+    "SLIDE_NUMBER_10": 4,
+    "BODY_12": 0,
+    "BODY_13": 0,
+    "BODY_14": 0,
+    "BODY_15": 0,
+    "BODY_16": 0,
+    "BODY_17": 0,
+    "CLIPART_18": 0,
+    "CLIPART_19": 0,
+    "CLIPART_20": 0,
+    "CLIPART_21": 0,
+    "CLIPART_22": 0,
+    "CLIPART_23": 0,
+    "CLIPART_24": 0
+  },
+  "total_word_count": 4,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title — states the key message or topic",
+    "BODY_11": "Subtitle, date, presenter name, or event description",
+    "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+    "BODY_12": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_13": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_14": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_15": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_16": "Main content area — bullets, paragraphs, or structured content",
+    "BODY_17": "Main content area — bullets, paragraphs, or structured content",
+    "CLIPART_18": "Content placeholder (CLIPART)",
+    "CLIPART_19": "Content placeholder (CLIPART)",
+    "CLIPART_20": "Content placeholder (CLIPART)",
+    "CLIPART_21": "Content placeholder (CLIPART)",
+    "CLIPART_22": "Content placeholder (CLIPART)",
+    "CLIPART_23": "Content placeholder (CLIPART)",
+    "CLIPART_24": "Content placeholder (CLIPART)"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3–8 words describing Agenda / TOC)",
+    "BODY_11": "Subtitle text, date, or event name (1–2 lines)",
+    "SLIDE_NUMBER_10": "Auto-populated — do not modify",
+    "BODY_12": "Body content (bullets or paragraphs)",
+    "BODY_13": "Body content (bullets or paragraphs)",
+    "BODY_14": "Body content (bullets or paragraphs)",
+    "BODY_15": "Body content (bullets or paragraphs)",
+    "BODY_16": "Body content (bullets or paragraphs)",
+    "BODY_17": "Body content (bullets or paragraphs)",
+    "CLIPART_18": "Content for this area",
+    "CLIPART_19": "Content for this area",
+    "CLIPART_20": "Content for this area",
+    "CLIPART_21": "Content for this area",
+    "CLIPART_22": "Content for this area",
+    "CLIPART_23": "Content for this area",
+    "CLIPART_24": "Content for this area"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3–10 words",
+    "BODY_11": "~5–20 words",
+    "SLIDE_NUMBER_10": "Do not modify",
+    "BODY_12": "~30–80 words",
+    "BODY_13": "~30–80 words",
+    "BODY_14": "~30–80 words",
+    "BODY_15": "~30–80 words",
+    "BODY_16": "~30–80 words",
+    "BODY_17": "~30–80 words",
+    "CLIPART_18": "~10–50 words",
+    "CLIPART_19": "~10–50 words",
+    "CLIPART_20": "~10–50 words",
+    "CLIPART_21": "~10–50 words",
+    "CLIPART_22": "~10–50 words",
+    "CLIPART_23": "~10–50 words",
+    "CLIPART_24": "~10–50 words"
+  },
+  "do_not_modify": [
+    "footer",
+    "slide number"
+  ],
+  "selection_tags": [
+    "agenda",
+    "executive",
+    "sales",
+    "product-overview"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{472C5CBE-893D-1048-BE2F-FC5B170BAF9E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{F5D7B995-A918-2918-9234-5D6BFA9A9C8D}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{6098C686-DA6F-2A35-E99B-8D8707AC5400}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>2</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Text Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{DD67E3FE-2F3D-54DA-2C02-74F4C7DD16A1}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"6\" name=\"Text Placeholder 5\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{5F6A76D1-24D9-396D-E7F0-FBB8D18C60EA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"13\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"7\" name=\"Text Placeholder 6\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FD2865E8-7ED1-6BCF-3AB7-C70102301489}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"14\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"8\" name=\"Text Placeholder 7\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{EF892835-F196-ACB4-5464-9EA222825766}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"15\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"9\" name=\"Text Placeholder 8\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{23C84730-46FC-CAC5-68CC-A121F3342FC0}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"16\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"10\" name=\"Text Placeholder 9\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FA5401A5-60DC-2ADA-84BD-B02913BD73D1}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"17\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"11\" name=\"Online Image Placeholder 10\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{CD568E3A-9BC9-1DE2-7C3E-D31C025F4A4E}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"18\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"12\" name=\"Online Image Placeholder 11\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{0CC1CC56-1037-10EB-51C9-725DEC900211}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"19\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"13\" name=\"Online Image Placeholder 12\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{38E19919-05E1-E6BD-CE0C-6ABB4B0BD841}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"20\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"14\" name=\"Online Image Placeholder 13\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{9A2E5A46-0FF1-2CD0-C5F7-E83416E28B82}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"21\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"15\" name=\"Online Image Placeholder 14\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{91862681-7D84-88A3-3982-C6D4ED6D80E3}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"22\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"16\" name=\"Online Image Placeholder 15\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{113A01C5-EBC1-E511-72BE-E5361DAB4205}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"23\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"17\" name=\"Online Image Placeholder 16\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{CA85E0EB-A354-8B09-5780-3D75ED9011EC}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"clipArt\" sz=\"quarter\" idx=\"24\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"944292981\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+}

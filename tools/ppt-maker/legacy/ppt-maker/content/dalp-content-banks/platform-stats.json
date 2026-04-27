@@ -1,0 +1,110 @@
+{
+  "last_updated": "2026-04-05",
+  "usage_notes": "Stats are grouped by category for slide selection. Use 'stat' and 'label' for STAT-formatted slides (36pt Bold Blue number + sub-label). All figures sourced from DALP canonical narrative, capability mapping, and product docs.",
+  "categories": {
+    "platform_scope": [
+      {
+        "stat": "7",
+        "label": "Pre-built asset classes",
+        "detail": "Bonds, equity, funds, deposits, stablecoins, real estate, precious metals — plus configurable custom types via the DALP Asset model",
+        "source": "dalp-narrative, dalp-overview.md"
+      },
+      {
+        "stat": "18",
+        "label": "Compliance module types",
+        "detail": "Jurisdiction, eligibility, holding periods, supply limits, transfer conditions — enforced ex-ante before execution",
+        "source": "dalp-narrative, compliance-modules.md"
+      },
+      {
+        "stat": "200+",
+        "label": "API endpoints",
+        "detail": "Full REST API surface for integration with core banking, custody, and risk systems",
+        "source": "dalp-narrative"
+      }
+    ],
+    "operational_depth": [
+      {
+        "stat": "21",
+        "label": "Pre-built observability dashboards",
+        "detail": "Full-stack observability: VictoriaMetrics (metrics), Loki (logs), Tempo (traces), Grafana dashboards, automated Slack alerting",
+        "source": "capability-mapping/observability-architecture.md"
+      },
+      {
+        "stat": "4",
+        "label": "Deployment models",
+        "detail": "Managed SaaS, private cloud, on-premises, or hybrid — same lifecycle capabilities across all options",
+        "source": "deployment-options.md, dalp-narrative"
+      }
+    ],
+    "infrastructure": [
+      {
+        "stat": "20+",
+        "label": "Supported EVM-compatible networks",
+        "detail": "Public and permissioned EVM-compatible blockchain networks",
+        "source": "dalp-narrative"
+      }
+    ],
+    "security_and_governance": [
+      {
+        "stat": "RBAC",
+        "label": "Access control model",
+        "detail": "Role-based access control with 5 defined roles, maker-checker approval workflows, configurable multi-signature quorum, and formal recovery procedures",
+        "source": "dalp-narrative (Key Guardian section)"
+      },
+      {
+        "stat": "HSM",
+        "label": "Hardware security module compatible",
+        "detail": "Key management with HSM compatibility and formal recovery procedures",
+        "source": "dalp-narrative"
+      }
+    ],
+    "settlement": [
+      {
+        "stat": "T+0",
+        "label": "Atomic settlement",
+        "detail": "DvP and XvP atomic settlement including cross-venue settlement via the XVP module",
+        "source": "dalp-narrative, case-studies.md"
+      }
+    ],
+    "integration": [
+      {
+        "stat": "4",
+        "label": "API protocols",
+        "detail": "REST, GraphQL, event webhooks, and oRPC provide programmatic access to every platform capability",
+        "source": "dalp-narrative (Integration & Interoperability section)"
+      },
+      {
+        "stat": "ISO 20022",
+        "label": "Payment rail standard",
+        "detail": "Payment rail connectivity for SWIFT, SEPA, and RTGS via ISO 20022 standards",
+        "source": "dalp-narrative (Integration & Interoperability section)"
+      },
+      {
+        "stat": "2",
+        "label": "Custodian integrations",
+        "detail": "Bring-your-own-custodian model with Fireblocks and DFNS integrations; DALP orchestrates custody policy, not custody itself",
+        "source": "dalp-narrative (Custody section)"
+      }
+    ],
+    "lifecycle": [
+      {
+        "stat": "5",
+        "label": "Core lifecycle pillars",
+        "detail": "Issuance, compliance, custody, settlement, and servicing as integrated modules covering the full asset lifecycle from creation to retirement",
+        "source": "dalp-narrative (Core-Lifecycle Pillars section)"
+      },
+      {
+        "stat": "4+",
+        "label": "Regulatory jurisdictions modeled",
+        "detail": "Compliance modules model requirements for EU MiCA, Singapore MAS, UK FCA, and Japan FSA frameworks",
+        "source": "dalp-narrative (Compliance section)"
+      },
+      {
+        "stat": "5",
+        "label": "Defined custody roles",
+        "detail": "Role-based access control with 5 defined roles, configurable multi-signature quorum, and emergency pause capability",
+        "source": "dalp-narrative (Key Guardian section)"
+      }
+    ]
+  }
+}

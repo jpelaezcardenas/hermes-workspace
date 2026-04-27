@@ -1,0 +1,71 @@
+{
+  "slide_number": 1,
+  "filename": "slide-001-cover-slide.pptx",
+  "layout_name": "Title - Standard",
+  "layout_slug": "title-standard",
+  "template_layout_name": "Cover Slide",
+  "template_layout_slug": "cover-slide",
+  "layout_category": "opening",
+  "description": "Opening/cover slide with a large title and subtitle area. Branded background with SettleMint logo. Always the first slide of any deck.",
+  "usage": "Use as the very first slide of every presentation. Enter the deck title and subtitle (date, event name, presenter).",
+  "potential_usage": "Can also be used as a re-opening slide after a major break or change in speaker.",
+  "content_capacity": "light",
+  "has_image_area": false,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 1,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 11,
+      "type": "BODY"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 11,
+      "word_count": 0
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "BODY_11": 0
+  },
+  "total_word_count": 0,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title — states the key message or topic",
+    "BODY_11": "Subtitle, date, presenter name, or event description"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3–8 words describing Title - Standard)",
+    "BODY_11": "Subtitle text, date, or event name (1–2 lines)"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3–10 words",
+    "BODY_11": "~5–20 words"
+  },
+  "do_not_modify": [
+    "background image",
+    "logo",
+    "footer"
+  ],
+  "selection_tags": [
+    "cover",
+    "executive",
+    "investor",
+    "sales",
+    "product-overview",
+    "technical-deep-dive"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{ACFB61FE-7094-9FD7-36D3-8974595120DA}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{C4FE56E4-328C-D15F-C5C7-1699C0003D6A}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"601454250\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>"
+}

@@ -1,0 +1,266 @@
+{
+  "project": "2026-03-19-dalp-precious-metals-30",
+  "output": "output/2026-03-19-dalp-precious-metals-30.pptx",
+  "description": "30-slide DALP deck focused on configurable token design and precious metals tokenization",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Tokenized Metals",
+      "subtitle": "Institutional lifecycle control for configurable digital assets"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Executive summary",
+      "body": "\u2022 Tokenization is easy to demo but difficult to operate once identity, compliance, custody coordination, settlement, and servicing matter together.\n\u2022 DALP is SettleMint\u2019s digital asset lifecycle platform for designing, launching, and operating tokenized assets on EVM-compatible networks.\n\u2022 DALP stands out through configurable asset design: governed templates, policy modules, identity-linked controls, role-based approvals, and lifecycle actions on one platform.\n\u2022 Precious metals are a strong fit because investors care about provenance, vault data, fractional access, transfer rules, and redemption discipline as much as the token itself."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why tokenization gets hard",
+      "subtitle": "Production complexity starts after the mint"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Easy to demo, hard to run",
+      "body": "\u2022 A simple mint proves a token can exist; it does not prove the operating model can survive legal review, onboarding, settlement, and day-two servicing.\n\u2022 Production programs need product, compliance, treasury, operations, and engineering teams working from the same asset record instead of separate spreadsheets and side processes.\n\u2022 Manual controls create exception queues, reconciliation risk, slower launches, and weak evidence for audit or partner review.\n\u2022 The real challenge is not creating a token contract. It is governing the full lifecycle without rebuilding the stack for every new asset."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "What institutions must control",
+      "item1": "Investor eligibility\nInstitutions must control who may subscribe, hold, and transfer, not just which wallet receives a token.",
+      "item2": "Transfer conditions\nJurisdiction, supply, time-lock, and role-based restrictions must be enforced before execution.",
+      "item3": "Servicing events\nIssuance is only the start; live assets need payouts, freezes, redemptions, reporting, and exception handling.",
+      "item4": "Operational evidence\nApprovals, logs, monitoring, and reconciliation outputs must support governance and external review."
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Where pilots break",
+      "table_data": [
+        [
+          "Workstream",
+          "Pilot shortcut",
+          "Production requirement",
+          "Impact if missing"
+        ],
+        [
+          "Asset design",
+          "One-off contract",
+          "Reusable governed template",
+          "Every launch starts from zero"
+        ],
+        [
+          "Compliance",
+          "Manual review",
+          "Ex-ante policy checks",
+          "Blocked transfers happen too late"
+        ],
+        [
+          "Identity",
+          "Wallet list",
+          "Verified claims and eligibility",
+          "Distribution risk stays manual"
+        ],
+        [
+          "Operations",
+          "Spreadsheet tracking",
+          "Approvals, logs, monitoring",
+          "Weak audit trail"
+        ],
+        [
+          "Servicing",
+          "Custom scripts",
+          "Lifecycle controls and events",
+          "Day-two cost escalates"
+        ],
+        [
+          "Integration",
+          "Standalone demo",
+          "Custody and core-system hooks",
+          "No path to scale"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "What DALP is",
+      "subtitle": "One platform for the digital asset lifecycle"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP in one sentence",
+      "body": "\u2022 DALP is SettleMint\u2019s Digital Asset Lifecycle Platform for designing, launching, and operating tokenized assets with governance, identity, compliance, settlement coordination, and servicing on one control plane.\n\u2022 It is built for regulated institutions that need repeatability, auditability, and production reliability rather than isolated proofs of concept.\n\u2022 The platform supports seven pre-built asset classes: bonds, equity, funds, deposits, stablecoins, real estate, and precious metals.\n\u2022 DALP extends beyond fixed templates through a configurable asset model, while staying grounded in approved EVM-compatible deployment language."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "DALP platform pillars",
+      "col1": "Governed design\n\u2022 Use asset classes and reusable templates.\n\u2022 Keep metadata and terms explicit.\n\u2022 Review launch readiness before deployment.\n\u2022 Reuse approved patterns across future programs.",
+      "col2": "Policy execution\n\u2022 Link identity to permissions.\n\u2022 Enforce rules before transfer.\n\u2022 Separate maker and checker actions.",
+      "col3": "Live operations\n\u2022 Run servicing on-platform.\n\u2022 Integrate custody and core systems.\n\u2022 Monitor with audit-ready evidence."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Supported asset model",
+      "body": "DALP supports multiple regulated asset classes on the same operating model. The platform UI demonstrates that precious metals are not treated as a special one-off demo; they sit alongside bonds, equity, funds, deposits, stablecoins, and real estate inside the same lifecycle environment. That matters because institutions want reuse across products, not separate stacks by asset class.",
+      "image_path": "templates/dalp-screenshots/16 - Insights/Insights - Asset Overview.jpg"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Lifecycle on one platform",
+      "body": "DALP is designed around the full digital asset lifecycle. Asset design, onboarding, issuance, transfer, settlement coordination, servicing, redemption, and reporting operate as connected stages rather than separate tools. That is the core difference between a demo environment and production infrastructure.",
+      "image_path": "output/diagrams/dalp-lifecycle-operating-model.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Configurable token design",
+      "subtitle": "How DALP turns controls into product configuration"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why configurable tokens matter",
+      "body": "\u2022 Institutions rarely launch one generic token repeatedly; they launch instruments with different terms, permissions, distribution rules, and servicing needs.\n\u2022 DALP treats the asset as a governed configuration problem: choose an asset class, define metadata, attach policy modules, set permissions, and connect servicing actions.\n\u2022 That reduces custom smart-contract work while making product, legal, operations, and engineering teams collaborate on one explicit design.\n\u2022 The benefit is not only faster launch. It is better control over what the token is allowed to do in production."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Token design building blocks",
+      "item1": "Asset class\nStart from a supported product type with governed defaults.",
+      "item2": "Metadata schema\nCapture the fields that define the real instrument.",
+      "item3": "Supply rules\nControl issuance amounts, caps, and release logic.",
+      "item4": "Identity gates\nRequire verified claims before distribution or transfer.",
+      "item5": "Permissions\nAssign approval, custody, and operational roles clearly.",
+      "item6": "Lifecycle actions\nEnable mint, burn, freeze, pause, redeem, and related flows."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset designer and templates",
+      "body": "The DALP asset designer gives product and operations teams a structured path from instrument definition to review and deployment. Instead of free-form contract changes, teams work through explicit configuration steps for asset details, pricing, compliance modules, permissions, and launch readiness. That makes token design repeatable and reviewable.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance modules in workflow",
+      "body": "Compliance is part of the product workflow, not a document that lives beside it. DALP policy templates expose reusable controls for identity, country restrictions, supply conditions, holding periods, and settlement-related rules. Teams can apply and review policy logic during setup instead of rebuilding controls for each launch.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - List.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Identity and claims",
+      "body": "Verified identity is central to DALP\u2019s operating model. OnchainID and reusable claims let institutions control who may receive, hold, and move a regulated token. This supports cleaner onboarding, more consistent transfer decisions, and a distribution model based on eligibility rather than raw wallet addresses.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Governance and lifecycle controls",
+      "item1": "Role-based authority\nRBAC and maker-checker controls separate configuration, approval, and execution responsibilities.",
+      "item2": "Lifecycle actions\nMint, burn, freeze, pause, redeem, and related controls stay connected to policy and permissions.",
+      "item3": "Emergency response\nOperational controls support intervention when an exception, breach, or servicing issue appears.",
+      "item4": "Reusable governance\nThe same control model can be applied across products instead of reinventing procedures per asset."
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Transfer decision flow",
+      "body": "This flow captures DALP\u2019s compliance posture around token movement. The platform resolves the token policy, checks identity and claims, evaluates transfer conditions, and only then allows execution or blocks the action. For regulated assets, the key is ex-ante control with an evidence trail after the decision.",
+      "image_path": "output/diagrams/dalp-transfer-decision-flow.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Precious metals tokenization",
+      "subtitle": "A strong use case for configurable digital assets"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why metals are strong RWAs",
+      "body": "\u2022 Precious metals already have widely understood economic properties: scarcity, reserve value, standard custody practices, and global investor demand.\n\u2022 Tokenization can improve distribution, fractional access, transferability, and operational transparency without changing the underlying asset thesis.\n\u2022 The production challenge is provenance and control: investors need confidence in vault location, custodian data, eligibility rules, and redemption handling.\n\u2022 That is exactly where configurable token design matters more than a simple commodity token demo."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Metals as a governed class",
+      "body": "DALP includes precious metals as a supported asset class rather than forcing teams into a generic contract. The platform UI shows multiple metal programs across gold, silver, platinum, and palladium, with vault-linked naming and fractional token precision. This grounds the story in real-world custody structure instead of abstract token theory.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metals Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Physical metadata made digital",
+      "body": "For metals, the token must carry more than supply and symbol. DALP\u2019s precious-metal detail view shows asset-specific metadata such as metal type, storage location, and custodian. That is important because a precious metal token is only credible when the digital record stays linked to physical custody facts and servicing responsibility.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metal 1.jpg"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Metals issuance and servicing",
+      "body": "A precious-metals program needs a controlled sequence from product design through distribution and redemption. DALP helps connect vault metadata, investor identity, issuance rules, transfer checks, monitoring, and close-out workflows inside one platform record. That is how fractional access and operational discipline can coexist.",
+      "image_path": "output/diagrams/dalp-metals-issuance-servicing.png"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Why configurable tokens fit metals",
+      "col1": "Investor and market side\n\u2022 Fractional ownership broadens access.\n\u2022 Eligibility rules protect distribution.\n\u2022 Transfer checks support controlled secondary movement.\n\u2022 Reporting improves transparency.",
+      "col2": "Asset and operator side\n\u2022 Metadata links token to vault facts.\n\u2022 Permissions separate issuer, ops, and custody roles.\n\u2022 Freeze, redeem, and burn actions stay governed.\n\u2022 Integrations keep servicing auditable."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Metals requirements mapped to DALP",
+      "body": "Precious metals are a good test of whether a platform is truly configurable. The token must reflect custody facts, investor controls, lifecycle events, and operational evidence at the same time.",
+      "table_data": [
+        [
+          "Metals requirement",
+          "Why it matters",
+          "DALP mechanism",
+          "Outcome"
+        ],
+        [
+          "Metal-specific metadata",
+          "Differentiate gold, silver, platinum, palladium",
+          "Asset-class fields and schemas",
+          "Digital record mirrors physical asset"
+        ],
+        [
+          "Vault and custodian link",
+          "Support provenance and trust",
+          "Governed metadata and operational workflows",
+          "Clear custody context"
+        ],
+        [
+          "Fractional supply",
+          "Enable broader distribution",
+          "Supply rules and token precision",
+          "Controlled issuance model"
+        ],
+        [
+          "Eligible holders",
+          "Protect regulated distribution",
+          "OnchainID and policy checks",
+          "Verified investor base"
+        ],
+        [
+          "Transfers and exceptions",
+          "Manage secondary activity safely",
+          "Ex-ante compliance and lifecycle controls",
+          "Approved or blocked movement"
+        ]
+      ]
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Architecture, ops, and custody",
+      "col1": "Architecture\n\u2022 DALP sits between core systems and EVM networks.\n\u2022 APIs, events, and identity stay on one control plane.\n\u2022 Deployment can be public or permissioned EVM.",
+      "col2": "Operations and compliance\n\u2022 Monitoring, logs, and approvals support live programs.\n\u2022 Policies are enforced before execution.\n\u2022 Auditability spans requests and outcomes.",
+      "col3": "Custody and settlement\n\u2022 DALP is not the custodian.\n\u2022 Bring-your-own-custodian supports Fireblocks and DFNS.\n\u2022 Settlement and servicing integrate into the workflow."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Why SettleMint wins",
+      "item1": "Platform, not point solution\nDALP covers design, identity, compliance, settlement coordination, servicing, and reporting in one operating model.",
+      "item2": "Configurable by design\nTemplates, policy modules, permissions, and lifecycle controls fit institutional tokenization better than fixed commodity-token tooling.",
+      "item3": "Credible for regulated teams\nRBAC, maker-checker workflows, observability, and auditability support production governance from day one.",
+      "item4": "Clear deployment boundary\nApproved positioning is EVM-compatible network support with integration into existing custody, risk, and core environments."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Example implementation path",
+      "col1": "1. Define the product\n\u2022 Confirm metal program scope.\n\u2022 Choose vault, custodian, and distribution model.\n\u2022 Map policy requirements.",
+      "col2": "2. Configure DALP\n\u2022 Set metadata and supply rules.\n\u2022 Attach identity and compliance modules.\n\u2022 Connect custody and operations flows.",
+      "col3": "3. Launch and scale\n\u2022 Start with one governed issuance.\n\u2022 Prove servicing and reporting.\n\u2022 Reuse the model across new assets."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

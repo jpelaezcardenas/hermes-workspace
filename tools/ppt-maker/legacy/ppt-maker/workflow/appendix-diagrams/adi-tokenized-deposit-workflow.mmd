@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant Bank
+    participant DALP
+    participant SmartContract
+    participant Investor
+    participant Custody
+
+    Bank->>DALP: Configure deposit token
+    DALP->>SmartContract: Deploy token contract
+    Investor->>DALP: KYC + onboarding
+    DALP->>SmartContract: Whitelist investor
+    Bank->>DALP: Initiate mint
+    DALP->>SmartContract: Mint deposit tokens
+    SmartContract->>Investor: Tokens credited
+    Investor->>DALP: Request redemption
+    DALP->>SmartContract: Burn tokens
+    SmartContract->>Custody: Release underlying
+    Custody->>Investor: Settlement complete

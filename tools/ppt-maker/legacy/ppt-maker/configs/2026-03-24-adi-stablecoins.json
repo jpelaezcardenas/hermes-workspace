@@ -1,0 +1,155 @@
+{
+  "output": "output/2026-03-24-adi-stablecoins.pptx",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Digital Asset Infrastructure for ADI Chain",
+      "subtitle": "SettleMint · March 2026"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "About SettleMint",
+      "subtitle": "Over a decade of regulated digital asset infrastructure"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "SettleMint: Digital Asset Lifecycle Infrastructure",
+      "body": "• ~10 years building digital asset infrastructure for regulated financial markets and sovereign programs across Europe, Asia, and the Middle East.\n• 7+ years of continuous production deployments at regulated banks and financial institutions.\n• Active programs at institutions including Commerzbank, Maybank, KBC, Sony Bank, OCBC, Standard Chartered, and Mizuho.\n• Our focus: reducing the operational complexity of doing tokenization correctly at institutional scale.\n• SettleMint sells the DALP platform. Institutions design, deploy, and operate their digital asset programs on it."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Proven at Scale",
+      "col1": "Sony Bank\n• Tokenized deposits with full lifecycle management and compliance controls.\n• Multi-jurisdiction eligibility enforcement.\n• Interest accrual and redemption workflows built in.\n• Institutional governance from day one.",
+      "col2": "Maybank Project Photon\n• FX tokenization (MYRT) deployed on DALP.\n• Cross-border settlement via Exchange-versus-Payment (XvP).\n• Atomic cross-currency swaps with zero settlement risk.\n• Live at a major Southeast Asian bank.",
+      "col3": "KBC / Bolero\n• Fiat-backed stable token for regulated crowdfunding.\n• Full lifecycle: issuance, corporate actions, and redemption.\n• Smart contract backend for investor distribution.\n• Compliance-first architecture from design through servicing."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP Overview",
+      "subtitle": "One platform for the full digital asset lifecycle"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP: One Platform for the Full Digital Asset Lifecycle",
+      "body": "• DALP covers the complete digital asset lifecycle: design, issuance, compliance, custody integration, settlement, and servicing.\n• 7 pre-built asset classes: bonds, equity, funds, deposits, stablecoins, real estate, and precious metals.\n• 18 compliance module types enforced ex-ante: blocked transfers fail before execution, not after.\n• 200+ API endpoints for integration with core banking, custody, and risk systems.\n• Deployment options: managed SaaS, private cloud, on-premises, or hybrid with the same lifecycle capabilities across all."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Stablecoin Issuance in DALP",
+      "body": "• Asset configuration and token standard selection (ERC-3643 / T-REX) at design time.\n• Compliance policies attached before issuance begins, not added afterward.\n• Reserve management and redemption workflow configured upfront.\n• Automated issuance, servicing, and lifecycle event handling once deployed.\n• Full audit trail maintained on-chain and within the DALP control plane.",
+      "image_path": "templates/dalp-screenshots/08 - Stablecoins/jpg/Stablecoins.jpg"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Platform at a Glance",
+      "col1": "**7 Asset Classes**\n• Bonds, equity, funds, deposits, stablecoins, real estate, and precious metals.\n• Each pre-built with lifecycle templates, compliance modules, and servicing workflows.\n• Custom asset types supported via the configurable DALP Asset model.",
+      "col2": "**18 Compliance Modules**\n• Jurisdiction rules, investor eligibility, holding periods, supply limits, and transfer conditions.\n• All enforced ex-ante: blocked transfers fail before execution on-chain.\n• Configurable per asset class and per jurisdiction from one control plane.",
+      "col3": "**T+0 Settlement**\n• DvP and XvP atomic settlement built into the platform.\n• Cross-venue settlement via the DALP XVP module.\n• No settlement risk: both legs of a transaction settle simultaneously on ADI Chain."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Use Cases",
+      "subtitle": "Stablecoins, tokenized deposits, and programmable money"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Stablecoins on DALP",
+      "col1": "What DALP delivers\n• ERC-3643 / T-REX regulated token standard built in.\n• Configurable reserve management and redemption workflows.\n• Multi-jurisdiction compliance controls covering MiCA, MAS, FCA, and FSA.\n• OnchainID-based identity and investor eligibility enforcement.\n• Full lifecycle: design, issuance, transfers, servicing, and redemption on one platform.",
+      "col2": "Why it matters for ADI\n• Stablecoins on ADI Chain need regulatory controls, not just smart contracts.\n• DALP embeds compliance at the token level so it cannot be bypassed at execution.\n• Institutions get consistent controls across multiple jurisdictions from a single control plane.\n• Reference implementations at Sony Bank and KBC show the model in production."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Policy Configuration",
+      "body": "• Compliance policies are configured at the asset level at design time, not added after deployment.\n• Ex-ante enforcement means blocked transfers fail before they execute on-chain.\n• Each jurisdiction gets its own policy set, all managed from one DALP control plane.\n• Supports MiCA, MAS, FCA, and FSA regulatory frameworks via configurable module templates.\n• Policy changes go through maker-checker approval workflows for governance auditability.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/jpg/Compliance Policy Templates.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Tokenized Deposits on DALP",
+      "col1": "Platform capability\n• Full deposit lifecycle: issuance, interest accrual, and redemption on one platform.\n• Maker-checker approval workflows built into every operational step.\n• Custody-ready with HSM compatibility and formal key recovery procedures.\n• Deposit-linked compliance: KYC/AML, holding periods, and transfer restrictions.\n• Configurable corporate actions for deposit products requiring lifecycle events.",
+      "col2": "Reference: Maybank Project Photon\n• FX tokenization (MYRT) deployed on DALP at Maybank.\n• Cross-border settlement via Exchange-versus-Payment (XvP).\n• Atomic cross-currency swaps with no settlement risk between counterparties.\n• Same architecture, same platform, available for tokenized deposit programs on ADI Chain."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Deposits in DALP",
+      "body": "• Deposit assets configured through the DALP Asset Designer with full parameter control.\n• Compliance policies linked at creation: investor eligibility, holding periods, and transfer rules.\n• Full servicing lifecycle after issuance: interest payments, corporate actions, and redemption.\n• Operational evidence maintained on-platform for audit and regulatory reporting.",
+      "image_path": "templates/dalp-screenshots/07 - Deposits/jpg/Deposits Listing.jpg"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Programmable Money on DALP",
+      "body": "• Programmable money means financial logic is embedded in the asset at issuance, not bolted on at the settlement layer.\n• DALP supports automatic interest payments, conditional transfer rules, scheduled redemptions, and XvP atomic settlement as native platform capabilities.\n• Compliance hooks fire before any instruction executes, so programmable rules operate within a governance boundary that cannot be bypassed.\n• KBC / Bolero used DALP to deliver a fiat-backed stable token with automated lifecycle events and corporate actions for regulated crowdfunding.\n• ADI can deploy programmable stablecoins with embedded reserve logic, automated settlement, and multi-jurisdiction eligibility checks on the same platform."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP on ADI Chain",
+      "subtitle": "Connecting the platform to ADI Chain"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "DALP Connects to ADI Chain",
+      "col1": "ADI Chain integration\n• DALP connects to EVM-compatible networks, and ADI Chain is EVM-compatible.\n• Smart contract templates deploy on-chain with a single configuration step.\n• OnchainID identity and policy enforcement are native to the ERC-3643 token standard.\n• Settlement finality on ADI Chain; governance, approvals, and controls remain on DALP.",
+      "col2": "Time to deployment\n• Pre-built stablecoin templates: days to configure, not months to build from scratch.\n• Compliance modules pre-loaded; jurisdiction-specific rules activated by configuration.\n• 200+ API endpoints for integration with existing core banking and custody systems.\n• The same platform takes programs from initial configuration through live operation."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "ADI Chain Capabilities Out of the Box",
+      "body": "DALP delivers a complete set of capabilities for digital asset programs on ADI Chain. Each capability is available out of the box, configurable to jurisdiction-specific requirements, and fully integrated within the DALP control plane.",
+      "table_data": [
+        ["Capability", "What DALP provides", "Relevant for ADI"],
+        ["Stablecoin issuance", "ERC-3643 regulated token with configurable reserve and redemption workflows", "ADI stablecoin programs across jurisdictions"],
+        ["Compliance controls", "18 module types with ex-ante enforcement across multiple jurisdictions", "MiCA, MAS, FCA, FSA alignment from day one"],
+        ["Tokenized deposits", "Full deposit lifecycle with interest accrual and HSM custody compatibility", "Bank and NBFI deposit programs on ADI Chain"],
+        ["Programmable settlement", "XvP atomic settlement with T+0 finality and conditional transfer rules", "Cross-border and DvP transaction programs"]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Next Steps",
+      "subtitle": "Turning ADI Chain potential into operating programs"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Next Steps with SettleMint",
+      "body": "• Schedule a technical deep-dive covering DALP architecture and ADI Chain integration details with the SettleMint solutions team.\n• Review the stablecoin and tokenized deposit templates with your engineering team to assess fit for ADI Chain programs.\n• Connect ADI compliance team with SettleMint regulatory specialists for jurisdiction-specific mapping across MiCA, MAS, FCA, and FSA.\n• Define a pilot scope together: one use case, fully configured and live on ADI Chain, within 6 to 8 weeks of kickoff.\n• SettleMint has delivered programs at this scale across three continents. We are ready to move when ADI is."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Reference diagrams for DALP on ADI Chain"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Stablecoin Lifecycle on DALP",
+      "body": "End-to-end view of a stablecoin program lifecycle on DALP from initial asset design through compliance configuration, issuance, reserve management, transfer and settlement, and final redemption. Each stage is governed by the DALP control plane with full audit trail.",
+      "image_path": "workflow/appendix-diagrams/adi-stablecoin-lifecycle.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "DALP Compliance Architecture",
+      "body": "The DALP Policy Engine sits above three enforcement layers: identity verification, transfer rules, and supply controls. All three must pass before any instruction executes on-chain. This architecture ensures compliance cannot be bypassed regardless of the instruction source.",
+      "image_path": "workflow/appendix-diagrams/adi-compliance-architecture.mmd"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "DALP + ADI Chain Integration",
+      "body": "The integration topology from core banking systems through the DALP API layer, smart contract templates, ADI Chain settlement, and the custody and settlement layer. DALP acts as the governance and operations layer; ADI Chain provides settlement finality.",
+      "image_path": "workflow/appendix-diagrams/adi-integration-topology.mmd"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Tokenized Deposit Lifecycle",
+      "body": "Sequence diagram showing how a tokenized deposit moves through the system: from issuer creation and DALP compliance check through on-chain issuance on ADI Chain, interest accrual, and investor-triggered redemption with on-chain burn.",
+      "image_path": "workflow/appendix-diagrams/adi-deposit-sequence.mmd"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Multi-Jurisdiction Compliance",
+      "body": "The DALP Compliance Engine manages jurisdiction-specific rule sets independently for MiCA (EU), MAS (Singapore), FCA (UK), and FSA (Japan). Each jurisdiction has its own configured policy set. All rules converge to a single enforcement point before any transfer executes on ADI Chain. This means ADI Chain programs can serve investors across multiple regulatory regimes from one platform without rebuilding the compliance layer for each jurisdiction. Configuration-driven compliance replaces custom-coded contract logic for every new market.",
+      "image_path": "workflow/appendix-diagrams/adi-multi-jurisdiction.mmd"
+    }
+  ]
+}

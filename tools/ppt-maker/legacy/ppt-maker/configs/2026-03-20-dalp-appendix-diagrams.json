@@ -1,0 +1,56 @@
+{
+  "project": "2026-03-20-dalp-appendix-diagrams",
+  "output": "output/2026-03-20-dalp-appendix-diagrams.pptx",
+  "description": "DALP appendix diagram deck — 6 architecture and process diagrams covering token issuance, compliance, platform layers, asset lifecycle, maker-checker, and integration topology",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Technical Architecture",
+      "subtitle": "Appendix — Process & Architecture Diagrams | March 2026"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Architecture and process diagrams for technical reference"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Token issuance flow",
+      "body": "End-to-end token issuance on DALP: investor portal initiates a subscription, DALP runs identity and whitelist checks, orchestrates the mint on the smart contract, and credits the investor's custody wallet — all in a single governed flow.",
+      "image_path": "workflow/appendix-diagrams/dalp-token-issuance-flow-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Compliance check sequence",
+      "body": "Every action on DALP — transfer, issuance, or redemption — passes through a layered compliance gate before touching on-chain state.\n\n• Identity check: DID and KYC status confirmed\n• Whitelist check: counterparty must be on the approved register\n• Policy engine: transaction rules and jurisdictional constraints applied\n• Limit check: holding caps and velocity limits enforced\n\nBlocked actions are rejected with a logged reason before any transaction is submitted, keeping the audit trail clean and preventing on-chain state from diverging from compliance intent.",
+      "image_path": "workflow/appendix-diagrams/dalp-compliance-check-sequence-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "DALP platform architecture layers",
+      "body": "DALP is structured in four distinct layers, each with a clear responsibility boundary:\n\n• Channel layer: investor portals, REST APIs, and the operator console — all entry points into the platform\n• Business services: asset lifecycle management, compliance modules, identity and KYC orchestration, and post-issuance servicing\n• Execution layer: orchestration engine, maker-checker workflow, event bus, and policy enforcement\n• Blockchain layer: EVM-compatible smart contracts, token standards (ERC-20/3643), and on-chain state\n\nThis layered model allows operators to integrate at any level without rebuilding the compliance and execution logic that sits below it.",
+      "image_path": "workflow/appendix-diagrams/dalp-platform-architecture-layers-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Digital asset lifecycle",
+      "body": "From initial configuration through issuance, distribution, ongoing servicing, atomic DvP settlement, and final redemption — DALP manages the complete lifecycle of a digital asset, not just the token mint.",
+      "image_path": "workflow/appendix-diagrams/dalp-asset-lifecycle-timeline-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Maker-checker approval flow",
+      "body": "DALP enforces institutional-grade separation of duties through a configurable maker-checker pattern — required by regulators for tokenized asset operations.\n\n• Maker initiates the action and submits a draft record\n• Draft enters a review queue with full context and audit metadata\n• Checker independently reviews — a different user, different role\n• Checker approves or rejects with a mandatory reason\n• Approved actions execute on-chain atomically\n• Rejected actions return to the maker with documented reasoning\n\nThe entire sequence is immutably logged. No on-chain action can bypass this gate when maker-checker is configured on an asset class or operation type. This is not optional theatre — it is a hard control in the execution layer.",
+      "image_path": "workflow/appendix-diagrams/dalp-maker-checker-flow-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Integration topology",
+      "body": "DALP acts as an integration hub between enterprise back-office systems — CRM, OMS, ERP, treasury, and external KYC providers — and the execution layer of smart contracts and custodians. Outputs connect to settlement rails, CSD networks, and T+0 DvP infrastructure.",
+      "image_path": "workflow/appendix-diagrams/dalp-integration-topology-2026-03-20.mmd"
+    }
+  ]
+}

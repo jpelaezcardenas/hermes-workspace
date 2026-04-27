@@ -1,0 +1,646 @@
+{
+  "output": "output/2026-03-20-dalp-screenshots.pptx",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Platform Screenshots",
+      "body": "Digital Asset Lifecycle Platform UI Walkthrough"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Login",
+      "body": "Platform entry point with enterprise authentication."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Login Screen",
+      "body": "Sign-in with email/password or passwordless passkey. Branded gradient background with SettleMint logo. Multi-factor authentication for enterprise security.",
+      "image_path": "templates/dalp-screenshots/01 - Login/Login.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Dashboard",
+      "body": "Real-time portfolio command center with live blockchain activity."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard Overview",
+      "body": "Portfolio valuation ($276M), AUM (13.2B USD), pending action alerts, and live blockchain activity feed. Real-time command center for asset managers.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Dashboard Identity Modules",
+      "body": "Identity Manager and Verification Policy Manager integrated into the dashboard. Pending KYC/AML alerts surface compliance actions without leaving the main workspace.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard Verification Scale",
+      "body": "39 on-chain identities, 4 trusted issuers, 384 active compliance verifications. Geographic asset distribution map previews cross-border holdings.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Dashboard Jurisdiction Map",
+      "body": "Choropleth world map showing asset distribution by country. Darker shading indicates higher asset concentration — multi-jurisdiction compliance at a glance.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard Asset Analytics",
+      "body": "Asset-level analytics: geographic map (Doha, Qatar) plus token supply history, mint/burn activity, transaction volume, and wallet distribution over 30 days.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard - Map and Statistics.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Dashboard Map Statistics",
+      "body": "Alternative analytics view: Doha property pin with token supply and holder distribution metrics. Supports decision-making for real estate asset managers.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard - Map and Statistics 2.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Asset Designer",
+      "body": "Guided wizard for tokenizing any asset class from design to deployment."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Designer Choose Class",
+      "body": "Step 1 of 7: select from Fixed Income (Bond), Flexible Income (Fund, Equity), Cash Equivalent (Stablecoin, Deposit), or Real World Asset (Precious Metal, Real Estate).",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Design Bond Asset Type",
+      "body": "Bond selected with built-in capability checklist: access control, supply limit, safe custody, cash out, earn returns. Feature scope confirmed before configuration.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Design Bond Basic Info",
+      "body": "Real-time name/symbol/decimals availability check. Jurisdiction (France) assigned at creation. Token parameters: name, symbol, 18 decimals configured with live validation.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Design Bond Instrument Details",
+      "body": "Bond-specific fields: ISIN (US0378331005, 12-char validated) and maturity date with time precision. Financial instrument standards captured at creation.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 3.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Design Bond Denomination Setup",
+      "body": "Token supply cap (100,000 GOLBON) and denomination asset linking. Bonds linked to on-chain settlement tokens. Enter manually option supports direct address input.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 4.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Design Bond Deutsche Bank",
+      "body": "Denomination: Deutsche Bank Euro Deposit (DEED). Face value 1,000 DEED per bond. Enables atomic DvP settlement against real institutional deposit tokens.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 5.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Asset Info",
+      "body": "Doha Business Towers (DBT) with Qatar jurisdiction, 4 decimal places for fractional ownership. Real-time name/symbol validation confirms token availability.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 3 - Real Estate Info.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Instrument Details",
+      "body": "Property metadata: REN123456789876, GPS (25.286106, 51.534817), Industrial type, Doha district code, and initial owner assignment to a registered user.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 4 - Instrument Details.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Physical Specs",
+      "body": "Property specifications: 100,000 m² area, 2015 build year, 500 units. Full physical asset data model captured before deployment — institutional-grade tokenization.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 4 - Instrument Details Form.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Pricing Valuation",
+      "body": "$100M property → 1,000,000 tokens at $100 each. Total valuation auto-calculated. Fractional tokenization makes institutional real estate accessible to more investors.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 5 - Pricing and Valuation.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Framework Selection",
+      "body": "One-click selection from 6 DALP Library templates: Japan FSA, MAS Singapore, MiCA EU (selected), Reg CF, Reg D 506(b). No custom compliance code required.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Advanced Config",
+      "body": "Advanced configuration mode exposes extended wizard steps. Same global compliance library with MiCA selected — supports complex assets with longer setup flows.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Identity Verification",
+      "body": "Boolean expression builder: KYC AND Asset classification. Visual expression construction with real-time validation. MiCA/EU examples provided as guidance.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance Identity.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Complex Expression",
+      "body": "Nine-condition rule: KYC, AML, Qualified institutional investor, Accredited investor, NOT Asset location, Collateral, Prospectus filed, Issuer reporting. All enforced on-chain.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance Expression.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Country Allowlist",
+      "body": "All 27 EU member states pre-populated from the MiCA template. Each country removable individually. Geographic investor restrictions enforced at smart contract level.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance Country Allowlist.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Supply Limit MiCA",
+      "body": "MiCA supply cap: 8,000,000 tokens per 365-day rolling window. Base price conversion for EUR-denominated limits. Rolling window or fixed period selectable.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Supply Limit.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Permissions Config Panel",
+      "body": "Fine-grained role assignment: Custodian, Governance, Emergency, Supply Manager, Sale Admin per wallet address. Administration and Operations clearly separated.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 7 - Asset Permissions Config.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Permissions Roster",
+      "body": "Three-party governance: Ada Admin (Permission manager, Governance), Anna Schmidt (Custodian), Yuki Tanaka (5 roles: Custodian, Supply, Emergency, Sale admin, Funds).",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 7 - Asset Permissions List.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Permissions Full Governance",
+      "body": "Step 10/11: 5-party governance — System Admin, Asset Issuer, Emma Chen, Hans Mueller, Quinn Walker — each with distinct roles. Separation of duties before token deployment.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Permissions.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Review Deploy Step One",
+      "body": "Complete summary at 11/11 steps: Gold Bond (GOLBON), ISIN US0378331005, France, 100,000 max supply. All parameters confirmed before blockchain deployment.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Review and Deploy 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Review Deploy Compliance",
+      "body": "Pre-deployment: 3 active compliance modules (SMART identity, Country allowlist, Token supply limit) and all 5 administrators with wallet addresses shown.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Review and Deploy 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "My Assets Portfolio View",
+      "body": "$276M across 7 instruments: real estate, stablecoin, deposit, equity, bond, precious metal, fund. Live balance, available, and frozen token tracking per asset.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/My Assets.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Insights Platform Scale",
+      "body": "$13.17B AUM across 71 assets: 11 bonds, 10 equities, 10 funds, 10 stablecoins, 10 deposits, 10 real estates, 10 precious metals. Real-time value distribution.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Insights.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Portfolio Insights",
+      "body": "Multi-dimensional analytics: asset value by instrument, supply count by type, class distribution — three simultaneous views for complete portfolio composition.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Portfolio Insights.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Portfolio Insights View Two",
+      "body": "Alternative portfolio insights from a different account perspective. Same three-chart layout: by instrument, supply, and class — consistent UX across user roles.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Portfolio Insights 2.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Bonds",
+      "body": "Fixed income tokenization: multi-currency bond portfolio management."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bonds Portfolio Listing",
+      "body": "10 bonds across 9 currencies (EUR, MYR, CAD, CHF, SAR, AED, SGD, JPY, GBP). Types: floating rate, zero coupon, convertible, high yield, green, corporate.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Detail Asset Data",
+      "body": "Municipal Bond Tokyo: 10 tabs, maturity Feb 2031, 100% redemption coverage, 3 holders, 1.1M supply. Cross-currency: AED price, MIZY denomination.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond Detail Yield Schedule",
+      "body": "Automated 5-year annual coupon (2026–2031). Separate yield contract on-chain. 500,000 MIZY denomination reserve pre-funded. Yield rate 250 basis points.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Detail Audit Trail",
+      "body": "On-chain event log: Yield Schedule Set, Transfer Completed, Checkpoint Updated. Automatic checkpoints per transfer create a tamper-proof compliance audit trail.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond Detail Issuer Verification",
+      "body": "SMART identity verification active on bond. IssuerLicensed topic captures License Type, Number, and Jurisdiction. Regulatory license attestation stored on-chain.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 4.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Equity",
+      "body": "Tokenized equity across common, preferred, and voting share classes."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Equity Share Portfolio",
+      "body": "10 equities: common, preferred, voting share classes. EUR and USD pricing, 0 decimals (whole shares). Full corporate capital structure supported in one platform.",
+      "image_path": "templates/dalp-screenshots/05 - Equity/Equity Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Equity Detail Collateral",
+      "body": "Pacific Equity Common: 151.52% collateral coverage, $770M market cap. Over-collateralized with automatic minting capacity calculation and expiry tracking.",
+      "image_path": "templates/dalp-screenshots/05 - Equity/Equity Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Funds",
+      "body": "Tokenized funds from venture capital to emerging market strategies."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Funds Portfolio Listing",
+      "body": "10 funds with 18-decimal fractional precision: Sustainable Impact, Multi-Strategy, Venture Capital, Private Equity, Market Neutral, Emerging Markets. EUR/USD.",
+      "image_path": "templates/dalp-screenshots/06 - Funds/Funds Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Fund Detail Metadata",
+      "body": "Sustainable Impact Fund: Category (Emerging Markets), Class (Sector-Specific), Management fee. Asset-type-specific schema beyond standard token parameters.",
+      "image_path": "templates/dalp-screenshots/06 - Funds/Fund Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Fund Detail Verifications",
+      "body": "Four on-chain verifications: base price, asset issuer, contract identity, asset classification. All cryptographically attested via ONCHAINID — even basic attributes.",
+      "image_path": "templates/dalp-screenshots/06 - Funds/Fund Detail 2.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Deposits and Stablecoins",
+      "body": "Tokenized bank deposits and multi-currency stablecoins for cash management."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Deposits Bank Listing",
+      "body": "Tokenized bank deposits: UBS Swiss Deposit, DBS Singapore, Saudi Riyal, Emirates Dirham. Multi-currency cash equivalent management from institutional issuers.",
+      "image_path": "templates/dalp-screenshots/07 - Deposits/Deposits Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Stablecoins Multi Currency",
+      "body": "Full spectrum: USDC, USDT, EURS, AED, SGD, CAD, JPY stablecoins plus platform-native SettleMint Dollar. All 1:1 fiat-pegged, 18 decimals, all Active.",
+      "image_path": "templates/dalp-screenshots/08 - Stablecoins/Stablecoins.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Stablecoin SGD Peg Detail",
+      "body": "Singapore Dollar Coin (SGDC): peg currency stored on-chain as a verifiable attribute. 1:1 SGD peg explicitly configured — transparent digital fiat monetary policy.",
+      "image_path": "templates/dalp-screenshots/08 - Stablecoins/Stablecoin Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Precious Metals",
+      "body": "Gold, silver, platinum, palladium tokenized with real custody traceability."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Precious Metals Vault Listing",
+      "body": "10 tokens across gold, silver, platinum, palladium. Named after real vault locations (London, Zurich, Tokyo) and custodians (Brinks, Loomis). 18-decimal precision.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metals Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Precious Metal Physical Link",
+      "body": "Brinks Gold Token (BGT): metal type, storage (London), custodian on-chain. $2B total market value. Physical custody attributes linked to the digital token.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metal 1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Real Estate",
+      "body": "Global property tokenization with GPS metadata and on-chain attestation."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Global Portfolio",
+      "body": "10 properties: Bangkok, Berlin, Paris, Amsterdam, Dubai, Singapore, Tokyo, New York, Munich, Brussels. EUR/USD pricing, 0 decimals, all Active across jurisdictions.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Commercial View",
+      "body": "GBP, JPY, SGD portfolio: Manhattan Office Tower, London Warehouse, Tokyo Hotel, Dubai Marina, Riyadh Office. Full commercial real estate asset type coverage.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate Assets - Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Brussels Property",
+      "body": "Brussels Central Apartments (BCAPT): $250M, 500 tokens at $500K each. Property type, use, city, district code, area ID stored on-chain. EU residential tokenization.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Doha Asset Detail",
+      "body": "Doha Business Towers: GPS (25.286106, 51.534817), REN identifier, 100,000 m², 500 units, 2015 build. $100M in 1M tokens at $100. Embedded map view.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Asset Details.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Data Feed",
+      "body": "On-chain data feed creation for Doha Towers. Asset-scoped numeric (scalar) feed registers price updates and valuation changes via the built-in feed registry.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Create Data Feed.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Event Log",
+      "body": "On-chain audit trail: every minting, transfer, and compliance change permanently recorded with timestamps and sender addresses — immutable compliance evidence.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Events.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Mint Tokens",
+      "body": "Token minting: recipient from registered users, amount entry, no supply limit for DBT. Two-step confirmation (VALUES → CONFIRM) before on-chain execution.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Mint Tokens.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Mint Confirm",
+      "body": "Minting complete: Ada Admin selected, 5,000 DBT entered. Continue button activates on valid form — guides to blockchain execution confirmation step.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Mint Tokens Confirm.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate On-Chain Proof",
+      "body": "8 active verifications for Doha Towers: GPS, property class, physical specs, REN, base price, asset issuer, contract identity — all attested via ONCHAINID.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Verifications.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Compliance and Policy Templates",
+      "body": "Pre-built and custom regulatory frameworks for global asset issuance."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy Templates Global Library",
+      "body": "7 DALP Library frameworks: Japan FSA, MAS Singapore, MiCA EU, Reg CF, Reg D 506(b), Reg D 506(c), UK FCA. All Published and production-ready.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Templates.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy MAS Singapore Detail",
+      "body": "MAS Capital Markets: 4 controls — SMART identity, Country allowlist, Investor count, Time lock. Holding period restriction aligns with MAS digital asset regulations.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy MiCA EU Standard",
+      "body": "MiCA EU: 3 controls - SMART identity, Country allowlist, 8M EUR rolling annual supply limit. MiCA Article 23 enforced on-chain with 365-day rolling window.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Detail 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy Templates Custom Plus Library",
+      "body": "Org templates (Draft) alongside DALP Library (Published). Qatar Real Estate Token custom template with 5 controls — extensibility beyond the pre-built library.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - List.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy Template Create New",
+      "body": "New template: name, jurisdiction (Qatar), description — created instantly as Draft. Ready for custom compliance controls to be configured and published.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - Create From Scratch.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy Template Control Library",
+      "body": "12 available controls across 7 categories: Eligibility, Restrictions, Transfer controls, Issuance and supply, Time-based rules, Settlement and collateral.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Qatar Real Estate Token - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Expression Builder Simple Rule",
+      "body": "Visual boolean builder: Accredited investor AND KYC. Real-time validation, AND/OR operators, color-coded pills. Intuitive compliance rule construction for any team.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Expression Builder.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Investor Count Country Limits",
+      "body": "Qatar investor count: 1,000,000 max, no global cap. Per-country limits enable precise regulatory compliance without blanket restrictions across all jurisdictions.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Investor Count Config.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Control Audit",
+      "body": "Disabling a compliance control requires confirmation and is permanently logged. Every change traceable — critical for regulated issuers and compliance audit requirements.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Investor Count Disable Dialog.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Supply Cap Control Detail",
+      "body": "Supply cap enforces maximum token supply at minting, prevents exceeding configured limit, supports regulatory supply restrictions. Single-click Enable action.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Supply Cap Detail.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Supply Limit Config",
+      "body": "10M tokens per 30-day rolling window. Base price conversion for EUR-denominated limits, asset-level vs issuer-wide scoping. Granular time-windowed supply control.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Token Supply Limit Config.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Instrument Templates Library",
+      "body": "5 pre-built templates: Bond (Maturity Redemption, Fixed Yield), Deposit, Fund (Voting Power, AUM Fee), Precious Metal, StableCoin. Custom variants built on top.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Templates - List and Create.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Instrument Template Add Field",
+      "body": "Metadata schema editor: field name, label, description, type (string/number/enum), mutability (immutable/restricted-mutable), required toggle, default value.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Add Metadata Field.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Instrument Template Field Config",
+      "body": "City field: string type, restricted-mutable, optional. Field-level inspection via click-to-open panel. Template actions for publish, edit, and version management.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Metadata Field City Config.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Qatar Real Estate Schema",
+      "body": "6-field schema: city, latitude, longitude (restricted-mutable), propertyUse (immutable/enum), buildingYear, districtCode. Core classification locked; ops fields updatable.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Qatar Real Estate - Metadata Schema.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Identity and Verification",
+      "body": "On-chain identity infrastructure and KYC/AML verification management."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "On-Chain Identity User View",
+      "body": "Personal identity contract: QR code, Registered status, country (BE), 2 active verifications. AML verification issued by System Admin via ONCHAINID standard.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "User Management Registry",
+      "body": "11 registered participants: each with a blockchain wallet (EOA) and on-chain identity contract (ONCHAINID). User types: Investor and Trusted issuer.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/User.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Verification Topics Registry",
+      "body": "System topics (AML, Accredited investor, Asset classification) alongside custom topics (assetCoordinates, assetPhysicalDetails). 21–30 total verification topics.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Verification Topics.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "XVP Settlement",
+      "body": "Atomic cross-chain exchange vs payment settlement with HTLC security."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XVP Setup Asset Flows",
+      "body": "Step 1: Local flow from Quinn Walker to Emma Chen using Deutsche Bank Euro Deposit. Named participant selection with Enter manually fallback for direct address input.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XVP Setup Settlement Config",
+      "body": "Settlement name, April 1 expiry, auto-execute, Belgium jurisdiction. HTLC security: hashlock entry for cross-chain atomic execution. Enter secret alternative available.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XVP Setup Two-Leg Review",
+      "body": "Two-leg atomic trade: 100,000 DEED (Quinn → Emma, local) + 500 tokens (Emma → Hans, External Chain 1). All or nothing. Create settlement deploys on-chain.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 3.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XVP Setup HTLC Details",
+      "body": "Full HTLC confirmation: hashlock (0x75657d...923ce) displayed, secret masked. Settlement name, expiry, auto-execute confirmed before blockchain deployment.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 4.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XVP Details Pending State",
+      "body": "Settlement Pending: 0/1 approvals (Quinn Walker required). Hashlock visible, secret not yet revealed. Cross-chain responsibility warning shown. Awaiting counterparty.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Details 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XVP Details Multi-Party Approval",
+      "body": "0/2 approvals with 13-hour expiry warning. System Admin ↔ Asset Issuer swap Proof-of-Deposit tokens. Expiry urgency management built into the status view.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Details 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XVP API Documentation",
+      "body": "Light-mode REST API docs for XvP settlement endpoints. Full programmatic access to settlement creation, approval, execution — integrates with OMS and trading systems.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XvP API Light.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Settings and Administration",
+      "body": "API access, activity logging, addon modules, and white-label branding."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Settings API Keys",
+      "body": "Named API keys displayed once at creation. Copy-to-clipboard, sm_atk_ prefix format. Keys cannot be retrieved again — enterprise-grade API security model.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/API Keys.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Settings Actions Queue",
+      "body": "5 upcoming Claim yield actions for Sovereign Bond 2029: annual coupon payments 1–5 years out. Authorization-gated, Pending/Upcoming/Completed categorization.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Actions.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Activity Log Categorized Events",
+      "body": "Color-coded audit trail: Identity (blue), Access control (red), Assets (green), System (gray), Transfers (teal). Gasless transactions confirm permissioned blockchain.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Activity Log.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Activity Real-Time Feed",
+      "body": "Live activity: XvP creation, identity verification, compliance events, token transfers. Real gas costs and block numbers visible — confirms live blockchain operations.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Activity.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Settings Addon Modules",
+      "body": "12+ modular addons as smart contracts: Permit (gasless), Fixed Yield Schedule, Maturity Redemption, XvP, Transaction Fee Accounting. Enable and expand without redeployment.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Addons.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Settings White-Label Branding",
+      "body": "Full white-label: logos for light/dark mode, 6 semantic color tokens, live UI preview. Any institution can brand DALP as their own platform — no code changes.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Theme 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Settings Login Branding",
+      "body": "White-label extends to authentication: favicon (Apple touch, SVG formats), login page background, logo, and welcome messaging fully customizable per institution.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Theme 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Tokenized Deposit Asset",
+      "body": "Deutsche Bank Euro Deposit (DEED) asset detail. 8-tab interface. The institutional-grade deposit token used as denomination currency across bonds and XvP settlements.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Tokenize Deposit 1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Monitoring",
+      "body": "Enterprise-grade observability for API performance and blockchain health."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "API Monitoring Overview",
+      "body": "694 requests in 24h, 1.2% error rate (4xx: 1.0%, 5xx: 0.1%), 916ms avg response. Real-time traffic chart updated every 35 seconds. No third-party tooling required.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/API Monitoring - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "API Monitoring Request Log",
+      "body": "Per-request: caller identity, IP, headers, x-request-id for distributed tracing. SettleMint/2.1.7 version tracking. Cookie redaction. Full API observability built in.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/API Monitoring - Request Log.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Blockchain Monitoring",
+      "body": "Chain RPC (Healthy, Block #18,173, head 17s) and Indexer (0 blocks behind) in real time. 24-hour health history with Healthy/Degraded/Warning state tracking.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/Blockchain Monitoring.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Insights",
+      "body": "Real-time portfolio analytics across all managed assets and classes."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Insights Full Overview",
+      "body": "$142.6M across 64 assets: 7 types, 2 pending launches. Three views: by instrument value, supply count, and asset class distribution — all updated in real time.",
+      "image_path": "templates/dalp-screenshots/16 - Insights/Insights - Asset Overview.jpg"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

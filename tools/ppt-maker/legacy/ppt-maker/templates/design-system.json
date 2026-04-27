@@ -1,0 +1,126 @@
+{
+  "colors": {
+    "primary": "#0000FF",
+    "secondary": "#183060",
+    "accent": "#187848",
+    "accent_purple": "#8848C8",
+    "accent_orange": "#C05030",
+    "accent_gold": "#BCA820",
+    "background": "#FFFFFF",
+    "background_light": "#F7F7F7",
+    "card_bg": "#FAFAFA",
+    "text_primary": "#111111",
+    "text_secondary": "#787878",
+    "text_light": "#A0A0A0",
+    "heading": "#0000FF",
+    "heading_dark": "#183060",
+    "border": "#E0E0E0",
+    "divider": "#E0E0E0",
+    "white": "#FFFFFF",
+    "badge_bg": "#E0E0FF",
+    "badge_text": "#0000FF",
+    "blue_card_bg": "#0000FF",
+    "blue_card_text": "#FFFFFF",
+    "dark_card_bg": "#111111",
+    "dark_card_text": "#FFFFFF"
+  },
+  "status_colors": {
+    "success": "#187848",
+    "warning": "#C8B830",
+    "error": "#C05030"
+  },
+  "theme_accents": {
+    "accent1": "#0000FF",
+    "accent2": "#187848",
+    "accent3": "#8848C8",
+    "accent4": "#C05030",
+    "accent5": "#1E4868",
+    "accent6": "#BCA820",
+    "hyperlink": "#0000FF",
+    "followed_hyperlink": "#482068"
+  },
+  "typography": {
+    "font_family": "Figtree",
+    "sizes": {
+      "title": 30,
+      "stat_hero": 36,
+      "heading_1": 28,
+      "heading_2": 18,
+      "heading_3": 14,
+      "body": 12,
+      "caption": 11,
+      "footnote": 9,
+      "stat_label": 11
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "extrabold": 800
+    },
+    "levels": {
+      "L1": {"size": 30, "weight": "bold", "color": "#0000FF", "usage": "Slide titles"},
+      "L2": {"size": 18, "weight": "semibold", "color": "#111111", "usage": "Section headings, subtitles"},
+      "L3": {"size": 14, "weight": "bold", "color": "#111111", "usage": "Card titles, sub-sections"},
+      "L4": {"size": 12, "weight": "regular", "color": "#111111", "usage": "Body text, descriptions"},
+      "L5": {"size": 9, "weight": "regular", "color": "#787878", "usage": "Captions, footnotes, labels"},
+      "STAT": {"size": 36, "weight": "bold", "color": "#0000FF", "usage": "Hero numbers, KPIs"},
+      "STAT_LABEL": {"size": 11, "weight": "regular", "color": "#787878", "usage": "Stat descriptions"}
+    }
+  },
+  "slide_dimensions": {
+    "width_inches": 13.333,
+    "height_inches": 7.5,
+    "width_emu": 12192000,
+    "height_emu": 6858000,
+    "safe_area": {
+      "top_inches": 1.0,
+      "bottom_inches": 0.65,
+      "left_inches": 0.4,
+      "right_inches": 0.4
+    }
+  },
+  "content_zones": {
+    "header_height_inches": 1.0,
+    "footer_height_inches": 0.5,
+    "usable_height_inches": 5.4,
+    "usable_width_inches": 12.533,
+    "content_top_inches": 1.1,
+    "content_bottom_inches": 6.5,
+    "title_position": {
+      "left_inches": 0.4,
+      "top_inches": 0.389,
+      "width_inches": 10.4,
+      "height_inches": 0.5
+    },
+    "footer_left": {
+      "text": "SettleMint Confidential",
+      "size": 8,
+      "color": "#787878",
+      "left_inches": 0.4,
+      "top_inches": 6.85
+    }
+  },
+  "shapes": {
+    "rounded_corner_val": 1600,
+    "icon_size_standard_inches": 0.3,
+    "icon_size_grid_inches": 0.5,
+    "image_rounded_corners": true
+  },
+  "rules": {
+    "font": "Figtree — no exceptions",
+    "no_emoji": true,
+    "no_bullet_chars": "Never use bullet symbols. Use icons or plain dashes (—) for separators.",
+    "autofit": "All text shapes use normAutofit. Titles add fontScale=70000.",
+    "ghost_text": "Remove ALL inherited placeholders after add_slide(layout). No ghost text.",
+    "branded_slides": "Cover, Section Dividers, Closing use WHITE text on blue gradient. Do not overwrite background.",
+    "protected_areas": ["header (top ~1 inch)", "footer (bottom ~0.5 inch)", "slide number placeholder", "background images on branded slides", "SettleMint logo"]
+  },
+  "icon_library": {
+    "path": "templates/icon-library/png/blue/",
+    "count": 70,
+    "examples": ["shield-check", "zap", "globe", "layers", "lock"]
+  }
+}

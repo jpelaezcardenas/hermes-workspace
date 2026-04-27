@@ -1,0 +1,10 @@
+flowchart TD
+    classDef channel fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef service fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef exec fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef chain fill:#fff8e1,stroke:#f9a825,color:#1f2937,stroke-width:1.5px;
+
+    Channels[Channel Layer\nPortals · APIs · Ops Console]:::channel
+    Channels --> Business[Business Services\nAsset · Compliance · Identity · Servicing]:::service
+    Business --> Execution[Execution Layer\nOrchestration · Maker-Checker · Event Bus]:::exec
+    Execution --> Chain[Blockchain Layer\nEVM Smart Contracts · Token Standards]:::chain

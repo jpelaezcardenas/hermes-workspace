@@ -1,0 +1,28 @@
+graph LR
+    DESIGN[Asset Design] --> COMPLIANCE_CHECK[Compliance Setup]
+    COMPLIANCE_CHECK --> ISSUANCE[Primary Issuance]
+    ISSUANCE --> DISTRIBUTION[Distribution]
+    DISTRIBUTION --> TRADING[Secondary Trading]
+    TRADING --> SERVICING[Servicing Events]
+    SERVICING --> CORPORATE[Corporate Actions]
+    CORPORATE --> REDEMPTION[Redemption]
+
+    subgraph LIFECYCLE_EVENTS["Servicing Events"]
+        COUPON[Coupon Payments]
+        YIELD[Yield Distribution]
+        DIV[Dividend Processing]
+    end
+
+    SERVICING --> COUPON
+    SERVICING --> YIELD
+    SERVICING --> DIV
+
+    style DESIGN fill:#000099,color:#fff
+    style COMPLIANCE_CHECK fill:#037352,color:#fff
+    style ISSUANCE fill:#0000FF,color:#fff
+    style DISTRIBUTION fill:#000099,color:#fff
+    style TRADING fill:#037352,color:#fff
+    style SERVICING fill:#0000FF,color:#fff
+    style CORPORATE fill:#000099,color:#fff
+    style REDEMPTION fill:#037352,color:#fff
+    style LIFECYCLE_EVENTS fill:#f5f5f5,color:#333

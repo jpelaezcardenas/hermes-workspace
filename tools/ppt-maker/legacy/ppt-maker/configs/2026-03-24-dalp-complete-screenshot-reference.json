@@ -1,0 +1,1014 @@
+{
+  "project": "2026-03-24-dalp-complete-screenshot-reference",
+  "output": "output/2026-03-24-dalp-complete-screenshot-reference.pptx",
+  "description": "Complete DALP platform screenshot reference, all 160 screens with explanations, grouped by section.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Platform: Complete Screenshot Reference",
+      "subtitle": "All 160 platform screens with explanations"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Platform Access and Dashboard",
+      "item_1": "Asset Creation and Configuration",
+      "item_2": "Asset Classes",
+      "item_3": "Compliance and Identity",
+      "item_4": "Token Operations and Settlement",
+      "icon1": "icon-library/lucide/lock.svg",
+      "icon2": "icon-library/lucide/cpu.svg",
+      "icon3": "icon-library/lucide/layers.svg",
+      "icon4": "icon-library/lucide/shield-check.svg",
+      "icon5": "icon-library/lucide/trending-up.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Platform Access and Dashboard",
+      "subtitle": "Secure entry, role-based navigation, live command centre."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Secure Authentication",
+      "body": "DALP supports passwordless passkey login alongside email/password credentials. Access is role-gated from the first click, ensuring only authorised participants reach the platform.",
+      "image_path": "templates/dalp-screenshots/01 - Login/Login.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Dashboard Overview",
+      "body": "The main dashboard gives operators a live command centre: portfolio valuation, AUM tracking, pending action alerts, and a blockchain activity feed. The sidebar exposes all asset classes and compliance tools from one interface.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard: Identity and Verification Modules",
+      "body": "Scrolling down reveals the identity manager module with pending verification alerts, and the verification policy manager. Compliance is a first-class dashboard widget, not a hidden sub-menu.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Dashboard: Portfolio Summary",
+      "body": "Portfolio summary cards show real-time asset valuations, 7-day performance, and the number of active assets across the platform, giving operators an instant overview of the entire managed portfolio.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 3.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard: Asset Distribution Chart",
+      "body": "The dashboard donut chart visualises AUM distribution across asset types, with drill-down into individual asset categories. Useful for portfolio-level monitoring and investor reporting.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 4.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Dashboard: Global Distribution Map",
+      "body": "The global map view shows the geographic spread of platform activity and investor locations. Ideal for multi-jurisdiction operations, it provides a visual overview of where assets are held and traded.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard - Map and Statistics.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard: Map and Statistics Detail",
+      "body": "A deeper view of the geographic statistics panel, showing activity volumes and investor counts by region. Supports operational oversight across multiple jurisdictions from a single screen.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard - Map and Statistics 2.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Asset Creation and Configuration",
+      "subtitle": "Guided wizard, pricing, compliance, permissions before deploy."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Designer: Start",
+      "body": "The Asset Designer is the entry point for creating any tokenised instrument. Operators select the asset class and begin configuring parameters through a structured, step-by-step wizard.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Designer: Real Estate Info",
+      "body": "Step 3 of the wizard captures real-world asset information such as property details, location, and legal description. These metadata fields feed directly into the deployed smart contract.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 3 - Real Estate Info.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Instrument Details",
+      "body": "Instrument parameters such as ISIN, maturity, coupon rate, and denomination are configured here. Every field defined at this step is encoded into the smart contract with no separate developer configuration required.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 4 - Instrument Details.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Instrument Details Form",
+      "body": "The detailed form view for instrument parameters allows operators to configure all financial terms. The form validates inputs before allowing progression, preventing misconfigured issuances.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 4 - Instrument Details Form.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Pricing and Valuation Setup",
+      "body": "Pricing model, NAV methodology, and valuation frequency are configured at this step. The platform handles market-priced instruments and NAV-based assets with equal precision.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 5 - Pricing and Valuation.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Modules Selection",
+      "body": "Operators choose from a library of compliance modules at design time: investor count caps, supply limits, country blocklists and allowlists, transfer approvals, and time locks. Each module is independently configurable.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Asset Permissions Configuration",
+      "body": "Role-based access controls are configured per asset, defining who can mint, transfer, freeze, or manage the instrument. Permissions are enforced at the smart contract level.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 7 - Asset Permissions Config.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Permissions List",
+      "body": "The permissions list view shows all configured roles and their associated rights for this asset. Operators can review, add, or modify role assignments before deployment.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 7 - Asset Permissions List.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance: Country Allowlist",
+      "body": "The country allowlist compliance module restricts token holding and transfer to investors from specified jurisdictions. Supports domestic-only issuance requirements and cross-border distribution controls.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance Country Allowlist.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance: Expression Builder",
+      "body": "The expression builder allows operators to create custom compliance logic using boolean conditions. Complex rules such as investor must be accredited AND in an approved jurisdiction can be encoded without writing code.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance Expression.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance: Identity Module",
+      "body": "The identity compliance module links token transfers to on-chain identity verification. Only holders with verified identities matching the configured criteria can receive or hold the token.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance Identity.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Overview",
+      "body": "The compliance overview within the Asset Designer shows all active compliance modules configured for this asset, their parameters, and their enforcement status. Gives issuers a clear pre-deployment compliance picture.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Compliance.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Permissions Panel",
+      "body": "The permissions panel within the Asset Designer provides a consolidated view of all role-based permissions configured for the asset, covering issuance, transfer, management, and administrative roles.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Permissions.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Review and Deploy: Step 1",
+      "body": "Before deployment, the wizard presents a comprehensive review summary covering all configured parameters, compliance modules, and permissions. Operators verify everything is correct before committing to the blockchain.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Review and Deploy 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Review and Deploy: Step 2",
+      "body": "The final deployment confirmation screen. Once the operator confirms, the smart contract is deployed on-chain in a single transaction. The entire configured compliance and permission framework goes live at this moment.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Review and Deploy 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Supply Limit Configuration",
+      "body": "The supply limit compliance module sets a hard cap on the total number of tokens that can be minted for this asset. This cap is enforced at the smart contract level and cannot be exceeded.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer Supply Limit.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "My Assets",
+      "body": "The My Assets view lists all tokenised instruments the operator has access to, with status indicators, asset type, and quick-access actions. The starting point for day-to-day asset management.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/My Assets.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Asset Insights",
+      "body": "Per-asset analytics showing price history, trading volume, holder distribution, and event timeline. Operators and investors can track the performance and activity of individual tokenised instruments.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Insights.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Portfolio Insights",
+      "body": "Portfolio-level analytics aggregating performance, distribution, and activity data across all managed assets. Provides the macro view needed for reporting to senior management or regulators.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Portfolio Insights.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Portfolio Insights: Detail View",
+      "body": "A deeper cut of portfolio analytics, with drill-down into individual asset performance, holder counts, and recent corporate actions. Supports investor reporting and internal portfolio review.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Portfolio Insights 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Design Wizard: Step 1",
+      "body": "The bond-specific design wizard walks issuers through the complete process of configuring a fixed income token. Step 1 captures the high-level bond parameters and instrument classification.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond Design Wizard: Step 2",
+      "body": "Step 2 of the bond wizard covers coupon structure configuration: rate type, payment frequency, day count convention, and first coupon date.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Design Wizard: Step 3",
+      "body": "Step 3 covers the bond settlement and clearing parameters, including settlement currency, clearing arrangement, and denomination structure.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond Design Wizard: Step 4",
+      "body": "Step 4 captures investor eligibility requirements for this specific bond issuance, including accreditation status, jurisdiction restrictions, and minimum investment thresholds.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Design Wizard: Step 5",
+      "body": "Step 5 is the final review before bond deployment: a complete summary of all configured parameters for the issuer approval before the instrument is launched on-chain.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Design Bond 5.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Asset Classes",
+      "subtitle": "Bonds, equity, funds, deposits, stablecoins, metals, real estate."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bonds Listing",
+      "body": "The bonds listing view shows all active bond instruments on the platform, with status, maturity, coupon rate, and outstanding balance. Operators manage multiple bond programmes from this unified interface.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond Detail: Overview",
+      "body": "The bond detail screen shows the full instrument profile: ISIN, maturity, coupon schedule, total supply, current holders, and outstanding balance. The starting point for any bond lifecycle management action.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Detail: Coupon and Events",
+      "body": "The coupon and events tab shows the complete schedule of income events, past and upcoming, including coupon payments, ex-dates, and corporate actions. All events are on-chain and auditable.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond Detail: Compliance Status",
+      "body": "The compliance tab of the bond detail shows the current enforcement status of all configured compliance modules. Operators can see at a glance whether any compliance conditions are at risk.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 3.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Detail: Activity Log",
+      "body": "The activity tab logs every action taken on this bond instrument, including minting events, transfers, compliance changes, and administrative actions, providing a complete tamper-proof audit trail.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Detail 4.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Equity Listing",
+      "body": "The equity listing view shows all tokenised equity instruments on the platform, including share class, total supply, market cap, and holder count. Supports multiple concurrent equity programmes.",
+      "image_path": "templates/dalp-screenshots/05 - Equity/Equity Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Equity Detail",
+      "body": "The equity instrument detail view shows cap table data, voting rights configuration, dividend history, and current holder distribution. Provides the full picture for share registry management.",
+      "image_path": "templates/dalp-screenshots/05 - Equity/Equity Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Funds Listing",
+      "body": "The funds listing view shows all tokenised fund instruments managed on the platform, including fund type, NAV, AUM, and investor count. Supports open-ended and closed-ended fund structures.",
+      "image_path": "templates/dalp-screenshots/06 - Funds/Funds Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Fund Detail: Overview",
+      "body": "The fund detail screen shows NAV history, investor count, subscription and redemption status, and compliance configuration. Provides operators and fund administrators with a complete operational view.",
+      "image_path": "templates/dalp-screenshots/06 - Funds/Fund Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Fund Detail: Investors",
+      "body": "A deeper view into the fund investor registry: holder list, subscription dates, holding amounts, and KYC/AML status. Supports investor reporting and regulatory disclosure requirements.",
+      "image_path": "templates/dalp-screenshots/06 - Funds/Fund Detail 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Deposits Listing",
+      "body": "Tokenised deposits are listed here with bank identifier, deposit type, term, interest rate, and current balance. DALP handles term deposits and demand deposits as distinct instrument types.",
+      "image_path": "templates/dalp-screenshots/07 - Deposits/Deposits Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Stablecoins Overview",
+      "body": "The stablecoins view shows all on-platform stablecoin instruments: peg currency, reserve status, total supply, and compliance configuration. Supports fiat-backed, commodity-backed, and algorithmic structures.",
+      "image_path": "templates/dalp-screenshots/08 - Stablecoins/Stablecoins.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Stablecoin Detail",
+      "body": "Stablecoin instrument detail: reserve composition, minting and redemption activity, holder distribution, and compliance module status. Full lifecycle visibility for stablecoin operators.",
+      "image_path": "templates/dalp-screenshots/08 - Stablecoins/Stablecoin Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Precious Metals Listing",
+      "body": "Tokenised precious metals programmes are listed here with vault identifier, metal type, purity, and current backing ratio. Each token represents a defined quantity of physical metal in custody.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metals Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Precious Metal Detail",
+      "body": "The precious metal asset detail shows the specific metal, custody arrangement, redemption terms, and holder activity. Links the on-chain token to the physical asset record.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metal 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate Listing",
+      "body": "Tokenised real estate assets listed with property type, location, valuation, and token supply. Supports fractional ownership programmes across multiple property types and geographies.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate Assets View",
+      "body": "An alternative listing view for real estate assets, showing property thumbnails, valuations, and investor counts. Useful for investor-facing portals and internal portfolio management.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate Assets - Listing.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate: Programme Overview",
+      "body": "Overview screen for a real estate tokenisation programme, showing property details, token economics, and current investor activity.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate: Asset Details",
+      "body": "Detailed asset profile for the Doha Business Towers tokenisation: property specifications, valuation methodology, token supply breakdown, and compliance status.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Asset Details.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate: Data Feed Setup",
+      "body": "Configuring a data feed for the real estate asset, linking external property valuation or rental income data to the on-chain token. Enables automated NAV updates from trusted data sources.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Create Data Feed.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate: Events",
+      "body": "The events tab logs all lifecycle events for the real estate asset, including minting, transfers, income distributions, and compliance actions. Full traceability for property token operations.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Events.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate: Mint Tokens",
+      "body": "Initiating a token minting operation for the real estate asset. The operator specifies the amount and recipient, and the minting workflow enforces configured approval requirements.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Mint Tokens.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Real Estate: Mint Confirmation",
+      "body": "The minting confirmation step for the real estate asset. Operators review all parameters before the tokens are minted on-chain. Once confirmed, the transaction is irreversible and fully recorded.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Mint Tokens Confirm.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real Estate: Verifications",
+      "body": "Investor verification status for the real estate token, showing KYC/AML status, accreditation, jurisdiction eligibility, and any pending verification actions required.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/Real Estate - Doha Business Towers - Verifications.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Compliance and Identity",
+      "subtitle": "Policy templates, expression builder, on-chain identity."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Policy Templates",
+      "body": "Reusable compliance policy templates allow operators to define compliance rules once and apply them across multiple assets. This ensures consistency and reduces configuration effort for new issuances.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Templates.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance Policy: Detail 1",
+      "body": "A detailed compliance policy view showing all configured modules, their parameters, and current enforcement status. Operators can review and modify policy settings without redeploying the asset.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Compliance Policy: Detail 2",
+      "body": "The second detail tab shows the policy usage: which assets are currently using this template, and any overrides applied at the asset level.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Compliance Policy Detail 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Instrument Templates: List and Create",
+      "body": "Instrument templates define reusable asset configurations. Standard parameter sets that issuers apply to new assets reduce time-to-market for repeat issuance programmes.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Templates - List and Create.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Instrument Template: Add Metadata Field",
+      "body": "Adding a custom metadata field to an instrument template. Operators extend the standard data model with asset-specific attributes such as property address for real estate or vault reference for precious metals.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Add Metadata Field.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Instrument Template: Metadata Field Config",
+      "body": "Detailed configuration for a custom metadata field: type, validation rules, display label, and whether the field is required or optional. Supports rich data models without code changes.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Metadata Field City Config.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Instrument Template: Qatar Real Estate Schema",
+      "body": "The full metadata schema for the Qatar Real Estate instrument template, showing all configured fields and their types. Demonstrates how DALP supports jurisdiction-specific data requirements.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Instrument Template - Qatar Real Estate - Metadata Schema.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy Templates: List",
+      "body": "All configured compliance policy templates are listed here with name, asset class, module count, and usage status. Operators manage the policy library from this view.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - List.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy Templates: Create From Scratch",
+      "body": "Creating a new compliance policy template from scratch. Operators name the policy, select the target asset class, and begin adding compliance modules. Templates are versioned and reusable.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Templates - Create From Scratch.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy Template: Expression Builder",
+      "body": "The expression builder allows operators to define complex multi-condition compliance rules without writing code. Boolean logic conditions combine multiple compliance attributes into custom enforcement rules.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Expression Builder.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy Template: Qatar Real Estate Overview",
+      "body": "The overview screen for the Qatar Real Estate compliance policy template, showing all configured modules, their status, and the assets currently using this template.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Qatar Real Estate Token - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy Template: Investor Count Configuration",
+      "body": "Detailed configuration for the investor count compliance module within a policy template, setting the maximum number of unique holders allowed for assets using this policy.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Investor Count Config.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy Template: Investor Count Disable Dialog",
+      "body": "The confirmation dialog for disabling the investor count compliance module on an active policy. Operators must explicitly confirm this change, which affects all assets using the template.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Investor Count Disable Dialog.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Policy Template: Supply Cap Detail",
+      "body": "The supply cap compliance module detail, showing the configured maximum token supply, current utilisation, and the enforcement behaviour when the cap is reached.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Supply Cap Detail.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Policy Template: Token Supply Limit Config",
+      "body": "Configuration screen for the token supply limit module: setting the hard cap, configuring the overflow behaviour, and linking the limit to the asset issuance workflow.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/Policy Template - Token Supply Limit Config.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "On-Chain Identity",
+      "body": "DALP on-chain identity stores verified investor credentials on the blockchain. Identity claims including KYC status, accreditation, and jurisdiction are attached to wallet addresses and checked automatically during token transfers.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "User Management",
+      "body": "The user management screen shows all platform users, their roles, and their identity verification status. Operators manage access rights and compliance status for every participant from this view.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/User.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Verification Topics",
+      "body": "Verification topics define the specific identity claims required for platform participation, such as KYC level, accreditation status, or professional investor certification. Each topic maps to an on-chain claim type.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Verification Topics.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Token Operations and Settlement",
+      "subtitle": "Minting, transfers, freeze, XvP settlement, monitoring."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Settlement: Setup Step 1",
+      "body": "Initiating an XvP atomic settlement: the first party specifies the asset leg, which token, how much, and from which wallet.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Settlement: Setup Step 2",
+      "body": "Step 2 captures the payment leg details: settlement currency, amount, and the counterparty wallet address. Both legs are validated before the settlement flow proceeds.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Settlement: Setup Step 3",
+      "body": "Step 3 is the pre-execution review: both parties see the full settlement terms before committing. Either party can reject at this stage, cancelling the flow without any on-chain effect.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Settlement: Setup Step 4",
+      "body": "The final confirmation step for XvP settlement. Once both parties confirm, the atomic settlement executes. Both legs succeed or neither does, providing immediate on-chain finality.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Setup 4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Settlement: Detail Overview",
+      "body": "Post-settlement details for a completed XvP transaction: both legs, timestamps, wallet addresses, and on-chain transaction hashes. Provides the complete evidence record for the settlement.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Details 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Settlement: Audit Trail",
+      "body": "The audit tab of the XvP settlement detail shows the full event log: initiation, confirmations, validation checks, and final execution, with timestamps and participant identifiers.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XVP Details 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP API Interface",
+      "body": "The XvP API light view shows the programmatic interface for initiating settlements from external systems. Supports integration with trading platforms, OMS, and treasury systems via REST API.",
+      "image_path": "templates/dalp-screenshots/13 - XVP/XvP API Light.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "API Key Management",
+      "body": "Operators manage API credentials for platform integrations from this screen. Keys are scoped by permission level, expiry, and allowed IP ranges, following principle of least privilege for all integrations.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/API Keys.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Actions Panel",
+      "body": "The actions panel shows all pending and recent governance actions across the platform, grouped by type, status, and assigned approver. Central hub for maker-checker workflow management.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Actions.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Activity Log",
+      "body": "The full platform activity log, filterable by event type, asset, user, and time range. Provides compliance teams and auditors with a searchable, exportable record of all platform events.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Activity Log.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Activity Feed",
+      "body": "The real-time activity feed shows a chronological stream of platform events as they happen: identity verifications, token events, compliance changes, and settlement confirmations.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Activity.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Add-ons Marketplace",
+      "body": "The add-ons screen shows available platform extensions: XvP settlement, yield distribution, and other capability modules. Each add-on is independently configurable and deployable per platform instance.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Addons.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Platform Theming: Option 1",
+      "body": "DALP supports white-label theming: operators customise the platform visual identity including logo, colours, and typography to match their brand. Shown here: the default SettleMint theme configuration.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Theme 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Platform Theming: Option 2",
+      "body": "An alternative theme configuration showing how the platform appearance can be adjusted for different operator brands. Full white-labelling is supported for institutions deploying DALP under their own identity.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Theme 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Tokenise Deposit Workflow",
+      "body": "The deposit tokenisation workflow within settings: configuring how bank deposits are represented as tokens, including the deposit type, term, interest structure, and eligible holder criteria.",
+      "image_path": "templates/dalp-screenshots/14 - Settings and Admin/Tokenize Deposit 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "API Monitoring: Overview",
+      "body": "Real-time API performance monitoring: request volume, latency, error rates, and endpoint-level statistics. Operators can identify integration issues before they affect platform users.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/API Monitoring - Overview.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "API Monitoring: Request Log",
+      "body": "The detailed API request log shows individual API calls: endpoint, timestamp, response code, latency, and calling system. Essential for debugging integrations and demonstrating API reliability.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/API Monitoring - Request Log.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Blockchain Monitoring",
+      "body": "On-chain monitoring shows the health and performance of the underlying blockchain network: block time, gas usage, transaction throughput, and node status. Provides operational visibility into the infrastructure layer.",
+      "image_path": "templates/dalp-screenshots/15 - Monitoring/Blockchain Monitoring.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Insights: Asset Overview",
+      "body": "The platform-wide insights view aggregates analytics across all assets: total AUM, transaction volume, active holders, and compliance events. Supports management reporting and regulatory submissions.",
+      "image_path": "templates/dalp-screenshots/16 - Insights/Insights - Asset Overview.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Action Queue Overview",
+      "body": "The actions queue showing all pending governance actions awaiting approval. Each action type is grouped and colour-coded for quick triage by operators.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Actions/0.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Action Approval: Step 1",
+      "body": "An action detail view showing the full context of a pending approval: initiator, parameters, timestamp, and required approvers. Operators review before approving or rejecting.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Actions/1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Action Approval: Step 2",
+      "body": "Step 2 of the action approval workflow. The approver reviews the action parameters and business justification before committing their approval.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Actions/2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Action Approval: Step 3",
+      "body": "Step 3 of the action flow. The second approver in a two-step maker-checker process reviews the action. Both approvals are required before execution.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Actions/3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Action Approval: Step 4",
+      "body": "The completed action record showing that all required approvals were received and the action was executed. The full approval chain is preserved as an immutable audit record.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Actions/4.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Recent Activities Feed",
+      "body": "The recent activities view shows a chronological log of all platform events: token operations, compliance changes, identity verifications, and settlement confirmations. Each entry links to the full event detail.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Activity/Recent Activities.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Add-on Overview",
+      "body": "The XvP Exchange add-on entry screen, showing the add-on status, configuration options, and recent settlement statistics. Operators enable and configure atomic settlement from this view.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/0 XvP .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Flow: Step 1",
+      "body": "Initiating an XvP settlement flow: the seller specifies the asset to be delivered, the quantity, and the receiving wallet. This locks the asset leg pending counterparty confirmation.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Asset flow step 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Flow: Step 2",
+      "body": "The buyer confirms the payment leg: amount, currency, and the asset they expect to receive. Both legs are now specified and the system validates eligibility and balances.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Asset flow step 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Flow: Step 3",
+      "body": "Pre-execution validation. Both parties see the matched settlement terms. Any discrepancy at this stage prevents execution, protecting both parties from errors.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Asset flow step 3.1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Settlement Final",
+      "body": "The completed XvP settlement confirmation. Both legs have been atomically executed: the asset moved to the buyer and the payment to the seller simultaneously. No partial settlement is possible.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Asset flow step final .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "XvP Created Flow",
+      "body": "A completed settlement flow record showing the full transaction history: initiation, both party confirmations, validation, and atomic execution with on-chain transaction references.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Created Flow.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "XvP Created Flow 2",
+      "body": "A second example of a completed XvP settlement flow, demonstrating the platform ability to handle concurrent settlement operations across multiple asset pairs simultaneously.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Exchange XvP/Created Flow2 .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Yield: Income Distribution Dashboard",
+      "body": "The yield add-on income dashboard shows scheduled distributions, pending payments, and historical yield events for all income-generating assets. Operators manage coupon payments and dividend distributions from this view.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Addons/Yield/Income yield.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Forced Transfer: Step 1",
+      "body": "Initiating a forced transfer: the operator selects the source wallet and the token to be transferred. Forced transfers are restricted to authorised roles and require the highest level of governance approval.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Forced Transfer: Step 2",
+      "body": "Step 2: specifying the destination wallet and transfer amount. The system validates that the destination is eligible to hold the token under its compliance configuration.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Forced Transfer: Step 3",
+      "body": "Step 3: providing the legal or regulatory justification for the forced transfer. This documentation is recorded on-chain alongside the transfer event.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Forced Transfer: Step 4",
+      "body": "Step 4: the first approver reviews all forced transfer parameters and the justification. Their approval is cryptographically signed and permanently recorded.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Forced Transfer: Step 5",
+      "body": "Step 5: the second approver performs an independent review of the forced transfer. Both approvals are required as neither party can execute alone.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/5.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Forced Transfer: Step 6",
+      "body": "Step 6: execution confirmation. The forced transfer has been approved and executed on-chain. The complete approval chain, justification, and transaction record are preserved as immutable evidence.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Forced Transfer/6.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Freeze: Step 0",
+      "body": "Initiating a token freeze: the operator selects the wallet holding and the token to freeze. Freeze actions are triggered by AML alerts, regulatory holds, or court orders.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Freeze/step 0.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Freeze: Step 1",
+      "body": "Step 1 of the freeze workflow: the operator provides the reason for the freeze and any supporting reference such as a case number or regulatory instruction. This context is recorded on-chain.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Freeze/step 1.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Freeze: Step 2",
+      "body": "Step 2: the freeze parameters are reviewed before submission for approval. The system shows the current holder balance and the compliance implications of the freeze.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Freeze/step 2.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Freeze: Step 3",
+      "body": "Step 3: the freeze action enters the approval queue. An authorised approver reviews the request, the documented justification, and confirms the freeze.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Freeze/step 3.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Freeze: Step 4",
+      "body": "Step 4: freeze execution confirmed. The token holding is now frozen, visible to the holder but non-transferable. The holder and any linked reporting systems are notified.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Freeze/step 4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Minting: Step 1",
+      "body": "Initiating token minting: the operator specifies the asset, the amount to mint, and the recipient wallet. Minting is subject to the asset supply cap and configured approval requirements.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Mint Tokens/step 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Minting: Step 2",
+      "body": "Step 2 of the minting workflow: reviewing the minting parameters including amount, recipient eligibility check, and remaining supply headroom, before submitting for approval.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Mint Tokens/step 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Minting: Step 3",
+      "body": "Step 3: the minting request enters the approval queue. The maker-checker flow ensures no single operator can mint unilaterally in environments requiring dual control.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Mint Tokens/step 3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Minting: Step 4",
+      "body": "Step 4: minting execution confirmed. The tokens have been issued to the recipient wallet. The event is permanently recorded on-chain with the full approval chain preserved.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Mint Tokens/step 4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Transfer: Step 1",
+      "body": "Initiating a token transfer: selecting the source wallet, destination wallet, and transfer amount. The platform immediately checks the destination eligibility under the asset compliance configuration.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Transfer: Step 2",
+      "body": "Step 2: compliance pre-check results are displayed, including jurisdiction eligibility, identity verification status, investor count headroom, and any active restrictions on the destination wallet.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Transfer: Step 3",
+      "body": "Step 3: if a transfer approval module is configured, the transfer enters the approval queue at this step. The request shows all compliance check results to the approver.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Transfer: Step 4",
+      "body": "Step 4: the approver reviews the full transfer context including from wallet, to wallet, amount, compliance status, and any override justification, before approving.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Transfer: Step 5",
+      "body": "Step 5: for assets with two-step approval, the second approver independently reviews the transfer. Both approvals are recorded cryptographically.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/5.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Transfer: Step 6",
+      "body": "Step 6: transfer execution confirmation. The tokens have moved from source to destination. Compliance checks are re-validated at execution time to prevent race conditions.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/6.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Transfer: Step 7",
+      "body": "Step 7: the transfer completion record, showing the on-chain transaction hash, timestamps, wallet addresses, and full approval chain. The definitive audit record for this transfer.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Transfer Tokens/7.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Unfreeze: Step 0",
+      "body": "Initiating an unfreeze: the operator selects the frozen wallet and token. Unfreeze can only be initiated by authorised roles and requires documented justification matching the governance standard of the original freeze.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Unfreeze/step 0.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Unfreeze: Step 1",
+      "body": "Step 1: the operator provides the reason for unfreezing and any supporting reference such as regulatory clearance or court order. Recorded on-chain alongside the freeze record.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Unfreeze/Step 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Unfreeze: Step 2",
+      "body": "Step 2: the unfreeze parameters are reviewed before submission. The system shows the freeze history and the original freeze justification for context.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Unfreeze/Step 2.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Token Unfreeze: Step 3",
+      "body": "Step 3: the unfreeze request enters the approval queue. An authorised approver reviews the request against the original freeze context and the provided clearance justification.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Unfreeze/Step 3.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Token Unfreeze: Step 4",
+      "body": "Step 4: unfreeze execution confirmed. The token holding is now active again. The complete freeze and unfreeze lifecycle with all approvals and justifications is preserved as an immutable audit trail.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/0. Asset Manager/Unfreeze/Step 4.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond Tokenisation: Start",
+      "body": "The opening screen of the bond tokenisation wizard. Operators are presented with a structured flow overview before beginning configuration, ensuring all required information is prepared in advance.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/01 Step Bond Tokenisation.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Instrument Selection",
+      "body": "Step 2: selecting the instrument type. The wizard presents the available fixed income sub-types including standard bond, green bond, sukuk, and convertible note, each with a pre-configured parameter template.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/02 Step Bond Choosing Instrument .jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Information Entry",
+      "body": "Step 3: entering the bond identifying information including name, ISIN, issuer name, and governing law. This data forms the bond digital identity on the platform.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/03 Step Bond Information.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Instrument Details",
+      "body": "Step 4: configuring the core financial parameters including face value, denomination, maturity date, coupon rate, coupon frequency, and day count convention.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/04 Step Instrument Details .jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Pricing and Valuation",
+      "body": "Step 5: setting the pricing model and NAV methodology for the bond. Operators configure the pricing source, valuation frequency, and the initial issuance price.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/05 Step Bond pricing and valuation .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Compliance Modules",
+      "body": "Step 6: selecting compliance modules for this bond. Each module adds an enforceable constraint to the token. Operators choose exactly the restrictions required for this specific issuance.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/06 Step Complaince Modules.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Supply Cap",
+      "body": "Step 7: configuring the supply cap, which is the maximum number of bond tokens that can be minted. This represents the total issuance size and is enforced as a hard constraint on the smart contract.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/07 Step Supply Cap .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Collateral Requirement",
+      "body": "Step 8: defining collateral requirements for the bond issuance. Operators specify the collateral type, minimum ratio, and monitoring parameters for collateral-backed instruments.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/08 Step Colleteral Requirement.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Time Lock",
+      "body": "Step 9: configuring time-based restrictions including lock-up periods, transfer embargo windows, or holding period requirements. Time locks are enforced automatically at the smart contract level.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/09 Step Time Lock .jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Block Addresses",
+      "body": "Step 10: entering wallet addresses that should be blocked from holding or transacting this bond. Used for sanctions enforcement and known-bad-actor exclusions.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/10 Step Block Addresses.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Transfer Approval",
+      "body": "Step 11: configuring transfer approval requirements, including whether all secondary transfers require explicit approval and how many approvers are needed. Supports T+2 settlement models with manual oversight.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/11 Step Transfer Approval.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Country Blocklist",
+      "body": "Step 12: selecting countries whose residents are blocked from holding this bond. Supports sanctions compliance and jurisdiction-restricted distribution for cross-border issuances.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/12 Step Country Blocklist.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Identity Blocklist",
+      "body": "Step 13: blocking specific on-chain identity credentials from eligibility. Complements the country blocklist with individual-level exclusions based on verified identity attributes.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/13 Step Identity Blocklist.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Investor Count Cap",
+      "body": "Step 14: setting the maximum number of unique investors allowed to hold this bond. Enforces private placement limits such as the 500-investor rule for Reg D or equivalent exemptions.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/14 Step Investor count.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Identity Allowlist",
+      "body": "Step 15: defining the identity allowlist. Only holders with specific verified credentials can receive this bond. Supports accredited investor requirements and professional investor restrictions.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/15 Step Identity allowlist.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Token Supply Limit",
+      "body": "Step 16: configuring the hard token supply limit, a secondary cap that prevents the total token count from exceeding the configured maximum regardless of other issuance actions.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/16 Step Token Supply Limit.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Smart Identity Verification",
+      "body": "Step 17: configuring smart identity verification, which performs automatic eligibility checks against the on-chain identity registry at the time of every transfer. No manual KYC check required per transfer.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/17 Step Smart Identity Verification.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Country Allowlist",
+      "body": "Step 18: specifying allowed countries. Only investors from listed jurisdictions can hold or receive this bond. Works in conjunction with the country blocklist for precise jurisdiction control.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/18 Step Country allowlist.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Bond: Asset Permissions",
+      "body": "Step 19: final permissions configuration, assigning specific platform roles to the minting, transfer, freeze, and management functions of this bond. Locks down who can perform each action.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/19 Step Asset Permissions.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bond: Review and Deploy",
+      "body": "Step 20: the final review screen. All 19 configuration steps are summarised for operator sign-off. Once confirmed, the bond smart contract is deployed on-chain, fully configured and live.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/01. Fixed Income/Bond Tokenisation/20 Step Review and Deploy.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Equity Tokenisation: Start",
+      "body": "Opening the equity tokenisation wizard. The wizard supports tokenising ordinary shares, preference shares, and convertible instruments through the same structured configuration flow.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/01 Step.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Equity: Step 2",
+      "body": "Step 2: configuring the equity instrument identifying details including company name, share class, ISIN, and governing law. These fields define the token legal identity.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/02 Step.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Equity: Step 3",
+      "body": "Step 3: entering equity-specific parameters including authorised share count, voting rights configuration, and dividend policy. These settings encode the share economic and governance rights.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/03 Step .jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Equity: Step 4",
+      "body": "Step 4: configuring distribution restrictions including transfer restrictions, lock-up periods, and pre-emption rights. Protects the cap table integrity for controlled share issuances.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/04 Step.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Equity: Pricing Configuration",
+      "body": "Step 5: configuring the equity pricing model including initial issuance price, valuation methodology, and reference data source. Supports mark-to-market and book-value pricing models.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/05 Step Tokenised Equity Pricing .jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Equity: Compliance Modules",
+      "body": "Step 6: selecting compliance modules for the equity token. Typical modules include accredited investor restrictions, transfer approval, and investor count caps for private placements.",
+      "image_path": "templates/dalp-screenshots/new-2026-03-24/Asset Management/1. Asset Designer/02. Flexible Income/Equity/06 Step Tokenised Equtiy Complaince Modules.jpg"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

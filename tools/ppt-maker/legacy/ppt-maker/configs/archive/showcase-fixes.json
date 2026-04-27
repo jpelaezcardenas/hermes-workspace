@@ -1,0 +1,46 @@
+{
+  "project": "showcase-fixes",
+  "output": "output/showcase-fixes.pptx",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Tokenized Deposits",
+      "subtitle": "End-to-end lifecycle management, compliance built in"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Regulatory Framework",
+      "subtitle": "Compliance requirements and regulatory landscape"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Why It Matters",
+      "item_0": "Reduced Risk\nDvP atomicity ensures delivery and payment happen simultaneously, eliminating the settlement lag that creates counterparty exposure in traditional rails.",
+      "item_1": "Programmable Money\nSmart contract controls enable conditional release, scheduled payments, and automated compliance checks without manual intervention at each step.",
+      "item_2": "Cross-Border Efficiency\nInstant bilateral settlement between banks and global counterparties replaces multi-day SWIFT chains and correspondent bank queues.",
+      "item_3": "24/7 Settlement\nTokenized deposits settle on-chain at any hour, eliminating cut-off times and end-of-day batch processing that delay corporate treasury cycles."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Platform Benefits",
+      "col1": "Speed to Market\nPre-built smart contract templates and configurable workflows reduce deployment time from months to weeks. The platform handles regulatory reporting automatically, covering MiFID II, MiCA, and local frameworks. Banks can launch tokenized deposit programs with production-grade infrastructure from day one, removing the need for lengthy custom development cycles that traditionally delay go-live dates.",
+      "col2": "Operational Control\nReal-time dashboards provide full visibility into asset lifecycle states across issuance, transfers, and redemptions. Built-in audit trails enable compliance without manual intervention. Operations teams gain granular control over token supply, holder management, and settlement parameters while maintaining the transparency regulators expect from licensed institutions."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Regulatory Landscape",
+      "body": "Japan has one of Asia-Pacific's most mature digital-asset regulatory stacks. The FSA's layered framework gives licensed banks a clear path to issue tokenized deposits under existing banking rules.",
+      "table_data": [
+        ["Regulation", "Regulator", "Relevance to Tokenized Deposits"],
+        ["Payment Services Act", "FSA", "Governs fund transfers, e-money, and prepaid instruments - baseline for deposit tokens"],
+        ["Stablecoin Act 2022", "FSA", "Establishes electronic payment instrument rules; banks exempt as deposit issuers"],
+        ["FIEA (Financial Instruments)", "FSA / JFSA", "Covers security token offerings; relevant for DvP and settlement interoperability"],
+        ["Banking Act", "FSA", "Licensed banks retain deposit primacy; tokenized deposits inherit full protections"],
+        ["Act on Trust Business", "FSA", "Enables trust structures for digital asset custody and management"]
+      ]
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

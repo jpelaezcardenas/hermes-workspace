@@ -1,0 +1,128 @@
+{
+  "version": "1.0.0",
+  "description": "PPTX Builder Diagramming Engine — Template Index",
+  "engines": {
+    "mermaid": {
+      "version": "11.x",
+      "cli": "mmdc / npx @mermaid-js/mermaid-cli",
+      "output_formats": ["svg", "png"],
+      "config": "mermaid-config.json",
+      "png_strategy": "direct mmdc png at scale 3 (~216 DPI effective)"
+    },
+    "plantuml": {
+      "version": "any",
+      "cli": "plantuml / java -jar plantuml.jar",
+      "output_formats": ["svg", "png"],
+      "note": "Requires Java runtime or plantuml CLI",
+      "png_strategy": "direct PlantUML png at 300 DPI"
+    }
+  },
+  "ppt_embedding": {
+    "svg_as_source_of_truth": true,
+    "native_svg_embed_reliable": false,
+    "embed_format": "png"
+  },
+  "brand_colors": {
+    "primary": "#0000FF",
+    "primary_light": "#E8E8FF",
+    "text_dark": "#111111",
+    "text_gray": "#787878",
+    "bg_light": "#F7F7F7",
+    "green": "#187848",
+    "green_light": "#E8F5E8",
+    "purple": "#8848C8",
+    "purple_light": "#F0E8F8",
+    "orange": "#C05030",
+    "orange_light": "#FFF0E8",
+    "steel": "#1E4868",
+    "steel_light": "#E8F0F8",
+    "yellow": "#BCA820",
+    "yellow_light": "#F8F5E0"
+  },
+  "categories": {
+    "architecture": {
+      "description": "System architecture and layer diagrams",
+      "templates": ["platform_architecture", "network_topology"]
+    },
+    "flow": {
+      "description": "Process and data flow diagrams",
+      "templates": ["asset_lifecycle", "token_issuance_flow"]
+    },
+    "sequence": {
+      "description": "Interaction sequence diagrams",
+      "templates": ["compliance_sequence"]
+    },
+    "gantt": {
+      "description": "Timeline and Gantt charts",
+      "templates": ["deployment_timeline"]
+    },
+    "er": {
+      "description": "Entity-relationship diagrams",
+      "templates": ["entity_relationship"]
+    },
+    "state": {
+      "description": "State machine diagrams",
+      "templates": ["state_diagram"]
+    },
+    "class": {
+      "description": "Class and component diagrams",
+      "templates": ["class_diagram"]
+    },
+    "pie": {
+      "description": "Distribution and breakdown charts",
+      "templates": ["pie_chart"]
+    }
+  },
+  "templates": {
+    "platform_architecture": {
+      "type": "mermaid",
+      "category": "architecture",
+      "description": "DALP platform layer architecture — 3-tier with Experience, Business Services, Infrastructure"
+    },
+    "asset_lifecycle": {
+      "type": "mermaid",
+      "category": "flow",
+      "description": "Digital asset lifecycle: Configure → Deploy → Issue → Service → Redeem"
+    },
+    "compliance_sequence": {
+      "type": "mermaid",
+      "category": "sequence",
+      "description": "Compliance check sequence: Investor → Platform → Compliance → Blockchain"
+    },
+    "deployment_timeline": {
+      "type": "mermaid",
+      "category": "gantt",
+      "description": "DALP implementation Gantt: Discovery → Development → Testing → Launch"
+    },
+    "entity_relationship": {
+      "type": "mermaid",
+      "category": "er",
+      "description": "DALP data model: Asset, Token, Holder, Transaction, Compliance Rule"
+    },
+    "state_diagram": {
+      "type": "mermaid",
+      "category": "state",
+      "description": "Asset state transitions: Draft → Configured → Deployed → Active → Matured → Redeemed"
+    },
+    "class_diagram": {
+      "type": "mermaid",
+      "category": "class",
+      "description": "Smart contract class hierarchy: DALPAsset, ComplianceModule, IdentityRegistry"
+    },
+    "pie_chart": {
+      "type": "mermaid",
+      "category": "pie",
+      "description": "Asset distribution by type: Fixed Income, Equity, Real Estate, Funds, Commodities"
+    },
+    "network_topology": {
+      "type": "mermaid",
+      "category": "architecture",
+      "description": "Blockchain network topology: Production validators, staging, external integrations"
+    },
+    "token_issuance_flow": {
+      "type": "mermaid",
+      "category": "flow",
+      "description": "Token issuance process with compliance gates and KYC verification"
+    }
+  }
+}

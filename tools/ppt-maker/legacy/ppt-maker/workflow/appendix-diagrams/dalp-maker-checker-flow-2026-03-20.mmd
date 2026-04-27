@@ -1,0 +1,13 @@
+flowchart TD
+    classDef actor fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef gate fill:#fff8e1,stroke:#f9a825,color:#1f2937,stroke-width:1.5px;
+    classDef pass fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef fail fill:#fce8e6,stroke:#e53935,color:#b71c1c,stroke-width:1.5px;
+
+    Request[Maker\nInitiates action]:::actor
+    Request --> Draft[Draft\nrecord created]:::gate
+    Draft --> Review[Checker\nreviews draft]:::actor
+    Review --> Approve{Approve?}:::gate
+    Approve -->|Yes| Execute[Execute\non-chain]:::pass
+    Approve -->|No| Reject[Reject\nwith reason]:::fail
+    Reject --> Request

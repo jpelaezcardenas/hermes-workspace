@@ -1,0 +1,40 @@
+graph TB
+    subgraph UI["Operations and UI Layer"]
+        AD[Asset Designer]
+        CD[Compliance Dashboard]
+        MC[Monitoring Console]
+        PM[Portfolio Manager]
+    end
+
+    subgraph PLATFORM["Platform Services"]
+        TLE[Token Lifecycle Engine]
+        CRE[Compliance Rule Engine]
+        OID[OnchainID Registry]
+        SETTLE[Settlement Engine]
+        CUSTODY[Custody Orchestrator]
+    end
+
+    subgraph INFRA["Infrastructure Layer"]
+        BESU[Hyperledger Besu]
+        ETH[Ethereum]
+        EVM[Any EVM Network]
+        HSM[HSM Key Store]
+        METRICS[VictoriaMetrics]
+        LOGS[Loki Logs]
+    end
+
+    subgraph INTEGRATION["External Integration"]
+        CORE[Core Banking]
+        KYC[KYC Providers]
+        CUSTODIAN[External Custodians]
+        PAYMENT[Payment Rails]
+    end
+
+    UI --> PLATFORM
+    PLATFORM --> INFRA
+    PLATFORM --> INTEGRATION
+
+    style UI fill:#000099,color:#fff,stroke:#000099
+    style PLATFORM fill:#037352,color:#fff,stroke:#037352
+    style INFRA fill:#0000FF,color:#fff,stroke:#0000FF
+    style INTEGRATION fill:#333,color:#fff,stroke:#333

@@ -1,0 +1,236 @@
+{
+  "last_updated": "2026-04-09",
+  "description": "Reusable narrative content blocks for presentations, organized by context and audience. Each block contains slide-ready text sized for common layouts.",
+  "blocks": [
+    {
+      "id": "executive-opener",
+      "context": "executive_pitch",
+      "audience": "executive",
+      "slide_type": "single_column",
+      "title": "The Real Challenge in Digital Assets",
+      "body": "Minting a token takes minutes. Operating it — compliance checks, investor eligibility, coupon payments, redemption processing, custody coordination — takes an institution. DALP handles the full lifecycle so regulated organizations can run digital asset operations with the same governance and auditability they expect from traditional infrastructure.",
+      "word_count": 46,
+      "use_when": "Opening slide after cover to frame why DALP exists. Sets up the problem before showing the solution."
+    },
+    {
+      "id": "platform-value-prop",
+      "context": "executive_pitch",
+      "audience": "executive",
+      "slide_type": "three_column",
+      "title": "One Platform, Three Layers of Control",
+      "columns": [
+        {
+          "heading": "Design & Issue",
+          "body": "Seven pre-built asset classes — bonds, equity, funds, deposits, stablecoins, real estate, precious metals — with configurable terms, class-specific validation, and governed issuance workflows."
+        },
+        {
+          "heading": "Comply & Settle",
+          "body": "Identity-linked eligibility, transfer policies enforced before execution, and atomic DvP/XvP settlement that coordinates asset and cash legs in a single controlled flow."
+        },
+        {
+          "heading": "Service & Operate",
+          "body": "Coupon payments, maturity redemption, lifecycle events, and treasury payouts stay on-platform. Full observability with metrics, logs, traces, and pre-built dashboards."
+        }
+      ],
+      "use_when": "Core value proposition slide. Works for any audience type but strongest for executives who need the big picture fast."
+    },
+    {
+      "id": "why-not-build",
+      "context": "executive_pitch",
+      "audience": "executive",
+      "slide_type": "two_column",
+      "title": "Build vs. Buy: The Hidden Cost",
+      "columns": [
+        {
+          "heading": "Building In-House",
+          "body": "12–18 month timeline to first issuance. Separate teams for smart contracts, compliance logic, custody integration, and settlement orchestration. Ongoing maintenance across every layer."
+        },
+        {
+          "heading": "DALP Platform",
+          "body": "Weeks to first asset. Pre-built compliance modules, custody integration via standard APIs, and settlement orchestration included. One team operates the full stack."
+        }
+      ],
+      "use_when": "When the audience is evaluating build-vs-buy. Particularly effective for CTOs and heads of digital assets."
+    },
+    {
+      "id": "technical-architecture-intro",
+      "context": "technical_deep_dive",
+      "audience": "technical",
+      "slide_type": "single_column",
+      "title": "DALP Architecture: How the Layers Fit",
+      "body": "DALP sits between your core systems and blockchain networks as the orchestration and governance layer. It handles identity verification, compliance enforcement, asset lifecycle management, custody coordination, and settlement execution. Integrations connect via documented REST APIs to existing core banking, payment rails, and custodian systems. Deployment options span cloud, on-premises, and hybrid — with the same platform behavior across all models.",
+      "word_count": 60,
+      "use_when": "First slide in a technical architecture section. Sets up the mental model before detailed diagrams."
+    },
+    {
+      "id": "compliance-depth",
+      "context": "technical_deep_dive",
+      "audience": "technical",
+      "slide_type": "two_column",
+      "title": "Compliance: Enforced Before Execution",
+      "columns": [
+        {
+          "heading": "Identity & Eligibility",
+          "body": "OnchainID with ERC-3643-aligned controls. Verified claims bound to investor identities. Jurisdiction-specific eligibility rules checked at transfer time, not after settlement."
+        },
+        {
+          "heading": "Policy & Transfer Rules",
+          "body": "Configurable transfer policies per asset class. Maker-checker approval workflows. RBAC and ABAC access controls. Audit trail for every compliance decision."
+        }
+      ],
+      "use_when": "When the audience needs to understand how compliance works technically, not just that it exists."
+    },
+    {
+      "id": "sales-credibility",
+      "context": "sales",
+      "audience": "sales",
+      "slide_type": "text_2x2",
+      "title": "Proven With Regulated Institutions",
+      "cells": [
+        {
+          "heading": "Sovereign Scale",
+          "body": "Saudi Arabia real estate registry — national-grade digital asset infrastructure with governance and lifecycle control."
+        },
+        {
+          "heading": "Tier-1 Banking",
+          "body": "Commerzbank digital bonds — regulated-bank execution with compliance, servicing, and operational rigor."
+        },
+        {
+          "heading": "Transaction Banking",
+          "body": "Maybank Project Photon — programmable deposits fitting existing bank controls and institutional workflows."
+        },
+        {
+          "heading": "Capital Markets",
+          "body": "KBC Securities / Bolero — digital securities distribution reaching real investors through established channels."
+        }
+      ],
+      "use_when": "Credibility slide for sales decks. Shows breadth across regions and use cases without overselling."
+    },
+    {
+      "id": "investor-market-context",
+      "context": "investor_pitch",
+      "audience": "investor",
+      "slide_type": "two_column",
+      "title": "Tokenized Securities Need Operational Infrastructure",
+      "columns": [
+        {
+          "heading": "Where the Market Is",
+          "body": "Regulated institutions are moving past experimentation. Central banks, commercial banks, and securities firms are issuing digital bonds, tokenized deposits, and regulated stablecoins with real counterparties and real settlement obligations."
+        },
+        {
+          "heading": "What They Lack",
+          "body": "The tooling gap is not in token creation. It is in compliance enforcement, lifecycle servicing, custody coordination, and settlement orchestration. DALP fills that gap as a platform, not a service provider."
+        }
+      ],
+      "use_when": "Opening context slide for investor decks. Establishes the market need without hype. Pairs well with platform-value-prop as the follow-up."
+    },
+    {
+      "id": "investor-business-model",
+      "context": "investor_pitch",
+      "audience": "investor",
+      "slide_type": "text_2x2",
+      "title": "Platform Economics: Recurring, Scalable, Embedded",
+      "cells": [
+        {
+          "heading": "License + SaaS",
+          "body": "Annual platform subscriptions with tiered pricing by deployment model and transaction volume. No per-token or per-trade fees that discourage adoption."
+        },
+        {
+          "heading": "Multi-Asset Expansion",
+          "body": "Clients start with one asset class and expand. Seven pre-built templates (bonds, equity, funds, deposits, stablecoins, real estate, precious metals) drive natural upsell."
+        },
+        {
+          "heading": "Deployment Flexibility",
+          "body": "Cloud, on-premises, and hybrid options. Each deployment model carries the same platform and the same economics. No feature gating by infrastructure choice."
+        },
+        {
+          "heading": "Integration Stickiness",
+          "body": "DALP connects to core banking, custody, and payment rails via standard APIs. Once embedded in a client's operational stack, switching costs are structural, not contractual."
+        }
+      ],
+      "use_when": "Business model slide for investor decks. Explains revenue mechanics and expansion dynamics without speculative projections."
+    },
+    {
+      "id": "usecase-bond-tokenization",
+      "context": "use_case",
+      "audience": "executive",
+      "slide_type": "single_column",
+      "title": "Digital Bonds: From Issuance Through Every Coupon to Maturity",
+      "body": "DALP manages the complete bond lifecycle. Define terms, coupon schedules, and maturity dates during issuance. Enforce investor eligibility and transfer restrictions at every transaction. Automate coupon calculations and distribution on schedule. Process early redemption or maturity payouts with maker-checker approvals. Commerzbank and Mizuho Bank run digital bond operations on DALP with full compliance and servicing automation.",
+      "word_count": 60,
+      "use_when": "Use-case-specific slide when the conversation is about bond tokenization. Works for executive and technical audiences. Reference Commerzbank and Mizuho as named proof points."
+    },
+    {
+      "id": "sales-deployment-speed",
+      "context": "sales",
+      "audience": "sales",
+      "slide_type": "two_column",
+      "title": "Weeks to First Asset, Not Quarters",
+      "columns": [
+        {
+          "heading": "What You Get on Day One",
+          "body": "Seven asset templates ready to configure. 18 compliance modules covering MiCA, MAS, FCA, and FSA frameworks. Custody orchestration with Fireblocks or DFNS. Atomic DvP/XvP settlement. 21 observability dashboards pre-wired."
+        },
+        {
+          "heading": "What That Means for Your Timeline",
+          "body": "No 12-month smart contract build. No separate compliance integration project. No custom custody connector. One platform, one team to operate it, one vendor relationship. Commerzbank went from integration to Boerse Stuttgart listing on the same stack."
+        }
+      ],
+      "use_when": "Mid-deck slide for sales presentations when the prospect is comparing timelines or evaluating implementation effort. Pairs well after platform-value-prop."
+    },
+    {
+      "id": "sales-regional-proof",
+      "context": "sales",
+      "audience": "sales",
+      "slide_type": "text_2x2",
+      "title": "Live Across Regions and Regulators",
+      "cells": [
+        {
+          "heading": "Europe",
+          "body": "Commerzbank (digital bonds, Boerse Stuttgart listing), KBC Securities (crowdfunding lifecycle, fiat-backed stable token). MiCA-aligned compliance modules."
+        },
+        {
+          "heading": "Asia-Pacific",
+          "body": "Maybank (FX tokenization, XvP atomic swaps), OCBC (security token engine, HNWI fractionalization), Mizuho (bond tokenization, cross-currency settlement)."
+        },
+        {
+          "heading": "Middle East",
+          "body": "Saudi RER (national real estate registry), ADI-Finstreet (tokenized equity on dedicated mainnet with corporate actions and on-chain voting)."
+        },
+        {
+          "heading": "Multi-Region",
+          "body": "Standard Chartered (Digital Virtual Exchange across Asia, Africa, Middle East). Same platform behavior whether deployed as managed SaaS, private cloud, or on-premises."
+        }
+      ],
+      "use_when": "Geographic credibility slide for sales decks when the prospect cares about regional coverage, regulatory familiarity, or multi-jurisdiction deployment. Works well late in the deck before closing."
+    },
+    {
+      "id": "usecase-tokenized-deposits",
+      "context": "use_case",
+      "audience": "executive",
+      "slide_type": "single_column",
+      "title": "Tokenized Deposits: Programmable Money Within Bank Controls",
+      "body": "DALP enables banks to issue and manage tokenized deposits that fit existing institutional workflows. Define deposit terms, configure transfer restrictions, and enforce eligibility checks before every transaction. Settle cross-currency payments atomically via XvP without custody intermediaries. Maybank's Project Photon uses DALP to run FX tokenization (MYRT) with programmable settlement logic that operates within regulated bank controls, not alongside them.",
+      "word_count": 65,
+      "use_when": "Use-case-specific slide when the conversation is about tokenized deposits or programmable money. Targets banking audiences evaluating deposit tokenization. Reference Maybank as the named proof point."
+    },
+    {
+      "id": "usecase-real-estate-registry",
+      "context": "use_case",
+      "audience": "executive",
+      "slide_type": "two_column",
+      "title": "Real Estate Needs Registry-Grade Control",
+      "columns": [
+        {
+          "heading": "What Fails in Most Projects",
+          "body": "Token issuance is the easy part. Real-estate programs break on ownership evidence, investor eligibility, transfer approvals, registry alignment, and the operational burden of proving every lifecycle event to regulated stakeholders."
+        },
+        {
+          "heading": "How DALP Changes the Model",
+          "body": "DALP treats real estate as a governed asset class with identity-linked controls, transfer restrictions, custody and settlement integration, and audit-ready lifecycle operations. Saudi RER is the proof point for registry-scale digital asset infrastructure where governance matters as much as token design."
+        }
+      ],
+      "use_when": "Use-case-specific slide for sovereign, public-sector, or institutional real-estate discussions. Best used when the buyer cares about registries, control boundaries, and operational evidence rather than marketplace hype."
+    }
+  ]
+}

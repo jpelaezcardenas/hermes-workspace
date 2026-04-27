@@ -1,0 +1,21 @@
+gantt
+    title Precious Metals DALP Launch Path
+    dateFormat  YYYY-MM-DD
+    axisFormat  %b %d
+
+    section Foundation
+    Scope programme & issuer setup     :a1, 2026-04-01, 10d
+    Define asset & servicing rules     :a2, after a1, 10d
+
+    section Build
+    Configure DALP templates           :b1, after a2, 14d
+    Integrate custody / settlement     :b2, after a2, 18d
+    Configure compliance modules       :b3, after b1, 10d
+
+    section Readiness
+    UAT with operations                :c1, after b2, 10d
+    Controls & sign-off                :c2, after c1, 5d
+
+    section Launch
+    Pilot issuance                     :d1, after c2, 5d
+    Production rollout                 :d2, after d1, 5d

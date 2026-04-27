@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant P as Participant
+    participant API as DALP API
+    participant COMP as Compliance Engine
+    participant AML as AML / Sanctions
+    participant AUDIT as Audit Log
+    participant OPS as Ops Team
+
+    P->>API: Submit transaction
+    API->>COMP: Pre-trade compliance check
+    COMP->>AML: Sanction screening (OFAC, UN, CBE)
+    AML-->>COMP: Screen result
+    alt Clean
+        COMP-->>API: Approved
+        API-->>P: Transaction proceeds
+        COMP->>AUDIT: Log approval + evidence
+    else Alert
+        COMP->>OPS: Alert raised
+        COMP->>AUDIT: Log hold + reason code
+        OPS-->>COMP: Investigation outcome
+        COMP-->>API: Release or block
+    end

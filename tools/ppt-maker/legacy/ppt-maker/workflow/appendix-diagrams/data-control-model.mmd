@@ -1,0 +1,46 @@
+erDiagram
+    PROGRAMME ||--o{ ASSET : defines
+    PROGRAMME ||--o{ POLICY : applies
+    ASSET ||--o{ TOKEN_HOLDING : represents
+    INVESTOR ||--o{ TOKEN_HOLDING : owns
+    INVESTOR ||--o{ IDENTITY_RECORD : verifies
+    TOKEN_HOLDING ||--o{ TRANSFER_EVENT : creates
+    POLICY ||--o{ TRANSFER_EVENT : constrains
+    CUSTODY_ACCOUNT ||--o{ ASSET : backs
+
+    PROGRAMME {
+        string programmeName
+        string jurisdiction
+        string issuer
+    }
+    ASSET {
+        string metalType
+        string unitSize
+        string redemptionModel
+    }
+    POLICY {
+        string whitelistMode
+        string holdingLimit
+        string servicingRule
+    }
+    INVESTOR {
+        string investorId
+        string classification
+        string country
+    }
+    IDENTITY_RECORD {
+        string kycStatus
+        string sanctionsStatus
+    }
+    TOKEN_HOLDING {
+        string wallet
+        number balance
+    }
+    TRANSFER_EVENT {
+        string eventType
+        datetime timestamp
+    }
+    CUSTODY_ACCOUNT {
+        string vaultRef
+        string reconciliationCycle
+    }

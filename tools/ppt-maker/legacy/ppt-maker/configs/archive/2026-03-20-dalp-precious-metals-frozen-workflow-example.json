@@ -1,0 +1,120 @@
+{
+  "project": "2026-03-20-dalp-precious-metals-frozen-workflow-example",
+  "output": "output/2026-03-20-dalp-precious-metals-frozen-workflow-example.pptx",
+  "description": "Sample deck for the frozen ppt-maker workflow with Thank You followed by appendix Mermaid diagrams.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Tokenized Metals",
+      "subtitle": "Middle East executive briefing | frozen workflow example"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Market case",
+      "item_1": "Platform evidence",
+      "item_2": "Operating model",
+      "item_3": "Commercial fit",
+      "item_4": "Appendix",
+      "icon1": "icon-library/lucide/trending-up.svg",
+      "icon2": "icon-library/lucide/cpu.svg",
+      "icon3": "icon-library/lucide/layers.svg",
+      "icon4": "icon-library/lucide/briefcase.svg",
+      "icon5": "icon-library/lucide/git-branch.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Market case",
+      "subtitle": "Gold programs need more than a token mint"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why metals are live now",
+      "body": "• Precious metals already have recognized custody, valuation, and investor demand, so tokenization starts from a credible asset story rather than a speculative one.\n• The hard part is operational: linking issuance, holder eligibility, custody facts, and redemption rules without creating spreadsheet-driven side processes.\n• DALP matters here because the platform turns those controls into governed configuration instead of one-off contract work.\n• That gives issuers a path to launch one program, prove it, and reuse the model across future assets."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Product evidence matters",
+      "body": "This is the point: precious metals are represented in DALP as a supported asset class inside the same lifecycle environment as other regulated products. That signals reuse, governance, and operating discipline instead of a one-off commodity demo.",
+      "image_path": "templates/dalp-screenshots/09 - Precious Metals/Precious Metals Listing.jpg"
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Gold-program needs vs DALP",
+      "body": "A credible metals platform has to connect physical-asset facts, eligible distribution, lifecycle controls, and day-two operations. DALP maps to that operating need directly rather than treating the token as the whole product.",
+      "table_data": [
+        ["Need", "Why it matters", "DALP mechanism", "Outcome"],
+        ["Metal metadata", "Gold is not a generic token", "Asset-class fields", "Digital record mirrors the product"],
+        ["Eligible holders", "Distribution must stay controlled", "Identity + policy checks", "Cleaner onboarding and transfer control"],
+        ["Custody linkage", "Trust depends on vault context", "Governed workflows + integrations", "Operational evidence stays attached"],
+        ["Lifecycle actions", "Redemption and exceptions happen", "Mint / burn / freeze / redeem", "Day-two operations stay on-platform"]
+      ]
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Operating model",
+      "subtitle": "Configuration, controls, and servicing on one plane"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "What has to work together",
+      "col1": "Issuance\n• Define product terms with explicit metal, unit, and redemption choices.\n• Configure supply, metadata, and distribution parameters before launch.\n• Launch from governed templates instead of one-off smart-contract work.\n• Keep approval readiness visible before the programme goes live.",
+      "col2": "Controls\n• Bind identity, wallet permissions, and investor claims together.\n• Enforce jurisdiction, whitelist, and holding logic before transfer.\n• Separate maker, checker, and operator actions for governance.\n• Keep policy decisions observable when an exception needs review.",
+      "col3": "Servicing\n• Run redemptions, freezes, and status changes on-platform.\n• Monitor events, reconciliation points, and operational exceptions.\n• Preserve audit-ready evidence for partners and internal review.\n• Reuse the same servicing pattern across future asset launches."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance is part of setup",
+      "body": "DALP exposes compliance and permissioning in the operating workflow itself. That matters for metals because transfer control, jurisdiction logic, and exception handling cannot live as manual review steps beside the platform.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Commercial close",
+      "subtitle": "Why the platform approach wins"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Why SettleMint wins",
+      "body": "• DALP gives institutions a governed way to design, launch, and operate digital assets instead of stitching together isolated tooling.\n• For precious metals, that means the token, the eligibility logic, the servicing workflow, and the operating evidence can stay connected.\n• That is the difference between a flashy pilot and something a bank, exchange, or custodian can actually stand behind.\n• The commercial story is simple: launch faster, prove control earlier, and reuse the same operating model across adjacent products."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Reference diagrams for the operating model"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Metals lifecycle overview",
+      "body": "This appendix view shows the end-to-end precious-metals programme lifecycle from setup through redemption and settlement. It is intentionally more detailed than a main-slide visual because the goal here is reference value: where configuration happens, when policy attaches, where issuance begins, how servicing continues after launch, and how redemption closes the loop back to the underlying asset record.",
+      "image_path": "workflow/appendix-diagrams/precious-metals-lifecycle.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Compliance transfer sequence",
+      "body": "The transfer sequence highlights how identity checks, policy evaluation, blockchain execution, and custody-side events line up for a controlled transfer or redemption path. In a metals context, that matters because an apparently simple movement can still require eligibility review, audit evidence, and a downstream custody action before the business process is truly complete.",
+      "image_path": "workflow/appendix-diagrams/compliance-transfer-sequence.mmd"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Deployment roadmap",
+      "body": "A metals program usually moves from scoping into configuration, integration, readiness, pilot, and rollout. This appendix timeline is there to support planning conversations.",
+      "image_path": "workflow/appendix-diagrams/deployment-roadmap-gantt.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Platform topology",
+      "body": "This appendix topology shows the relationship between channels, DALP business services, execution components, and the external control points around custody and settlement.",
+      "image_path": "workflow/appendix-diagrams/platform-topology.mmd"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Data and control model",
+      "body": "The underlying data model ties programme definitions, assets, policies, investors, identity records, holdings, and events together so operational evidence stays attached to the product record. That linkage is what makes reporting, exception analysis, and controls review credible once the programme is live and servicing activity starts to accumulate over time.",
+      "image_path": "workflow/appendix-diagrams/data-control-model.mmd"
+    }
+  ]
+}

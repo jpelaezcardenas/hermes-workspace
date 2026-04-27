@@ -1,0 +1,12 @@
+{
+  "project": "test-diagram-fix",
+  "output": "output/test-diagram-fix.pptx",
+  "slides": [
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "XvP Settlement Flow Test",
+      "body": "Test diagram with embedded Figtree font - verifying no strikethrough",
+      "image_path": "output/diagrams/test-sizing-fix.png"
+    }
+  ]
+}

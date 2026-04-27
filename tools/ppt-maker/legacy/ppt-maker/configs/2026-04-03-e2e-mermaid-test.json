@@ -1,0 +1,110 @@
+{
+  "project": "2026-04-03-e2e-mermaid-test",
+  "output": "output/2026-04-03-e2e-mermaid-test.pptx",
+  "description": "End-to-end test deck for Mermaid diagram rendering pipeline validation. 10 slides covering DALP overview with 4 appendix Mermaid diagrams.",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP Overview",
+      "subtitle": "Digital Asset Lifecycle Platform | April 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "items": [
+        "What is DALP",
+        "Asset Lifecycle",
+        "Compliance Architecture",
+        "Integration Overview",
+        "Value Proposition",
+        "Use Cases"
+      ]
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "What is DALP",
+      "body": "DALP (Digital Asset Lifecycle Platform) is a complete platform for issuing, managing, and servicing tokenized financial instruments.\n\nOne contract type (DALPAsset) represents any financial instrument. Token features and compliance modules are runtime-pluggable building blocks, not compiled-in at deployment. Reconfiguration happens without redeployment.\n\nSeven out-of-the-box asset templates: bonds, deposits, stablecoins, equity, funds, real estate, and precious metals. Any free-form asset type can be created beyond these starting points."
+    },
+    {
+      "bank_file": "slide-004-blank.pptx",
+      "title": "Asset Lifecycle Management",
+      "recipe": "process-flow",
+      "step1_number": "01",
+      "step1_title": "Configure",
+      "step1_body": "Define asset parameters, compliance rules, and token features",
+      "step2_number": "02",
+      "step2_title": "Issue",
+      "step2_body": "Deploy smart contracts, mint tokens, distribute to investors",
+      "step3_number": "03",
+      "step3_title": "Service",
+      "step3_body": "Ongoing coupon payments, corporate actions, compliance monitoring",
+      "step4_number": "04",
+      "step4_title": "Settle",
+      "step4_body": "Atomic DvP settlement, T+0 transfer, cross-chain operations",
+      "step5_number": "05",
+      "step5_title": "Redeem",
+      "step5_body": "Maturity redemption, buyback, burn, and final settlement"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Compliance as Code",
+      "body": "Every action on DALP passes through a layered compliance gate before touching on-chain state.\n\n12 compliance modules covering geographic restrictions, identity access control, claim-based verification, supply and investor limits, time-based rules, and transfer controls.\n\n7 regulatory templates out of the box: MiCA EU Standard, Reg D 506(b), Reg D 506(c), MAS Singapore, UK FCA Securities, Japan FSA Crypto, and Reg CF Crowdfunding.\n\nCompliance modules are runtime-pluggable. Add, remove, or reconfigure without redeploying the smart contract."
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Integration Capabilities",
+      "body": "DALP integrates with existing custodians, core banking systems, and payment rails via standard APIs.\n\nInbound: CRM, OMS, ERP, treasury systems, and external KYC providers connect through the DALP API gateway.\n\nOutbound: settlement rails, CSD networks, and T+0 DvP infrastructure receive transaction data and confirmations.",
+      "body_right": "Supported integration patterns:\n\nREST APIs for programmatic access\nWebhook-based event notifications\nBatch import/export for bulk operations\nSDK libraries for Node.js, Python, and Java\nCLI tools for DevOps automation\n\nAll integrations are authenticated, rate-limited, and fully audited."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Value Proposition",
+      "item1": "One Contract, Any Instrument\nA single DALPAsset contract supports bonds, equity, funds, stablecoins, deposits, real estate, and precious metals with runtime-configurable features.",
+      "item2": "Features as Building Blocks\n11 token features and 12 compliance modules snap together at runtime. No redeployment needed to add fee structures, voting power, or new compliance rules.",
+      "item3": "Deploy in Weeks\nFull lifecycle management from issuance to servicing. Seven asset templates provide proven starting points. Configure, deploy, and go live.",
+      "item4": "Institutional Controls\nMaker-checker approvals, RBAC/ABAC, HSM-compatible key management, and formal recovery procedures built into the execution layer."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Use Cases",
+      "item1": "Tokenized Bonds\nFixed-income instruments with automated coupon payments and maturity redemption",
+      "item2": "Tokenized Deposits\nBank deposits on-chain with full regulatory compliance and instant settlement",
+      "item3": "Stablecoins\nRegulated stablecoin issuance with reserve management and compliance controls",
+      "item4": "Fund Tokenization\nInvestment fund units with automated NAV calculations and distributions",
+      "item5": "Real Estate\nFractional property ownership with rental yield distribution and secondary trading",
+      "item6": "Precious Metals\nGold and silver-backed tokens with vault custody integration and physical redemption"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Architecture and process diagrams for technical reference"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "DALP Platform Architecture Layers",
+      "body": "DALP is structured in four distinct layers: channel layer (investor portals, REST APIs, operator console), business services (asset lifecycle, compliance, identity), execution layer (orchestration engine, maker-checker, event bus), and blockchain layer (EVM smart contracts, token standards, on-chain state).",
+      "image_path": "workflow/appendix-diagrams/dalp-platform-architecture-layers-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "Compliance Check Sequence",
+      "body": "Every action passes through a layered compliance gate: identity check (DID and KYC status), whitelist check (approved register), policy engine (transaction rules and jurisdictional constraints), and limit check (holding caps and velocity limits). Blocked actions are rejected with a logged reason before any transaction is submitted.",
+      "image_path": "workflow/appendix-diagrams/dalp-compliance-check-sequence-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Digital Asset Lifecycle",
+      "body": "From initial configuration through issuance, distribution, ongoing servicing, atomic DvP settlement, and final redemption.",
+      "image_path": "workflow/appendix-diagrams/dalp-asset-lifecycle-timeline-2026-03-20.mmd"
+    },
+    {
+      "bank_file": "slide-020-picture-right-wide.pptx",
+      "title": "Integration Topology",
+      "body": "DALP acts as an integration hub between enterprise back-office systems and the execution layer of smart contracts and custodians. Outputs connect to settlement rails, CSD networks, and T+0 DvP infrastructure.",
+      "image_path": "workflow/appendix-diagrams/dalp-integration-topology-2026-03-20.mmd"
+    }
+  ]
+}

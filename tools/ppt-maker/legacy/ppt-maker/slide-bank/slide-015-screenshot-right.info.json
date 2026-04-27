@@ -1,0 +1,123 @@
+{
+  "slide_number": 15,
+  "filename": "slide-015-screenshot-right.pptx",
+  "layout_name": "Text Left + Image Right",
+  "layout_slug": "text-left-image-right",
+  "template_layout_name": "Screenshot Right",
+  "template_layout_slug": "screenshot-right",
+  "layout_category": "visual",
+  "description": "Left side carries title and text content; right side holds a screenshot or image. The text leads and the visual supports.",
+  "usage": "Use this layout for DALP/browser screenshots. It is the approved browser-frame slot for screenshots; diagrams or stock art can be used only when the slide still makes sense visually.",
+  "potential_usage": "Works for product feature demos, architecture diagrams with explanation, or any slide where the visual is proof of the text.",
+  "content_capacity": "medium",
+  "has_image_area": true,
+  "has_icon_area": false,
+  "has_chart_area": false,
+  "has_table_area": false,
+  "column_count": 2,
+  "placeholders": [
+    {
+      "idx": 0,
+      "type": "TITLE"
+    },
+    {
+      "idx": 11,
+      "type": "BODY"
+    },
+    {
+      "idx": 10,
+      "type": "SLIDE_NUMBER"
+    },
+    {
+      "idx": 12,
+      "type": "PICTURE"
+    }
+  ],
+  "elements": [
+    {
+      "type": "TITLE",
+      "idx": 0,
+      "word_count": 0
+    },
+    {
+      "type": "BODY",
+      "idx": 11,
+      "word_count": 0
+    },
+    {
+      "type": "SLIDE_NUMBER",
+      "idx": 10,
+      "word_count": 4
+    },
+    {
+      "type": "PICTURE",
+      "idx": 12,
+      "word_count": 0
+    }
+  ],
+  "word_counts": {
+    "TITLE_0": 0,
+    "BODY_11": 0,
+    "SLIDE_NUMBER_10": 4,
+    "PICTURE_12": 0
+  },
+  "total_word_count": 4,
+  "placeholder_summary": {
+    "TITLE_0": "Main slide title \u2014 states the key message or topic",
+    "BODY_11": "Subtitle, date, presenter name, or event description",
+    "SLIDE_NUMBER_10": "Auto-generated slide number footer (do not edit)",
+    "PICTURE_12": "Browser-frame placeholder \u2014 DALP screenshots belong here; diagrams and stock art are allowed when needed"
+  },
+  "content_suggestions": {
+    "TITLE_0": "Slide title (3\u20138 words describing Text Left + Image Right)",
+    "BODY_11": "Subtitle text, date, or event name (1\u20132 lines)",
+    "SLIDE_NUMBER_10": "Auto-populated \u2014 do not modify",
+    "PICTURE_12": "Insert DALP screenshot, browser mockup, or diagram framed for browser view"
+  },
+  "fill_hints": {
+    "TITLE_0": "~3\u201310 words",
+    "BODY_11": "~5\u201320 words",
+    "SLIDE_NUMBER_10": "Do not modify",
+    "PICTURE_12": "Replace with approved image asset"
+  },
+  "do_not_modify": [
+    "footer",
+    "slide number"
+  ],
+  "selection_tags": [
+    "image",
+    "screenshot",
+    "two-column",
+    "product-overview",
+    "technical-deep-dive",
+    "sales"
+  ],
+  "slide_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:p=\"http://schemas.openxmlformats.org/presentationml/2006/main\"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=\"1\" name=\"\"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x=\"0\" y=\"0\"/><a:ext cx=\"0\" cy=\"0\"/><a:chOff x=\"0\" y=\"0\"/><a:chExt cx=\"0\" cy=\"0\"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr><p:cNvPr id=\"2\" name=\"Title 1\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{5D107528-2C1E-DADE-4A9B-658E6F60A059}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"title\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"3\" name=\"Text Placeholder 2\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{FDBF4128-84A8-FF84-85DC-7658E24EBDB2}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"body\" sz=\"quarter\" idx=\"11\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"4\" name=\"Slide Number Placeholder 3\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{A23D5DAA-70F0-1AF1-B90C-789B3D874B5F}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"sldNum\" sz=\"quarter\" idx=\"10\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang=\"en-US\"/><a:t>SettleMint Confidential | </a:t></a:r><a:fld id=\"{C1FA820A-35B7-8A43-A5A5-CEBBE55BE679}\" type=\"slidenum\"><a:rPr lang=\"en-US\" smtClean=\"0\"/><a:pPr/><a:t>13</a:t></a:fld><a:endParaRPr lang=\"en-US\" dirty=\"0\"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr><p:cNvPr id=\"5\" name=\"Picture Placeholder 4\"><a:extLst><a:ext uri=\"{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}\"><a16:creationId xmlns:a16=\"http://schemas.microsoft.com/office/drawing/2014/main\" id=\"{AE14320A-72C6-12FA-F8FA-FD3C7CD03BAB}\"/></a:ext></a:extLst></p:cNvPr><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr><p:ph type=\"pic\" sz=\"quarter\" idx=\"12\"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang=\"en-US\"/></a:p></p:txBody></p:sp></p:spTree><p:extLst><p:ext uri=\"{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}\"><p14:creationId xmlns:p14=\"http://schemas.microsoft.com/office/powerpoint/2010/main\" val=\"1716155327\"/></p:ext></p:extLst></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>",
+  "image_slot_policy": [
+    {
+      "placeholder_idx": 12,
+      "placeholder_kind": "browser_frame",
+      "allowed_asset_kinds": [
+        "dalp_screenshot",
+        "diagram",
+        "generic_image"
+      ],
+      "preferred_asset_kinds": [
+        "dalp_screenshot"
+      ],
+      "fit_mode_by_asset_kind": {
+        "dalp_screenshot": "cover",
+        "diagram": "contain",
+        "generic_image": "cover"
+      },
+      "background_by_asset_kind": {
+        "dalp_screenshot": "transparent",
+        "diagram": "transparent",
+        "generic_image": "transparent"
+      },
+      "round_corners": true,
+      "corner_radius_px": 8,
+      "aspect_ratio_class": "screenshot-browser-frame"
+    }
+  ]
+}

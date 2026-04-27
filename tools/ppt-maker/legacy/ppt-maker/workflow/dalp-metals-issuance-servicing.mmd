@@ -1,0 +1,9 @@
+flowchart LR
+    A[Metal program design\nClass • metadata • supply] --> B[Identity and onboarding\nOnchainID • verified claims]
+    B --> C[Mint and allocate\nIssue tokens to eligible holders]
+    C --> D[Distribution and transfer\nPolicy checks before execution]
+    D --> E[Servicing and reporting\nMonitoring • audit trail • reconciliation]
+    E --> F[Redemption / burn\nClose position and release workflow]
+    A --> G[Vault and custody data\nMetal type • location • custodian]
+    G --> C
+    G --> E

@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant Buyer
+    participant DALP as DALP Settlement Engine
+    participant AssetLeg as Asset Contract
+    participant CashLeg as Cash/Stablecoin Contract
+    participant Chain as EVM Network
+
+    Buyer->>DALP: Initiate DvP Settlement
+    DALP->>DALP: Validate Both Parties
+    Note over DALP: Check OnchainID claims<br/>Verify compliance rules<br/>Confirm asset availability
+    DALP->>AssetLeg: Lock Asset Tokens
+    DALP->>CashLeg: Lock Payment Amount
+    DALP->>Chain: Submit Atomic Transaction
+    Note over Chain: Both legs execute together<br/>or both revert together
+    alt Settlement Success
+        Chain-->>AssetLeg: Asset Transferred to Buyer
+        Chain-->>CashLeg: Payment Transferred to Seller
+        Chain-->>DALP: Settlement Confirmed
+        DALP-->>Buyer: T+0 Settlement Complete
+    else Settlement Failed
+        Chain-->>DALP: Revert Both Legs
+        DALP-->>Buyer: Settlement Reverted
+    end

@@ -1,0 +1,25 @@
+{
+  "output": "output/test-screenshot-fix.pptx",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Screenshot Fix Test",
+      "body": "White line fix verification"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Dashboard Overview",
+      "body": "Portfolio valuation ($276M), AUM (13.2B USD), pending action alerts, and live blockchain activity feed. Real-time command center for asset managers.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Bonds Portfolio Listing",
+      "body": "10 bonds across 9 currencies (EUR, MYR, CAD, CHF, SAR, AED, SGD, JPY, GBP). Types: floating rate, zero coupon, convertible, high yield, green, corporate.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/Bonds Listing.jpg"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

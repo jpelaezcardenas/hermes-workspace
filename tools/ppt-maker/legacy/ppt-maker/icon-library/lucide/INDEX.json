@@ -1,0 +1,31 @@
+{
+  "source": "lucide-icons/lucide (lucide-static)",
+  "count": 111,
+  "categories": {
+    "finance": ["coins", "credit-card", "dollar-sign", "percent", "trending-up", "trending-down", "wallet", "bar-chart", "bar-chart-2", "bar-chart-3", "pie-chart"],
+    "technology": ["cpu", "database", "server", "cloud", "code", "terminal", "network", "monitor", "wifi", "git-branch"],
+    "business": ["briefcase", "building", "calendar", "clipboard", "globe", "layers", "target", "award", "flag"],
+    "security": ["lock", "shield", "shield-check", "key", "unlock", "eye"],
+    "communication": ["bell", "mail", "message-circle", "message-square", "phone", "send"],
+    "ui": ["check", "check-circle", "check-square", "chevron-right", "cog", "settings", "search", "filter"],
+    "navigation": ["anchor", "compass", "home", "map", "map-pin", "navigation"],
+    "files": ["archive", "bookmark", "file", "file-check", "file-text", "folder", "save"],
+    "people": ["user", "user-check", "users", "heart"],
+    "misc": ["activity", "alert-circle", "alert-triangle", "box", "circle", "command", "grid", "hash", "hexagon", "info", "layout", "package", "rocket", "star", "tag", "zap"],
+    "other": ["airplay", "arrow-right", "battery-charging", "calculator", "download", "edit", "external-link", "help-circle", "image", "link", "list", "log-in", "maximize", "menu", "moon", "more-horizontal", "package", "percent", "phone", "play", "plus-circle", "refresh-cw", "repeat", "rss", "share", "shopping-cart", "sliders", "truck", "upload", "zoom-in"]
+  },
+  "icons": [
+    "activity", "airplay", "alert-circle", "alert-triangle", "anchor", "archive", "arrow-right", "award",
+    "bar-chart", "bar-chart-2", "bar-chart-3", "battery-charging", "bell", "bookmark", "box", "briefcase",
+    "building", "calculator", "calendar", "check", "check-circle", "check-square", "chevron-right",
+    "circle", "clipboard", "clock", "cloud", "code", "cog", "coins", "command", "compass", "cpu", "credit-card",
+    "database", "dollar-sign", "download", "edit", "external-link", "eye", "file", "file-check", "file-text",
+    "filter", "flag", "folder", "git-branch", "globe", "grid", "hash", "heart", "help-circle", "hexagon",
+    "home", "image", "info", "key", "layers", "layout", "link", "list", "lock", "log-in", "mail", "map", "map-pin",
+    "maximize", "menu", "message-circle", "message-square", "monitor", "moon", "more-horizontal",
+    "navigation", "network", "package", "percent", "phone", "pie-chart", "play", "plus-circle", "refresh-cw",
+    "repeat", "rocket", "rss", "save", "search", "send", "server", "settings", "share", "shield", "shield-check",
+    "shopping-cart", "sliders", "star", "tag", "target", "terminal", "trending-down", "trending-up",
+    "truck", "unlock", "upload", "user", "user-check", "users", "wallet", "wifi", "zap", "zoom-in"
+  ]
+}

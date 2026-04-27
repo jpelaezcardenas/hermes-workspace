@@ -1,0 +1,14 @@
+flowchart LR
+    classDef enterprise fill:#eaf3ff,stroke:#5b9bd5,color:#1f2937,stroke-width:1.5px;
+    classDef dalp fill:#0b5cab,stroke:#0b3a6b,color:#ffffff,stroke-width:2px;
+    classDef exec fill:#eef7ee,stroke:#6aa84f,color:#1f2937,stroke-width:1.5px;
+    classDef rails fill:#fff8e1,stroke:#f9a825,color:#1f2937,stroke-width:1.5px;
+
+    CRM[CRM / OMS\nenterprise system]:::enterprise --> API[DALP REST\nAPI Gateway]:::dalp
+    ERP[ERP / Treasury\nsystem]:::enterprise --> API
+    KYCProv[KYC / AML\nprovider]:::enterprise --> API
+    API --> Orch[Orchestration\nEngine]:::dalp
+    Orch --> Chain[EVM Smart\nContracts]:::exec
+    Orch --> Custody[Custody\nAdapter]:::exec
+    Chain --> Rails[Settlement\nRails · CSD · T+0]:::rails
+    Custody --> Rails

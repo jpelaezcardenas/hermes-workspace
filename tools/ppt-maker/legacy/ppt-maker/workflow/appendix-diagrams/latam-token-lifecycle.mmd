@@ -1,0 +1,13 @@
+stateDiagram-v2
+    [*] --> Designed: Asset Template Selected
+    Designed --> ComplianceConfigured: Policy Modules Attached
+    ComplianceConfigured --> Approved: Maker Checker Approval
+    Approved --> Issued: Primary Issuance
+    Issued --> Active: Distribution Complete
+    Active --> Servicing: Coupon or Yield Event
+    Servicing --> Active: Event Processed
+    Active --> Frozen: Regulatory Hold
+    Frozen --> Active: Hold Released
+    Active --> Redeemed: Maturity or Redemption
+    Redeemed --> Retired: Final Settlement
+    Retired --> [*]

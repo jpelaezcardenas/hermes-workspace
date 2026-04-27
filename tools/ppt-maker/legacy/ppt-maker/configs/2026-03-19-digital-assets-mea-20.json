@@ -1,0 +1,146 @@
+{
+  "project": "2026-03-19-digital-assets-mea-20",
+  "output": "output/2026-03-19-digital-assets-mea-20.pptx",
+  "description": "20-slide executive DALP deck on digital assets for the Middle East and Africa market",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Digital Assets for MEA",
+      "subtitle": "How DALP fits Middle East and Africa market priorities | March 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "MEA market context",
+      "item_1": "Why DALP fits",
+      "item_2": "Operating model",
+      "item_3": "Priority use cases",
+      "item_4": "Regional proof points",
+      "icon0": "icon-library/lucide/globe.svg",
+      "icon1": "icon-library/lucide/layers.svg",
+      "icon2": "icon-library/lucide/settings.svg",
+      "icon3": "icon-library/lucide/briefcase.svg",
+      "icon4": "icon-library/lucide/award.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Market Context",
+      "subtitle": "Why digital-asset infrastructure matters now in MEA"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "MEA demand is becoming operational",
+      "body": "• Across the Middle East and Africa, digital-asset interest is shifting from sandbox conversations to operating-model questions around governance, compliance, custody, and rollout discipline.\n• Banks, exchanges, sovereign programs, and fintechs increasingly need infrastructure that fits regional regulation, enterprise controls, and multi-stakeholder delivery rather than isolated minting demos.\n• The strongest opportunities center on tokenized securities, programmable deposits, stablecoin rails, real-estate products, and controlled cross-border settlement workflows.\n• For commercial teams, the discussion is no longer whether tokenization is possible. It is whether the platform can support production ownership, evidence, and repeatable launches." 
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "What buyers in MEA typically need",
+      "item1": "Governed launches\nClients want a controlled path from product design to live issuance, with clear ownership across business, compliance, operations, and technology.",
+      "item2": "Regulatory alignment\nThe platform must fit jurisdiction-specific controls, investor eligibility rules, audit expectations, and approval workflows before execution.",
+      "item3": "Enterprise integration\nDigital assets must connect into custody, identity, books and records, treasury, and reporting environments instead of creating a side stack.",
+      "item4": "Reuse across products\nInstitutions want one operating model they can extend across bonds, deposits, funds, real estate, and new programs over time."
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "The conversation is strategic and regional",
+      "body": "Executive buyers in MEA are balancing innovation, regulatory readiness, and competitive timing. That makes the commercial story less about blockchain theory and more about how quickly a governed platform can support real products, real partners, and regional scale. DALP fits when the client wants a business-ready operating model rather than a bespoke pilot that cannot be reused.",
+      "image_path": "image-bank/city/dubai.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why DALP",
+      "subtitle": "SettleMint’s advantage is lifecycle control, not token minting alone"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP is the operating layer",
+      "body": "• DALP is SettleMint’s Digital Asset Lifecycle Platform for designing, launching, and operating digital assets with governance, identity, compliance, settlement coordination, and servicing on one control plane.\n• That positioning matters in MEA because institutions need business ownership and operational evidence, not just smart-contract deployment. DALP keeps product, legal, operations, and engineering teams working from the same governed asset record.\n• The platform supports multiple regulated asset classes on one model, helping clients start with one use case and expand without rebuilding process, controls, and integration patterns.\n• For sales conversations, the message is simple: DALP helps clients move from pilot enthusiasm to controlled, repeatable digital-asset delivery." 
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "DALP building blocks for MEA",
+      "item1": "Asset templates\nStart from supported asset classes and reusable launch patterns instead of one-off contract projects.",
+      "item2": "Metadata schemas\nCapture instrument terms, physical asset details, and required fields in a reviewable product setup.",
+      "item3": "Identity and claims\nUse verified identity and reusable claims to govern who may subscribe, hold, and transfer.",
+      "item4": "Policy modules\nApply transfer, country, eligibility, and holding rules before execution rather than after the fact.",
+      "item5": "Operational approvals\nSeparate maker, checker, and execution responsibilities so sensitive actions stay bounded by role.",
+      "item6": "Lifecycle actions\nKeep issuance, transfer, servicing, redemption, and monitoring connected on one platform record."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Configurable asset design",
+      "body": "The DALP asset designer gives product and operations teams a structured path from instrument definition to compliance, permissions, review, and deployment. That is valuable in MEA sales cycles because it shows how digital-asset products can be configured through a governed workflow instead of hidden inside custom code and manual sign-offs.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Lifecycle on one platform",
+      "body": "DALP connects asset design, onboarding, issuance, transfer, settlement coordination, servicing, redemption, and reporting as one operating model. For MEA institutions, that matters because the hard part of digital assets is usually not launch day; it is keeping controls, ownership, and evidence intact once the product is live and expanding.",
+      "image_path": "output/diagrams/dalp-lifecycle-operating-model-padded.png"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Operating Model",
+      "subtitle": "How DALP maps regional requirements into live execution"
+    },
+    {
+      "bank_file": "slide-006-table.pptx",
+      "title": "Regional requirements mapped to DALP",
+      "table_data": [
+        ["MEA requirement", "Why it matters", "DALP mechanism", "Business outcome"],
+        ["Investor eligibility", "Control who can hold and transfer", "OnchainID and verified claims", "Governed distribution"],
+        ["Approval discipline", "Separate setup from release authority", "RBAC and maker-checker workflows", "Clear accountability"],
+        ["Multi-party servicing", "Coordinate ops, treasury, and compliance", "Lifecycle workflows and permissions", "Lower manual handoffs"],
+        ["Audit evidence", "Support internal and external review", "Activity logs and monitoring", "Stronger governance"],
+        ["Product reuse", "Scale beyond one pilot", "Templates and policy modules", "Faster next launch"],
+        ["Integration readiness", "Fit custody and core systems", "APIs, events, and enterprise hooks", "Operational fit" ]
+      ]
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Identity and policy guide execution",
+      "body": "DALP ties verified identity and policy logic to operational permissions, so wallet addresses alone are not the control model. This is central for MEA institutions that need clearer governance around eligible holders, transfer conditions, and operational authority across regulated products and partner ecosystems.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-008-chart-with-text.pptx",
+      "title": "Transfer decisions are policy-led",
+      "body": "This flow shows DALP’s compliance posture around token movement. The platform resolves the applicable policy, checks identity and claims, evaluates transfer conditions, and only then allows or blocks execution. For business audiences, the message is practical: controls happen before the asset state changes, with evidence after the decision.",
+      "image_path": "output/diagrams/dalp-transfer-decision-flow-padded.png"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "Institutional rollout needs business ownership",
+      "body": "Successful digital-asset programs in MEA depend on aligned business sponsorship, compliance comfort, delivery ownership, and clear sequencing into live operations. DALP supports that conversation well because it gives each stakeholder a role in a governed lifecycle rather than forcing the program into an engineering-only narrative. That makes executive consensus easier to build and scale across future products.",
+      "image_path": "image-bank/business/meeting.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Use Cases and Proof",
+      "subtitle": "Where DALP is strongest for Middle East and Africa opportunities"
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "Priority MEA use cases",
+      "col1": "Bonds and sukuk\n• Support governed issuance and investor controls.\n• Keep approvals, servicing, and maturity events on-platform.\n• Fit treasury and capital-markets conversations well.",
+      "col2": "Deposits and stablecoins\n• Modernize payment and settlement workflows.\n• Link identity, permissions, and monitoring to live movement.\n• Support phased rollout across internal and partner rails.",
+      "col3": "Real estate and funds\n• Combine product metadata with holder eligibility.\n• Keep transfer restrictions and servicing visible.\n• Reuse one operating model across multiple assets."
+    },
+    {
+      "bank_file": "slide-007-table-with-text.pptx",
+      "title": "Regional proof points and expansion path",
+      "body": "SettleMint’s regional relevance comes from matching DALP’s lifecycle model to real Middle East and Africa contexts. Existing reference material includes Saudi RER for sovereign-scale real-estate infrastructure and Standard Chartered for institutional digital securities across Asia, Africa, and the Middle East. Commercially, the strongest path is to start with one controlled use case, prove governance and servicing, then extend the model across new products and entities.",
+      "table_data": [
+        ["Reference / phase", "Regional relevance", "What it proves", "Commercial takeaway"],
+        ["Saudi RER", "Middle East sovereign program", "DALP fits governed real-asset infrastructure", "Strong proof for public-sector and registry-style discussions"],
+        ["Standard Chartered", "Africa and Middle East relevance", "Multi-asset institutional tokenization narrative", "Useful for bank and market-infrastructure buyers"],
+        ["Phase 1", "Single priority use case", "Validate controls, integrations, and ownership", "Reduce decision risk"],
+        ["Phase 2", "Controlled production rollout", "Prove servicing and auditability", "Create internal confidence"],
+        ["Phase 3", "Expansion to new products", "Reuse DALP templates and policy model", "Scale without redesign" ]
+      ]
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

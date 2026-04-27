@@ -1,0 +1,209 @@
+{
+  "project": "2026-04-03-dalp-uae-banks-30",
+  "output": "output/2026-04-03-dalp-uae-banks-30.pptx",
+  "description": "30-slide DALP presentation for UAE banking executives, emphasizing composability, regulatory alignment, and asset class coverage",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for UAE Banks",
+      "subtitle": "Digital Asset Lifecycle Platform for regulated financial institutions | April 2026"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "UAE market context",
+      "item_1": "DALP platform overview",
+      "item_2": "Composable token design",
+      "item_3": "Asset classes for UAE banks",
+      "item_4": "Security, integration, and next steps",
+      "icon1": "icon-library/lucide/globe.svg",
+      "icon2": "icon-library/lucide/layers.svg",
+      "icon3": "icon-library/lucide/settings.svg",
+      "icon4": "icon-library/lucide/briefcase.svg",
+      "icon5": "icon-library/lucide/shield.svg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "UAE Market Context",
+      "subtitle": "A region building digital asset infrastructure at pace"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "UAE digital assets regulatory landscape",
+      "body": "\u2022 The UAE has built one of the most structured regulatory environments for digital assets globally, with multiple complementary frameworks operating in parallel.\n\u2022 CBUAE oversees tokenized deposits, payment tokens, and dirham-denominated instruments. SCA regulates securities tokenization across the UAE mainland.\n\u2022 VARA in Dubai provides a dedicated virtual asset regulatory authority with licensing categories spanning exchanges, brokers, custodians, and issuers.\n\u2022 ADGM and DIFC operate as international financial free zones with their own securities and digital asset frameworks, attracting global institutions.\n\u2022 This multi-regulator environment creates specific requirements: platforms must support configurable compliance rules that adapt to each authority."
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "What UAE banks need from digital asset infrastructure",
+      "item1": "Regulatory flexibility\nSupport CBUAE, SCA, VARA, ADGM, and DIFC requirements within one operating model. Different instruments, different regulators, one platform.",
+      "item2": "Sharia compliance readiness\nIslamic finance instruments require specific structuring: profit-sharing, asset-backing, and prohibition of interest. The platform must accommodate these constraints.",
+      "item3": "Operational governance\nUAE banks operate under strict internal controls. Maker-checker approvals, RBAC, audit trails, and segregation of duties are non-negotiable.",
+      "item4": "Multi-asset scalability\nBanks want to start with one asset class (e.g., Sukuk or deposits) and extend to real estate, precious metals, and trade finance on the same platform."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "Key opportunities for UAE banks",
+      "item1": "Sukuk tokenization\nThe UAE is the second-largest Sukuk market globally. Tokenized Sukuk can improve distribution, settlement speed, and investor access.",
+      "item2": "Real estate tokenization\nDubai's real estate market is already exploring fractional ownership. Tokenization enables broader investor participation with governed transfer controls.",
+      "item3": "Tokenized deposits\nCBUAE's regulatory guidance on payment tokens and deposit tokenization opens a clear path for banks to modernize settlement infrastructure.",
+      "item4": "Precious metals\nDubai Gold Souk and DMCC position the UAE as a global metals hub. Tokenized gold and silver with vault-linked metadata serve institutional and retail demand.",
+      "item5": "Trade finance\nCross-border trade corridors between UAE, India, China, and Africa present opportunities for tokenized receivables and letters of credit.",
+      "item6": "Fund tokenization\nADGM and DIFC-regulated fund structures can benefit from tokenized subscriptions, automated NAV distribution, and governed investor eligibility."
+    },
+    {
+      "bank_file": "slide-018-picture-right-equal.pptx",
+      "title": "UAE banks are moving from exploration to execution",
+      "body": "The conversation in UAE banking has shifted from \"should we explore tokenization\" to \"which platform can support regulated operations at scale.\" Banks need infrastructure that fits their existing governance, connects to core banking systems, and supports multiple regulators and asset classes from day one. That is exactly the problem DALP solves.",
+      "image_path": "image-bank/city/dubai.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "DALP Platform Overview",
+      "subtitle": "One platform for the entire digital asset lifecycle"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "DALP: Digital Asset Lifecycle Platform",
+      "body": "\u2022 DALP is SettleMint's platform for designing, launching, and operating tokenized assets with governance, identity, compliance, settlement coordination, and servicing on one control plane.\n\u2022 It is not a tokenization engine. Tokenization is one step. DALP manages the full lifecycle: from instrument design through issuance, transfer, servicing, and redemption.\n\u2022 The platform supports seven pre-built asset classes (bonds, equity, funds, deposits, stablecoins, real estate, precious metals) and allows entirely custom asset types.\n\u2022 DALP is built for regulated institutions that need repeatability, auditability, and operational discipline rather than isolated proofs of concept."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "The five lifecycle pillars",
+      "col1": "Design and configure\n\u2022 Choose asset class or create custom types.\n\u2022 Define metadata, terms, and pricing.\n\u2022 Attach compliance modules and permissions.\n\u2022 Review and deploy through governed workflow.",
+      "col2": "Launch and distribute\n\u2022 Mint tokens under controlled supply rules.\n\u2022 Verify investor identity and eligibility.\n\u2022 Enforce transfer conditions before execution.\n\u2022 Coordinate with custody providers.",
+      "col3": "Operate and service\n\u2022 Run lifecycle events: payouts, freezes, redemptions.\n\u2022 Monitor with full observability stack.\n\u2022 Maintain audit trails for all actions.\n\u2022 Extend the model to new asset classes."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Platform architecture at a glance",
+      "body": "DALP provides a unified control plane that sits between your core banking systems and EVM-compatible networks. The dashboard gives operations teams real-time visibility into assets, transactions, and compliance status across all deployed instruments. APIs and event streams connect DALP to custody, identity, and settlement infrastructure.",
+      "image_path": "templates/dalp-screenshots/02 - Dashboard/jpg/Dashboard 1.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Composable Token Design",
+      "subtitle": "One contract, any instrument. The core differentiator."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "One contract type for any financial instrument",
+      "body": "\u2022 DALP uses a single configurable contract type (DALPAsset) that can represent any financial instrument by combining pluggable token features and compliance modules.\n\u2022 There are no fixed token types. Features and compliance rules are building blocks that can be mixed, matched, added, and removed at any time, even after deployment.\n\u2022 This composability means a UAE bank can configure a Sukuk with profit-sharing features and Sharia-compliant transfer rules, then reuse the same platform for a tokenized deposit with entirely different compliance parameters.\n\u2022 No redeployment needed. No separate contract per instrument. One architecture that adapts to every product."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "11 token features across 4 categories",
+      "item1": "Fees and charges\nTransaction Fee, Transaction Fee Accounting, External Transaction Fee, AUM Fee. Configurable collection, reconciliation, and management fee logic.",
+      "item2": "Governance and snapshots\nHistorical Balances, Voting Power, Permit (EIP-2612). Point-in-time queries, delegated governance, and gasless approvals.",
+      "item3": "Lifecycle and yield\nMaturity Redemption and Fixed Treasury Yield. Bond maturity workflows and fixed-rate yield distribution to holders.",
+      "item4": "Transformation\nConversion and Conversion Minter. Support convertible instruments with automated burn-and-mint mechanics.",
+      "item5": "How features work\nEach feature implements lifecycle hooks: canUpdate, onTransferred, onMinted, onBurned, onRedeemed, onAttached. Up to 32 features per token.",
+      "item6": "Post-deployment changes\nFeatures can be added or removed on live tokens via setFeatures(). No redeployment. Tokens evolve as the product evolves."
+    },
+    {
+      "bank_file": "slide-014-text-2x3.pptx",
+      "title": "12 compliance modules across 6 categories",
+      "item1": "Geographic restrictions\nCountry Allow List and Country Block List. Control which jurisdictions can hold the asset.",
+      "item2": "Identity access control\nIdentity Allow List, Identity Block List, Address Block List. Granular control over who can receive tokens.",
+      "item3": "Claim-based verification\nSMART Identity Verification with RPN expression engine. Evaluate KYC, AML, ACCREDITED, CONTRACT, JURISDICTION with logical operators.",
+      "item4": "Supply and investor limits\nToken Supply Limit (rolling-window caps), Investor Count, Capped (hard supply maximum). Match MiCA, Reg D, and local requirements.",
+      "item5": "Time-based rules\nTime Lock module enforces minimum holding periods using FIFO batch tracking. Configure for any jurisdiction requirement.",
+      "item6": "Transfer controls\nTransfer Approval (pre-authorization with configurable expiry) and Collateral (on-chain collateral ratio enforcement)."
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "UAE-specific compliance configuration",
+      "body": "DALP ships with seven regulatory compliance templates out of the box, and organizations create custom templates via the platform UI. For UAE banks, this means configuring CBUAE requirements for deposits, VARA rules for virtual assets, and ADGM securities compliance, all within the same platform. Sharia compliance constraints (asset-backing, profit-sharing structures) map to feature and module configuration rather than custom code.",
+      "image_path": "templates/dalp-screenshots/03 - Asset Designer/jpg/Asset Designer - Step 6 - Compliance Modules.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Compliance templates in practice",
+      "body": "The policy template library lets compliance teams define reusable rule sets that can be applied across multiple instruments. Each template combines identity verification, geographic restrictions, supply limits, and transfer controls into a single reviewable configuration. Teams can create UAE-specific templates that reflect CBUAE directives, VARA licensing conditions, or ADGM fund regulations without writing code.",
+      "image_path": "templates/dalp-screenshots/11 - Compliance and Policy Templates/jpg/Policy Templates - List.jpg"
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Post-deployment flexibility",
+      "body": "\u2022 Under governance role, live tokens can be reconfigured without redeployment: add or remove token features, add or remove compliance modules, change fee rates, modify country lists, adjust investor limits.\n\u2022 This means a token can evolve: start as a simple bearer instrument, then add fee features, enable governance voting, or change compliance rules while live.\n\u2022 For UAE banks, this is critical. Regulatory requirements change, new CBUAE guidance may require updated transfer controls, and Sharia boards may adjust structuring requirements.\n\u2022 Competitors require contract redeployment or migration for these changes. DALP handles it through configuration."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Asset Classes for UAE Banks",
+      "subtitle": "Seven pre-built types plus custom instruments"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Sukuk tokenization",
+      "body": "Sukuk are the most natural starting point for UAE banks entering digital assets. DALP supports Sukuk through the bond asset class with configurable features for profit distribution (Fixed Treasury Yield), maturity handling (Maturity Redemption), and Sharia-compliant transfer controls. Historical Balances enable point-in-time queries for distribution calculations. The platform enforces investor eligibility and geographic restrictions through composable compliance modules.",
+      "image_path": "templates/dalp-screenshots/04 - Bonds/jpg/Bonds Detail 1.jpg"
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Real estate tokenization",
+      "body": "Dubai's real estate market is already exploring fractional ownership through tokenization. DALP's real estate asset class supports property metadata, valuation data feeds, investor eligibility controls, and governed transfer restrictions. The platform connects property-level information to token-level operations, so each fractional interest carries the data investors and regulators require. Capped supply and investor count modules enforce distribution limits.",
+      "image_path": "templates/dalp-screenshots/10 - Real Estate/jpg/Real Estate Assets - Listing.jpg"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Tokenized deposits and precious metals",
+      "body": "CBUAE's regulatory guidance on deposit tokenization opens a direct path for UAE banks. DALP's deposit asset class supports controlled issuance, identity-linked holdings, and integration with existing payment infrastructure. For precious metals, DALP connects vault metadata (metal type, custodian, storage location) to token operations. Dubai's position as a global gold hub makes tokenized metals with verifiable provenance a strong commercial proposition.",
+      "image_path": "templates/dalp-screenshots/07 - Deposits/jpg/Deposits Listing.jpg"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Custom asset types and extensibility",
+      "col1": "Built-in asset presets\n\u2022 Bond (Sukuk): yield, maturity, historical balances.\n\u2022 Equity: voting power, historical balances.\n\u2022 Fund: AUM fee, voting, historical balances.\n\u2022 Deposit: historical balances.\n\u2022 StableCoin: collateral, historical balances.\n\u2022 Real Estate: capped, historical balances.\n\u2022 Precious Metal: historical balances.",
+      "col2": "Create any instrument type\n\u2022 DALPAsset accepts any assetTypeName string.\n\u2022 Configure trade finance, carbon credits, loyalty points.\n\u2022 Combine any features and compliance modules.\n\u2022 Define custom metadata schemas.\n\u2022 Register custom features via addon registry.\n\u2022 No code changes for new instrument types."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Security and Compliance",
+      "subtitle": "Built for regulated institutional operations"
+    },
+    {
+      "bank_file": "slide-013-text-2x2.pptx",
+      "title": "Security architecture and access control",
+      "item1": "Identity and verification\nOnchainID with reusable claims. Verified identity governs who may subscribe, hold, and transfer. Distribution based on eligibility, not wallet addresses.",
+      "item2": "Role-based access control\nRBAC and ABAC with maker-checker workflows. Separate configuration, approval, and execution responsibilities across teams.",
+      "item3": "Custody integration\nBring-your-own-custodian model supports Fireblocks, DFNS, and other providers. DALP is the lifecycle layer, not the custodian. HSM compatibility for key management.",
+      "item4": "Observability and audit\nFull-stack monitoring: metrics (VictoriaMetrics), logs (Loki), traces (Tempo), pre-built Grafana dashboards, and automated alerting. Every action carries an audit trail."
+    },
+    {
+      "bank_file": "slide-016-screenshot-left.pptx",
+      "title": "Identity-linked operations",
+      "body": "DALP ties verified identity to operational permissions. Wallet addresses alone are never the control model. OnchainID and reusable claims let institutions control who may receive, hold, and move a regulated token. This supports cleaner onboarding, consistent transfer decisions, and a distribution model based on verified eligibility. For UAE banks, this aligns with KYC/AML requirements across CBUAE, VARA, and ADGM frameworks.",
+      "image_path": "templates/dalp-screenshots/12 - Identity and Verification/jpg/Onchain Identity.jpg"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Integration and Deployment",
+      "subtitle": "Connecting DALP to existing bank infrastructure"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Core banking integration and deployment",
+      "col1": "Integration architecture\n\u2022 REST APIs and event streams for core banking connectivity.\n\u2022 Standard interfaces for custody providers.\n\u2022 Identity federation with existing IAM systems.\n\u2022 Settlement coordination with payment rails.\n\u2022 Reporting and reconciliation outputs for books and records.",
+      "col2": "Deployment options\n\u2022 Self-hosted deployment for UAE data residency requirements.\n\u2022 EVM-compatible network support (public and permissioned).\n\u2022 High availability architecture with documented recovery procedures.\n\u2022 Infrastructure as code for repeatable deployments.\n\u2022 Full observability from day one."
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Why SettleMint",
+      "subtitle": "Platform, not project. Partner, not vendor."
+    },
+    {
+      "bank_file": "slide-012-three-column.pptx",
+      "title": "SettleMint credentials and regional presence",
+      "col1": "Platform maturity\n\u2022 Founded 2016, 9 years of blockchain infrastructure delivery.\n\u2022 DALP represents the fourth generation of the platform.\n\u2022 Active deployments across banking, capital markets, and government sectors.",
+      "col2": "Regional relevance\n\u2022 Existing Middle East engagements and partnerships.\n\u2022 Understanding of CBUAE, SCA, VARA, ADGM, and DIFC requirements.\n\u2022 Experience with Islamic finance structuring and Sharia compliance considerations.",
+      "col3": "Implementation approach\n\u2022 Platform delivery, not consulting projects.\n\u2022 Structured onboarding with governed launch workflows.\n\u2022 Reusable templates and compliance configurations accelerate time to first asset.\n\u2022 Expansion to additional asset classes on the same operating model."
+    },
+    {
+      "bank_file": "slide-005-single-column.pptx",
+      "title": "Suggested engagement path",
+      "body": "\u2022 Phase 1: Discovery workshop to map priority asset classes, regulatory requirements, and integration landscape. Identify the first instrument for governed launch.\n\u2022 Phase 2: Platform deployment with configured asset templates, compliance modules, identity integration, and custody provider connectivity.\n\u2022 Phase 3: First asset launch under full governance: maker-checker approvals, identity verification, transfer controls, and monitoring.\n\u2022 Phase 4: Extend to additional asset classes using the same platform, templates, and compliance model. Each new product reuses proven infrastructure."
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+graph LR
+    subgraph Platform["DALP Platform Layers"]
+        APP["Application\nServices"]
+        CHAIN["Blockchain\nNodes"]
+        INFRA["Infrastructure\n(compute, storage)"]
+    end
+    subgraph Collect["Collection Layer"]
+        PROM["Prometheus\nMetrics Scrape"]
+        FLUNT["Fluentd\nLog Aggregation"]
+        OTLP["OpenTelemetry\nTrace Collector"]
+    end
+    subgraph Store["Storage & Query"]
+        VMDB["VictoriaMetrics\nTime-Series DB"]
+        LOKI["Loki\nLog Store"]
+        TEMPO["Tempo\nTrace Store"]
+    end
+    subgraph Viz["Visualisation & Alerting"]
+        GRAF["Grafana\nDashboards"]
+        ALERT["AlertManager\nPagerDuty / OpsGenie"]
+        RPT["Scheduled Reports\n(Arabic + English)"]
+    end
+    APP --> PROM
+    CHAIN --> PROM
+    INFRA --> PROM
+    APP --> FLUNT
+    APP --> OTLP
+    PROM --> VMDB
+    FLUNT --> LOKI
+    OTLP --> TEMPO
+    VMDB --> GRAF
+    LOKI --> GRAF
+    TEMPO --> GRAF
+    GRAF --> ALERT
+    GRAF --> RPT

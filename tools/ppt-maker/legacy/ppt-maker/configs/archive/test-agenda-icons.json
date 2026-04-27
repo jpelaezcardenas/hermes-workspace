@@ -1,0 +1,35 @@
+{
+  "project": "test-agenda-icons",
+  "output": "output/test-agenda-icons.pptx",
+  "description": "Test deck for agenda icon and bullet fixes",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "DALP for Digital Assets",
+      "subtitle": "Platform Overview"
+    },
+    {
+      "bank_file": "slide-002-agenda.pptx",
+      "title": "Agenda",
+      "item_0": "Platform Overview",
+      "item_1": "Key Capabilities",
+      "item_2": "Security Architecture",
+      "item_3": "Implementation Timeline",
+      "icon1": "icon-library/lucide/building.512x512.png",
+      "icon2": "icon-library/lucide/coins.512x512.png",
+      "icon3": "icon-library/lucide/shield.512x512.png",
+      "icon4": "icon-library/lucide/clock.512x512.png"
+    },
+    {
+      "bank_file": "slide-010-two-column.pptx",
+      "title": "Before and After DALP",
+      "col1_title": "Before",
+      "col1": "* Manual reconciliation processes\n* Fragmented custody solutions\n* Paper-based compliance\n* 15-30 day settlement cycles\n* Multiple intermediary layers",
+      "col2_title": "After",
+      "col2": "* Automated on-chain reconciliation\n* Unified digital custody\n* Programmable compliance rules\n* Near-instant atomic settlement\n* Direct peer-to-peer transfers"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    }
+  ]
+}

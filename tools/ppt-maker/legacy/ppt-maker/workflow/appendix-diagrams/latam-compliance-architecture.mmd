@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant Investor
+    participant DALP as DALP Platform
+    participant OID as OnchainID
+    participant Policy as SMART Policy Engine
+    participant Chain as EVM Network
+
+    Investor->>DALP: Request Transfer
+    DALP->>OID: Verify Sender Identity
+    OID-->>DALP: Claims: KYC, AML, Country
+    DALP->>OID: Verify Receiver Identity
+    OID-->>DALP: Claims: Accreditation, Eligibility
+    DALP->>Policy: Evaluate Transfer Rules
+    Note over Policy: Country Allow/Block List<br/>Investor Count Limit<br/>Supply Cap Check<br/>Time Lock Validation
+    Policy-->>DALP: Compliant: Yes/No
+    alt Transfer Approved
+        DALP->>Chain: Execute Transfer
+        Chain-->>DALP: Transaction Confirmed
+        DALP-->>Investor: Transfer Complete
+    else Transfer Rejected
+        DALP-->>Investor: Rejection with Reason
+    end

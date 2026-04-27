@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant BUYER as Buyer
+    participant SELL as Seller
+    participant DALP as DALP Settlement
+    participant CBS as Core Banking
+    participant AUDIT as Audit Log
+    participant REG as Regulator Feed
+
+    BUYER->>DALP: Initiate settlement instruction
+    SELL->>DALP: Confirm asset delivery
+    DALP->>DALP: Pre-settlement compliance check
+    DALP->>DALP: Lock asset + cash legs
+    DALP->>CBS: Debit / credit notification
+    CBS-->>DALP: Confirmation
+    DALP->>DALP: Atomic execution (DVP)
+    DALP-->>BUYER: Settlement confirmed
+    DALP-->>SELL: Settlement confirmed
+    DALP->>AUDIT: Immutable settlement record
+    DALP->>REG: Regulatory reporting event (CBE format)

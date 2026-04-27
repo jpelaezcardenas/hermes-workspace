@@ -1,0 +1,8 @@
+graph LR
+    Design["Token Design"] -->|"Configure rules"| Issue["Issuance / Mint"]
+    Issue -->|"Compliance gate"| Distribute["Distribution & Transfer"]
+    Distribute -->|"Yield / Voting"| Service["Lifecycle Servicing"]
+    Service -->|"Conversion / Maturity"| Redeem["Redemption / Burn"]
+    Redeem -->|"AUM fee settled"| Archive["Archive & Audit"]
+    Service --> Compliance["Compliance Modules\nIdentity / Policy"]
+    Compliance -->|"Check passes"| Service

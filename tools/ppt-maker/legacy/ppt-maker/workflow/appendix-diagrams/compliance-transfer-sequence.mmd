@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant Investor
+    participant Portal as DALP Portal
+    participant Policy as Compliance Engine
+    participant Registry as Identity Registry
+    participant Chain as Blockchain
+    participant Custody
+
+    Investor->>Portal: Request transfer / redemption
+    Portal->>Registry: Resolve identity & wallet
+    Registry-->>Portal: Verified profile
+    Portal->>Policy: Evaluate jurisdiction, whitelist, limits
+    Policy->>Policy: Check holding rules & eligibility
+    Policy-->>Portal: Approved / rejected
+    alt Approved
+        Portal->>Chain: Execute token transfer / burn
+        Chain-->>Custody: Emit settlement event
+        Custody-->>Investor: Release metal or cash leg
+    else Rejected
+        Portal-->>Investor: Explain failed rule
+    end

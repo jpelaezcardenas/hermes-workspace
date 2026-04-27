@@ -1,0 +1,49 @@
+{
+  "project": "placeholder-aware-mermaid-demo",
+  "output": "output/placeholder-aware-mermaid-demo.pptx",
+  "slides": [
+    {
+      "bank_file": "slide-001-cover-slide.pptx",
+      "title": "Placeholder-aware Mermaid demo",
+      "subtitle": "One appendix slide per canonical image placeholder class"
+    },
+    {
+      "bank_file": "slide-024-thank-you.pptx"
+    },
+    {
+      "bank_file": "slide-003-section-separator.pptx",
+      "title": "Appendix",
+      "subtitle": "Mermaid variants matched to actual slide-bank placeholder classes"
+    },
+    {
+      "bank_file": "slide-015-screenshot-right.pptx",
+      "title": "Screenshot browser frame",
+      "body": "The browser-frame slot uses a wide landscape ratio — roughly 2:1. A system flow diagram rendered at 2800 px spans the full placeholder without distortion, keeping arrow labels and swimlane titles readable at presentation size.\n\nThis slot is best suited to DALP architecture diagrams, end-to-end asset flows, or sequence diagrams that need horizontal breathing room.",
+      "image_path": "output/diagrams/system-flow--screenshot-browser-frame-screenshot-browser-frame.png"
+    },
+    {
+      "bank_file": "slide-017-picture-left-equal.pptx",
+      "title": "Equal image slot",
+      "body": "The square-ish equal slot suits balanced tree diagrams. DALP's three core pillars — Design, Operate, Govern — branch vertically from the platform root, filling the placeholder cleanly.\n\nRendering at 1800 px width with multi-line node labels produces a near-1:1 viewBox, so `contain` placement fills ~98% of the slot with no horizontal letterboxing.",
+      "image_path": "output/diagrams/capability-map--equal-equal.png"
+    },
+    {
+      "bank_file": "slide-019-picture-left-wide.pptx",
+      "title": "Wide image slot",
+      "body": "Horizontal swim-lane diagrams align naturally with the wide landscape placeholder. Integration lanes show system boundaries and data flows across DALP, external custodians, and regulatory feeds without compression.\n\nThe ~1.7:1 slot ratio gives enough horizontal room for four or five lanes side-by-side, making complex integration maps legible in a single view.",
+      "image_path": "output/diagrams/integration-lanes--wide-wide.png"
+    },
+    {
+      "bank_file": "slide-021-picture-left-one-third.pptx",
+      "title": "One-third image slot",
+      "body": "Narrow portrait slots favour strict vertical stacks. A top-down approval chain fills the one-third column cleanly, with each step clearly separated and arrows pointing downward through the decision hierarchy.\n\nThis layout maps naturally to multi-step processes like issuance approvals, compliance sign-offs, or settlement confirmations — where sequence and clear hierarchy matter more than breadth.",
+      "image_path": "output/diagrams/approval-stack--one-third-one-third.png"
+    },
+    {
+      "bank_file": "slide-023-picture-full-width.pptx",
+      "title": "Full-width image slot",
+      "body": "The panoramic full-width slot spans the slide edge to edge. A horizontal value-stream map uses this extra width to lay out every lifecycle stage — from asset origination through settlement and reporting — in a single readable row.",
+      "image_path": "output/diagrams/value-stream--full-width-full-width.png"
+    }
+  ]
+}

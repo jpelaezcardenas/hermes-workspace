@@ -1,0 +1,10 @@
+graph LR
+    CLI["DALP CLI"] --> DAPI
+    SDK["DALP SDK"] --> DAPI
+    Portal["Operator Portal"] --> DAPI
+    DAPI["DAPI\nAPI Runtime\nAuth Hardened"] --> DDWF
+    DDWF["DDWF\nWorkflow Runtime\nDurable Exec"] --> Chain["Smart Contracts\nEVM Layer"]
+    DDWF --> DIDX
+    Chain --> DIDX["DIDX\nIndexer Runtime\nStandalone"]
+    DAPI --> Telemetry["Telemetry\nGrafana Alerting"]
+    DIDX --> ReadAPI["Token Read Surface"]

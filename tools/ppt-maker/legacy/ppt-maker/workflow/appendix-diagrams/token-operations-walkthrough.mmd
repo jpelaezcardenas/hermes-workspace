@@ -1,0 +1,11 @@
+graph LR
+    A[Operator] --> B[Initiate Action]
+    B --> C{Approval Gate}
+    C -->|Approved| D[Mint Tokens]
+    C -->|Approved| E[Transfer Tokens]
+    C -->|Approved| F[Freeze Holdings]
+    C -->|Rejected| G[Action Blocked]
+    D --> H[On-Chain Record]
+    E --> H
+    F --> H
+    H --> I[Audit Trail]

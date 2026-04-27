@@ -1,0 +1,34 @@
+flowchart LR
+    subgraph Clients["Client Systems"]
+        ERP["ERP /\nCore banking"]
+        CRM["CRM /\nInvestor portal"]
+        Custody["Custodian\nsystem"]
+    end
+    subgraph DALP["DALP Platform"]
+        API["REST +\nEvent APIs"]
+        WF["Workflow\nengine"]
+        TOK["Asset\noperations"]
+        COMP["Compliance\nmodules"]
+    end
+    subgraph Outputs["Outputs & Evidence"]
+        RPT["Reports &\ndashboards"]
+        AUD["Audit-ready\nevidence"]
+        REG["Regulatory\nreporting"]
+    end
+    ERP --> API
+    CRM --> API
+    Custody --> API
+    API --> WF
+    API --> TOK
+    WF --> COMP
+    COMP --> TOK
+    TOK --> RPT
+    WF --> RPT
+    RPT --> AUD
+    AUD --> REG
+    classDef client fill:#E8F0F8,stroke:#1E4868,color:#1E4868,stroke-width:2px
+    classDef platform fill:#E8EAF6,stroke:#000099,color:#000099,stroke-width:2px
+    classDef output fill:#E8F5E8,stroke:#187848,color:#187848,stroke-width:2px
+    class ERP,CRM,Custody client
+    class API,WF,TOK,COMP platform
+    class RPT,AUD,REG output
