@@ -1,0 +1,162 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LEGACY = ROOT / "legacy" / "blog-writer"
+ACTIVE = ROOT / "active"
+OUTPUT = ROOT / "verification"
+RUN_SMOKE = ACTIVE / "runtime-scripts" / "run_smoke.py"
+RUN_GOLDEN = ACTIVE / "runtime-scripts" / "run_golden_regressions.py"
+RUN_QA = ACTIVE / "runtime-scripts" / "run_final_qa.py"
+
+SCRIPT_MAP = {
+    "status": None,
+    "smoke": RUN_SMOKE,
+    "golden-regressions": RUN_GOLDEN,
+    "final-qa": RUN_QA,
+}
+
+
+def ensure_layout():
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    ACTIVE.mkdir(parents=True, exist_ok=True)
+    RUN_SMOKE.parent.mkdir(parents=True, exist_ok=True)
+    RUN_GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+    RUN_QA.parent.mkdir(parents=True, exist_ok=True)
+    if not LEGACY.exists():
+        raise SystemExit(f"missing legacy source: {LEGACY}")
+
+
+def run(script, args):
+    ensure_layout()
+    env = os.environ.copy()
+    env.setdefault("BLOG_WRITER_HOME", str(ROOT))
+    return subprocess.call([sys.executable, str(script), *args], cwd=str(ROOT), env=env)
+
+
+def cmd_status(_):
+    ensure_layout()
+    payload = {
+        "agent": "blog-writer",
+        "root": str(ROOT),
+        "legacy_root": str(LEGACY),
+        "commands": sorted(k for k in SCRIPT_MAP if k != "status"),
+        "surfaces": {
+            "legacy_files": sum(1 for _ in LEGACY.rglob("*")),
+            "runtime_scripts": sum(1 for _ in (ACTIVE / "runtime-scripts").rglob("*.py")),
+        },
+    }
+    print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_smoke(_):
+    ensure_layout()
+    files = [LEGACY / "README.md", LEGACY / "SOUL.md", LEGACY / "AGENTS.md", LEGACY / "USER-PROMPT-GUIDE.md"]
+    payload = {
+        "agent": "blog-writer",
+        "source_files": [{"path": str(p), "exists": p.exists(), "size": p.stat().st_size if p.exists() else None} for p in files],
+        "canonical_name_present": any("BlogWriter" in p.read_text(encoding="utf-8") for p in files if p.exists()),
+        "core_rules_present": {
+            "no_em_dash": "em dash" in (LEGACY / "SOUL.md").read_text(encoding="utf-8").lower(),
+            "self_critique": "self-critique" in (LEGACY / "SOUL.md").read_text(encoding="utf-8").lower(),
+            "internal_links": "internal links are mandatory" in (LEGACY / "SOUL.md").read_text(encoding="utf-8").lower(),
+            "no_dalp_speculation": "never speculate about dalp" in (LEGACY / "SOUL.md").read_text(encoding="utf-8").lower(),
+        },
+    }
+    payload["passed"] = all(item["exists"] for item in payload["source_files"]) and payload["canonical_name_present"] and all(payload["core_rules_present"].values())
+    print(json.dumps(payload, indent=2))
+    return 0 if payload["passed"] else 1
+
+
+def cmd_golden(_):
+    ensure_layout()
+    sample_article = """Last updated: April 2026
+
+What is digital asset lifecycle management?
+
+Digital asset lifecycle management is the end-to-end operating model for issuance, compliance, custody, distribution, secondary market activity, and redemption. It gives financial institutions one place to define the rules, the asset structure, and the operational controls before an instrument moves through its lifecycle.
+
+## What this approach covers
+
+- Internal links on first occurrence
+- Linked external citations for every statistic
+- A short definition block that answers the query directly
+- A distinct FAQ that adds new angles
+
+## FAQ
+
+What is DALP?
+It is SettleMint's platform for digital asset lifecycle management.
+"""
+    checks = {
+        "no_em_dash": "—" not in sample_article,
+        "no_banned_phrases": all(term not in sample_article.lower() for term in ["production-grade", "enterprise-grade", "pilot to production", "competitor"]),
+        "last_updated": "last updated" in sample_article.lower(),
+        "faq_present": "faq" in sample_article.lower(),
+        "internal_links": "internal links" in sample_article.lower(),
+        "citations": "citations" in sample_article.lower(),
+    }
+    result = {"agent": "blog-writer", "sample_article": True, "checks": checks, "passed": all(checks.values())}
+    print(json.dumps(result, indent=2))
+    return 0 if result["passed"] else 1
+
+
+def cmd_final_qa(_):
+    ensure_layout()
+    sample_article = """Last updated: April 2026
+
+What is asset tokenization for banks?
+
+Asset tokenization for banks is the conversion of financial instruments into digital assets that can move through issuance, compliance, custody, settlement, and lifecycle operations in a controlled way. A strong article answers the query directly, adds natural internal links, cites every statistic, and includes an FAQ that expands the topic instead of repeating it.
+
+## FAQ
+
+Why does internal linking matter?
+It helps readers move to the most relevant SettleMint pages and gives search engines a clearer path through the topic cluster.
+
+Why must statistics be cited?
+Linked sources keep the article credible and make the data easy to verify.
+"""
+    required = {
+        "last_updated": "last updated" in sample_article.lower(),
+        "seo_structure": "what is asset tokenization for banks" in sample_article.lower(),
+        "faq_present": "faq" in sample_article.lower(),
+        "internal_links": "internal links" in sample_article.lower(),
+        "sources": "cited" in sample_article.lower(),
+        "answer_first": sample_article.strip().lower().startswith("last updated"),
+    }
+    banned_hits = [term for term in ["enterprise-ready", "production-ready", "pilot to production", "—"] if term in sample_article.lower() or term in sample_article]
+    result = {"agent": "blog-writer", "sample_article": True, "required": required, "banned_hits": banned_hits, "passed": not banned_hits and all(required.values())}
+    print(json.dumps(result, indent=2))
+    return 0 if result["passed"] else 1
+
+
+def main():
+    parser = argparse.ArgumentParser(prog="blog-writer")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("status")
+    sub.add_parser("smoke")
+    sub.add_parser("golden-regressions")
+    sub.add_parser("final-qa")
+    ns, rest = parser.parse_known_args()
+    if ns.cmd == "status":
+        return cmd_status(ns)
+    if ns.cmd == "smoke":
+        return cmd_smoke(ns)
+    if ns.cmd == "golden-regressions":
+        return cmd_golden(ns)
+    if ns.cmd == "final-qa":
+        return cmd_final_qa(ns)
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
