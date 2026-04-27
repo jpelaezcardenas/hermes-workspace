@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "id": "",
+      "question": "This confidentiality statement shall remain binding on the parties for a period of five (5) years from the date stated on the front cover, unless superseded by confidentiality provisions detailed in a subsequent agreement.",
+      "existing_response": "",
+      "section": "",
+      "paragraph": 2
+    },
+    {
+      "id": "",
+      "question": "The response must reflect UAE requirements, including CBUAE, SCA, DFSA, ADGM FSMR. Relevant market initiatives include digital dirham, Project Aber, DIFC Innovation Hub. The response must explicitly address Sharia governance, AAOIFI-aligned review, product permissibility controls, and evidence suitable for Sharia-board review.",
+      "existing_response": "",
+      "section": "",
+      "paragraph": 22
+    },
+    {
+      "id": "",
+      "question": "Vendors must distinguish shipped capability, configurable platform capability, partner-enabled scope, and roadmap items.",
+      "existing_response": "",
+      "section": "",
+      "paragraph": 28
+    },
+    {
+      "id": "",
+      "question": "Respondents must provide architecture, deployment model, integration approach, security controls, operational resilience, implementation plan, support model, commercial assumptions, and evidence references.",
+      "existing_response": "",
+      "section": "",
+      "paragraph": 30
+    }
+  ],
+  "metadata": {
+    "format": "docx",
+    "sections": []
+  },
+  "source_file": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T141622Z/forge-enbd-rfp.docx",
+  "source_format": ".docx",
+  "total_questions": 4
+}

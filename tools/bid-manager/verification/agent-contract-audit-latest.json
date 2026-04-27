@@ -1,0 +1,13 @@
+{
+  "agent": "bid-manager",
+  "checked_files": [
+    "README.md",
+    "bin/bid-manager"
+  ],
+  "banned_active_names": [
+    "proposal-maker",
+    "proposal-factory"
+  ],
+  "findings": [],
+  "ok": true
+}
