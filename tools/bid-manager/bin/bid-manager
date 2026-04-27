@@ -88,6 +88,10 @@ def run_script(name: str, args: list[str]) -> int:
     env = os.environ.copy()
     env.setdefault("BID_MANAGER_HOME", str(ROOT))
     env.setdefault("PYTHONPATH", f"{SHARED / 'scripts'}:{BID / 'scripts'}:{env.get('PYTHONPATH','')}")
+    local_bin = str(Path.home() / ".local" / "bin")
+    path_parts = env.get("PATH", "").split(os.pathsep) if env.get("PATH") else []
+    if local_bin not in path_parts:
+        env["PATH"] = os.pathsep.join([local_bin, *path_parts])
     return subprocess.call([sys.executable, str(script), *normalize_args(args)], cwd=str(BID), env=env)
 
 
