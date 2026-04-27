@@ -20,7 +20,9 @@ This directory wires the preserved legacy office-agent assets into the current H
 - `ppt-maker inspect <deck.pptx> --json` — run recovered PPT checker inspection.
 - `ppt-maker validate <deck.pptx>` — run recovered deck validation.
 - `ppt-maker render-pdf <deck.pptx> [out-dir]` — render a PPTX to PDF through LibreOffice.
-- `ppt-maker golden-regressions --json` — build, inspect, validate, render, image-render, and gate a DALP overview deck fixture.
+- `ppt-maker generate-review <deck.pptx> --output-md <review.md> --output-json <review.json>` — run recovered PPT Checker written-review generation.
+- `ppt-maker visual-regression --json` — build a screenshot-heavy DALP walkthrough fixture, inspect/validate, generate review outputs, render PDF/pages, and create a slide montage.
+- `ppt-maker golden-regressions --json` — build, inspect, validate, render, image-render, gate a DALP overview deck fixture, and run the visual regression lane.
 
 ## Current verification posture
 
@@ -28,9 +30,11 @@ This directory wires the preserved legacy office-agent assets into the current H
 - Legacy inventory: 2,237 PPT Maker files and 50 PPT Checker files.
 - Slide bank: 22 PPTX slide templates present.
 - Master template: `Master Template 2026.pptx` present.
-- Smoke: passed.
-- Golden regressions: 6/6 command cases passed and 2/2 artifact gates passed.
-- Generated fixture: 10-slide DALP overview deck, valid PPTX, rendered PDF with 10 pages, first slide image render passed.
+- Smoke: passed with 6 recovered/runtime script commands present.
+- Golden regressions: 7/7 command cases passed and 2/2 artifact gates passed.
+- Basic fixture: 10-slide DALP overview deck, valid PPTX, rendered PDF with 10 pages, first slide image render passed.
+- Visual regression: 6/6 command cases passed and 5/5 artifact gates passed.
+- Visual fixture: 19-slide DALP walkthrough deck with screenshot media, generated review MD/JSON, PDF render, rendered slide images, and montage.
 
 ## Rule
 

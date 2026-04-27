@@ -6,6 +6,7 @@ import argparse
 import json
 import shutil
 import subprocess
+import sys
 import time
 import zipfile
 from pathlib import Path
@@ -102,6 +103,7 @@ def main(argv: list[str] | None = None) -> int:
     cases.append(run_case("render_pdf", [str(WRAPPER), "render-pdf", str(pptx), str(out_dir)]))
     if pdf.exists():
         cases.append(run_case("render_first_slide_image", ["pdftoppm", "-png", "-r", "100", "-f", "1", "-l", "1", str(pdf), str(out_dir / "slide")]))
+    cases.append(run_case("visual_regression", [sys.executable, str(ROOT / "active" / "runtime-scripts" / "run_visual_regression.py"), "--json", "--out-dir", str(out_dir / "visual-regression")]))
 
     gates = [pptx_gate(pptx, 10), pdf_gate(pdf, 10)]
     unexpected = [c for c in cases if not c["ok"]]
