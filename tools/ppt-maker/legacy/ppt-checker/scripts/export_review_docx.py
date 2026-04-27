@@ -15,7 +15,7 @@ W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 NS = {'w': W_NS}
 
 ROOT = Path(__file__).resolve().parents[2]
-BID_MANAGER = ROOT / 'bid-manager'
+BID_MANAGER = Path('/root/hermes-workspace/tools/bid-manager/legacy/bid-manager')
 CONVERTER = BID_MANAGER / 'scripts' / 'markdown_to_docx.py'
 TEMPLATE = BID_MANAGER / 'templates' / 'MASTER_TEMPLATE_LOCKED.docx'
 

@@ -21,8 +21,10 @@ This directory wires the preserved legacy office-agent assets into the current H
 - `ppt-maker validate <deck.pptx>` — run recovered deck validation.
 - `ppt-maker render-pdf <deck.pptx> [out-dir]` — render a PPTX to PDF through LibreOffice.
 - `ppt-maker generate-review <deck.pptx> --output-md <review.md> --output-json <review.json>` — run recovered PPT Checker written-review generation.
+- `ppt-maker export-review-docx <review.md> <review.docx>` — export a review markdown file to DOCX using the recovered Word template path.
 - `ppt-maker visual-regression --json` — build a screenshot-heavy DALP walkthrough fixture, inspect/validate, generate review outputs, render PDF/pages, and create a slide montage.
 - `ppt-maker golden-regressions --json` — build, inspect, validate, render, image-render, gate a DALP overview deck fixture, and run the visual regression lane.
+- `ppt-maker final-artifact-qa --json` — run the compact client-ready deck QA lane and emit a machine-readable verdict.
 
 ## Current verification posture
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/root/hermes-workspace/tools/ppt-maker/.venv/bin/python
 """Canonical ppt-maker runtime wrapper.
 
 Wraps the recovered SettleMint office-agent PPT Maker and PPT Checker surfaces
@@ -24,10 +24,12 @@ ACTIVE = ROOT / "active"
 SCRIPT_MAP = {
     "build-config": PPT / "scripts" / "build_from_config.py",
     "generate-review": CHECKER / "scripts" / "generate_review.py",
+    "export-review-docx": CHECKER / "scripts" / "export_review_docx.py",
     "inspect": CHECKER / "scripts" / "inspect-pptx.py",
     "validate": CHECKER / "scripts" / "validate_deck.py",
     "golden-regressions": ACTIVE / "runtime-scripts" / "run_golden_regressions.py",
     "visual-regression": ACTIVE / "runtime-scripts" / "run_visual_regression.py",
+    "final-artifact-qa": ACTIVE / "runtime-scripts" / "run_final_artifact_qa.py",
 }
 
 
