@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse, os, subprocess, sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+LEGACY = ROOT
+SCRIPT = LEGACY / "scripts" / "markdown_to_docx.py"
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(prog="word-writer")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("smoke", help="Verify key scripts compile")
+    p = sub.add_parser("markdown-to-docx", help="Convert markdown to DOCX")
+    p.add_argument("args", nargs=argparse.REMAINDER)
+    ns, extra = parser.parse_known_args(argv)
+    if ns.cmd == "smoke":
+        files = [str(SCRIPT)]
+        proc = subprocess.run([sys.executable, "-m", "py_compile", *files], cwd=str(ROOT), capture_output=True, text=True)
+        print(proc.stdout, end="")
+        if proc.returncode != 0:
+            print(proc.stderr, file=sys.stderr)
+        print('{"ok": %s, "script": "markdown_to_docx.py"}' % str(proc.returncode == 0).lower())
+        return proc.returncode
+    if extra:
+        ns.args.extend(extra)
+    return subprocess.call([sys.executable, str(SCRIPT), *ns.args], cwd=str(ROOT), env=os.environ.copy())
+
+if __name__ == '__main__':
+    raise SystemExit(main())
