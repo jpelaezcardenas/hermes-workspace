@@ -1,0 +1,80 @@
+{
+  "agent": "bid-manager",
+  "root": "/root/hermes-workspace/tools/bid-manager",
+  "artifact_dir": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z",
+  "source_rfp": "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/output/RFP/Middle-East-Africa/banks/emirates-nbd-rfp-tokenized-deposits-trade-finance-202603-v1.0.md",
+  "response_md": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/bid-manager-enbd-response.md",
+  "response_docx": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/bid-manager-enbd-response.docx",
+  "case_count": 5,
+  "passed_count": 5,
+  "unexpected": [],
+  "cases": [
+    {
+      "name": "forge_generate_mea",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "forge-generate-mea"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.214,
+      "stdout_tail": "i-tokenized-trade-finance-202603-v1.0.md\nRFI/Middle-East-Africa/banks/commercial-international-bank-cib-rfi-tokenized-fixed-income-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/flutterwave-rfp-tokenized-cross-border-payments-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/m-pesa-safaricom-rfp-digital-asset-mobile-payment-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/opay-rfp-tokenized-payment-infrastructure-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/tabby-rfp-tokenized-bnpl-infrastructure-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/chipper-cash-rfp-cross-border-tokenized-remittance-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/tamara-rfp-sharia-compliant-tokenized-lending-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/sarwa-rfp-tokenized-investment-platform-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/rain-rfp-digital-asset-exchange-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/interswitch-rfp-tokenized-payment-settlement-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/jumo-rfp-tokenized-sme-lending-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/flutterwave-rfi-tokenized-cross-border-payments-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/m-pesa-safaricom-rfi-digital-asset-mobile-payment-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/opay-rfi-tokenized-payment-infrastructure-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/tabby-rfi-tokenized-bnpl-infrastructure-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/chipper-cash-rfi-cross-border-tokenized-remittance-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/tamara-rfi-sharia-compliant-tokenized-lending-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/sarwa-rfi-tokenized-investment-platform-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/rain-rfi-digital-asset-exchange-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/interswitch-rfi-tokenized-payment-settlement-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/jumo-rfi-tokenized-sme-lending-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/adx-rfp-digital-securities-marketplace-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/tadawul-rfp-tokenized-securities-listing-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/jse-rfp-digital-asset-trading-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/difc-rfp-digital-asset-sandbox-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/adgm-rfp-digital-asset-regulatory-framework-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/central-bank-of-uae-rfp-cbdc-digital-dirham-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/sama-rfp-digital-riyal-pilot-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/south-african-reserve-bank-rfp-project-khokha-cbdc-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/central-bank-of-bahrain-rfp-digital-asset-regulatory-platform-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/casablanca-stock-exchange-rfp-tokenized-securities-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/adx-rfi-digital-securities-marketplace-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/tadawul-rfi-tokenized-securities-listing-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/jse-rfi-digital-asset-trading-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/difc-rfi-digital-asset-sandbox-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/adgm-rfi-digital-asset-regulatory-framework-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/central-bank-of-uae-rfi-cbdc-digital-dirham-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/sama-rfi-digital-riyal-pilot-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/south-african-reserve-bank-rfi-project-khokha-cbdc-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/central-bank-of-bahrain-rfi-digital-asset-regulatory-platform-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/casablanca-stock-exchange-rfi-tokenized-securities-202603-v1.0.md\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "forge_rfp_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/output/RFP/Middle-East-Africa/banks/emirates-nbd-rfp-tokenized-deposits-trade-finance-202603-v1.0.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/forge-enbd-rfp.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.546,
+      "stdout_tail": "  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\n  Cover page preserved (22 elements), 30 sample elements removed\n  TOC updated with 6 headings from template SDT (with TOC field)\n  Empty page prevention: removed 4 redundant element(s)\n\u2713 Converted emirates-nbd-rfp-tokenized-deposits-trade-finance-202603-v1.0.md \u2192 forge-enbd-rfp.docx (locked template validation verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "forge_extract_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "forge-extract",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/forge-enbd-rfp.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.271,
+      "stdout_tail": "{\n  \"questions\": [\n    {\n      \"id\": \"\",\n      \"question\": \"This confidentiality statement shall remain binding on the parties for a period of five (5) years from the date stated on the front cover, unless superseded by confidentiality provisions detailed in a subsequent agreement.\",\n      \"existing_response\": \"\",\n      \"section\": \"\",\n      \"paragraph\": 2\n    },\n    {\n      \"id\": \"\",\n      \"question\": \"The response must reflect UAE requirements, including CBUAE, SCA, DFSA, ADGM FSMR. Relevant market initiatives include digital dirham, Project Aber, DIFC Innovation Hub. The response must explicitly address Sharia governance, AAOIFI-aligned review, product permissibility controls, and evidence suitable for Sharia-board review.\",\n      \"existing_response\": \"\",\n      \"section\": \"\",\n      \"paragraph\": 22\n    },\n    {\n      \"id\": \"\",\n      \"question\": \"Vendors must distinguish shipped capability, configurable platform capability, partner-enabled scope, and roadmap items.\",\n      \"existing_response\": \"\",\n      \"section\": \"\",\n      \"paragraph\": 28\n    },\n    {\n      \"id\": \"\",\n      \"question\": \"Respondents must provide architecture, deployment model, integration approach, security controls, operational resilience, implementation plan, support model, commercial assumptions, and evidence references.\",\n      \"existing_response\": \"\",\n      \"section\": \"\",\n      \"paragraph\": 30\n    }\n  ],\n  \"metadata\": {\n    \"format\": \"docx\",\n    \"sections\": []\n  },\n  \"source_file\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/forge-enbd-rfp.docx\",\n  \"source_format\": \".docx\",\n  \"total_questions\": 4\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "bid_manager_response_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/bid-manager-enbd-response.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/bid-manager-enbd-response.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 1.413,
+      "stdout_tail": "  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\n  Cover page preserved (22 elements), 30 sample elements removed\n  TOC updated with 50 headings from template SDT (with TOC field)\n  Empty page prevention: removed 5 redundant element(s)\n\u2713 Converted bid-manager-enbd-response.md \u2192 bid-manager-enbd-response.docx (locked template validation verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "bid_checker_response",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "check-proposal",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/bid-manager-enbd-response.md"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.148,
+      "stdout_tail": "{\n  \"file\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211727Z/bid-manager-enbd-response.md\",\n  \"ok\": true,\n  \"structure\": {\n    \"has_executive_summary\": true,\n    \"heading_count\": 51,\n    \"headings\": [\n      \"# Emirates NBD \\u2014 Bid Manager E2E Technical Response Fixture\",\n      \"## Executive Summary\",\n      \"## Source RFP Context\",\n      \"# Technical Proposal Blueprint: Compact\",\n      \"## Blueprint Rules: MANDATORY COMPLIANCE\",\n      \"### Structural Compliance\",\n      \"### Consistency Anchors\",\n      \"### Pre-Write Checklist (complete before drafting any section)\",\n      \"### Output Quality Gates (validate before delivery)\",\n      \"### MANDATORY DIAGRAMS (Gyan directive, 2026-04-03)\",\n      \"### Original Skeleton-Specific Rules\",\n      \"## Global Guidance\",\n      \"### Objective\",\n      \"### Core Source References\",\n      \"### Tone Guidance\",\n      \"### What To Avoid\",\n      \"### Visual Element Policy\",\n      \"#### Section-to-Screenshot Map\",\n      \"## Executive Summary\",\n      \"### Executive Summary > Client Need and Proposed Response\",\n      \"### Executive Summary > Why SettleMint / DALP\",\n      \"### Executive Summary > Visual Spec\",\n      \"## About SettleMint\",\n      \"## About DALP\",\n      \"## Customer References\",\n      \"### Customer References > Summary Table\",\n      \"### Customer References > Relevance Note\",\n      \"### Customer References > Avoid\",\n      \"## Solution Overview\",\n      \"### Solution Overview > Requirement Themes\",\n      \"### Solution Overview > Proposed Operating Model\",\n      \"### Solution Overview > Core Capability Response\",\n      \"### Solution Overview > Fit Table\",\n      \"### Solution Overview > Visual Spec\",\n      \"### Solution Overview > Avoid\",\n      \"## Architecture Overview\",\n      \"## Security Overview\",\n      \"## Implementation Timeline\",\n      \"## Support & SLA\",\n      \"### Support & SLA > Support Summary Table\",\n      \"### Support & SLA > Severity Table\",\n      \"### Support & SLA > Avoid\",\n      \"## Risk Register\",\n      \"## Project Implementation & Delivery\",\n      \"### Project Implementation & Delivery (900-1400 words depending on variant)\",\n      \"## Deployment\",\n      \"### Deployment (500-900 words depending on variant)\",\n      \"## Support Appendix\",\n      \"### Support Appendix (400-700 words, appendix-style)\",\n      \"## Writer's Checklist\"\n    ],\n    \"word_count\": 2880,\n    \"has_sections\": true\n  },\n  \"issues\": [],\n  \"pattern_hits\": [\n    {\n      \"pattern\": \"Unqualified Absolute Language\",\n      \"evidence\": [\n        \"complete\",\n        \"always\",\n        \"complete\",\n        \"All\",\n        \"All\",\n        \"all\",\n        \"all\",\n        \"Always\",\n        \"complete\",\n        \"complete\"\n      ],\n      \"fix\": \"Add appropriate qualification or remove the absolute. \\\"Supports all EVM-compatible networks\\\" is defensible. \\\"Fully supports all requirements\\\" almost never is.\"\n    }\n  ]\n}\n",
+      "stderr_tail": ""
+    }
+  ],
+  "ok": true
+}

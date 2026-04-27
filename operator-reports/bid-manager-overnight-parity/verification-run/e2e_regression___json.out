@@ -1,0 +1,122 @@
+{
+  "agent": "bid-manager",
+  "root": "/root/hermes-workspace/tools/bid-manager",
+  "artifact_dir": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z",
+  "source_rfp": "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/output/RFP/Middle-East-Africa/banks/emirates-nbd-rfp-tokenized-deposits-trade-finance-202603-v1.0.md",
+  "response_md": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.md",
+  "response_docx": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.docx",
+  "case_count": 5,
+  "passed_count": 2,
+  "unexpected": [
+    {
+      "name": "forge_rfp_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/output/RFP/Middle-East-Africa/banks/emirates-nbd-rfp-tokenized-deposits-trade-finance-202603-v1.0.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/forge-enbd-rfp.docx"
+      ],
+      "exit": 1,
+      "ok": false,
+      "duration_seconds": 0.259,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py\", line 24, in <module>\n    from docx import Document\nModuleNotFoundError: No module named 'docx'\n"
+    },
+    {
+      "name": "forge_extract_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "forge-extract",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/forge-enbd-rfp.docx"
+      ],
+      "exit": 1,
+      "ok": false,
+      "duration_seconds": 0.117,
+      "stdout_tail": "{\"error\": \"File not found: /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/forge-enbd-rfp.docx\"}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "bid_manager_response_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.docx"
+      ],
+      "exit": 1,
+      "ok": false,
+      "duration_seconds": 0.257,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py\", line 24, in <module>\n    from docx import Document\nModuleNotFoundError: No module named 'docx'\n"
+    }
+  ],
+  "cases": [
+    {
+      "name": "forge_generate_mea",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "forge-generate-mea"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.273,
+      "stdout_tail": "i-tokenized-trade-finance-202603-v1.0.md\nRFI/Middle-East-Africa/banks/commercial-international-bank-cib-rfi-tokenized-fixed-income-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/flutterwave-rfp-tokenized-cross-border-payments-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/m-pesa-safaricom-rfp-digital-asset-mobile-payment-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/opay-rfp-tokenized-payment-infrastructure-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/tabby-rfp-tokenized-bnpl-infrastructure-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/chipper-cash-rfp-cross-border-tokenized-remittance-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/tamara-rfp-sharia-compliant-tokenized-lending-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/sarwa-rfp-tokenized-investment-platform-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/rain-rfp-digital-asset-exchange-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/interswitch-rfp-tokenized-payment-settlement-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/jumo-rfp-tokenized-sme-lending-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/flutterwave-rfi-tokenized-cross-border-payments-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/m-pesa-safaricom-rfi-digital-asset-mobile-payment-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/opay-rfi-tokenized-payment-infrastructure-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/tabby-rfi-tokenized-bnpl-infrastructure-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/chipper-cash-rfi-cross-border-tokenized-remittance-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/tamara-rfi-sharia-compliant-tokenized-lending-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/sarwa-rfi-tokenized-investment-platform-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/rain-rfi-digital-asset-exchange-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/interswitch-rfi-tokenized-payment-settlement-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/jumo-rfi-tokenized-sme-lending-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/adx-rfp-digital-securities-marketplace-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/tadawul-rfp-tokenized-securities-listing-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/jse-rfp-digital-asset-trading-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/difc-rfp-digital-asset-sandbox-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/adgm-rfp-digital-asset-regulatory-framework-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/central-bank-of-uae-rfp-cbdc-digital-dirham-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/sama-rfp-digital-riyal-pilot-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/south-african-reserve-bank-rfp-project-khokha-cbdc-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/central-bank-of-bahrain-rfp-digital-asset-regulatory-platform-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/casablanca-stock-exchange-rfp-tokenized-securities-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/adx-rfi-digital-securities-marketplace-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/tadawul-rfi-tokenized-securities-listing-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/jse-rfi-digital-asset-trading-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/difc-rfi-digital-asset-sandbox-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/adgm-rfi-digital-asset-regulatory-framework-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/central-bank-of-uae-rfi-cbdc-digital-dirham-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/sama-rfi-digital-riyal-pilot-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/south-african-reserve-bank-rfi-project-khokha-cbdc-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/central-bank-of-bahrain-rfi-digital-asset-regulatory-platform-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/casablanca-stock-exchange-rfi-tokenized-securities-202603-v1.0.md\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "forge_rfp_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/output/RFP/Middle-East-Africa/banks/emirates-nbd-rfp-tokenized-deposits-trade-finance-202603-v1.0.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/forge-enbd-rfp.docx"
+      ],
+      "exit": 1,
+      "ok": false,
+      "duration_seconds": 0.259,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py\", line 24, in <module>\n    from docx import Document\nModuleNotFoundError: No module named 'docx'\n"
+    },
+    {
+      "name": "forge_extract_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "forge-extract",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/forge-enbd-rfp.docx"
+      ],
+      "exit": 1,
+      "ok": false,
+      "duration_seconds": 0.117,
+      "stdout_tail": "{\"error\": \"File not found: /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/forge-enbd-rfp.docx\"}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "bid_manager_response_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.docx"
+      ],
+      "exit": 1,
+      "ok": false,
+      "duration_seconds": 0.257,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py\", line 24, in <module>\n    from docx import Document\nModuleNotFoundError: No module named 'docx'\n"
+    },
+    {
+      "name": "bid_checker_response",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "check-proposal",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.md"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.153,
+      "stdout_tail": "{\n  \"file\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211130Z/bid-manager-enbd-response.md\",\n  \"ok\": true,\n  \"structure\": {\n    \"has_executive_summary\": true,\n    \"heading_count\": 51,\n    \"headings\": [\n      \"# Emirates NBD \\u2014 Bid Manager E2E Technical Response Fixture\",\n      \"## Executive Summary\",\n      \"## Source RFP Context\",\n      \"# Technical Proposal Blueprint: Compact\",\n      \"## Blueprint Rules: MANDATORY COMPLIANCE\",\n      \"### Structural Compliance\",\n      \"### Consistency Anchors\",\n      \"### Pre-Write Checklist (complete before drafting any section)\",\n      \"### Output Quality Gates (validate before delivery)\",\n      \"### MANDATORY DIAGRAMS (Gyan directive, 2026-04-03)\",\n      \"### Original Skeleton-Specific Rules\",\n      \"## Global Guidance\",\n      \"### Objective\",\n      \"### Core Source References\",\n      \"### Tone Guidance\",\n      \"### What To Avoid\",\n      \"### Visual Element Policy\",\n      \"#### Section-to-Screenshot Map\",\n      \"## Executive Summary\",\n      \"### Executive Summary > Client Need and Proposed Response\",\n      \"### Executive Summary > Why SettleMint / DALP\",\n      \"### Executive Summary > Visual Spec\",\n      \"## About SettleMint\",\n      \"## About DALP\",\n      \"## Customer References\",\n      \"### Customer References > Summary Table\",\n      \"### Customer References > Relevance Note\",\n      \"### Customer References > Avoid\",\n      \"## Solution Overview\",\n      \"### Solution Overview > Requirement Themes\",\n      \"### Solution Overview > Proposed Operating Model\",\n      \"### Solution Overview > Core Capability Response\",\n      \"### Solution Overview > Fit Table\",\n      \"### Solution Overview > Visual Spec\",\n      \"### Solution Overview > Avoid\",\n      \"## Architecture Overview\",\n      \"## Security Overview\",\n      \"## Implementation Timeline\",\n      \"## Support & SLA\",\n      \"### Support & SLA > Support Summary Table\",\n      \"### Support & SLA > Severity Table\",\n      \"### Support & SLA > Avoid\",\n      \"## Risk Register\",\n      \"## Project Implementation & Delivery\",\n      \"### Project Implementation & Delivery (900-1400 words depending on variant)\",\n      \"## Deployment\",\n      \"### Deployment (500-900 words depending on variant)\",\n      \"## Support Appendix\",\n      \"### Support Appendix (400-700 words, appendix-style)\",\n      \"## Writer's Checklist\"\n    ],\n    \"word_count\": 2880,\n    \"has_sections\": true\n  },\n  \"issues\": [],\n  \"pattern_hits\": [\n    {\n      \"pattern\": \"Unqualified Absolute Language\",\n      \"evidence\": [\n        \"complete\",\n        \"always\",\n        \"complete\",\n        \"All\",\n        \"All\",\n        \"all\",\n        \"all\",\n        \"Always\",\n        \"complete\",\n        \"complete\"\n      ],\n      \"fix\": \"Add appropriate qualification or remove the absolute. \\\"Supports all EVM-compatible networks\\\" is defensible. \\\"Fully supports all requirements\\\" almost never is.\"\n    }\n  ]\n}\n",
+      "stderr_tail": ""
+    }
+  ],
+  "ok": false
+}

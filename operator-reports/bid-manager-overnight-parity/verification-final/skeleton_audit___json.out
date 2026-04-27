@@ -1,0 +1,343 @@
+{
+  "agent": "bid-manager",
+  "root": "/root/hermes-workspace/tools/bid-manager",
+  "skeleton_root": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons",
+  "totals": {
+    "families": 7,
+    "families_ok": 7,
+    "markdown_files": 16,
+    "docx_files": 12,
+    "excel_files": 3,
+    "diagram_skeletons": 32
+  },
+  "families": [
+    {
+      "name": "1_technical",
+      "exists": true,
+      "missing": [],
+      "artifacts": {
+        "markdown": [
+          "legacy/bid-manager/skeletons/1_technical/markdown/technical-compact.md",
+          "legacy/bid-manager/skeletons/1_technical/markdown/technical-medium.md",
+          "legacy/bid-manager/skeletons/1_technical/markdown/technical-full.md"
+        ],
+        "docx": [
+          "legacy/bid-manager/skeletons/1_technical/docx/technical-compact.docx",
+          "legacy/bid-manager/skeletons/1_technical/docx/technical-medium.docx",
+          "legacy/bid-manager/skeletons/1_technical/docx/technical-full.docx"
+        ]
+      },
+      "metrics": {
+        "markdown": [
+          {
+            "path": "legacy/bid-manager/skeletons/1_technical/markdown/technical-compact.md",
+            "bytes": 23514,
+            "word_count": 2973,
+            "headings": 48,
+            "mermaid_blocks": 4,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/1_technical/markdown/technical-full.md",
+            "bytes": 50827,
+            "word_count": 6209,
+            "headings": 143,
+            "mermaid_blocks": 17,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/1_technical/markdown/technical-medium.md",
+            "bytes": 31696,
+            "word_count": 3945,
+            "headings": 102,
+            "mermaid_blocks": 9,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          }
+        ],
+        "total_mermaid_blocks": 30,
+        "visual_spec_files": 3,
+        "quality_gate_files": 3
+      },
+      "ok": true
+    },
+    {
+      "name": "2_commercial",
+      "exists": true,
+      "missing": [],
+      "artifacts": {
+        "markdown": [
+          "legacy/bid-manager/skeletons/2_commercial/markdown/commercial-compact.md",
+          "legacy/bid-manager/skeletons/2_commercial/markdown/commercial-medium.md",
+          "legacy/bid-manager/skeletons/2_commercial/markdown/commercial-full.md"
+        ],
+        "docx": [
+          "legacy/bid-manager/skeletons/2_commercial/docx/commercial-compact.docx",
+          "legacy/bid-manager/skeletons/2_commercial/docx/commercial-medium.docx",
+          "legacy/bid-manager/skeletons/2_commercial/docx/commercial-full.docx"
+        ]
+      },
+      "metrics": {
+        "markdown": [
+          {
+            "path": "legacy/bid-manager/skeletons/2_commercial/markdown/commercial-compact.md",
+            "bytes": 21457,
+            "word_count": 2757,
+            "headings": 26,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/2_commercial/markdown/commercial-full.md",
+            "bytes": 50816,
+            "word_count": 6268,
+            "headings": 67,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/2_commercial/markdown/commercial-medium.md",
+            "bytes": 23716,
+            "word_count": 3028,
+            "headings": 26,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          }
+        ],
+        "total_mermaid_blocks": 0,
+        "visual_spec_files": 3,
+        "quality_gate_files": 3
+      },
+      "ok": true
+    },
+    {
+      "name": "3_rfi",
+      "exists": true,
+      "missing": [],
+      "artifacts": {
+        "markdown": [
+          "legacy/bid-manager/skeletons/3_rfi/markdown/rfi-compact.md",
+          "legacy/bid-manager/skeletons/3_rfi/markdown/rfi-medium.md",
+          "legacy/bid-manager/skeletons/3_rfi/markdown/rfi-full.md"
+        ],
+        "docx": [
+          "legacy/bid-manager/skeletons/3_rfi/docx/rfi-compact.docx",
+          "legacy/bid-manager/skeletons/3_rfi/docx/rfi-medium.docx",
+          "legacy/bid-manager/skeletons/3_rfi/docx/rfi-full.docx"
+        ]
+      },
+      "metrics": {
+        "markdown": [
+          {
+            "path": "legacy/bid-manager/skeletons/3_rfi/markdown/rfi-compact.md",
+            "bytes": 32483,
+            "word_count": 4078,
+            "headings": 47,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/3_rfi/markdown/rfi-full.md",
+            "bytes": 77438,
+            "word_count": 9453,
+            "headings": 119,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/3_rfi/markdown/rfi-medium.md",
+            "bytes": 42483,
+            "word_count": 5253,
+            "headings": 59,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          }
+        ],
+        "total_mermaid_blocks": 0,
+        "visual_spec_files": 3,
+        "quality_gate_files": 3
+      },
+      "ok": true
+    },
+    {
+      "name": "4_joint-response",
+      "exists": true,
+      "missing": [],
+      "artifacts": {
+        "markdown": [
+          "legacy/bid-manager/skeletons/4_joint-response/markdown/joint-response-compact.md",
+          "legacy/bid-manager/skeletons/4_joint-response/markdown/joint-response-medium.md",
+          "legacy/bid-manager/skeletons/4_joint-response/markdown/joint-response-full.md"
+        ],
+        "docx": [
+          "legacy/bid-manager/skeletons/4_joint-response/docx/joint-response-compact.docx",
+          "legacy/bid-manager/skeletons/4_joint-response/docx/joint-response-medium.docx",
+          "legacy/bid-manager/skeletons/4_joint-response/docx/joint-response-full.docx"
+        ]
+      },
+      "metrics": {
+        "markdown": [
+          {
+            "path": "legacy/bid-manager/skeletons/4_joint-response/markdown/joint-response-compact.md",
+            "bytes": 24896,
+            "word_count": 3171,
+            "headings": 29,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/4_joint-response/markdown/joint-response-full.md",
+            "bytes": 40268,
+            "word_count": 4990,
+            "headings": 36,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/4_joint-response/markdown/joint-response-medium.md",
+            "bytes": 29456,
+            "word_count": 3699,
+            "headings": 33,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          }
+        ],
+        "total_mermaid_blocks": 0,
+        "visual_spec_files": 3,
+        "quality_gate_files": 3
+      },
+      "ok": true
+    },
+    {
+      "name": "5_questionnaire",
+      "exists": true,
+      "missing": [],
+      "artifacts": {
+        "markdown": [
+          "legacy/bid-manager/skeletons/5_questionnaire/markdown/questionnaire-response.md"
+        ],
+        "excel": [
+          "legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template.csv",
+          "legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template.xlsx",
+          "legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template-v1.0.0.xlsx"
+        ]
+      },
+      "metrics": {
+        "markdown": [
+          {
+            "path": "legacy/bid-manager/skeletons/5_questionnaire/markdown/questionnaire-response.md",
+            "bytes": 22864,
+            "word_count": 2939,
+            "headings": 33,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          }
+        ],
+        "total_mermaid_blocks": 0,
+        "visual_spec_files": 1,
+        "quality_gate_files": 1
+      },
+      "ok": true
+    },
+    {
+      "name": "6_diagrams",
+      "exists": true,
+      "mmd_count": 32,
+      "examples": [
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/api-gateway-flow.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/asset-servicing-lifecycle.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/bond-issuance-flow.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/compliance-module-architecture.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/compliance-transfer-flow.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/custody-integration-flow.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/data-flow-asset-creation.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/deployment-topology-onprem.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/deployment-topology-saas.mmd",
+        "legacy/bid-manager/skeletons/6_diagrams/skeletons/deposit-tokenization-flow.mmd"
+      ],
+      "docs": [
+        "legacy/bid-manager/skeletons/6_diagrams/README.md",
+        "legacy/bid-manager/skeletons/6_diagrams/DIAGRAM-TYPES.md",
+        "legacy/bid-manager/skeletons/6_diagrams/STYLE-GUIDE.md"
+      ],
+      "missing": [],
+      "ok": true
+    },
+    {
+      "name": "7_generic",
+      "exists": true,
+      "missing": [],
+      "artifacts": {
+        "markdown": [
+          "legacy/bid-manager/skeletons/7_generic/markdown/generic-compact.md",
+          "legacy/bid-manager/skeletons/7_generic/markdown/generic-medium.md",
+          "legacy/bid-manager/skeletons/7_generic/markdown/generic-full.md"
+        ]
+      },
+      "metrics": {
+        "markdown": [
+          {
+            "path": "legacy/bid-manager/skeletons/7_generic/markdown/generic-compact.md",
+            "bytes": 18059,
+            "word_count": 2371,
+            "headings": 23,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/7_generic/markdown/generic-full.md",
+            "bytes": 27244,
+            "word_count": 3454,
+            "headings": 31,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          },
+          {
+            "path": "legacy/bid-manager/skeletons/7_generic/markdown/generic-medium.md",
+            "bytes": 22326,
+            "word_count": 2873,
+            "headings": 26,
+            "mermaid_blocks": 0,
+            "image_refs": 0,
+            "has_visual_spec": true,
+            "has_quality_gate": true
+          }
+        ],
+        "total_mermaid_blocks": 0,
+        "visual_spec_files": 3,
+        "quality_gate_files": 3
+      },
+      "ok": true
+    }
+  ],
+  "ok": true
+}

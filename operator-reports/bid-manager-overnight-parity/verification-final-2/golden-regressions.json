@@ -1,0 +1,243 @@
+{
+  "agent": "bid-manager",
+  "root": "/root/hermes-workspace/tools/bid-manager",
+  "artifact_dir": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/golden-20260427T211610Z",
+  "case_count": 15,
+  "passed_count": 15,
+  "expected_failure_baselines": [
+    "validator_generic_compact_expected_fail_visuals"
+  ],
+  "unexpected": [],
+  "cases": [
+    {
+      "name": "smoke_active_wrapper",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "smoke"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.255,
+      "stdout_tail": "{\n  \"agent\": \"bid-manager\",\n  \"script_checks\": [\n    {\n      \"command\": \"skeleton-audit\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_skeleton_audit.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"golden-regressions\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_golden_regressions.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"e2e-regression\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_e2e_regression.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"full-regression\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_full_regression.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"questionnaire-regression\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_questionnaire_regression.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"agent-contract-audit\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_agent_contract_audit.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"final-artifact-qa\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_final_artifact_qa.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"md-to-docx\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"docx-to-md\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/docx_to_markdown.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"xlsx-to-csv\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/xlsx_to_csv.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"csv-to-xlsx\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/csv_to_xlsx.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"validate\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/validate_proposal.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"render-mermaid\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/mermaid_to_images.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"render-plantuml\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/plantuml_to_images.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"check-proposal\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-checker/scripts/validate_proposal.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"forge-generate-mea\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/scripts/generate_mea_docs.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"forge-extract\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/scripts/extract-rfp.py\",\n      \"exists\": true\n    },\n    {\n      \"command\": \"forge-write\",\n      \"script\": \"/root/hermes-workspace/tools/bid-manager/legacy/rfp-forge/scripts/write-response.py\",\n      \"exists\": true\n    }\n  ],\n  \"python_files_compiled\": 22,\n  \"compile_exit_code\": 0,\n  \"compile_stdout\": \"\",\n  \"compile_stderr\": \"\",\n  \"known_legacy_regressions\": [],\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "skeleton_audit",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "skeleton-audit",
+        "--json"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.18,
+      "stdout_tail": "   },\n      \"ok\": true\n    },\n    {\n      \"name\": \"5_questionnaire\",\n      \"exists\": true,\n      \"missing\": [],\n      \"artifacts\": {\n        \"markdown\": [\n          \"legacy/bid-manager/skeletons/5_questionnaire/markdown/questionnaire-response.md\"\n        ],\n        \"excel\": [\n          \"legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template.csv\",\n          \"legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template.xlsx\",\n          \"legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template-v1.0.0.xlsx\"\n        ]\n      },\n      \"metrics\": {\n        \"markdown\": [\n          {\n            \"path\": \"legacy/bid-manager/skeletons/5_questionnaire/markdown/questionnaire-response.md\",\n            \"bytes\": 22864,\n            \"word_count\": 2939,\n            \"headings\": 33,\n            \"mermaid_blocks\": 0,\n            \"image_refs\": 0,\n            \"has_visual_spec\": true,\n            \"has_quality_gate\": true\n          }\n        ],\n        \"total_mermaid_blocks\": 0,\n        \"visual_spec_files\": 1,\n        \"quality_gate_files\": 1\n      },\n      \"ok\": true\n    },\n    {\n      \"name\": \"6_diagrams\",\n      \"exists\": true,\n      \"mmd_count\": 32,\n      \"examples\": [\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/api-gateway-flow.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/asset-servicing-lifecycle.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/bond-issuance-flow.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/compliance-module-architecture.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/compliance-transfer-flow.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/custody-integration-flow.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/data-flow-asset-creation.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/deployment-topology-onprem.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/deployment-topology-saas.mmd\",\n        \"legacy/bid-manager/skeletons/6_diagrams/skeletons/deposit-tokenization-flow.mmd\"\n      ],\n      \"docs\": [\n        \"legacy/bid-manager/skeletons/6_diagrams/README.md\",\n        \"legacy/bid-manager/skeletons/6_diagrams/DIAGRAM-TYPES.md\",\n        \"legacy/bid-manager/skeletons/6_diagrams/STYLE-GUIDE.md\"\n      ],\n      \"missing\": [],\n      \"ok\": true\n    },\n    {\n      \"name\": \"7_generic\",\n      \"exists\": true,\n      \"missing\": [],\n      \"artifacts\": {\n        \"markdown\": [\n          \"legacy/bid-manager/skeletons/7_generic/markdown/generic-compact.md\",\n          \"legacy/bid-manager/skeletons/7_generic/markdown/generic-medium.md\",\n          \"legacy/bid-manager/skeletons/7_generic/markdown/generic-full.md\"\n        ]\n      },\n      \"metrics\": {\n        \"markdown\": [\n          {\n            \"path\": \"legacy/bid-manager/skeletons/7_generic/markdown/generic-compact.md\",\n            \"bytes\": 18059,\n            \"word_count\": 2371,\n            \"headings\": 23,\n            \"mermaid_blocks\": 0,\n            \"image_refs\": 0,\n            \"has_visual_spec\": true,\n            \"has_quality_gate\": true\n          },\n          {\n            \"path\": \"legacy/bid-manager/skeletons/7_generic/markdown/generic-full.md\",\n            \"bytes\": 27244,\n            \"word_count\": 3454,\n            \"headings\": 31,\n            \"mermaid_blocks\": 0,\n            \"image_refs\": 0,\n            \"has_visual_spec\": true,\n            \"has_quality_gate\": true\n          },\n          {\n            \"path\": \"legacy/bid-manager/skeletons/7_generic/markdown/generic-medium.md\",\n            \"bytes\": 22326,\n            \"word_count\": 2873,\n            \"headings\": 26,\n            \"mermaid_blocks\": 0,\n            \"image_refs\": 0,\n            \"has_visual_spec\": true,\n            \"has_quality_gate\": true\n          }\n        ],\n        \"total_mermaid_blocks\": 0,\n        \"visual_spec_files\": 3,\n        \"quality_gate_files\": 3\n      },\n      \"ok\": true\n    }\n  ],\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "technical_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/1_technical/markdown/technical-compact.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/golden-20260427T211610Z/technical-compact.docx"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 1.141,
+      "stdout_tail": "  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\n  Cover page preserved (22 elements), 30 sample elements removed\n  TOC updated with 48 headings from template SDT (with TOC field)\n  Empty page prevention: removed 4 redundant element(s)\n\u2713 Converted technical-compact.md \u2192 technical-compact.docx (locked template validation verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "technical_docx_to_md",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "docx-to-md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/1_technical/docx/technical-compact.docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/golden-20260427T211610Z/technical-compact-roundtrip.md"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 1.205,
+      "stdout_tail": "\u2713 Converted technical-compact.docx \u2192 technical-compact-roundtrip.md (9,543 chars)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "questionnaire_csv_to_xlsx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "csv-to-xlsx",
+        "/root/hermes-workspace/tools/bid-manager/active/fixtures/questionnaire-approved.csv",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/golden-20260427T211610Z/questionnaire-template.xlsx"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 1.319,
+      "stdout_tail": "\u2713 Converted questionnaire-approved.csv \u2192 questionnaire-template.xlsx (1 response rows, approved template cloned, workbook contract verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "questionnaire_xlsx_to_csv",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "xlsx-to-csv",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/5_questionnaire/excel/settlemint-questionnaire-template.xlsx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/golden-20260427T211610Z/questionnaire-template.csv"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.4,
+      "stdout_tail": "\u2713 Converted settlemint-questionnaire-template.xlsx \u2192 questionnaire-template.csv (openpyxl)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "bid_checker_technical_compact",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "check-proposal",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/1_technical/markdown/technical-compact.md"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.176,
+      "stdout_tail": "{\n  \"file\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/1_technical/markdown/technical-compact.md\",\n  \"ok\": true,\n  \"structure\": {\n    \"has_executive_summary\": true,\n    \"heading_count\": 48,\n    \"headings\": [\n      \"# Technical Proposal Blueprint: Compact\",\n      \"## Blueprint Rules: MANDATORY COMPLIANCE\",\n      \"### Structural Compliance\",\n      \"### Consistency Anchors\",\n      \"### Pre-Write Checklist (complete before drafting any section)\",\n      \"### Output Quality Gates (validate before delivery)\",\n      \"### MANDATORY DIAGRAMS (Gyan directive, 2026-04-03)\",\n      \"### Original Skeleton-Specific Rules\",\n      \"## Global Guidance\",\n      \"### Objective\",\n      \"### Core Source References\",\n      \"### Tone Guidance\",\n      \"### What To Avoid\",\n      \"### Visual Element Policy\",\n      \"#### Section-to-Screenshot Map\",\n      \"## Executive Summary\",\n      \"### Executive Summary > Client Need and Proposed Response\",\n      \"### Executive Summary > Why SettleMint / DALP\",\n      \"### Executive Summary > Visual Spec\",\n      \"## About SettleMint\",\n      \"## About DALP\",\n      \"## Customer References\",\n      \"### Customer References > Summary Table\",\n      \"### Customer References > Relevance Note\",\n      \"### Customer References > Avoid\",\n      \"## Solution Overview\",\n      \"### Solution Overview > Requirement Themes\",\n      \"### Solution Overview > Proposed Operating Model\",\n      \"### Solution Overview > Core Capability Response\",\n      \"### Solution Overview > Fit Table\",\n      \"### Solution Overview > Visual Spec\",\n      \"### Solution Overview > Avoid\",\n      \"## Architecture Overview\",\n      \"## Security Overview\",\n      \"## Implementation Timeline\",\n      \"## Support & SLA\",\n      \"### Support & SLA > Support Summary Table\",\n      \"### Support & SLA > Severity Table\",\n      \"### Support & SLA > Avoid\",\n      \"## Risk Register\",\n      \"## Project Implementation & Delivery\",\n      \"### Project Implementation & Delivery (900-1400 words depending on variant)\",\n      \"## Deployment\",\n      \"### Deployment (500-900 words depending on variant)\",\n      \"## Support Appendix\",\n      \"### Support Appendix (400-700 words, appendix-style)\",\n      \"## Writer's Checklist\",\n      \"### Writer's Checklist > Must Pass\"\n    ],\n    \"word_count\": 2812,\n    \"has_sections\": true\n  },\n  \"issues\": [],\n  \"pattern_hits\": [\n    {\n      \"pattern\": \"Unqualified Absolute Language\",\n      \"evidence\": [\n        \"complete\",\n        \"always\",\n        \"complete\",\n        \"All\",\n        \"All\",\n        \"all\",\n        \"all\",\n        \"Always\",\n        \"complete\",\n        \"complete\"\n      ],\n      \"fix\": \"Add appropriate qualification or remove the absolute. \\\"Supports all EVM-compatible networks\\\" is defensible. \\\"Fully supports all requirements\\\" almost never is.\"\n    }\n  ]\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "bid_checker_commercial_compact",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "check-proposal",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/2_commercial/markdown/commercial-compact.md"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.171,
+      "stdout_tail": "{\n  \"file\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/2_commercial/markdown/commercial-compact.md\",\n  \"ok\": true,\n  \"structure\": {\n    \"has_executive_summary\": true,\n    \"heading_count\": 26,\n    \"headings\": [\n      \"# Commercial Proposal Blueprint: Compact\",\n      \"## Blueprint Rules: MANDATORY COMPLIANCE\",\n      \"### Structural Compliance\",\n      \"### Consistency Anchors\",\n      \"### Pre-Write Checklist (complete before drafting any section)\",\n      \"### Output Quality Gates (validate before delivery)\",\n      \"### Original Skeleton-Specific Rules\",\n      \"## Global Writer Instructions\",\n      \"### Visual Element Policy\",\n      \"#### Section-to-Screenshot Map\",\n      \"## Executive Summary\",\n      \"## Investment Rationale\",\n      \"## Licensing & Pricing\",\n      \"## Support Summary\",\n      \"## Implementation Timeline\",\n      \"## Key Commercial Terms\",\n      \"## TCO Comparison\",\n      \"## Customer References\",\n      \"### Customer References (700-1100 words total; 3-4 case studies)\",\n      \"## Project Implementation & Delivery\",\n      \"### Project Implementation & Delivery (900-1400 words depending on variant)\",\n      \"## Deployment\",\n      \"### Deployment (500-900 words depending on variant)\",\n      \"## Support Appendix\",\n      \"### Support Appendix (400-700 words, appendix-style)\",\n      \"## Next Steps\"\n    ],\n    \"word_count\": 2608,\n    \"has_sections\": true\n  },\n  \"issues\": [],\n  \"pattern_hits\": [\n    {\n      \"pattern\": \"Unqualified Absolute Language\",\n      \"evidence\": [\n        \"complete\",\n        \"always\",\n        \"complete\",\n        \"All\",\n        \"All\",\n        \"all\",\n        \"Always\",\n        \"complete\",\n        \"All\",\n        \"complete\"\n      ],\n      \"fix\": \"Add appropriate qualification or remove the absolute. \\\"Supports all EVM-compatible networks\\\" is defensible. \\\"Fully supports all requirements\\\" almost never is.\"\n    }\n  ]\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "validator_generic_compact_expected_fail_visuals",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "validate",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/7_generic/markdown/generic-compact.md",
+        "compact",
+        "--json"
+      ],
+      "expected_exit": "nonzero",
+      "actual_exit": 1,
+      "expected_failure_baseline": true,
+      "passed": true,
+      "duration_seconds": 0.182,
+      "stdout_tail": "\",\n  \"variant\": \"compact\",\n  \"strict\": false,\n  \"passed\": false,\n  \"checks\": {\n    \"mermaid_blocks\": {\n      \"count\": 0,\n      \"minimum\": 10,\n      \"passed\": false\n    },\n    \"image_refs\": {\n      \"count\": 0,\n      \"minimum\": 6,\n      \"passed\": false\n    },\n    \"screenshot_policy\": {\n      \"caption_passed\": true,\n      \"missing_captions\": [],\n      \"section_count\": 0,\n      \"section_minimum\": 2,\n      \"section_passed\": false,\n      \"category_count\": 0,\n      \"category_minimum\": 2,\n      \"category_passed\": false\n    },\n    \"sequence_diagrams\": {\n      \"count\": 0,\n      \"minimum\": 4,\n      \"passed\": false\n    },\n    \"emoji\": {\n      \"count\": 22,\n      \"passed\": false,\n      \"positions\": [\n        {\n          \"char\": \"\\u26d4\",\n          \"position\": 301,\n          \"unicode\": \"U+26D4\",\n          \"context\": \"...ATORY COMPLIANCE  > \\u26d4 **This skeleton MU...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe2\",\n          \"position\": 1291,\n          \"unicode\": \"U+1F7E2\",\n          \"context\": \"... - Confidence tags: \\ud83d\\udfe2 Native | \\ud83d\\udfe1 Partial...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe1\",\n          \"position\": 1302,\n          \"unicode\": \"U+1F7E1\",\n          \"context\": \"...ce tags: \\ud83d\\udfe2 Native | \\ud83d\\udfe1 Partial | \\ud83d\\udd34 Gap | ...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udd34\",\n          \"position\": 1314,\n          \"unicode\": \"U+1F534\",\n          \"context\": \"...ative | \\ud83d\\udfe1 Partial | \\ud83d\\udd34 Gap | \\u26aa N/A, apply...\"\n        },\n        {\n          \"char\": \"\\u26aa\",\n          \"position\": 1322,\n          \"unicode\": \"U+26AA\",\n          \"context\": \"...\\ud83d\\udfe1 Partial | \\ud83d\\udd34 Gap | \\u26aa N/A, apply at sect...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe2\",\n          \"position\": 10801,\n          \"unicode\": \"U+1F7E2\",\n          \"context\": \"...e  [Confidence tag: \\ud83d\\udfe2 Native]  ---  - Vi...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe2\",\n          \"position\": 11519,\n          \"unicode\": \"U+1F7E2\",\n          \"context\": \"...s  [Confidence tag: \\ud83d\\udfe2 Native]  ---  - Vi...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe2\",\n          \"position\": 12505,\n          \"unicode\": \"U+1F7E2\",\n          \"context\": \"...m  [Confidence tag: \\ud83d\\udfe2 Native | \\ud83d\\udfe1 Partial...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe1\",\n          \"position\": 12516,\n          \"unicode\": \"U+1F7E1\",\n          \"context\": \"...nce tag: \\ud83d\\udfe2 Native | \\ud83d\\udfe1 Partial]  ---  - V...\"\n        },\n        {\n          \"char\": \"\\ud83d\\udfe2\",\n          \"position\": 13325,\n          \"unicode\": \"U+1F7E2\",\n          \"context\": \"...e  [Confidence tag: \\ud83d\\udfe2 Native | \\ud83d\\udfe1 Partial...\"\n        }\n      ]\n    },\n    \"word_count\": 2531,\n    \"mandatory_diagram_sections\": {\n      \"missing\": [\n        {\n          \"section\": \"Platform\",\n          \"expected_diagram\": \"platform architecture\",\n          \"status\": \"section exists but no mermaid block found\"\n        },\n        {\n          \"section\": \"Solution\",\n          \"expected_diagram\": \"solution architecture\",\n          \"status\": \"section exists but no mermaid block found\"\n        },\n        {\n          \"section\": \"Compliance\",\n          \"expected_diagram\": \"compliance flow\",\n          \"status\": \"section exists but no mermaid block found\"\n        }\n      ],\n      \"passed\": false\n    },\n    \"placeholders\": {\n      \"remnants\": [\n        {\n          \"type\": \"Unresolved [VARIABLE: ...] placeholder\",\n          \"count\": 3,\n          \"examples\": [\n            \"[VARIABLE: ...]\",\n            \"[VARIABLE: ...]\",\n            \"[VARIABLE: ...]\"\n          ]\n        },\n        {\n          \"type\": \"Unexpanded [REUSABLE BLOCK: ...] tag\",\n          \"count\": 2,\n          \"examples\": [\n            \"[REUSABLE BLOCK: slug]\",\n            \"[REUSABLE BLOCK: ...]\"\n          ]\n        }\n      ],\n      \"passed\": true\n    },\n    \"banned_phrases\": {\n      \"findings\": [],\n      \"count\": 0,\n      \"passed\": true\n    }\n  }\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "rfp_forge_generate_mea",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "forge-generate-mea"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.233,
+      "stdout_tail": "i-tokenized-trade-finance-202603-v1.0.md\nRFI/Middle-East-Africa/banks/commercial-international-bank-cib-rfi-tokenized-fixed-income-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/flutterwave-rfp-tokenized-cross-border-payments-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/m-pesa-safaricom-rfp-digital-asset-mobile-payment-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/opay-rfp-tokenized-payment-infrastructure-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/tabby-rfp-tokenized-bnpl-infrastructure-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/chipper-cash-rfp-cross-border-tokenized-remittance-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/tamara-rfp-sharia-compliant-tokenized-lending-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/sarwa-rfp-tokenized-investment-platform-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/rain-rfp-digital-asset-exchange-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/interswitch-rfp-tokenized-payment-settlement-202603-v1.0.md\nRFP/Middle-East-Africa/fintechs/jumo-rfp-tokenized-sme-lending-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/flutterwave-rfi-tokenized-cross-border-payments-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/m-pesa-safaricom-rfi-digital-asset-mobile-payment-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/opay-rfi-tokenized-payment-infrastructure-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/tabby-rfi-tokenized-bnpl-infrastructure-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/chipper-cash-rfi-cross-border-tokenized-remittance-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/tamara-rfi-sharia-compliant-tokenized-lending-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/sarwa-rfi-tokenized-investment-platform-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/rain-rfi-digital-asset-exchange-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/interswitch-rfi-tokenized-payment-settlement-202603-v1.0.md\nRFI/Middle-East-Africa/fintechs/jumo-rfi-tokenized-sme-lending-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/adx-rfp-digital-securities-marketplace-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/tadawul-rfp-tokenized-securities-listing-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/jse-rfp-digital-asset-trading-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/difc-rfp-digital-asset-sandbox-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/adgm-rfp-digital-asset-regulatory-framework-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/central-bank-of-uae-rfp-cbdc-digital-dirham-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/sama-rfp-digital-riyal-pilot-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/south-african-reserve-bank-rfp-project-khokha-cbdc-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/central-bank-of-bahrain-rfp-digital-asset-regulatory-platform-202603-v1.0.md\nRFP/Middle-East-Africa/financial-institutions/casablanca-stock-exchange-rfp-tokenized-securities-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/adx-rfi-digital-securities-marketplace-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/tadawul-rfi-tokenized-securities-listing-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/jse-rfi-digital-asset-trading-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/difc-rfi-digital-asset-sandbox-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/adgm-rfi-digital-asset-regulatory-framework-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/central-bank-of-uae-rfi-cbdc-digital-dirham-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/sama-rfi-digital-riyal-pilot-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/south-african-reserve-bank-rfi-project-khokha-cbdc-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/central-bank-of-bahrain-rfi-digital-asset-regulatory-platform-202603-v1.0.md\nRFI/Middle-East-Africa/financial-institutions/casablanca-stock-exchange-rfi-tokenized-securities-202603-v1.0.md\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "compact_forge_to_bid_checker_e2e",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "e2e-regression",
+        "--json"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 2.557,
+      "stdout_tail": "ut_tail\": \"  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\\n  Cover page preserved (22 elements), 30 sample elements removed\\n  TOC updated with 50 headings from template SDT (with TOC field)\\n  Empty page prevention: removed 5 redundant element(s)\\n\\u2713 Converted bid-manager-enbd-response.md \\u2192 bid-manager-enbd-response.docx (locked template validation verified)\\n\",\n      \"stderr_tail\": \"\"\n    },\n    {\n      \"name\": \"bid_checker_response\",\n      \"cmd\": [\n        \"/root/hermes-workspace/tools/bid-manager/bin/bid-manager\",\n        \"check-proposal\",\n        \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211615Z/bid-manager-enbd-response.md\"\n      ],\n      \"exit\": 0,\n      \"ok\": true,\n      \"duration_seconds\": 0.15,\n      \"stdout_tail\": \"{\\n  \\\"file\\\": \\\"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/e2e-20260427T211615Z/bid-manager-enbd-response.md\\\",\\n  \\\"ok\\\": true,\\n  \\\"structure\\\": {\\n    \\\"has_executive_summary\\\": true,\\n    \\\"heading_count\\\": 51,\\n    \\\"headings\\\": [\\n      \\\"# Emirates NBD \\\\u2014 Bid Manager E2E Technical Response Fixture\\\",\\n      \\\"## Executive Summary\\\",\\n      \\\"## Source RFP Context\\\",\\n      \\\"# Technical Proposal Blueprint: Compact\\\",\\n      \\\"## Blueprint Rules: MANDATORY COMPLIANCE\\\",\\n      \\\"### Structural Compliance\\\",\\n      \\\"### Consistency Anchors\\\",\\n      \\\"### Pre-Write Checklist (complete before drafting any section)\\\",\\n      \\\"### Output Quality Gates (validate before delivery)\\\",\\n      \\\"### MANDATORY DIAGRAMS (Gyan directive, 2026-04-03)\\\",\\n      \\\"### Original Skeleton-Specific Rules\\\",\\n      \\\"## Global Guidance\\\",\\n      \\\"### Objective\\\",\\n      \\\"### Core Source References\\\",\\n      \\\"### Tone Guidance\\\",\\n      \\\"### What To Avoid\\\",\\n      \\\"### Visual Element Policy\\\",\\n      \\\"#### Section-to-Screenshot Map\\\",\\n      \\\"## Executive Summary\\\",\\n      \\\"### Executive Summary > Client Need and Proposed Response\\\",\\n      \\\"### Executive Summary > Why SettleMint / DALP\\\",\\n      \\\"### Executive Summary > Visual Spec\\\",\\n      \\\"## About SettleMint\\\",\\n      \\\"## About DALP\\\",\\n      \\\"## Customer References\\\",\\n      \\\"### Customer References > Summary Table\\\",\\n      \\\"### Customer References > Relevance Note\\\",\\n      \\\"### Customer References > Avoid\\\",\\n      \\\"## Solution Overview\\\",\\n      \\\"### Solution Overview > Requirement Themes\\\",\\n      \\\"### Solution Overview > Proposed Operating Model\\\",\\n      \\\"### Solution Overview > Core Capability Response\\\",\\n      \\\"### Solution Overview > Fit Table\\\",\\n      \\\"### Solution Overview > Visual Spec\\\",\\n      \\\"### Solution Overview > Avoid\\\",\\n      \\\"## Architecture Overview\\\",\\n      \\\"## Security Overview\\\",\\n      \\\"## Implementation Timeline\\\",\\n      \\\"## Support & SLA\\\",\\n      \\\"### Support & SLA > Support Summary Table\\\",\\n      \\\"### Support & SLA > Severity Table\\\",\\n      \\\"### Support & SLA > Avoid\\\",\\n      \\\"## Risk Register\\\",\\n      \\\"## Project Implementation & Delivery\\\",\\n      \\\"### Project Implementation & Delivery (900-1400 words depending on variant)\\\",\\n      \\\"## Deployment\\\",\\n      \\\"### Deployment (500-900 words depending on variant)\\\",\\n      \\\"## Support Appendix\\\",\\n      \\\"### Support Appendix (400-700 words, appendix-style)\\\",\\n      \\\"## Writer's Checklist\\\"\\n    ],\\n    \\\"word_count\\\": 2880,\\n    \\\"has_sections\\\": true\\n  },\\n  \\\"issues\\\": [],\\n  \\\"pattern_hits\\\": [\\n    {\\n      \\\"pattern\\\": \\\"Unqualified Absolute Language\\\",\\n      \\\"evidence\\\": [\\n        \\\"complete\\\",\\n        \\\"always\\\",\\n        \\\"complete\\\",\\n        \\\"All\\\",\\n        \\\"All\\\",\\n        \\\"all\\\",\\n        \\\"all\\\",\\n        \\\"Always\\\",\\n        \\\"complete\\\",\\n        \\\"complete\\\"\\n      ],\\n      \\\"fix\\\": \\\"Add appropriate qualification or remove the absolute. \\\\\\\"Supports all EVM-compatible networks\\\\\\\" is defensible. \\\\\\\"Fully supports all requirements\\\\\\\" almost never is.\\\"\\n    }\\n  ]\\n}\\n\",\n      \"stderr_tail\": \"\"\n    }\n  ],\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "full_technical_commercial_render_regression",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "full-regression",
+        "--json"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 20.529,
+      "stdout_tail": "0114,\n      \"zip_ok\": true,\n      \"has_document_xml\": true,\n      \"paragraphs\": 1072,\n      \"tables\": 1,\n      \"word_count\": 6471,\n      \"banned_routing_name_hits\": [],\n      \"docx_parse_ok\": true\n    },\n    {\n      \"name\": \"technical_full_pdf_gate\",\n      \"path\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-technical-full-regression.pdf\",\n      \"exists\": true,\n      \"ok\": true,\n      \"pdfinfo\": {\n        \"name\": \"pdfinfo_bid-manager-technical-full-regression\",\n        \"cmd\": [\n          \"pdfinfo\",\n          \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-technical-full-regression.pdf\"\n        ],\n        \"exit\": 0,\n        \"ok\": true,\n        \"duration_seconds\": 0.014,\n        \"stdout_tail\": \"Author:          Gyanendra Sharma\\nCreator:         Writer\\nProducer:        LibreOffice 24.2\\nCreationDate:    Mon Apr 27 21:16:22 2026 UTC\\nCustom Metadata: no\\nMetadata Stream: no\\nTagged:          yes\\nUserProperties:  no\\nSuspects:        no\\nForm:            none\\nJavaScript:      no\\nPages:           40\\nEncrypted:       no\\nPage size:       595.304 x 841.89 pts (A4)\\nPage rot:        0\\nFile size:       976789 bytes\\nOptimized:       no\\nPDF version:     1.7\\n\",\n        \"stderr_tail\": \"\"\n      },\n      \"pages\": 40,\n      \"pdftotext\": {\n        \"name\": \"pdftotext_bid-manager-technical-full-regression\",\n        \"cmd\": [\n          \"pdftotext\",\n          \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-technical-full-regression.pdf\",\n          \"-\"\n        ],\n        \"exit\": 0,\n        \"ok\": true,\n        \"duration_seconds\": 0.112,\n        \"stderr_tail\": \"\"\n      },\n      \"text_tail_chars\": 4000,\n      \"contains_bid_manager\": true\n    },\n    {\n      \"name\": \"commercial_full_docx_gate\",\n      \"path\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-commercial-full-regression.docx\",\n      \"exists\": true,\n      \"ok\": true,\n      \"bytes\": 159065,\n      \"zip_ok\": true,\n      \"has_document_xml\": true,\n      \"paragraphs\": 1187,\n      \"tables\": 1,\n      \"word_count\": 6548,\n      \"banned_routing_name_hits\": [],\n      \"docx_parse_ok\": true\n    },\n    {\n      \"name\": \"commercial_full_pdf_gate\",\n      \"path\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-commercial-full-regression.pdf\",\n      \"exists\": true,\n      \"ok\": true,\n      \"pdfinfo\": {\n        \"name\": \"pdfinfo_bid-manager-commercial-full-regression\",\n        \"cmd\": [\n          \"pdfinfo\",\n          \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-commercial-full-regression.pdf\"\n        ],\n        \"exit\": 0,\n        \"ok\": true,\n        \"duration_seconds\": 0.012,\n        \"stdout_tail\": \"Author:          Gyanendra Sharma\\nCreator:         Writer\\nProducer:        LibreOffice 24.2\\nCreationDate:    Mon Apr 27 21:16:32 2026 UTC\\nCustom Metadata: no\\nMetadata Stream: no\\nTagged:          yes\\nUserProperties:  no\\nSuspects:        no\\nForm:            none\\nJavaScript:      no\\nPages:           42\\nEncrypted:       no\\nPage size:       595.304 x 841.89 pts (A4)\\nPage rot:        0\\nFile size:       975587 bytes\\nOptimized:       no\\nPDF version:     1.7\\n\",\n        \"stderr_tail\": \"\"\n      },\n      \"pages\": 42,\n      \"pdftotext\": {\n        \"name\": \"pdftotext_bid-manager-commercial-full-regression\",\n        \"cmd\": [\n          \"pdftotext\",\n          \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T211618Z/bid-manager-commercial-full-regression.pdf\",\n          \"-\"\n        ],\n        \"exit\": 0,\n        \"ok\": true,\n        \"duration_seconds\": 0.073,\n        \"stderr_tail\": \"\"\n      },\n      \"text_tail_chars\": 4000,\n      \"contains_bid_manager\": true\n    }\n  ],\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "official_style_questionnaire_rowfill",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "questionnaire-regression",
+        "--json"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 1.545,
+      "stdout_tail": "{\n  \"agent\": \"bid-manager\",\n  \"artifact_dir\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z\",\n  \"source\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z/bid-manager-official-questionnaire-source.xlsx\",\n  \"final\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z/bid-manager-official-questionnaire-filled.xlsx\",\n  \"render\": {\n    \"name\": \"libreoffice_xlsx_to_pdf\",\n    \"cmd\": [\n      \"libreoffice\",\n      \"--headless\",\n      \"--convert-to\",\n      \"pdf\",\n      \"--outdir\",\n      \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z\",\n      \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z/bid-manager-official-questionnaire-filled.xlsx\"\n    ],\n    \"exit\": 0,\n    \"ok\": true,\n    \"duration_seconds\": 1.133,\n    \"stdout_tail\": \"convert /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z/bid-manager-official-questionnaire-filled.xlsx as a Calc document -> /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z/bid-manager-official-questionnaire-filled.pdf using filter : calc_pdf_Export\\n\",\n    \"stderr_tail\": \"Warning: failed to launch javaldx - java may not function correctly\\n\"\n  },\n  \"verification\": {\n    \"source_parts\": 9,\n    \"final_parts\": 9,\n    \"parts_preserved\": true,\n    \"rows\": 3,\n    \"response_count\": 3,\n    \"status_count\": 3,\n    \"evidence_count\": 3,\n    \"statuses\": [\n      \"Met\",\n      \"Met\",\n      \"Met\"\n    ],\n    \"buyer_remarks_untouched\": 3,\n    \"openpyxl_load_ok\": true,\n    \"libreoffice_render_ok\": true,\n    \"render_pdf\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211639Z/bid-manager-official-questionnaire-filled.pdf\"\n  },\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "agent_contract_naming_audit",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "agent-contract-audit",
+        "--json"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 0.132,
+      "stdout_tail": "{\n  \"agent\": \"bid-manager\",\n  \"checked_files\": [\n    \"README.md\",\n    \"bin/bid-manager\"\n  ],\n  \"banned_active_names\": [\n    \"proposal-maker\",\n    \"proposal-factory\"\n  ],\n  \"findings\": [],\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "final_artifact_qa",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "final-artifact-qa",
+        "--json"
+      ],
+      "expected_exit": "0",
+      "actual_exit": 0,
+      "expected_failure_baseline": false,
+      "passed": true,
+      "duration_seconds": 2.876,
+      "stdout_tail": "{\n  \"agent\": \"bid-manager\",\n  \"artifact_dir\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z\",\n  \"cases\": [\n    {\n      \"name\": \"md_to_docx\",\n      \"cmd\": [\n        \"/root/hermes-workspace/tools/bid-manager/bin/bid-manager\",\n        \"md-to-docx\",\n        \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.md\",\n        \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.docx\"\n      ],\n      \"exit\": 0,\n      \"ok\": true,\n      \"duration_seconds\": 0.584,\n      \"stdout_tail\": \"  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\\n  Cover page preserved (22 elements), 30 sample elements removed\\n  TOC updated with 6 headings from template SDT (with TOC field)\\n  Empty page prevention: removed 4 redundant element(s)\\n\\u2713 Converted enbd-tokenization-final-qa.md \\u2192 enbd-tokenization-final-qa.docx (locked template validation verified)\\n\",\n      \"stderr_tail\": \"\"\n    },\n    {\n      \"name\": \"render_pdf\",\n      \"cmd\": [\n        \"libreoffice\",\n        \"--headless\",\n        \"--convert-to\",\n        \"pdf\",\n        \"--outdir\",\n        \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z\",\n        \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.docx\"\n      ],\n      \"exit\": 0,\n      \"ok\": true,\n      \"duration_seconds\": 1.996,\n      \"stdout_tail\": \"convert /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.docx as a Writer document -> /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.pdf using filter : writer_pdf_Export\\n\",\n      \"stderr_tail\": \"Warning: failed to launch javaldx - java may not function correctly\\n\"\n    }\n  ],\n  \"gates\": [\n    {\n      \"path\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.docx\",\n      \"exists\": true,\n      \"ok\": true,\n      \"zip_ok\": true,\n      \"media_count\": 2,\n      \"word_count\": 580,\n      \"paragraphs\": 29,\n      \"tables\": 1,\n      \"banned_text_hits\": [],\n      \"has_table_of_contents_text\": true,\n      \"mentions_bid_manager\": false\n    },\n    {\n      \"path\": \"/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211640Z/enbd-tokenization-final-qa.pdf\",\n      \"exists\": true,\n      \"ok\": true,\n      \"pdfinfo_ok\": true,\n      \"pdftotext_ok\": true,\n      \"pages\": 5,\n      \"text_chars\": 3000\n    }\n  ],\n  \"ok\": true\n}\n",
+      "stderr_tail": ""
+    }
+  ],
+  "ok": true
+}

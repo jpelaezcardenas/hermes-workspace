@@ -1,0 +1,27 @@
+You are Quark running unattended overnight for SettleMint.
+
+Mission: autonomously test and harden the active bid-manager agent setup until it is at least at the same operational level as the copied office-agent bid-manager folder.
+
+Scope and evidence targets:
+- Legacy/copy baseline: /root/brain/office-agents/bid-manager and, if useful, /tmp/quark-workspace-april-2026/settlemint-office-agents/bid-manager.
+- Active runtime: /root/hermes-workspace/tools/bid-manager.
+- Canonical wrapper: /root/hermes-workspace/tools/bid-manager/bin/bid-manager.
+
+Required work:
+1. Compare legacy/copied office-agent bid-manager structure against the active runtime. Identify any missing valuable scripts, skeletons, templates, validators, docs, screenshots, diagram assets, regression fixtures, or QA surfaces.
+2. Run the full active verification stack, at minimum: status, smoke, skeleton-audit --json, golden-regressions --json, e2e-regression --json, full-regression --json, questionnaire-regression --json, agent-contract-audit --json, final-artifact-qa --json.
+3. If failures or parity gaps appear, fix them directly in /root/hermes-workspace/tools/bid-manager without mutating the preserved legacy mirror by accident.
+4. Add/repair regression coverage so the active surface proves parity rather than merely copying files.
+5. Verify DOCX/XLSX/PDF artifact gates where applicable, including LibreOffice rendering when available.
+6. Preserve the canonical user-facing name bid-manager; do not introduce proposal-maker/proposal-factory/proposal-stack as active names.
+7. Keep healthy progress silent. Do not send Slack messages. Write local reports and heartbeats instead.
+8. Write a concise morning-ready operator report with: parity verdict, commands exposed, verification results, files changed, commits, remaining gaps, and next best action.
+9. Commit successful /root/hermes-workspace and /root/brain changes if verification passes. If a remote push is blocked, leave a clean local commit and say so in the report.
+
+Quality bar:
+- Treat the copied office-agent folder as the baseline inventory, not as blindly trusted final code.
+- Broken legacy helpers should become either repaired active commands or explicit expected-fail regression baselines. Do not advertise broken machinery as live.
+- Do not stop after one green test if another available parity check would materially improve confidence.
+- Work until the overnight budget is exhausted or the parity gate is genuinely green.
+
+Final artifact location: /root/hermes-workspace/operator-reports/bid-manager-overnight-parity/summary.md

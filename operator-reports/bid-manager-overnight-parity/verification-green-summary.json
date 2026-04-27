@@ -1,0 +1,127 @@
+{
+  "commands": [
+    {
+      "command": "status",
+      "exit": 0,
+      "start": "2026-04-27T21:16:52Z",
+      "end": "2026-04-27T21:16:52Z"
+    },
+    {
+      "command": "smoke",
+      "exit": 0,
+      "start": "2026-04-27T21:16:52Z",
+      "end": "2026-04-27T21:16:52Z"
+    },
+    {
+      "command": "skeleton-audit --json",
+      "exit": 0,
+      "start": "2026-04-27T21:16:52Z",
+      "end": "2026-04-27T21:16:52Z"
+    },
+    {
+      "command": "golden-regressions --json",
+      "exit": 0,
+      "start": "2026-04-27T21:16:52Z",
+      "end": "2026-04-27T21:17:27Z"
+    },
+    {
+      "command": "e2e-regression --json",
+      "exit": 0,
+      "start": "2026-04-27T21:17:27Z",
+      "end": "2026-04-27T21:17:30Z"
+    },
+    {
+      "command": "full-regression --json",
+      "exit": 0,
+      "start": "2026-04-27T21:17:30Z",
+      "end": "2026-04-27T21:17:50Z"
+    },
+    {
+      "command": "questionnaire-regression --json",
+      "exit": 0,
+      "start": "2026-04-27T21:17:50Z",
+      "end": "2026-04-27T21:17:52Z"
+    },
+    {
+      "command": "agent-contract-audit --json",
+      "exit": 0,
+      "start": "2026-04-27T21:17:52Z",
+      "end": "2026-04-27T21:17:52Z"
+    },
+    {
+      "command": "final-artifact-qa --json",
+      "exit": 0,
+      "start": "2026-04-27T21:17:52Z",
+      "end": "2026-04-27T21:17:55Z"
+    }
+  ],
+  "ok": true,
+  "skeleton": {
+    "ok": true,
+    "families": 7,
+    "total_markdown": 0,
+    "total_docx": 0
+  },
+  "golden": {
+    "ok": true,
+    "cases": 15,
+    "failed": []
+  },
+  "full": {
+    "ok": true,
+    "cases": 4,
+    "artifacts": []
+  },
+  "questionnaire": {
+    "ok": true,
+    "verification": {
+      "source_parts": 9,
+      "final_parts": 9,
+      "parts_preserved": true,
+      "rows": 3,
+      "response_count": 3,
+      "status_count": 3,
+      "evidence_count": 3,
+      "statuses": [
+        "Met",
+        "Met",
+        "Met"
+      ],
+      "buyer_remarks_untouched": 3,
+      "openpyxl_load_ok": true,
+      "libreoffice_render_ok": true,
+      "render_pdf": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T211751Z/bid-manager-official-questionnaire-filled.pdf"
+    }
+  },
+  "final_artifact_qa": {
+    "ok": true,
+    "gates": [
+      {
+        "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211752Z/enbd-tokenization-final-qa.docx",
+        "exists": true,
+        "ok": true,
+        "zip_ok": true,
+        "media_count": 2,
+        "word_count": 580,
+        "paragraphs": 29,
+        "tables": 1,
+        "banned_text_hits": [],
+        "has_table_of_contents_text": true,
+        "mentions_bid_manager": false
+      },
+      {
+        "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T211752Z/enbd-tokenization-final-qa.pdf",
+        "exists": true,
+        "ok": true,
+        "pdfinfo_ok": true,
+        "pdftotext_ok": true,
+        "pages": 5,
+        "text_chars": 3000
+      }
+    ]
+  },
+  "agent_contract": {
+    "ok": true,
+    "findings": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "agent": "bid-manager",
+  "root": "/root/hermes-workspace/tools/bid-manager",
+  "output_root": "/root/hermes-workspace/tools/bid-manager/settlemint-office-agents/bid-manager/output",
+  "surfaces": {
+    "bid-manager": {
+      "files": 2749,
+      "dirs": 451,
+      "symlinks": 2,
+      "bytes": 618753522
+    },
+    "bid-checker": {
+      "files": 40,
+      "dirs": 13,
+      "symlinks": 1,
+      "bytes": 44362497
+    },
+    "rfp-forge": {
+      "files": 610,
+      "dirs": 99,
+      "symlinks": 2,
+      "bytes": 19092766
+    },
+    "shared": {
+      "files": 2342,
+      "dirs": 172,
+      "symlinks": 0,
+      "bytes": 1893766508
+    }
+  },
+  "commands": [
+    "agent-contract-audit",
+    "check-proposal",
+    "csv-to-xlsx",
+    "docx-to-md",
+    "e2e-regression",
+    "final-artifact-qa",
+    "forge-extract",
+    "forge-generate-mea",
+    "forge-write",
+    "full-regression",
+    "golden-regressions",
+    "md-to-docx",
+    "questionnaire-regression",
+    "render-mermaid",
+    "render-plantuml",
+    "skeleton-audit",
+    "validate",
+    "xlsx-to-csv"
+  ]
+}

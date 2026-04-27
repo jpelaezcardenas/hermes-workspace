@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_questionnaire_regression.py", line 14, in <module>
+    from openpyxl import Workbook, load_workbook
+ModuleNotFoundError: No module named 'openpyxl'
