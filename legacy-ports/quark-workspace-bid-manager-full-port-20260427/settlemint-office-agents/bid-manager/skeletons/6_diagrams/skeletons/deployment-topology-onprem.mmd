@@ -1,0 +1,54 @@
+%% DALP on-premises or private cloud deployment topology.
+%% Use in self-hosted deployment, regulated hosting, and private infrastructure sections.
+%% Replace [CLIENT: ...] boundaries with the client's real hosting zones.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    USERS[Client Users]
+    IDM[[CLIENT: SSO / IAM]]
+    EDGE[[CLIENT: DMZ / Ingress]]
+
+    subgraph VPC[[CLIENT: VPC / Datacenter]]
+        K8S[Private K8s Cluster]
+        APP[DALP Services]
+        IDX[Chain Indexer]
+        DB[PostgreSQL HA]
+        OBJ[Private Object Storage]
+        HSM[HSM / Key Vault]
+        MON[Monitoring]
+        BASTION[[CLIENT: Admin Access]]
+    end
+
+    subgraph CHAIN[Blockchain Connectivity]
+        RPC[[CLIENT: RPC Endpoints]]
+        NODE[[CLIENT: Validator / Node]]
+    end
+
+    USERS --> EDGE --> K8S
+    IDM --> APP
+    K8S --> APP
+    K8S --> IDX
+    APP --> DB
+    APP --> OBJ
+    APP --> HSM
+    APP --> MON
+    IDX --> DB
+    APP --> RPC
+    IDX --> RPC
+    RPC --> NODE
+    BASTION --> K8S
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+
+    class USERS,IDM,EDGE,VPC,BASTION,RPC,NODE client,rounded;
+    class APP dalp,rounded;
+    class K8S,IDX,DB,OBJ,HSM,MON infra,rounded;

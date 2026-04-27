@@ -1,0 +1,73 @@
+@startuml
+skinparam backgroundColor white
+skinparam rectangle {
+  BorderColor #000099
+  FontColor #000099
+}
+rectangle "ADI Chain" as chain {
+  rectangle "Network and node infrastructure" as infra
+  rectangle "Security and governance services" as gov
+  rectangle "Interoperability and oracle services" as intg
+}
+rectangle "DALP on ADI Chain" as dalp {
+  rectangle "Asset factories" as factories
+  rectangle "Identity and compliance" as compliance
+  rectangle "Operator console and APIs" as api
+  rectangle "Lifecycle servicing" as lifecycle
+}
+rectangle "Institutional ecosystem" as eco {
+  rectangle "Custody and signer services" as custody
+  rectangle "Treasury and banking systems" as treasury
+  rectangle "Investor channels and registrar workflows" as investor
+  rectangle "Monitoring and reporting" as reporting
+}
+chain --> dalp
+api --> custody
+api --> treasury
+api --> investor
+api --> reporting
+compliance --> chain
+lifecycle --> chain
+@enduml
+
+@startuml
+skinparam backgroundColor white
+skinparam rectangle {
+  BorderColor #000099
+  FontColor #000099
+}
+actor Investor
+rectangle "Trusted issuer" as TI
+rectangle "On-chain identity / claims" as ID
+rectangle "DALP compliance engine" as CE
+rectangle "Asset token on ADI Chain" as TOK
+Investor --> TI : KYC, eligibility, documents
+TI --> ID : issue claims
+Investor --> TOK : request transfer or subscription
+TOK --> CE : pre-transfer check
+CE --> ID : resolve identity and claims
+CE --> TOK : allow or reject
+@enduml
+
+@startuml
+skinparam backgroundColor white
+start
+:Create asset in DALP;
+:Assign roles and policy;
+:Verify investor identities;
+:Issue tokens on ADI Chain;
+if (Secondary transfers?) then (yes)
+  :Evaluate compliance before each transfer;
+endif
+if (Servicing event?) then (yield)
+  :Process yield entitlement and claims;
+elseif (voting)
+  :Run vote using checkpointed balances;
+elseif (maturity)
+  :Redeem and retire tokens;
+elseif (complex split/consolidation)
+  :Operational workflow using mint and burn primitives;
+endif
+:Audit and reporting trail;
+stop
+@enduml

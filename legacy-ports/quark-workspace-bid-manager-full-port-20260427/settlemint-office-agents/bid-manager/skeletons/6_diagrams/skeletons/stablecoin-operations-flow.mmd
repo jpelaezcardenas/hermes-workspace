@@ -1,0 +1,57 @@
+%% Stablecoin issuance and management with MiCA compliance enforcement.
+%% Use in stablecoin use case, compliance, and regulatory design sections.
+%% Shows 1:1 peg maintenance, MiCA supply cap enforcement, and rolling window tracking.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TD
+    FIAT[Fiat Deposit Received] --> VERIFY{Reserve Attestation<br/>Verified?}
+    VERIFY -->|Yes| CAPCHECK{MiCA Supply Cap<br/>Check}
+    VERIFY -->|No| REJECT1[Reject: Reserve<br/>Mismatch]
+
+    CAPCHECK -->|Within Cap| MINT[Mint Stablecoins]
+    CAPCHECK -->|Exceeds Cap| REJECT2[Reject: MiCA Cap<br/>Exceeded]
+
+    MINT --> ROLLING[Update Rolling Window<br/>Tracking]
+    ROLLING --> CIRCULATE[Tokens In Circulation]
+
+    CIRCULATE --> TRANSFER{Transfer Request}
+    TRANSFER --> COMPLY{Compliance Engine<br/>Evaluation}
+    COMPLY -->|Pass| EXECUTE[Execute Transfer]
+    COMPLY -->|Fail| BLOCK[Block Transfer]
+    EXECUTE --> CIRCULATE
+
+    CIRCULATE --> REDEEM[Redemption Request]
+    REDEEM --> BURNCHECK{Holder Verified<br/>And Eligible?}
+    BURNCHECK -->|Yes| BURN[Burn Stablecoins]
+    BURNCHECK -->|No| REJECT3[Reject: Eligibility<br/>Failed]
+    BURN --> PAYOUT[Fiat Payout<br/>Via Payment Rails]
+    PAYOUT --> RESERVE[Reserve Balance<br/>Updated]
+
+    subgraph MICA[MiCA Enforcement Layer]
+        CAPCHECK
+        ROLLING
+        REJECT2
+    end
+
+    subgraph COMPLIANCE[Compliance Controls]
+        COMPLY
+        BLOCK
+    end
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class FIAT,PAYOUT,RESERVE external,rounded;
+    class VERIFY,MINT,ROLLING,CIRCULATE,EXECUTE,BURN dalp,rounded;
+    class CAPCHECK,COMPLY compliance,rounded;
+    class TRANSFER,REDEEM,BURNCHECK dalp,rounded;
+    class REJECT1,REJECT2,REJECT3,BLOCK risk,rounded;

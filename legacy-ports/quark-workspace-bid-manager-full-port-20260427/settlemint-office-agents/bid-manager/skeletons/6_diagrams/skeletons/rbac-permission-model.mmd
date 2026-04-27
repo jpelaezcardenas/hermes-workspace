@@ -1,0 +1,63 @@
+%% DALP role-based access control model showing platform to on-chain role cascade.
+%% Use in security architecture, access control, and governance sections.
+%% Shows granular, auditable permissions from platform roles through smart contract roles.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TB
+    subgraph PLATFORM[Platform Roles]
+        ADMIN[Admin]
+        OPERATOR[Operator]
+        VIEWER[Viewer]
+    end
+
+    subgraph ASSET[Asset Roles]
+        ISSUER[Issuer]
+        TAGENT[Transfer Agent]
+        COFFICER[Compliance Officer]
+    end
+
+    subgraph ONCHAIN[Smart Contract Roles<br/>via AccessManager]
+        MINTER[MINTER]
+        BURNER[BURNER]
+        FREEZER[FREEZER]
+        PAUSER[PAUSER]
+        FORCED[FORCED_TRANSFER]
+    end
+
+    subgraph GOVERNANCE[Governance Controls]
+        MKC[Maker-Checker<br/>Enforcement]
+        AUDIT[Audit Trail<br/>All Role Changes]
+        SSO[SSO / IdP<br/>Authentication]
+    end
+
+    ADMIN -->|Full platform access| ISSUER
+    ADMIN -->|Full platform access| TAGENT
+    ADMIN -->|Full platform access| COFFICER
+    OPERATOR -->|Operational access| TAGENT
+    OPERATOR -->|Operational access| COFFICER
+    VIEWER -.->|Read-only| ASSET
+
+    ISSUER -->|Maps to| MINTER
+    ISSUER -->|Maps to| BURNER
+    TAGENT -->|Maps to| FORCED
+    COFFICER -->|Maps to| FREEZER
+    COFFICER -->|Maps to| PAUSER
+
+    SSO --> PLATFORM
+    MKC --> ONCHAIN
+    AUDIT --> ONCHAIN
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+
+    class ADMIN,OPERATOR,VIEWER dalp,rounded;
+    class ISSUER,TAGENT,COFFICER compliance,rounded;
+    class MINTER,BURNER,FREEZER,PAUSER,FORCED infra,rounded;
+    class MKC,AUDIT,SSO external,rounded;

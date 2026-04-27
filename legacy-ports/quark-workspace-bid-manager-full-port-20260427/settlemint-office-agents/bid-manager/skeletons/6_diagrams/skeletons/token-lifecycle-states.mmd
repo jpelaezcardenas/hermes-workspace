@@ -1,0 +1,43 @@
+%% DALP asset lifecycle state model.
+%% Use in asset lifecycle, servicing, and operating model sections.
+%% Add client-specific governance notes only if the asset operating model differs.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "securityLevel": "loose"
+}}%%
+stateDiagram-v2
+    [*] --> Design
+    Design --> Configure : Select asset type\nfeatures and modules
+    Configure --> Deploy : Factory validation\nand deployment
+    Deploy --> Issue : Assign roles\nunpause and mint
+    Issue --> Active : Token in circulation
+
+    state Active {
+        [*] --> Servicing
+        Servicing --> Servicing : Transfer
+        Servicing --> Servicing : Corporate Action
+        Servicing --> Servicing : Compliance Check
+        Servicing --> Servicing : Mint Or Burn
+    }
+
+    Active --> PauseFreeze : Pause Or Freeze
+    PauseFreeze --> Active : Unpause Or Unfreeze
+
+    Active --> RedeemMature : Maturity Or Redemption
+    PauseFreeze --> RedeemMature : Governed Exit
+    RedeemMature --> Retired : Burned Or Fully Redeemed
+    Retired --> [*]
+
+    note right of Configure
+        [CLIENT: Add approval gate if
+        client requires pre-go-live
+        compliance sign-off]
+    end note
+
+    note right of Active
+        DALP servicing includes transfers,
+        yield events, maturity redemption,
+        forced transfer, freeze, and role-based
+        operations.
+    end note

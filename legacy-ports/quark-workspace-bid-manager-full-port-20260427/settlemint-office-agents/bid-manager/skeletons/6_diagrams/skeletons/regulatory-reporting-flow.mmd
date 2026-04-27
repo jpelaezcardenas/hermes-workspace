@@ -1,0 +1,101 @@
+%% DALP regulatory reporting flow.
+%% Shows event capture, compliance event store, report generation, regulatory submission.
+%% Use in compliance, regulatory, audit, and reporting sections.
+%% Evaluator focus: audit-ready, automated reporting across MiCA, MiFID II, CSDR.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Figtree, Inter, Arial, sans-serif",
+    "fontSize": "15px",
+    "textColor": "#1A1A2E",
+    "lineColor": "#6B7280",
+    "background": "#FFFFFF",
+    "clusterBkg": "#FAFAFA",
+    "clusterBorder": "#D0D7DE",
+    "edgeLabelBackground": "#FFFFFF"
+  },
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    subgraph EVENTS[Event Sources]
+        ONCHAIN[On-Chain Events<br/>Chain Indexer]
+        OFFCHAIN[Off-Chain Events<br/>Execution Engine]
+        COMPEV[Compliance Events<br/>OnchainID Changes]
+    end
+
+    subgraph ENRICH[Enrichment Layer]
+        NORMALIZE[Event Normalization<br/>+ Timestamp]
+        OFFENRICH[Off-Chain Enrichment<br/>Counterparty / Asset Data]
+        STORE[Compliance<br/>Event Store]
+    end
+
+    subgraph GENERATE[Report Generation]
+        TEMPLATES{Report<br/>Template?}
+        MICA[MiCA<br/>Reports]
+        MIFID[MiFID II<br/>Transaction Reports]
+        CSDR[CSDR<br/>Settlement Reports]
+        CUSTOM[Custom<br/>Reports]
+    end
+
+    subgraph FORMAT[Export Formats]
+        XBRL[XBRL]
+        CSV[CSV]
+        PDF[PDF]
+        API_OUT[API / JSON]
+    end
+
+    %% Event flow
+    ONCHAIN --> NORMALIZE
+    OFFCHAIN --> NORMALIZE
+    COMPEV --> NORMALIZE
+    NORMALIZE --> OFFENRICH
+    OFFENRICH --> STORE
+
+    %% Store to generation
+    STORE --> TEMPLATES
+    TEMPLATES -->|MiCA| MICA
+    TEMPLATES -->|MiFID II| MIFID
+    TEMPLATES -->|CSDR| CSDR
+    TEMPLATES -->|Custom| CUSTOM
+
+    %% Reports to formats
+    MICA --> XBRL
+    MICA --> PDF
+    MIFID --> CSV
+    MIFID --> XBRL
+    CSDR --> CSV
+    CUSTOM --> API_OUT
+    CUSTOM --> PDF
+
+    %% Submission
+    XBRL --> REGAUTH
+    CSV --> REGAUTH
+    PDF --> REGAUTH
+    API_OUT --> CLIENTBI
+
+    REGAUTH[[CLIENT: Regulatory<br/>Authority]]
+    CLIENTBI[[CLIENT: Reporting /<br/>BI System]]
+
+    %% Audit
+    STORE -.->|Immutable Record| AUDIT[Audit Trail<br/>Tamper-Proof Log]
+    AUDIT -.-> CLIENTAUDIT[[CLIENT: Internal<br/>Audit Team]]
+
+    %% Styling
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class ONCHAIN,OFFCHAIN dalp,rounded;
+    class COMPEV compliance,rounded;
+    class NORMALIZE,OFFENRICH,STORE dalp,rounded;
+    class TEMPLATES dalp,rounded;
+    class MICA,MIFID,CSDR,CUSTOM compliance,rounded;
+    class XBRL,CSV,PDF,API_OUT infra,rounded;
+    class AUDIT compliance,rounded;
+    class REGAUTH,CLIENTBI,CLIENTAUDIT client,rounded;

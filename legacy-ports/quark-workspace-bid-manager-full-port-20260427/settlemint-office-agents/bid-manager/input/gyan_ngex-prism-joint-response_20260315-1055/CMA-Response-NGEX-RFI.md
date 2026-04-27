@@ -1,0 +1,1545 @@
+CMA Small Systems AB
+
+Response to Request for Information
+
+Digital Post-Trade Financial Market Infrastructure
+
+Prepared for
+ **Next Generation Holding – L.L.C – S.P.C (NGEX)**
+Abu Dhabi, United Arab Emirates
+
+Prepared by
+
+**CMA Small Systems AB**
+Olof Palmes gata 29, 4th Floor
+111 22 Stockholm, Sweden
+
+Stockholm,
+
+March 13, 2026
+
+# Confidentiality Notice
+
+This document contains confidential information belonging to CMA Small Systems AB and is provided solely for the purpose of responding to the Request for Information issued by Next Generation Holding – L.L.C – S.P.C (NGEX).
+
+The information contained in this document may not be disclosed, reproduced, or distributed to third parties without the prior written consent of CMA Small Systems AB.
+
+# Document Information
+
+* **Document Title**: CMA Response to NGEX RFI – Digital Post-Trade Financial Market Infrastructure
+* **Prepared for**: Next Generation Holding – L.L.C – S.P.C (NGEX)
+* **Prepared by**: CMA Small Systems AB
+* **Date**: 13 March 2026
+* **Document Version**: 1.0
+* **Confidentiality Classification**: Confidential
+
+# Version Control
+
+|  |  |  |  |
+| --- | --- | --- | --- |
+| **Version** | **Date** | **Author** | **Description** |
+| 0.1 | 10 March 2026 | CMA Team | Initial draft |
+| 0.5 | 11 March 2026 | CMA Team | Updated content and structure |
+| 1.0 | 13 March 2026 | CMA Small Systems AB | Final version submitted to NGEX |
+
+# Distribution List
+
+|  |  |  |
+| --- | --- | --- |
+| **Organization** | **Name** | **Role** |
+| NGEX | Procurement Team | RFI Evaluation |
+| CMA Small Systems AB | Internal Project Team | Preparation of response |
+
+[Confidentiality Notice 2](#_Toc224267389)
+
+[Document Information 3](#_Toc224267390)
+
+[Version Control 3](#_Toc224267391)
+
+[Distribution List 3](#_Toc224267392)
+
+[Executive Summary 9](#_Toc224267393)
+
+[Introduction 9](#_Toc224267394)
+
+[CMA Experience in Financial Market Infrastructure 9](#_Toc224267395)
+
+[References 10](#_Toc224267396)
+
+[Overview of Selected Deployments 11](#_Toc224267397)
+
+[Arab Monetary Fund – BUNA Regional Financial Infrastructure 11](#_Toc224267398)
+
+[Gulf Payments Company – AFAQ Cross-Border Payment Infrastructure 12](#_Toc224267399)
+
+[Central Bank of Indonesia (Bank Indonesia) – Securities and Financial Market Infrastructure 12](#_Toc224267400)
+
+[Central Bank of Mongolia (Bank of Mongolia) – Capital Markets Trading and Depository Infrastructure 12](#_Toc224267401)
+
+[Vietnam Securities Depository – Capital Markets Infrastructure 13](#_Toc224267402)
+
+[National Bank of the Kyrgyz Republic – Financial Market Trading Infrastructure 13](#_Toc224267403)
+
+[State Bank of Pakistan – Integrated Financial Market Infrastructure (PRISM+) 14](#_Toc224267404)
+
+[Monetary Authority of Singapore – MEPS+ Contingency Infrastructure 14](#_Toc224267405)
+
+[Commodity Exchange Trading and Post-Trade Infrastructure 15](#_Toc224267406)
+
+[Ecosystem and Distribution 15](#_Toc224267407)
+
+[Issuer Access 15](#_Toc224267408)
+
+[Investor Access 16](#_Toc224267409)
+
+[Platform-Driven Connectivity 16](#_Toc224267410)
+
+[Evidence 16](#_Toc224267411)
+
+[Constraints 17](#_Toc224267412)
+
+[Solution Positioning Statement 18](#_Toc224267413)
+
+[What CMA provides end-to-end 18](#_Toc224267414)
+
+[What CMA integrates 18](#_Toc224267415)
+
+[What NGEX and third parties provide 19](#_Toc224267416)
+
+[~~Proposed Role of CMA in the NGEX Architecture~~ 21](#_Toc224267417)
+
+[Key Capabilities of the Proposed Solution 21](#_Toc224267418)
+
+[Alignment with NGEX Strategic Objectives 22](#_Toc224267419)
+
+[CMA Overview and Relevant Experience 23](#_Toc224267420)
+
+[Company Overview 23](#_Toc224267421)
+
+[Experience in Financial Market Infrastructure 23](#_Toc224267422)
+
+[Relevant Implementations and Deployments 24](#_Toc224267423)
+
+[References and Case Studies 24](#_Toc224267424)
+
+[Ecosystem and Market Connectivity 25](#_Toc224267425)
+
+[Institutional Relationships and Market Participants 25](#_Toc224267426)
+
+[Connectivity with Financial Institutions and Market Infrastructure 25](#_Toc224267427)
+
+[Partner Ecosystem 26](#_Toc224267428)
+
+[Contribution to NGEX Ecosystem Development 26](#_Toc224267429)
+
+[Solution Positioning 27](#_Toc224267430)
+
+[CMA Role within the NGEX Architecture 27](#_Toc224267431)
+
+[Scope of the CMA Platform 27](#_Toc224267432)
+
+[Integration with NGEX and Third-Party Components 28](#_Toc224267433)
+
+[Architectural Principles 29](#_Toc224267434)
+
+[Target Operating Model 30](#_Toc224267435)
+
+[Operating Model for the MVP Phase 30](#_Toc224267436)
+
+[Roles and Responsibilities Across Participants 30](#_Toc224267437)
+
+[Day-2 Operations 31](#_Toc224267438)
+
+[Governance and Operational Controls 31](#_Toc224267439)
+
+[Tokenization Model Support 32](#_Toc224267440)
+
+[Digital Twin Model Support 32](#_Toc224267441)
+
+[Native Digital Issuance 32](#_Toc224267442)
+
+[Token Lifecycle Governance 33](#_Toc224267443)
+
+[Golden Record Governance 33](#_Toc224267444)
+
+[Trade Confirmation Ingestion 34](#_Toc224267445)
+
+[Supported Integration Interfaces 34](#_Toc224267446)
+
+[Trade Data Processing and Canonical Data Model 34](#_Toc224267447)
+
+[Downstream Processing 34](#_Toc224267448)
+
+[Operational Controls and Exception Handling 35](#_Toc224267449)
+
+[24/7 Operational Model 36](#_Toc224267450)
+
+[Continuous Infrastructure Operation 36](#_Toc224267451)
+
+[Operational Dependencies 36](#_Toc224267452)
+
+[Evolution Toward Real-Time Operations 36](#_Toc224267453)
+
+[Ledger and Blockchain Integration 37](#_Toc224267454)
+
+[Integration with Distributed Ledger Environments 37](#_Toc224267455)
+
+[Multi-Ledger Architecture Considerations 37](#_Toc224267456)
+
+[Ledger Abstraction and Interoperability 38](#_Toc224267457)
+
+[Synchronization with Registry and Settlement Systems 38](#_Toc224267458)
+
+[Security Architecture and Key Management 39](#_Toc224267459)
+
+[Security Architecture Overview 39](#_Toc224267460)
+
+[Information Security Controls 39](#_Toc224267461)
+
+[Key Management Integration 39](#_Toc224267462)
+
+[Identity and Access Management 40](#_Toc224267463)
+
+[Incident Response and Operational Monitoring 40](#_Toc224267464)
+
+[Data Residency and Privacy Considerations 40](#_Toc224267465)
+
+[Identity, Compliance and Regulatory Readiness 41](#_Toc224267466)
+
+[KYC and AML Integration Framework 41](#_Toc224267467)
+
+[Sanctions Screening and Transfer Restrictions 41](#_Toc224267468)
+
+[Regulatory Reporting 41](#_Toc224267469)
+
+[Auditability and Evidence Production 42](#_Toc224267470)
+
+[Alignment with Financial Market Infrastructure Principles 42](#_Toc224267471)
+
+[Wallet and Custody Infrastructure 43](#_Toc224267472)
+
+[Custody Model Integration 43](#_Toc224267473)
+
+[Segregation Models 43](#_Toc224267474)
+
+[Integration with Wallet Infrastructure 43](#_Toc224267475)
+
+[Recovery and Governance Procedures 44](#_Toc224267476)
+
+[Implementation Approach 45](#_Toc224267477)
+
+[Implementation Strategy 45](#_Toc224267478)
+
+[Proposed MVP Implementation Phases 45](#_Toc224267479)
+
+[Phase 1. Architecture and design 45](#_Toc224267480)
+
+[Phase 2. Platform configuration and integration 45](#_Toc224267481)
+
+[Phase 3. Testing and validation 46](#_Toc224267482)
+
+[Phase 4. Pilot deployment 46](#_Toc224267483)
+
+[NGEX Responsibilities 46](#_Toc224267484)
+
+[Key Dependencies 46](#_Toc224267485)
+
+[Risk Management Approach 47](#_Toc224267486)
+
+[Commercial Model (Indicative) 47](#_Toc224267487)
+
+[Licensing Model 47](#_Toc224267488)
+
+[Implementation Services 47](#_Toc224267489)
+
+[Support and Maintenance 48](#_Toc224267490)
+
+[Service Levels and Operational Support 48](#_Toc224267491)
+
+[Coverage and Gaps Statement 48](#_Toc224267492)
+
+[Capabilities Delivered by CMA 48](#_Toc224267493)
+
+[Capabilities Not Delivered by CMA 50](#_Toc224267494)
+
+[Potential Partner Categories 51](#_Toc224267495)
+
+[Integration Responsibility Split 51](#_Toc224267496)
+
+[Conclusion 52](#_Toc224267497)
+
+[Appendix A - Proposed Architecture for NGEX Digital Post-Trade Infrastructure 53](#_Toc224267498)
+
+[Architectural Overview 53](#_Toc224267499)
+
+[High-Level Architecture Diagram 53](#_Toc224267500)
+
+[Component Responsibilities 54](#_Toc224267501)
+
+[Trading Venue 54](#_Toc224267502)
+
+[CMA Post-Trade Platform 55](#_Toc224267503)
+
+[Distributed Ledger Registry (Operated by NGEX) 55](#_Toc224267504)
+
+[Custodian or CSD Infrastructure 55](#_Toc224267505)
+
+[Wallet and Custody Infrastructure 55](#_Toc224267506)
+
+[Architectural Principles 56](#_Toc224267507)
+
+[Appendix B - Example Deployment Architecture 57](#_Toc224267508)
+
+[Deployment Model Overview 57](#_Toc224267509)
+
+[Example Deployment Architecture 58](#_Toc224267510)
+
+[Infrastructure Components 58](#_Toc224267511)
+
+[Application Layer 58](#_Toc224267512)
+
+[Integration Layer 59](#_Toc224267513)
+
+[Distributed Ledger Environment 59](#_Toc224267514)
+
+[Custody and Settlement Infrastructure 59](#_Toc224267515)
+
+[Security and Key Management Layer 59](#_Toc224267516)
+
+[Appendix C - Operating Flow Diagram 60](#_Toc224267517)
+
+[Transaction Processing Flow 60](#_Toc224267518)
+
+[Operational Monitoring 60](#_Toc224267519)
+
+# Executive Summary
+
+## Introduction
+
+CMA Small Systems AB appreciates the opportunity to respond to the Request for Information issued by Next Generation Holding – L.L.C – S.P.C (NGEX).
+
+The initiative undertaken by NGEX represents an ambitious effort to establish a new generation of financial market infrastructure capable of supporting the evolution of digital capital markets and positioning the region as an important hub for modern financial infrastructure.
+
+Experience shows that the success of such initiatives depends not only on technology but also on deep expertise in designing, implementing, and operating complex financial market infrastructures. These systems must reliably integrate multiple institutions, regulatory requirements, operational processes, and market participants within a stable and well-governed ecosystem.
+
+CMA brings global experience in building mission-critical financial infrastructures for central banks and national financial institutions, including payment systems, settlement platforms, and securities depositories. This experience enables CMA to contribute both technology and the practical expertise required to establish reliable and scalable infrastructures capable of supporting regional and international financial markets.
+
+## CMA Experience in Financial Market Infrastructure
+
+CMA Small Systems AB provides technology solutions for financial institutions, including financial market infrastructures. For more than three decades, CMA has supported central banks, market operators, and national payment institutions in the design, implementation, and operation of critical financial systems.
+
+CMA solutions have been deployed in more than 55 countries and support national infrastructures such as real-time gross settlement systems, instant payment systems, and securities depositories. These systems operate in highly regulated environments and require strong operational resilience, clear governance frameworks, and strict security and compliance controls.
+
+In addition to national infrastructures, CMA has also contributed to regional and cross-border financial systems, including infrastructures such as BUNA, AFAQ, COMESA, BCEAO, and BEAC, supporting integration between multiple national financial systems and institutions.
+
+CMA provides infrastructure platforms that operate across multiple layers of financial market infrastructure, supporting both payment systems and capital markets.
+
+Key components of the CMA portfolio include:
+
+* **RTS/X – Real-Time Gross Settlement (RTGS)**
+  Core market infrastructure used by central banks for large-value and high-priority payments, liquidity management, and settlement operations.
+* **IPS and BCS/X – Retail and Instant Payment Systems**
+  Platforms supporting ACH and instant payments, enabling high-volume retail transactions and national fast payment infrastructures.
+* **TMS/X – Transaction Management and Integration Layer**
+  Integration and orchestration platform that enables connectivity between financial institutions, payment systems, and market infrastructures.
+* **DEPO/X – Central Securities Depository and Registry**
+  Platform supporting securities custody, issuance, settlement, and corporate actions processing for capital market infrastructures.
+* **TRAD/X – Electronic Trading Platform**
+  Trading platform supporting order matching, price discovery, and trading for bonds, equities, treasury instruments, and other financial assets.
+
+CMA systems operate across different layers of financial infrastructure and support a wide range of financial instruments that are actively traded and settled in production environments, including currencies, government securities, corporate bonds, equities, and commodities.
+
+While tokenized instruments are emerging in capital markets, none of CMA’s clients have yet requested a production system specifically designed for tokenized assets. However, CMA’s experience in building complex financial infrastructures over more than three decades provides a strong foundation for supporting such developments when required. Based on this experience, CMA considers technology to be an important component, but successful infrastructure projects depend equally on operational design, governance models, and practical experience in running mission-critical financial systems.
+
+## References
+
+CMA has delivered financial market infrastructure systems for central banks, national market operators, exchanges, and financial institutions across multiple regions. The examples below represent a selected subset of relevant deployments, illustrating CMA’s experience in regulated environments and in infrastructures supporting capital markets, post-trade operations, and monetary policy systems.
+
+Many of these systems operate as core components of national or regional financial infrastructures, supporting settlement, securities operations, trading environments, and interaction between central banks, financial institutions, and market participants. Additional references and detailed project information can be provided upon request.
+
+## Overview of Selected Deployments
+
+These implementations demonstrate CMA’s experience in building infrastructures that support regulated financial markets, integrate multiple market participants, and operate as core components of national or regional financial ecosystems.
+
+|  |  |  |  |
+| --- | --- | --- | --- |
+| **Project** | **Country** | **Infrastructure Layer** | **Financial Instruments** |
+| BUNA Regional Payment System | United Arab Emirates | Regional financial infrastructure | Cross-border payments |
+| AFAQ GCC Payment System | Saudi Arabia | Regional settlement infrastructure | Cross-border payments |
+| Central Bank of Indonesia (Bank Indonesia) | Indonesia | Securities infrastructure and monetary operations | Government securities |
+| Vietnam Securities Depository (VSD) | Vietnam | Central securities depository and post-trade infrastructure | Equities, bonds, ETFs |
+| Central Bank of Mongolia (Bank of Mongolia) | Mongolia | Capital markets trading and depository infrastructure | Government securities, FX, money market instruments |
+| National Bank of the Kyrgyz Republic | Kyrgyzstan | Financial market trading infrastructure | Government securities, FX, money market instruments |
+| State Bank of Pakistan (PRISM+) | Pakistan | Integrated financial market infrastructure | Payments and securities operations |
+| Monetary Authority of Singapore – MEPS+ Contingency | Singapore | Payment and securities settlement infrastructure | Payments and securities settlement |
+| National Commodity Exchange Infrastructure | Confidential | Exchange trading and post-trade infrastructure | Commodities |
+
+### Arab Monetary Fund – BUNA Regional Financial Infrastructure
+
+**Client:** Arab Monetary Fund
+**Location:** Abu Dhabi, United Arab Emirates
+
+**Scope**
+
+* Regional payment infrastructure enabling cross-border settlement between financial institutions in multiple countries
+* Integration with national financial infrastructures and participating central banks
+* Support for cross-border liquidity flows and regional financial connectivity
+
+**Environment**Regional financial infrastructure connecting multiple national financial systems and central banks.
+
+**Reference contact:** Available upon request
+
+### Gulf Payments Company – AFAQ Cross-Border Payment Infrastructure
+
+**Client:** Gulf Payments Company
+**Location:** Riyadh, Saudi Arabia
+
+**Scope**
+
+* Regional infrastructure connecting financial institutions across GCC countries
+* Cross-border settlement between national payment systems
+* Integration with national RTGS infrastructures of participating central banks
+
+**Environment**Regional regulated financial infrastructure supporting cross-border financial integration across the GCC.
+
+**Reference contact:** Available upon request
+
+### Central Bank of Indonesia (Bank Indonesia) – Securities and Financial Market Infrastructure
+
+**Client:** Central Bank of Indonesia
+**Location:** Indonesia
+
+**Scope**
+
+* Central Securities Depository infrastructure supporting custody and settlement of government securities
+* Platform supporting government securities auctions
+* Integration with financial institutions participating in domestic capital markets
+* Support for central bank monetary policy operations
+
+**Environment**Central bank operated infrastructure supporting national capital markets and government securities operations.
+
+**Reference contact:** Available upon request
+
+### Central Bank of Mongolia (Bank of Mongolia) – Capital Markets Trading and Depository Infrastructure
+
+**Client:** Central Bank of Mongolia
+**Location:** Mongolia
+
+**Scope**
+
+* Integrated infrastructure supporting securities trading and post-trade processes
+* Central Securities Depository platform supporting custody and settlement of government securities
+* Trading infrastructure supporting foreign exchange, money market, and government securities transactions
+* Integration with central bank systems supporting domestic financial market operations
+
+**Environment**Central bank regulated capital market infrastructure supporting government securities markets and monetary policy operations.
+
+**Reference contact:** Available upon request
+
+### Vietnam Securities Depository – Capital Markets Infrastructure
+
+**Client:** Vietnam Securities Depository (VSD)
+**Location:** Vietnam
+**Scope**
+
+* Central Securities Depository platform supporting securities custody and settlement
+* Corporate actions processing and investor account management
+* Integration with national stock exchanges and clearing infrastructure
+* Support for capital market instruments including equities, bonds, and exchange-traded funds (ETFs)
+* Post-trade infrastructure supporting settlement and lifecycle management of listed securities
+
+**Environment**National capital market infrastructure supporting regulated securities markets.
+
+**Reference contact:** Available upon request
+
+### National Bank of the Kyrgyz Republic – Financial Market Trading Infrastructure
+
+**Client:** National Bank of the Kyrgyz Republic
+**Location:** Kyrgyzstan
+
+**Scope**
+
+* Automated trading infrastructure supporting government securities, foreign exchange, and money market instruments
+* Integration with financial institutions participating in domestic financial markets
+* Support for trading and settlement of government securities
+
+**Environment**Central bank regulated financial market infrastructure.
+
+**Reference contact:** Available upon request
+
+### State Bank of Pakistan – Integrated Financial Market Infrastructure (PRISM+)
+
+**Client:** State Bank of Pakistan
+**Location:** Pakistan
+
+**Scope**
+
+* Infrastructure supporting payments, securities settlement, and collateral management
+* Integration with financial institutions participating in national financial markets
+* Support for government securities settlement and liquidity management
+* Integration with national instant payment infrastructure (RAAST)
+
+**Environment**National financial infrastructure operated under central bank oversight.
+
+**Reference contact:** Available upon request
+
+### Monetary Authority of Singapore – MEPS+ Contingency Infrastructure
+
+**Client:** Monetary Authority of Singapore
+**Location:** Singapore
+
+**Scope**
+
+* Contingency infrastructure supporting the MEPS+ settlement environment
+* Hybrid infrastructure supporting both payments and securities settlement operations
+* High-availability backup system ensuring operational continuity of critical financial infrastructure
+
+**Environment**Systemically important financial infrastructure operating under central bank regulation.
+
+**Reference contact:** Available upon request
+
+### Commodity Exchange Trading and Post-Trade Infrastructure
+
+**Client:** National Commodity Exchange (name available upon request)
+
+**Scope**
+
+* Trading infrastructure supporting commodities markets
+* Post-trade infrastructure supporting trade processing and settlement
+* Integration with clearing and financial market systems
+* Support for high-volume exchange trading operations
+
+**Environment**Regulated exchange infrastructure supporting commodities trading and post-trade market operations.
+
+**Reference contact:** Available upon request
+
+## Ecosystem and Distribution
+
+Financial market infrastructures implemented using CMA platforms typically operate within regulated ecosystems involving central banks, securities depositories, exchanges, financial institutions, and market intermediaries. Within such environments, issuers and investors interact through regulated market infrastructures responsible for issuance, trading, settlement, and post-trade processing.
+
+The following sections describe how issuers and investors typically access these ecosystems and how connectivity and participation are organized in infrastructures implemented using CMA solutions.
+
+## Issuer Access
+
+Issuers interacting with infrastructures implemented by CMA typically include sovereign issuers and ministries of finance issuing government securities, central banks issuing monetary policy instruments, and corporates issuing bonds, equities, and exchange-traded funds (ETFs) through regulated capital markets.
+
+The platforms support issuance and lifecycle management of dematerialized financial instruments, including government securities, corporate bonds, equities, commodities, ETFs, and Sharia-compliant instruments such as Sukuk. For example, CMA systems support capital market infrastructures in Vietnam where ETFs are issued and processed through the national securities depository and exchange environment.
+
+In parallel, CMA is developing internal MVP prototypes for tokenized financial instruments and digital asset infrastructures. This work includes design collaboration with technology platforms including Chainlink and SettleMint to evaluate integration of distributed ledger technologies with existing financial market infrastructures. CMA also cooperates with organizations such as the Global Legal Entity Identifier Foundation (GLEIF) in the area of digital identity and legal entity identification, and with R3 in relation to enterprise distributed ledger technologies used in regulated financial markets.
+
+## Investor Access
+
+Investors participating in infrastructures implemented by CMA typically include commercial banks, custodians, brokers and dealers, institutional investors, and other regulated market intermediaries. These participants access capital markets and financial infrastructures operated by central banks, exchanges, and securities depositories.
+
+Connectivity for investors is typically provided through regulated financial institutions such as custodians and brokers, which connect to the infrastructure using standard market interfaces and onboarding procedures defined by the infrastructure operator. CMA solutions such as CAP/X and TMS/X provide integration, access, and operational connectivity tools for brokers, custodians, and other market participants interacting with trading, registry, and post-trade systems.
+
+## Platform-Driven Connectivity
+
+CMA solutions are used as the technology platform for financial market infrastructures rather than as a proprietary marketplace or participant network. The ecosystem of participants is typically defined and governed by the infrastructure operator (for example a central bank, exchange, or securities depository).
+
+Participants such as banks, brokers, custodians, and market intermediaries connect to the infrastructure through standard integration channels supported by the platform, including APIs, secure messaging, and participant access portals such as CAP/X, as well as integration layers such as TMS/X.
+
+Onboarding of participants is managed by the infrastructure operator according to its regulatory framework and participation rules. Market participants typically enter into contractual relationships with the infrastructure operator, while CMA provides and supports the underlying technology platform enabling connectivity, access management, and operational integration.
+
+## Evidence
+
+CMA platforms are used in financial market infrastructures operating across multiple regions, including Asia, the Middle East, Europe, and Africa. These infrastructures support participation of commercial banks, brokers, custodians, securities depositories, and other regulated market participants connected through payment, trading, and post-trade systems.
+
+Examples of such infrastructures are described in the Selected Deployments section above.
+
+The onboarding of new participants is typically managed by the infrastructure operator and includes regulatory approval, contractual arrangements, and operational readiness. Once these steps are completed, CMA supports the technical integration and certification of participants. The technical onboarding phase typically takes approximately 3–6 months, depending on the complexity of integration and testing requirements.
+
+Examples of introductions CMA could facilitate include:
+
+* financial institutions participating in infrastructures implemented by CMA
+* securities depositories and market operators evaluating modernization of post-trade infrastructures
+* financial institutions exploring tokenization and digital asset initiatives in regulated environments
+
+Further details and specific contacts can be provided upon request or under NDA.
+
+## Constraints
+
+CMA provides technology platforms for financial market infrastructures and does not operate markets or participant ecosystems directly. Participation in infrastructures implemented using CMA solutions is therefore governed by the rules, regulatory framework, and contractual arrangements defined by the infrastructure operator.
+
+CMA’s primary role is that of a technology vendor rather than a service operator. At the same time, CMA supports flexible cooperation models for national financial infrastructure initiatives, including collaboration with local teams and partners during implementation and evolution of the infrastructure.
+
+The key considerations related to ecosystem access and participation are summarized below.
+
+|  |  |
+| --- | --- |
+| **Area** | **CMA Position** |
+| **Exclusivity** | CMA does not impose exclusivity requirements on issuers, investors, or market participants. |
+| **Jurisdiction** | Participation is governed by the regulatory framework and participation rules defined by the infrastructure operator (e.g., central bank, exchange, or securities depository). |
+| **Control of ecosystem** | CMA provides the technology platform but does not operate the infrastructure or control admission of participants. Participant onboarding and governance are managed by the infrastructure operator. |
+| **Commercial relationships** | CMA typically contracts with the infrastructure operator as the technology vendor. Relationships with issuers, investors, brokers, and other participants are managed by the operator. |
+| **Implementation and operational support** | CMA’s role is focused on technology delivery and infrastructure implementation. CMA can support implementation and operational phases through remote support, on-site technical teams, or cooperation with local partners where required. |
+| **Technology transfer and local capability** | CMA supports national infrastructure initiatives through flexible cooperation models, including technology transfer, joint development with local teams, and knowledge transfer during implementation. This enables infrastructure operators to maintain long-term control and technical capability for the evolution of their financial market infrastructure. |
+
+# Solution Positioning Statement
+
+The NGEX platform can be implemented as a modular financial market infrastructure connecting trading venues, digital asset execution environments, and existing financial market systems. Such infrastructures typically require integration of multiple components rather than deployment of a single off-the-shelf product.
+
+CMA approaches these projects by building on proven infrastructure platforms and architectural patterns developed through financial market infrastructure deployments in multiple countries. Rather than developing systems entirely from scratch, CMA assembles and adapts established components to match the vision and regulatory framework defined by the infrastructure operator. This approach combines reliability with flexibility while allowing the operator to retain long-term control over the evolution of the infrastructure.
+
+Where required, CMA also supports development of local technical capability through knowledge transfer, collaboration with local teams, and joint development initiatives, including scenarios where the operator’s engineering teams participate in further development of the platform.
+
+The roles of CMA, NGEX, and other ecosystem participants are summarized below.
+
+## What CMA provides end-to-end
+
+CMA provides the technology platform supporting post-trade orchestration and operational workflows for digital and traditional financial instruments. The platform enables processing of trade confirmations, coordination of settlement workflows, reconciliation between infrastructure components, and lifecycle processing of instruments within regulated financial market environments.
+
+## What CMA integrates
+
+The CMA platform connects trading venues, digital asset execution environments, and existing financial market infrastructures such as custodians, depositories, and payment systems. CMA provides the technology enabling connectivity between these components and supports the design of integration models and operational workflows based on experience from financial market infrastructure deployments.
+
+## What NGEX and third parties provide
+
+NGEX acts as the platform operator responsible for ecosystem governance, participant onboarding, and market rules. Third-party providers may supply trading venues, digital asset execution environments, custody services, or other specialized infrastructure components connected to the platform.
+
+CMA does not operate these components directly. Instead, the CMA platform integrates with them and provides the operational logic required for processing transactions, coordinating post-trade workflows, and supporting interaction between participants and the NGEX platform.
+
+The table below outlines the roles of CMA, NGEX, and third-party providers within the proposed platform architecture.
+
+|  |  |  |  |
+| --- | --- | --- | --- |
+| **Capability / Layer** | **CMA** | **NGEX** | **Third Parties** |
+| **Core platform logic** | Provides the technology platform enabling post-trade orchestration, workflow management, and reconciliation between infrastructure components. | Defines operating model, governance, and platform policies. | - |
+| **Trading environment** | Integrates trading venues with the platform and processes trade confirmations and post-trade events. | Selects and governs trading venues participating in the ecosystem. | ATS or exchange platforms |
+| **Digital asset execution** | Integrates distributed ledger or tokenization environments with the infrastructure and supports operational logic for digital asset workflows. | Defines digital asset framework and operational policies. | Blockchain or tokenization platforms |
+| **Custody and settlement ecosystem** | Supports integration with custody, settlement, and payment infrastructures. | Defines custody and settlement model within the ecosystem. | Custodians, CSDs, settlement banks |
+| **Participant connectivity** | Provides connectivity tools and access components (e.g., CAP/X, TMS/X) enabling participants to interact with the platform. | Manages participant onboarding, participation rules, and contractual relationships. | Banks, brokers, custodians, market intermediaries |
+| **Implementation and evolution** | Provides technology delivery, integration expertise, and optional joint development with client teams. | Oversees infrastructure development roadmap and operational evolution. | Local partners or specialized providers where required |
+
+# Target Operating Model
+
+## Operating Model Overview
+
+The NGEX platform is designed as a financial market infrastructure connecting trading venues, digital asset execution environments, and existing financial market systems. NGEX acts as the platform operator responsible for ecosystem governance, participant onboarding, and market rules.
+
+The CMA platform provides the technology layer enabling orchestration of operational workflows across the infrastructure. Trading venues, digital asset execution environments, and existing financial market infrastructures such as custodians, depositories, and payment systems operate as specialized components connected to the platform.
+
+Within this model, the CMA platform coordinates operational workflows between these components while NGEX maintains governance and regulatory oversight.
+
+## Core Workflows
+
+|  |  |  |  |
+| --- | --- | --- | --- |
+| **Workflow** | **CMA** | **NGEX** | **Third Parties** |
+| **Instrument issuance** | Integrates issuance workflows and lifecycle processing | Defines issuance framework and participation rules | Issuers via market infrastructure |
+| **Trade execution** | Integrates trading venue interfaces and processes trade confirmations | Governs trading participation and market rules | Trading venue (ATS / exchange) |
+| **Transaction processing** | Orchestrates post-trade workflows and transaction processing | Oversees operational policies | - |
+| **Settlement coordination** | Coordinates settlement workflows and reconciliation across infrastructure components | Defines settlement model | Custodians, settlement banks, CSDs |
+| **Digital asset execution (if applicable)** | Integrates digital asset execution environments | Defines digital asset framework | Blockchain / tokenization platforms |
+| **Participant connectivity** | Provides connectivity interfaces and integration tools | Manages onboarding and contracts | Banks, brokers, custodians |
+| **Regulatory reporting** | Supports generation of supervisory and reporting data | Defines reporting requirements | Regulators / reporting infrastructures |
+| **Data analytics and monitoring** | Provides operational dashboards and analytics tools | Defines analytical use cases | - |
+
+## Operational Workflow Overview
+
+## ![](data:image/png;base64...)
+
+## Platform Architecture Overview
+
+![](data:image/png;base64...)
+
+## Governance Model
+
+NGEX acts as the platform operator responsible for governance of the ecosystem. This includes:
+
+* defining participation rules and onboarding procedures
+* defining market rules and operational policies
+* oversight of trading venues and participant access
+* coordination with regulators and infrastructure stakeholders
+
+CMA provides the technology platform supporting these governance processes but does not operate the market or manage participants directly.
+
+## Day-2 Operations
+
+Day-to-day operational oversight is performed by the NGEX operations team using monitoring and operational tools provided by the platform.
+
+Typical operational processes include:
+
+* system monitoring and operational dashboards
+* incident detection and handling
+* reconciliation between infrastructure components
+* management of operational exceptions
+* operational analytics and reporting
+* regulatory reporting
+
+CMA can support these activities through several operating models depending on NGEX preferences:
+
+* remote technical support and monitoring assistance
+* on-site technical teams supporting platform operations
+* engineering collaboration with NGEX development teams
+* joint development of platform enhancements where required
+
+## Operational Resilience
+
+The platform architecture supports operational resilience required for regulated financial market infrastructures. This includes monitoring tools, reconciliation controls between infrastructure components, incident management procedures, and fallback mechanisms allowing operations to continue even when individual components experience disruptions.
+
+## RACI Model for Operational Activities
+
+|  |  |  |  |  |
+| --- | --- | --- | --- | --- |
+| **Activity** | **Responsible** | **Accountable** | **Consulted** | **Informed** |
+| **Platform operation** | NGEX | NGEX | CMA | Participants |
+| **Infrastructure technology** | CMA | NGEX | Third-party providers | Participants |
+| **Trading operations** | Trading venue | NGEX | CMA | Participants |
+| **Participant onboarding** | NGEX | NGEX | CMA | Participants |
+| **Incident handling** | NGEX / CMA (technical support) | NGEX | Third-party providers | Participants |
+| **Platform evolution** | CMA / NGEX (joint development) | NGEX | Third-party providers | Participants |
+
+## ~~Proposed Role of CMA in the NGEX Architecture~~
+
+For the NGEX Digital Post-Trade FMI initiative, CMA proposes to provide the post-trade orchestration and settlement workflow platform that integrates trading venues, distributed ledger registries, and traditional capital market infrastructures into a unified operational environment.
+
+Within the proposed architecture, CMA’s platform acts as the post-trade control and orchestration layer responsible for:
+
+* ingestion and processing of trade confirmations from external trading venues
+* orchestration of settlement workflows across infrastructure participants
+* reconciliation between distributed ledger registries and traditional custody or CSD environments
+* operational monitoring, exception handling, and audit-ready reporting
+
+This approach allows NGEX to maintain a clear separation between the distributed ledger registry layer, external trading venues, and the operational post-trade control environment while ensuring that settlement processes remain transparent, auditable, and operationally resilient.
+
+## Key Capabilities of the Proposed Solution
+
+The proposed CMA platform supports the operational and governance requirements of regulated market infrastructures and can provide NGEX with the following capabilities:
+
+* ingestion and processing of trade confirmations from external trading venues through API-based and other standard interfaces
+* orchestration of settlement processing and lifecycle workflows across market infrastructure participants
+* reconciliation and exception management between distributed ledger token registries and immobilized underlying securities
+* corporate actions and entitlement processing for tokenized securities
+* operational monitoring, reporting, and full audit trail generation for regulatory oversight
+
+The platform is designed to operate as an infrastructure-grade orchestration layer. It enables NGEX to integrate distributed ledger technologies with existing capital market infrastructures while maintaining robust operational controls and regulatory readiness.
+
+## Alignment with NGEX Strategic Objectives
+
+The architecture and operating model proposed by CMA align closely with the objectives outlined in the NGEX RFI and supporting documentation.
+
+In particular, the CMA approach supports:
+
+* a controlled MVP implementation with a limited number of participants and assets
+* a digital twin model where tokenized securities remain fully aligned with immobilized underlying assets
+* a scalable architecture capable of supporting additional asset classes, trading venues, and settlement models over time
+* interoperability between traditional market infrastructure and distributed ledger environments
+
+By combining experience in financial market infrastructure with an integration-oriented architecture, CMA aims to support NGEX in establishing a secure, scalable, and operationally resilient digital post-trade environment capable of evolving alongside the broader transformation of capital markets.
+
+# CMA Overview and Relevant Experience
+
+## Company Overview
+
+CMA Small Systems AB is a Swedish technology company specializing in solutions for financial institutions, including financial market infrastructures. Since its establishment, CMA has focused on the design and implementation of critical national financial systems that support the operation of payment systems, settlement infrastructures, and capital markets.
+
+The company develops and delivers software platforms used by central banks, payment operators, stock exchanges, and other financial market institutions. CMA solutions support key infrastructure functions such as real-time settlement, clearing, registry services, and operational monitoring of financial transactions.
+
+CMA systems are deployed in more than 55 countries and operate in environments that require high levels of reliability, operational resilience, and regulatory compliance. These systems typically serve as core national infrastructure components and therefore must meet strict requirements related to security, auditability, and operational governance.
+
+The company’s product portfolio includes solutions for payment infrastructures, settlement systems, and depository and registry platforms. These systems are designed to support both domestic and cross-border financial transactions while integrating with a wide range of banking systems, trading venues, and financial institutions.
+
+## Experience in Financial Market Infrastructure
+
+CMA has extensive experience in the design and implementation of financial market infrastructure systems that operate at the national level. These infrastructures support the safe and efficient functioning of financial markets and must comply with regulatory standards and operational principles applicable to systemically important financial institutions.
+
+CMA solutions have been used to implement and operate systems including:
+
+* Real-Time Gross Settlement (RTGS) systems for interbank payments
+* Instant payment systems that enable real-time retail payment processing
+* Automated clearing systems for domestic payment processing
+* Depository and registry platforms supporting securities settlement and record keeping
+
+These systems typically require integration with multiple stakeholders, including commercial banks, financial institutions, market operators, and regulatory authorities. As a result, CMA platforms are designed with strong operational controls, monitoring capabilities, and audit mechanisms to ensure the integrity and reliability of financial transactions.
+
+In addition to the implementation of new systems, CMA has supported the modernization and evolution of existing financial infrastructures. This includes integration with new technologies, adoption of international standards, and improvements in operational efficiency and resilience.
+
+## Relevant Implementations and Deployments
+
+CMA has participated in numerous national infrastructure projects where the company provided technology platforms supporting settlement operations, transaction processing, and financial market connectivity.
+
+These deployments include systems implemented for central banks and national financial institutions across regions including Europe, Asia, the Middle East, Africa, and Latin America. In these environments, CMA platforms support high transaction volumes and operate under strict operational and regulatory frameworks.
+
+Typical responsibilities within such projects include system design, software delivery, integration with existing market infrastructure, operational support, and long-term system maintenance. The systems implemented by CMA frequently serve as core national infrastructure components and must therefore meet requirements related to resilience, scalability, and security.
+
+## References and Case Studies
+
+CMA has implemented financial infrastructure systems for numerous central banks and financial institutions worldwide. Selected references and case studies can be provided upon request or under appropriate confidentiality arrangements.
+
+These references demonstrate CMA’s experience in delivering systems that support mission-critical financial operations and integrate multiple market participants within a secure and auditable operational framework.
+
+Where relevant, CMA can provide additional documentation, architecture descriptions, and reference contacts to illustrate the operational scope and performance of these systems.
+
+# Ecosystem and Market Connectivity
+
+## Institutional Relationships and Market Participants
+
+CMA Small Systems AB has long-standing relationships with financial institutions and financial market infrastructures across multiple regions. The company’s solutions are typically deployed at the national infrastructure level and therefore interact with a broad range of market participants including central banks, commercial banks, payment operators, and financial institutions.
+
+Through the implementation of national payment and settlement systems, CMA platforms connect numerous financial institutions that participate in payment processing, settlement activities, and market infrastructure operations. These institutions include domestic and international banks, financial service providers, and other regulated market participants.
+
+Such environments require the ability to integrate diverse institutions into a common infrastructure while ensuring operational consistency, security, and regulatory compliance. CMA platforms are designed to support this type of multi-participant environment and can be adapted to accommodate different categories of infrastructure participants.
+
+## Connectivity with Financial Institutions and Market Infrastructure
+
+CMA solutions are typically deployed as part of national financial infrastructure ecosystems. As a result, the platforms are designed to integrate with a wide range of financial systems and market infrastructures.
+
+Typical integrations supported by CMA platforms include:
+
+* commercial banking systems
+* payment service providers
+* settlement systems and central banks
+* securities exchanges and trading venues
+* custodians and financial intermediaries
+
+This integration capability enables CMA platforms to function as a coordination layer that connects different infrastructure components and ensures consistent transaction processing and operational control across the ecosystem.
+
+## Partner Ecosystem
+
+While CMA specializes in the design and implementation of financial infrastructure systems, certain components of digital asset infrastructures may involve specialized technology providers. In such environments, CMA platforms can integrate with third-party solutions that provide capabilities such as distributed ledger infrastructure, digital asset custody, or token lifecycle management.
+
+Potential partner categories may include:
+
+* providers of digital asset custody and wallet infrastructure
+* distributed ledger infrastructure providers
+* identity and compliance service providers
+* cloud and infrastructure service providers
+
+This partner ecosystem enables NGEX to combine established financial infrastructure technology with emerging digital asset technologies while maintaining clear operational governance and integration across components.
+
+## Contribution to NGEX Ecosystem Development
+
+CMA’s experience in building national financial infrastructures allows the company to support the establishment of ecosystems where multiple financial institutions participate in a shared infrastructure environment.
+
+In the context of the NGEX initiative, CMA can contribute by providing the operational platform that connects trading venues, custodians, and registry infrastructures into a coherent post-trade operating environment. This approach supports the gradual expansion of the ecosystem as additional market participants, asset classes, and trading venues are introduced.
+
+# Solution Positioning
+
+## CMA Role within the NGEX Architecture
+
+CMA proposes to provide the operational platform responsible for post-trade orchestration and settlement workflow processing within the NGEX Digital Post-Trade Financial Market Infrastructure.
+
+The CMA platform operates as the coordination and control layer between external trading venues, distributed ledger registries, and traditional financial market infrastructures such as custodians or central securities depositories.
+
+Within this architecture, the CMA platform is responsible for managing post-trade processes including the ingestion of trade confirmations, settlement workflow orchestration, reconciliation between infrastructure components, and operational monitoring.
+
+This approach enables NGEX to maintain a clear separation between trading venues, distributed ledger infrastructure, and traditional financial market participants while ensuring that settlement processes remain transparent, auditable, and operationally resilient.
+
+## Scope of the CMA Platform
+
+The CMA platform supports the operational functions required to manage post-trade workflows in regulated financial market infrastructures.
+
+Key capabilities include:
+
+**Trade confirmation ingestion**
+
+The platform supports the ingestion of trade confirmations from external trading venues through API-based integrations, file-based interfaces, and other supported communication mechanisms.
+
+**Settlement workflow orchestration**
+
+The platform coordinates the execution of settlement processes between participating infrastructure components, ensuring that transaction processing follows defined operational procedures.
+
+**Reconciliation and exception management**
+
+The platform supports reconciliation processes between distributed ledger registries and traditional custody or depository environments, enabling detection and resolution of discrepancies.
+
+**Corporate actions and asset servicing**
+
+The platform supports processing of corporate actions and entitlements related to securities held within the infrastructure environment.
+
+**Operational monitoring and reporting**
+
+The platform provides monitoring tools, reporting capabilities, and audit trail generation to support operational oversight and regulatory review.
+
+## Integration with NGEX and Third-Party Components
+
+The proposed architecture assumes that the NGEX infrastructure will consist of multiple specialized components that must operate together in a coordinated manner.
+
+The CMA platform integrates with these components through standardized interfaces and messaging mechanisms.
+
+Key integration points include:
+
+**Trading venues**
+
+Trade confirmations are received from external trading venues that execute transactions involving tokenized securities.
+
+**Distributed ledger registry**
+
+The distributed ledger environment maintains the digital record of tokenized securities ownership and lifecycle events.
+
+**Custodians or CSD infrastructure**
+
+Traditional custody or depository environments maintain immobilized underlying securities and support settlement finality processes.
+
+**Identity and compliance systems**
+
+Identity verification, compliance screening, and investor onboarding may be supported by specialized systems integrated with the operational infrastructure.
+
+Through these integrations, the CMA platform provides a unified operational environment that coordinates transaction processing across the various infrastructure layers involved in the NGEX ecosystem.
+
+## Architectural Principles
+
+The architecture proposed by CMA follows principles commonly applied to regulated financial market infrastructures.
+
+These principles include:
+
+**Clear separation of infrastructure roles**
+
+Each infrastructure component performs a clearly defined function within the operating model.
+
+**Operational transparency**
+
+All critical processes are recorded and monitored to provide a complete audit trail.
+
+**Resilience and operational continuity**
+
+Infrastructure components are designed to operate reliably within mission-critical financial environments.
+
+**Interoperability**
+
+The platform supports integration with multiple technologies and external systems through standardized interfaces.
+
+These principles support the creation of a post-trade environment that is compatible with both traditional capital market infrastructures and emerging distributed ledger technologies.
+
+# Target Operating Model
+
+## Operating Model for the MVP Phase
+
+The initial implementation of the NGEX Digital Post-Trade Financial Market Infrastructure is expected to follow a controlled MVP approach with a limited number of assets, participants, and trading venues. The primary objective of the MVP phase is to validate the operational model and technical architecture while maintaining full control over settlement and registry processes.
+
+In this environment, trading activity takes place on an external trading venue that executes transactions involving tokenized securities. Following trade execution, trade confirmation information is transmitted to the post-trade infrastructure for processing and settlement coordination.
+
+The CMA platform receives trade confirmations from the trading venue and processes the transactions according to the defined operational workflows. The system validates the trade information, generates the necessary settlement instructions, and coordinates the downstream processing required to update the registry and settlement records.
+
+Ownership records of tokenized securities are maintained within the distributed ledger registry environment operated by NGEX. At the same time, the immobilized underlying securities remain recorded within the traditional custody or depository infrastructure.
+
+The CMA platform ensures that these infrastructure layers remain synchronized through reconciliation processes and operational controls.
+
+## Roles and Responsibilities Across Participants
+
+The operating model involves several infrastructure participants, each performing a specific role within the ecosystem.
+
+NGEX acts as the operator of the digital registry infrastructure and manages the lifecycle of tokenized securities. NGEX coordinates interactions between infrastructure participants and ensures compliance with regulatory and operational requirements.
+
+External trading venues execute market transactions involving tokenized securities and provide trade confirmation information to the post-trade infrastructure.
+
+Custodians or central securities depositories maintain the immobilized underlying securities and provide settlement finality within the traditional capital market infrastructure.
+
+The CMA platform provides the operational environment that coordinates the processing of post-trade activities across these participants. The system receives trade confirmations, orchestrates settlement workflows, and ensures that registry records and settlement information remain consistent across the infrastructure.
+
+Investors and financial institutions interact with the ecosystem through the trading venue and participating financial intermediaries.
+
+## Day-2 Operations
+
+Beyond initial transaction processing, the infrastructure must support a comprehensive set of operational processes required for the continuous operation of a regulated financial market infrastructure.
+
+The CMA platform provides operational capabilities that support these activities, including monitoring of transaction processing, detection of operational exceptions, and management of reconciliation procedures between infrastructure components.
+
+Operational teams are able to monitor transaction flows and system status through dedicated operational dashboards and reporting tools. In the event of processing exceptions or inconsistencies, the platform provides tools to investigate the issue, initiate corrective actions, and document the resolution process.
+
+The platform also supports the generation of operational reports and audit trails required for regulatory oversight and internal governance.
+
+## Governance and Operational Controls
+
+The proposed operating model incorporates governance mechanisms that ensure that critical infrastructure processes are performed in a controlled and auditable manner.
+
+Operational workflows support role-based access control and segregation of duties to ensure that sensitive actions cannot be executed by a single operator without appropriate authorization.
+
+The platform supports maker-checker approval processes for critical operational activities such as token lifecycle events, settlement adjustments, or administrative changes to the system configuration.
+
+All operational activities are recorded in an immutable audit log that provides full traceability of system actions, user interactions, and transaction processing events.
+
+These governance mechanisms ensure that the infrastructure operates in accordance with the operational standards typically required for regulated financial market infrastructures.
+
+# Tokenization Model Support
+
+## Digital Twin Model Support
+
+The operating model described in the NGEX RFI is based on a digital twin structure in which existing securities are immobilized within a traditional custody or depository infrastructure while corresponding tokens are issued on a distributed ledger to represent ownership rights.
+
+Within this model, the distributed ledger environment maintains the digital registry of tokenized holdings, while the underlying securities remain recorded within the traditional capital market infrastructure. Maintaining strict alignment between the token supply and the immobilized underlying securities is therefore a critical operational requirement.
+
+The CMA platform supports this model by providing the operational processes required to manage transaction processing, settlement coordination, and reconciliation between the distributed ledger registry and the traditional custody environment. The platform ensures that token transfers, settlement updates, and corporate action events are consistently reflected across the infrastructure layers involved in the ecosystem.
+
+Through these capabilities, the CMA platform supports the operational integrity of the digital twin model and enables NGEX to maintain alignment between the digital representation of securities and the underlying assets.
+
+## Native Digital Issuance
+
+While the MVP implementation focuses on tokenized representations of existing securities, the infrastructure described by NGEX is expected to evolve toward the support of native digital issuance models for certain asset classes.
+
+In a native digital issuance model, securities are issued directly within a digital registry environment rather than being mirrored from existing instruments held within a traditional depository infrastructure.
+
+The CMA platform is designed to support such environments by providing operational workflows for issuance processing, lifecycle management, settlement coordination, and corporate action processing for digitally issued instruments.
+
+The platform is capable of coordinating these processes across distributed ledger environments and external infrastructure components while maintaining the operational controls and audit capabilities required for regulated financial market infrastructures.
+
+## Token Lifecycle Governance
+
+Tokenized securities require clearly defined governance mechanisms for lifecycle events such as issuance, transfers, and retirement of tokens. These events must be executed in a controlled manner and must comply with the operational and regulatory rules applicable to the infrastructure.
+
+The CMA platform supports governance of token lifecycle processes by providing workflow management and operational controls for actions such as token issuance authorization, settlement validation, and exception handling.
+
+These workflows can incorporate approval procedures, role-based authorization, and operational monitoring to ensure that lifecycle events are performed in accordance with defined governance policies.
+
+By managing these workflows within the operational infrastructure layer, the CMA platform helps ensure that token lifecycle events remain consistent with the operational state of the broader market infrastructure.
+
+## Golden Record Governance
+
+In a hybrid infrastructure where distributed ledger registries interact with traditional custody environments, the definition of a system of record becomes an important architectural consideration.
+
+The NGEX model assumes that the distributed ledger registry maintains the authoritative record of tokenized holdings, while traditional custody infrastructures maintain records of the immobilized underlying securities.
+
+The CMA platform supports coordination between these infrastructure layers by providing reconciliation mechanisms, operational controls, and monitoring capabilities that ensure the consistency of records across the ecosystem.
+
+Through continuous reconciliation and exception management processes, the platform enables NGEX to maintain the integrity of the registry data and ensure that the operational state of the infrastructure remains aligned with the defined system-of-record governance model.
+
+# Trade Confirmation Ingestion
+
+## Supported Integration Interfaces
+
+The CMA platform supports multiple integration mechanisms for receiving trade confirmations and transaction data from external trading venues. This flexibility enables the infrastructure to accommodate different communication patterns used by trading platforms and financial market infrastructures.
+
+The system supports API-based integrations, file-based data exchange, and other structured messaging mechanisms that allow trading venues to transmit trade confirmation data to the post-trade infrastructure.
+
+These interfaces are designed to operate in secure and controlled environments, with appropriate authentication and validation procedures to ensure that incoming transaction information is processed reliably and in accordance with operational rules.
+
+This approach allows NGEX to integrate trading venues that use different communication technologies while maintaining a consistent operational workflow for post-trade processing.
+
+## Trade Data Processing and Canonical Data Model
+
+Once trade confirmations are received, the CMA platform processes the transaction data and maps it into a standardized internal representation that enables consistent downstream processing.
+
+The canonical data model allows the system to normalize trade information received from different sources and ensures that transaction attributes such as instrument identifiers, quantities, and participant accounts are represented consistently within the infrastructure.
+
+This normalization process supports reliable transaction processing, reconciliation procedures, and reporting across the ecosystem.
+
+## Downstream Processing
+
+Following validation and normalization of the trade confirmation data, the platform initiates downstream operational processes required for settlement and registry updates.
+
+These processes may include generation of settlement instructions, coordination of updates to the distributed ledger registry, and preparation of reconciliation procedures between infrastructure components.
+
+The CMA platform coordinates these processes according to defined operational workflows, ensuring that the processing sequence remains consistent with the settlement model adopted by NGEX.
+
+This workflow orchestration enables NGEX to manage transaction processing across the infrastructure in a controlled and auditable manner.
+
+## Operational Controls and Exception Handling
+
+Reliable operation of the post-trade infrastructure requires the ability to detect and manage operational exceptions during transaction processing.
+
+The CMA platform includes mechanisms to detect conditions such as missing trade confirmations, duplicate transactions, late data submissions, or corrections to previously submitted trades.
+
+Operational tools allow infrastructure operators to investigate such situations, apply corrective actions where necessary, and document the resolution process.
+
+All exception handling activities are recorded within the system audit trail to ensure full traceability of operational decisions and actions taken by system operators.
+
+# 24/7 Operational Model
+
+## Continuous Infrastructure Operation
+
+The CMA platform is designed to support continuous operation in environments where financial infrastructure services must be available at all times. The system architecture allows transaction processing, monitoring, and operational management to function without interruption.
+
+Operational services such as trade ingestion, transaction validation, workflow orchestration, and system monitoring can operate continuously. This enables the infrastructure to process incoming transaction information from trading venues and to maintain operational awareness of system status at all times.
+
+The platform architecture supports high availability configurations, allowing infrastructure operators to maintain service continuity in the event of hardware or network disruptions.
+
+## Operational Dependencies
+
+While the operational platform itself can function continuously, certain processes within the broader infrastructure may depend on external institutions or settlement infrastructures.
+
+For example, settlement finality for securities may depend on traditional custody or depository infrastructures that operate according to defined settlement cycles. Similarly, certain approval workflows or operational controls may require human authorization steps.
+
+The CMA platform is designed to accommodate such dependencies by supporting configurable operational workflows and settlement cycles. This allows NGEX to operate the infrastructure in accordance with the operational constraints of participating institutions while maintaining continuous system availability.
+
+## Evolution Toward Real-Time Operations
+
+The proposed architecture allows the infrastructure to evolve toward more automated and real-time operational models as the ecosystem expands.
+
+As additional technologies and settlement mechanisms become available, including digital settlement assets or automated settlement models, the operational workflows managed by the CMA platform can be adapted to support more frequent or near real-time settlement cycles.
+
+This flexibility allows NGEX to begin with a controlled MVP operating model and progressively expand toward more advanced settlement architectures while maintaining operational control and system stability.
+
+# Ledger and Blockchain Integration
+
+## Integration with Distributed Ledger Environments
+
+The NGEX architecture introduces distributed ledger technologies as a component of the broader post-trade infrastructure. Within this environment, the distributed ledger registry maintains records related to tokenized securities, including ownership information and lifecycle events.
+
+The CMA platform is designed to integrate with distributed ledger environments through standardized interfaces and event-driven communication mechanisms. These integrations allow the operational platform to coordinate transaction processing and settlement workflows that involve distributed ledger components.
+
+Through these integration mechanisms, the CMA platform can receive registry updates, trigger operational workflows, and maintain synchronization between the ledger environment and other infrastructure components.
+
+## Multi-Ledger Architecture Considerations
+
+The NGEX target architecture anticipates the possibility of interacting with different distributed ledger technologies over time. These environments may include permissioned ledger networks as well as public blockchain platforms used for distribution or interoperability purposes.
+
+The CMA platform is designed to operate independently of any specific ledger technology and can interact with distributed ledger components through integration layers that expose standardized data and event interfaces.
+
+This architectural approach allows NGEX to introduce additional ledger environments in the future without requiring significant changes to the operational post-trade infrastructure.
+
+## Ledger Abstraction and Interoperability
+
+To support interoperability across multiple infrastructure layers, the CMA platform operates using an abstraction model that separates operational workflows from the specific technologies used within distributed ledger environments.
+
+Operational processes such as transaction processing, reconciliation, and monitoring are managed within the platform independently of the ledger technology used to maintain token registries.
+
+This abstraction approach enables the infrastructure to maintain consistent operational processes while interacting with different distributed ledger implementations through well-defined integration interfaces.
+
+## Synchronization with Registry and Settlement Systems
+
+The hybrid architecture described in the NGEX RFI requires coordination between distributed ledger registries and traditional settlement infrastructures.
+
+The CMA platform supports this coordination by maintaining operational processes that ensure consistency between the various infrastructure components. These processes include monitoring of transaction flows, reconciliation procedures, and detection of operational discrepancies between infrastructure layers.
+
+Through these mechanisms, the platform enables NGEX to maintain alignment between distributed ledger records and the broader financial infrastructure environment.
+
+# Security Architecture and Key Management
+
+## Security Architecture Overview
+
+The CMA platform is designed to operate within regulated financial infrastructure environments where security, operational integrity, and resilience are critical requirements. The platform architecture incorporates multiple layers of security controls that protect system access, transaction processing, and operational data.
+
+Security mechanisms include authentication controls, access management policies, secure communication channels, and infrastructure monitoring tools that allow operators to detect and respond to potential security incidents.
+
+These controls are implemented as part of a broader operational governance framework that supports the safe operation of financial market infrastructure systems.
+
+## Information Security Controls
+
+The platform incorporates a range of security controls designed to protect system components, operational data, and communication channels between infrastructure participants.
+
+These controls include secure network communication, system access controls, and mechanisms for monitoring system activity. Logging and monitoring functions enable operators to track system events and detect unusual activity within the infrastructure environment.
+
+Such mechanisms help ensure that the operational environment remains secure while maintaining the transparency and traceability required for regulated financial systems.
+
+## Key Management Integration
+
+In digital asset infrastructures, cryptographic key management plays an important role in protecting access to digital securities and transaction authorization mechanisms.
+
+The CMA platform is designed to integrate with external key management systems that provide secure handling of cryptographic keys. These systems may include hardware security modules or other institutional-grade key management solutions used to protect sensitive cryptographic operations.
+
+The integration architecture allows NGEX to adopt the key management approach most appropriate for its operational and regulatory environment while maintaining clear separation between operational infrastructure and key custody mechanisms.
+
+## Identity and Access Management
+
+The platform incorporates identity and access management mechanisms that control how users and system components interact with the infrastructure.
+
+Access to system functions is governed through role-based access control models that ensure users are granted only the permissions necessary for their operational responsibilities. Administrative functions and critical system operations are restricted to authorized personnel and may require multi-level approval procedures.
+
+These mechanisms support segregation of duties and reduce the risk of unauthorized operational actions.
+
+## Incident Response and Operational Monitoring
+
+The CMA platform provides monitoring and logging capabilities that allow infrastructure operators to detect and investigate operational anomalies or potential security incidents.
+
+Operational dashboards provide visibility into system performance, transaction flows, and infrastructure health. When irregular conditions are detected, operators can investigate system events, analyze transaction records, and initiate corrective actions where necessary.
+
+This monitoring capability supports operational continuity and enables rapid response to incidents that may affect the stability of the infrastructure.
+
+## Data Residency and Privacy Considerations
+
+The architecture supports deployment models that allow NGEX to comply with applicable data residency and regulatory requirements. System components responsible for critical infrastructure functions can be deployed within controlled environments that meet regulatory expectations regarding data protection and operational oversight.
+
+The platform can be deployed in environments that support local infrastructure hosting while allowing integration with external services where appropriate.
+
+This flexibility enables NGEX to design an infrastructure environment that aligns with regulatory requirements and operational policies.
+
+# Identity, Compliance and Regulatory Readiness
+
+## KYC and AML Integration Framework
+
+Financial market infrastructures operate within regulated environments where participant identification and compliance controls are critical components of the operational framework.
+
+The CMA platform is designed to integrate with external identity verification and compliance systems that support investor onboarding, identity verification, and anti-money laundering procedures. These integrations allow NGEX to connect the operational infrastructure with appropriate KYC and AML processes implemented by participating financial institutions or specialized service providers.
+
+The platform supports the exchange of identity and participant information required for transaction processing while maintaining appropriate controls over sensitive data and operational access.
+
+## Sanctions Screening and Transfer Restrictions
+
+The infrastructure may require mechanisms to enforce restrictions related to participant eligibility, regulatory requirements, or sanctions compliance.
+
+The CMA platform supports integration with compliance services that perform sanctions screening and eligibility verification. Through these integrations, the infrastructure can ensure that transactions are processed only for authorized participants and that regulatory restrictions can be applied where required.
+
+Operational workflows can incorporate validation steps that verify participant eligibility before transactions are finalized, helping maintain compliance with applicable regulatory frameworks.
+
+## Regulatory Reporting
+
+Financial market infrastructures must provide reporting capabilities that support regulatory oversight and operational transparency.
+
+The CMA platform supports generation of operational and transactional reports that can be used by infrastructure operators and regulatory authorities to monitor system activity. These reporting capabilities allow NGEX to produce structured information about transactions, participant activity, and settlement processes.
+
+The reporting framework can be adapted to meet the specific requirements of regulatory authorities and oversight bodies responsible for supervising the infrastructure.
+
+## Auditability and Evidence Production
+
+A key requirement for regulated infrastructures is the ability to demonstrate full traceability of operational actions and transaction processing events.
+
+The CMA platform maintains detailed audit logs that record system activities, user interactions, and transaction lifecycle events. These records provide a complete history of system operations and support investigation, compliance verification, and regulatory review.
+
+The audit capabilities ensure that operational processes remain transparent and that the infrastructure can produce evidence demonstrating compliance with applicable governance and regulatory standards.
+
+## Alignment with Financial Market Infrastructure Principles
+
+Systems that support financial market infrastructures must adhere to operational and governance principles commonly applied to critical financial systems.
+
+The CMA platform is designed to operate within frameworks consistent with the principles typically applied to systemically important financial infrastructures. These principles emphasize operational reliability, transparency of processes, clear governance structures, and strong risk management practices.
+
+Through its architecture and operational controls, the platform enables NGEX to operate an infrastructure environment that aligns with internationally recognized standards for financial market infrastructure operations.
+
+# Wallet and Custody Infrastructure
+
+## Custody Model Integration
+
+The NGEX architecture includes custody and safekeeping functions for tokenized securities and associated digital assets. These functions may be implemented through institutional-grade custody solutions that manage cryptographic keys, digital wallets, and secure transaction authorization mechanisms.
+
+The CMA platform is designed to integrate with such custody environments and coordinate operational workflows that involve digital asset custody services. Through these integrations, the platform can interact with wallet infrastructure components responsible for holding digital assets and executing authorized transactions.
+
+This integration model allows NGEX to select the custody technology and operational model that best aligns with its regulatory and operational requirements while maintaining coordination with the broader post-trade infrastructure.
+
+## Segregation Models
+
+Custody infrastructures supporting digital securities may implement different account structures depending on regulatory and operational requirements. These may include segregated account models where individual investors are associated with dedicated accounts, as well as omnibus structures where assets are held collectively under intermediary accounts.
+
+The CMA platform can support both approaches by maintaining operational records that reference investor accounts, participant identifiers, or institutional custody accounts depending on the custody model adopted by NGEX.
+
+This flexibility allows the operational infrastructure to accommodate different custody arrangements while maintaining consistent transaction processing and reporting capabilities.
+
+## Integration with Wallet Infrastructure
+
+Wallet infrastructures typically manage the generation, storage, and usage of cryptographic keys required to authorize digital asset transactions. These components operate as part of the security layer of the infrastructure.
+
+The CMA platform interacts with wallet infrastructure through integration interfaces that allow operational workflows to trigger transaction authorization processes when required. These interactions may include requests to sign transactions, confirmation of completed blockchain operations, or synchronization of registry records with digital asset movements.
+
+This architecture maintains a clear separation between the operational infrastructure and the custody layer while allowing coordinated execution of post-trade processes.
+
+## Recovery and Governance Procedures
+
+Digital asset infrastructures must incorporate governance mechanisms that allow operators to respond to exceptional situations such as operational failures, security incidents, or key management issues.
+
+The operational platform can support governance procedures that involve administrative actions, approval workflows, and operational controls required to manage such situations. These procedures may include controlled recovery mechanisms, administrative overrides where permitted, and structured operational processes designed to restore normal infrastructure operation.
+
+Such governance mechanisms help ensure that the infrastructure remains resilient and that exceptional situations can be addressed in a controlled and transparent manner.
+
+# Implementation Approach
+
+## Implementation Strategy
+
+The implementation of the NGEX Digital Post-Trade Financial Market Infrastructure requires a structured approach that ensures reliable system deployment while maintaining operational stability and regulatory alignment.
+
+CMA proposes a phased implementation methodology that allows NGEX to progressively introduce infrastructure components while validating system functionality, operational procedures, and integration points. This approach enables the infrastructure to evolve in a controlled manner while minimizing operational risks.
+
+The implementation process includes system configuration, integration with participating infrastructure components, testing of operational workflows, and controlled deployment of the MVP environment.
+
+## Proposed MVP Implementation Phases
+
+The implementation of the MVP infrastructure can be structured into several phases.
+
+### Phase 1. Architecture and design
+
+This phase focuses on defining the target architecture, operational workflows, integration interfaces, and infrastructure deployment model. Technical specifications and system configurations are prepared in collaboration with NGEX and other infrastructure participants.
+
+### Phase 2. Platform configuration and integration
+
+During this phase the CMA platform is configured and integrated with external infrastructure components including the distributed ledger registry environment, trading venues, and custody or depository systems.
+
+### Phase 3. Testing and validation
+
+The integrated environment is tested to validate transaction processing workflows, settlement coordination, reconciliation procedures, and operational monitoring capabilities. This phase includes functional testing, integration testing, and operational scenario validation.
+
+### Phase 4. Pilot deployment
+
+Following successful validation, the infrastructure is deployed in a controlled pilot environment that supports the MVP use case defined by NGEX. Operational teams monitor system performance and verify that the infrastructure operates according to defined operational procedures.
+
+## NGEX Responsibilities
+
+Successful implementation of the infrastructure requires close cooperation between CMA and NGEX. NGEX is expected to provide inputs related to system governance, operational procedures, and integration requirements for participating institutions.
+
+NGEX also coordinates interactions with external infrastructure participants including trading venues, custodians, and regulatory authorities.
+
+Through this coordination NGEX ensures that the infrastructure operates in accordance with regulatory expectations and organizational policies.
+
+## Key Dependencies
+
+The implementation timeline depends on several external factors including the readiness of infrastructure participants and the availability of integration interfaces.
+
+Dependencies may include the availability of trading venue interfaces, configuration of distributed ledger registry environments, and integration with custody or depository systems responsible for maintaining immobilized underlying securities.
+
+Close coordination between infrastructure participants helps ensure that these dependencies are addressed during the implementation process.
+
+## Risk Management Approach
+
+Implementation of financial infrastructure systems requires careful management of operational and technical risks.
+
+The implementation process therefore includes structured testing procedures, validation of operational workflows, and monitoring of system performance during the pilot phase. These measures allow potential issues to be identified and addressed before the infrastructure transitions to broader operational use.
+
+By following a phased implementation strategy with defined validation steps, CMA aims to support NGEX in establishing a stable and reliable operational environment for the Digital Post-Trade Financial Market Infrastructure.
+
+# Commercial Model (Indicative)
+
+## Licensing Model
+
+CMA typically provides its infrastructure platforms under a licensing model that allows the infrastructure operator to deploy and operate the system within its own controlled environment.
+
+Under this model, NGEX would operate the post-trade platform within its infrastructure environment while CMA provides the core software components, implementation services, and technical support required for system deployment and operation.
+
+This approach allows NGEX to maintain operational control of the infrastructure while benefiting from CMA’s technology platform and implementation expertise.
+
+## Implementation Services
+
+Implementation services include system configuration, integration with participating infrastructure components, testing support, and assistance during the pilot deployment phase.
+
+These services are typically provided as part of a structured project engagement that covers the technical and operational work required to deploy the infrastructure platform.
+
+The scope of implementation services may include technical integration activities, operational workflow configuration, and support for testing and validation procedures.
+
+## Support and Maintenance
+
+Following system deployment, CMA provides ongoing support and maintenance services that ensure the continued stability and evolution of the platform.
+
+These services typically include software maintenance, technical support, and delivery of system updates where required. Maintenance services may also include assistance with system monitoring, troubleshooting, and operational guidance.
+
+This support model allows NGEX to maintain a stable operational infrastructure while ensuring that the platform can evolve as new requirements emerge.
+
+## Service Levels and Operational Support
+
+Operational support services can be structured according to service level agreements that define response times, incident management procedures, and support coverage.
+
+Service levels are typically aligned with the operational requirements of financial market infrastructures and may include support for critical operational incidents and infrastructure maintenance activities.
+
+The specific support model and service levels would be defined in collaboration with NGEX during subsequent project phases.
+
+# Coverage and Gaps Statement
+
+This section summarizes the capabilities provided by CMA within the proposed architecture, identifies areas where additional components are required, and outlines the responsibilities of different participants involved in the NGEX Digital Post-Trade Financial Market Infrastructure.
+
+## Capabilities Delivered by CMA
+
+CMA provides the operational platform responsible for coordinating post-trade processes within the infrastructure environment.
+
+Capabilities delivered by the CMA platform include:
+
+**Post-trade workflow orchestration**
+
+The platform manages operational workflows related to trade processing, settlement coordination, reconciliation procedures, and lifecycle event processing.
+
+**Trade confirmation ingestion**
+
+The system supports ingestion and processing of trade confirmation information received from external trading venues.
+
+**Settlement coordination**
+
+The platform coordinates settlement workflows between infrastructure participants, including distributed ledger registries and traditional custody or depository environments.
+
+**Reconciliation and exception management**
+
+The platform supports reconciliation procedures and provides operational tools for identifying and resolving inconsistencies between infrastructure components.
+
+**Operational monitoring and reporting**
+
+The system provides monitoring capabilities, operational dashboards, and reporting tools that support infrastructure oversight and regulatory transparency.
+
+These capabilities are available within the current CMA platform architecture and can be configured to support the NGEX operating model.
+
+## Capabilities Not Delivered by CMA
+
+Certain components of the NGEX architecture fall outside the scope of the CMA platform and would typically be provided by specialized technology providers or infrastructure participants.
+
+These components may include:
+
+**Distributed ledger infrastructure**
+
+The distributed ledger registry environment used for maintaining tokenized securities records.
+
+**Digital asset custody infrastructure**
+
+Wallet infrastructure and cryptographic key management services used to secure digital assets.
+
+**Investor identity verification services**
+
+Specialized systems responsible for performing identity verification, compliance checks, and onboarding of participants.
+
+These components operate as specialized layers within the infrastructure ecosystem and interact with the CMA platform through defined integration interfaces.
+
+## Potential Partner Categories
+
+To support the full infrastructure environment described in the NGEX architecture, the ecosystem may include specialized providers in several areas.
+
+These may include:
+
+* Distributed ledger technology providers responsible for registry infrastructure.
+* Digital asset custody providers responsible for secure key management and wallet infrastructure.
+* Identity and compliance service providers supporting KYC and AML procedures.
+* Infrastructure hosting providers supporting secure deployment environments.
+
+These partners would provide specialized capabilities that complement the operational platform delivered by CMA.
+
+## Integration Responsibility Split
+
+The proposed architecture assumes a clear separation of responsibilities across infrastructure participants.
+
+CMA provides the operational post-trade orchestration platform responsible for coordinating transaction processing and settlement workflows.
+
+NGEX operates the digital registry environment, manages the lifecycle of tokenized securities, and coordinates the participation of infrastructure stakeholders.
+
+Third-party providers may deliver specialized components such as distributed ledger infrastructure, digital asset custody services, and identity verification systems.
+
+Through this separation of responsibilities, the infrastructure can combine specialized technologies while maintaining clear governance and operational coordination across the ecosystem.
+
+# Conclusion
+
+CMA Small Systems AB appreciates the opportunity to participate in the NGEX Request for Information regarding the development of a Digital Post-Trade Financial Market Infrastructure.
+
+The initiative described by NGEX represents an important step toward combining traditional capital market infrastructures with emerging digital technologies. The phased approach proposed by NGEX, beginning with a controlled MVP implementation and evolving toward a scalable multi-asset environment, provides a practical path for introducing digital asset capabilities while maintaining operational stability and regulatory alignment.
+
+CMA’s experience in the design and implementation of national financial infrastructures allows the company to support such initiatives by providing reliable operational platforms that coordinate complex post-trade processes across multiple infrastructure participants.
+
+Within the proposed architecture, the CMA platform provides the operational environment responsible for post-trade workflow orchestration, settlement coordination, reconciliation, and operational monitoring. By integrating trading venues, distributed ledger registries, and traditional custody infrastructures, the platform enables NGEX to maintain a consistent and auditable operational framework for processing tokenized securities transactions.
+
+Through this approach, CMA aims to support NGEX in establishing a resilient and scalable infrastructure capable of evolving alongside the broader transformation of capital markets.
+
+CMA looks forward to further discussions with NGEX and remains available to provide additional technical information, architecture descriptions, and operational details that may assist in the evaluation of potential solutions.
+
+# Appendix A - Proposed Architecture for NGEX Digital Post-Trade Infrastructure
+
+## Architectural Overview
+
+The proposed architecture integrates external trading venues, distributed ledger registry infrastructure, and traditional financial market infrastructure components within a coordinated post-trade operating environment.
+
+The CMA platform operates as the post-trade orchestration and operational control layer, coordinating transaction processing, settlement workflows, and reconciliation between infrastructure components.
+
+This architecture allows NGEX to combine distributed ledger technologies with existing capital market infrastructure while maintaining operational transparency, governance, and resilience.
+
+## High-Level Architecture Diagram
+
+![A black screen with white text  AI-generated content may be incorrect.](data:image/png;base64...)
+
+## Component Responsibilities
+
+### Trading Venue
+
+External trading venues execute transactions involving tokenized securities.
+
+Trade confirmation information is transmitted to the post-trade infrastructure for processing.
+
+### CMA Post-Trade Platform
+
+The CMA platform coordinates operational post-trade processes across the ecosystem.
+
+Key responsibilities include:
+
+* trade confirmation ingestion
+* settlement workflow orchestration
+* reconciliation between registry and custody infrastructure
+* operational monitoring and reporting
+* exception handling and operational controls
+
+This layer acts as the **operational coordination platform for the infrastructure**.
+
+### Distributed Ledger Registry (Operated by NGEX)
+
+The distributed ledger registry maintains the authoritative digital record of tokenized securities ownership and lifecycle events.
+
+Functions include:
+
+* token ownership records
+* token lifecycle events
+* registry updates following settlement processing
+
+### Custodian or CSD Infrastructure
+
+Traditional custody infrastructure maintains records of the immobilized underlying securities and may provide settlement finality for the underlying assets.
+
+This layer ensures alignment between the tokenized representation of securities and the underlying financial instruments.
+
+### Wallet and Custody Infrastructure
+
+The custody layer manages digital wallets and cryptographic keys required for digital asset transactions.
+
+Typical functions include:
+
+* key management
+* wallet infrastructure
+* transaction authorization
+
+These components operate as part of the infrastructure security layer and interact with the operational platform through defined interfaces.
+
+## Architectural Principles
+
+The architecture follows principles typically applied to regulated financial market infrastructures.
+
+These principles include:
+
+* Clear separation of infrastructure roles
+* Operational transparency and auditability
+* Integration with existing market infrastructure
+* Technology neutrality with respect to distributed ledger implementations
+* Scalable architecture capable of supporting additional participants and asset classes
+
+# Appendix B - Example Deployment Architecture
+
+## Deployment Model Overview
+
+The CMA platform can be deployed within a secure infrastructure environment operated by NGEX. The deployment model supports high availability, operational resilience, and compliance with data residency requirements.
+
+The architecture allows critical infrastructure components to be hosted within NGEX-controlled environments while supporting integration with external infrastructure participants such as trading venues, custody providers, and distributed ledger networks.
+
+This deployment model enables NGEX to maintain operational control over the infrastructure while ensuring secure connectivity with external systems.
+
+## Example Deployment Architecture
+
+![A screenshot of a computer  AI-generated content may be incorrect.](data:image/png;base64...)
+
+## Infrastructure Components
+
+### Application Layer
+
+The CMA Post-Trade Platform provides the core operational services responsible for transaction processing and settlement coordination.
+
+These services include:
+
+* trade ingestion services
+* workflow orchestration
+* reconciliation engines
+* operational monitoring and reporting tools
+
+### Integration Layer
+
+The integration layer provides communication interfaces that connect the operational platform with external infrastructure components.
+
+These interfaces may include:
+
+* APIs for trading venue integrations
+* messaging interfaces for registry updates
+* integration services for custody and settlement infrastructure
+
+### Distributed Ledger Environment
+
+The distributed ledger network maintains the digital registry of tokenized securities and records ownership and lifecycle events associated with tokens.
+
+The CMA platform interacts with this environment through defined integration services.
+
+### Custody and Settlement Infrastructure
+
+Traditional custody or depository systems maintain records of immobilized securities and may provide settlement finality for the underlying assets.
+
+Integration with these systems ensures alignment between the digital representation of securities and their traditional infrastructure records.
+
+### Security and Key Management Layer
+
+The security layer includes wallet infrastructure and cryptographic key management systems used to authorize digital asset transactions.
+
+These systems typically rely on institutional-grade security mechanisms such as hardware security modules or distributed key management technologies.
+
+# Appendix C - Operating Flow Diagram
+
+## Transaction Processing Flow
+
+The operating flow describes the sequence of events from trade execution to final update of the digital registry.
+
+![A screenshot of a computer  AI-generated content may be incorrect.](data:image/png;base64...)
+
+## Operational Monitoring
+
+Throughout the process the platform provides monitoring capabilities that allow infrastructure operators to track transaction processing and identify operational exceptions.
+
+Operational dashboards provide visibility into system performance, transaction flows, and reconciliation status.

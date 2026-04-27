@@ -1,0 +1,115 @@
+{
+  "surfaces": [
+    {
+      "surface": "settlemint-office-agents/bid-manager",
+      "source": {
+        "exists": true,
+        "files": 2545,
+        "symlinks": 2,
+        "dirs": 408,
+        "bytes": 591888103,
+        "inventory_sha256": "3665cdf544b81a0c5f670fb5b305de63a0935f45a48b64df476050a450ea4e61"
+      },
+      "dest": {
+        "exists": true,
+        "files": 2545,
+        "symlinks": 2,
+        "dirs": 408,
+        "bytes": 591888103,
+        "inventory_sha256": "3665cdf544b81a0c5f670fb5b305de63a0935f45a48b64df476050a450ea4e61"
+      },
+      "match": true,
+      "missing_sample": [],
+      "extra_sample": []
+    },
+    {
+      "surface": "settlemint-office-agents/bid-checker",
+      "source": {
+        "exists": true,
+        "files": 38,
+        "symlinks": 1,
+        "dirs": 12,
+        "bytes": 44341794,
+        "inventory_sha256": "2514fae7922b45c2c9711b0af13f5b7ba6404ff85e833405fd218785a74b62d1"
+      },
+      "dest": {
+        "exists": true,
+        "files": 38,
+        "symlinks": 1,
+        "dirs": 12,
+        "bytes": 44341794,
+        "inventory_sha256": "2514fae7922b45c2c9711b0af13f5b7ba6404ff85e833405fd218785a74b62d1"
+      },
+      "match": true,
+      "missing_sample": [],
+      "extra_sample": []
+    },
+    {
+      "surface": "settlemint-office-agents/rfp-forge",
+      "source": {
+        "exists": true,
+        "files": 539,
+        "symlinks": 2,
+        "dirs": 89,
+        "bytes": 18107898,
+        "inventory_sha256": "48e172ab34050ea2b2f830d106e07f33cce5893143157dfe8f409e4023d08f55"
+      },
+      "dest": {
+        "exists": true,
+        "files": 539,
+        "symlinks": 2,
+        "dirs": 89,
+        "bytes": 18107898,
+        "inventory_sha256": "48e172ab34050ea2b2f830d106e07f33cce5893143157dfe8f409e4023d08f55"
+      },
+      "match": true,
+      "missing_sample": [],
+      "extra_sample": []
+    },
+    {
+      "surface": "scripts/rfp-agent",
+      "source": {
+        "exists": true,
+        "files": 3,
+        "symlinks": 0,
+        "dirs": 0,
+        "bytes": 23044,
+        "inventory_sha256": "52f2b96abea23230a8049e792af29e8e84322c87f59cca708f33e81f5c36cc79"
+      },
+      "dest": {
+        "exists": true,
+        "files": 3,
+        "symlinks": 0,
+        "dirs": 0,
+        "bytes": 23044,
+        "inventory_sha256": "52f2b96abea23230a8049e792af29e8e84322c87f59cca708f33e81f5c36cc79"
+      },
+      "match": true,
+      "missing_sample": [],
+      "extra_sample": []
+    },
+    {
+      "surface": "product/dalp/bid-kit",
+      "source": {
+        "exists": true,
+        "files": 28,
+        "symlinks": 0,
+        "dirs": 4,
+        "bytes": 489953,
+        "inventory_sha256": "61e38cad5a95a6a2683407aae0bd14b6d503912bece80aab48845dd9e35b1623"
+      },
+      "dest": {
+        "exists": true,
+        "files": 28,
+        "symlinks": 0,
+        "dirs": 4,
+        "bytes": 489953,
+        "inventory_sha256": "61e38cad5a95a6a2683407aae0bd14b6d503912bece80aab48845dd9e35b1623"
+      },
+      "match": true,
+      "missing_sample": [],
+      "extra_sample": []
+    }
+  ],
+  "all_match": true
+}

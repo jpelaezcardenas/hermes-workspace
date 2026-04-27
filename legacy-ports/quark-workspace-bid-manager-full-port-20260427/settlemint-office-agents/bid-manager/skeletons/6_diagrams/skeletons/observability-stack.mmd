@@ -1,0 +1,104 @@
+%% DALP observability and monitoring stack.
+%% Shows full-stack observability: metrics, logs, traces, dashboards, alerting.
+%% Use in operations, SLA, support model, and infrastructure maturity sections.
+%% Evaluator focus: operational maturity, proactive monitoring, chain-specific observability.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Figtree, Inter, Arial, sans-serif",
+    "fontSize": "15px",
+    "textColor": "#1A1A2E",
+    "lineColor": "#6B7280",
+    "background": "#FFFFFF",
+    "clusterBkg": "#FAFAFA",
+    "clusterBorder": "#D0D7DE",
+    "edgeLabelBackground": "#FFFFFF"
+  },
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart LR
+    subgraph SOURCES[DALP Service Sources]
+        UAPI[Unified API]
+        EE[Execution Engine]
+        KG[Key Guardian]
+        CI[Chain Indexer]
+        CG[Chain Gateway]
+        FS[Feeds System]
+        BC[Blockchain Nodes]
+    end
+
+    subgraph COLLECT[Collection Layer]
+        VM[VictoriaMetrics<br/>Metrics]
+        LOKI[Loki<br/>Logs]
+        TEMPO[Tempo<br/>Distributed Traces]
+    end
+
+    subgraph DASH[Visualization + Alerting]
+        GF[Grafana Dashboards]
+        ALERTS[Alert Manager]
+    end
+
+    subgraph NOTIFY[Notification Channels]
+        PD[PagerDuty]
+        WEBHOOK[Webhook<br/>Integration]
+        EMAIL[Email<br/>Notifications]
+    end
+
+    subgraph MONITORS[Key Monitors]
+        APIH[API Health +<br/>Latency]
+        CILAG[Chain Indexer<br/>Lag]
+        NODEHEALTH[Node Consensus<br/>Status]
+        TXFAIL[Transaction<br/>Failure Rate]
+        CERT[Certificate<br/>Expiry]
+    end
+
+    %% Sources to collectors
+    UAPI -->|Metrics| VM
+    EE -->|Metrics| VM
+    KG -->|Metrics| VM
+    CI -->|Metrics| VM
+
+    UAPI -->|Logs| LOKI
+    EE -->|Logs| LOKI
+    KG -->|Logs| LOKI
+    CG -->|Logs| LOKI
+    BC -->|Logs| LOKI
+
+    UAPI -->|Traces| TEMPO
+    EE -->|Traces| TEMPO
+
+    %% Collectors to dashboards
+    VM --> GF
+    LOKI --> GF
+    TEMPO --> GF
+
+    %% Dashboards to alerts
+    GF --> ALERTS
+    GF --> MONITORS
+
+    %% Alert routing
+    ALERTS --> PD
+    ALERTS --> WEBHOOK
+    ALERTS --> EMAIL
+
+    %% Client ops
+    OPSPORTAL[[CLIENT: Operations<br/>NOC Team]] --> GF
+
+    %% Styling
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class UAPI,EE,KG,CI,CG,FS dalp,rounded;
+    class BC infra,rounded;
+    class VM,LOKI,TEMPO infra,rounded;
+    class GF,ALERTS dalp,rounded;
+    class PD,WEBHOOK,EMAIL external,rounded;
+    class APIH,CILAG,NODEHEALTH,TXFAIL,CERT milestone,rounded;
+    class OPSPORTAL client,rounded;

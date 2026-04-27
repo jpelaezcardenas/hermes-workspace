@@ -1,0 +1,60 @@
+%% Property tokenization user story from onboarding through yield distribution.
+%% Use in real estate use case, fractional ownership, and investor eligibility sections.
+%% Shows legal wrapper, fractional creation, and rental yield mechanics.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF", "clusterBkg": "#FAFAFA", "clusterBorder": "#D0D7DE", "edgeLabelBackground": "#FFFFFF"},
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TD
+    subgraph ONBOARD[Property Onboarding]
+        PROP[Property Registration] --> LEGAL[Legal Wrapper<br/>Established]
+        LEGAL --> VALUATION[Valuation Feed<br/>Integrated]
+        VALUATION --> FRAC[Fractional Token<br/>Creation]
+    end
+
+    subgraph PRIMARY[Primary Sale]
+        FRAC --> ACCRED{Investor<br/>Accreditation Check}
+        ACCRED -->|Accredited| ALLOCATE[Allocate<br/>Property Tokens]
+        ACCRED -->|Not Accredited| REJECT1[Reject:<br/>Not Eligible]
+        ALLOCATE --> PAYMENT[Payment Settlement]
+    end
+
+    subgraph SECONDARY[Secondary Trading]
+        PAYMENT --> MARKET[Tokens Available<br/>For Transfer]
+        MARKET --> COMPLY{Compliance Engine<br/>Transfer Check}
+        COMPLY -->|Pass| TRADE[Execute<br/>Secondary Transfer]
+        COMPLY -->|Fail| REJECT2[Block Transfer]
+        TRADE --> MARKET
+    end
+
+    subgraph YIELD[Yield Distribution]
+        RENTAL[Rental Income<br/>Received] --> SNAPSHOT[Snapshot Token<br/>Holders]
+        SNAPSHOT --> DISTRIBUTE[Distribute Yield<br/>Pro Rata]
+        DISTRIBUTE --> MARKET
+    end
+
+    subgraph EVENTS[Property Events]
+        REVALUE[Revaluation Event] --> VALUATION
+        SALE[Property Sale<br/>Or Exit] --> BURN[Burn All Tokens]
+        BURN --> PROCEEDS[Distribute Sale<br/>Proceeds]
+    end
+
+    VALFEED[[CLIENT: Property<br/>Valuation Provider]] --> VALUATION
+    CUSTODIAN[[CLIENT: Custody]] --> ALLOCATE
+
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class PROP,LEGAL,FRAC,ALLOCATE,PAYMENT,MARKET,TRADE dalp,rounded;
+    class VALUATION,SNAPSHOT,DISTRIBUTE,BURN,PROCEEDS dalp,rounded;
+    class ACCRED,COMPLY compliance,rounded;
+    class RENTAL,REVALUE,SALE milestone,rounded;
+    class VALFEED,CUSTODIAN client,rounded;
+    class REJECT1,REJECT2 risk,rounded;

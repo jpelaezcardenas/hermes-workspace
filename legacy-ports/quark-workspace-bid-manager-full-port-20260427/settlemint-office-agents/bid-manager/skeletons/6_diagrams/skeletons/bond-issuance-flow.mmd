@@ -1,0 +1,53 @@
+%% Bond issuance user story with maker-checker governance.
+%% Use in asset lifecycle, issuance design, and operating model sections.
+%% Shows full flow from bond definition through deployment to initial distribution.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": true, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 32, "boxMargin": 12, "boxTextMargin": 8, "noteMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    actor Issuer
+    participant AC as Asset Console
+    participant CE as Compliance Engine
+    participant EE as Execution Engine
+    participant BC as Blockchain
+    participant CU as [CLIENT: Custody]
+
+    rect rgb(232, 244, 253)
+        Note over Issuer, AC: Bond Design Phase
+        Issuer ->> AC: Define bond terms<br/>(maturity, coupon, currency)
+        AC ->> CE: Select compliance modules<br/>(Country Allowlist, Transfer Limits)
+        CE -->> AC: Module configuration confirmed
+        AC ->> AC: Configure RBAC permissions<br/>(Issuer, Transfer Agent, Compliance Officer)
+    end
+
+    rect rgb(243, 229, 245)
+        Note over AC, EE: Maker-Checker Deployment
+        Issuer ->> AC: Maker creates deployment request
+        AC ->> AC: Pending: awaiting Checker approval
+        Note right of AC: Checker reviews bond terms,<br/>compliance modules, and roles
+        AC ->> AC: Checker approves deployment
+        AC ->> EE: Invoke SMART Protocol Factory
+        EE ->> BC: Deploy bond smart contract
+        BC -->> EE: Contract address confirmed
+        EE ->> BC: Assign on-chain roles<br/>(AccessManager: MINTER, BURNER)
+        EE -->> AC: Deployment complete
+    end
+
+    rect rgb(232, 245, 233)
+        Note over AC, CU: Initial Distribution
+        Issuer ->> AC: Maker creates mint request
+        AC ->> AC: Pending: awaiting Checker approval
+        AC ->> AC: Checker approves mint
+        AC ->> CE: Validate mint against compliance
+        CE -->> AC: Compliance passed
+        AC ->> EE: Execute mint
+        EE ->> BC: Mint initial bond tokens
+        BC -->> EE: Mint confirmed
+        EE ->> CU: Notify custody of new position
+        CU -->> EE: Custody acknowledgement
+    end
+
+    Note over Issuer, CU: [CLIENT: Add distribution channel<br/>or investor portal integration as needed]

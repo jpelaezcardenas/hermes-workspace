@@ -1,0 +1,40 @@
+%% DALP transfer compliance sequence.
+%% Use in compliance, transfer controls, and regulatory enforcement sections.
+%% Swap module names only if proposal scope narrows to a subset of controls.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": false, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 28, "boxMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    autonumber
+    participant U as Transfer Initiator
+    participant API as Unified API
+    participant EE as Execution Engine
+    participant CE as Compliance Engine
+    participant ID as OnchainID / Claims
+    participant TOK as DALPAsset
+
+    U->>API: Submit transfer request
+    API->>EE: Create transfer workflow
+    EE->>CE: Evaluate transfer
+    CE->>ID: Verify investor eligibility
+    ID-->>CE: Identity valid / invalid
+    CE->>CE: Check transfer limits
+    CE->>CE: Check country restrictions
+    CE->>ID: Verify trusted claims
+
+    alt Compliance approved
+        CE-->>EE: Approved
+        EE->>TOK: Execute transfer on-chain
+        TOK-->>EE: Transfer event
+        EE-->>API: Confirm success
+        API-->>U: Transfer completed
+    else Compliance rejected
+        CE-->>EE: Reject with reason
+        EE-->>API: Fail transfer
+        API-->>U: Rejected
+    end
+
+    Note over CE,ID: [CLIENT: Add manual transfer approval step here if deal requires operator sign-off]

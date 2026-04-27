@@ -1,0 +1,96 @@
+%% DALP asset servicing lifecycle (Day-2 operations).
+%% Shows post-issuance operations: coupon, maturity, redemption, forced transfer, freeze/unfreeze.
+%% Use in asset servicing, operational model, lifecycle management, and Day-2 readiness sections.
+%% Evaluator focus: real operational complexity handling, not just minting.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Figtree, Inter, Arial, sans-serif",
+    "fontSize": "15px",
+    "textColor": "#1A1A2E",
+    "lineColor": "#6B7280",
+    "background": "#FFFFFF",
+    "clusterBkg": "#FAFAFA",
+    "clusterBorder": "#D0D7DE",
+    "edgeLabelBackground": "#FFFFFF"
+  },
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TD
+    subgraph TRIGGERS[Servicing Triggers]
+        SCHED[Scheduled Event<br/>Coupon Date / Maturity]
+        MANUAL[Operator Request<br/>Asset Console]
+        REGORDER[Regulatory Order<br/>Freeze / Forced Transfer]
+    end
+
+    subgraph APPROVAL[Maker-Checker Approval]
+        MAKER[Maker Initiates<br/>Servicing Action]
+        CHECKER{Checker<br/>Approves?}
+        MAKER --> CHECKER
+    end
+
+    SCHED --> MAKER
+    MANUAL --> MAKER
+    REGORDER --> MAKER
+
+    CHECKER -->|Approved| ROUTE
+    CHECKER -->|Rejected| AUDITREJ[Rejection Logged<br/>to Audit Trail]
+
+    ROUTE{Action<br/>Type?}
+
+    %% Coupon distribution
+    ROUTE -->|Coupon| COUPON[Calculate Distributions<br/>Feeds System]
+    COUPON --> CEXEC[Execute Payments<br/>On-Chain]
+
+    %% Maturity processing
+    ROUTE -->|Maturity| MATURE[Maturity Processing<br/>Burn Tokens + Settle]
+    MATURE --> MEXEC[Final Redemption<br/>Payment Execution]
+
+    %% Early redemption
+    ROUTE -->|Early Redemption| REDEEM[Redemption Request<br/>Compliance Check]
+    REDEEM --> REXEC[Partial/Full Burn<br/>+ Payment]
+
+    %% Forced transfer
+    ROUTE -->|Forced Transfer| FORCE[Forced Transfer<br/>Compliance Override]
+    FORCE --> FEXEC[Transfer Execution<br/>On-Chain]
+
+    %% Freeze / Unfreeze
+    ROUTE -->|Freeze / Unfreeze| FREEZE[Freeze or Unfreeze<br/>Investor Tokens]
+    FREEZE --> FREXEC[On-Chain State<br/>Update]
+
+    %% All executions converge
+    CEXEC --> NOTIFY
+    MEXEC --> NOTIFY
+    REXEC --> NOTIFY
+    FEXEC --> NOTIFY
+    FREXEC --> NOTIFY
+
+    subgraph NOTIFY[Post-Execution]
+        AUDIT[Audit Trail<br/>Immutable Log]
+        REPORT[Reporting Output<br/>CSV / PDF]
+        WEBHOOK[Webhook<br/>Notification]
+        CLIENT_NOTIFY[[CLIENT: Investor<br/>Notification System]]
+    end
+
+    %% Styling
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class SCHED,MANUAL dalp,rounded;
+    class REGORDER risk,rounded;
+    class MAKER,CHECKER compliance,rounded;
+    class AUDITREJ risk,rounded;
+    class ROUTE dalp,rounded;
+    class COUPON,MATURE,REDEEM dalp,rounded;
+    class FORCE,FREEZE risk,rounded;
+    class CEXEC,MEXEC,REXEC,FEXEC,FREXEC dalp,rounded;
+    class AUDIT,REPORT compliance,rounded;
+    class WEBHOOK dalp,rounded;
+    class CLIENT_NOTIFY client,rounded;

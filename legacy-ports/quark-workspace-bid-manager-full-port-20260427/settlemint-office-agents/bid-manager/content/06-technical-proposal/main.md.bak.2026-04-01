@@ -1,0 +1,873 @@
+# Section 6: Technical Proposal
+
+## Executive Summary
+
+Institutional adoption of digital asset infrastructure depends on a straightforward question: can the technology meet the same operational standards that traditional financial systems have spent decades establishing? High availability measured in four nines. Security controls that satisfy five independent audit layers. Deployment models that respect data sovereignty. Upgrade paths that do not require taking the platform offline, redeploying existing assets, or disrupting holders' balances.
+
+DALP's architecture is designed around these requirements. The platform runs on Kubernetes (standard distributions and Red Hat OpenShift), supports cloud, on-premises, and hybrid deployment models, and integrates with institutional infrastructure including HSM-backed key management, enterprise observability stacks, and existing identity providers. A 534-code structured error catalog provides immediate, actionable feedback for every failed operation. Distributed tracing instruments every step from API entry through custody provider signing, enabling operations teams to diagnose issues across trust boundaries they do not control.
+
+This section presents the technical architecture in sufficient detail for a technical evaluation committee to assess the platform's fitness for institutional deployment, and in sufficient clarity for business and compliance stakeholders to understand why each architectural choice matters for their operational and regulatory requirements.
+
+---
+
+## 6.1 Platform Architecture Overview
+
+### 6.1.1 Architectural Principles
+
+DALP's architecture follows several foundational principles:
+
+- **Lifecycle-first design**: Every architectural component serves the full digital asset lifecycle — from issuance through servicing to retirement — not just token creation. This means the architecture accounts for ongoing operations like compliance monitoring, corporate actions, holder management, and asset maturity from the start.
+- **Durable execution**: All stateful operations run through Restate, a durable execution engine that guarantees workflow completion even through infrastructure failures, process restarts, and network partitions. This is not an optional reliability layer — it is the core execution model.
+- **Defense-in-depth**: Security is enforced at every layer independently — authentication, authorization, wallet verification, on-chain compliance, and custody provider policy — so no single control failure grants unauthorized access. Five independent security layers must all pass for a transaction to reach the blockchain.
+- **Separation of concerns**: The architecture cleanly separates API routing, business logic, blockchain interaction, data indexing, and observability into independently deployable and scalable components. Each component can be scaled, updated, and monitored independently.
+- **Provider abstraction**: Infrastructure dependencies (custody, secrets, object storage, database) are accessed through provider-abstracted interfaces. This prevents vendor lock-in and enables deployment across different cloud providers and on-premises environments without application changes.
+
+### 6.1.2 Core Components
+
+DALP consists of the following major components:
+
+#### DALP dApp (Frontend)
+
+A full decentralized application built with React and TanStack Router, providing the operational console for asset management, compliance operations, identity administration, and system monitoring. The dApp is not merely a "portal" or "UI" — it implements sophisticated client-side logic including:
+
+- Client-side effective-status derivation (compensating for subgraph lag)
+- Arbitrary-precision arithmetic for financial calculations (dnum library, avoiding floating-point errors in token amounts)
+- Five-tab operational consoles for complex addons (token sales, settlements)
+- Asset Designer wizard with multi-step validation and asset-class-based configuration
+- Global search with debounced input, section grouping, and role-aware token visibility
+- i18n support with 4 locales (en-US, de-DE, ar-SA, ja-JP) including right-to-left layout
+- Toast-integrated error display with DALP error codes, translated messages, and suggested actions
+
+#### DAPI (Durable API Service)
+
+The backend API layer, built on oRPC with dual-endpoint architecture:
+
+- **`/api/rpc`**: Session/cookie-authenticated endpoint for the dApp frontend. API keys are explicitly blocked on this endpoint (FORBIDDEN response). oRPC uses POST for all procedure calls, making HTTP method unreliable for scope enforcement — hence the hard block on API keys.
+- **`/api/v2`**: REST endpoint accepting API keys with HTTP-method-based scope enforcement (read-only keys restricted to GET/HEAD/OPTIONS; read-write keys allow POST/PUT/PATCH/DELETE).
+
+This two-endpoint model is a hardened security boundary: the RPC endpoint serves only browser sessions, while the REST endpoint is the sole supported interface for programmatic consumers (SDK, CLI, CI pipelines, backend integrations).
+
+The DAPI implements a layered middleware chain that transforms authenticated HTTP requests into tenant-scoped, permission-aware, execution-ready operations:
+
+1. **Session resolution**: Resolves identity from browser sessions or API keys
+2. **Authentication enforcement**: Requires authenticated user, emits identity headers for metrics
+3. **Organization role synchronization**: Reconciles on-chain access-control state into organization membership roles at request time — ensuring off-chain permissions stay aligned with chain-authoritative role state
+4. **System context hydration**: Resolves tenant system address, validates bootstrap readiness, derives user permissions from on-chain roles, caches by `sessionId:systemAddress:userAddress`
+5. **Token context hydration** (for token operations): Resolves token-specific access, derives caller actions from roles, trusted-issuer status, and interface support
+6. **Wallet verification**: Step-up verification for sensitive mutations (PIN, TOTP, backup codes) with per-factor replay protection
+7. **Transaction queue**: Negotiates execution mode (sync/async/hybrid) and transaction speed from RFC 7240 `Prefer` request headers
+
+#### Execution Engine (Restate)
+
+The durable execution engine that powers all stateful operations. Restate provides:
+
+- **Virtual objects**: Keyed by partition (e.g., `{address}.{chainId}`) for exclusive locking during submission. Only one transaction can be submitted per address/chain combination at a time, preventing nonce conflicts.
+- **Durable workflows**: Multi-phase operations that survive restarts (e.g., token creation: create → grant-permissions → issue-claims → unpause → completed). Phase status is persisted and readable, enabling operators to track progress and understand failures.
+- **Idempotent retry**: Operations can be safely retried without duplicate execution. Idempotency keys are scoped by operation kind (`<baseKey>-<kind>`) to prevent cross-operation collision.
+- **Cron patterns**: Scheduled operations (monitoring rollups, health collection, retention cleanup) without external schedulers. Restate manages cron lifecycle internally.
+- **Configurable retry handling**: Three retry presets — `fast` (5 attempts, 10s max), `standard` (10 attempts, 5min max), `longRunning` (20 attempts, 30min max) — applied per step via `ctx.run()` options. Configuration via `config.yml` with zero behavioral change when the section is absent.
+
+#### Blockchain Layer
+
+Smart contracts based on the ERC-3643 (T-REX) standard for compliant tokens, with DALP-specific extensions:
+
+- **DALPAsset contracts**: Unified asset contract with configurable `assetTypeId` and dynamic feature composition via the SMART Configurable extension system (up to 32 pluggable features per token). Features include yield schedules, collateral management, maturity/redemption, AUM fees, and more.
+- **Compliance contracts**: Three-tier compliance interface hierarchy (Global → Token → SMART V2) with dual v1/v2 support for incremental migration. 18 compliance module types covering eligibility, restrictions, transfer controls, supply limits, time-based restrictions, and collateral.
+- **Identity contracts**: OnchainID identity contracts (ERC-734/ERC-735) deployed through the Identity Factory, with claim-based verification and the three-tier Trusted Issuers Registry.
+- **System contracts**: Directory, Identity Registry, Trusted Issuers Registry, Compliance Registry, Feeds Directory — the on-chain governance infrastructure.
+- **Addon contracts**: Factory-deployed capabilities (Vault, XvP Settlement, Token Sale, Airdrop, Fixed Yield Schedule, Feeds) — each following a consistent factory pattern for deployment and governance.
+
+#### Indexer
+
+A custom PostgreSQL-based blockchain event indexer (Indexer V2) designed for DALP's specific data requirements:
+
+- Processes all on-chain events across tokens, identity, compliance, addons, feeds, and system contracts
+- Provides 18+ PostgreSQL analytics views across 5 domains (identity, compliance, addons, cross-cutting, actions)
+- Supports **zero-downtime reindexing** with schema isolation: new indexer versions build fresh data in a rotating schema (`idxr_d1`, `idxr_d2`, ...) alongside the running version, then switch atomically via pass-through views in the `public` schema
+- Includes reorg detection and rollback capabilities with tracked tables
+- Bootstraps by discovering contracts through the on-chain DALP Directory — no manual contract address configuration required
+- Registration-driven schema management: table DDL generated from live Drizzle definitions rather than cloned via `LIKE`, with view recreation on every startup to survive migration drops
+
+TheGraph remains available for legacy query paths during migration, with a phased deprecation plan.
+
+#### Signer Service
+
+Provider-agnostic wallet and signing abstraction supporting:
+
+- **Local signer**: DALP-managed keys with encrypted database storage. Uses the Restate-backed NonceTracker for atomic consume-and-broadcast with self-healing nonce recovery.
+- **DFNS integration**: Programmatic MPC wallet creation, signing, and full API-based approval resolution. Supports auto-sign policies, amount thresholds, IP/time restrictions, and multi-party approval requirements.
+- **Fireblocks integration**: Enterprise MPC-CMP custody with continuous key refresh. Listing pending approvals is supported; resolution requires Fireblocks Console or API Co-Signer.
+
+The Signer Service normalizes wallet creation, signing, approvals, and optional provider-native broadcast across all backends through the `ExternalSigner` contract. Provider initialization is serialized through a shared `initPromise` to prevent concurrent bootstrap races. Provider health is a first-class concern with dedicated health check endpoints.
+
+#### Transaction Processor
+
+A Restate virtual-object service keyed by `{fromAddress}.{chainId}` that provides:
+
+- Partition-level exclusive locking during submission
+- Contract validation and ERC-8021 attribution appending
+- Runtime branching between provider-native broadcast and local nonce-managed broadcast via `supportsBroadcast()` check
+- **11-state lifecycle management**: RECEIVED → QUEUED → PREPARING → PENDING_APPROVAL → SIGNING → BROADCASTING → CONFIRMING → COMPLETED | FAILED | DEAD_LETTER | CANCELLED
+- **20 sub-statuses** for granular failure classification (REVERTED, INSUFFICIENT_BALANCE, NONCE_CONFLICT, SIGNING_FAILED, BLOCKED_BY_POLICY, etc.)
+- **Shared Confirmation Watcher**: A Restate Virtual Object (one per chain) that batch-polls receipts for all active BROADCASTING/CONFIRMING transactions — replacing per-transaction RPC loops with a single shared poller per chain (up to 250 transactions per tick)
+- Reconciliation, cancellation via replacement-by-fee, and dead-letter rescue
+
+#### Nonce Manager
+
+A Restate-backed virtual-object service that serializes nonce allocation per `{address}.{chainId}` partition:
+
+- Atomic consume-and-broadcast for local signer flows
+- Self-healing for "nonce too low" failures (re-reads on-chain nonce, advances, retries up to 3 times)
+- Operator repair surfaces: `syncWithOnchain`, `resetNonce`, `forceSetNonce`, `getForceHistory`
+- Provider-native broadcast paths intentionally bypass this service — external signers manage their own nonces
+
+---
+
+## 6.2 Infrastructure: Cloud, On-Premises, and Hybrid Options
+
+### 6.2.1 Deployment Models
+
+DALP supports three deployment models, each meeting different institutional requirements:
+
+#### Managed Cloud (SaaS)
+
+SettleMint operates the infrastructure on behalf of the client. This model provides:
+- Fully managed Kubernetes cluster with multi-AZ distribution
+- Managed PostgreSQL, Redis, and object storage
+- Managed observability (metrics, logs, traces, alerting)
+- SettleMint-managed upgrades, patching, and monitoring
+- Recommended for organizations that want to minimize operational overhead
+- Typical ongoing operational effort: SettleMint-managed (client focus on business operations)
+
+#### Self-Hosted Cloud
+
+The client provisions and operates infrastructure on their preferred cloud provider (AWS, Azure, GCP). DALP provides Helm charts that automatically configure for the target environment:
+
+| Provider | Managed PostgreSQL | Managed Redis | Object Storage | Observability |
+|----------|-------------------|---------------|----------------|---------------|
+| **AWS** | RDS PostgreSQL (Multi-AZ) | ElastiCache for Redis (Multi-AZ) | S3 (99.999999999% durability) | CloudWatch, Managed Prometheus/Grafana |
+| **Azure** | Azure Database for PostgreSQL Flexible Server (zone-redundant) | Azure Cache for Redis (zone redundancy) | Blob Storage (ZRS or GRS) | Azure Monitor, Managed Grafana |
+| **GCP** | Cloud SQL for PostgreSQL (Regional HA) | Memorystore Standard tier | Cloud Storage (multi-regional) | Cloud Monitoring and Logging |
+
+Cloud-native identity patterns are used for service authentication:
+- **AWS**: IRSA (IAM Roles for Service Accounts) for EKS workloads
+- **Azure**: Workload Identity for AKS workloads
+- **GCP**: Workload Identity for GKE workloads
+- **Fallback**: Static credentials where cloud-native identity is not available
+
+#### On-Premises
+
+For organizations with strict data residency, regulatory, or security requirements. DALP runs the complete stack inside the customer's data center:
+
+- **Database**: CloudNativePG operator for PostgreSQL (version 17.x) with scheduled backups, connection pooling, and zone-aware failover
+- **Cache**: In-cluster Redis (version 8.x)
+- **Storage**: RustFS for S3-compatible object storage (or MinIO for established deployments)
+- **Observability**: Full observability stack (Grafana, VictoriaMetrics, Loki, Tempo, Alloy) deployed in-cluster
+- **Backup**: Velero for Kubernetes resource backups, CloudNativePG for database backups, S3-compatible storage for backup retention
+
+On-premises deployments require more operational effort but provide complete data sovereignty and infrastructure control. DALP's filesystem object storage provider with HMAC-signed presigned URLs enables zero-container-dependency development and testing even without S3-compatible storage.
+
+### 6.2.2 Kubernetes and OpenShift Support
+
+DALP supports deployment on both standard Kubernetes and Red Hat OpenShift:
+
+| Requirement | Minimum | Recommended |
+|-------------|---------|-------------|
+| Kubernetes version | 1.27+ | 1.29+ |
+| OpenShift version | 4.14+ | 4.16+ |
+| Node count | 3 | 6+ |
+| Node size (compute) | 4 vCPU / 16 GB RAM | 8 vCPU / 32 GB RAM |
+
+The Helm charts automatically detect the platform and configure accordingly:
+- **Kubernetes**: Traefik-based ingress with IngressRoute CRDs, standard security contexts
+- **OpenShift**: Native OpenShift Router with Routes (Traefik disabled), compatible with restricted-v2 Security Context Constraint, all containers run as non-root with no privilege escalation
+
+The detection is automatic — operators do not need to manually configure platform-specific settings. CRD detection and route/ingress selection are handled by Helm template conditionals.
+
+### 6.2.3 Database Requirements
+
+| Parameter | Requirement | Purpose |
+|-----------|------------|---------|
+| PostgreSQL version | 17.x (tested on 17.5) | Feature compatibility |
+| High availability | Multi-AZ or zone-redundant | Automatic failover |
+| Storage | 100 GB minimum, auto-growth | Data persistence |
+| PITR | Enabled, 7-day retention | Point-in-time recovery |
+| SSL/TLS | Required | Encrypted connections |
+| `max_connections` | 300+ | Connection pool sizing |
+| Required extensions | pg_trgm, btree_gist, pg_stat_statements, postgres_fdw | Platform functionality |
+
+Three separate databases with dedicated owners are required:
+- **`blockscout`**: Blockchain explorer data
+- **`thegraph`**: Subgraph data (UTF8/C collation required)
+- **`dapp`**: Application data including transaction requests, identity records, KYC profiles, settings, indexer schemas, and audit trails
+
+### 6.2.4 Redis Requirements
+
+| Parameter | Requirement |
+|-----------|------------|
+| Redis version | 8.x (tested on 8.4.0) |
+| Cluster mode | Disabled (database index support required) |
+| Memory | 6 GB minimum |
+| High availability | Multi-AZ or zone redundancy |
+| TLS encryption | Required |
+| AUTH password | Required |
+| Persistence | AOF or snapshots enabled |
+
+### 6.2.5 Object Storage
+
+Object storage is required for application document storage and backup retention. DALP supports 7 provider aliases through its pluggable object storage abstraction:
+
+| Provider | Configuration |
+|----------|--------------|
+| **AWS S3** | Native S3 with IAM role authentication |
+| **GCP Cloud Storage** | Native GCS with workload identity |
+| **Azure Blob Storage** | Native Azure Blob with managed identity |
+| **S3-compatible** | Any S3-compatible endpoint (custom endpoint + path-style URLs) |
+| **MinIO** | Alias for S3-compatible |
+| **RustFS** | Alias for S3-compatible |
+| **Filesystem** | Local disk with HMAC-signed presigned URLs (development/testing) |
+
+The dual-bucket model uses a `bucket` (public assets) and optional `privateBucket` (sensitive data). For S3-compatible providers, `publicEndpoint` override supports Docker/NAT environments where internal and external URLs differ.
+
+| Bucket Purpose | When Required |
+|---------------|---------------|
+| Application storage | Always |
+| Velero backups | If using Velero |
+| PostgreSQL WAL and backups | Self-hosted PostgreSQL only |
+| Observability backups | Self-hosted observability only |
+
+---
+
+## 6.3 Network Architecture
+
+### 6.3.1 Supported Blockchain Networks
+
+DALP operates on any EVM-compatible blockchain network — both public and permissioned. The platform abstracts blockchain complexity so business teams operate on clear asset and workflow concepts, not protocols.
+
+**Permissioned networks**: DALP typically deploys on Hyperledger Besu-based permissioned networks with IBFT 2.0 or QBFT consensus. Production deployments typically run 4 validators and 2 RPC nodes, with storage scaled accordingly. Besu provides deterministic block times and instant finality, which simplifies compliance-critical operations where transaction certainty is required.
+
+**Public networks**: DALP connects to public EVM networks (Ethereum mainnet, Polygon, Arbitrum, and others) via RPC endpoints. For public networks, the EntryPoint contract uses the canonical v0.9 address when available; for private networks, a local EntryPoint is deployed automatically.
+
+**Multi-network support**: DALP can operate across multiple networks simultaneously. The indexer maintains per-network directory addresses and discovers contracts independently on each network. The nonce manager partitions state by `{address}.{chainId}`, allowing the same wallet to transact on multiple chains without nonce conflicts.
+
+### 6.3.2 Network Discovery and Configuration
+
+The DALP indexer bootstraps network discovery by querying the on-chain DALP Directory for registered factories, then discovers all deployed contracts through factory event logs. This genesis directory discovery supports per-network directory addresses and includes:
+
+- Factory discovery chain handlers that process factory registration events
+- Live watcher with per-network directory addresses for ongoing discovery
+- TokenFactoryRegistered name validation against a trusted map to prevent discovery of non-DALP contracts
+- Contract address resolution without manual configuration — operators do not need to maintain a list of deployed contract addresses
+
+### 6.3.3 Network Requirements
+
+| Requirement | Detail |
+|-------------|--------|
+| Outbound access | harbor.settlemint.com (port 443) for container images |
+| Database connectivity | Managed PostgreSQL endpoint (port 5432) |
+| Cache connectivity | Managed Redis endpoint (port 6379) |
+| TLS | HTTPS only for external routes; HTTP allowed only for redirects |
+| Service mesh | Not supported (disable Istio or Linkerd sidecars) |
+| NetworkPolicy | Must be allowed for pod-to-pod security |
+
+The service mesh restriction is architectural: DALP uses Traefik for ingress routing and relies on direct pod-to-pod communication for internal service calls. Service mesh sidecars can interfere with Restate's connection model and internal routing patterns.
+
+### 6.3.4 DNS and Routing
+
+DALP requires DNS entries for platform services:
+
+| Service | Purpose | Required |
+|---------|---------|----------|
+| dApp | Main application interface | Yes |
+| Explorer (Blockscout) | Blockchain explorer UI and API | Yes |
+| Traefik dashboard | Ingress controller management | Optional |
+| RPC | External JSON-RPC access | Optional |
+| Graph | Direct subgraph access | Optional |
+| Grafana | Observability dashboards | In-cluster only |
+
+All required domains must be delegated and resolvable before installation. Private deployments use internal DNS that resolves inside the cluster. TLS certificates can be managed through ACME (Let's Encrypt), provided secrets, or cert-manager integration.
+
+---
+
+## 6.4 Security Architecture
+
+### 6.4.1 Defense-in-Depth Model
+
+DALP enforces security at every platform layer, with each layer operating independently. The five-layer security model means that compromising one layer does not grant access to blockchain operations.
+
+```mermaid
+graph LR
+    A[User Request] --> B[Layer 1: Identity]
+    B --> C[Layer 2: Access Control]
+    C --> D[Layer 3: Wallet Verification]
+    D --> E[Layer 4: On-Chain Compliance]
+    E --> F[Layer 5: Custody Policy]
+    F --> G[Transaction Signed and Broadcast]
+    B -->|Auth Failed| X[Blocked]
+    C -->|Unauthorized| X
+    D -->|Verification Failed| X
+    E -->|Compliance Failed| X
+    F -->|Policy Rejected| X
+```
+
+*Figure: Five-layer security model. Each layer independently blocks unauthorized transactions.*
+
+| Layer | Control | Enforced By | What It Prevents |
+|-------|---------|-------------|------------------|
+| **Identity** | Authentication (session, API key, CLI device flow) | dApp, DAPI | Unauthenticated access |
+| **Access** | Role-based and resource-level authorization | DAPI middleware chain | Unauthorized operations |
+| **Transaction** | Wallet verification (PIN, TOTP, backup codes) | DAPI before blockchain writes | Compromised session abuse |
+| **On-chain** | Identity claims and compliance modules | SMART Protocol (ERC-3643) | Non-compliant transfers |
+| **Custody** | Provider policy evaluation and MPC signing | Key Guardian, custody providers | Unauthorized key usage |
+
+A compromised session token is blocked by wallet verification. A bypassed API authorization check is blocked by on-chain compliance. Even if all off-chain controls fail, custody provider policies provide the final gate before any transaction reaches the blockchain.
+
+### 6.4.2 Trust Boundaries
+
+Three trust boundaries define the security perimeter:
+
+1. **Platform boundary**: Between external users/systems and DALP's API surface. Controlled by authentication (session vs API key with endpoint affinity), rate limiting, and endpoint-specific auth-method enforcement. API keys are explicitly blocked on the RPC endpoint — there is no configuration to override this.
+
+2. **Execution boundary**: Between the API layer and the Execution Engine. Controlled by authorization (RBAC with organization role sync), input validation (Zod schemas on all route contracts), wallet verification middleware, and confirmation gates for destructive operations.
+
+3. **Chain boundary**: Between the Execution Engine and the blockchain. Controlled by wallet verification (step-up factor proof), on-chain compliance (SMART Protocol module evaluation via simulation and execution-time enforcement), and custody provider policies (DFNS policy engine / Fireblocks TAP).
+
+### 6.4.3 Authentication Architecture
+
+**Browser Sessions**: Session-based authentication using Better Auth, with support for:
+- Email/password with mandatory email verification
+- Passkey support (WebAuthn) for login
+- Enterprise SSO integration (deployment-specific)
+- Token-based auth flows for password reset and email verification with normalized malformed query parameter handling
+- Session management with configurable session lifetime
+
+**API Keys**: Organization-scoped API keys with explicit scope enforcement:
+- **Read-only keys**: Restricted to GET/HEAD/OPTIONS on the REST endpoint
+- **Read-write keys**: Full access on the REST endpoint
+- **Endpoint restriction**: API keys are explicitly blocked on the RPC endpoint (FORBIDDEN response)
+- **Scope enforcement**: `assertScopeAllowed(context.httpMethod, scope)` at the route level
+
+**CLI Authentication**: Browser-based device login flow (`/api/auth/device/code` and `/api/auth/device/token`) that upgrades a session into a long-lived CLI API key. Credentials stored in macOS Keychain on Darwin, permission-checked config file elsewhere. Logout attempts server-side key revocation, then clears local credentials even when remote deletion fails.
+
+### 6.4.4 Role-Based Access Control
+
+DALP implements RBAC at two levels:
+
+**System roles**: Platform-wide and per-system authority controlling who can create assets, manage identities, configure compliance, manage trusted issuers, and administer the platform.
+
+**Per-asset roles**: 5 defined roles per asset (admin, custodian, emergency, governance, supplyManagement), each with specific operational scope. Per-asset roles are independent — authority on one asset does not grant authority on another.
+
+On-chain role assignments flow into platform authorization through the `orgRoleSyncMiddleware`, which reconciles on-chain access-control state into off-chain membership roles at authentication time. This ensures that role changes made directly on-chain are reflected in the next API request.
+
+The permission model is granular and context-aware:
+- System-level permissions govern platform administration, identity management, and compliance configuration
+- Token-level permissions derive from on-chain roles, trusted-issuer status, and interface support
+- Two-stage permission middleware enforces both role requirements and token interface requirements before handlers execute
+- Interface-aware authorization prevents operations on tokens that lack the required capabilities, even if the operator has the right role
+
+### 6.4.5 Encryption and Key Management
+
+#### Secrets Management
+
+DALP implements unified secrets management with provider abstraction supporting multiple backends:
+
+| Backend | Use Case |
+|---------|----------|
+| **Encrypted database** | Default for DALP-managed secrets (wallet keys, configuration) |
+| **Conjur HSM/vault** | Enterprise deployments requiring hardware security module backing |
+| **Environment variables** | Configuration-only secrets |
+
+Conjur integration is available across all DALP Helm subcharts for enterprise deployments. Wallet secrets are consolidated in the dApp database with encrypted storage. The provider-factory pattern matches the object storage abstraction, ensuring consistent infrastructure abstraction across the platform.
+
+**Gaps**: No key rotation automation; no audit log for secret access; no support for HashiCorp Vault (Conjur only for external vault providers).
+
+#### Key Guardian
+
+DALP's key management module (Key Guardian) protects private keys through defense-in-depth with multiple storage backends:
+
+| Storage Tier | Protection Level | Use Case |
+|---|---|---|
+| Encrypted database | Application-level encryption | Development, low-value assets |
+| Cloud secret manager | Platform-managed encryption | Standard production deployments |
+| Hardware security module | FIPS 140-2 Level 3 | Regulated financial services |
+| Third-party custody (DFNS / Fireblocks) | Delegated institutional MPC | Highest security requirements |
+
+Key Guardian manages the full key lifecycle:
+- **Generation**: HSM-backed keys generate entirely within hardware. Software keys use CSRNG with immediate encryption before memory clearing.
+- **Rotation**: Replaces active signing keys while maintaining historical keys for verification. Coordinates with blockchain address updates and registry notifications.
+- **Recovery**: Enterprise deployments use sharded backups with threshold signature schemes requiring multiple custodians.
+- **Revocation**: Compromised keys immediately removed from active use. Smart contract permissions update to reject signatures from revoked keys.
+
+Access control is strict: only Transaction Signer components can request signatures. Signature requests require valid workflow context. Rate limiting prevents bulk signature extraction. All access attempts are logged with key identifier, requester identity, and workflow correlation.
+
+### 6.4.6 Wallet Verification
+
+Multi-factor verification gates protect sensitive blockchain write operations:
+
+| Factor | Mechanism | Replay Protection |
+|--------|-----------|-------------------|
+| **PINCODE** | User-configured PIN verified before transaction signing | — |
+| **OTP (TOTP)** | Time-based one-time password | Tracked in `wallet_key_otp_used_token` table |
+| **SECRET_CODES** | Backup codes with per-use tracking | Tracked in `wallet_secret_codes_used` table |
+
+Each factor requires pre-configuration before it can be used for verification. API-key sessions bypass wallet verification (programmatic access is governed by API key scope instead). PASSKEY verification for transaction signing is not yet supported — currently hard-rejected with FORBIDDEN.
+
+### 6.4.7 Two-Layer Transaction Policy
+
+Every DALP blockchain transaction passes through two independent policy layers:
+
+| Layer | Where Enforced | What It Controls | Configured By |
+|---|---|---|---|
+| **On-chain compliance** | SMART Protocol contracts | Identity/KYC claims, country restrictions, blocklists, supply caps, investor counts, time locks, volume modules | Issuer / compliance manager via DALP API |
+| **Custodian policies** | DFNS policy engine or Fireblocks TAP | Per-transaction amount limits, rolling spend limits, approver workflows, IP/time restrictions, destination allowlists | Operations team in provider dashboard |
+
+Both layers must pass for a transaction to complete. They are evaluated independently — neither can bypass the other. On-chain compliance is pre-checked via simulation and enforced again at execution time.
+
+---
+
+## 6.5 High Availability and Disaster Recovery
+
+### 6.5.1 HA/DR Philosophy
+
+DALP's HA/DR approach follows four guiding principles:
+
+1. Prefer cloud-native managed services over self-hosted operators
+2. Backup and restore should be automatic and tested regularly
+3. RTO and RPO targets should be defined before deployment
+4. DR drills should be scheduled quarterly
+
+These principles reflect the operational reality that most institutions do not have dedicated teams for managing database replication, backup verification, and failover testing. Cloud-native managed services handle these concerns at the infrastructure level, allowing the DALP operations team to focus on application-level concerns.
+
+### 6.5.2 Recovery Metrics
+
+| Metric | Definition | Typical Target |
+|--------|-----------|----------------|
+| **RTO** | Maximum acceptable downtime | 15 minutes – 4 hours |
+| **RPO** | Maximum acceptable data loss | 0 – 15 minutes |
+| **RTT** | Realistic end-to-end recovery time | 30 minutes – 8 hours |
+
+RTT is the realistic measured time including verification steps. Planning should always account for RTT > RTO. The distinction matters because RTO is a target, but RTT includes the time needed to verify that the recovered system is actually functioning correctly — database consistency checks, blockchain sync verification, and smoke testing.
+
+### 6.5.3 Deployment Scenarios
+
+| Scenario | RTO | RPO | Monthly Effort | When to Use |
+|----------|-----|-----|---------------|-------------|
+| **Cloud-native** (recommended) | 2–15 minutes | Seconds–1 min | 8–16 hours | Most deployments |
+| **Hot-warm** | 30–180 minutes | 5–60 minutes | 25–40 hours | Geographic redundancy requirements |
+| **Hot-cold** | 8–72 hours | 4–24 hours | 10–20 hours | Cost optimization, acceptable data loss |
+| **Hot-hot (consortium)** | 1–10 minutes | Seconds–minutes | 40–60 hours | Multi-region active-active |
+| **Hot-hot (public)** | 1–10 minutes | 1–5 minutes | 20–30 hours | Public networks, re-derivable data |
+
+#### Cloud-Native (Recommended)
+
+Single-region, multi-AZ deployment using managed services and Velero backups. Architecture:
+
+- Kubernetes/OpenShift cluster distributed across 3+ availability zones
+- Managed PostgreSQL with synchronous replication and automatic failover (2–15 min RTO)
+- Managed Redis with zone-redundant replication
+- S3-compatible object storage with 99.999999999% durability
+- Velero for Kubernetes resource backups
+
+**Setup time**: 2–3 days with 1 client platform engineer. Requires: Kubernetes cluster provisioning (2–4h), managed PostgreSQL setup (1–2h), Velero installation (2–4h), backup verification (2–4h), monitoring setup (2–4h), documentation (4–8h).
+
+**Ongoing effort**: 8–16 hours/month. Includes: weekly backup verification (30min), monthly Helm chart updates (1–2h), quarterly DR drill (4–8h), monthly security patching (2–4h), quarterly capacity review (2–4h).
+
+**Team requirements**: Minimum 0.25 FTE as part of platform team responsibilities. Required skills: Kubernetes/OpenShift administration (intermediate), Helm chart management (basic), cloud provider managed services, basic PostgreSQL operations, Prometheus/Grafana monitoring.
+
+**Cloud-specific configurations**:
+- **AWS (EKS)**: EKS control plane multi-AZ by default, Auto Scaling Groups across AZs, RDS Multi-AZ, ElastiCache Multi-AZ, S3 standard durability
+- **Azure (AKS)**: Zone-redundant control plane, Availability Zones for workers, Azure Database zone-redundant HA, Azure Cache zone redundancy, Blob Storage ZRS or GRS
+- **GCP (GKE)**: Regional multi-zone control plane, multi-zone node pool, Cloud SQL Regional HA, Memorystore Standard tier, Cloud Storage multi-regional
+- **OpenShift**: Multi-master with etcd quorum, workers across failure domains, OpenShift Data Foundation (Ceph) for storage, router sharding for HA
+
+#### Hot-Warm
+
+For organizations requiring geographic redundancy:
+- Primary region serves all traffic
+- Secondary region maintains near-real-time data replication
+- Failover requires manual or automated switchover (30–180 min RTO)
+- Monthly effort: 25–40 hours including replication monitoring, failover testing, and capacity management
+
+#### Hot-Hot (Consortium / Public)
+
+For multi-region active-active requirements:
+- Multiple regions serve traffic simultaneously
+- Blockchain state is inherently distributed — nodes in each region
+- Application state requires cross-region database replication
+- Highest operational complexity (40–60 hours/month for consortium; 20–30 hours for public networks)
+
+### 6.5.4 Backup and Recovery
+
+DALP supports multiple backup strategies:
+
+- **PostgreSQL PITR**: Point-in-time recovery with 7-day retention (managed service) or CloudNativePG scheduled backups (self-hosted). Enables recovery to any point within the retention window.
+- **Velero**: Kubernetes resource backups for configuration, CRDs, and persistent volume snapshots. Supports scheduled backups and on-demand snapshots.
+- **Object storage backups**: Versioned storage with lifecycle policies (30-day cold transition, 90-day non-current deletion). Provides protection against accidental deletion and object corruption.
+- **WAL archiving**: PostgreSQL write-ahead log archiving for self-hosted deployments. Enables point-in-time recovery without managed service PITR.
+
+**Backup storage sizing**: Follows the formula: base storage × retention multiplier (59) × compression ratio (0.4) × headroom (1.2). For a production deployment with 4 Besu validators (40 Gi base), this yields approximately 1,756 Gi of backup storage.
+
+### 6.5.5 Multi-AZ Requirements
+
+Production deployments require nodes distributed across a minimum of three availability zones:
+
+- Topology spread constraints rely on standard Kubernetes zone labels (`topology.kubernetes.io/zone`)
+- Pod disruption budgets assume cross-zone scheduling — at least one replica in each zone
+- Single-AZ deployments are not supported for production workloads
+- The multi-AZ requirement ensures that a single zone failure does not cause complete service outage
+
+### 6.5.6 Blockchain-Specific HA Considerations
+
+Blockchain infrastructure has unique HA characteristics:
+
+- **On-chain data is inherently replicated**: Every blockchain node maintains a complete copy of the ledger. Losing the application database does not mean losing on-chain data — it can be re-derived by re-indexing from the blockchain.
+- **Indexer zero-downtime reindexing**: The rotating schema architecture (`idxr_d1`, `idxr_d2`) means indexer upgrades and re-indexing can happen without read downtime. The old schema serves reads while the new schema builds, then switches atomically.
+- **Validator redundancy**: Permissioned networks with IBFT 2.0/QBFT consensus tolerate f = (n-1)/3 Byzantine failures. A 4-validator setup tolerates 1 failure; a 7-validator setup tolerates 2.
+- **RPC node redundancy**: Additional RPC nodes provide read scalability and redundancy. The load balancer routes to healthy RPC nodes automatically.
+
+---
+
+## 6.6 Performance and Scalability
+
+### 6.6.1 Execution Model
+
+DALP's performance model is built around the Restate durable execution engine:
+
+- **Partition-level locking**: Transaction processing locks at the `{fromAddress}.{chainId}` level, allowing parallel processing across different addresses while maintaining strict serialization for the same address. This prevents nonce conflicts while maximizing throughput.
+- **Async queue semantics**: V2 mutations support sync, async, and hybrid execution modes negotiated via RFC 7240 `Prefer` headers:
+  - `sync` (default): Wait for transaction completion and return the result
+  - `respond-async`: Return HTTP 202 immediately with `statusUrl` for polling
+  - `respond-async, wait=N`: Attempt sync completion for N seconds, fall back to 202 if not complete
+- **Provider-native broadcast**: For Fireblocks and DFNS signers, transaction broadcast is delegated to the custody provider, reducing DALP's latency overhead by eliminating local nonce management and broadcast retries.
+- **Shared confirmation watcher**: One Restate Virtual Object per chain batch-polls receipts for up to 250 active transactions per tick (1-second intervals, up to 20 confirmation attempts), replacing per-transaction RPC loops.
+
+### 6.6.2 Indexer Performance
+
+The custom PostgreSQL indexer (V2) provides:
+
+- **Event latency**: <5 seconds from blockchain event to analytics view availability (dependent on block time and subgraph indexing)
+- **Virtual views**: Real-time query-time execution for current data — always consistent with the latest indexed state
+- **Materialized views**: Configurable refresh for aggregated analytics — periodic refresh for computationally expensive aggregations
+- **Zero-downtime reindexing**: Schema-isolated reindexing allows new indexer versions to build fresh data in a rotating schema alongside the running version, then switch atomically via pass-through views. The view-recreation-on-startup guarantee eliminates post-migration reader outages.
+- **Reorg handling**: Block reorgs are detected and rolled back through tracked tables, maintaining data consistency even during chain reorganizations.
+
+### 6.6.3 Database Sizing
+
+Baseline PVC sizing (chart defaults) for stateful workloads:
+
+| Component | Count | Size | Total |
+|-----------|-------|------|-------|
+| IPFS cluster | 1 | 1 Gi | 1 Gi |
+| IPFS | 1 | 1 Gi | 1 Gi |
+| Besu validators | 4 (production) | 10 Gi | 40 Gi |
+| Besu RPC nodes | 2 | 10 Gi | 20 Gi |
+| **Base total** | | | **62 Gi** |
+
+These are baseline sizes. Production deployments with high transaction volumes or long retention requirements should scale accordingly. Managed database services handle auto-growth; self-hosted deployments should configure PVC auto-expansion.
+
+### 6.6.4 Horizontal Scaling
+
+DALP components scale independently:
+
+- **DAPI**: Horizontal pod autoscaling based on CPU/memory metrics. Multiple DAPI replicas behind the load balancer.
+- **Indexer**: Database-backed with connection pooling. Indexer performance scales with database performance.
+- **Restate**: Partition-based scaling by address/chain combinations. Each partition (address+chain) is an independent virtual object.
+- **Besu nodes**: Additional RPC nodes for read scalability. Validator count is fixed by consensus requirements.
+- **dApp**: Stateless frontend — scales horizontally behind the load balancer.
+
+---
+
+## 6.7 Monitoring and Observability
+
+### 6.7.1 Three-Pillar Observability
+
+DALP implements full-stack observability through three pillars:
+
+| Pillar | Technology | Purpose |
+|--------|-----------|---------|
+| **Metrics** | VictoriaMetrics | Time-series metrics (request rates, latency, error rates, resource usage) |
+| **Logs** | Loki | Structured application logs, error traces, audit records |
+| **Traces** | Tempo | Distributed tracing across service boundaries |
+
+These can be deployed as in-cluster services or connected to managed observability providers (AWS CloudWatch, Azure Monitor, GCP Cloud Monitoring).
+
+### 6.7.2 Distributed Tracing Architecture
+
+DALP implements comprehensive distributed tracing across three tracer namespaces:
+
+- **`dalp.dapi`**: Core DAPI service tracing with three auto-instrumentations — oRPC route handlers, PostgreSQL queries, and parent-based sampling propagation
+- **`dalp.integrations.fireblocks`**: Per-operation span instrumentation for Fireblocks API calls (20+ call sites covering vault creation, wallet discovery, signing, approval flows)
+- **`dalp.integrations.dfns`**: Per-operation span instrumentation for DFNS API calls (wallet CRUD, signing, policy management, approval flows)
+- **`services.transaction-processor`**: Transaction lifecycle spans (`tx.submit`, `tx.sign`, `tx.broadcast`, `tx.confirm`) plus queue bridge spans (`tx.queue.persist`, `tx.queue.dispatch`, `tx.queue.sync_wait`)
+
+**Sampling configuration**: Production deployments use `ParentBasedSampler` with configurable ratio (default 10% in Helm production values). Parent spans propagate sampling decisions to child spans, ensuring complete trace capture on sampled requests.
+
+**Export pipeline**: OTLP export to Grafana Alloy collector (default endpoint `http://obs-alloy:4318/v1/traces`). Endpoint redaction in startup logs strips credentials and query parameters. "None" exporter mode creates SDK with empty span processors for testing without network export.
+
+This three-tracer architecture enables end-to-end request tracing from API entry through workflow orchestration to external custody provider calls — critical for diagnosing latency and failures in delegated signing flows where DALP doesn't own the full execution path.
+
+### 6.7.3 Pre-Built Dashboards
+
+DALP ships Grafana dashboards covering:
+
+| Dashboard | Focus |
+|-----------|-------|
+| **Node Utilization Overview** | Kubernetes node health and resource usage |
+| **Blockchain Infrastructure Health** | Chain connectivity, block production, sync status |
+| **Operations Overview** | Platform-wide operational metrics |
+| **Transaction Monitoring** | Transaction throughput, latency, error rates |
+| **Compliance Activity** | Compliance check volumes and outcomes |
+| **Security Events** | Authentication, authorization, and verification events |
+
+### 6.7.4 Blockchain Health Monitoring
+
+The monitoring service implements automated blockchain health collection with:
+
+- **Cron-based polling**: Health collection per enabled network plus optional shared graph-node collector. Bootstrap is idempotent — monitoring workflows start once per deployment and recover automatically from infrastructure failures.
+- **3-sample hysteresis**: Health status changes require 3 consecutive samples to prevent false alerts from transient issues. Threshold-based classification with hysteresis ensures that brief network blips don't trigger alert storms.
+- **SSE publishing**: Real-time health events published via Server-Sent Events for dashboard consumers. The SSE publisher is a `globalThis` singleton EventPublisher — process-local fan-out rather than a durable cross-service event bus.
+- **Hourly API metrics rollup**: Restate cron-based aggregation with idempotent `ON CONFLICT DO UPDATE` rollups. Processes current and previous hour buckets for API performance tracking.
+- **Retention management**: Automated cleanup of monitoring data beyond configured retention windows.
+
+### 6.7.5 Structured Alert Delivery
+
+DALP includes structured alert delivery with DALP-branded Slack notification templates:
+
+- **Alert titles**: `[FIRING:N] alertname` or `[RESOLVED] alertname` headers for immediate severity assessment
+- **Alert body**: Bold alertname, namespace/pod/container labels in backtick code formatting, summary annotation, description annotation, and silence URL with hyperlink
+- **Conditional deployment**: Templates are only created when Slack alerting is configured (`grafana.sidecar.alerts.enabled` and `grafana.sidecar.alerts.slackUrl`)
+- **Alert annotations**: Every alert rule includes both `summary` (short one-liner) and `description` (long-form) annotations
+- **Opt-in scraping**: Prometheus pod scraping filtered by `prometheus.io/scrape: "true"` annotation to prevent metric collection sprawl
+
+### 6.7.6 Analytics Views
+
+18+ PostgreSQL analytics views provide direct SQL access for BI tools:
+
+| Domain | Views | Examples |
+|--------|-------|---------|
+| **Identity** | 2 | Identity stats, key type distribution |
+| **Compliance** | 4 | Claims stats, trusted issuer stats, topic scheme coverage, module stats |
+| **Addons** | 3+ | Vault activity, airdrop stats, settlement stats, yield schedule stats |
+| **Cross-cutting** | 7 | Transaction count/history, asset activity (hourly/daily), lifecycle, country distribution |
+| **Actions** | 1 | Unified action event log |
+| **Pricing** | 2+ | System/portfolio value, token-factory breakdowns with fiat projections |
+
+Views support both virtual (real-time query-time execution) and materialized (configurable refresh) modes.
+
+### 6.7.7 CLI Monitoring Access
+
+The DALP CLI provides streaming access to monitoring data:
+
+- API and blockchain health summaries, timelines, and detail queries
+- `logs-stream` and `snapshots-stream` streaming accessors for operational tooling
+- Typed date coercion for `from`/`to` query windows
+- Direct access to monitoring data without requiring Grafana UI access
+
+---
+
+## 6.8 DevOps and Deployment Pipeline
+
+### 6.8.1 Helm-Based Deployment
+
+DALP is packaged as Helm charts with a comprehensive values configuration that covers:
+
+- Component enablement and sizing (per-service resource requests/limits)
+- Database connection details (managed or in-cluster) with separate databases for blockscout, thegraph, and dapp
+- Redis configuration (managed or in-cluster, TLS, AUTH)
+- Object storage configuration (provider selection, bucket names, endpoints)
+- Observability endpoint routing (external managed vs. in-cluster)
+- TLS certificate management (ACME, provided secrets, or cert-manager)
+- Network configuration and ingress routing (Traefik for Kubernetes, Routes for OpenShift)
+- Blockchain node configuration (validator count, RPC node count, consensus parameters)
+- Custody provider configuration (local, DFNS, or Fireblocks)
+- Telemetry configuration (sampling ratio, OTLP endpoint, service name)
+
+### 6.8.2 Container Image Management
+
+All container images are served through `harbor.settlemint.com`, which proxies upstream registries. This single registry endpoint:
+
+- Simplifies firewall rules (only one outbound destination needed on port 443)
+- Provides a controlled distribution point for versioned images
+- Supports image mirroring into customer-owned registries for air-gapped deployments
+- Enables consistent image provenance tracking across all deployments
+
+### 6.8.3 CRD and Operator Management
+
+DALP requires several Kubernetes Custom Resource Definitions:
+
+| Component | CRDs Required | When Required |
+|-----------|--------------|---------------|
+| **Traefik** | IngressRoute, Middleware, TLSOption, TLSStore | Always (Kubernetes only) |
+| **CloudNativePG** | clusters, poolers, scheduledbackups | Self-hosted PostgreSQL only |
+| **Velero** | backups, schedules, restores | When Velero is enabled |
+| **VolumeSnapshot** | snapshot.storage.k8s.io resources | When snapshot backups are enabled |
+
+Operators are configured for namespace-scoped RBAC — ClusterRoleBindings are not required unless chart defaults are changed. CRD installation requires cluster-level permissions and should be coordinated with the customer's security team.
+
+### 6.8.4 Installation Process
+
+DALP deployment follows a structured process:
+
+1. **Prerequisites verification**: All infrastructure components validated against the prerequisites checklist (Kubernetes version, PostgreSQL connectivity, Redis connectivity, DNS resolution, TLS certificates, object storage access)
+2. **Helm values configuration**: Customized for the target environment (cloud provider, managed vs. self-hosted services, custody provider, observability endpoints)
+3. **CRD installation**: Cluster-scoped resources deployed with security team approval
+4. **Chart deployment**: Helm install/upgrade with configured values
+5. **Post-deployment verification**: Contract deployment validation, identity verification, health checks, monitoring confirmation
+6. **System bootstrap**: On-chain system deployment, Identity Registry initialization, Trusted Issuers Registry configuration, compliance module deployment
+7. **Observability integration**: Dashboard import, alerting configuration, external observability endpoint connection
+
+### 6.8.5 Upgrade Model
+
+DALP supports rolling upgrades with:
+
+- **Zero-downtime reindexing**: New indexer versions build data in an isolated schema (`idxr_d1` → `idxr_d2`), then switch atomically via pass-through view recreation. The old schema continues serving reads during the build phase.
+- **Schema registration decoupling**: Database migrations decoupled from Drizzle ORM migrations for safer rollouts. Indexer tables are excluded from Drizzle migration scope; only the deployment registry table is tracked.
+- **Rolling deployment hardening**: Handles missing columns and skips existing table index creation during transition periods where different code versions coexist.
+- **UUPS proxy patterns**: Smart contract upgrades through directory-managed proxy patterns, allowing contract upgrades without redeploying tokens. This enables compliance module updates and feature additions without disrupting existing asset holders.
+- **Draining deployment cleanup**: Grace period (1 hour) for draining old indexer deployments before cleanup, ensuring in-flight queries complete.
+
+### 6.8.6 CLI Operations
+
+The DALP CLI provides a comprehensive operations surface with 301 command registrations across 26 top-level groups:
+
+- **System administration**: Bootstrap, resume, settings, access manager operations (88 commands)
+- **Token lifecycle**: Create, mint, burn, transfer, pause, freeze, recover, metadata, compliance modules (50+ commands)
+- **Identity and KYC**: User management, identity registration, KYC review, claim operations
+- **Compliance**: Module management, trusted issuer operations, topic scheme configuration
+- **Monitoring**: Health queries, timeline views, streaming accessors, API metrics
+- **Addons**: XvP Settlement, Token Sale, Fixed Yield, Vault, Airdrop, Feeds operations
+- **Settings and configuration**: Platform configuration, organization management
+
+CLI authentication uses device-code login with secure credential storage. All commands use typed schemas and bind directly to the DALP SDK/OpenAPI client, ensuring consistent validation and error handling across all interfaces.
+
+### 6.8.7 SDK Integration
+
+The DALP SDK (`@settlemint/dalp-sdk`) provides a typed TypeScript integration surface:
+
+- Contract-bound REST client for DALP v2 API with organization-scoped authentication
+- DALP-specific serializers for `Dnum` (arbitrary-precision decimals), `bigint` (blockchain amounts), and `Date` types
+- 534 auto-generated contract error codes with metadata (selector, severity, retryable flag, message, suggested action)
+- Published as public npm package with runtime, type-only, and plugin-only subpaths
+- SDK migrated from RPCLink + `/api/rpc` to OpenAPILink + `/api/v2`, matching the production API key authentication pathway
+
+### 6.8.8 Error Handling
+
+DALP implements a platform-wide structured error code system:
+
+- **534 auto-generated error codes** (DALP-1001 through DALP-NNNN) extracted from Solidity ABI definitions through codegen
+- Each code carries metadata: 4-byte selector, audience (user/operator/internal), severity (error/warning/info), retryable flag, message, suggested action, argument names and mapping
+- Exposed via SDK (`DALP_CONTRACT_ERROR_CODES` object + `DalpContractErrorCode` union type), dApp React hooks (`useErrorDalpCode`, `useErrorTitle`, `useErrorDescription`), i18n translations (4 locales), and OpenAPI `x-contract-errors` extension for per-operation error listing
+- **CI freshness checks** ensure error catalog stays synchronized with contract changes — exits non-zero with actionable error if any artifact is stale
+- **Toast integration**: dApp error display shows translated title, description, suggested action, and DALP code (support reference) through the unified error toast system
+- **Revert decoder**: Decodes Error(string), Panic(uint256), and custom ABI errors into human-readable messages with sub-status classification. 51 Panic codes mapped. Pattern matching classifies INSUFFICIENT_BALANCE, UNAUTHORIZED, CUSTOM_ERROR, REVERTED.
+
+---
+
+## 6.9 Operational Sustainability
+
+### 6.9.1 Operational Effort by Deployment Model
+
+| Activity | Managed Cloud | Self-Hosted Cloud | On-Premises |
+|----------|--------------|------------------|-------------|
+| Infrastructure management | SettleMint | Client (0.25 FTE) | Client (0.5 FTE) |
+| Database operations | SettleMint | Managed service | Client (CloudNativePG) |
+| Backup verification | SettleMint | Weekly (30 min) | Weekly (30 min) |
+| Helm chart updates | SettleMint | Monthly (1-2h) | Monthly (1-2h) |
+| DR drill | SettleMint | Quarterly (4-8h) | Quarterly (4-8h) |
+| Security patching | SettleMint | Monthly (2-4h) | Monthly (2-4h) |
+| Capacity review | SettleMint | Quarterly (2-4h) | Quarterly (2-4h) |
+| Total monthly effort | Minimal | 8-16 hours | 16-32 hours |
+
+### 6.9.2 Monitoring-Driven Operations
+
+DALP's monitoring automation reduces operational burden:
+
+- Four monitoring services run as Restate-managed workflows with automatic recovery
+- Bootstrap is idempotent — monitoring starts once and recovers from failures
+- Pre-built dashboards provide immediate visibility without custom configuration
+- Structured alerting delivers actionable notifications to Slack with silence links
+- CLI monitoring access enables scripted health checks and operational tooling
+
+### 6.9.3 Self-Healing Capabilities
+
+Several DALP subsystems include self-healing behavior:
+
+- **Nonce recovery**: The NonceTracker detects "nonce too low" failures, re-reads the on-chain nonce, and retries (up to 3 times) without operator intervention
+- **Workflow recovery**: Restate durable workflows survive process restarts and resume from the last persisted state
+- **Dead-letter rescue**: Transactions that exhaust retry budgets are routed to dead-letter state with operator-accessible rescue paths
+- **View recreation**: Indexer pass-through views are recreated on every startup, self-repairing views dropped by database migrations
+- **Provider initialization serialization**: The SignerLoader prevents concurrent bootstrap races through a shared initialization promise
+
+### 6.9.4 Upgrade Safety
+
+DALP's upgrade model is designed for production safety:
+
+- **Zero-downtime reindexing** eliminates the need for maintenance windows during indexer upgrades
+- **Schema registration decoupling** prevents Drizzle migration interference with indexer schemas
+- **UUPS proxy patterns** enable smart contract upgrades without token redeployment
+- **Rolling deployment hardening** handles code version coexistence during rolling updates — the indexer handles missing columns gracefully and skips existing table index creation during transition periods
+- **CI freshness checks** catch drift between contract changes and error catalog/SDK artifacts before deployment — the CI pipeline exits non-zero with actionable error messages if any artifact is stale
+- **Draining deployment cleanup** provides a 1-hour grace period for old indexer deployments before cleanup, ensuring in-flight queries complete without error
+
+---
+
+## 6.10 Integration Architecture
+
+### 6.10.1 API Integration Patterns
+
+DALP provides multiple integration pathways for external systems:
+
+**REST API (v2)**: The primary programmatic interface. Organization-scoped API keys with read-only or read-write scope. HTTP-method-based scope enforcement. Supports both synchronous and asynchronous execution via RFC 7240 `Prefer` headers. Used by the SDK, CLI, CI pipelines, and backend integrations.
+
+**SDK (`@settlemint/dalp-sdk`)**: Typed TypeScript client binding to the v2 REST API. Includes DALP-specific serializers for arbitrary-precision decimals (`Dnum`), blockchain integers (`bigint`), and dates. 534 auto-generated contract error codes with metadata enable rich error handling in client applications.
+
+**CLI**: 301 command registrations across 26 groups. Device-code authentication with secure credential storage. Streaming access to monitoring data. All commands use typed schemas validated at invocation time.
+
+**Chainlink Adapter**: Stable-address feed adapters that present DALP data through the industry-standard `AggregatorV3Interface`. Enables zero-integration-change consumption by any system that already supports Chainlink feeds.
+
+**Webhooks / SSE**: Server-Sent Events for real-time health monitoring and blockchain event streaming. The SSE publisher uses a `globalThis` singleton EventPublisher for process-local fan-out.
+
+### 6.10.2 External Custody Integration
+
+DALP's custody integration architecture supports multiple institutional custody providers:
+
+| Integration Point | DFNS | Fireblocks | Local Signer |
+|---|---|---|---|
+| Wallet creation | API-based MPC wallet provisioning | Vault account + asset wallet hierarchy | Encrypted database storage |
+| Transaction signing | MPC key shard combination | MPC-CMP with continuous key refresh | Local signing with nonce management |
+| Policy enforcement | DFNS policy engine (programmatic) | TAP (console/co-signer) | DALP-managed only |
+| Approval resolution | Full API-based resolution through DALP | Console or Co-Signer appliance only | N/A |
+| Audit integration | Synchronized audit logs | Vault event tracking | Transaction request history |
+
+The provider abstraction means institutional clients can start with one custody provider and migrate to another without application changes. The `ExternalSigner` contract normalizes all backends behind a common interface. Configuration changes in the Helm values are sufficient to switch providers.
+
+### 6.10.3 Identity Provider Integration
+
+DALP's identity layer integrates with external identity providers through the Trusted Issuers Registry:
+
+- **KYC providers**: Registered as trusted issuers at the system level, authorized to issue KYC, AML, and jurisdiction claims
+- **Compliance providers**: Registered as trusted issuers for specialized claim topics (accreditation, qualified investor status)
+- **Internal issuers**: The DALP Identity Factory auto-registers as a trusted issuer for the `CONTRACT` claim topic via the Global Trusted Issuers Registry
+
+External KYC providers submit claim issuance requests through the DALP API. The auto-claim validation layer ensures that KYC claims match approved profile content hashes, creating a deterministic binding between off-chain verification and on-chain attestation.
+
+### 6.10.4 Observability Integration
+
+DALP's observability stack integrates with enterprise monitoring infrastructure:
+
+- **OTLP export**: Distributed traces exported to any OTLP-compatible collector (Grafana Alloy, Jaeger, Datadog, New Relic)
+- **Prometheus metrics**: VictoriaMetrics-compatible scrape endpoints for all platform components, with opt-in annotation-based service discovery
+- **Log aggregation**: Structured logs via Loki, compatible with any log aggregation pipeline
+- **BI tool integration**: PostgreSQL analytics views accessible by any SQL-compatible BI tool (Looker, Tableau, Power BI, Metabase)
+- **Alert routing**: Grafana-managed alerting with DALP-branded Slack notification templates, configurable escalation paths, and silence URLs for acknowledged alerts
+
+### 6.10.5 Smart Contract Upgrade Path
+
+DALP smart contracts use UUPS (Universal Upgradeable Proxy Standard) proxy patterns managed through the on-chain DALP Directory. This enables:
+
+- Contract logic upgrades without redeploying tokens — existing token holders retain their balances and identity bindings
+- Compliance module updates to address new regulatory requirements without disrupting existing asset operations
+- New feature additions through the SMART Configurable extension system (up to 32 pluggable features per token)
+- Directory-managed proxy resolution ensures all platform components reference the current implementation
+
+The upgrade path is governance-controlled: only authorized system-level roles can initiate contract upgrades, and the upgrade transaction follows the same two-layer policy model (on-chain compliance pre-check + custody provider approval) as all other blockchain operations.

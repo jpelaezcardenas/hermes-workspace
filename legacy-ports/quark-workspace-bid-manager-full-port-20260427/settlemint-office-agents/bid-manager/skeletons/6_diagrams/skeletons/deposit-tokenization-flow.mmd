@@ -1,0 +1,59 @@
+%% Tokenized deposit lifecycle from definition through maturity redemption.
+%% Use in asset lifecycle, deposit use case, and reserve management sections.
+%% Shows reserve-linkage synchronization and interest accrual mechanics.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {"fontFamily": "Figtree, Inter, Arial, sans-serif", "fontSize": "15px", "textColor": "#1A1A2E", "lineColor": "#6B7280", "background": "#FFFFFF"},
+  "sequence": {"mirrorActors": false, "showSequenceNumbers": true, "diagramMarginX": 40, "diagramMarginY": 20, "messageMargin": 32, "boxMargin": 12, "boxTextMargin": 8, "noteMargin": 12, "actorMargin": 40, "width": 170, "height": 64},
+  "securityLevel": "loose"
+}}%%
+sequenceDiagram
+    actor BT as Bank Treasury
+    participant AC as Asset Console
+    participant CE as Compliance Engine
+    participant CB as [CLIENT: Core Banking]
+    participant BC as Blockchain
+
+    rect rgb(232, 244, 253)
+        Note over BT, AC: Deposit Configuration
+        BT ->> AC: Define deposit terms<br/>(tenor, interest rate, currency)
+        AC ->> CE: Configure supply cap module
+        CE -->> AC: Supply cap enforced
+        AC ->> CB: Link fiat reserve account
+        CB -->> AC: Reserve account confirmed
+    end
+
+    rect rgb(243, 229, 245)
+        Note over AC, BC: Issuance Against Reserve
+        BT ->> AC: Request mint against reserve
+        AC ->> CB: Verify fiat reserve balance
+        CB -->> AC: Reserve balance confirmed
+        AC ->> CE: Validate against supply cap
+        CE -->> AC: Within cap, approved
+        AC ->> BC: Mint deposit tokens
+        BC -->> AC: Tokens minted
+        Note right of CB: Reserve and token supply<br/>stay synchronized 1:1
+    end
+
+    rect rgb(232, 245, 233)
+        Note over AC, BC: Distribution And Servicing
+        AC ->> BC: Distribute to token holders
+        BC -->> AC: Distribution confirmed
+
+        Note over AC, BC: Interest Accrual Cycle
+        CB ->> AC: Interest accrual event
+        AC ->> BC: Mint accrued interest tokens
+        BC -->> AC: Interest tokens distributed
+    end
+
+    rect rgb(255, 248, 225)
+        Note over BT, BC: Maturity And Redemption
+        BT ->> AC: Trigger maturity redemption
+        AC ->> BC: Burn deposit tokens
+        BC -->> AC: Tokens burned
+        AC ->> CB: Initiate fiat settlement
+        CB -->> AC: Fiat payout complete
+        Note right of CB: Token supply returns to zero,<br/>reserve fully settled
+    end
+
+    Note over BT, BC: [CLIENT: Add reconciliation<br/>reporting feed if required]

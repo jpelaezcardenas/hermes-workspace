@@ -1,0 +1,93 @@
+%% DALP multi-tenancy isolation model.
+%% Shows tenant isolation across infrastructure, data, configuration, and blockchain layers.
+%% Use in architecture, security, data residency, and multi-tenant deployment sections.
+%% Evaluator focus: clear data separation guarantees, RBAC per tenant, blockchain isolation.
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Figtree, Inter, Arial, sans-serif",
+    "fontSize": "15px",
+    "textColor": "#1A1A2E",
+    "lineColor": "#6B7280",
+    "background": "#FFFFFF",
+    "clusterBkg": "#FAFAFA",
+    "clusterBorder": "#D0D7DE",
+    "edgeLabelBackground": "#FFFFFF"
+  },
+  "flowchart": {"curve": "basis", "nodeSpacing": 40, "rankSpacing": 55, "padding": 18, "htmlLabels": true, "diagramPadding": 8},
+  "securityLevel": "loose"
+}}%%
+flowchart TB
+    subgraph SHARED[Shared Infrastructure Layer]
+        K8S[Kubernetes Cluster]
+        DB[PostgreSQL<br/>Schema-per-Tenant]
+        REDIS[Redis<br/>Namespace Isolation]
+        OBJ[Object Storage<br/>Bucket-per-Tenant]
+        MON[Observability Stack<br/>Grafana / Loki / VictoriaMetrics]
+    end
+
+    subgraph T1[Tenant A Configuration]
+        T1RBAC[RBAC Policies<br/>Tenant A Roles]
+        T1COMP[Compliance Rules<br/>Jurisdiction A]
+        T1BRAND[Branding<br/>White-Label Config]
+        T1API[API Keys +<br/>Rate Limits]
+    end
+
+    subgraph T2[Tenant B Configuration]
+        T2RBAC[RBAC Policies<br/>Tenant B Roles]
+        T2COMP[Compliance Rules<br/>Jurisdiction B]
+        T2BRAND[Branding<br/>White-Label Config]
+        T2API[API Keys +<br/>Rate Limits]
+    end
+
+    subgraph CHAIN[Blockchain Isolation]
+        CHN1[Tenant A Chain<br/>Dedicated Network]
+        CHN2[Tenant B Chain<br/>Dedicated Network]
+        SHARED_CHN[Shared Network<br/>Contract-Level Isolation]
+    end
+
+    subgraph GW[DALP Gateway]
+        APIGW[Unified API Gateway]
+        TRESOLVER[Tenant Resolver<br/>JWT / API Key Routing]
+        AM[AccessManager<br/>Tenant Scoping]
+    end
+
+    %% Client entry points
+    CLIENT_A[[CLIENT: Tenant A<br/>Operations Team]] --> APIGW
+    CLIENT_B[[CLIENT: Tenant B<br/>Operations Team]] --> APIGW
+
+    %% Gateway routing
+    APIGW --> TRESOLVER
+    TRESOLVER --> AM
+    AM -->|Tenant A| T1RBAC
+    AM -->|Tenant B| T2RBAC
+
+    %% Config to infra
+    T1RBAC --> K8S
+    T2RBAC --> K8S
+    T1COMP --> DB
+    T2COMP --> DB
+    T1API --> APIGW
+    T2API --> APIGW
+
+    %% Infra to chain
+    K8S --> CHN1
+    K8S --> CHN2
+    K8S --> SHARED_CHN
+
+    %% Styling
+    classDef rounded rx:10,ry:10;
+    classDef dalp fill:#E8F4FD,stroke:#5B8DEF,color:#1A1A2E,stroke-width:1.5px;
+    classDef client fill:#E8F5E9,stroke:#66BB6A,color:#1A1A2E,stroke-width:1.5px;
+    classDef external fill:#FFF3E0,stroke:#FB8C00,color:#1A1A2E,stroke-width:1.5px;
+    classDef compliance fill:#F3E5F5,stroke:#8E63CE,color:#1A1A2E,stroke-width:1.5px;
+    classDef infra fill:#F5F5F5,stroke:#90A4AE,color:#1A1A2E,stroke-width:1.5px;
+    classDef risk fill:#FFEBEE,stroke:#E57373,color:#1A1A2E,stroke-width:1.5px;
+    classDef milestone fill:#FFF8E1,stroke:#FBC02D,color:#1A1A2E,stroke-width:1.5px;
+
+    class APIGW,TRESOLVER,AM dalp,rounded;
+    class K8S,DB,REDIS,OBJ,MON infra,rounded;
+    class T1RBAC,T2RBAC,T1COMP,T2COMP compliance,rounded;
+    class T1BRAND,T2BRAND,T1API,T2API dalp,rounded;
+    class CHN1,CHN2,SHARED_CHN dalp,rounded;
+    class CLIENT_A,CLIENT_B client,rounded;
