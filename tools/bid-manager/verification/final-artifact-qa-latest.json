@@ -1,0 +1,62 @@
+{
+  "agent": "bid-manager",
+  "artifact_dir": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z",
+  "cases": [
+    {
+      "name": "md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 0.54,
+      "stdout_tail": "  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\n  Cover page preserved (22 elements), 30 sample elements removed\n  TOC updated with 6 headings from template SDT (with TOC field)\n  Empty page prevention: removed 4 redundant element(s)\n\u2713 Converted enbd-tokenization-final-qa.md \u2192 enbd-tokenization-final-qa.docx (locked template validation verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "render_pdf",
+      "cmd": [
+        "libreoffice",
+        "--headless",
+        "--convert-to",
+        "pdf",
+        "--outdir",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 2.078,
+      "stdout_tail": "convert /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.docx as a Writer document -> /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.pdf using filter : writer_pdf_Export\n",
+      "stderr_tail": "Warning: failed to launch javaldx - java may not function correctly\n"
+    }
+  ],
+  "gates": [
+    {
+      "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.docx",
+      "exists": true,
+      "ok": true,
+      "zip_ok": true,
+      "media_count": 2,
+      "word_count": 580,
+      "paragraphs": 29,
+      "tables": 1,
+      "banned_text_hits": [],
+      "has_table_of_contents_text": true,
+      "mentions_bid_manager": false
+    },
+    {
+      "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.pdf",
+      "exists": true,
+      "ok": true,
+      "pdfinfo_ok": true,
+      "pdftotext_ok": true,
+      "pages": 5,
+      "text_chars": 3000
+    }
+  ],
+  "ok": true
+}

@@ -32,6 +32,11 @@
       "exists": true
     },
     {
+      "command": "final-artifact-qa",
+      "script": "/root/hermes-workspace/tools/bid-manager/active/runtime-scripts/run_final_artifact_qa.py",
+      "exists": true
+    },
+    {
       "command": "md-to-docx",
       "script": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/scripts/markdown_to_docx.py",
       "exists": true
@@ -87,7 +92,7 @@
       "exists": true
     }
   ],
-  "python_files_compiled": 21,
+  "python_files_compiled": 22,
   "compile_exit_code": 0,
   "compile_stdout": "",
   "compile_stderr": "",

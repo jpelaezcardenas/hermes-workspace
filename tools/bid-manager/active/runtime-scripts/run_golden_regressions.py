@@ -83,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     cases.append(run_case("full_technical_commercial_render_regression", [str(WRAPPER), "full-regression", "--json"]))
     cases.append(run_case("official_style_questionnaire_rowfill", [str(WRAPPER), "questionnaire-regression", "--json"]))
     cases.append(run_case("agent_contract_naming_audit", [str(WRAPPER), "agent-contract-audit", "--json"]))
+    cases.append(run_case("final_artifact_qa", [str(WRAPPER), "final-artifact-qa", "--json"]))
 
     unexpected = [c for c in cases if not c["passed"]]
     payload = {

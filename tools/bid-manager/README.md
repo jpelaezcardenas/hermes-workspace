@@ -24,16 +24,18 @@ The active wrapper now exposes:
 - `bid-manager full-regression --json` — converts full technical and commercial proposal skeletons, opens the DOCX packages, renders them to PDF through LibreOffice, and checks PDF openability/page counts.
 - `bid-manager questionnaire-regression --json` — fills an official-style XLSX questionnaire fixture, preserves package parts, verifies row counts/statuses/evidence, leaves buyer-only remarks untouched, and renders through LibreOffice.
 - `bid-manager agent-contract-audit --json` — verifies active user-facing runtime surfaces do not expose conflicting agent names.
+- `bid-manager final-artifact-qa --json` — builds a clean client-facing DOCX/PDF fixture and checks package integrity, banned internal/process language, media presence, TOC text, PDF render, and PDF text extraction.
 - `bid-manager forge-generate-mea` — regenerates the recovered MEA RFP/RFI bank.
 
 Current regression posture:
 
 - Skeleton coverage: 7/7 families OK.
-- Golden regressions: 14/14 cases matched expectation.
+- Golden regressions: 15/15 cases matched expectation.
 - Compact end-to-end regression: 5/5 cases passed.
 - Full technical/commercial render regression: 4/4 commands and 4/4 artifact gates passed; rendered PDFs were 40 and 42 pages.
 - Official-style questionnaire row-fill regression: passed; 3/3 responses, statuses, and evidence cells filled; buyer-only remarks untouched; package parts preserved; LibreOffice render passed.
 - Agent contract audit: passed; no active conflicting user-facing names found.
+- Final artifact QA regression: passed; clean client-facing DOCX/PDF fixture rendered to 5 pages, included media, had no banned internal/process terms, and extracted readable PDF text.
 - Known expected fail baselines: generic compact proposal visual validator failure.
 
 ## Rule

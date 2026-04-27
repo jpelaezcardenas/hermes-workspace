@@ -1,0 +1,176 @@
+{
+  "agent": "bid-manager",
+  "root": "/root/hermes-workspace/tools/bid-manager",
+  "artifact_dir": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z",
+  "case_count": 4,
+  "passed_count": 4,
+  "gate_count": 4,
+  "gate_passed_count": 4,
+  "unexpected_cases": [],
+  "failed_gates": [],
+  "cases": [
+    {
+      "name": "technical_full_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/1_technical/markdown/technical-full.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 2.275,
+      "stdout_tail": "  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\n  Cover page preserved (22 elements), 30 sample elements removed\n  TOC updated with 143 headings from template SDT (with TOC field)\n  Empty page prevention: removed 4 redundant element(s)\n\u2713 Converted technical-full.md \u2192 bid-manager-technical-full-regression.docx (locked template validation verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "render_pdf_bid-manager-technical-full-regression",
+      "cmd": [
+        "libreoffice",
+        "--headless",
+        "--convert-to",
+        "pdf",
+        "--outdir",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 7.079,
+      "stdout_tail": "convert /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.docx as a Writer document -> /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.pdf using filter : writer_pdf_Export\n",
+      "stderr_tail": "Warning: failed to launch javaldx - java may not function correctly\n",
+      "pdf": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.pdf",
+      "pdf_exists": true
+    },
+    {
+      "name": "commercial_full_md_to_docx",
+      "cmd": [
+        "/root/hermes-workspace/tools/bid-manager/bin/bid-manager",
+        "md-to-docx",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/skeletons/2_commercial/markdown/commercial-full.md",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 2.199,
+      "stdout_tail": "  Using template: MASTER_TEMPLATE_LOCKED.docx (54 styles)\n  Cover page preserved (22 elements), 30 sample elements removed\n  TOC updated with 67 headings from template SDT (with TOC field)\n  Empty page prevention: removed 4 redundant element(s)\n\u2713 Converted commercial-full.md \u2192 bid-manager-commercial-full-regression.docx (locked template validation verified)\n",
+      "stderr_tail": ""
+    },
+    {
+      "name": "render_pdf_bid-manager-commercial-full-regression",
+      "cmd": [
+        "libreoffice",
+        "--headless",
+        "--convert-to",
+        "pdf",
+        "--outdir",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z",
+        "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.docx"
+      ],
+      "exit": 0,
+      "ok": true,
+      "duration_seconds": 7.717,
+      "stdout_tail": "convert /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.docx as a Writer document -> /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.pdf using filter : writer_pdf_Export\n",
+      "stderr_tail": "Warning: failed to launch javaldx - java may not function correctly\n",
+      "pdf": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.pdf",
+      "pdf_exists": true
+    }
+  ],
+  "gates": [
+    {
+      "name": "technical_full_docx_gate",
+      "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.docx",
+      "exists": true,
+      "ok": true,
+      "bytes": 160114,
+      "zip_ok": true,
+      "has_document_xml": true,
+      "paragraphs": 1072,
+      "tables": 1,
+      "word_count": 6471,
+      "banned_routing_name_hits": [],
+      "docx_parse_ok": true
+    },
+    {
+      "name": "technical_full_pdf_gate",
+      "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.pdf",
+      "exists": true,
+      "ok": true,
+      "pdfinfo": {
+        "name": "pdfinfo_bid-manager-technical-full-regression",
+        "cmd": [
+          "pdfinfo",
+          "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.pdf"
+        ],
+        "exit": 0,
+        "ok": true,
+        "duration_seconds": 0.013,
+        "stdout_tail": "Author:          Gyanendra Sharma\nCreator:         Writer\nProducer:        LibreOffice 24.2\nCreationDate:    Mon Apr 27 14:26:23 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           40\nEncrypted:       no\nPage size:       595.304 x 841.89 pts (A4)\nPage rot:        0\nFile size:       976789 bytes\nOptimized:       no\nPDF version:     1.7\n",
+        "stderr_tail": ""
+      },
+      "pages": 40,
+      "pdftotext": {
+        "name": "pdftotext_bid-manager-technical-full-regression",
+        "cmd": [
+          "pdftotext",
+          "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-technical-full-regression.pdf",
+          "-"
+        ],
+        "exit": 0,
+        "ok": true,
+        "duration_seconds": 0.102,
+        "stderr_tail": ""
+      },
+      "text_tail_chars": 4000,
+      "contains_bid_manager": true
+    },
+    {
+      "name": "commercial_full_docx_gate",
+      "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.docx",
+      "exists": true,
+      "ok": true,
+      "bytes": 159065,
+      "zip_ok": true,
+      "has_document_xml": true,
+      "paragraphs": 1187,
+      "tables": 1,
+      "word_count": 6548,
+      "banned_routing_name_hits": [],
+      "docx_parse_ok": true
+    },
+    {
+      "name": "commercial_full_pdf_gate",
+      "path": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.pdf",
+      "exists": true,
+      "ok": true,
+      "pdfinfo": {
+        "name": "pdfinfo_bid-manager-commercial-full-regression",
+        "cmd": [
+          "pdfinfo",
+          "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.pdf"
+        ],
+        "exit": 0,
+        "ok": true,
+        "duration_seconds": 0.016,
+        "stdout_tail": "Author:          Gyanendra Sharma\nCreator:         Writer\nProducer:        LibreOffice 24.2\nCreationDate:    Mon Apr 27 14:26:33 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           42\nEncrypted:       no\nPage size:       595.304 x 841.89 pts (A4)\nPage rot:        0\nFile size:       975587 bytes\nOptimized:       no\nPDF version:     1.7\n",
+        "stderr_tail": ""
+      },
+      "pages": 42,
+      "pdftotext": {
+        "name": "pdftotext_bid-manager-commercial-full-regression",
+        "cmd": [
+          "pdftotext",
+          "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/full-regression-20260427T142619Z/bid-manager-commercial-full-regression.pdf",
+          "-"
+        ],
+        "exit": 0,
+        "ok": true,
+        "duration_seconds": 0.105,
+        "stderr_tail": ""
+      },
+      "text_tail_chars": 4000,
+      "contains_bid_manager": true
+    }
+  ],
+  "ok": true
+}

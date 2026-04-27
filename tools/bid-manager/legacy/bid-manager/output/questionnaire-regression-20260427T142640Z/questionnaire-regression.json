@@ -1,0 +1,42 @@
+{
+  "agent": "bid-manager",
+  "artifact_dir": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z",
+  "source": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z/bid-manager-official-questionnaire-source.xlsx",
+  "final": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z/bid-manager-official-questionnaire-filled.xlsx",
+  "render": {
+    "name": "libreoffice_xlsx_to_pdf",
+    "cmd": [
+      "libreoffice",
+      "--headless",
+      "--convert-to",
+      "pdf",
+      "--outdir",
+      "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z",
+      "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z/bid-manager-official-questionnaire-filled.xlsx"
+    ],
+    "exit": 0,
+    "ok": true,
+    "duration_seconds": 1.035,
+    "stdout_tail": "convert /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z/bid-manager-official-questionnaire-filled.xlsx as a Calc document -> /root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z/bid-manager-official-questionnaire-filled.pdf using filter : calc_pdf_Export\n",
+    "stderr_tail": "Warning: failed to launch javaldx - java may not function correctly\n"
+  },
+  "verification": {
+    "source_parts": 9,
+    "final_parts": 9,
+    "parts_preserved": true,
+    "rows": 3,
+    "response_count": 3,
+    "status_count": 3,
+    "evidence_count": 3,
+    "statuses": [
+      "Met",
+      "Met",
+      "Met"
+    ],
+    "buyer_remarks_untouched": 3,
+    "openpyxl_load_ok": true,
+    "libreoffice_render_ok": true,
+    "render_pdf": "/root/hermes-workspace/tools/bid-manager/legacy/bid-manager/output/questionnaire-regression-20260427T142640Z/bid-manager-official-questionnaire-filled.pdf"
+  },
+  "ok": true
+}

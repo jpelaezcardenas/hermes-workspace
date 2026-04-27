@@ -261,3 +261,12 @@
 - 2026-04-27T14:16:24Z | markdown_to_docx | e2e-20260427T141622Z/bid-manager-enbd-response.docx | model=unknown | failover=not-triggered
 - 2026-04-27T14:16:26Z | markdown_to_docx | full-regression-20260427T141624Z/bid-manager-technical-full-regression.docx | model=unknown | failover=not-triggered
 - 2026-04-27T14:16:36Z | markdown_to_docx | full-regression-20260427T141624Z/bid-manager-commercial-full-regression.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:01Z | markdown_to_docx | final-artifact-qa-20260427T142600Z/enbd-tokenization-final-qa.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:12Z | markdown_to_docx | golden-20260427T142611Z/technical-compact.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:15Z | csv_to_xlsx | golden-20260427T142611Z/questionnaire-template.xlsx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:17Z | markdown_to_docx | e2e-20260427T142617Z/forge-enbd-rfp.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:19Z | markdown_to_docx | e2e-20260427T142617Z/bid-manager-enbd-response.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:22Z | markdown_to_docx | full-regression-20260427T142619Z/bid-manager-technical-full-regression.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:31Z | markdown_to_docx | full-regression-20260427T142619Z/bid-manager-commercial-full-regression.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:26:42Z | markdown_to_docx | final-artifact-qa-20260427T142641Z/enbd-tokenization-final-qa.docx | model=unknown | failover=not-triggered
+- 2026-04-27T14:28:31Z | markdown_to_docx | final-artifact-qa-20260427T142831Z/enbd-tokenization-final-qa.docx | model=unknown | failover=not-triggered
