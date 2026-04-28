@@ -17,7 +17,7 @@ export const Route = createFileRoute('/api/history')({
     handlers: {
       GET: async ({ request }) => {
         if (!isAuthenticated(request)) {
-          return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+          return json({ ok: false, error: 'Unauthorized', errorCode: 'unauthorized' }, { status: 401 })
         }
         await ensureGatewayProbed()
         if (!getGatewayCapabilities().sessions) {
@@ -130,6 +130,7 @@ export const Route = createFileRoute('/api/history')({
           return json(
             {
               error: err instanceof Error ? err.message : String(err),
+              errorCode: 'invalidRequestBody',
             },
             { status: 500 },
           )

@@ -6,6 +6,8 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Add01Icon, CheckListIcon, RefreshIcon } from '@hugeicons/core-free-icons'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { TaskCard } from './task-card'
 import { TaskDialog } from './task-dialog'
 import { toast } from '@/components/ui/toast'
@@ -27,8 +29,18 @@ import type { HermesTask, TaskColumn, CreateTaskInput, TaskAssignee } from '@/li
 const QUERY_KEY = ['hermes', 'tasks'] as const
 const ASSIGNEES_KEY = ['hermes', 'tasks', 'assignees'] as const
 
-export const TASKS_BOARD_HELP_TEXT =
-  'Drag cards to change status. Open a card to set assignee and due date.'
+const COLUMN_I18N_KEY: Record<TaskColumn, 'backlog' | 'todo' | 'inProgress' | 'review' | 'done'> = {
+  backlog: 'backlog',
+  todo: 'todo',
+  in_progress: 'inProgress',
+  review: 'review',
+  done: 'done',
+}
+
+function columnLabel(t: TFunction<'tasks'>, col: TaskColumn) {
+  const key = COLUMN_I18N_KEY[col]
+  return t(key, { defaultValue: COLUMN_LABELS[col] })
+}
 
 function SkeletonCard() {
   return (
@@ -45,6 +57,8 @@ function SkeletonCard() {
 }
 
 export function TasksScreen() {
+  const { t } = useTranslation('tasks')
+  const { t: tCommon } = useTranslation('common')
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
   const [createColumn, setCreateColumn] = useState<TaskColumn>('backlog')
@@ -112,26 +126,53 @@ export function TasksScreen() {
 
   const createMutation = useMutation({
     mutationFn: createTask,
-    onSuccess: () => { invalidate(); toast('Task created'); setShowCreate(false) },
-    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to create task', { type: 'error' }),
+    onSuccess: () => {
+      invalidate()
+      toast(t('taskCreatedToast', { defaultValue: 'Task created' }))
+      setShowCreate(false)
+    },
+    onError: (e) =>
+      toast(
+        e instanceof Error ? e.message : t('createFailed', { defaultValue: 'Failed to create task' }),
+        { type: 'error' },
+      ),
   })
 
   const updateMutation = useMutation({
     mutationFn: ({ id, input }: { id: string; input: CreateTaskInput }) => updateTask(id, input),
-    onSuccess: () => { invalidate(); toast('Task updated'); setEditingTask(null) },
-    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to update task', { type: 'error' }),
+    onSuccess: () => {
+      invalidate()
+      toast(t('taskUpdatedToast', { defaultValue: 'Task updated' }))
+      setEditingTask(null)
+    },
+    onError: (e) =>
+      toast(
+        e instanceof Error ? e.message : t('updateFailed', { defaultValue: 'Failed to update task' }),
+        { type: 'error' },
+      ),
   })
 
   const deleteMutation = useMutation({
     mutationFn: deleteTask,
-    onSuccess: () => { invalidate(); toast('Task deleted') },
-    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to delete task', { type: 'error' }),
+    onSuccess: () => {
+      invalidate()
+      toast(t('taskDeletedToast', { defaultValue: 'Task deleted' }))
+    },
+    onError: (e) =>
+      toast(
+        e instanceof Error ? e.message : t('deleteFailed', { defaultValue: 'Failed to delete task' }),
+        { type: 'error' },
+      ),
   })
 
   const moveMutation = useMutation({
     mutationFn: ({ id, column }: { id: string; column: TaskColumn }) => moveTask(id, column, 'user'),
     onSuccess: () => invalidate(),
-    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to move task', { type: 'error' }),
+    onError: (e) =>
+      toast(
+        e instanceof Error ? e.message : t('moveFailed', { defaultValue: 'Failed to move task' }),
+        { type: 'error' },
+      ),
   })
 
   function handleDragStart(e: React.DragEvent, taskId: string) {
@@ -156,7 +197,13 @@ export function TasksScreen() {
     // Hybrid autonomy: if a human reviewer is configured, only they can move
     // tasks into the 'done' column — agents may move to 'review' at most.
     if (targetColumn === 'done' && humanReviewer) {
-      toast(`Only ${humanReviewer} can mark tasks as done`, { type: 'error' })
+      toast(
+        t('onlyHumanCanDone', {
+          name: humanReviewer,
+          defaultValue: `Only ${humanReviewer} can mark tasks as done`,
+        }),
+        { type: 'error' },
+      )
       setDraggingId(null)
       setDragOverColumn(null)
       return
@@ -181,32 +228,59 @@ export function TasksScreen() {
       <header className="rounded-2xl border border-primary-200 bg-primary-50/85 p-4 backdrop-blur-xl">
         <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 min-w-0">
-          <h1 className="text-2xl font-medium text-ink">Tasks</h1>
+          <h1 className="text-2xl font-medium text-ink">
+            {t('pageTitle', { defaultValue: 'Tasks' })}
+          </h1>
           {assigneeFilter && (
             <div className="flex items-center gap-2 text-xs text-[var(--theme-muted)]">
-              <span>Filtered by: <span className="capitalize" style={{ color: '#f59e0b' }}>{assigneeFilter}</span></span>
+              <span>
+                {t('filteredBy', { defaultValue: 'Filtered by:' })}{' '}
+                <span className="capitalize" style={{ color: '#f59e0b' }}>
+                  {assigneeFilter}
+                </span>
+              </span>
               <button
                 type="button"
                 onClick={() => setAssigneeFilter(null)}
                 className="text-[var(--theme-muted)] hover:text-[var(--theme-text)] transition-colors"
               >
-                ✕ Clear
+                ✕ {t('clearFilter', { defaultValue: 'Clear' })}
               </button>
             </div>
           )}
           {/* Stats */}
           <div className="flex items-center gap-2 text-xs text-[var(--theme-muted)] flex-wrap">
-            <span>{stats.total} total</span>
+            <span>
+              {t('statTotal', {
+                count: stats.total,
+                defaultValue: '{{count}} total',
+              })}
+            </span>
             <span className="hidden sm:inline">·</span>
-            <span className="hidden sm:inline">{stats.inProgress} in progress</span>
+            <span className="hidden sm:inline">
+              {t('statInProgress', {
+                count: stats.inProgress,
+                defaultValue: '{{count}} in progress',
+              })}
+            </span>
             {stats.overdue > 0 && (
               <>
                 <span>·</span>
-                <span className="text-red-400">{stats.overdue} overdue</span>
+                <span className="text-red-400">
+                  {t('statOverdue', {
+                    count: stats.overdue,
+                    defaultValue: '{{count}} overdue',
+                  })}
+                </span>
               </>
             )}
             <span className="hidden sm:inline">·</span>
-            <span className="hidden sm:inline">{stats.completion}% done</span>
+            <span className="hidden sm:inline">
+              {t('statDonePercent', {
+                pct: stats.completion,
+                defaultValue: '{{pct}}% done',
+              })}
+            </span>
           </div>
         </div>
 
@@ -220,12 +294,14 @@ export function TasksScreen() {
                 : 'border-[var(--theme-border)] text-[var(--theme-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-accent)]',
             )}
           >
-            {showDone ? 'Hide Done' : 'Show Done'}
+            {showDone
+              ? t('hideDone', { defaultValue: 'Hide Done' })
+              : t('showDone', { defaultValue: 'Show Done' })}
           </button>
           <button
             onClick={invalidate}
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title="Refresh"
+            title={t('refreshTitle', { defaultValue: 'Refresh' })}
           >
             <HugeiconsIcon icon={RefreshIcon} size={16} className="text-[var(--theme-muted)]" />
           </button>
@@ -235,12 +311,15 @@ export function TasksScreen() {
             style={{ background: 'var(--theme-accent)' }}
           >
             <HugeiconsIcon icon={Add01Icon} size={14} />
-            New Task
+            {t('newTask', { defaultValue: 'New Task' })}
           </button>
         </div>
       </div>
         <p className="mt-3 text-xs text-[var(--theme-muted)]">
-          {TASKS_BOARD_HELP_TEXT}
+          {t('boardHelp', {
+            defaultValue:
+              'Drag cards to change status. Open a card to set assignee and due date.',
+          })}
         </p>
       </header>
 
@@ -276,7 +355,7 @@ export function TasksScreen() {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colColor }} />
                   <span className="text-xs font-semibold text-[var(--theme-text)]">
-                    {COLUMN_LABELS[col]}
+                    {columnLabel(t, col)}
                   </span>
                   <span className="text-xs text-[var(--theme-muted)]">
                     ({tasksQuery.isFetching && tasksQuery.data === undefined ? '…' : colTasks.length})
@@ -285,7 +364,10 @@ export function TasksScreen() {
                 <button
                   onClick={() => { setCreateColumn(col); setShowCreate(true) }}
                   className="rounded p-0.5 hover:bg-[var(--theme-hover)] transition-colors"
-                  title={`Add to ${COLUMN_LABELS[col]}`}
+                  title={t('columnAddTitle', {
+                    column: columnLabel(t, col),
+                    defaultValue: `Add to ${COLUMN_LABELS[col]}`,
+                  })}
                 >
                   <HugeiconsIcon icon={Add01Icon} size={14} className="text-[var(--theme-muted)]" />
                 </button>
@@ -300,12 +382,14 @@ export function TasksScreen() {
                     animate={{ opacity: 1 }}
                     className="flex flex-col items-center justify-center py-8 gap-2 text-red-400"
                   >
-                    <p className="text-xs font-medium">Failed to load tasks</p>
+                    <p className="text-xs font-medium">
+                      {t('loadFailed', { defaultValue: 'Failed to load tasks' })}
+                    </p>
                     <button
                       onClick={() => tasksQuery.refetch()}
                       className="text-xs text-[var(--theme-accent)] hover:underline"
                     >
-                      Retry
+                      {tCommon('tryAgain', { defaultValue: 'Try again' })}
                     </button>
                   </motion.div>
                 ) : tasksQuery.isLoading ? (
@@ -325,8 +409,14 @@ export function TasksScreen() {
                         className="flex flex-col items-center justify-center py-8 gap-2 text-[var(--theme-muted)] opacity-60"
                       >
                         <HugeiconsIcon icon={CheckListIcon} size={22} />
-                        <p className="text-xs font-medium">No tasks</p>
-                        <p className="text-[10px]">Drop here or click + to add</p>
+                        <p className="text-xs font-medium">
+                          {t('emptyColumn', { defaultValue: 'No tasks' })}
+                        </p>
+                        <p className="text-[10px]">
+                          {t('emptyColumnHint', {
+                            defaultValue: 'Drop here or click + to add',
+                          })}
+                        </p>
                       </motion.div>
                     ) : (
                       colTasks.map(task => (

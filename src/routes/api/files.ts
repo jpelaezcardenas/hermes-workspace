@@ -249,7 +249,7 @@ export const Route = createFileRoute('/api/files')({
     handlers: {
       GET: async ({ request }) => {
         if (!isAuthenticated(request)) {
-          return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+          return json({ ok: false, error: 'Unauthorized', errorCode: 'unauthorized' }, { status: 401 })
         }
         try {
           const url = new URL(request.url)
@@ -316,7 +316,7 @@ export const Route = createFileRoute('/api/files')({
       },
       POST: async ({ request }) => {
         if (!isAuthenticated(request)) {
-          return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+          return json({ ok: false, error: 'Unauthorized', errorCode: 'unauthorized' }, { status: 401 })
         }
         const ip = getClientIp(request)
         if (!rateLimit(`files:${ip}`, 30, 60_000)) {
@@ -333,12 +333,12 @@ export const Route = createFileRoute('/api/files')({
             const form = await request.formData()
             const action = String(form.get('action') || 'upload')
             if (action !== 'upload') {
-              return json({ error: 'Invalid upload request' }, { status: 400 })
+              return json({ error: 'Invalid upload request', errorCode: 'invalidUploadRequest' }, { status: 400 })
             }
             const file = form.get('file')
             const targetPath = String(form.get('path') || '')
             if (!(file instanceof File)) {
-              return json({ error: 'Missing file' }, { status: 400 })
+              return json({ error: 'Missing file', errorCode: 'missingFile' }, { status: 400 })
             }
             const resolvedTarget = ensureWorkspacePath(targetPath)
             const isDir = (await fs.stat(resolvedTarget)).isDirectory()
@@ -373,7 +373,7 @@ export const Route = createFileRoute('/api/files')({
 
           if (action === 'delete') {
             if (!requireLocalOrAuth(request)) {
-              return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+              return json({ ok: false, error: 'Unauthorized', errorCode: 'unauthorized' }, { status: 401 })
             }
             const targetPath = ensureWorkspacePath(String(body.path || ''))
             try {

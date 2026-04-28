@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowDown01Icon,
@@ -45,10 +46,12 @@ function ModelSelector({
   value,
   onChange,
   models,
+  defaultAutoLabel,
 }: {
   value: string
   onChange: (nextValue: string) => void
   models: AvailableModel[]
+  defaultAutoLabel: string
 }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -98,7 +101,7 @@ function ModelSelector({
         className="inline-flex min-h-[3rem] w-full items-center justify-between gap-3 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-left text-sm text-[var(--theme-text)] shadow-[0_8px_24px_color-mix(in_srgb,var(--theme-shadow)_18%,transparent)]"
       >
         <span className="truncate">
-          {selected ? `${selected.provider} / ${selected.name}` : 'Default (auto)'}
+          {selected ? `${selected.provider} / ${selected.name}` : defaultAutoLabel}
         </span>
         <HugeiconsIcon
           icon={ArrowDown01Icon}
@@ -125,7 +128,7 @@ function ModelSelector({
                 !value ? 'bg-[var(--theme-accent-soft)]' : 'hover:bg-[var(--theme-bg)]',
               )}
             >
-              Default (auto)
+              {defaultAutoLabel}
             </button>
             {models.map((model) => (
               <button
@@ -175,6 +178,8 @@ export function OperationsAgentDetail({
   isSaving: boolean
   isDeleting: boolean
 }) {
+  const { t } = useTranslation('operations')
+  const { t: tCommon } = useTranslation('common')
   const [name, setName] = useState('')
   const [emoji, setEmoji] = useState('🤖')
   const [model, setModel] = useState('')
@@ -220,13 +225,15 @@ export function OperationsAgentDetail({
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
-                Agent Settings
+                {t('agentSettingsEyebrow', { defaultValue: 'Agent Settings' })}
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--theme-text)]">
                 {agent.name}
               </h2>
               <p className="mt-2 text-sm text-[var(--theme-muted-2)]">
-                Update this agent without leaving the roster.
+                {t('agentSettingsDesc', {
+                  defaultValue: 'Update this agent without leaving the roster.',
+                })}
               </p>
             </div>
           </div>
@@ -234,7 +241,7 @@ export function OperationsAgentDetail({
             type="button"
             onClick={onClose}
             className="inline-flex size-10 items-center justify-center rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] text-lg text-[var(--theme-muted)] transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent-strong)]"
-            aria-label="Close agent settings"
+            aria-label={t('ariaCloseAgent', { defaultValue: 'Close agent settings' })}
           >
             <HugeiconsIcon icon={Cancel01Icon} size={18} strokeWidth={1.8} />
           </button>
@@ -242,7 +249,9 @@ export function OperationsAgentDetail({
 
         <div className="mt-6 grid gap-4 md:grid-cols-[1.2fr_0.6fr]">
           <label className="space-y-2">
-            <span className="text-sm font-medium text-[var(--theme-text)]">Name</span>
+            <span className="text-sm font-medium text-[var(--theme-text)]">
+              {t('labelName', { defaultValue: 'Name' })}
+            </span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -251,7 +260,9 @@ export function OperationsAgentDetail({
           </label>
 
           <label className="space-y-2">
-            <span className="text-sm font-medium text-[var(--theme-text)]">Emoji</span>
+            <span className="text-sm font-medium text-[var(--theme-text)]">
+              {t('labelEmoji', { defaultValue: 'Emoji' })}
+            </span>
             <input
               value={emoji}
               onChange={(event) => setEmoji(event.target.value)}
@@ -261,13 +272,20 @@ export function OperationsAgentDetail({
         </div>
 
         <label className="mt-4 block space-y-2">
-          <span className="text-sm font-medium text-[var(--theme-text)]">Model</span>
-          <ModelSelector value={model} onChange={setModel} models={models} />
+          <span className="text-sm font-medium text-[var(--theme-text)]">
+            {t('labelModel', { defaultValue: 'Model' })}
+          </span>
+          <ModelSelector
+            value={model}
+            onChange={setModel}
+            models={models}
+            defaultAutoLabel={t('defaultModelAuto', { defaultValue: 'Default (auto)' })}
+          />
         </label>
 
         <label className="mt-4 block space-y-2">
           <span className="text-sm font-medium text-[var(--theme-text)]">
-            System Prompt
+            {t('labelSystemPrompt', { defaultValue: 'System Prompt' })}
           </span>
           <textarea
             value={systemPrompt}
@@ -284,7 +302,7 @@ export function OperationsAgentDetail({
             disabled={isDeleting || isSaving}
           >
             <HugeiconsIcon icon={Delete02Icon} size={16} strokeWidth={1.8} />
-            {isDeleting ? 'Deleting…' : 'Delete agent'}
+            {isDeleting ? t('deletingAgent', { defaultValue: 'Deleting…' }) : t('deleteAgent', { defaultValue: 'Delete agent' })}
           </Button>
           <div className="flex justify-end gap-3">
             <Button
@@ -293,7 +311,7 @@ export function OperationsAgentDetail({
               onClick={onClose}
               disabled={isDeleting}
             >
-              Cancel
+              {tCommon('cancel', { defaultValue: 'Cancel' })}
             </Button>
             <Button
               className="bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
@@ -308,7 +326,7 @@ export function OperationsAgentDetail({
               }
               disabled={isSaving || isDeleting}
             >
-              {isSaving ? 'Saving…' : 'Save'}
+              {isSaving ? t('savingAgent', { defaultValue: 'Saving…' }) : t('saveAgent', { defaultValue: 'Save' })}
             </Button>
           </div>
         </div>

@@ -10,6 +10,7 @@ import {
 import { getChatMode } from '../../server/gateway-capabilities'
 import { ensureLocalSession, appendLocalMessage, getLocalMessages, touchLocalSession } from '../../server/local-session-store'
 import { getLocalProviderDef, getDiscoveredModels } from '../../server/local-provider-discovery'
+import { jsonError } from '../../server/api-error'
 import {
   
   
@@ -270,10 +271,7 @@ export const Route = createFileRoute('/api/send-stream')({
       POST: async ({ request }) => {
         // Auth check
         if (!isAuthenticated(request)) {
-          return new Response(
-            JSON.stringify({ ok: false, error: 'Unauthorized' }),
-            { status: 401, headers: { 'Content-Type': 'application/json' } },
-          )
+          return jsonError('unauthorized', 'Unauthorized', 401)
         }
         const csrfCheck = requireJsonContentType(request)
         if (csrfCheck) return csrfCheck
@@ -299,13 +297,7 @@ export const Route = createFileRoute('/api/send-stream')({
         const attachments = normalizeAttachments(body.attachments)
         const history = normalizePortableHistory(body.history)
         if (!message.trim() && (!attachments || attachments.length === 0)) {
-          return new Response(
-            JSON.stringify({ ok: false, error: 'message required' }),
-            {
-              status: 400,
-              headers: { 'Content-Type': 'application/json' },
-            },
-          )
+          return jsonError('messageRequired', 'message required', 400)
         }
 
         // Resolve session key
@@ -322,18 +314,9 @@ export const Route = createFileRoute('/api/send-stream')({
         } catch (err) {
           const errorMsg = normalizeHermesErrorMessage(err)
           if (errorMsg === 'session not found') {
-            return new Response(
-              JSON.stringify({ ok: false, error: 'session not found' }),
-              {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' },
-              },
-            )
+            return jsonError('sessionNotFound', 'session not found', 404)
           }
-          return new Response(JSON.stringify({ ok: false, error: errorMsg }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' },
-          })
+          return jsonError('invalidRequestBody', errorMsg, 500)
         }
 
         // Check if the selected model is a local provider model — force portable + direct routing
@@ -436,7 +419,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   // Inject locale preference so the agent responds in the user's language
                   const locale = typeof body.locale === 'string' ? body.locale.trim() : ''
                   const localeSystemMsg: Array<OpenAICompatMessage> = locale && locale !== 'en'
-                    ? [{ role: 'system', content: `Respond in ${locale === 'es' ? 'Spanish' : locale === 'fr' ? 'French' : locale === 'zh' ? 'Chinese' : locale === 'de' ? 'German' : locale === 'ja' ? 'Japanese' : locale === 'ko' ? 'Korean' : locale === 'pt' ? 'Portuguese' : locale === 'ru' ? 'Russian' : locale === 'ar' ? 'Arabic' : 'English'}. The user's interface is set to this language.` }]
+                    ? [{ role: 'system', content: `Respond in ${locale === 'es' ? 'Spanish' : locale === 'fr' ? 'French' : locale === 'zh' || locale === 'zh-CN' ? 'Chinese' : locale === 'de' ? 'German' : locale === 'ja' ? 'Japanese' : locale === 'ko' ? 'Korean' : locale === 'pt' ? 'Portuguese' : locale === 'ru' ? 'Russian' : locale === 'ar' ? 'Arabic' : 'English'}. The user's interface is set to this language.` }]
                     : []
                   // Load persisted history for this session, then append user message
                   const persistedMessages = getLocalMessages(portableSessionKey)
@@ -907,7 +890,10 @@ export const Route = createFileRoute('/api/send-stream')({
               // Set a timeout to close the stream if no completion event
               streamTimeoutTimer = setTimeout(() => {
                 if (!streamClosed) {
-                  sendEvent('error', { message: 'Stream timeout' })
+                  sendEvent('error', {
+                    message: 'Stream timeout',
+                    errorCode: 'streamTimeout',
+                  })
                   closeStream()
                 }
               }, SEND_STREAM_RUN_TIMEOUT_MS)

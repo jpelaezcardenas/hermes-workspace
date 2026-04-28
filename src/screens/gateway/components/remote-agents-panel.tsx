@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { formatModelName } from '@/lib/format-model-name'
 import { cn } from '@/lib/utils'
 import { fetchSessions, type GatewaySession } from '@/lib/gateway-api'
@@ -63,6 +64,7 @@ function getLastMessageText(session: GatewaySession): string {
 }
 
 export function RemoteAgentsPanel({ localSessionKeys }: RemoteAgentsPanelProps) {
+  const { t } = useTranslation('gateway')
   const [sessions, setSessions] = useState<GatewaySession[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -76,11 +78,15 @@ export function RemoteAgentsPanel({ localSessionKeys }: RemoteAgentsPanelProps) 
       const remote = (res.sessions ?? []).filter((s) => s.key && !localSet.has(s.key) && !shouldHideSession(s))
       setSessions(remote)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to fetch sessions')
+      setError(
+        e instanceof Error
+          ? e.message
+          : t('remoteAgentsFetchFailed', { defaultValue: 'Failed to fetch sessions' }),
+      )
     } finally {
       setLoading(false)
     }
-  }, [localSet])
+  }, [localSet, t])
 
   useEffect(() => {
     void refresh()
@@ -91,7 +97,9 @@ export function RemoteAgentsPanel({ localSessionKeys }: RemoteAgentsPanelProps) 
   if (sessions.length === 0 && !loading && !error) {
     return (
       <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-slate-900 p-6 text-center">
-        <p className="text-sm text-neutral-600 dark:text-neutral-300">No remote agents found</p>
+        <p className="text-sm text-neutral-600 dark:text-neutral-300">
+          {t('remoteAgentsEmpty', { defaultValue: 'No remote agents found' })}
+        </p>
       </div>
     )
   }
@@ -100,7 +108,7 @@ export function RemoteAgentsPanel({ localSessionKeys }: RemoteAgentsPanelProps) 
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-neutral-900 dark:text-white">
-          Remote Agents
+          {t('remoteAgentsTitle', { defaultValue: 'Remote Agents' })}
           <span className="rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-[10px] font-medium text-neutral-500">
             {sessions.length}
           </span>
@@ -111,7 +119,9 @@ export function RemoteAgentsPanel({ localSessionKeys }: RemoteAgentsPanelProps) 
           disabled={loading}
           className="rounded-lg px-2.5 py-1 text-xs text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
         >
-          {loading ? 'Refreshing...' : 'Refresh'}
+          {loading
+            ? t('remoteAgentsRefreshing', { defaultValue: 'Refreshing…' })
+            : t('remoteAgentsRefresh', { defaultValue: 'Refresh' })}
         </button>
       </div>
 

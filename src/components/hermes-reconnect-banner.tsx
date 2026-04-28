@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const POLL_INTERVAL_MS = 10_000
 const FLASH_DURATION_MS = 1_800
@@ -34,6 +35,7 @@ async function probeHermesHealth(): Promise<boolean> {
 export function HermesReconnectBanner({
   enabled = true,
 }: HermesReconnectBannerProps) {
+  const { t } = useTranslation('common')
   const [bannerState, setBannerState] = useState<BannerState>('hidden')
   const [isChecking, setIsChecking] = useState(false)
   const [isStarting, setIsStarting] = useState(false)
@@ -210,17 +212,24 @@ export function HermesReconnectBanner({
       }
 
       if (!response.ok || !payload.ok) {
-        throw new Error(payload.error || 'Failed to start Hermes agent')
+        throw new Error(
+          payload.error ||
+            t('hermesFailedToStartAgent', { defaultValue: 'Failed to start Hermes agent' }),
+        )
       }
 
       setMessage(
         payload.message === 'already running'
-          ? 'Hermes agent is already running'
-          : 'Starting Hermes agent…',
+          ? t('hermesAgentAlreadyRunning', {
+              defaultValue: 'Hermes agent is already running',
+            })
+          : t('hermesAgentStarting', { defaultValue: 'Starting Hermes agent…' }),
       )
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : 'Failed to start Hermes agent',
+        error instanceof Error
+          ? error.message
+          : t('hermesFailedToStartAgent', { defaultValue: 'Failed to start Hermes agent' }),
       )
     } finally {
       setIsStarting(false)
@@ -260,7 +269,11 @@ export function HermesReconnectBanner({
           />
           <div className="min-w-0">
             <p className="text-sm font-semibold">
-              {isDisconnected ? 'Hermes agent not connected' : 'Connected'}
+              {isDisconnected
+                ? t('hermesAgentNotConnected', {
+                    defaultValue: 'Hermes agent not connected',
+                  })
+                : t('hermesAgentConnected', { defaultValue: 'Connected' })}
             </p>
             {message ? (
               <p className="truncate text-xs opacity-80">{message}</p>
@@ -281,7 +294,9 @@ export function HermesReconnectBanner({
                 color: 'inherit',
               }}
             >
-              {isChecking ? 'Retrying…' : 'Retry'}
+              {isChecking
+                ? t('hermesBannerRetrying', { defaultValue: 'Retrying…' })
+                : t('hermesBannerRetry', { defaultValue: 'Retry' })}
             </button>
             <button
               type="button"
@@ -292,7 +307,9 @@ export function HermesReconnectBanner({
                 background: 'var(--theme-danger)',
               }}
             >
-              {isStarting ? 'Starting…' : 'Start Agent'}
+              {isStarting
+                ? t('hermesBannerStarting', { defaultValue: 'Starting…' })
+                : t('hermesBannerStartAgent', { defaultValue: 'Start Agent' })}
             </button>
           </div>
         ) : null}

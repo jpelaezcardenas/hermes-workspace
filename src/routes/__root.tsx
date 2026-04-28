@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import { I18nextProvider } from 'react-i18next'
 import appCss from '../styles.css?url'
 import { SearchModal } from '@/components/search/search-modal'
 import { TerminalShortcutListener } from '@/components/terminal-shortcut-listener'
@@ -24,7 +25,9 @@ import {
 } from '@/components/onboarding/hermes-onboarding'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { getRootSurfaceState } from './-root-layout-state'
+import { getLocaleBootstrapScript, i18next, initI18n } from '@/lib/i18n/init'
 
+initI18n()
 
 const APP_CSP = [
   "default-src 'self'",
@@ -188,7 +191,9 @@ export const Route = createRootRoute({
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center bg-primary-50">
         <h1 className="text-2xl font-semibold text-primary-900 mb-4">
-          Something went wrong
+          {i18next.t('settings.somethingWentWrong', {
+            defaultValue: 'Something went wrong',
+          })}
         </h1>
         <pre className="p-4 bg-primary-100 rounded-lg text-sm text-primary-700 max-w-full overflow-auto mb-6">
           {error instanceof Error ? error.message : String(error)}
@@ -197,7 +202,9 @@ export const Route = createRootRoute({
           onClick={() => (window.location.href = '/')}
           className="px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
         >
-          Return Home
+          {i18next.t('settings.returnHome', {
+            defaultValue: 'Return Home',
+          })}
         </button>
       </div>
     )
@@ -301,31 +308,37 @@ function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      {rootSurfaceState.showOnboarding ? <HermesOnboarding /> : null}
-      {rootSurfaceState.showWorkspaceShell ? (
-        <>
-          <GlobalShortcutListener />
-          <TerminalShortcutListener />
-          <WorkspaceShell>
-            <ErrorBoundary
-              className="h-full min-h-0 flex-1"
-              title="Something went wrong"
-              description="This page failed to render. Reload to try again."
-            >
-              <Outlet />
-            </ErrorBoundary>
-          </WorkspaceShell>
-          <SearchModal />
-          <KeyboardShortcutsModal />
-          {rootSurfaceState.showPostOnboardingOverlays ? (
-            <>
-              <MobilePromptTrigger />
-              <OnboardingTour />
-            </>
-          ) : null}
-        </>
-      ) : null}
+      <I18nextProvider i18n={i18next}>
+        <Toaster />
+        {rootSurfaceState.showOnboarding ? <HermesOnboarding /> : null}
+        {rootSurfaceState.showWorkspaceShell ? (
+          <>
+            <GlobalShortcutListener />
+            <TerminalShortcutListener />
+            <WorkspaceShell>
+              <ErrorBoundary
+                className="h-full min-h-0 flex-1"
+                title={i18next.t('settings.somethingWentWrong', {
+                  defaultValue: 'Something went wrong',
+                })}
+                description={i18next.t('settings.pageRenderFailed', {
+                  defaultValue: 'This page failed to render. Reload to try again.',
+                })}
+              >
+                <Outlet />
+              </ErrorBoundary>
+            </WorkspaceShell>
+            <SearchModal />
+            <KeyboardShortcutsModal />
+            {rootSurfaceState.showPostOnboardingOverlays ? (
+              <>
+                <MobilePromptTrigger />
+                <OnboardingTour />
+              </>
+            ) : null}
+          </>
+        ) : null}
+      </I18nextProvider>
     </QueryClientProvider>
   )
 }
@@ -334,6 +347,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: wrapInlineScript(getLocaleBootstrapScript()),
+          }}
+        />
         <meta httpEquiv="Content-Security-Policy" content={APP_CSP} />
         <script
           dangerouslySetInnerHTML={{

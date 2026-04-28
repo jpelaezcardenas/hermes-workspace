@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowDown01Icon, Cancel01Icon, Settings01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -36,10 +37,12 @@ function ModelSelector({
   value,
   onChange,
   models,
+  defaultAutoLabel,
 }: {
   value: string
   onChange: (nextValue: string) => void
   models: AvailableModel[]
+  defaultAutoLabel: string
 }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -65,7 +68,7 @@ function ModelSelector({
         className="inline-flex min-h-[3rem] w-full items-center justify-between gap-3 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-left text-sm text-[var(--theme-text)] shadow-[0_8px_24px_color-mix(in_srgb,var(--theme-shadow)_18%,transparent)]"
       >
         <span className="truncate">
-          {selected ? `${selected.provider} / ${selected.name}` : 'Default (auto)'}
+          {selected ? `${selected.provider} / ${selected.name}` : defaultAutoLabel}
         </span>
         <HugeiconsIcon
           icon={ArrowDown01Icon}
@@ -89,7 +92,7 @@ function ModelSelector({
                 !value ? 'bg-[var(--theme-accent-soft)]' : 'hover:bg-[var(--theme-bg)]',
               )}
             >
-              Default (auto)
+              {defaultAutoLabel}
             </button>
             {models.map((model) => (
               <button
@@ -127,6 +130,8 @@ export function OperationsSettingsModal({
   onClose: () => void
   onSave: (settings: OperationsSettings) => void
 }) {
+  const { t } = useTranslation('operations')
+  const { t: tCommon } = useTranslation('common')
   const [draft, setDraft] = useState(settings)
 
   useEffect(() => {
@@ -165,10 +170,12 @@ export function OperationsSettingsModal({
             </div>
             <div>
               <h2 className="text-xl font-semibold text-[var(--theme-text)]">
-                Operations Settings
+                {t('opsSettingsTitle', { defaultValue: 'Operations Settings' })}
               </h2>
               <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
-                Defaults stored locally for the Operations screen.
+                {t('opsSettingsDesc', {
+                  defaultValue: 'Defaults stored locally for the Operations screen.',
+                })}
               </p>
             </div>
           </div>
@@ -184,22 +191,25 @@ export function OperationsSettingsModal({
         <div className="mt-6 space-y-4">
           <label className="space-y-2">
             <span className="text-sm font-medium text-[var(--theme-text)]">
-              Default model for new agents
+              {t('defaultModelForAgents', { defaultValue: 'Default model for new agents' })}
             </span>
             <ModelSelector
               value={draft.defaultModel}
               onChange={(defaultModel) => setDraft((current) => ({ ...current, defaultModel }))}
               models={models}
+              defaultAutoLabel={t('defaultModelAuto', { defaultValue: 'Default (auto)' })}
             />
           </label>
 
           <label className="flex items-center justify-between rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3">
             <span>
               <span className="block text-sm font-medium text-[var(--theme-text)]">
-                Auto-approve
+                {t('autoApprove', { defaultValue: 'Auto-approve' })}
               </span>
               <span className="block text-sm text-[var(--theme-muted-2)]">
-                Reserved for future workflow automation.
+                {t('autoApproveDesc', {
+                  defaultValue: 'Reserved for future workflow automation.',
+                })}
               </span>
             </span>
             <input
@@ -217,7 +227,7 @@ export function OperationsSettingsModal({
 
           <label className="space-y-2">
             <span className="text-sm font-medium text-[var(--theme-text)]">
-              Activity feed length
+              {t('activityFeedLength', { defaultValue: 'Activity feed length' })}
             </span>
             <input
               type="number"
@@ -241,7 +251,7 @@ export function OperationsSettingsModal({
             className="border border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
             onClick={onClose}
           >
-            Cancel
+            {tCommon('cancel', { defaultValue: 'Cancel' })}
           </Button>
           <Button
             className="bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
@@ -250,7 +260,7 @@ export function OperationsSettingsModal({
               onClose()
             }}
           >
-            Save Settings
+            {t('saveSettingsBtn', { defaultValue: 'Save Settings' })}
           </Button>
         </div>
       </div>

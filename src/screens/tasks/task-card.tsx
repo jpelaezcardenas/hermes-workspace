@@ -1,5 +1,6 @@
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import type { HermesTask } from '@/lib/tasks-api'
+import type { HermesTask, TaskPriority } from '@/lib/tasks-api'
 import { PRIORITY_COLORS, isOverdue } from '@/lib/tasks-api'
 
 type Props = {
@@ -10,20 +11,40 @@ type Props = {
   isDragging?: boolean
 }
 
+export type TaskAssigneeCopy = {
+  assigneePrefix: string
+  unassigned: string
+}
+
 export function formatTaskAssigneeLabel(
   assignee: string | null,
   assigneeLabels: Record<string, string>,
+  copy: TaskAssigneeCopy,
 ): string {
-  const resolvedLabel = assignee ? (assigneeLabels[assignee] ?? assignee) : 'Unassigned'
-  return `Assignee: ${resolvedLabel}`
+  const resolvedLabel = assignee ? (assigneeLabels[assignee] ?? assignee) : copy.unassigned
+  return `${copy.assigneePrefix}: ${resolvedLabel}`
+}
+
+function priorityLabelKey(p: TaskPriority): 'priorityHigh' | 'priorityMedium' | 'priorityLow' {
+  if (p === 'high') return 'priorityHigh'
+  if (p === 'low') return 'priorityLow'
+  return 'priorityMedium'
 }
 
 export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDragging }: Props) {
+  const { t, i18n } = useTranslation('tasks')
   const overdue = isOverdue(task)
   const priorityColor = PRIORITY_COLORS[task.priority]
   const visibleTags = task.tags.slice(0, 2)
   const extraTagCount = task.tags.length - 2
-  const assigneeLabel = formatTaskAssigneeLabel(task.assignee, assigneeLabels)
+  const assigneeLabel = formatTaskAssigneeLabel(task.assignee, assigneeLabels, {
+    assigneePrefix: t('assigneePrefix', { defaultValue: 'Assignee' }),
+    unassigned: t('unassigned', { defaultValue: 'Unassigned' }),
+  })
+  const priorityWord = t(priorityLabelKey(task.priority), {
+    defaultValue: task.priority,
+  })
+  const dateLocale = i18n.language?.toLowerCase().startsWith('zh') ? 'zh-CN' : 'en-US'
 
   return (
     <div
@@ -42,7 +63,10 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
       <span
         className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full shrink-0"
         style={{ background: priorityColor }}
-        title={`Priority: ${task.priority}`}
+        title={t('priorityLabel', {
+          priority: priorityWord,
+          defaultValue: `Priority: ${task.priority}`,
+        })}
       />
 
       <p className="text-sm font-medium text-[var(--theme-text)] leading-snug mb-1 line-clamp-2 pr-4">
@@ -70,7 +94,10 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
           ))}
           {extraTagCount > 0 && (
             <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--theme-hover)] text-[var(--theme-muted)]">
-              +{extraTagCount} more
+              {t('moreTags', {
+                count: extraTagCount,
+                defaultValue: `+${extraTagCount} more`,
+              })}
             </span>
           )}
         </div>
@@ -80,14 +107,19 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
             {overdue && (
               <>
                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                <span className="text-red-400 font-semibold">Overdue</span>
+                <span className="text-red-400 font-semibold">
+                  {t('overdue', { defaultValue: 'Overdue' })}
+                </span>
                 <span className="text-[var(--theme-muted)] mx-0.5">·</span>
               </>
             )}
             <span className={overdue ? 'text-red-400 font-semibold' : 'text-[var(--theme-muted)]'}>
               {(() => {
                 const [y, m, d] = task.due_date!.split('-').map(Number)
-                return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                return new Date(y, m - 1, d).toLocaleDateString(dateLocale, {
+                  month: 'short',
+                  day: 'numeric',
+                })
               })()}
             </span>
           </div>

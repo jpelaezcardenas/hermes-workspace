@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { i18next } from '@/lib/i18n/init'
 import { cn } from '@/lib/utils'
 import {
   emitFeedEvent,
@@ -7,12 +9,9 @@ import {
   type FeedEventType,
 } from './feed-event-bus'
 
-// 'Activity' = tasks + agents (no health checks), default
-// 'Tasks'    = task events only
-// 'Agents'   = agent events only
-// 'System'   = gateway_health + system events
-const FILTERS = ['Activity', 'Tasks', 'Agents', 'System'] as const
-type FilterTab = (typeof FILTERS)[number]
+// activity = tasks + agents (no health checks), default
+const FILTER_KEYS = ['activity', 'tasks', 'agents', 'system'] as const
+type FilterTab = (typeof FILTER_KEYS)[number]
 
 type SessionRecord = Record<string, unknown>
 type FeedRow = FeedEvent & { baseMessage: string; repeatCount: number }
@@ -48,19 +47,37 @@ const ACTIVITY_TYPES = new Set<FeedEventType>([
 type EventBadge = { label: string; className: string }
 type EventSeverity = 'error' | 'spawn' | 'system' | 'default'
 
-const EVENT_BADGE: Record<FeedEventType, EventBadge> = {
-  mission_started: { label: 'MISSION', className: 'bg-orange-950/70 text-orange-400 border border-orange-800/50' },
-  task_created:    { label: 'TASK',    className: 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/50' },
-  task_moved:      { label: 'MOVE',    className: 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/50' },
-  task_completed:  { label: 'DONE',    className: 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/50' },
-  task_assigned:   { label: 'ASSIGN',  className: 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/50' },
-  agent_active:    { label: 'AGENT',   className: 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/50' },
-  agent_idle:      { label: 'IDLE',    className: 'bg-neutral-100 text-neutral-500 border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700' },
-  agent_paused:    { label: 'PAUSE',   className: 'bg-amber-950/70 text-amber-400 border border-amber-800/50' },
-  agent_spawned:   { label: 'SPAWN',   className: 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/50' },
-  agent_killed:    { label: 'KILL',    className: 'bg-red-950/70 text-red-400 border border-red-800/50' },
-  gateway_health:  { label: 'SYS',     className: 'bg-neutral-100 text-neutral-500 border border-neutral-200 dark:bg-neutral-900 dark:text-neutral-600 dark:border-neutral-800' },
-  system:          { label: 'SYS',     className: 'bg-neutral-100 text-neutral-500 border border-neutral-200 dark:bg-neutral-900 dark:text-neutral-600 dark:border-neutral-800' },
+const EVENT_BADGE_CLASS: Record<FeedEventType, string> = {
+  mission_started: 'bg-orange-950/70 text-orange-400 border border-orange-800/50',
+  task_created: 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/50',
+  task_moved: 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/50',
+  task_completed: 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/50',
+  task_assigned: 'bg-cyan-950/70 text-cyan-400 border border-cyan-800/50',
+  agent_active: 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/50',
+  agent_idle:
+    'bg-neutral-100 text-neutral-500 border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700',
+  agent_paused: 'bg-amber-950/70 text-amber-400 border border-amber-800/50',
+  agent_spawned: 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/50',
+  agent_killed: 'bg-red-950/70 text-red-400 border border-red-800/50',
+  gateway_health:
+    'bg-neutral-100 text-neutral-500 border border-neutral-200 dark:bg-neutral-900 dark:text-neutral-600 dark:border-neutral-800',
+  system:
+    'bg-neutral-100 text-neutral-500 border border-neutral-200 dark:bg-neutral-900 dark:text-neutral-600 dark:border-neutral-800',
+}
+
+const EVENT_BADGE_I18N_KEY: Record<FeedEventType, string> = {
+  mission_started: 'feedBadgeMission',
+  task_created: 'feedBadgeTask',
+  task_moved: 'feedBadgeMove',
+  task_completed: 'feedBadgeDone',
+  task_assigned: 'feedBadgeAssign',
+  agent_active: 'feedBadgeAgent',
+  agent_idle: 'feedBadgeIdle',
+  agent_paused: 'feedBadgePause',
+  agent_spawned: 'feedBadgeSpawn',
+  agent_killed: 'feedBadgeKill',
+  gateway_health: 'feedBadgeSys',
+  system: 'feedBadgeSys',
 }
 
 function readString(value: unknown): string {
@@ -88,12 +105,33 @@ function sessionName(session: SessionRecord): string {
 
 function relativeTime(ts: number, now: number): string {
   const s = Math.max(0, Math.floor((now - ts) / 1000))
-  if (s < 5) return 'just now'
-  if (s < 60) return `${s}s ago`
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
-  if (s < 604800) return `${Math.floor(s / 86400)}d ago`
-  return `${Math.floor(s / 604800)}w ago`
+  const just = () =>
+    i18next.t('gateway:timeJustNow', { defaultValue: 'just now' })
+  if (s < 5) return just()
+  if (s < 60)
+    return i18next.t('gateway:timeSecondsAgo', {
+      count: s,
+      defaultValue: `${s}s ago`,
+    })
+  if (s < 3600)
+    return i18next.t('gateway:timeMinutesAgo', {
+      count: Math.floor(s / 60),
+      defaultValue: `${Math.floor(s / 60)}m ago`,
+    })
+  if (s < 86400)
+    return i18next.t('gateway:timeHoursAgo', {
+      count: Math.floor(s / 3600),
+      defaultValue: `${Math.floor(s / 3600)}h ago`,
+    })
+  if (s < 604800)
+    return i18next.t('gateway:timeDaysAgo', {
+      count: Math.floor(s / 86400),
+      defaultValue: `${Math.floor(s / 86400)}d ago`,
+    })
+  return i18next.t('gateway:timeWeeksAgo', {
+    count: Math.floor(s / 604800),
+    defaultValue: `${Math.floor(s / 604800)}w ago`,
+  })
 }
 
 function eventSeverity(event: FeedRow): EventSeverity {
@@ -126,11 +164,18 @@ function severityClass(severity: EventSeverity): string {
   return 'border-neutral-200 bg-neutral-50 dark:border-neutral-800/60 dark:bg-neutral-900/40'
 }
 
-function severityBadge(event: FeedRow, severity: EventSeverity): EventBadge {
+function severityBadge(
+  event: FeedRow,
+  severity: EventSeverity,
+  typeBadge: (type: FeedEventType) => EventBadge,
+): EventBadge {
   if (severity === 'error') {
-    return { label: 'ERROR', className: 'bg-red-950/70 text-red-300 border border-red-800/60' }
+    return {
+      label: i18next.t('gateway:feedBadgeError', { defaultValue: 'ERROR' }),
+      className: 'bg-red-950/70 text-red-300 border border-red-800/60',
+    }
   }
-  return EVENT_BADGE[event.type] ?? EVENT_BADGE.system
+  return typeBadge(event.type)
 }
 
 function severityTextClass(severity: EventSeverity): string {
@@ -146,14 +191,41 @@ function severityTimestampClass(severity: EventSeverity): string {
   return 'text-neutral-700 dark:text-neutral-400'
 }
 
-function placeholderLabel(activeFilter: FilterTab): string {
-  if (activeFilter === 'Activity') return 'No events yet'
-  return `No events yet in ${activeFilter}`
+function eventMatchesFilter(type: FeedEventType, tab: FilterTab): boolean {
+  if (tab === 'tasks') return TASK_TYPES.has(type)
+  if (tab === 'agents') return AGENT_TYPES.has(type)
+  if (tab === 'system') return SYSTEM_TYPES.has(type)
+  return ACTIVITY_TYPES.has(type)
 }
 
 export function LiveFeedPanel() {
-  // Default to 'Activity' to hide noisy health checks
-  const [activeFilter, setActiveFilter] = useState<FilterTab>('Activity')
+  const { t } = useTranslation('gateway')
+  const typeBadge = useCallback(
+    (type: FeedEventType): EventBadge => {
+      const key = EVENT_BADGE_I18N_KEY[type] ?? 'feedBadgeSys'
+      const defaults: Record<string, string> = {
+        feedBadgeMission: 'MISSION',
+        feedBadgeTask: 'TASK',
+        feedBadgeMove: 'MOVE',
+        feedBadgeDone: 'DONE',
+        feedBadgeAssign: 'ASSIGN',
+        feedBadgeAgent: 'AGENT',
+        feedBadgeIdle: 'IDLE',
+        feedBadgePause: 'PAUSE',
+        feedBadgeSpawn: 'SPAWN',
+        feedBadgeKill: 'KILL',
+        feedBadgeSys: 'SYS',
+      }
+      return {
+        label: t(key as 'feedBadgeMission', { defaultValue: defaults[key] ?? 'SYS' }),
+        className: EVENT_BADGE_CLASS[type] ?? EVENT_BADGE_CLASS.system,
+      }
+    },
+    [t],
+  )
+
+  // Default to activity to hide noisy health checks
+  const [activeFilter, setActiveFilter] = useState<FilterTab>('activity')
   const [events, setEvents] = useState<Array<FeedRow>>([])
   const [now, setNow] = useState(() => Date.now())
   const previousSessionsRef = useRef<Map<string, string> | null>(null)
@@ -236,21 +308,32 @@ export function LiveFeedPanel() {
   }, [])
 
   const visibleEvents = useMemo(() => {
-    return events.filter((event) => {
-      if (activeFilter === 'Tasks') return TASK_TYPES.has(event.type)
-      if (activeFilter === 'Agents') return AGENT_TYPES.has(event.type)
-      if (activeFilter === 'System') return SYSTEM_TYPES.has(event.type)
-      // 'Activity': tasks + agents, no health/system noise
-      return ACTIVITY_TYPES.has(event.type)
-    })
+    return events.filter((event) => eventMatchesFilter(event.type, activeFilter))
   }, [activeFilter, events])
+
+  const emptyFeedLabel = useMemo(() => {
+    if (activeFilter === 'activity')
+      return t('feedEmptyActivity', { defaultValue: 'No events yet' })
+    const filterName = t(`feedFilter_${activeFilter}` as 'feedFilter_tasks', {
+      defaultValue:
+        activeFilter === 'tasks'
+          ? 'Tasks'
+          : activeFilter === 'agents'
+            ? 'Agents'
+            : 'System',
+    })
+    return t('feedEmptyFiltered', {
+      filter: filterName,
+      defaultValue: 'No events yet in {{filter}}',
+    })
+  }, [activeFilter, t])
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-neutral-950">
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-4 py-2.5 dark:border-neutral-800">
         <h2 className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
-          Live Feed
+          {t('feedTitle', { defaultValue: 'Live Feed' })}
         </h2>
         <div className="flex items-center gap-2">
           {events.length > 0 ? (
@@ -259,7 +342,7 @@ export function LiveFeedPanel() {
               onClick={() => setEvents([])}
               className="rounded px-1.5 py-0.5 text-[10px] text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
             >
-              Clear
+              {t('feedClear', { defaultValue: 'Clear' })}
             </button>
           ) : null}
           {/* Animated LIVE badge */}
@@ -268,14 +351,14 @@ export function LiveFeedPanel() {
               <span className="absolute inset-0 animate-ping rounded-full bg-emerald-500/60" />
               <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
             </span>
-            LIVE
+            {t('feedLiveBadge', { defaultValue: 'LIVE' })}
           </span>
         </div>
       </div>
 
       {/* ── Filters ─────────────────────────────────────────────────────── */}
       <div className="flex shrink-0 gap-0.5 border-b border-neutral-200 px-2 py-1.5 dark:border-neutral-800">
-        {FILTERS.map((tab) => (
+        {FILTER_KEYS.map((tab) => (
           <button
             key={tab}
             type="button"
@@ -287,7 +370,16 @@ export function LiveFeedPanel() {
                 : 'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-600 dark:hover:bg-neutral-900 dark:hover:text-neutral-300',
             )}
           >
-            {tab}
+            {t(`feedFilter_${tab}` as 'feedFilter_activity', {
+              defaultValue:
+                tab === 'activity'
+                  ? 'Activity'
+                  : tab === 'tasks'
+                    ? 'Tasks'
+                    : tab === 'agents'
+                      ? 'Agents'
+                      : 'System',
+            })}
           </button>
         ))}
       </div>
@@ -301,7 +393,7 @@ export function LiveFeedPanel() {
           {visibleEvents.length === 0 ? (
             <div className="flex min-h-[220px] items-center justify-center">
               <p className="text-center font-mono text-[10px] text-neutral-600 dark:text-neutral-500">
-                {placeholderLabel(activeFilter)}
+                {emptyFeedLabel}
               </p>
             </div>
           ) : (
@@ -312,7 +404,7 @@ export function LiveFeedPanel() {
                     ? `${event.baseMessage} ×${event.repeatCount}`
                     : event.baseMessage
                 const severity = eventSeverity(event)
-                const badge = severityBadge(event, severity)
+                const badge = severityBadge(event, severity, typeBadge)
 
                 return (
                   <div

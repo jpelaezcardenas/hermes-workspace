@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import {
   DialogContent,
   DialogRoot,
@@ -7,8 +9,27 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import type { HermesTask, CreateTaskInput, TaskColumn, TaskPriority, TaskAssignee } from '@/lib/tasks-api'
+import type {
+  HermesTask,
+  CreateTaskInput,
+  TaskColumn,
+  TaskPriority,
+  TaskAssignee,
+} from '@/lib/tasks-api'
 import { COLUMN_LABELS, COLUMN_ORDER } from '@/lib/tasks-api'
+
+const COLUMN_I18N_KEY: Record<TaskColumn, 'backlog' | 'todo' | 'inProgress' | 'review' | 'done'> = {
+  backlog: 'backlog',
+  todo: 'todo',
+  in_progress: 'inProgress',
+  review: 'review',
+  done: 'done',
+}
+
+function columnOptionLabel(t: TFunction<'tasks'>, col: TaskColumn) {
+  const key = COLUMN_I18N_KEY[col]
+  return t(key, { defaultValue: COLUMN_LABELS[col] })
+}
 
 type Props = {
   open: boolean
@@ -21,6 +42,8 @@ type Props = {
 }
 
 export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting }: Props) {
+  const { t } = useTranslation('tasks')
+  const { t: tCommon } = useTranslation('common')
   const isEdit = Boolean(task)
 
   const [title, setTitle] = useState('')
@@ -82,39 +105,43 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
 
         <div className="p-5">
           <DialogTitle className="text-base font-semibold text-[var(--theme-text)] mb-1">
-            {isEdit ? 'Edit Task' : 'New Task'}
+            {isEdit
+              ? t('dialogEditTitle', { defaultValue: 'Edit Task' })
+              : t('dialogNewTitle', { defaultValue: 'New Task' })}
           </DialogTitle>
           <DialogDescription className="text-xs text-[var(--theme-muted)] mb-4">
-            {isEdit ? 'Update the task details below.' : 'Fill in the details for your new task.'}
+            {isEdit
+              ? t('dialogEditDesc', { defaultValue: 'Update the task details below.' })
+              : t('dialogNewDesc', { defaultValue: 'Fill in the details for your new task.' })}
           </DialogDescription>
 
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className={labelClass}>Title *</label>
+              <label className={labelClass}>{t('fieldTitle', { defaultValue: 'Title *' })}</label>
               <input
                 className={inputClass}
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                placeholder="What needs to be done?"
+                placeholder={t('placeholderTitle', { defaultValue: 'What needs to be done?' })}
                 required
                 autoFocus
               />
             </div>
 
             <div>
-              <label className={labelClass}>Description</label>
+              <label className={labelClass}>{t('fieldDescription', { defaultValue: 'Description' })}</label>
               <textarea
                 className={cn(inputClass, 'resize-none')}
                 rows={3}
                 value={description}
                 onChange={e => setDescription(e.target.value)}
-                placeholder="Optional details..."
+                placeholder={t('placeholderDescription', { defaultValue: 'Optional details...' })}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelClass}>Column</label>
+                <label className={labelClass}>{t('fieldColumn', { defaultValue: 'Column' })}</label>
                 <select
                   className={inputClass}
                   style={{ colorScheme: 'dark' }}
@@ -122,45 +149,50 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                   onChange={e => setColumn(e.target.value as TaskColumn)}
                 >
                   {COLUMN_ORDER.map(col => (
-                    <option key={col} value={col}>{COLUMN_LABELS[col]}</option>
+                    <option key={col} value={col}>
+                      {columnOptionLabel(t, col)}
+                    </option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className={labelClass}>Priority</label>
+                <label className={labelClass}>{t('fieldPriority', { defaultValue: 'Priority' })}</label>
                 <select
                   className={inputClass}
                   style={{ colorScheme: 'dark' }}
                   value={priority}
                   onChange={e => setPriority(e.target.value as TaskPriority)}
                 >
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
+                  <option value="high">{t('priorityHigh', { defaultValue: 'High' })}</option>
+                  <option value="medium">{t('priorityMedium', { defaultValue: 'Medium' })}</option>
+                  <option value="low">{t('priorityLow', { defaultValue: 'Low' })}</option>
                 </select>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelClass}>Assignee</label>
+                <label className={labelClass}>{t('fieldAssignee', { defaultValue: 'Assignee' })}</label>
                 <select
                   className={inputClass}
                   style={{ colorScheme: 'dark' }}
                   value={assignee}
                   onChange={e => setAssignee(e.target.value)}
                 >
-                  <option value="">Unassigned</option>
+                  <option value="">{t('unassigned', { defaultValue: 'Unassigned' })}</option>
                   {assignees.map(({ id, label }) => (
                     <option key={id} value={id}>{label}</option>
                   ))}
                 </select>
                 <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
-                  Assignee is separate from status. Dragging a card changes its column only.
+                  {t('assigneeHint', {
+                    defaultValue:
+                      'Assignee is separate from status. Dragging a card changes its column only.',
+                  })}
                 </p>
               </div>
               <div>
-                <label className={labelClass}>Due Date</label>
+                <label className={labelClass}>{t('fieldDueDate', { defaultValue: 'Due Date' })}</label>
                 <input
                   type="date"
                   className={inputClass}
@@ -172,17 +204,19 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
             </div>
 
             <div>
-              <label className={labelClass}>Tags (comma-separated)</label>
+              <label className={labelClass}>{t('fieldTags', { defaultValue: 'Tags (comma-separated)' })}</label>
               <input
                 className={inputClass}
                 value={tags}
                 onChange={e => setTags(e.target.value)}
-                placeholder="frontend, bug, research"
+                placeholder={t('placeholderTags', { defaultValue: 'frontend, bug, research' })}
               />
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>
+              <p className="text-[10px] text-[var(--theme-muted)]">
+                {t('pressEscToCancel', { defaultValue: 'Press Esc to cancel' })}
+              </p>
               <div className="flex gap-2">
                 <Button
                   type="button"
@@ -191,7 +225,7 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                   onClick={() => onOpenChange(false)}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  {tCommon('cancel', { defaultValue: 'Cancel' })}
                 </Button>
                 <Button
                   type="submit"
@@ -199,7 +233,11 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                   disabled={isSubmitting || !title.trim()}
                   style={{ background: 'var(--theme-accent)', color: 'white' }}
                 >
-                  {isSubmitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Task'}
+                  {isSubmitting
+                    ? t('saving', { defaultValue: 'Saving...' })
+                    : isEdit
+                      ? t('saveChanges', { defaultValue: 'Save Changes' })
+                      : t('createTask', { defaultValue: 'Create Task' })}
                 </Button>
               </div>
             </div>

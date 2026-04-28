@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   ArrowRight01Icon,
@@ -19,12 +21,12 @@ import { cn } from '@/lib/utils'
 import { useAgentChat, type OperationsChatMessage } from '../hooks/use-agent-chat'
 import type { OperationsAgent } from '../hooks/use-operations'
 
-function getStatusStyles(status: OperationsAgent['status']) {
+function getStatusStyles(status: OperationsAgent['status'], t: TFunction<'operations'>) {
   if (status === 'error') {
     return {
       dot: 'bg-red-500',
       ring: 'text-red-500',
-      label: 'Error',
+      label: t('statusError', { defaultValue: 'Error' }),
     }
   }
 
@@ -32,14 +34,14 @@ function getStatusStyles(status: OperationsAgent['status']) {
     return {
       dot: 'bg-emerald-500',
       ring: 'text-emerald-500',
-      label: 'Active',
+      label: t('statusActiveCard', { defaultValue: 'Active' }),
     }
   }
 
   return {
     dot: 'bg-primary-300',
     ring: 'text-primary-300',
-    label: 'Idle',
+    label: t('statusIdle', { defaultValue: 'Idle' }),
   }
 }
 
@@ -77,6 +79,7 @@ export function OperationsInlineChat({
   isSending: boolean
   error: string | null
 }) {
+  const { t } = useTranslation('operations')
   const [draft, setDraft] = useState('')
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
@@ -130,7 +133,7 @@ export function OperationsInlineChat({
           </div>
         ) : (
           <p className="text-center text-xs text-[var(--theme-muted)]">
-            Send a message...
+            {t('opsChatEmpty', { defaultValue: 'Send a message...' })}
           </p>
         )}
       </div>
@@ -148,7 +151,10 @@ export function OperationsInlineChat({
                 void handleSend()
               }
             }}
-            placeholder={`Message ${stripEmojiPrefix(agentName)}...`}
+            placeholder={t('opsChatPlaceholder', {
+              name: stripEmojiPrefix(agentName),
+              defaultValue: `Message ${stripEmojiPrefix(agentName)}...`,
+            })}
             className="h-8 flex-1 bg-transparent px-1.5 text-xs text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)]"
           />
           <Button
@@ -156,7 +162,11 @@ export function OperationsInlineChat({
             className="rounded-lg bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
             onClick={() => void handleSend()}
             disabled={!draft.trim() || isSending}
-            aria-label={isSending ? 'Sending message' : 'Send message'}
+            aria-label={
+              isSending
+                ? t('ariaSendingMessage', { defaultValue: 'Sending message' })
+                : t('ariaSendMessage', { defaultValue: 'Send message' })
+            }
           >
             <HugeiconsIcon icon={ArrowRight01Icon} size={15} strokeWidth={1.8} />
           </Button>
@@ -173,8 +183,9 @@ export function OperationsAgentCard({
   agent: OperationsAgent
   onOpenSettings: (agentId: string) => void
 }) {
+  const { t } = useTranslation('operations')
   const queryClient = useQueryClient()
-  const status = getStatusStyles(agent.status)
+  const status = getStatusStyles(agent.status, t)
   const displayName = stripEmojiPrefix(agent.name)
   const [showCronPanel, setShowCronPanel] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
@@ -192,7 +203,7 @@ export function OperationsAgentCard({
       toast(
         mutationError instanceof Error
           ? mutationError.message
-          : 'Failed to update cron job',
+          : t('failedCronToggle', { defaultValue: 'Failed to update cron job' }),
         { type: 'error' },
       )
     },
@@ -202,11 +213,13 @@ export function OperationsAgentCard({
     mutationFn: async (jobId: string) => runCronJob(jobId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['operations', 'cron'] })
-      toast('Cron job started', { type: 'success' })
+      toast(t('cronStartedToast', { defaultValue: 'Cron job started' }), { type: 'success' })
     },
     onError: (mutationError) => {
       toast(
-        mutationError instanceof Error ? mutationError.message : 'Failed to run cron job',
+        mutationError instanceof Error
+          ? mutationError.message
+          : t('failedRunCronJob', { defaultValue: 'Failed to run cron job' }),
         { type: 'error' },
       )
     },
@@ -230,8 +243,15 @@ export function OperationsAgentCard({
             type="button"
             aria-label={
               cronJobCount > 0
-                ? `${cronJobCount} cron jobs for ${displayName}`
-                : `No cron jobs for ${displayName}`
+                ? t('cronJobsFor', {
+                    count: cronJobCount,
+                    name: displayName,
+                    defaultValue: `${cronJobCount} cron jobs for ${displayName}`,
+                  })
+                : t('cronJobsNone', {
+                    name: displayName,
+                    defaultValue: `No cron jobs for ${displayName}`,
+                  })
             }
             onClick={() => setShowCronPanel((value) => !value)}
             className={cn(
@@ -268,7 +288,11 @@ export function OperationsAgentCard({
         <div className="absolute right-0 flex items-center gap-1">
           <button
             type="button"
-            aria-label={isActive ? `Pause ${displayName}` : `Run ${displayName} now`}
+            aria-label={
+              isActive
+                ? t('ariaPauseAgent', { name: displayName, defaultValue: `Pause ${displayName}` })
+                : t('ariaRunAgent', { name: displayName, defaultValue: `Run ${displayName} now` })
+            }
             onClick={() => void handlePlayPause()}
             disabled={isSending && !isActive}
             className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--theme-muted)] transition-colors hover:bg-[var(--theme-bg)] hover:text-[var(--theme-text)] disabled:cursor-not-allowed disabled:opacity-60"
@@ -282,7 +306,10 @@ export function OperationsAgentCard({
 
           <button
             type="button"
-            aria-label={`Open settings for ${displayName}`}
+            aria-label={t('ariaOpenAgentSettings', {
+              name: displayName,
+              defaultValue: `Open settings for ${displayName}`,
+            })}
             onClick={() => onOpenSettings(agent.id)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--theme-muted)] transition-colors hover:bg-[var(--theme-bg)] hover:text-[var(--theme-text)]"
           >
@@ -317,10 +344,15 @@ export function OperationsAgentCard({
         </div>
 
         <p className="w-full truncate text-[11px] text-[var(--theme-muted)]">
-          {agent.meta.description || 'No description'}
+          {agent.meta.description || t('noDescription', { defaultValue: 'No description' })}
         </p>
         <p className="w-full truncate text-[10px] text-[var(--theme-muted)]/80">
-          {agent.jobs.length > 0 ? `${agent.jobs.length} scheduled job${agent.jobs.length === 1 ? '' : 's'}` : 'Manual only'}
+          {agent.jobs.length > 0
+            ? t('scheduledJobs', {
+                count: agent.jobs.length,
+                defaultValue: `${agent.jobs.length} scheduled job(s)`,
+              })
+            : t('manualOnly', { defaultValue: 'Manual only' })}
         </p>
       </div>
 
@@ -354,7 +386,11 @@ export function OperationsAgentCard({
                               })
                             }
                             className="peer sr-only"
-                            aria-label={job.enabled ? 'Disable job' : 'Enable job'}
+                            aria-label={
+                              job.enabled
+                                ? t('ariaDisableJob', { defaultValue: 'Disable job' })
+                                : t('ariaEnableJob', { defaultValue: 'Enable job' })
+                            }
                           />
                           <span className="h-5 w-9 rounded-full bg-primary-200 transition-colors peer-checked:bg-[var(--theme-accent)]" />
                           <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--theme-card)] shadow-sm transition-transform peer-checked:translate-x-4" />
@@ -385,21 +421,21 @@ export function OperationsAgentCard({
                       variant="secondary"
                       className="h-8 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 text-xs font-medium text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
                     >
-                      + Add Job
+                      {t('addJob', { defaultValue: '+ Add Job' })}
                     </Button>
                   </div>
                 </>
               ) : (
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-xs text-[var(--theme-muted)]">
-                    No scheduled jobs
+                    {t('noScheduledJobs', { defaultValue: 'No scheduled jobs' })}
                   </p>
                   <Button
                     render={<a href="/cron" />}
                     variant="secondary"
                     className="h-8 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 text-xs font-medium text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
                   >
-                    + Add Job
+                    {t('addJob', { defaultValue: '+ Add Job' })}
                   </Button>
                 </div>
               )}

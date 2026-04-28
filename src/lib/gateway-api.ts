@@ -1,3 +1,4 @@
+import { localizeApiError } from './i18n/errors'
 export const BASE_URL =
   typeof window !== 'undefined'
     ? window.location.origin
@@ -108,12 +109,22 @@ export type GatewayAgentPauseResponse = GatewayAgentActionResponse & {
 async function readError(response: Response): Promise<string> {
   try {
     const payload = (await response.json()) as Record<string, unknown>
-    if (typeof payload.error === 'string') return payload.error
-    if (typeof payload.message === 'string') return payload.message
-    return JSON.stringify(payload)
+    return localizeApiError(
+      {
+        error: typeof payload.error === 'string' ? payload.error : undefined,
+        message: typeof payload.message === 'string' ? payload.message : undefined,
+        errorCode:
+          typeof payload.errorCode === 'string' ? payload.errorCode : undefined,
+        code: typeof payload.code === 'string' ? payload.code : undefined,
+      },
+      response.statusText || 'Gateway request failed',
+    )
   } catch {
     const text = await response.text().catch(() => '')
-    return text || response.statusText || 'Gateway request failed'
+    return localizeApiError(
+      { error: text || undefined },
+      response.statusText || 'Gateway request failed',
+    )
   }
 }
 

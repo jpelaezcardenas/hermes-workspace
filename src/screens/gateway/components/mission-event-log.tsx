@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   AlertDiamondIcon,
   ArrowTurnBackwardIcon,
@@ -27,13 +28,6 @@ type EventVisual = {
   icon: React.ComponentProps<typeof HugeiconsIcon>['icon']
   toneClassName: string
 }
-
-const FILTER_OPTIONS: Array<{ key: EventFilter; label: string }> = [
-  { key: 'all', label: 'All' },
-  { key: 'agent', label: 'Agent Events' },
-  { key: 'task', label: 'Task Events' },
-  { key: 'errors', label: 'Errors Only' },
-]
 
 function getEventVisual(eventType: MissionEvent['type']): EventVisual {
   switch (eventType) {
@@ -70,12 +64,16 @@ function formatTimestamp(timestamp: number): string {
   })
 }
 
-function getAgentLabel(event: MissionEvent, agentNames?: Record<string, string>): string {
+function getAgentLabel(
+  event: MissionEvent,
+  agentNames: Record<string, string> | undefined,
+  missionLabel: string,
+): string {
   if ('agentId' in event.payload) {
     return agentNames?.[event.payload.agentId] ?? event.payload.agentId
   }
 
-  return 'Mission'
+  return missionLabel
 }
 
 function getEventDescription(event: MissionEvent, agentNames?: Record<string, string>): string {
@@ -121,6 +119,27 @@ function matchesFilter(event: MissionEvent, filter: EventFilter): boolean {
 }
 
 export function MissionEventLog({ events, agentNames, className }: MissionEventLogProps) {
+  const { t } = useTranslation('gateway')
+  const filterOptions = useMemo(
+    () =>
+      [
+        { key: 'all' as const, label: t('missionLogFilterAll', { defaultValue: 'All' }) },
+        {
+          key: 'agent' as const,
+          label: t('missionLogFilterAgent', { defaultValue: 'Agent Events' }),
+        },
+        {
+          key: 'task' as const,
+          label: t('missionLogFilterTask', { defaultValue: 'Task Events' }),
+        },
+        {
+          key: 'errors' as const,
+          label: t('missionLogFilterErrors', { defaultValue: 'Errors Only' }),
+        },
+      ] satisfies Array<{ key: EventFilter; label: string }>,
+    [t],
+  )
+  const missionRoleLabel = t('missionLogRoleMission', { defaultValue: 'Mission' })
   const [filter, setFilter] = useState<EventFilter>('all')
   const [expandedOutputIds, setExpandedOutputIds] = useState<Record<string, boolean>>({})
   const endRef = useRef<HTMLDivElement | null>(null)
@@ -143,7 +162,7 @@ export function MissionEventLog({ events, agentNames, className }: MissionEventL
     >
       <div className="border-b border-primary-800 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2">
-          {FILTER_OPTIONS.map((option) => (
+          {filterOptions.map((option) => (
             <button
               key={option.key}
               type="button"
@@ -164,7 +183,9 @@ export function MissionEventLog({ events, agentNames, className }: MissionEventL
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {filteredEvents.length === 0 ? (
           <div className="rounded-xl border border-dashed border-primary-700 bg-primary-950/60 px-4 py-8 text-center">
-            <p className="text-sm text-primary-300">No mission events yet.</p>
+            <p className="text-sm text-primary-300">
+              {t('missionLogEmpty', { defaultValue: 'No mission events yet.' })}
+            </p>
           </div>
         ) : (
           <ol className="space-y-2">
@@ -198,7 +219,7 @@ export function MissionEventLog({ events, agentNames, className }: MissionEventL
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                           <span className="font-semibold text-primary-100">
-                            {getAgentLabel(event, agentNames)}
+                            {getAgentLabel(event, agentNames, missionRoleLabel)}
                           </span>
                           <span className="text-primary-300">
                             {getEventDescription(event, agentNames)}
@@ -217,7 +238,9 @@ export function MissionEventLog({ events, agentNames, className }: MissionEventL
                               }
                               className="text-xs font-medium text-primary-400 transition-colors hover:text-primary-100"
                             >
-                              {isExpanded ? 'Hide output' : 'Show output'}
+                              {isExpanded
+                                ? t('missionLogToggleHide', { defaultValue: 'Hide output' })
+                                : t('missionLogToggleShow', { defaultValue: 'Show output' })}
                             </button>
                             <AnimatePresence initial={false}>
                               {isExpanded ? (

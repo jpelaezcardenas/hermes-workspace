@@ -16,9 +16,18 @@ import {
 import { createFileRoute } from '@tanstack/react-router'
 import { useCallback, useEffect, useState } from 'react'
 import type * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
 import type { ThemeId } from '@/lib/theme'
+
+function themeCardLabelKey(id: ThemeId): string {
+  return `themeCard_${id.replace(/-/g, '_')}_label`
+}
+
+function themeCardDescKey(id: ThemeId): string {
+  return `themeCard_${id.replace(/-/g, '_')}_desc`
+}
 import type { SettingsNavId } from '@/components/settings/settings-sidebar'
 import {
   SETTINGS_NAV_ITEMS,
@@ -170,6 +179,7 @@ const THEME_PREVIEWS: Record<
 }
 
 function WorkspaceThemePicker() {
+  const { t } = useTranslation('settings')
   const { updateSettings } = useSettings()
   const [current, setCurrent] = useState<ThemeId>(() => getTheme())
 
@@ -181,13 +191,19 @@ function WorkspaceThemePicker() {
 
   return (
     <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
-      {THEMES.map((t) => {
-        const isActive = current === t.id
+      {THEMES.map((themeEntry) => {
+        const isActive = current === themeEntry.id
+        const label = t(themeCardLabelKey(themeEntry.id), {
+          defaultValue: themeEntry.label,
+        })
+        const description = t(themeCardDescKey(themeEntry.id), {
+          defaultValue: themeEntry.description,
+        })
         return (
           <button
-            key={t.id}
+            key={themeEntry.id}
             type="button"
-            onClick={() => applyWorkspaceTheme(t.id)}
+            onClick={() => applyWorkspaceTheme(themeEntry.id)}
             className={cn(
               'flex min-h-[112px] flex-col gap-2.5 rounded-xl border p-3.5 text-left transition-all',
               isActive
@@ -195,18 +211,18 @@ function WorkspaceThemePicker() {
                 : 'border-[var(--theme-border)] bg-[var(--theme-card)] text-[var(--theme-text)] hover:-translate-y-0.5 hover:bg-[var(--theme-card2)]',
             )}
           >
-            <PageThemeSwatch colors={THEME_PREVIEWS[t.id]} />
+            <PageThemeSwatch colors={THEME_PREVIEWS[themeEntry.id]} />
             <div className="flex items-center gap-1.5">
-              <span className="text-xs">{t.icon}</span>
-              <span className="text-xs font-semibold">{t.label}</span>
+              <span className="text-xs">{themeEntry.icon}</span>
+              <span className="text-xs font-semibold">{label}</span>
               {isActive && (
                 <span className="ml-auto text-[9px] font-bold uppercase tracking-wide text-[var(--theme-accent)]">
-                  Active
+                  {t('themePickerActive', { defaultValue: 'Active' })}
                 </span>
               )}
             </div>
             <p className="text-[10px] leading-tight text-[var(--theme-muted)]">
-              {t.description}
+              {description}
             </p>
           </button>
         )
@@ -268,7 +284,8 @@ function SettingsRow({ label, description, children }: RowProps) {
 type SettingsSectionId = SettingsNavId
 
 function SettingsRoute() {
-  usePageTitle('Settings')
+  const { t: tr } = useTranslation(['settings', 'common'])
+  usePageTitle(tr('settings:title', { defaultValue: 'Settings' }))
   const { settings, updateSettings } = useSettings()
 
   // Phase 4.2: Fetch models for preferred model dropdowns
@@ -340,18 +357,19 @@ function SettingsRoute() {
           {activeSection === 'appearance' && (
             <>
               <SettingsSection
-                title="Appearance"
-                description="Choose a workspace theme and accent color."
+                title={tr('settings:appearanceTitle', { defaultValue: 'Appearance' })}
+                description={tr('settings:appearanceDesc', { defaultValue: 'Choose a workspace theme and accent color.' })}
                 icon={PaintBoardIcon}
               >
                 <div className="space-y-2">
                   <div>
                     <p className="text-sm font-medium text-primary-900">
-                      Theme
+                      {tr('settings:theme', { defaultValue: 'Theme' })}
                     </p>
                     <p className="text-xs text-primary-600 text-pretty">
-                      Choose the workspace palette. Light and dark variants are
-                      both available.
+                      {tr('settings:themeDesc', {
+                        defaultValue: 'Choose the workspace palette. Light and dark variants are both available.',
+                      })}
                     </p>
                   </div>
                   <WorkspaceThemePicker />
@@ -424,13 +442,20 @@ function SettingsRoute() {
           {/* ── Notifications ───────────────────────────────────── */}
           {activeSection === ('language' as SettingsSectionId) && (
             <SettingsSection
-              title="Language"
-              description="Choose the display language for the workspace UI."
+              title={tr('settings:language', { defaultValue: 'Language' })}
+              description={tr('settings:languageDescription', {
+                defaultValue: 'Choose the display language for the workspace UI.',
+              })}
               icon={Settings02Icon}
             >
               <SettingsRow
-                label="Interface Language"
-                description="Translates navigation, labels, and buttons. Content from the agent remains in the agent's language."
+                label={tr('settings:interfaceLanguage', {
+                  defaultValue: 'Interface Language',
+                })}
+                description={tr('settings:languageHint', {
+                  defaultValue:
+                    "Translates navigation, labels, and buttons. Content from the agent remains in the agent's language.",
+                })}
               >
                 <select
                   value={getLocale()}
@@ -451,25 +476,35 @@ function SettingsRoute() {
           {activeSection === 'notifications' && (
             <>
               <SettingsSection
-                title="Notifications"
-                description="Control alert delivery and usage warning threshold."
+                title={tr('settings:notificationsSectionTitle', {
+                  defaultValue: 'Notifications',
+                })}
+                description={tr('settings:notificationsSectionDesc', {
+                  defaultValue: 'Control alert delivery and usage warning threshold.',
+                })}
                 icon={Notification03Icon}
               >
                 <SettingsRow
-                  label="Enable alerts"
-                  description="Show usage and system alert notifications."
+                  label={tr('settings:enableAlertsLabel', { defaultValue: 'Enable alerts' })}
+                  description={tr('settings:enableAlertsDesc', {
+                    defaultValue: 'Show usage and system alert notifications.',
+                  })}
                 >
                   <Switch
                     checked={settings.notificationsEnabled}
                     onCheckedChange={(checked) =>
                       updateSettings({ notificationsEnabled: checked })
                     }
-                    aria-label="Enable alerts"
+                    aria-label={tr('settings:enableAlertsLabel', {
+                      defaultValue: 'Enable alerts',
+                    })}
                   />
                 </SettingsRow>
                 <SettingsRow
-                  label="Usage threshold"
-                  description="Set usage warning trigger between 50% and 100%."
+                  label={tr('settings:usageThresholdLabel', { defaultValue: 'Usage threshold' })}
+                  description={tr('settings:usageThresholdDesc', {
+                    defaultValue: 'Set usage warning trigger between 50% and 100%.',
+                  })}
                 >
                   <div className="flex w-full items-center gap-2 md:max-w-xs">
                     <input
@@ -484,7 +519,7 @@ function SettingsRoute() {
                       }
                       className="w-full accent-primary-900 dark:accent-primary-400 disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={!settings.notificationsEnabled}
-                      aria-label={`Usage threshold: ${settings.usageThreshold} percent`}
+                      aria-label={`${tr('settings:usageThresholdLabel', { defaultValue: 'Usage threshold' })}: ${settings.usageThreshold}%`}
                       aria-valuemin={50}
                       aria-valuemax={100}
                       aria-valuenow={settings.usageThreshold}
@@ -497,25 +532,42 @@ function SettingsRoute() {
               </SettingsSection>
 
               <SettingsSection
-                title="Smart Suggestions"
-                description="Get proactive model suggestions to optimize cost and quality."
+                title={tr('settings:smartSuggestionsSectionTitle', {
+                  defaultValue: 'Smart Suggestions',
+                })}
+                description={tr('settings:smartSuggestionsSectionDesc', {
+                  defaultValue:
+                    'Get proactive model suggestions to optimize cost and quality.',
+                })}
                 icon={Settings02Icon}
               >
                 <SettingsRow
-                  label="Enable smart suggestions"
-                  description="Suggest cheaper models for simple tasks or better models for complex work."
+                  label={tr('settings:enableSmartSuggestionsLabel', {
+                    defaultValue: 'Enable smart suggestions',
+                  })}
+                  description={tr('settings:enableSmartSuggestionsDesc', {
+                    defaultValue:
+                      'Suggest cheaper models for simple tasks or better models for complex work.',
+                  })}
                 >
                   <Switch
                     checked={settings.smartSuggestionsEnabled}
                     onCheckedChange={(checked) =>
                       updateSettings({ smartSuggestionsEnabled: checked })
                     }
-                    aria-label="Enable smart suggestions"
+                    aria-label={tr('settings:enableSmartSuggestionsLabel', {
+                      defaultValue: 'Enable smart suggestions',
+                    })}
                   />
                 </SettingsRow>
                 <SettingsRow
-                  label="Preferred budget model"
-                  description="Default model for cheaper suggestions (leave empty for auto-detect)."
+                  label={tr('settings:preferredBudgetModelLabel', {
+                    defaultValue: 'Preferred budget model',
+                  })}
+                  description={tr('settings:preferredBudgetModelDesc', {
+                    defaultValue:
+                      'Default model for cheaper suggestions (leave empty for auto-detect).',
+                  })}
                 >
                   <select
                     value={settings.preferredBudgetModel}
@@ -523,11 +575,19 @@ function SettingsRoute() {
                       updateSettings({ preferredBudgetModel: e.target.value })
                     }
                     className="h-9 w-full rounded-lg border border-primary-200 dark:border-gray-600 bg-primary-50 dark:bg-gray-800 px-3 text-sm text-primary-900 dark:text-gray-100 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400 dark:focus-visible:ring-primary-500 md:max-w-xs"
-                    aria-label="Preferred budget model"
+                    aria-label={tr('settings:preferredBudgetModelLabel', {
+                      defaultValue: 'Preferred budget model',
+                    })}
                   >
-                    <option value="">Auto-detect</option>
+                    <option value="">
+                      {tr('settings:autoDetectOption', { defaultValue: 'Auto-detect' })}
+                    </option>
                     {modelsError && (
-                      <option disabled>Failed to load models</option>
+                      <option disabled>
+                        {tr('settings:modelsLoadFailedOption', {
+                          defaultValue: 'Failed to load models',
+                        })}
+                      </option>
                     )}
                     {availableModels.map((model) => (
                       <option key={model.id} value={model.id}>
@@ -537,8 +597,13 @@ function SettingsRoute() {
                   </select>
                 </SettingsRow>
                 <SettingsRow
-                  label="Preferred premium model"
-                  description="Default model for upgrade suggestions (leave empty for auto-detect)."
+                  label={tr('settings:preferredPremiumModelLabel', {
+                    defaultValue: 'Preferred premium model',
+                  })}
+                  description={tr('settings:preferredPremiumModelDesc', {
+                    defaultValue:
+                      'Default model for upgrade suggestions (leave empty for auto-detect).',
+                  })}
                 >
                   <select
                     value={settings.preferredPremiumModel}
@@ -546,11 +611,19 @@ function SettingsRoute() {
                       updateSettings({ preferredPremiumModel: e.target.value })
                     }
                     className="h-9 w-full rounded-lg border border-primary-200 dark:border-gray-600 bg-primary-50 dark:bg-gray-800 px-3 text-sm text-primary-900 dark:text-gray-100 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400 dark:focus-visible:ring-primary-500 md:max-w-xs"
-                    aria-label="Preferred premium model"
+                    aria-label={tr('settings:preferredPremiumModelLabel', {
+                      defaultValue: 'Preferred premium model',
+                    })}
                   >
-                    <option value="">Auto-detect</option>
+                    <option value="">
+                      {tr('settings:autoDetectOption', { defaultValue: 'Auto-detect' })}
+                    </option>
                     {modelsError && (
-                      <option disabled>Failed to load models</option>
+                      <option disabled>
+                        {tr('settings:modelsLoadFailedOption', {
+                          defaultValue: 'Failed to load models',
+                        })}
+                      </option>
                     )}
                     {availableModels.map((model) => (
                       <option key={model.id} value={model.id}>
@@ -560,15 +633,22 @@ function SettingsRoute() {
                   </select>
                 </SettingsRow>
                 <SettingsRow
-                  label="Only suggest cheaper models"
-                  description="Never suggest upgrades, only suggest cheaper alternatives."
+                  label={tr('settings:onlySuggestCheaperLabel', {
+                    defaultValue: 'Only suggest cheaper models',
+                  })}
+                  description={tr('settings:onlySuggestCheaperDesc', {
+                    defaultValue:
+                      'Never suggest upgrades, only suggest cheaper alternatives.',
+                  })}
                 >
                   <Switch
                     checked={settings.onlySuggestCheaper}
                     onCheckedChange={(checked) =>
                       updateSettings({ onlySuggestCheaper: checked })
                     }
-                    aria-label="Only suggest cheaper models"
+                    aria-label={tr('settings:onlySuggestCheaperLabel', {
+                      defaultValue: 'Only suggest cheaper models',
+                    })}
                   />
                 </SettingsRow>
               </SettingsSection>
@@ -583,7 +663,9 @@ function SettingsRoute() {
                 strokeWidth={1.5}
               />
               <span className="text-pretty">
-                Changes are saved automatically to local storage.
+                {tr('settings:localStorageAutosave', {
+                  defaultValue: 'Changes are saved automatically to local storage.',
+                })}
               </span>
             </div>
           </footer>
@@ -740,59 +822,76 @@ function _ProfileSection() {
 // ── Chat Display Section ────────────────────────────────────────────────
 
 function ChatDisplaySection() {
+  const { t } = useTranslation('settings')
   const { settings: chatSettings, updateSettings: updateChatSettings } =
     useChatSettingsStore()
-  const { settings, updateSettings } = useSettings()
 
   return (
     <>
       <SettingsSection
-        title="Chat Display"
-        description="Control what's visible in chat messages."
+        title={t('chatDisplaySectionTitle', { defaultValue: 'Chat Display' })}
+        description={t('chatDisplaySectionDesc', {
+          defaultValue: "Control what's visible in chat messages.",
+        })}
         icon={MessageMultiple01Icon}
       >
         <SettingsRow
-          label="Show tool messages"
-          description="Display tool call details when the agent uses tools."
+          label={t('chatShowToolMessagesLabel', { defaultValue: 'Show tool messages' })}
+          description={t('chatShowToolMessagesDesc', {
+            defaultValue: 'Display tool call details when the agent uses tools.',
+          })}
         >
           <Switch
             checked={chatSettings.showToolMessages}
             onCheckedChange={(checked) =>
               updateChatSettings({ showToolMessages: checked })
             }
-            aria-label="Show tool messages"
+            aria-label={t('chatShowToolMessagesLabel', { defaultValue: 'Show tool messages' })}
           />
         </SettingsRow>
         <SettingsRow
-          label="Show reasoning blocks"
-          description="Display model thinking and reasoning process."
+          label={t('chatShowReasoningLabel', { defaultValue: 'Show reasoning blocks' })}
+          description={t('chatShowReasoningDesc', {
+            defaultValue: 'Display model thinking and reasoning process.',
+          })}
         >
           <Switch
             checked={chatSettings.showReasoningBlocks}
             onCheckedChange={(checked) =>
               updateChatSettings({ showReasoningBlocks: checked })
             }
-            aria-label="Show reasoning blocks"
+            aria-label={t('chatShowReasoningLabel', { defaultValue: 'Show reasoning blocks' })}
           />
         </SettingsRow>
         <SettingsRow
-          label="Sound on response complete"
-          description="Play a short sound in the browser when the agent finishes replying."
+          label={t('chatSoundCompleteLabel', {
+            defaultValue: 'Sound on response complete',
+          })}
+          description={t('chatSoundCompleteDesc', {
+            defaultValue:
+              'Play a short sound in the browser when the agent finishes replying.',
+          })}
         >
           <Switch
             checked={chatSettings.soundOnChatComplete}
             onCheckedChange={(checked) =>
               updateChatSettings({ soundOnChatComplete: checked })
             }
-            aria-label="Sound on response complete"
+            aria-label={t('chatSoundCompleteLabel', {
+              defaultValue: 'Sound on response complete',
+            })}
           />
         </SettingsRow>
         <SettingsRow
-          label="Enter key behavior"
+          label={t('chatEnterBehaviorLabel', { defaultValue: 'Enter key behavior' })}
           description={
             chatSettings.enterBehavior === 'newline'
-              ? 'Enter inserts a newline. Use ⌘/Ctrl+Enter to send.'
-              : 'Enter sends the message. Use Shift+Enter for a newline.'
+              ? t('chatEnterNewlineHint', {
+                  defaultValue: 'Enter inserts a newline. Use ⌘/Ctrl+Enter to send.',
+                })
+              : t('chatEnterSendHint', {
+                  defaultValue: 'Enter sends the message. Use Shift+Enter for a newline.',
+                })
           }
         >
           <Switch
@@ -802,12 +901,14 @@ function ChatDisplaySection() {
                 enterBehavior: checked ? 'newline' : 'send',
               })
             }
-            aria-label="Enter inserts newline instead of sending"
+            aria-label={t('chatEnterBehaviorLabel', { defaultValue: 'Enter key behavior' })}
           />
         </SettingsRow>
         <SettingsRow
-          label="Chat content width"
-          description="Controls the max-width of the message column on wide screens."
+          label={t('chatWidthLabel', { defaultValue: 'Chat content width' })}
+          description={t('chatWidthDesc', {
+            defaultValue: 'Controls the max-width of the message column on wide screens.',
+          })}
         >
           <select
             value={chatSettings.chatWidth}
@@ -820,19 +921,27 @@ function ChatDisplaySection() {
               })
             }
             className="h-8 rounded-md border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400"
-            aria-label="Chat content width"
+            aria-label={t('chatWidthLabel', { defaultValue: 'Chat content width' })}
           >
-            <option value="comfortable">Comfortable (900px)</option>
-            <option value="wide">Wide (1200px)</option>
-            <option value="full">Full width</option>
+            <option value="comfortable">
+              {t('chatWidthComfortable', { defaultValue: 'Comfortable (900px)' })}
+            </option>
+            <option value="wide">{t('chatWidthWide', { defaultValue: 'Wide (1200px)' })}</option>
+            <option value="full">{t('chatWidthFull', { defaultValue: 'Full width' })}</option>
           </select>
         </SettingsRow>
         <SettingsRow
-          label="Expand sidebar on hover"
+          label={t('chatSidebarHoverLabel', { defaultValue: 'Expand sidebar on hover' })}
           description={
             chatSettings.sidebarHoverExpand
-              ? 'Collapsed sidebar expands temporarily when you hover over it.'
-              : 'Collapsed sidebar stays at 48px. Click the toggle to open (default).'
+              ? t('chatSidebarHoverOnHint', {
+                  defaultValue:
+                    'Collapsed sidebar expands temporarily when you hover over it.',
+                })
+              : t('chatSidebarHoverOffHint', {
+                  defaultValue:
+                    'Collapsed sidebar stays at 48px. Click the toggle to open (default).',
+                })
           }
         >
           <Switch
@@ -840,7 +949,9 @@ function ChatDisplaySection() {
             onCheckedChange={(checked) =>
               updateChatSettings({ sidebarHoverExpand: checked })
             }
-            aria-label="Expand sidebar on hover"
+            aria-label={t('chatSidebarHoverLabel', {
+              defaultValue: 'Expand sidebar on hover',
+            })}
           />
         </SettingsRow>
       </SettingsSection>
@@ -965,10 +1076,11 @@ function HermesConfigSection({
 }: {
   activeView?: 'hermes' | 'agent' | 'routing' | 'voice' | 'display'
 }) {
+  const { t } = useTranslation('settings')
   const [data, setData] = useState<HermesConfigData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [saveMessage, setSaveMessage] = useState<string | null>(null)
+  const [saveBanner, setSaveBanner] = useState<'success' | 'error' | null>(null)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [keyInput, setKeyInput] = useState('')
   const [modelInput, setModelInput] = useState('')
@@ -1034,22 +1146,22 @@ function HermesConfigSection({
     env?: Record<string, string>
   }) => {
     setSaving(true)
-    setSaveMessage(null)
+    setSaveBanner(null)
     try {
       const res = await fetch('/api/hermes-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
       })
-      const result = (await res.json()) as { message?: string }
-      setSaveMessage(result.message || 'Saved')
+      await res.json() as { message?: string }
+      setSaveBanner(res.ok ? 'success' : 'error')
       const refreshData = await fetchConfig()
       if (refreshData.activeProvider) {
         void fetchModelsForProvider(refreshData.activeProvider)
       }
-      setTimeout(() => setSaveMessage(null), 3000)
+      setTimeout(() => setSaveBanner(null), 3000)
     } catch {
-      setSaveMessage('Failed to save')
+      setSaveBanner('error')
     }
     setSaving(false)
   }
@@ -1083,8 +1195,10 @@ function HermesConfigSection({
   if (loading) {
     return (
       <SettingsSection
-        title="Hermes Agent"
-        description="Loading configuration..."
+        title={t('hermesSectionLoadingTitle', { defaultValue: 'Hermes Agent' })}
+        description={t('hermesSectionLoadingDesc', {
+          defaultValue: 'Loading configuration...',
+        })}
         icon={Settings02Icon}
       >
         <div
@@ -1098,12 +1212,16 @@ function HermesConfigSection({
   if (!data) {
     return (
       <SettingsSection
-        title="Hermes Agent"
-        description="Could not load Hermes configuration."
+        title={t('hermesSectionErrorTitle', { defaultValue: 'Hermes Agent' })}
+        description={t('hermesSectionErrorDesc', {
+          defaultValue: 'Could not load Hermes configuration.',
+        })}
         icon={Settings02Icon}
       >
         <p className="text-sm" style={{ color: 'var(--theme-muted)' }}>
-          Make sure Hermes Agent is running on localhost:8642
+          {t('hermesSectionErrorHint', {
+            defaultValue: 'Make sure Hermes Agent is running on localhost:8642',
+          })}
         </p>
       </SettingsSection>
     )
@@ -1131,13 +1249,17 @@ function HermesConfigSection({
   const renderHermesOverview = () => (
     <>
       <SettingsSection
-        title="Model & Provider"
-        description="Configure the default AI model for Hermes Agent."
+        title={t('modelProviderSectionTitle', { defaultValue: 'Model & Provider' })}
+        description={t('modelProviderSectionDesc', {
+          defaultValue: 'Configure the default AI model for Hermes Agent.',
+        })}
         icon={SourceCodeSquareIcon}
       >
         <SettingsRow
-          label="Provider"
-          description="Select the inference provider."
+          label={t('rowProvider', { defaultValue: 'Provider' })}
+          description={t('rowProviderDesc', {
+            defaultValue: 'Select the inference provider.',
+          })}
         >
           <div className="flex w-full max-w-sm gap-2">
             {availableProviders.length > 0 ? (
@@ -1164,15 +1286,19 @@ function HermesConfigSection({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setProviderInput(e.target.value)
                 }
-                placeholder="e.g. ollama, anthropic, openai-codex"
+                placeholder={t('placeholderProviderFreeform', {
+                  defaultValue: 'e.g. ollama, anthropic, openai-codex',
+                })}
                 className="flex-1"
               />
             )}
           </div>
         </SettingsRow>
         <SettingsRow
-          label="Model"
-          description="The model Hermes uses for conversations."
+          label={t('rowModel', { defaultValue: 'Model' })}
+          description={t('rowModelDesc', {
+            defaultValue: 'The model Hermes uses for conversations.',
+          })}
         >
           <div className="flex w-full max-w-sm gap-2">
             {availableModels.length > 0 ? (
@@ -1183,7 +1309,12 @@ function HermesConfigSection({
               >
                 {!availableModels.some((m) => m.id === modelInput) &&
                   modelInput && (
-                    <option value={modelInput}>{modelInput} (current)</option>
+                    <option value={modelInput}>
+                      {t('modelCurrentOption', {
+                        id: modelInput,
+                        defaultValue: `${modelInput} (current)`,
+                      })}
+                    </option>
                   )}
                 {availableModels.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -1199,7 +1330,9 @@ function HermesConfigSection({
                   setModelInput(e.target.value)
                 }
                 placeholder={
-                  loadingModels ? 'Loading models...' : 'e.g. qwen3.5:35b'
+                  loadingModels
+                    ? t('placeholderModelLoading', { defaultValue: 'Loading models...' })
+                    : t('placeholderModelFreeform', { defaultValue: 'e.g. qwen3.5:35b' })
                 }
                 className="flex-1 font-mono"
               />
@@ -1207,8 +1340,10 @@ function HermesConfigSection({
           </div>
         </SettingsRow>
         <SettingsRow
-          label="Base URL"
-          description="For local providers (Ollama, LM Studio, MLX). Leave blank for cloud."
+          label={t('rowBaseUrl', { defaultValue: 'Base URL' })}
+          description={t('rowBaseUrlDesc', {
+            defaultValue: 'For local providers (Ollama, LM Studio, MLX). Leave blank for cloud.',
+          })}
         >
           <div className="flex w-full max-w-sm gap-2">
             <Input
@@ -1216,7 +1351,9 @@ function HermesConfigSection({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setBaseUrlInput(e.target.value)
               }
-              placeholder="e.g. http://localhost:11434/v1"
+              placeholder={t('placeholderBaseUrl', {
+                defaultValue: 'e.g. http://localhost:11434/v1',
+              })}
               className="flex-1 font-mono text-sm"
             />
           </div>
@@ -1234,14 +1371,18 @@ function HermesConfigSection({
               void saveConfig({ config: configUpdate })
             }}
           >
-            {saving ? 'Saving...' : 'Save Model'}
+            {saving
+              ? t('saveSaving', { defaultValue: 'Saving...' })
+              : t('saveModelBtn', { defaultValue: 'Save Model' })}
           </Button>
         </div>
       </SettingsSection>
 
       <SettingsSection
-        title="API Keys"
-        description="Manage provider API keys stored in ~/.hermes/.env"
+        title={t('apiKeysSectionTitle', { defaultValue: 'API Keys' })}
+        description={t('apiKeysSectionDesc', {
+          defaultValue: 'Manage provider API keys stored in ~/.hermes/.env',
+        })}
         icon={CloudIcon}
       >
         {data.providers
@@ -1251,7 +1392,9 @@ function HermesConfigSection({
               key={provider.id}
               label={provider.name}
               description={
-                provider.configured ? '✅ Configured' : '❌ Not configured'
+                provider.configured
+                  ? t('keyStatusConfigured', { defaultValue: '✅ Configured' })
+                  : t('keyStatusNotConfigured', { defaultValue: '❌ Not configured' })
               }
             >
               <div className="flex w-full max-w-sm items-center gap-2">
@@ -1265,7 +1408,10 @@ function HermesConfigSection({
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setKeyInput(e.target.value)
                           }
-                          placeholder={`Enter ${envKey}`}
+                          placeholder={t('enterKeyPlaceholder', {
+                            key: envKey,
+                            defaultValue: `Enter ${envKey}`,
+                          })}
                           className="flex-1"
                         />
                         <Button
@@ -1276,7 +1422,7 @@ function HermesConfigSection({
                             setKeyInput('')
                           }}
                         >
-                          Save
+                          {t('btnSave', { defaultValue: 'Save' })}
                         </Button>
                         <Button
                           size="sm"
@@ -1295,7 +1441,8 @@ function HermesConfigSection({
                           className="text-xs font-mono"
                           style={{ color: 'var(--theme-muted)' }}
                         >
-                          {provider.maskedKeys[envKey] || 'Not set'}
+                          {provider.maskedKeys[envKey] ||
+                            t('keyValueNotSet', { defaultValue: 'Not set' })}
                         </span>
                         <Button
                           size="sm"
@@ -1305,7 +1452,9 @@ function HermesConfigSection({
                             setKeyInput('')
                           }}
                         >
-                          {provider.configured ? 'Change' : 'Add'}
+                          {provider.configured
+                            ? t('btnChange', { defaultValue: 'Change' })
+                            : t('btnAdd', { defaultValue: 'Add' })}
                         </Button>
                       </div>
                     )}
@@ -1317,13 +1466,17 @@ function HermesConfigSection({
       </SettingsSection>
 
       <SettingsSection
-        title="Memory"
-        description="Configure Hermes Agent memory and user profiles."
+        title={t('memorySectionTitle', { defaultValue: 'Memory' })}
+        description={t('memorySectionDesc', {
+          defaultValue: 'Configure Hermes Agent memory and user profiles.',
+        })}
         icon={UserIcon}
       >
         <SettingsRow
-          label="Memory enabled"
-          description="Store and recall memories across sessions."
+          label={t('memoryEnabledLabel', { defaultValue: 'Memory enabled' })}
+          description={t('memoryEnabledDesc', {
+            defaultValue: 'Store and recall memories across sessions.',
+          })}
         >
           <Switch
             checked={memoryConfig.memory_enabled !== false}
@@ -1335,8 +1488,10 @@ function HermesConfigSection({
           />
         </SettingsRow>
         <SettingsRow
-          label="User profile"
-          description="Remember user preferences and context."
+          label={t('userProfileLabel', { defaultValue: 'User profile' })}
+          description={t('userProfileDesc', {
+            defaultValue: 'Remember user preferences and context.',
+          })}
         >
           <Switch
             checked={memoryConfig.user_profile_enabled !== false}
@@ -1350,11 +1505,18 @@ function HermesConfigSection({
       </SettingsSection>
 
       <SettingsSection
-        title="Terminal"
-        description="Shell execution settings."
+        title={t('terminalSectionTitle', { defaultValue: 'Terminal' })}
+        description={t('terminalSectionDesc', {
+          defaultValue: 'Shell execution settings.',
+        })}
         icon={SourceCodeSquareIcon}
       >
-        <SettingsRow label="Backend" description="Terminal execution backend.">
+        <SettingsRow
+          label={t('terminalBackendLabel', { defaultValue: 'Backend' })}
+          description={t('terminalBackendDesc', {
+            defaultValue: 'Terminal execution backend.',
+          })}
+        >
           <span
             className="text-sm font-mono"
             style={{ color: 'var(--theme-muted)' }}
@@ -1363,8 +1525,10 @@ function HermesConfigSection({
           </span>
         </SettingsRow>
         <SettingsRow
-          label="Timeout"
-          description="Max seconds for terminal commands."
+          label={t('terminalTimeoutLabel', { defaultValue: 'Timeout' })}
+          description={t('terminalTimeoutDesc', {
+            defaultValue: 'Max seconds for terminal commands.',
+          })}
         >
           <Input
             type="number"
@@ -1379,14 +1543,18 @@ function HermesConfigSection({
       </SettingsSection>
 
       <SettingsSection
-        title="Custom Providers"
-        description="Read-only provider details loaded from config.yaml."
+        title={t('customProvidersTitle', { defaultValue: 'Custom Providers' })}
+        description={t('customProvidersDesc', {
+          defaultValue: 'Read-only provider details loaded from config.yaml.',
+        })}
         icon={CloudIcon}
       >
         <div className="space-y-3">
           {customProviders.length === 0 ? (
             <div className="rounded-xl border border-primary-200 bg-primary-100/40 p-3 text-sm text-primary-600">
-              No custom providers configured.
+              {t('customProvidersEmpty', {
+                defaultValue: 'No custom providers configured.',
+              })}
             </div>
           ) : (
             customProviders.map((provider, index) => (
@@ -1397,26 +1565,35 @@ function HermesConfigSection({
                 <div className="grid gap-2 text-sm md:grid-cols-3">
                   <div>
                     <p className="text-xs uppercase tracking-wide text-primary-500">
-                      Name
+                      {t('fieldName', { defaultValue: 'Name' })}
                     </p>
                     <p className="font-medium text-primary-900">
-                      {String(provider.name || 'Unnamed')}
+                      {String(
+                        provider.name || t('customProvidersUnnamed', { defaultValue: 'Unnamed' }),
+                      )}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wide text-primary-500">
-                      Base URL
+                      {t('fieldBaseUrl', { defaultValue: 'Base URL' })}
                     </p>
                     <p className="font-mono text-xs text-primary-700 break-all">
-                      {String(provider.base_url || 'Not set')}
+                      {String(
+                        provider.base_url ||
+                          t('keyValueNotSet', { defaultValue: 'Not set' }),
+                      )}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-wide text-primary-500">
-                      Type
+                      {t('fieldType', { defaultValue: 'Type' })}
                     </p>
                     <p className="text-primary-700">
-                      {String(provider.type || provider.auth_type || 'Unknown')}
+                      {String(
+                        provider.type ||
+                          provider.auth_type ||
+                          t('customProvidersUnknown', { defaultValue: 'Unknown' }),
+                      )}
                     </p>
                   </div>
                 </div>
@@ -1425,7 +1602,9 @@ function HermesConfigSection({
           )}
           <div className="flex flex-col gap-3 rounded-xl border border-primary-200 bg-primary-100/40 p-3 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-primary-600">
-              Edit custom providers in config.yaml for security.
+              {t('customProvidersEditHint', {
+                defaultValue: 'Edit custom providers in config.yaml for security.',
+              })}
             </p>
             <Button
               size="sm"
@@ -1434,20 +1613,24 @@ function HermesConfigSection({
                 void navigator.clipboard?.writeText(data.hermesHome)
               }
             >
-              Copy config path
+              {t('copyConfigPathBtn', { defaultValue: 'Copy config path' })}
             </Button>
           </div>
         </div>
       </SettingsSection>
 
       <SettingsSection
-        title="About"
-        description="Hermes Agent runtime information."
+        title={t('aboutSectionTitle', { defaultValue: 'About' })}
+        description={t('aboutSectionDesc', {
+          defaultValue: 'Hermes Agent runtime information.',
+        })}
         icon={Notification03Icon}
       >
         <SettingsRow
-          label="Config location"
-          description="Where Hermes stores its configuration."
+          label={t('configLocationLabel', { defaultValue: 'Config location' })}
+          description={t('configLocationDesc', {
+            defaultValue: 'Where Hermes stores its configuration.',
+          })}
         >
           <span
             className="text-xs font-mono"
@@ -1457,8 +1640,10 @@ function HermesConfigSection({
           </span>
         </SettingsRow>
         <SettingsRow
-          label="Active provider"
-          description="Current inference provider."
+          label={t('activeProviderLabel', { defaultValue: 'Active provider' })}
+          description={t('activeProviderDesc', {
+            defaultValue: 'Current inference provider.',
+          })}
         >
           <span
             className="text-sm font-medium"
@@ -1474,13 +1659,17 @@ function HermesConfigSection({
 
   const renderAgentBehavior = () => (
     <SettingsSection
-      title="Agent Behavior"
-      description="Control agent execution limits and tool access."
+      title={t('agentBehaviorTitle', { defaultValue: 'Agent Behavior' })}
+      description={t('agentBehaviorDesc', {
+        defaultValue: 'Control agent execution limits and tool access.',
+      })}
       icon={Settings02Icon}
     >
       <SettingsRow
-        label="Max turns"
-        description="Maximum agent turns per request (1-100)."
+        label={t('maxTurnsLabel', { defaultValue: 'Max turns' })}
+        description={t('maxTurnsDesc', {
+          defaultValue: 'Maximum agent turns per request (1-100).',
+        })}
       >
         <Input
           type="number"
@@ -1494,8 +1683,10 @@ function HermesConfigSection({
         />
       </SettingsRow>
       <SettingsRow
-        label="Gateway timeout"
-        description="Seconds before gateway times out a request."
+        label={t('gatewayTimeoutLabel', { defaultValue: 'Gateway timeout' })}
+        description={t('gatewayTimeoutDesc', {
+          defaultValue: 'Seconds before gateway times out a request.',
+        })}
       >
         <Input
           type="number"
@@ -1509,8 +1700,10 @@ function HermesConfigSection({
         />
       </SettingsRow>
       <SettingsRow
-        label="Tool use enforcement"
-        description="Whether the agent must use tools when available."
+        label={t('toolUseEnforcementLabel', { defaultValue: 'Tool use enforcement' })}
+        description={t('toolUseEnforcementDesc', {
+          defaultValue: 'Whether the agent must use tools when available.',
+        })}
       >
         <select
           value={(agentConfig.tool_use_enforcement as string) || 'auto'}
@@ -1521,9 +1714,11 @@ function HermesConfigSection({
           }
           className={selectClassName}
         >
-          <option value="auto">auto</option>
-          <option value="required">required</option>
-          <option value="none">none</option>
+          <option value="auto">{t('toolUseAuto', { defaultValue: 'auto' })}</option>
+          <option value="required">
+            {t('toolUseRequired', { defaultValue: 'required' })}
+          </option>
+          <option value="none">{t('toolUseNone', { defaultValue: 'none' })}</option>
         </select>
       </SettingsRow>
     </SettingsSection>
@@ -1531,13 +1726,17 @@ function HermesConfigSection({
 
   const renderSmartRouting = () => (
     <SettingsSection
-      title="Smart Model Routing"
-      description="Automatically route simple queries to cheaper models."
+      title={t('smartRoutingTitle', { defaultValue: 'Smart Model Routing' })}
+      description={t('smartRoutingDesc', {
+        defaultValue: 'Automatically route simple queries to cheaper models.',
+      })}
       icon={SparklesIcon}
     >
       <SettingsRow
-        label="Enable smart routing"
-        description="Route simple queries to a cheaper model automatically."
+        label={t('enableSmartRoutingLabel', { defaultValue: 'Enable smart routing' })}
+        description={t('enableSmartRoutingDesc', {
+          defaultValue: 'Route simple queries to a cheaper model automatically.',
+        })}
       >
         <Switch
           checked={readBoolean(smartRouting.enabled, false)}
@@ -1549,8 +1748,10 @@ function HermesConfigSection({
         />
       </SettingsRow>
       <SettingsRow
-        label="Cheap model"
-        description="Model to use for simple queries."
+        label={t('cheapModelLabel', { defaultValue: 'Cheap model' })}
+        description={t('cheapModelDesc', {
+          defaultValue: 'Model to use for simple queries.',
+        })}
       >
         <select
           value={(smartRouting.cheap_model as string) || ''}
@@ -1561,7 +1762,9 @@ function HermesConfigSection({
           }
           className={selectClassName}
         >
-          <option value="">Select model</option>
+          <option value="">
+            {t('selectModelPlaceholder', { defaultValue: 'Select model' })}
+          </option>
           {availableModels.map((model) => (
             <option key={model.id} value={model.id}>
               {model.id}
@@ -1570,8 +1773,10 @@ function HermesConfigSection({
         </select>
       </SettingsRow>
       <SettingsRow
-        label="Max simple chars"
-        description="Messages shorter than this use the cheap model."
+        label={t('maxSimpleCharsLabel', { defaultValue: 'Max simple chars' })}
+        description={t('maxSimpleCharsDesc', {
+          defaultValue: 'Messages shorter than this use the cheap model.',
+        })}
       >
         <Input
           type="number"
@@ -1589,8 +1794,10 @@ function HermesConfigSection({
         />
       </SettingsRow>
       <SettingsRow
-        label="Max simple words"
-        description="Messages with fewer words use the cheap model."
+        label={t('maxSimpleWordsLabel', { defaultValue: 'Max simple words' })}
+        description={t('maxSimpleWordsDesc', {
+          defaultValue: 'Messages with fewer words use the cheap model.',
+        })}
       >
         <Input
           type="number"
@@ -1613,13 +1820,15 @@ function HermesConfigSection({
   const renderVoice = () => (
     <div className="space-y-4">
       <SettingsSection
-        title="Text-to-Speech"
-        description="Configure voice output for agent responses."
+        title={t('ttsSectionTitle', { defaultValue: 'Text-to-Speech' })}
+        description={t('ttsSectionDesc', {
+          defaultValue: 'Configure voice output for agent responses.',
+        })}
         icon={VolumeHighIcon}
       >
         <SettingsRow
-          label="TTS provider"
-          description="Which TTS engine to use."
+          label={t('ttsProviderLabel', { defaultValue: 'TTS provider' })}
+          description={t('ttsProviderDesc', { defaultValue: 'Which TTS engine to use.' })}
         >
           <select
             value={ttsProvider}
@@ -1628,15 +1837,20 @@ function HermesConfigSection({
             }
             className={selectClassName}
           >
-            <option value="edge">Edge TTS (free)</option>
-            <option value="elevenlabs">ElevenLabs</option>
-            <option value="openai">OpenAI TTS</option>
-            <option value="neutts">NeuTTS</option>
+            <option value="edge">{t('ttsOptionEdge', { defaultValue: 'Edge TTS (free)' })}</option>
+            <option value="elevenlabs">
+              {t('ttsOptionElevenlabs', { defaultValue: 'ElevenLabs' })}
+            </option>
+            <option value="openai">{t('ttsOptionOpenai', { defaultValue: 'OpenAI TTS' })}</option>
+            <option value="neutts">{t('ttsOptionNeutts', { defaultValue: 'NeuTTS' })}</option>
           </select>
         </SettingsRow>
 
         {ttsProvider === 'edge' && (
-          <SettingsRow label="Voice" description="Edge voice name.">
+          <SettingsRow
+            label={t('ttsVoiceLabel', { defaultValue: 'Voice' })}
+            description={t('ttsVoiceDescEdge', { defaultValue: 'Edge voice name.' })}
+          >
             <Input
               value={(ttsEdge.voice as string) || ''}
               onChange={(e) =>
@@ -1644,7 +1858,9 @@ function HermesConfigSection({
                   config: { tts: { edge: { voice: e.target.value } } },
                 })
               }
-              placeholder="en-US-AriaNeural"
+              placeholder={t('ttsVoicePlaceholderEdge', {
+                defaultValue: 'en-US-AriaNeural',
+              })}
               className="md:w-64"
             />
           </SettingsRow>
@@ -1652,7 +1868,10 @@ function HermesConfigSection({
 
         {ttsProvider === 'elevenlabs' && (
           <>
-            <SettingsRow label="Voice ID" description="ElevenLabs voice_id.">
+            <SettingsRow
+              label={t('ttsVoiceIdLabel', { defaultValue: 'Voice ID' })}
+              description={t('ttsVoiceIdDesc', { defaultValue: 'ElevenLabs voice_id.' })}
+            >
               <Input
                 value={(ttsElevenLabs.voice_id as string) || ''}
                 onChange={(e) =>
@@ -1665,7 +1884,12 @@ function HermesConfigSection({
                 className="md:w-64"
               />
             </SettingsRow>
-            <SettingsRow label="Model" description="ElevenLabs model name.">
+            <SettingsRow
+              label={t('ttsModelElevenLabel', { defaultValue: 'Model' })}
+              description={t('ttsModelElevenDesc', {
+                defaultValue: 'ElevenLabs model name.',
+              })}
+            >
               <Input
                 value={(ttsElevenLabs.model as string) || ''}
                 onChange={(e) =>
@@ -1682,8 +1906,10 @@ function HermesConfigSection({
         {ttsProvider === 'openai' && (
           <>
             <SettingsRow
-              label="Voice"
-              description="alloy, echo, fable, onyx, nova, shimmer"
+              label={t('ttsVoiceLabel', { defaultValue: 'Voice' })}
+              description={t('ttsVoiceOpenaiDesc', {
+                defaultValue: 'alloy, echo, fable, onyx, nova, shimmer',
+              })}
             >
               <select
                 value={(ttsOpenAi.voice as string) || 'alloy'}
@@ -1703,7 +1929,10 @@ function HermesConfigSection({
                 )}
               </select>
             </SettingsRow>
-            <SettingsRow label="Model" description="OpenAI TTS model.">
+            <SettingsRow
+              label={t('ttsModelOpenaiLabel', { defaultValue: 'Model' })}
+              description={t('ttsModelOpenaiDesc', { defaultValue: 'OpenAI TTS model.' })}
+            >
               <Input
                 value={(ttsOpenAi.model as string) || ''}
                 onChange={(e) =>
@@ -1711,7 +1940,7 @@ function HermesConfigSection({
                     config: { tts: { openai: { model: e.target.value } } },
                   })
                 }
-                placeholder="tts-1"
+                placeholder={t('ttsModelPlaceholderOpenai', { defaultValue: 'tts-1' })}
                 className="md:w-64"
               />
             </SettingsRow>
@@ -1720,11 +1949,16 @@ function HermesConfigSection({
       </SettingsSection>
 
       <SettingsSection
-        title="Speech-to-Text"
-        description="Configure voice input recognition."
+        title={t('sttSectionTitle', { defaultValue: 'Speech-to-Text' })}
+        description={t('sttSectionDesc', {
+          defaultValue: 'Configure voice input recognition.',
+        })}
         icon={Mic01Icon}
       >
-        <SettingsRow label="Enable STT" description="Turn on voice input.">
+        <SettingsRow
+          label={t('sttEnableLabel', { defaultValue: 'Enable STT' })}
+          description={t('sttEnableDesc', { defaultValue: 'Turn on voice input.' })}
+        >
           <Switch
             checked={readBoolean(sttConfig.enabled, false)}
             onCheckedChange={(checked) =>
@@ -1733,8 +1967,10 @@ function HermesConfigSection({
           />
         </SettingsRow>
         <SettingsRow
-          label="STT provider"
-          description="Which speech engine to use."
+          label={t('sttProviderLabel', { defaultValue: 'STT provider' })}
+          description={t('sttProviderDesc', {
+            defaultValue: 'Which speech engine to use.',
+          })}
         >
           <select
             value={sttProvider}
@@ -1743,14 +1979,18 @@ function HermesConfigSection({
             }
             className={selectClassName}
           >
-            <option value="local">Local (Whisper)</option>
-            <option value="openai">OpenAI Whisper API</option>
+            <option value="local">{t('sttOptionLocal', { defaultValue: 'Local (Whisper)' })}</option>
+            <option value="openai">
+              {t('sttOptionOpenai', { defaultValue: 'OpenAI Whisper API' })}
+            </option>
           </select>
         </SettingsRow>
         {sttProvider === 'local' && (
           <SettingsRow
-            label="Model size"
-            description="tiny, base, small, medium, large"
+            label={t('sttModelSizeLabel', { defaultValue: 'Model size' })}
+            description={t('sttModelSizeDesc', {
+              defaultValue: 'tiny, base, small, medium, large',
+            })}
           >
             <select
               value={(sttLocal.model_size as string) || 'base'}
@@ -1775,11 +2015,16 @@ function HermesConfigSection({
 
   const renderDisplay = () => (
     <SettingsSection
-      title="Display"
-      description="CLI display preferences reflected in the agent UI."
+      title={t('displaySectionTitle', { defaultValue: 'Display' })}
+      description={t('displaySectionDesc', {
+        defaultValue: 'CLI display preferences reflected in the agent UI.',
+      })}
       icon={PaintBoardIcon}
     >
-      <SettingsRow label="Personality" description="Agent response style.">
+      <SettingsRow
+        label={t('displayPersonalityLabel', { defaultValue: 'Personality' })}
+        description={t('displayPersonalityDesc', { defaultValue: 'Agent response style.' })}
+      >
         <select
           value={(displayConfig.personality as string) || 'default'}
           onChange={(e) =>
@@ -1797,8 +2042,10 @@ function HermesConfigSection({
         </select>
       </SettingsRow>
       <SettingsRow
-        label="Streaming"
-        description="Stream tokens as they arrive."
+        label={t('displayStreamingLabel', { defaultValue: 'Streaming' })}
+        description={t('displayStreamingDesc', {
+          defaultValue: 'Stream tokens as they arrive.',
+        })}
       >
         <Switch
           checked={readBoolean(displayConfig.streaming, true)}
@@ -1808,8 +2055,10 @@ function HermesConfigSection({
         />
       </SettingsRow>
       <SettingsRow
-        label="Show reasoning"
-        description="Expose model reasoning blocks in the UI."
+        label={t('displayShowReasoningLabel', { defaultValue: 'Show reasoning' })}
+        description={t('displayShowReasoningDesc', {
+          defaultValue: 'Expose model reasoning blocks in the UI.',
+        })}
       >
         <Switch
           checked={readBoolean(displayConfig.show_reasoning, false)}
@@ -1820,7 +2069,12 @@ function HermesConfigSection({
           }
         />
       </SettingsRow>
-      <SettingsRow label="Show cost" description="Display usage cost metadata.">
+      <SettingsRow
+        label={t('displayShowCostLabel', { defaultValue: 'Show cost' })}
+        description={t('displayShowCostDesc', {
+          defaultValue: 'Display usage cost metadata.',
+        })}
+      >
         <Switch
           checked={readBoolean(displayConfig.show_cost, false)}
           onCheckedChange={(checked) =>
@@ -1828,7 +2082,12 @@ function HermesConfigSection({
           }
         />
       </SettingsRow>
-      <SettingsRow label="Compact" description="Use a denser display layout.">
+      <SettingsRow
+        label={t('displayCompactLabel', { defaultValue: 'Compact' })}
+        description={t('displayCompactDesc', {
+          defaultValue: 'Use a denser display layout.',
+        })}
+      >
         <Switch
           checked={readBoolean(displayConfig.compact, false)}
           onCheckedChange={(checked) =>
@@ -1836,7 +2095,10 @@ function HermesConfigSection({
           }
         />
       </SettingsRow>
-      <SettingsRow label="Skin" description="CLI theme skin.">
+      <SettingsRow
+        label={t('displaySkinLabel', { defaultValue: 'Skin' })}
+        description={t('displaySkinDesc', { defaultValue: 'CLI theme skin.' })}
+      >
         <span
           className="text-sm font-mono"
           style={{ color: 'var(--theme-muted)' }}
@@ -1857,17 +2119,20 @@ function HermesConfigSection({
 
   return (
     <>
-      {saveMessage && (
+      {saveBanner && (
         <div
           className="rounded-lg px-3 py-2 text-sm font-medium"
           style={{
-            backgroundColor: saveMessage.includes('Failed')
-              ? 'rgba(239,68,68,0.15)'
-              : 'rgba(34,197,94,0.15)',
-            color: saveMessage.includes('Failed') ? '#ef4444' : '#22c55e',
+            backgroundColor:
+              saveBanner === 'error'
+                ? 'rgba(239,68,68,0.15)'
+                : 'rgba(34,197,94,0.15)',
+            color: saveBanner === 'error' ? '#ef4444' : '#22c55e',
           }}
         >
-          {saveMessage}
+          {saveBanner === 'error'
+            ? t('saveToastFailed', { defaultValue: 'Failed to save' })
+            : t('saveToastSaved', { defaultValue: 'Saved' })}
         </div>
       )}
       {sectionContent[activeView]}
@@ -1884,6 +2149,7 @@ type ConnectionSettings = {
 }
 
 function ConnectionSection() {
+  const { t } = useTranslation('settings')
   const [current, setCurrent] = useState<ConnectionSettings | null>(null)
   const [gatewayInput, setGatewayInput] = useState('')
   const [dashboardInput, setDashboardInput] = useState('')
@@ -1924,10 +2190,18 @@ function ConnectionSection() {
       const data = (await res.json()) as ConnectionSettings & { error?: string }
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
       setCurrent(data)
-      setMessage('Saved. Connection updated — no restart needed.')
+      setMessage(
+        t('connectionSavedMsg', {
+          defaultValue: 'Saved. Connection updated — no restart needed.',
+        }),
+      )
     } catch (err) {
       setIsError(true)
-      setMessage(err instanceof Error ? err.message : 'Failed to save')
+      setMessage(
+        err instanceof Error
+          ? err.message
+          : t('hermesSaveFailed', { defaultValue: 'Failed to save' }),
+      )
     } finally {
       setSaving(false)
       setTimeout(() => setMessage(null), 6000)
@@ -1948,10 +2222,10 @@ function ConnectionSection() {
       setCurrent(data)
       setGatewayInput(data.gateway)
       setDashboardInput(data.dashboard)
-      setMessage('Reset to env / default URLs.')
+      setMessage(t('connectionResetMsg', { defaultValue: 'Reset to env / default URLs.' }))
     } catch {
       setIsError(true)
-      setMessage('Reset failed')
+      setMessage(t('connectionResetFailed', { defaultValue: 'Reset failed' }))
     } finally {
       setSaving(false)
       setTimeout(() => setMessage(null), 6000)
@@ -1962,30 +2236,43 @@ function ConnectionSection() {
     'h-9 w-full rounded-lg border border-primary-200 bg-primary-50 px-3 text-sm text-primary-900 font-mono outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400'
 
   const sourceLabel: Record<ConnectionSettings['source'], string> = {
-    override: 'Runtime override (saved in workspace-overrides.json)',
-    env: 'From HERMES_API_URL / HERMES_DASHBOARD_URL env vars',
-    default: 'Defaults — no override set',
+    override: t('connectionSourceOverride', {
+      defaultValue: 'Runtime override (saved in workspace-overrides.json)',
+    }),
+    env: t('connectionSourceEnv', {
+      defaultValue: 'From HERMES_API_URL / HERMES_DASHBOARD_URL env vars',
+    }),
+    default: t('connectionSourceDefault', { defaultValue: 'Defaults — no override set' }),
   }
 
   return (
     <SettingsSection
-      title="Connection"
-      description="Point the workspace at your Project Agent services. Useful for Tailscale, LAN, or remote-server setups (#101)."
+      title={t('connectionSectionTitle', { defaultValue: 'Connection' })}
+      description={t('connectionSectionDesc', {
+        defaultValue:
+          'Point the workspace at your Project Agent services. Useful for Tailscale, LAN, or remote-server setups (#101).',
+      })}
       icon={Link01Icon}
     >
       <div className="text-xs text-primary-600">
-        {current ? sourceLabel[current.source] : 'Loading…'}
+        {current
+          ? sourceLabel[current.source]
+          : t('connectionLoadingSource', { defaultValue: 'Loading…' })}
       </div>
 
       <SettingsRow
-        label="Gateway URL"
-        description="Core chat + completions + health. Default http://127.0.0.1:8645."
+        label={t('connectionGatewayLabel', { defaultValue: 'Gateway URL' })}
+        description={t('connectionGatewayDesc', {
+          defaultValue: 'Core chat + completions + health. Default http://127.0.0.1:8645.',
+        })}
       >
         <input
           className={inputClass}
           value={gatewayInput}
           onChange={(e) => setGatewayInput(e.target.value)}
-          placeholder="http://100.x.y.z:8642"
+          placeholder={t('connectionGatewayPlaceholder', {
+            defaultValue: 'http://100.x.y.z:8642',
+          })}
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
@@ -1993,14 +2280,19 @@ function ConnectionSection() {
       </SettingsRow>
 
       <SettingsRow
-        label="Dashboard URL"
-        description="Extended APIs — sessions, skills, config, jobs. Default http://127.0.0.1:9119."
+        label={t('connectionDashboardLabel', { defaultValue: 'Dashboard URL' })}
+        description={t('connectionDashboardDesc', {
+          defaultValue:
+            'Extended APIs — sessions, skills, config, jobs. Default http://127.0.0.1:9119.',
+        })}
       >
         <input
           className={inputClass}
           value={dashboardInput}
           onChange={(e) => setDashboardInput(e.target.value)}
-          placeholder="http://100.x.y.z:9119"
+          placeholder={t('connectionDashboardPlaceholder', {
+            defaultValue: 'http://100.x.y.z:9119',
+          })}
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
@@ -2009,7 +2301,9 @@ function ConnectionSection() {
 
       <div className="flex items-center gap-2 pt-2">
         <Button size="sm" onClick={save} disabled={saving}>
-          {saving ? 'Saving…' : 'Save & reprobe'}
+          {saving
+            ? t('connectionSavingBtn', { defaultValue: 'Saving…' })
+            : t('connectionSaveBtn', { defaultValue: 'Save & reprobe' })}
         </Button>
         <Button
           size="sm"
@@ -2017,7 +2311,7 @@ function ConnectionSection() {
           onClick={reset}
           disabled={saving || current?.source === 'default'}
         >
-          Reset to defaults
+          {t('connectionResetBtn', { defaultValue: 'Reset to defaults' })}
         </Button>
         {message ? (
           <span
@@ -2032,11 +2326,13 @@ function ConnectionSection() {
       </div>
 
       <div className="mt-3 rounded-lg border border-primary-200 bg-primary-100/50 p-3 text-xs text-primary-600">
-        <strong className="font-semibold">Tailscale / remote tip:</strong>{' '}
-        Set the gateway to its Tailscale IP (e.g. <code>http://100.x.y.z:8642</code>)
-        and ensure the gateway listens on <code>0.0.0.0</code> (set{' '}
-        <code>API_SERVER_HOST=0.0.0.0</code> in the agent-side <code>.env</code>).
-        No workspace restart needed — capabilities reprobe on save.
+        <strong className="font-semibold">
+          {t('connectionTipTitle', { defaultValue: 'Tailscale / remote tip:' })}
+        </strong>{' '}
+        {t('connectionTipBody', {
+          defaultValue:
+            'Set the gateway to its Tailscale IP (e.g. http://100.x.y.z:8642) and ensure the gateway listens on 0.0.0.0 (set API_SERVER_HOST=0.0.0.0 in the agent-side .env). No workspace restart needed — capabilities reprobe on save.',
+        })}
       </div>
     </SettingsSection>
   )

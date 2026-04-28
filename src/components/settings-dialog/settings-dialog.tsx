@@ -19,6 +19,7 @@ import {
 } from '@hugeicons/core-free-icons'
 import { Component, useCallback, useEffect, useState } from 'react'
 import type * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import type { AccentColor, SettingsThemeMode } from '@/hooks/use-settings'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
@@ -69,16 +70,16 @@ type SectionId =
   | 'notifications'
   | 'language'
 
-const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
-  { id: 'hermes', label: 'Model & Provider', icon: CloudIcon },
-  { id: 'agent', label: 'Agent', icon: Settings02Icon },
-  { id: 'routing', label: 'Smart Routing', icon: SparklesIcon },
-  { id: 'voice', label: 'Voice', icon: VolumeHighIcon },
-  { id: 'display', label: 'Display', icon: PaintBoardIcon },
-  { id: 'appearance', label: 'Theme', icon: PaintBoardIcon },
-  { id: 'chat', label: 'Chat', icon: MessageMultiple01Icon },
-  { id: 'notifications', label: 'Alerts', icon: Notification03Icon },
-  { id: 'language', label: 'Language', icon: MessageMultiple01Icon },
+const SECTIONS: Array<{ id: SectionId; icon: any }> = [
+  { id: 'hermes', icon: CloudIcon },
+  { id: 'agent', icon: Settings02Icon },
+  { id: 'routing', icon: SparklesIcon },
+  { id: 'voice', icon: VolumeHighIcon },
+  { id: 'display', icon: PaintBoardIcon },
+  { id: 'appearance', icon: PaintBoardIcon },
+  { id: 'chat', icon: MessageMultiple01Icon },
+  { id: 'notifications', icon: Notification03Icon },
+  { id: 'language', icon: MessageMultiple01Icon },
 ]
 
 const DARK_ENTERPRISE_THEMES = new Set<ThemeId>([
@@ -103,10 +104,11 @@ function SectionHeader({
   title: string
   description: string
 }) {
+  const { t } = useTranslation('settings')
   return (
     <div className="mb-2">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-500">
-        Settings
+        {t('dialogSectionBrand', { defaultValue: 'Settings' })}
       </p>
       <h3 className="text-base font-semibold text-primary-900 dark:text-neutral-100">
         {title}
@@ -239,6 +241,7 @@ const PROVIDER_CARDS: Array<{
 ]
 
 function HermesContent() {
+  const { t } = useTranslation(['settings', 'common'])
   const configAvailable = useFeatureAvailable('config')
   const [activeProvider, setActiveProvider] = useState('')
   const [activeModel, setActiveModel] = useState('')
@@ -246,7 +249,9 @@ function HermesContent() {
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [keyInput, setKeyInput] = useState('')
   const [_saving, setSaving] = useState(false)
-  const [msg, setMsg] = useState<string | null>(null)
+  const [hermesToast, setHermesToast] = useState<
+    { kind: 'success'; detail?: string } | { kind: 'error' } | null
+  >(null)
   const [configuredKeys, setConfiguredKeys] = useState<Record<string, string>>(
     {},
   )
@@ -315,7 +320,7 @@ function HermesContent() {
     env?: Record<string, string>
   }) => {
     setSaving(true)
-    setMsg(null)
+    setHermesToast(null)
     try {
       const res = await fetch('/api/hermes-config', {
         method: 'PATCH',
@@ -323,7 +328,11 @@ function HermesContent() {
         body: JSON.stringify(updates),
       })
       const r = (await res.json()) as { message?: string }
-      setMsg(r.message || 'Saved')
+      setHermesToast(
+        r.message
+          ? { kind: 'success', detail: r.message }
+          : { kind: 'success' },
+      )
       const ref = await fetch('/api/hermes-config')
       const d = await ref.json()
       setActiveProvider(d.activeProvider || '')
@@ -334,9 +343,9 @@ function HermesContent() {
           keys[p.envKeys[0]] = p.maskedKeys?.[p.envKeys[0]] || '••••'
       }
       setConfiguredKeys(keys)
-      setTimeout(() => setMsg(null), 3000)
+      setTimeout(() => setHermesToast(null), 3000)
     } catch {
-      setMsg('Failed to save')
+      setHermesToast({ kind: 'error' })
     }
     setSaving(false)
   }
@@ -356,7 +365,9 @@ function HermesContent() {
   if (!configAvailable) {
     return (
       <BackendUnavailableState
-        feature="Hermes Agent Settings"
+        feature={t('hermesAgentSettingsTitle', {
+          defaultValue: 'Hermes Agent Settings',
+        })}
         description={getUnavailableReason('config')}
       />
     )
@@ -371,16 +382,19 @@ function HermesContent() {
 
   return (
     <div className="space-y-5">
-      {msg && (
+      {hermesToast && (
         <div
           className={cn(
             'rounded-lg px-3 py-2 text-sm font-medium',
-            msg.includes('Failed')
+            hermesToast.kind === 'error'
               ? 'bg-red-500/15 text-red-400'
               : 'bg-green-500/15 text-green-400',
           )}
         >
-          {msg}
+          {hermesToast.kind === 'error'
+            ? t('hermesSaveFailed', { defaultValue: 'Failed to save' })
+            : hermesToast.detail ??
+              t('common:saved', { defaultValue: 'Saved' })}
         </div>
       )}
 
@@ -390,10 +404,13 @@ function HermesContent() {
           className="mb-1 text-xs font-semibold uppercase tracking-wider"
           style={mutedStyle}
         >
-          Provider
+          {t('hermesProviderTitle', { defaultValue: 'Provider' })}
         </p>
         <p className="mb-3 text-[11px]" style={mutedStyle}>
-          Select your AI provider. OAuth providers authenticate via browser.
+          {t('hermesProviderDescription', {
+            defaultValue:
+              'Select your AI provider. OAuth providers authenticate via browser.',
+          })}
         </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {PROVIDER_CARDS.map((p) => {
@@ -434,10 +451,15 @@ function HermesContent() {
                 <span className="text-[9px]" style={mutedStyle}>
                   {(() => {
                     const disc = localDiscovery?.providers.find((lp) => lp.id === p.id)
-                    if (disc?.online) return '🟢 Detected'
-                    if (p.authType === 'oauth') return 'OAuth'
-                    if (p.authType === 'none') return 'Local'
-                    return hasKey ? 'Key set' : 'Key required'
+                    if (disc?.online)
+                      return t('hermesStatusDetected', { defaultValue: '🟢 Detected' })
+                    if (p.authType === 'oauth')
+                      return t('hermesStatusOAuth', { defaultValue: 'OAuth' })
+                    if (p.authType === 'none')
+                      return t('hermesStatusLocal', { defaultValue: 'Local' })
+                    return hasKey
+                      ? t('hermesStatusKeySet', { defaultValue: 'Key set' })
+                      : t('hermesStatusKeyRequired', { defaultValue: 'Key required' })
                   })()}
                 </span>
               </button>
@@ -453,7 +475,7 @@ function HermesContent() {
             className="mb-1 text-xs font-semibold uppercase tracking-wider"
             style={mutedStyle}
           >
-            Model
+            {t('hermesModelTitle', { defaultValue: 'Model' })}
           </p>
           <div className="flex flex-wrap gap-2">
             {(() => {
@@ -489,7 +511,11 @@ function HermesContent() {
         if (!disc || !disc.needsRestart) return null
         return (
           <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-200">
-            ⚠️ Gateway restart needed to use {disc.name}. Run <code className="rounded bg-black/30 px-1">hermes gateway restart</code> in your terminal.
+            {t('hermesGatewayRestartHint', {
+              provider: disc.name,
+              defaultValue:
+                '⚠️ Gateway restart needed to use {{provider}}. In your terminal, run: hermes gateway restart',
+            })}
           </div>
         )
       })()}
@@ -500,7 +526,7 @@ function HermesContent() {
           className="mb-1 text-xs font-semibold uppercase tracking-wider"
           style={mutedStyle}
         >
-          API Keys
+          {t('hermesApiKeysTitle', { defaultValue: 'API Keys' })}
         </p>
         <div className="space-y-1.5">
           {PROVIDER_CARDS.filter((p) => p.envKey).map((p) => {
@@ -526,7 +552,10 @@ function HermesContent() {
                         type="password"
                         value={keyInput}
                         onChange={(e) => setKeyInput(e.target.value)}
-                        placeholder={`Paste ${key}`}
+                        placeholder={t('hermesPasteKey', {
+                          key,
+                          defaultValue: 'Paste {{key}}',
+                        })}
                         className="w-full rounded border-0 bg-transparent py-0.5 text-[11px] outline-none"
                         style={{ color: 'var(--theme-text)' }}
                         autoFocus
@@ -545,7 +574,7 @@ function HermesContent() {
                     ) : hasKey ? (
                       configuredKeys[key]
                     ) : (
-                      'Not configured'
+                      t('hermesKeyNotConfigured', { defaultValue: 'Not configured' })
                     )}
                   </div>
                 </div>
@@ -569,7 +598,7 @@ function HermesContent() {
                         }}
                         className="rounded-lg px-2 py-1 text-[11px] font-medium bg-accent-500 text-white"
                       >
-                        Save
+                        {t('common:save', { defaultValue: 'Save' })}
                       </button>
                       <button
                         type="button"
@@ -580,7 +609,7 @@ function HermesContent() {
                         className="rounded-lg px-2 py-1 text-[11px] font-medium"
                         style={{ color: 'var(--theme-muted)' }}
                       >
-                        Cancel
+                        {t('common:cancel', { defaultValue: 'Cancel' })}
                       </button>
                     </>
                   ) : (
@@ -595,7 +624,9 @@ function HermesContent() {
                         color: 'var(--theme-accent, var(--theme-text))',
                       }}
                     >
-                      {hasKey ? 'Update' : 'Add'}
+                      {hasKey
+                        ? t('hermesKeyUpdate', { defaultValue: 'Update' })
+                        : t('hermesKeyAdd', { defaultValue: 'Add' })}
                     </button>
                   )}
                 </div>
@@ -611,7 +642,7 @@ function HermesContent() {
           className="mb-1 text-xs font-semibold uppercase tracking-wider"
           style={mutedStyle}
         >
-          Memory
+          {t('hermesMemorySectionTitle', { defaultValue: 'Memory' })}
         </p>
         <div className="space-y-1.5">
           <div
@@ -619,9 +650,13 @@ function HermesContent() {
             style={cardStyle}
           >
             <div>
-              <div className="text-sm font-medium">Memory</div>
+              <div className="text-sm font-medium">
+                {t('hermesMemoryEnableTitle', { defaultValue: 'Memory' })}
+              </div>
               <div className="text-[11px]" style={mutedStyle}>
-                Store & recall memories across sessions
+                {t('hermesMemoryEnableDesc', {
+                  defaultValue: 'Store & recall memories across sessions',
+                })}
               </div>
             </div>
             <Switch
@@ -637,9 +672,13 @@ function HermesContent() {
             style={cardStyle}
           >
             <div>
-              <div className="text-sm font-medium">User Profile</div>
+              <div className="text-sm font-medium">
+                {t('hermesUserProfileTitle', { defaultValue: 'User Profile' })}
+              </div>
               <div className="text-[11px]" style={mutedStyle}>
-                Remember preferences & context
+                {t('hermesUserProfileDesc', {
+                  defaultValue: 'Remember preferences & context',
+                })}
               </div>
             </div>
             <Switch
@@ -661,19 +700,25 @@ function HermesContent() {
             className="text-xs font-semibold uppercase tracking-wider"
             style={mutedStyle}
           >
-            Runtime
+            {t('hermesRuntimeTitle', { defaultValue: 'Runtime' })}
           </span>
         </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
-          <span style={mutedStyle}>Model</span>
+          <span style={mutedStyle}>
+            {t('hermesRuntimeModel', { defaultValue: 'Model' })}
+          </span>
           <span className="font-mono font-medium">{activeModel || '—'}</span>
-          <span style={mutedStyle}>Provider</span>
+          <span style={mutedStyle}>
+            {t('hermesRuntimeProvider', { defaultValue: 'Provider' })}
+          </span>
           <span className="font-mono font-medium">
             {PROVIDER_CARDS.find((p) => p.id === activeProvider)?.name ||
               activeProvider ||
               '—'}
           </span>
-          <span style={mutedStyle}>Config</span>
+          <span style={mutedStyle}>
+            {t('hermesRuntimeConfig', { defaultValue: 'Config' })}
+          </span>
           <span className="font-mono font-medium">~/.hermes/config.yaml</span>
         </div>
       </div>
@@ -1904,13 +1949,22 @@ function DisplayContent() {
 import { getLocale, setLocale, LOCALE_LABELS, type LocaleId } from '@/lib/i18n'
 
 function LanguageContent() {
+  const { t } = useTranslation('settings')
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Language"
-        description="Choose the display language for the workspace UI."
+        title={t('language', { defaultValue: 'Language' })}
+        description={t('languageDescription', {
+          defaultValue: 'Choose the display language for the workspace UI.',
+        })}
       />
-      <Row label="Interface Language" description="Translates navigation, labels, and buttons.">
+      <Row
+        label={t('interfaceLanguage', { defaultValue: 'Interface Language' })}
+        description={t('languageHint', {
+          defaultValue:
+            'Translates navigation, labels, and buttons.',
+        })}
+      >
         <select
           value={getLocale()}
           onChange={(e) => {
@@ -1953,6 +2007,7 @@ export function SettingsDialog({
   onOpenChange,
   initialSection = 'hermes',
 }: SettingsDialogProps) {
+  const { t } = useTranslation(['settings', 'common'])
   const [active, setActive] = useState<SectionId>(initialSection)
   const [mobileView, setMobileView] = useState<'nav' | 'content'>('nav')
   const ActiveContent = CONTENT_MAP[active]
@@ -1963,6 +2018,21 @@ export function SettingsDialog({
       setMobileView('nav')
     }
   }, [initialSection, open])
+
+  function sectionLabel(sectionId: SectionId): string {
+    const map: Record<SectionId, string> = {
+      hermes: t('settings:sectionModelProvider', { defaultValue: 'Model & Provider' }),
+      agent: t('settings:sectionAgent', { defaultValue: 'Agent' }),
+      routing: t('settings:sectionSmartRouting', { defaultValue: 'Smart Routing' }),
+      voice: t('settings:sectionVoice', { defaultValue: 'Voice' }),
+      display: t('settings:sectionDisplay', { defaultValue: 'Display' }),
+      appearance: t('settings:sectionTheme', { defaultValue: 'Theme' }),
+      chat: t('settings:sectionChat', { defaultValue: 'Chat' }),
+      notifications: t('settings:sectionAlerts', { defaultValue: 'Alerts' }),
+      language: t('settings:language', { defaultValue: 'Language' }),
+    }
+    return map[sectionId]
+  }
 
   function handleSectionSelect(sectionId: SectionId) {
     setActive(sectionId)
@@ -1976,10 +2046,12 @@ export function SettingsDialog({
           <div className="flex items-center justify-between border-b border-primary-200 bg-primary-50/80 px-4 py-4 md:rounded-t-2xl md:px-5">
             <div>
               <DialogTitle className="text-base font-semibold text-primary-900 dark:text-neutral-100">
-                Settings
+                {t('settings:title', { defaultValue: 'Settings' })}
               </DialogTitle>
               <DialogDescription className="sr-only">
-                Configure Hermes Workspace
+                {t('settings:subtitle', {
+                  defaultValue: 'Configure Hermes Workspace',
+                })}
               </DialogDescription>
             </div>
             <DialogClose
@@ -1988,7 +2060,7 @@ export function SettingsDialog({
                   size="icon-sm"
                   variant="ghost"
                   className="rounded-full text-primary-500 hover:bg-primary-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-                  aria-label="Close"
+                  aria-label={t('settings:close', { defaultValue: 'Close' })}
                 >
                   <HugeiconsIcon
                     icon={Cancel01Icon}
@@ -2025,7 +2097,7 @@ export function SettingsDialog({
                         size={16}
                         strokeWidth={1.5}
                       />
-                      {s.label}
+                      {sectionLabel(s.id)}
                     </button>
                   ))}
                 </nav>
@@ -2049,7 +2121,7 @@ export function SettingsDialog({
                       size={16}
                       strokeWidth={1.5}
                     />
-                    Back
+                    {t('settings:back', { defaultValue: 'Back' })}
                   </Button>
                 </div>
                 <ActiveContent />
@@ -2058,12 +2130,12 @@ export function SettingsDialog({
           </SettingsErrorBoundary>
 
           <div className="sticky bottom-0 z-10 border-t border-primary-200 bg-primary-50/60 px-4 py-3 text-xs text-primary-500 dark:text-neutral-400 md:rounded-b-2xl md:px-5">
-            Changes saved automatically.{' '}
+            {t('settings:changesSaved', { defaultValue: 'Changes saved automatically.' })}{' '}
             <a
               href="/settings"
               className="ml-2 font-medium underline underline-offset-2 hover:text-primary-700 dark:hover:text-neutral-200"
             >
-              All settings →
+              {t('settings:allSettings', { defaultValue: 'All settings' })} →
             </a>
           </div>
         </div>

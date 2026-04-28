@@ -1,4 +1,6 @@
+import type { ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 
 export type SettingsNavId =
@@ -14,32 +16,34 @@ export type SettingsNavId =
   | 'mcp'
   | 'language'
 
-type NavItem = { id: SettingsNavId; label: string }
+type NavItem = { id: SettingsNavId; labelKey: string }
 
 export const SETTINGS_NAV_ITEMS: Array<NavItem> = [
-  { id: 'connection', label: 'Connection' },
-  { id: 'hermes', label: 'Model & Provider' },
-  { id: 'agent', label: 'Agent Behavior' },
-  { id: 'routing', label: 'Smart Routing' },
-  { id: 'voice', label: 'Voice' },
-  { id: 'display', label: 'Display' },
-  { id: 'appearance', label: 'Appearance' },
-  { id: 'chat', label: 'Chat' },
-  { id: 'notifications', label: 'Notifications' },
-  { id: 'mcp', label: 'MCP Servers' },
-  { id: 'language', label: 'Language' },
+  { id: 'connection', labelKey: 'navConnection' },
+  { id: 'hermes', labelKey: 'navModelProvider' },
+  { id: 'agent', labelKey: 'navAgentBehavior' },
+  { id: 'routing', labelKey: 'navSmartRouting' },
+  { id: 'voice', labelKey: 'navVoice' },
+  { id: 'display', labelKey: 'navDisplay' },
+  { id: 'appearance', labelKey: 'navAppearance' },
+  { id: 'chat', labelKey: 'navChat' },
+  { id: 'notifications', labelKey: 'navNotifications' },
+  { id: 'mcp', labelKey: 'navMcpServers' },
+  { id: 'language', labelKey: 'language' },
 ]
 
 type ItemRendererArgs = {
   item: NavItem
+  label: string
   isActive: boolean
   activeClass: string
   inactiveClass: string
-  indicator: React.ReactNode
+  indicator: ReactNode
 }
 
 function renderItem({
   item,
+  label,
   isActive,
   activeClass,
   inactiveClass,
@@ -52,7 +56,7 @@ function renderItem({
   const content = (
     <>
       {isActive ? indicator : null}
-      {item.label}
+      {label}
     </>
   )
   if (item.id === 'mcp') {
@@ -75,6 +79,7 @@ function renderItem({
 }
 
 export function SettingsSidebar({ activeId }: { activeId: SettingsNavId }) {
+  const { t } = useTranslation('settings')
   const activeClass =
     'bg-[var(--theme-accent-subtle)] text-[var(--theme-accent)] font-semibold'
   const inactiveClass =
@@ -90,12 +95,13 @@ export function SettingsSidebar({ activeId }: { activeId: SettingsNavId }) {
     <nav className="hidden w-48 shrink-0 md:block">
       <div className="sticky top-8">
         <h1 className="mb-4 px-3 text-lg font-semibold text-primary-900">
-          Settings
+          {t('title', { defaultValue: 'Settings' })}
         </h1>
         <div className="flex flex-col gap-0.5">
           {SETTINGS_NAV_ITEMS.map((item) =>
             renderItem({
               item,
+              label: t(item.labelKey, { defaultValue: item.labelKey }),
               isActive: activeId === item.id,
               activeClass,
               inactiveClass,
@@ -109,6 +115,7 @@ export function SettingsSidebar({ activeId }: { activeId: SettingsNavId }) {
 }
 
 export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
+  const { t } = useTranslation('settings')
   const activeClass =
     'bg-[var(--theme-accent)] text-[var(--theme-bg)] font-semibold'
   const inactiveClass =
@@ -124,7 +131,7 @@ export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
         if (item.id === 'mcp') {
           return (
             <Link key={item.id} to="/settings/mcp" className={className}>
-              {item.label}
+              {t(item.labelKey, { defaultValue: item.labelKey })}
             </Link>
           )
         }
@@ -135,7 +142,7 @@ export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
             search={{ section: item.id }}
             className={className}
           >
-            {item.label}
+            {t(item.labelKey, { defaultValue: item.labelKey })}
           </Link>
         )
       })}

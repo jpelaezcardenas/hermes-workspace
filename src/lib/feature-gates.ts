@@ -1,3 +1,5 @@
+import { i18next } from '@/lib/i18n/init'
+
 // FIX: removed import of getCapabilities from server/gateway-capabilities — that module
 // transitively imports node:sqlite (local-db.ts) which cannot be bundled for the browser.
 // isFeatureAvailable was the only consumer and had no callers, so it is removed below.
@@ -37,13 +39,24 @@ function normalizeFeature(
 export function getFeatureLabel(feature: EnhancedFeature | string): string {
   const normalized = normalizeFeature(feature)
   if (!normalized) return feature
-  return FEATURE_LABELS[normalized]
+  return i18next.t(`gateway:feature_${normalized}`, {
+    defaultValue: FEATURE_LABELS[normalized],
+  })
 }
 
 export function getUnavailableReason(
   feature: EnhancedFeature | string,
 ): string {
-  return `${getFeatureLabel(feature)} requires a Hermes gateway that exposes the extended APIs. Check that Hermes is installed and running with \`hermes gateway run\`.`
+  const normalized = normalizeFeature(feature)
+  const label = normalized
+    ? i18next.t(`gateway:feature_${normalized}`, {
+        defaultValue: FEATURE_LABELS[normalized],
+      })
+    : String(feature)
+  return i18next.t('gateway:capabilityUnavailable', {
+    feature: label,
+    defaultValue: `${label} requires a Hermes gateway that exposes the extended APIs. Check that Hermes is installed and running with \`hermes gateway run\`.`,
+  })
 }
 
 export function createCapabilityUnavailablePayload(

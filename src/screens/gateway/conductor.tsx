@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { i18next } from '@/lib/i18n/init'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   ArrowDown01Icon,
@@ -71,37 +73,45 @@ const THEME_STYLE: CSSProperties = {
   ['--theme-warning-border' as string]: 'color-mix(in srgb, var(--theme-warning) 35%, white)',
 }
 
-const QUICK_ACTIONS: Array<{
+const QUICK_ACTION_DEFS: Array<{
   id: QuickActionId
-  label: string
   icon: typeof Search01Icon
   prompt: string
 }> = [
   {
     id: 'research',
-    label: 'Research',
     icon: Search01Icon,
     prompt: 'Research the problem space, gather constraints, compare approaches, and propose the most viable plan.',
   },
   {
     id: 'build',
-    label: 'Build',
     icon: PlayIcon,
     prompt: 'Build the requested feature end-to-end, including implementation, validation, and a concise delivery summary.',
   },
   {
     id: 'review',
-    label: 'Review',
     icon: TaskDone01Icon,
     prompt: 'Review the current implementation for correctness, regressions, missing tests, and release risks.',
   },
   {
     id: 'deploy',
-    label: 'Deploy',
     icon: Rocket01Icon,
     prompt: 'Prepare the work for deployment, verify readiness, and summarize any operational follow-ups.',
   },
 ]
+
+function quickActionLabel(id: QuickActionId): string {
+  return i18next.t(`gateway:conductorQuick_${id}`, {
+    defaultValue:
+      id === 'research'
+        ? 'Research'
+        : id === 'build'
+          ? 'Build'
+          : id === 'review'
+            ? 'Review'
+            : 'Deploy',
+  })
+}
 
 const AGENT_NAMES = ['Nova', 'Pixel', 'Blaze', 'Echo', 'Sage', 'Drift', 'Flux', 'Volt']
 const AGENT_EMOJIS = ['🤖', '⚡', '🔥', '🌊', '🌿', '💫', '🔮', '⭐']
@@ -133,6 +143,7 @@ function MissionCostSection({
   expanded: boolean
   onToggle: () => void
 }) {
+  const { t } = useTranslation('gateway')
   const estimatedCost = estimateTokenCost(totalTokens)
 
   return (
@@ -144,11 +155,20 @@ function MissionCostSection({
         className="flex w-full items-start justify-between gap-4 text-left"
       >
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">Mission Cost</p>
-          <p className="mt-1 text-sm text-[var(--theme-muted-2)]">Approximate at $5 / 1M tokens blended from input/output pricing.</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+            {t('missionCost', { defaultValue: 'Mission Cost' })}
+          </p>
+          <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
+            {t('missionCostDesc', {
+              defaultValue:
+                'Approximate at $5 / 1M tokens blended from input/output pricing.',
+            })}
+          </p>
         </div>
         <span className="inline-flex items-center gap-2 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-2 text-xs font-medium text-[var(--theme-text)]">
-          {expanded ? 'Hide' : 'Show'}
+          {expanded
+            ? t('hide', { defaultValue: 'Hide' })
+            : t('show', { defaultValue: 'Show' })}
           <HugeiconsIcon
             icon={ArrowDown01Icon}
             size={16}
@@ -162,19 +182,23 @@ function MissionCostSection({
         <div className="mt-4 space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Total Tokens</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
+                {t('totalTokens', { defaultValue: 'Total Tokens' })}
+              </p>
               <p className="mt-2 text-2xl font-semibold text-[var(--theme-text)]">{totalTokens.toLocaleString()}</p>
             </div>
             <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Estimated Cost</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
+                {t('estimatedCost', { defaultValue: 'Estimated Cost' })}
+              </p>
               <p className="mt-2 text-2xl font-semibold text-[var(--theme-text)]">{formatUsd(estimatedCost)}</p>
             </div>
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)]">
             <div className="flex items-center justify-between border-b border-[var(--theme-border)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
-              <span>Workers</span>
-              <span>Cost</span>
+              <span>{t('worker', { defaultValue: 'Worker' })}</span>
+              <span>{t('cost', { defaultValue: 'Cost' })}</span>
             </div>
             {workers.length > 0 ? (
               <div className="divide-y divide-[var(--theme-border)]">
@@ -188,7 +212,12 @@ function MissionCostSection({
                 ))}
               </div>
             ) : (
-              <div className="px-4 py-3 text-sm text-[var(--theme-muted)]">Per-worker token details were not captured for this mission.</div>
+              <div className="px-4 py-3 text-sm text-[var(--theme-muted)]">
+                {t('noWorkerTokenDetails', {
+                  defaultValue:
+                    'Per-worker token details were not captured for this mission.',
+                })}
+              </div>
             )}
           </div>
         </div>
@@ -196,19 +225,6 @@ function MissionCostSection({
     </div>
   )
 }
-
-const PLANNING_STEPS = ['Planning the mission…', 'Analyzing requirements…', 'Preparing agents…', 'Writing the spec…']
-const WORKING_STEPS = [
-  '📋 Reviewing the brief…',
-  '🔍 Scanning existing patterns…',
-  '✏️ Drafting the implementation…',
-  '☕ Grabbing a coffee…',
-  '🧠 Thinking through edge cases…',
-  '🎨 Polishing the design…',
-  '🔧 Wiring up components…',
-  '📐 Checking the layout…',
-  '🚀 Almost there…',
-]
 
 function CyclingStatus({
   steps,
@@ -219,6 +235,7 @@ function CyclingStatus({
   intervalMs?: number
   isPaused?: boolean
 }) {
+  const { t } = useTranslation('gateway')
   const [step, setStep] = useState(0)
 
   useEffect(() => {
@@ -233,7 +250,9 @@ function CyclingStatus({
         <div className="flex size-3.5 items-center justify-center rounded-full border border-amber-400/60 bg-amber-500/10 text-[9px] text-amber-300">
           ||
         </div>
-        <p className="text-sm text-[var(--theme-muted)]">Paused</p>
+        <p className="text-sm text-[var(--theme-muted)]">
+          {t('paused', { defaultValue: 'Paused' })}
+        </p>
       </div>
     )
   }
@@ -247,11 +266,22 @@ function CyclingStatus({
 }
 
 function PlanningIndicator() {
-  return <CyclingStatus steps={PLANNING_STEPS} intervalMs={2500} />
+  const { t } = useTranslation('gateway')
+  const steps = useMemo(
+    () => [
+      t('conductorPlanning1', { defaultValue: 'Planning the mission…' }),
+      t('conductorPlanning2', { defaultValue: 'Analyzing requirements…' }),
+      t('conductorPlanning3', { defaultValue: 'Preparing agents…' }),
+      t('conductorPlanning4', { defaultValue: 'Writing the spec…' }),
+    ],
+    [t],
+  )
+  return <CyclingStatus steps={steps} intervalMs={2500} />
 }
 
 function getOutputDisplayName(projectPath: string | null | undefined): string {
-  if (!projectPath) return 'Output ready'
+  if (!projectPath)
+    return i18next.t('gateway:outputReady', { defaultValue: 'Output ready' })
   return projectPath.split('/').pop() || 'index.html'
 }
 
@@ -308,16 +338,29 @@ function formatDurationRange(startIso: string | null | undefined, endIso: string
 }
 
 function formatRelativeTime(value: string | null | undefined, now: number): string {
-  if (!value) return 'just now'
+  const just = () =>
+    i18next.t('gateway:timeJustNow', { defaultValue: 'just now' })
+  if (!value) return just()
   const ms = new Date(value).getTime()
-  if (!Number.isFinite(ms)) return 'just now'
+  if (!Number.isFinite(ms)) return just()
   const diffSeconds = Math.max(0, Math.floor((now - ms) / 1000))
-  if (diffSeconds < 10) return 'just now'
-  if (diffSeconds < 60) return `${diffSeconds}s ago`
+  if (diffSeconds < 10) return just()
+  if (diffSeconds < 60)
+    return i18next.t('gateway:timeSecondsAgo', {
+      count: diffSeconds,
+      defaultValue: `${diffSeconds}s ago`,
+    })
   const diffMinutes = Math.floor(diffSeconds / 60)
-  if (diffMinutes < 60) return `${diffMinutes}m ago`
+  if (diffMinutes < 60)
+    return i18next.t('gateway:timeMinutesAgo', {
+      count: diffMinutes,
+      defaultValue: `${diffMinutes}m ago`,
+    })
   const diffHours = Math.floor(diffMinutes / 60)
-  return `${diffHours}h ago`
+  return i18next.t('gateway:timeHoursAgo', {
+    count: diffHours,
+    defaultValue: `${diffHours}h ago`,
+  })
 }
 
 function truncateContinuationText(text: string, limit = 500): string {
@@ -327,10 +370,25 @@ function truncateContinuationText(text: string, limit = 500): string {
 }
 
 function getWorkerDot(status: 'running' | 'complete' | 'stale' | 'idle') {
-  if (status === 'complete') return { dotClass: 'bg-emerald-400', label: 'Complete' }
-  if (status === 'running') return { dotClass: 'bg-sky-400 animate-pulse', label: 'Running' }
-  if (status === 'idle') return { dotClass: 'bg-amber-400', label: 'Idle' }
-  return { dotClass: 'bg-red-400', label: 'Stale' }
+  if (status === 'complete')
+    return {
+      dotClass: 'bg-emerald-400',
+      label: i18next.t('gateway:workerStatusComplete', { defaultValue: 'Complete' }),
+    }
+  if (status === 'running')
+    return {
+      dotClass: 'bg-sky-400 animate-pulse',
+      label: i18next.t('gateway:workerStatusRunning', { defaultValue: 'Running' }),
+    }
+  if (status === 'idle')
+    return {
+      dotClass: 'bg-amber-400',
+      label: i18next.t('gateway:workerStatusIdle', { defaultValue: 'Idle' }),
+    }
+  return {
+    dotClass: 'bg-red-400',
+    label: i18next.t('gateway:workerStatusStale', { defaultValue: 'Stale' }),
+  }
 }
 
 function getWorkerBorderClass(status: 'running' | 'complete' | 'stale' | 'idle') {
@@ -351,6 +409,21 @@ function WorkerCard({
   conductor: Pick<ReturnType<typeof useConductorGateway>, 'workerOutputs' | 'isPaused' | 'pausedAtMs' | 'missionStartedAt'>
   now: number
 }) {
+  const { t } = useTranslation('gateway')
+  const workingSteps = useMemo(
+    () => [
+      t('conductorWorking1', { defaultValue: '📋 Reviewing the brief…' }),
+      t('conductorWorking2', { defaultValue: '🔍 Scanning existing patterns…' }),
+      t('conductorWorking3', { defaultValue: '✏️ Drafting the implementation…' }),
+      t('conductorWorking4', { defaultValue: '☕ Grabbing a coffee…' }),
+      t('conductorWorking5', { defaultValue: '🧠 Thinking through edge cases…' }),
+      t('conductorWorking6', { defaultValue: '🎨 Polishing the design…' }),
+      t('conductorWorking7', { defaultValue: '🔧 Wiring up components…' }),
+      t('conductorWorking8', { defaultValue: '📐 Checking the layout…' }),
+      t('conductorWorking9', { defaultValue: '🚀 Almost there…' }),
+    ],
+    [t],
+  )
   const dot = getWorkerDot(worker.status)
   const persona = getAgentPersona(index)
   const workerOutput = conductor.workerOutputs[worker.key] ?? getLastAssistantMessage(worker.raw.messages as HistoryMessage[] | undefined)
@@ -392,19 +465,19 @@ function WorkerCard({
 
       <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
         <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-2">
-          <p className="text-[var(--theme-muted)]">Model</p>
+          <p className="text-[var(--theme-muted)]">{t('model', { defaultValue: 'Model' })}</p>
           <p className="mt-1 truncate text-[var(--theme-text)]">{getShortModelName(worker.model)}</p>
         </div>
         <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-2">
-          <p className="text-[var(--theme-muted)]">Tokens</p>
+          <p className="text-[var(--theme-muted)]">{t('tokens', { defaultValue: 'Tokens' })}</p>
           <p className="mt-1 text-[var(--theme-text)]">{worker.tokenUsageLabel}</p>
         </div>
         <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-2">
-          <p className="text-[var(--theme-muted)]">Elapsed</p>
+          <p className="text-[var(--theme-muted)]">{t('elapsed', { defaultValue: 'Elapsed' })}</p>
           <p className="mt-1 text-[var(--theme-text)]">{formatElapsedTime(workerStartedAt, workerEndTime)}</p>
         </div>
         <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-2">
-          <p className="text-[var(--theme-muted)]">Last update</p>
+          <p className="text-[var(--theme-muted)]">{t('lastUpdate', { defaultValue: 'Last update' })}</p>
           <p className="mt-1 text-[var(--theme-text)]">{formatRelativeTime(worker.updatedAt, now)}</p>
         </div>
       </div>
@@ -413,7 +486,7 @@ function WorkerCard({
         {workerOutput ? (
           <Markdown className="max-h-[400px] max-w-none overflow-auto text-sm text-[var(--theme-text)]">{workerOutput}</Markdown>
         ) : (
-          <CyclingStatus steps={WORKING_STEPS} intervalMs={3500} isPaused={conductor.isPaused} />
+          <CyclingStatus steps={workingSteps} intervalMs={3500} isPaused={conductor.isPaused} />
         )}
       </div>
     </div>
@@ -473,19 +546,21 @@ function usePreviewAvailability(previewUrl: string | null, enabled: boolean) {
 }
 
 function getShortModelName(model: string | null | undefined): string {
-  if (!model) return 'Unknown'
+  if (!model)
+    return i18next.t('gateway:unknownShort', { defaultValue: 'Unknown' })
   const parts = model.split('/')
   return parts[parts.length - 1] || model
 }
 
 function getModelDisplayName(model: AvailableModel | undefined, modelId: string | null | undefined): string {
-  if (!modelId) return 'Default (auto)'
+  if (!modelId)
+    return i18next.t('gateway:defaultAuto', { defaultValue: 'Default (auto)' })
   return model?.name?.trim() || model?.id?.trim() || modelId
 }
 
 function getProviderLabel(provider: string | null | undefined): string {
   const raw = provider?.trim()
-  if (!raw) return 'Unknown'
+  if (!raw) return i18next.t('gateway:unknownShort', { defaultValue: 'Unknown' })
   return raw
     .split(/[-_\s]+/)
     .filter(Boolean)
@@ -772,6 +847,7 @@ function deriveSessionStatus(session: GatewaySession): 'running' | 'completed' |
 }
 
 export function Conductor() {
+  const { t } = useTranslation(['gateway', 'common'])
   const conductor = useConductorGateway()
   const [goalDraft, setGoalDraft] = useState('')
   const [missionModalOpen, setMissionModalOpen] = useState(false)
@@ -889,13 +965,14 @@ export function Conductor() {
     await conductor.sendMission(trimmed)
   }
 
-  const handleQuickActionSelect = (action: (typeof QUICK_ACTIONS)[number]) => {
+  const handleQuickActionSelect = (action: (typeof QUICK_ACTION_DEFS)[number]) => {
+    const label = quickActionLabel(action.id)
     setSelectedAction(action.id)
     setGoalDraft((current) => {
       const trimmed = current.trim()
-      if (!trimmed) return `${action.label}: `
-      if (trimmed.toLowerCase().startsWith(`${action.label.toLowerCase()}:`)) return current
-      return `${action.label}: ${trimmed}`
+      if (!trimmed) return `${label}: `
+      if (trimmed.toLowerCase().startsWith(`${label.toLowerCase()}:`)) return current
+      return `${label}: ${trimmed}`
     })
   }
 
@@ -1197,7 +1274,10 @@ export function Conductor() {
       const historySummary = selectedHistoryEntry.completeSummary ?? selectedHistoryEntry.streamText
       const historyOutputText = selectedHistoryEntry.outputText?.trim() || selectedHistoryEntry.streamText?.trim() || ''
       const showHistoryOutputFallback = !!historyOutputText && (!selectedHistoryOutputPath || selectedHistoryPreview.unavailable)
-      const historyStatusLabel = selectedHistoryEntry.status === 'completed' ? 'Complete' : 'Stopped'
+      const historyStatusLabel =
+        selectedHistoryEntry.status === 'completed'
+          ? t('gateway:complete', { defaultValue: 'Complete' })
+          : t('gateway:stopped', { defaultValue: 'Stopped' })
       const historyStatusClasses =
         selectedHistoryEntry.status === 'completed'
           ? 'border border-emerald-400/35 bg-emerald-500/10 text-emerald-300'
@@ -1212,14 +1292,21 @@ export function Conductor() {
                 onClick={() => conductor.setSelectedHistoryEntry(null)}
                 className="inline-flex items-center gap-2 self-start rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm text-[var(--theme-muted)] transition-colors hover:border-[var(--theme-border2)] hover:text-[var(--theme-text)]"
               >
-                <span aria-hidden="true">←</span> Back
+                <span aria-hidden="true">←</span>{' '}
+                {t('common:back', { defaultValue: 'Back' })}
               </button>
 
               <div className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className={cn('text-xs font-semibold uppercase tracking-[0.24em]', selectedHistoryEntry.status === 'completed' ? 'text-[var(--theme-accent)]' : 'text-red-400')}>
-                      {selectedHistoryEntry.status === 'completed' ? 'Mission Complete' : 'Mission Stopped'}
+                      {selectedHistoryEntry.status === 'completed'
+                        ? t('gateway:missionComplete', {
+                            defaultValue: 'Mission Complete',
+                          })
+                        : t('gateway:missionStopped', {
+                            defaultValue: 'Mission Stopped',
+                          })}
                     </p>
                     <h1 className="mt-2 text-xl font-semibold tracking-tight text-[var(--theme-text)] sm:text-2xl">{selectedHistoryEntry.goal}</h1>
                     <p className="mt-2 text-xs text-[var(--theme-muted-2)]">
@@ -1235,7 +1322,7 @@ export function Conductor() {
                       }}
                       className="rounded-xl bg-[var(--theme-accent)] px-5 text-white hover:bg-[var(--theme-accent-strong)]"
                     >
-                      New Mission
+                      {t('gateway:newMission', { defaultValue: 'New Mission' })}
                     </Button>
                   </div>
                 </div>
@@ -1245,7 +1332,9 @@ export function Conductor() {
                 <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">Output Preview</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                        {t('gateway:outputPreview', { defaultValue: 'Output Preview' })}
+                      </p>
                       <p className="mt-1 text-xs text-[var(--theme-muted-2)]">{selectedHistoryOutputLabel}</p>
                     </div>
                     <a
@@ -1254,7 +1343,10 @@ export function Conductor() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-1.5 text-xs font-medium text-[var(--theme-text)] transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]"
                     >
-                      Open in new tab ↗
+                      {t('gateway:openInNewTab', {
+                        defaultValue: 'Open in new tab',
+                      })}{' '}
+                      ↗
                     </a>
                   </div>
                   <div className="mt-4 overflow-auto rounded-2xl border border-[var(--theme-border)] bg-white">
@@ -1262,7 +1354,9 @@ export function Conductor() {
                       src={selectedHistoryPreviewUrl!}
                       className="h-[clamp(280px,55vh,520px)] w-full"
                       sandbox="allow-scripts allow-same-origin"
-                      title="Mission history output preview"
+                      title={t('gateway:missionHistoryOutputPreview', {
+                        defaultValue: 'Mission history output preview',
+                      })}
                     />
                   </div>
                 </section>
@@ -1270,17 +1364,27 @@ export function Conductor() {
                 <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
                   <div className="flex items-center gap-3 text-sm text-[var(--theme-muted)]">
                     <div className="size-4 animate-spin rounded-full border-2 border-[var(--theme-border)] border-t-[var(--theme-accent)]" />
-                    Loading output preview…
+                    {t('gateway:loadingOutputPreview', {
+                      defaultValue: 'Loading output preview…',
+                    })}
                   </div>
                 </section>
               ) : selectedHistoryOutputPath && selectedHistoryPreview.unavailable ? (
-                showHistoryOutputFallback ? null : <p className="px-1 text-sm text-[var(--theme-muted)]">No preview available.</p>
+                showHistoryOutputFallback ? null : (
+                  <p className="px-1 text-sm text-[var(--theme-muted)]">
+                    {t('gateway:noPreviewAvailable', {
+                      defaultValue: 'No preview available.',
+                    })}
+                  </p>
+                )
               ) : null}
 
               <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">Agent Summary</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                        {t('gateway:agentSummary', { defaultValue: 'Agent Summary' })}
+                      </p>
                   </div>
                   <span className={cn('rounded-full px-3 py-1 text-xs font-medium', historyStatusClasses)}>
                     {historyStatusLabel}
@@ -1290,7 +1394,11 @@ export function Conductor() {
                   {historySummary ? (
                     <Markdown className="max-h-[400px] max-w-none overflow-auto text-sm text-[var(--theme-text)]">{historySummary}</Markdown>
                   ) : (
-                    <p className="text-sm text-[var(--theme-muted)]">No summary captured.</p>
+                    <p className="text-sm text-[var(--theme-muted)]">
+                      {t('gateway:noSummaryCaptured', {
+                        defaultValue: 'No summary captured.',
+                      })}
+                    </p>
                   )}
                 </div>
                 {historyWorkerDetails.length > 0 && (
@@ -1317,7 +1425,11 @@ export function Conductor() {
                 )}
                 {selectedHistoryEntry.streamText && selectedHistoryEntry.completeSummary && (
                   <details className="mt-4 overflow-hidden rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-5 py-4">
-                    <summary className="cursor-pointer text-xs font-medium text-[var(--theme-muted)]">Raw Agent Output</summary>
+                    <summary className="cursor-pointer text-xs font-medium text-[var(--theme-muted)]">
+                      {t('gateway:rawAgentOutput', {
+                        defaultValue: 'Raw Agent Output',
+                      })}
+                    </summary>
                     <div className="mt-4 border-t border-[var(--theme-border)] pt-4">
                       <Markdown className="max-h-[400px] max-w-none overflow-auto text-sm text-[var(--theme-text)]">{selectedHistoryEntry.streamText}</Markdown>
                     </div>
@@ -1329,9 +1441,14 @@ export function Conductor() {
                 <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">Output</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                        {t('gateway:output', { defaultValue: 'Output' })}
+                      </p>
                       <p className="mt-1 text-xs text-[var(--theme-muted-2)]">
-                        Preview unavailable{selectedHistoryOutputPath ? ` for ${selectedHistoryOutputLabel}` : ''}.
+                        {t('gateway:previewUnavailable', {
+                          defaultValue: 'Preview unavailable',
+                        })}
+                        {selectedHistoryOutputPath ? ` ${t('gateway:forFile', { defaultValue: 'for' })} ${selectedHistoryOutputLabel}` : ''}.
                       </p>
                     </div>
                   </div>
@@ -1341,7 +1458,9 @@ export function Conductor() {
                 </section>
               ) : historyOutputText ? (
                 <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">Worker Output</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                    {t('gateway:workerOutput', { defaultValue: 'Worker Output' })}
+                  </p>
                   <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-5 py-4">
                     <Markdown className="max-h-[600px] max-w-none overflow-auto text-sm text-[var(--theme-text)]">{historyOutputText}</Markdown>
                   </div>
@@ -1531,15 +1650,49 @@ export function Conductor() {
                   </div>
                 ) : (
                   <div className="rounded-xl border border-dashed border-[var(--theme-border)] px-4 py-6 text-center text-sm text-[var(--theme-muted)]">
-                    No {activityFilter === 'all' ? '' : `${activityFilter} `}{hasMissionHistory ? 'missions' : 'sessions'} found
+                    {activityFilter === 'all'
+                      ? hasMissionHistory
+                        ? t('conductorNoMissionsAll', { defaultValue: 'No missions found' })
+                        : t('conductorNoSessionsAll', { defaultValue: 'No sessions found' })
+                      : hasMissionHistory
+                        ? t('conductorNoMissionsFiltered', {
+                            status: t(
+                              activityFilter === 'completed'
+                                ? 'conductorFilterCompleted'
+                                : 'conductorFilterFailed',
+                              {
+                                defaultValue:
+                                  activityFilter === 'completed' ? 'completed' : 'failed',
+                              },
+                            ),
+                            defaultValue: 'No {{status}} missions found',
+                          })
+                        : t('conductorNoSessionsFiltered', {
+                            status: t(
+                              activityFilter === 'completed'
+                                ? 'conductorFilterCompleted'
+                                : 'conductorFilterFailed',
+                              {
+                                defaultValue:
+                                  activityFilter === 'completed' ? 'completed' : 'failed',
+                              },
+                            ),
+                            defaultValue: 'No {{status}} sessions found',
+                          })}
                   </div>
                 )}
               </section>
             ) : (
               <section className="mt-6 w-full">
                 <div className="rounded-xl border border-dashed border-[var(--theme-border)] px-4 py-8 text-center">
-                  <p className="text-sm text-[var(--theme-muted)]">No missions yet.</p>
-                  <p className="mt-1 text-xs text-[var(--theme-muted-2)]">Launch your first mission and it will appear here.</p>
+                  <p className="text-sm text-[var(--theme-muted)]">
+                    {t('noMissionsYet', { defaultValue: 'No missions yet.' })}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--theme-muted-2)]">
+                    {t('launchFirstMissionHint', {
+                      defaultValue: 'Launch your first mission and it will appear here.',
+                    })}
+                  </p>
                 </div>
               </section>
             )}
@@ -1556,14 +1709,23 @@ export function Conductor() {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-lg font-semibold tracking-tight text-[var(--theme-text)]">New Mission</h2>
-                    <p className="mt-1 text-sm text-[var(--theme-muted-2)]">Describe the mission, constraints, and desired outcome.</p>
+                    <h2 className="text-lg font-semibold tracking-tight text-[var(--theme-text)]">
+                      {t('newMissionModalTitle', { defaultValue: 'New Mission' })}
+                    </h2>
+                    <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
+                      {t('newMissionModalSubtitle', {
+                        defaultValue:
+                          'Describe the mission, constraints, and desired outcome.',
+                      })}
+                    </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setMissionModalOpen(false)}
                     className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] text-lg text-[var(--theme-muted)] transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent-strong)]"
-                    aria-label="Close new mission dialog"
+                    aria-label={t('newMissionCloseAria', {
+                      defaultValue: 'Close new mission dialog',
+                    })}
                   >
                     ×
                   </button>
@@ -1577,7 +1739,7 @@ export function Conductor() {
                   }}
                 >
                   <div className="flex flex-wrap gap-2">
-                    {QUICK_ACTIONS.map((action) => (
+                    {QUICK_ACTION_DEFS.map((action) => (
                       <button
                         key={action.id}
                         type="button"
@@ -1590,7 +1752,7 @@ export function Conductor() {
                         )}
                       >
                         <HugeiconsIcon icon={action.icon} size={14} strokeWidth={1.7} />
-                        {action.label}
+                        {quickActionLabel(action.id)}
                       </button>
                     ))}
                   </div>
@@ -1598,7 +1760,10 @@ export function Conductor() {
                   <textarea
                     value={goalDraft}
                     onChange={(event) => setGoalDraft(event.target.value)}
-                    placeholder={`${QUICK_ACTIONS.find((action) => action.id === selectedAction)?.label ?? 'Build'}: describe the mission, constraints, and desired outcome.`}
+                    placeholder={`${quickActionLabel(selectedAction)}: ${t('conductorMissionPlaceholderHint', {
+                      defaultValue:
+                        'describe the mission, constraints, and desired outcome.',
+                    })}`}
                     disabled={conductor.isSending}
                     rows={8}
                     className="min-h-[220px] w-full rounded-3xl border border-[var(--theme-border2)] bg-[var(--theme-bg)] px-4 py-4 text-sm text-[var(--theme-text)] outline-none transition-colors placeholder:text-[var(--theme-muted-2)] focus:border-[var(--theme-accent)] disabled:cursor-not-allowed disabled:opacity-60 md:text-base"
@@ -1610,7 +1775,9 @@ export function Conductor() {
                       disabled={!goalDraft.trim() || conductor.isSending}
                       className="rounded-full bg-[var(--theme-accent)] px-5 text-white hover:bg-[var(--theme-accent-strong)]"
                     >
-                      {conductor.isSending ? 'Launching...' : 'Launch Mission'}
+                      {conductor.isSending
+                        ? t('launchingMission', { defaultValue: 'Launching…' })
+                        : t('launchMission', { defaultValue: 'Launch Mission' })}
                       <HugeiconsIcon icon={ArrowRight01Icon} size={16} strokeWidth={1.7} />
                     </Button>
                   </div>
@@ -1630,7 +1797,9 @@ export function Conductor() {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">Mission Defaults</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                      {t('missionDefaultsTitle', { defaultValue: 'Mission Defaults' })}
+                    </p>
                     <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--theme-text)]">Conductor settings</h2>
                     <p className="mt-2 text-sm text-[var(--theme-muted-2)]">Set the models and defaults every new mission should inherit.</p>
                   </div>

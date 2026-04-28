@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowDown01Icon, Cancel01Icon, PlusSignIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -63,10 +64,12 @@ function ModelSelector({
   value,
   onChange,
   models,
+  defaultAutoLabel,
 }: {
   value: string
   onChange: (nextValue: string) => void
   models: AvailableModel[]
+  defaultAutoLabel: string
 }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -92,7 +95,7 @@ function ModelSelector({
         className="inline-flex min-h-[3rem] w-full items-center justify-between gap-3 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-left text-sm text-[var(--theme-text)] shadow-[0_8px_24px_color-mix(in_srgb,var(--theme-shadow)_18%,transparent)]"
       >
         <span className="truncate">
-          {selected ? `${selected.provider} / ${selected.name}` : 'Default (auto)'}
+          {selected ? `${selected.provider} / ${selected.name}` : defaultAutoLabel}
         </span>
         <HugeiconsIcon
           icon={ArrowDown01Icon}
@@ -149,6 +152,8 @@ export function OperationsNewAgentModal({
   }) => Promise<unknown>
   isSaving: boolean
 }) {
+  const { t } = useTranslation('operations')
+  const { t: tCommon } = useTranslation('common')
   const [presetId, setPresetId] = useState<string>('blank')
   const [name, setName] = useState('')
   const [emoji, setEmoji] = useState('🤖')
@@ -208,10 +213,12 @@ export function OperationsNewAgentModal({
             </div>
             <div>
               <h2 className="text-xl font-semibold text-[var(--theme-text)]">
-                New Agent
+                {t('newAgentTitle', { defaultValue: 'New Agent' })}
               </h2>
               <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
-                Add a persistent Operations agent to the roster.
+                {t('newAgentDesc', {
+                  defaultValue: 'Add a persistent Operations agent to the roster.',
+                })}
               </p>
             </div>
           </div>
@@ -226,7 +233,7 @@ export function OperationsNewAgentModal({
 
         <div className="mt-6 space-y-2">
           <span className="text-sm font-medium text-[var(--theme-text)]">
-            Start from a template
+            {t('startFromTemplate', { defaultValue: 'Start from a template' })}
           </span>
           <div className="flex flex-wrap gap-2">
             {PRESET_OPTIONS.map((preset) => (
@@ -242,61 +249,80 @@ export function OperationsNewAgentModal({
                 )}
               >
                 <span aria-hidden="true">{preset.emoji}</span>
-                <span>{preset.name}</span>
+                <span>
+                  {preset.id === 'blank'
+                    ? t('presetBlank', { defaultValue: 'Blank' })
+                    : preset.name}
+                </span>
               </button>
             ))}
           </div>
           <p className="text-xs text-[var(--theme-muted)]">
-            Templates fill in emoji, description, and system prompt. You can edit
-            everything before creating.
+            {t('templateHelp', {
+              defaultValue:
+                'Templates fill in emoji, description, and system prompt. You can edit everything before creating.',
+            })}
           </p>
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-[1.2fr_0.6fr]">
           <label className="space-y-2">
-            <span className="text-sm font-medium text-[var(--theme-text)]">Name</span>
+            <span className="text-sm font-medium text-[var(--theme-text)]">
+              {t('labelName', { defaultValue: 'Name' })}
+            </span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Sage"
+              placeholder={t('phAgentName', { defaultValue: 'Sage' })}
               className="w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
             />
           </label>
 
           <label className="space-y-2">
-            <span className="text-sm font-medium text-[var(--theme-text)]">Emoji</span>
+            <span className="text-sm font-medium text-[var(--theme-text)]">
+              {t('labelEmoji', { defaultValue: 'Emoji' })}
+            </span>
             <input
               value={emoji}
               onChange={(event) => setEmoji(event.target.value)}
-              placeholder="🐦"
+              placeholder={t('phEmoji', { defaultValue: '🐦' })}
               className="w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
             />
           </label>
         </div>
 
         <label className="mt-4 block space-y-2">
-          <span className="text-sm font-medium text-[var(--theme-text)]">Model</span>
-          <ModelSelector value={model} onChange={setModel} models={models} />
+          <span className="text-sm font-medium text-[var(--theme-text)]">
+            {t('labelModel', { defaultValue: 'Model' })}
+          </span>
+          <ModelSelector
+            value={model}
+            onChange={setModel}
+            models={models}
+            defaultAutoLabel={t('defaultModelAuto', { defaultValue: 'Default (auto)' })}
+          />
         </label>
 
         <label className="mt-4 block space-y-2">
-          <span className="text-sm font-medium text-[var(--theme-text)]">Description</span>
+          <span className="text-sm font-medium text-[var(--theme-text)]">
+            {t('labelDescription', { defaultValue: 'Description' })}
+          </span>
           <input
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            placeholder="X/Twitter growth agent"
+            placeholder={t('phDescription', { defaultValue: 'X/Twitter growth agent' })}
             className="w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
           />
         </label>
 
         <label className="mt-4 block space-y-2">
           <span className="text-sm font-medium text-[var(--theme-text)]">
-            System Prompt
+            {t('labelSystemPrompt', { defaultValue: 'System Prompt' })}
           </span>
           <textarea
             value={systemPrompt}
             onChange={(event) => setSystemPrompt(event.target.value)}
-            placeholder="You are Sage, an expert..."
+            placeholder={t('phSystemPrompt', { defaultValue: 'You are Sage, an expert...' })}
             className="min-h-[180px] w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
           />
         </label>
@@ -307,7 +333,7 @@ export function OperationsNewAgentModal({
             className="border border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
             onClick={onClose}
           >
-            Cancel
+            {tCommon('cancel', { defaultValue: 'Cancel' })}
           </Button>
           <Button
             className="bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
@@ -322,7 +348,7 @@ export function OperationsNewAgentModal({
             }
             disabled={isSaving || !name.trim()}
           >
-            {isSaving ? 'Creating…' : 'Create Agent'}
+            {isSaving ? t('creating', { defaultValue: 'Creating…' }) : t('createAgentBtn', { defaultValue: 'Create Agent' })}
           </Button>
         </div>
       </div>

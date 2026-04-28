@@ -1,4 +1,5 @@
 import { Suspense, lazy, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Cancel01Icon, Settings01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { AgentProgress } from '@/components/agent-view/agent-progress'
@@ -18,6 +19,7 @@ export function OrchestratorCard({
 }: {
   totalAgents: number
 }) {
+  const { t } = useTranslation('operations')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [orchestratorName, setOrchestratorName] = useState(() => {
     if (typeof window === 'undefined') return DEFAULT_ORCHESTRATOR_NAME
@@ -31,7 +33,8 @@ export function OrchestratorCard({
   }
 
   const saveSettings = () => {
-    const nextName = draftName.trim() || DEFAULT_ORCHESTRATOR_NAME
+    const fallback = t('mainAgentDefault', { defaultValue: DEFAULT_ORCHESTRATOR_NAME })
+    const nextName = draftName.trim() || fallback
     window.localStorage.setItem(ORCHESTRATOR_NAME_KEY, nextName)
     setOrchestratorName(nextName)
     setDraftName(nextName)
@@ -51,8 +54,8 @@ export function OrchestratorCard({
                     'h-2.5 w-2.5 rounded-full bg-emerald-500',
                     totalAgents > 0 && 'animate-pulse',
                   )}
-                  aria-label="Active"
-                  title="Active"
+                  aria-label={t('statusActive', { defaultValue: 'Active' })}
+                  title={t('statusActive', { defaultValue: 'Active' })}
                 />
               </span>
             </h2>
@@ -62,8 +65,12 @@ export function OrchestratorCard({
                 type="button"
                 onClick={openSettings}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--theme-muted)] transition-colors hover:text-[var(--theme-text)]"
-                aria-label="Orchestrator settings"
-                title="Orchestrator settings"
+                aria-label={t('ariaOrchestratorSettings', {
+                  defaultValue: 'Orchestrator settings',
+                })}
+                title={t('ariaOrchestratorSettings', {
+                  defaultValue: 'Orchestrator settings',
+                })}
               >
                 <HugeiconsIcon icon={Settings01Icon} size={16} strokeWidth={1.8} />
               </button>
@@ -89,7 +96,10 @@ export function OrchestratorCard({
           </div>
 
           <p className="text-sm text-[var(--theme-muted)]">
-            Orchestrator · {totalAgents} agents reporting
+            {t('orchestratorLine', {
+              count: totalAgents,
+              defaultValue: `Orchestrator · ${totalAgents} agents reporting`,
+            })}
           </p>
 
         </div>
@@ -99,7 +109,7 @@ export function OrchestratorCard({
             <Suspense
               fallback={
                 <div className="flex h-full w-full items-center justify-center bg-[var(--theme-card)] px-4 text-sm text-[var(--theme-muted)]">
-                  Loading…
+                  {t('loadingChat', { defaultValue: 'Loading…' })}
                 </div>
               }
             >
@@ -132,10 +142,12 @@ export function OrchestratorCard({
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-[var(--theme-text)]">
-                    Orchestrator Settings
+                    {t('orchestratorSettingsTitle', { defaultValue: 'Orchestrator Settings' })}
                   </h2>
                   <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
-                    Update the display name used on this card.
+                    {t('orchestratorSettingsDesc', {
+                      defaultValue: 'Update the display name used on this card.',
+                    })}
                   </p>
                 </div>
               </div>
@@ -143,7 +155,9 @@ export function OrchestratorCard({
                 type="button"
                 onClick={() => setSettingsOpen(false)}
                 className="inline-flex size-10 items-center justify-center rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] text-[var(--theme-muted)] transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent-strong)]"
-                aria-label="Close orchestrator settings"
+                aria-label={t('ariaCloseOrchestrator', {
+                  defaultValue: 'Close orchestrator settings',
+                })}
               >
                 <HugeiconsIcon icon={Cancel01Icon} size={18} strokeWidth={1.8} />
               </button>
@@ -151,22 +165,22 @@ export function OrchestratorCard({
 
             <label className="mt-6 block space-y-2">
               <span className="text-sm font-medium text-[var(--theme-text)]">
-                Display name
+                {t('labelDisplayName', { defaultValue: 'Display name' })}
               </span>
               <input
                 value={draftName}
                 onChange={(event) => setDraftName(event.target.value)}
-                placeholder={DEFAULT_ORCHESTRATOR_NAME}
+                placeholder={t('mainAgentDefault', { defaultValue: DEFAULT_ORCHESTRATOR_NAME })}
                 className="w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-accent)]"
               />
             </label>
 
             <div className="mt-6 flex items-center justify-end gap-3">
               <Button type="button" variant="secondary" onClick={() => setSettingsOpen(false)}>
-                Close
+                {t('close', { defaultValue: 'Close' })}
               </Button>
               <Button type="button" onClick={saveSettings}>
-                Save
+                {t('save', { defaultValue: 'Save' })}
               </Button>
             </div>
           </div>

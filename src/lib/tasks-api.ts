@@ -1,3 +1,6 @@
+import { i18next } from './i18n/init'
+import { localizeApiError } from './i18n/errors'
+
 const BASE = '/api/hermes-tasks'
 
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'done'
@@ -61,7 +64,20 @@ export async function fetchTasks(params?: {
   if (params?.include_done) q.set('include_done', 'true')
   const url = q.toString() ? `${BASE}?${q}` : BASE
   const res = await fetch(url)
-  if (!res.ok) throw new Error(`Failed to fetch tasks: ${res.status}`)
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
+    throw new Error(
+      localizeApiError(
+        {
+          error: typeof body.error === 'string' ? body.error : undefined,
+          message: typeof body.message === 'string' ? body.message : undefined,
+          errorCode:
+            typeof body.errorCode === 'string' ? body.errorCode : undefined,
+        },
+        `Failed to fetch tasks: ${res.status}`,
+      ),
+    )
+  }
   const data = await res.json()
   return data.tasks ?? []
 }
@@ -74,7 +90,22 @@ export async function createTask(input: CreateTaskInput): Promise<HermesTask> {
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    throw new Error(body.detail || `Failed to create task: ${res.status}`)
+    throw new Error(
+      localizeApiError(
+        {
+          error:
+            typeof body.detail === 'string'
+              ? body.detail
+              : typeof body.error === 'string'
+                ? body.error
+                : undefined,
+          message: typeof body.message === 'string' ? body.message : undefined,
+          errorCode:
+            typeof body.errorCode === 'string' ? body.errorCode : undefined,
+        },
+        `Failed to create task: ${res.status}`,
+      ),
+    )
   }
   return (await res.json()).task
 }
@@ -85,13 +116,39 @@ export async function updateTask(taskId: string, input: UpdateTaskInput): Promis
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   })
-  if (!res.ok) throw new Error(`Failed to update task: ${res.status}`)
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
+    throw new Error(
+      localizeApiError(
+        {
+          error: typeof body.error === 'string' ? body.error : undefined,
+          message: typeof body.message === 'string' ? body.message : undefined,
+          errorCode:
+            typeof body.errorCode === 'string' ? body.errorCode : undefined,
+        },
+        `Failed to update task: ${res.status}`,
+      ),
+    )
+  }
   return (await res.json()).task
 }
 
 export async function deleteTask(taskId: string): Promise<void> {
   const res = await fetch(`${BASE}/${taskId}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error(`Failed to delete task: ${res.status}`)
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
+    throw new Error(
+      localizeApiError(
+        {
+          error: typeof body.error === 'string' ? body.error : undefined,
+          message: typeof body.message === 'string' ? body.message : undefined,
+          errorCode:
+            typeof body.errorCode === 'string' ? body.errorCode : undefined,
+        },
+        `Failed to delete task: ${res.status}`,
+      ),
+    )
+  }
 }
 
 export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user'): Promise<HermesTask> {
@@ -102,17 +159,32 @@ export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'us
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    throw new Error(body.detail || `Failed to move task: ${res.status}`)
+    throw new Error(
+      localizeApiError(
+        {
+          error:
+            typeof body.detail === 'string'
+              ? body.detail
+              : typeof body.error === 'string'
+                ? body.error
+                : undefined,
+          message: typeof body.message === 'string' ? body.message : undefined,
+          errorCode:
+            typeof body.errorCode === 'string' ? body.errorCode : undefined,
+        },
+        `Failed to move task: ${res.status}`,
+      ),
+    )
   }
   return (await res.json()).task
 }
 
 export const COLUMN_LABELS: Record<TaskColumn, string> = {
-  backlog: 'Backlog',
-  todo: 'Todo',
-  in_progress: 'In Progress',
-  review: 'Review',
-  done: 'Done',
+  backlog: i18next.t('tasks.backlog', { defaultValue: 'Backlog' }),
+  todo: i18next.t('tasks.todo', { defaultValue: 'Todo' }),
+  in_progress: i18next.t('tasks.inProgress', { defaultValue: 'In Progress' }),
+  review: i18next.t('tasks.review', { defaultValue: 'Review' }),
+  done: i18next.t('tasks.done', { defaultValue: 'Done' }),
 }
 
 export const COLUMN_ORDER: Array<TaskColumn> = ['backlog', 'todo', 'in_progress', 'review', 'done']

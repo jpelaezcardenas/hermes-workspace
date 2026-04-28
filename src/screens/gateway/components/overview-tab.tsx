@@ -2,6 +2,7 @@
 // The Overview content is instead rendered inline via renderOverviewContent().
 // To reduce agent-hub-layout.tsx size, the inline overview rendering could be
 // migrated to use this component instead.
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import type { AgentWorkingRow } from './agents-working-panel'
 import type { TeamMember } from './team-panel'
@@ -61,6 +62,7 @@ export function OverviewTab({
   onOpenConfigureAgents,
   onViewAgentOutput,
 }: OverviewTabProps) {
+  const { t } = useTranslation('gateway')
   return (
     <div className="h-full overflow-y-auto bg-neutral-50 p-4">
       <div className="space-y-4">
@@ -68,14 +70,34 @@ export function OverviewTab({
           {missionActive ? (
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-neutral-900">Mission Status</p>
+                <p className="text-xs font-semibold text-neutral-900">
+                  {t('overviewMissionStatus', { defaultValue: 'Mission Status' })}
+                </p>
                 <p className="mt-1 truncate text-sm text-neutral-700">
-                  {truncateMissionGoal(activeMissionGoal || missionGoal || 'Active mission')}
+                  {truncateMissionGoal(
+                    activeMissionGoal ||
+                      missionGoal ||
+                      t('overviewActiveMissionFallback', { defaultValue: 'Active mission' }),
+                  )}
                 </p>
                 <p className="mt-1 text-[11px] text-neutral-500">
-                  {activeCount} active agent{activeCount === 1 ? '' : 's'}
+                  {activeCount === 1
+                    ? t('overviewActiveAgentsOne', {
+                        count: 1,
+                        defaultValue: '{{count}} active agent',
+                      })
+                    : t('overviewActiveAgentsMany', {
+                        count: activeCount,
+                        defaultValue: '{{count}} active agents',
+                      })}
                   {' · '}
-                  {totalTasks > 0 ? `${doneTasks}/${totalTasks} tasks done` : 'No tasks yet'}
+                  {totalTasks > 0
+                    ? t('overviewTasksProgress', {
+                        done: doneTasks,
+                        total: totalTasks,
+                        defaultValue: '{{done}}/{{total}} tasks done',
+                      })
+                    : t('overviewNoTasksYet', { defaultValue: 'No tasks yet' })}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -84,23 +106,27 @@ export function OverviewTab({
                   onClick={onViewMission}
                   className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 shadow-sm transition-colors hover:bg-neutral-50"
                 >
-                  View Mission
+                  {t('overviewViewMission', { defaultValue: 'View Mission' })}
                 </button>
                 <button
                   type="button"
                   onClick={onStopMission}
                   className="rounded-lg bg-accent-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-accent-600"
                 >
-                  Stop
+                  {t('overviewStop', { defaultValue: 'Stop' })}
                 </button>
               </div>
             </div>
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold text-neutral-900">No active mission</p>
+                <p className="text-xs font-semibold text-neutral-900">
+                  {t('overviewNoActiveMission', { defaultValue: 'No active mission' })}
+                </p>
                 <p className="mt-1 text-[11px] text-neutral-500">
-                  Configure your team and launch a mission when ready.
+                  {t('overviewNoMissionHint', {
+                    defaultValue: 'Configure your team and launch a mission when ready.',
+                  })}
                 </p>
               </div>
               <button
@@ -108,7 +134,7 @@ export function OverviewTab({
                 onClick={onOpenLaunchWizard}
                 className="rounded-lg bg-accent-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-accent-600"
               >
-                Start Mission
+                {t('overviewStartMission', { defaultValue: 'Start Mission' })}
               </button>
             </div>
           )}
@@ -116,10 +142,37 @@ export function OverviewTab({
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
-            { label: 'Agents', value: teamCount.toString(), sub: teamLabel },
-            { label: 'Active', value: activeCount.toString(), sub: missionActive ? 'Currently working' : 'Idle' },
-            { label: 'Tasks', value: totalTasks.toString(), sub: totalTasks > 0 ? `${doneTasks} done` : 'No tasks yet' },
-            { label: 'Approvals', value: pendingApprovalCount.toString(), sub: pendingApprovalCount > 0 ? 'Needs review' : 'All clear' },
+            {
+              label: t('overviewStatAgents', { defaultValue: 'Agents' }),
+              value: teamCount.toString(),
+              sub: teamLabel,
+            },
+            {
+              label: t('overviewStatActive', { defaultValue: 'Active' }),
+              value: activeCount.toString(),
+              sub: missionActive
+                ? t('overviewSubCurrentlyWorking', { defaultValue: 'Currently working' })
+                : t('overviewSubIdle', { defaultValue: 'Idle' }),
+            },
+            {
+              label: t('overviewStatTasks', { defaultValue: 'Tasks' }),
+              value: totalTasks.toString(),
+              sub:
+                totalTasks > 0
+                  ? t('overviewSubTasksDone', {
+                      done: doneTasks,
+                      defaultValue: '{{done}} done',
+                    })
+                  : t('overviewNoTasksYet', { defaultValue: 'No tasks yet' }),
+            },
+            {
+              label: t('overviewStatApprovals', { defaultValue: 'Approvals' }),
+              value: pendingApprovalCount.toString(),
+              sub:
+                pendingApprovalCount > 0
+                  ? t('overviewSubNeedsReview', { defaultValue: 'Needs review' })
+                  : t('overviewSubAllClear', { defaultValue: 'All clear' }),
+            },
           ].map((stat) => (
             <div
               key={stat.label}
@@ -135,7 +188,9 @@ export function OverviewTab({
         <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
-              <h2 className="text-sm font-semibold text-neutral-900">Agents</h2>
+              <h2 className="text-sm font-semibold text-neutral-900">
+                {t('overviewAgentsHeading', { defaultValue: 'Agents' })}
+              </h2>
               {agentWorkingRows.length > 0 ? (
                 <div className="flex -space-x-2">
                   {agentWorkingRows.slice(0, 5).map((agent, index) => {
@@ -170,7 +225,9 @@ export function OverviewTab({
                             : 'text-neutral-500 hover:text-neutral-700',
                         )}
                       >
-                        {mode === 'cards' ? 'Cards' : 'Live'}
+                        {mode === 'cards'
+                          ? t('overviewViewCards', { defaultValue: 'Cards' })
+                          : t('overviewViewLive', { defaultValue: 'Live' })}
                       </button>
                     ))}
                   </div>
@@ -182,14 +239,20 @@ export function OverviewTab({
               onClick={onOpenConfigureAgents}
               className="text-xs font-medium text-accent-600 hover:text-accent-700"
             >
-              Configure
+              {t('overviewConfigure', { defaultValue: 'Configure' })}
             </button>
           </div>
           {agentWorkingRows.length === 0 ? (
             <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 py-6 text-center">
               <p className="text-2xl" aria-hidden>🤖</p>
-              <p className="mt-1 text-sm font-medium text-neutral-700">No agents configured yet</p>
-              <p className="mt-1 text-xs text-neutral-500">Open Configure to add your first agent.</p>
+              <p className="mt-1 text-sm font-medium text-neutral-700">
+                {t('overviewNoAgentsTitle', { defaultValue: 'No agents configured yet' })}
+              </p>
+              <p className="mt-1 text-xs text-neutral-500">
+                {t('overviewNoAgentsHint', {
+                  defaultValue: 'Open Configure to add your first agent.',
+                })}
+              </p>
             </div>
           ) : overviewAgentsView === 'live' ? (
             <OfficeView
@@ -299,7 +362,9 @@ export function OverviewTab({
         </section>
 
         <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-          <h2 className="text-sm font-semibold text-neutral-900">Recent Activity</h2>
+          <h2 className="text-sm font-semibold text-neutral-900">
+            {t('overviewRecentActivity', { defaultValue: 'Recent Activity' })}
+          </h2>
           {recentActivityItems.length === 0 ? (
             <p className="mt-2 text-xs text-neutral-500">📝 No recent activity yet.</p>
           ) : (

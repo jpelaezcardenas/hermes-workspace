@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ArrowUp01Icon, RefreshIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Button } from '@/components/ui/button'
@@ -14,6 +15,7 @@ export function OperationsAgentChat({
   agentId: string
   agentName: string
 }) {
+  const { t } = useTranslation('operations')
   const [draft, setDraft] = useState('')
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const { messages, sendMessage, isRefreshing, isSending, error, refresh } =
@@ -37,9 +39,14 @@ export function OperationsAgentChat({
     <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 shadow-[0_20px_70px_color-mix(in_srgb,var(--theme-shadow)_14%,transparent)]">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold text-[var(--theme-text)]">Chat</h3>
+          <h3 className="text-lg font-semibold text-[var(--theme-text)]">
+            {t('opsChatTitle', { defaultValue: 'Chat' })}
+          </h3>
           <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
-            Persistent session with {agentName}
+            {t('opsChatSessionWith', {
+              name: agentName,
+              defaultValue: `Persistent session with ${agentName}`,
+            })}
           </p>
         </div>
         <Button
@@ -53,7 +60,7 @@ export function OperationsAgentChat({
             strokeWidth={1.8}
             className={cn(isRefreshing && 'animate-spin')}
           />
-          Refresh
+          {t('refresh', { defaultValue: 'Refresh' })}
         </Button>
       </div>
 
@@ -73,7 +80,13 @@ export function OperationsAgentChat({
               )}
             >
               <div className="mb-2 flex items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
-                <span>{message.role}</span>
+                <span>
+                  {message.role === 'user'
+                    ? t('msgRoleUser', { defaultValue: 'User' })
+                    : message.role === 'assistant'
+                      ? t('msgRoleAssistant', { defaultValue: 'Assistant' })
+                      : message.role}
+                </span>
                 {message.timestamp ? (
                   <span>{formatRelativeTime(message.timestamp)}</span>
                 ) : null}
@@ -87,7 +100,9 @@ export function OperationsAgentChat({
           ))
         ) : (
           <p className="text-sm text-[var(--theme-muted)]">
-            No messages yet. Start the conversation with this agent.
+            {t('opsChatThreadEmpty', {
+              defaultValue: 'No messages yet. Start the conversation with this agent.',
+            })}
           </p>
         )}
       </div>
@@ -106,7 +121,7 @@ export function OperationsAgentChat({
               void handleSend()
             }
           }}
-          placeholder="Type a message..."
+          placeholder={t('opsChatInputPlaceholder', { defaultValue: 'Type a message…' })}
           className="min-h-[112px] flex-1 resize-y rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
         />
         <Button
@@ -115,7 +130,9 @@ export function OperationsAgentChat({
           disabled={!draft.trim() || isSending}
         >
           <HugeiconsIcon icon={ArrowUp01Icon} size={16} strokeWidth={1.8} />
-          {isSending ? 'Sending…' : 'Send'}
+          {isSending
+            ? t('opsChatSending', { defaultValue: 'Sending…' })
+            : t('opsChatSend', { defaultValue: 'Send' })}
         </Button>
       </div>
     </section>

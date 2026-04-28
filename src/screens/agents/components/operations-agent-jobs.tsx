@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Add01Icon, Clock01Icon, Tick01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -25,6 +26,7 @@ export function OperationsAgentJobs({
   jobs: CronJob[]
   slugifyJobLabel: (value: string) => string
 }) {
+  const { t } = useTranslation('operations')
   const queryClient = useQueryClient()
   const [adding, setAdding] = useState(false)
   const [title, setTitle] = useState('')
@@ -40,7 +42,9 @@ export function OperationsAgentJobs({
     },
     onError: (error) => {
       toast(
-        error instanceof Error ? error.message : 'Failed to update cron job',
+        error instanceof Error
+          ? error.message
+          : t('failedCronToggle', { defaultValue: 'Failed to update cron job' }),
         { type: 'error' },
       )
     },
@@ -50,7 +54,7 @@ export function OperationsAgentJobs({
     mutationFn: async () => {
       const trimmedTitle = title.trim()
       if (!trimmedTitle) {
-        throw new Error('Job name is required')
+        throw new Error(t('errJobNameRequired', { defaultValue: 'Job name is required' }))
       }
 
       await upsertCronJob({
@@ -67,11 +71,13 @@ export function OperationsAgentJobs({
       setDescription('')
       setAdding(false)
       await queryClient.invalidateQueries({ queryKey: ['operations', 'cron'] })
-      toast('Cron job created', { type: 'success' })
+      toast(t('cronJobCreatedToast', { defaultValue: 'Cron job created' }), { type: 'success' })
     },
     onError: (error) => {
       toast(
-        error instanceof Error ? error.message : 'Failed to create cron job',
+        error instanceof Error
+          ? error.message
+          : t('errCreateCronJob', { defaultValue: 'Failed to create cron job' }),
         { type: 'error' },
       )
     },
@@ -82,10 +88,10 @@ export function OperationsAgentJobs({
       <div className="flex items-center justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold text-[var(--theme-text)]">
-            Scheduled Jobs
+            {t('opsJobsTitle', { defaultValue: 'Scheduled Jobs' })}
           </h3>
           <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
-            Jobs tagged with `ops:{agentId}:*`
+            {t('opsJobsSubtitle', { defaultValue: 'Jobs tagged with `ops:{agentId}:*`' })}
           </p>
         </div>
         <Button
@@ -94,7 +100,7 @@ export function OperationsAgentJobs({
           onClick={() => setAdding((value) => !value)}
         >
           <HugeiconsIcon icon={Add01Icon} size={16} strokeWidth={1.8} />
-          Add Job
+          {t('addJobPlain', { defaultValue: 'Add Job' })}
         </Button>
       </div>
 
@@ -121,7 +127,11 @@ export function OperationsAgentJobs({
                         })
                       }
                       className="inline-flex size-5 items-center justify-center rounded border border-[var(--theme-border)] bg-[var(--theme-card)]"
-                      aria-label={job.enabled ? 'Disable job' : 'Enable job'}
+                      aria-label={
+                        job.enabled
+                          ? t('ariaDisableJob', { defaultValue: 'Disable job' })
+                          : t('ariaEnableJob', { defaultValue: 'Enable job' })
+                      }
                     >
                       {job.enabled ? (
                         <HugeiconsIcon
@@ -149,10 +159,16 @@ export function OperationsAgentJobs({
                   </p>
                   <p className="mt-1">
                     {job.nextRunAt
-                      ? `Next ${new Date(job.nextRunAt).toLocaleString()}`
+                      ? t('jobsNextRun', {
+                          when: new Date(job.nextRunAt).toLocaleString(),
+                          defaultValue: `Next ${new Date(job.nextRunAt).toLocaleString()}`,
+                        })
                       : lastRunAt
-                        ? `Last ${formatRelativeTime(lastRunAt)}`
-                        : 'No runs yet'}
+                        ? t('jobsLastRun', {
+                            when: formatRelativeTime(lastRunAt),
+                            defaultValue: `Last ${formatRelativeTime(lastRunAt)}`,
+                          })
+                        : t('jobsNoRunsYet', { defaultValue: 'No runs yet' })}
                   </p>
                 </div>
               </div>
@@ -160,7 +176,9 @@ export function OperationsAgentJobs({
           })
         ) : (
           <div className="rounded-2xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-bg)] px-4 py-6 text-sm text-[var(--theme-muted)]">
-            No cron jobs are linked to this agent yet.
+            {t('opsJobsEmpty', {
+              defaultValue: 'No cron jobs are linked to this agent yet.',
+            })}
           </div>
         )}
       </div>
@@ -169,16 +187,20 @@ export function OperationsAgentJobs({
         <div className="mt-4 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-4">
           <div className="grid gap-3 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-medium text-[var(--theme-text)]">Job Name</span>
+              <span className="text-sm font-medium text-[var(--theme-text)]">
+                {t('jobFieldName', { defaultValue: 'Job Name' })}
+              </span>
               <input
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Daily scan"
+                placeholder={t('placeholderDailyScan', { defaultValue: 'Daily scan' })}
                 className="w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-medium text-[var(--theme-text)]">Schedule</span>
+              <span className="text-sm font-medium text-[var(--theme-text)]">
+                {t('jobFieldSchedule', { defaultValue: 'Schedule' })}
+              </span>
               <input
                 value={schedule}
                 onChange={(event) => setSchedule(event.target.value)}
@@ -188,11 +210,15 @@ export function OperationsAgentJobs({
             </label>
           </div>
           <label className="mt-3 block space-y-2">
-            <span className="text-sm font-medium text-[var(--theme-text)]">Description</span>
+            <span className="text-sm font-medium text-[var(--theme-text)]">
+              {t('jobFieldDescription', { defaultValue: 'Description' })}
+            </span>
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="What this job should do"
+              placeholder={t('placeholderJobDescription', {
+                defaultValue: 'What this job should do',
+              })}
               className="min-h-[96px] w-full rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)] focus:border-[var(--theme-accent)]"
             />
           </label>
@@ -202,14 +228,16 @@ export function OperationsAgentJobs({
               className="border border-[var(--theme-border)] bg-[var(--theme-card)] text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
               onClick={() => setAdding(false)}
             >
-              Cancel
+              {t('cancel', { defaultValue: 'Cancel' })}
             </Button>
             <Button
               className="bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
               onClick={() => createMutation.mutate()}
               disabled={createMutation.isPending}
             >
-              {createMutation.isPending ? 'Creating…' : 'Create Job'}
+              {createMutation.isPending
+                ? t('creatingJob', { defaultValue: 'Creating…' })
+                : t('createJobBtn', { defaultValue: 'Create Job' })}
             </Button>
           </div>
         </div>

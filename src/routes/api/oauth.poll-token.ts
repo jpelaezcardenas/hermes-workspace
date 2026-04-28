@@ -47,13 +47,13 @@ export const Route = createFileRoute('/api/oauth/poll-token')({
         try {
           body = await request.json()
         } catch {
-          return json({ error: 'Invalid JSON' }, { status: 400 })
+          return json({ error: 'Invalid JSON', errorCode: 'invalidJson' }, { status: 400 })
         }
 
         const parsed = BodySchema.safeParse(body)
         if (!parsed.success) {
           return json(
-            { error: 'Missing provider or deviceCode' },
+            { error: 'Missing provider or deviceCode', errorCode: 'invalidRequestBody' },
             { status: 400 },
           )
         }
@@ -114,6 +114,7 @@ export const Route = createFileRoute('/api/oauth/poll-token')({
             return json({
               status: 'error',
               message: err instanceof Error ? err.message : 'Network error',
+              errorCode: 'networkError',
             })
           }
         }
@@ -121,6 +122,7 @@ export const Route = createFileRoute('/api/oauth/poll-token')({
         return json({
           status: 'error',
           message: `OAuth device flow not supported for provider: ${provider}`,
+          errorCode: 'oauthUnsupportedProvider',
         })
       },
     },

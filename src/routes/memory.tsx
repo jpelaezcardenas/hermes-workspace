@@ -1,10 +1,11 @@
 import { Suspense, lazy, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import BackendUnavailableState from '@/components/backend-unavailable-state'
 import { Tabs, TabsList, TabsPanel, TabsTab } from '@/components/ui/tabs'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
 import { usePageTitle } from '@/hooks/use-page-title'
-import { getUnavailableReason } from '@/lib/feature-gates'
+import { getFeatureLabel, getUnavailableReason } from '@/lib/feature-gates'
 
 const MemoryBrowserScreen = lazy(async () => {
   const module = await import('@/screens/memory/memory-browser-screen')
@@ -19,10 +20,11 @@ const KnowledgeBrowserScreen = lazy(async () => {
 export const Route = createFileRoute('/memory')({
   ssr: false,
   component: function MemoryRoute() {
+    const { t } = useTranslation('memory')
     const [tab, setTab] = useState<'memory' | 'knowledge'>('memory')
     const memoryAvailable = useFeatureAvailable('memory')
 
-    usePageTitle('Memory')
+    usePageTitle(t('pageTitleMemory', { defaultValue: 'Memory' }))
 
     return (
       <div className="flex h-full min-h-0 flex-col">
@@ -36,8 +38,12 @@ export const Route = createFileRoute('/memory')({
               variant="underline"
               className="w-full justify-start gap-1"
             >
-              <TabsTab value="memory">Memory</TabsTab>
-              <TabsTab value="knowledge">Knowledge</TabsTab>
+              <TabsTab value="memory">
+                {t('tabMemory', { defaultValue: 'Memory' })}
+              </TabsTab>
+              <TabsTab value="knowledge">
+                {t('tabKnowledge', { defaultValue: 'Knowledge' })}
+              </TabsTab>
             </TabsList>
           </div>
 
@@ -45,15 +51,19 @@ export const Route = createFileRoute('/memory')({
             {tab === 'memory' ? (
               <Suspense
                 fallback={
-                  <RouteLoadingState label="Loading memory browser..." />
+                  <RouteLoadingState
+                    label={t('loadingMemoryBrowser', {
+                      defaultValue: 'Loading memory browser...',
+                    })}
+                  />
                 }
               >
                 {memoryAvailable ? (
                   <MemoryBrowserScreen />
                 ) : (
                   <BackendUnavailableState
-                    feature="Memory"
-                    description={getUnavailableReason('Memory')}
+                    feature={getFeatureLabel('memory')}
+                    description={getUnavailableReason('memory')}
                   />
                 )}
               </Suspense>
@@ -64,7 +74,11 @@ export const Route = createFileRoute('/memory')({
             {tab === 'knowledge' ? (
               <Suspense
                 fallback={
-                  <RouteLoadingState label="Loading knowledge browser..." />
+                  <RouteLoadingState
+                    label={t('loadingKnowledgeBrowser', {
+                      defaultValue: 'Loading knowledge browser...',
+                    })}
+                  />
                 }
               >
                 <KnowledgeBrowserScreen />

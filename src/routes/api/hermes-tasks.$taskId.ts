@@ -29,17 +29,17 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
     handlers: {
       GET: async ({ request, params }) => {
         if (!isAuthenticated(request)) {
-          return jsonResponse({ error: 'Unauthorized' }, 401)
+          return jsonResponse({ error: 'Unauthorized', errorCode: 'unauthorized' }, 401)
         }
 
         const task = getTask(params.taskId)
-        if (!task) return jsonResponse({ error: 'Task not found' }, 404)
+        if (!task) return jsonResponse({ error: 'Task not found', errorCode: 'sessionNotFound' }, 404)
         return jsonResponse({ task })
       },
 
       PATCH: async ({ request, params }) => {
         if (!isAuthenticated(request)) {
-          return jsonResponse({ error: 'Unauthorized' }, 401)
+          return jsonResponse({ error: 'Unauthorized', errorCode: 'unauthorized' }, 401)
         }
 
         try {
@@ -55,44 +55,47 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
             position: typeof body.position === 'number' ? body.position : undefined,
           })
 
-          if (!task) return jsonResponse({ error: 'Task not found' }, 404)
+          if (!task) return jsonResponse({ error: 'Task not found', errorCode: 'sessionNotFound' }, 404)
           return jsonResponse({ task })
         } catch {
-          return jsonResponse({ error: 'Invalid request body' }, 400)
+          return jsonResponse({ error: 'Invalid request body', errorCode: 'invalidRequestBody' }, 400)
         }
       },
 
       DELETE: async ({ request, params }) => {
         if (!isAuthenticated(request)) {
-          return jsonResponse({ error: 'Unauthorized' }, 401)
+          return jsonResponse({ error: 'Unauthorized', errorCode: 'unauthorized' }, 401)
         }
 
         const deleted = deleteTask(params.taskId)
-        if (!deleted) return jsonResponse({ error: 'Task not found' }, 404)
+        if (!deleted) return jsonResponse({ error: 'Task not found', errorCode: 'sessionNotFound' }, 404)
         return jsonResponse({ ok: true })
       },
 
       POST: async ({ request, params }) => {
         if (!isAuthenticated(request)) {
-          return jsonResponse({ error: 'Unauthorized' }, 401)
+          return jsonResponse({ error: 'Unauthorized', errorCode: 'unauthorized' }, 401)
         }
 
         const url = new URL(request.url)
         const action = url.searchParams.get('action') || 'move'
         if (action !== 'move') {
-          return jsonResponse({ error: `Unsupported action: ${action}` }, 400)
+          return jsonResponse(
+            { error: `Unsupported action: ${action}`, errorCode: 'unsupportedAction' },
+            400,
+          )
         }
 
         try {
           const body = (await request.json()) as Record<string, unknown>
           if (typeof body.column !== 'string') {
-            return jsonResponse({ error: 'column is required' }, 400)
+            return jsonResponse({ error: 'column is required', errorCode: 'columnRequired' }, 400)
           }
           const task = moveTask(params.taskId, body.column as TaskColumn)
-          if (!task) return jsonResponse({ error: 'Task not found' }, 404)
+          if (!task) return jsonResponse({ error: 'Task not found', errorCode: 'sessionNotFound' }, 404)
           return jsonResponse({ task })
         } catch {
-          return jsonResponse({ error: 'Invalid request body' }, 400)
+          return jsonResponse({ error: 'Invalid request body', errorCode: 'invalidRequestBody' }, 400)
         }
       },
     },
