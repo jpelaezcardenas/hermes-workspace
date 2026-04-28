@@ -179,12 +179,29 @@ export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'us
   return (await res.json()).task
 }
 
-export const COLUMN_LABELS: Record<TaskColumn, string> = {
-  backlog: i18next.t('tasks.backlog', { defaultValue: 'Backlog' }),
-  todo: i18next.t('tasks.todo', { defaultValue: 'Todo' }),
-  in_progress: i18next.t('tasks.inProgress', { defaultValue: 'In Progress' }),
-  review: i18next.t('tasks.review', { defaultValue: 'Review' }),
-  done: i18next.t('tasks.done', { defaultValue: 'Done' }),
+/** English fallbacks for `tasks:*` keys; not locale-aware (use `getTaskColumnLabel`). */
+export const TASK_COLUMN_LABEL_DEFAULTS: Record<TaskColumn, string> = {
+  backlog: 'Backlog',
+  todo: 'Todo',
+  in_progress: 'In Progress',
+  review: 'Review',
+  done: 'Done',
+}
+
+const TASK_COLUMN_I18N_KEY: Record<TaskColumn, string> = {
+  backlog: 'backlog',
+  todo: 'todo',
+  in_progress: 'inProgress',
+  review: 'review',
+  done: 'done',
+}
+
+/** Resolves the current locale on each call — safe after language changes. */
+export function getTaskColumnLabel(column: TaskColumn): string {
+  const subKey = TASK_COLUMN_I18N_KEY[column]
+  return i18next.t(`tasks:${subKey}`, {
+    defaultValue: TASK_COLUMN_LABEL_DEFAULTS[column],
+  })
 }
 
 export const COLUMN_ORDER: Array<TaskColumn> = ['backlog', 'todo', 'in_progress', 'review', 'done']

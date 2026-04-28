@@ -19,8 +19,8 @@ import {
   updateTask,
   deleteTask,
   moveTask,
-  COLUMN_LABELS,
   COLUMN_ORDER,
+  TASK_COLUMN_LABEL_DEFAULTS,
   COLUMN_COLORS,
   isOverdue,
 } from '@/lib/tasks-api'
@@ -39,7 +39,7 @@ const COLUMN_I18N_KEY: Record<TaskColumn, 'backlog' | 'todo' | 'inProgress' | 'r
 
 function columnLabel(t: TFunction<'tasks'>, col: TaskColumn) {
   const key = COLUMN_I18N_KEY[col]
-  return t(key, { defaultValue: COLUMN_LABELS[col] })
+  return t(key, { defaultValue: TASK_COLUMN_LABEL_DEFAULTS[col] })
 }
 
 function SkeletonCard() {
@@ -366,7 +366,7 @@ export function TasksScreen() {
                   className="rounded p-0.5 hover:bg-[var(--theme-hover)] transition-colors"
                   title={t('columnAddTitle', {
                     column: columnLabel(t, col),
-                    defaultValue: `Add to ${COLUMN_LABELS[col]}`,
+                    defaultValue: `Add to {{column}}`,
                   })}
                 >
                   <HugeiconsIcon icon={Add01Icon} size={14} className="text-[var(--theme-muted)]" />

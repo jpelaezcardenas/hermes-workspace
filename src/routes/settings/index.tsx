@@ -461,7 +461,6 @@ function SettingsRoute() {
                   value={getLocale()}
                   onChange={(e) => {
                     setLocale(e.target.value as LocaleId)
-                    window.location.reload()
                   }}
                   className="h-9 w-full rounded-lg border border-primary-200 dark:border-gray-600 bg-primary-50 dark:bg-gray-800 px-3 text-sm text-primary-900 dark:text-gray-100 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400 md:max-w-xs"
                 >

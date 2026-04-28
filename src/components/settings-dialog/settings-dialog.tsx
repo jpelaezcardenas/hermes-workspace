@@ -1969,7 +1969,6 @@ function LanguageContent() {
           value={getLocale()}
           onChange={(e) => {
             setLocale(e.target.value as LocaleId)
-            window.location.reload()
           }}
           className="h-9 w-full rounded-lg border border-primary-200 dark:border-neutral-700 bg-primary-50 dark:bg-neutral-800 px-3 text-sm text-primary-900 dark:text-neutral-100 outline-none md:max-w-xs"
         >

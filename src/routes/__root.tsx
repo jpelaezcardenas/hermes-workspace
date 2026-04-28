@@ -191,7 +191,7 @@ export const Route = createRootRoute({
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center bg-primary-50">
         <h1 className="text-2xl font-semibold text-primary-900 mb-4">
-          {i18next.t('settings.somethingWentWrong', {
+          {i18next.t('settings:somethingWentWrong', {
             defaultValue: 'Something went wrong',
           })}
         </h1>
@@ -202,7 +202,7 @@ export const Route = createRootRoute({
           onClick={() => (window.location.href = '/')}
           className="px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
         >
-          {i18next.t('settings.returnHome', {
+          {i18next.t('settings:returnHome', {
             defaultValue: 'Return Home',
           })}
         </button>
@@ -318,10 +318,10 @@ function RootLayout() {
             <WorkspaceShell>
               <ErrorBoundary
                 className="h-full min-h-0 flex-1"
-                title={i18next.t('settings.somethingWentWrong', {
+                title={i18next.t('settings:somethingWentWrong', {
                   defaultValue: 'Something went wrong',
                 })}
-                description={i18next.t('settings.pageRenderFailed', {
+                description={i18next.t('settings:pageRenderFailed', {
                   defaultValue: 'This page failed to render. Reload to try again.',
                 })}
               >

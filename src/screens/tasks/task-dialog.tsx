@@ -16,7 +16,7 @@ import type {
   TaskPriority,
   TaskAssignee,
 } from '@/lib/tasks-api'
-import { COLUMN_LABELS, COLUMN_ORDER } from '@/lib/tasks-api'
+import { COLUMN_ORDER, TASK_COLUMN_LABEL_DEFAULTS } from '@/lib/tasks-api'
 
 const COLUMN_I18N_KEY: Record<TaskColumn, 'backlog' | 'todo' | 'inProgress' | 'review' | 'done'> = {
   backlog: 'backlog',
@@ -28,7 +28,7 @@ const COLUMN_I18N_KEY: Record<TaskColumn, 'backlog' | 'todo' | 'inProgress' | 'r
 
 function columnOptionLabel(t: TFunction<'tasks'>, col: TaskColumn) {
   const key = COLUMN_I18N_KEY[col]
-  return t(key, { defaultValue: COLUMN_LABELS[col] })
+  return t(key, { defaultValue: TASK_COLUMN_LABEL_DEFAULTS[col] })
 }
 
 type Props = {
