@@ -18,6 +18,7 @@ This directory wires the preserved legacy office-agent assets into the current H
 
 The active wrapper now exposes:
 
+- `bid-manager parity-gate --json` — runs the consolidated health gate from a stripped cron/operator-like environment (`PATH=/usr/bin:/bin`) and writes one machine-readable summary.
 - `bid-manager skeleton-audit --json` — checks recovered skeleton-family coverage.
 - `bid-manager golden-regressions --json` — runs curated converter/checker/regression cases and classifies known legacy fail baselines.
 - `bid-manager e2e-regression --json` — runs a compact RFP Forge → Bid Manager → Bid Checker regression.
@@ -35,7 +36,9 @@ Current regression posture:
 - Full technical/commercial render regression: 4/4 commands and 4/4 artifact gates passed; rendered PDFs were 40 and 42 pages.
 - Official-style questionnaire row-fill regression: passed; 3/3 responses, statuses, and evidence cells filled; buyer-only remarks untouched; package parts preserved; LibreOffice render passed.
 - Agent contract audit: passed; no active conflicting user-facing names found.
-- Final artifact QA regression: passed; clean client-facing DOCX/PDF fixture rendered to 5 pages, included media, had no banned internal/process terms, and extracted readable PDF text.
+- Final artifact QA regression: passed; clean client-facing DOCX/PDF fixture rendered to 5 pages, included media, had no banned internal/process terms, extracted readable PDF text, rendered PDF pages to PNG, and checked for blank rendered/text pages.
+- Consolidated parity gate: `bid-manager parity-gate --json` is the operator command for full bid-manager health. It runs status, smoke, skeleton audit, golden regressions, end-to-end regression, full DOCX/PDF render regression, questionnaire XLSX regression, agent-contract audit, and final artifact QA in a stripped cron/operator-like environment.
+- Required runtime dependencies: system Python 3 with `python3-docx` and `openpyxl`, LibreOffice Writer/Calc (`libreoffice` CLI), Poppler tools (`pdfinfo`, `pdftotext`, `pdftoppm`), and `/root/.local/bin/markitdown` with DOCX support. The wrapper prepends `/root/.local/bin` and injects its runtime `PYTHONPATH`, so the parity gate must pass without interactive shell activation.
 - Known expected fail baselines: generic compact proposal visual validator failure.
 
 ## Rule

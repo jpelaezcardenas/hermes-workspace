@@ -33,6 +33,7 @@ SCRIPT_MAP = {
     "questionnaire-regression": ACTIVE / "runtime-scripts" / "run_questionnaire_regression.py",
     "agent-contract-audit": ACTIVE / "runtime-scripts" / "run_agent_contract_audit.py",
     "final-artifact-qa": ACTIVE / "runtime-scripts" / "run_final_artifact_qa.py",
+    "parity-gate": ACTIVE / "runtime-scripts" / "run_parity_gate.py",
     "md-to-docx": BID / "scripts" / "markdown_to_docx.py",
     "docx-to-md": BID / "scripts" / "docx_to_markdown.py",
     "xlsx-to-csv": BID / "scripts" / "xlsx_to_csv.py",
@@ -191,7 +192,10 @@ def main(argv: list[str] | None = None) -> int:
 
     ns, extra = parser.parse_known_args(argv)
     if extra and hasattr(ns, "args"):
-        ns.args.extend(extra)
+        # argparse.REMAINDER with parse_known_args pulls option-looking tokens into
+        # `extra` while leaving their values in `args`; prepend to preserve normal
+        # CLI order for passthrough commands like `--out-dir <path>`.
+        ns.args = [*extra, *ns.args]
     elif extra:
         parser.error("unrecognized arguments: " + " ".join(extra))
     return ns.func(ns)

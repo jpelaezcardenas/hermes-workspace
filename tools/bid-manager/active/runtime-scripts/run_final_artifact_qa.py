@@ -123,8 +123,38 @@ def pdf_gate(path: Path) -> dict[str, Any]:
     for line in info["stdout_tail"].splitlines():
         if line.startswith("Pages:"):
             pages = int(line.split(":", 1)[1].strip())
-    result.update({"pdfinfo_ok": info["ok"], "pdftotext_ok": text["ok"], "pages": pages, "text_chars": len(text["stdout_tail"])})
-    result["ok"] = bool(info["ok"] and text["ok"] and pages and pages >= 1 and result["text_chars"] > 300)
+    page_text_counts: list[int] = []
+    blank_pages: list[int] = []
+    rendered_pages = 0
+    if pages:
+        for page_num in range(1, pages + 1):
+            page_text = run("pdftotext_page", ["pdftotext", "-f", str(page_num), "-l", str(page_num), str(path), "-"])
+            chars = len(page_text["stdout_tail"].strip()) if page_text["ok"] else 0
+            page_text_counts.append(chars)
+            if chars == 0:
+                blank_pages.append(page_num)
+        render_prefix = path.with_suffix("").parent / f"{path.stem}-rendered-page"
+        render = run("pdftoppm", ["pdftoppm", "-png", "-r", "120", str(path), str(render_prefix)])
+        if render["ok"]:
+            rendered_pages = len(list(path.parent.glob(f"{path.stem}-rendered-page-*.png")))
+    result.update({
+        "pdfinfo_ok": info["ok"],
+        "pdftotext_ok": text["ok"],
+        "pages": pages,
+        "text_chars": len(text["stdout_tail"]),
+        "page_text_counts": page_text_counts,
+        "blank_pages": blank_pages,
+        "rendered_pages": rendered_pages,
+    })
+    result["ok"] = bool(
+        info["ok"]
+        and text["ok"]
+        and pages
+        and pages >= 1
+        and result["text_chars"] > 300
+        and not blank_pages
+        and rendered_pages == pages
+    )
     return result
 
 
