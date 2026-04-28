@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import BackendUnavailableState from '@/components/backend-unavailable-state'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { getUnavailableReason } from '@/lib/feature-gates'
@@ -8,12 +9,13 @@ import { JobsScreen } from '@/screens/jobs/jobs-screen'
 export const Route = createFileRoute('/jobs')({
   ssr: false,
   component: function JobsRoute() {
-    usePageTitle('Jobs')
+    const { t } = useTranslation(['nav', 'settings'])
+    usePageTitle(t('nav:jobs', { defaultValue: 'Jobs' }))
     if (!useFeatureAvailable('jobs')) {
       return (
         <BackendUnavailableState
-          feature="Jobs"
-          description={getUnavailableReason('Jobs')}
+          feature={t('nav:jobs', { defaultValue: 'Jobs' })}
+          description={getUnavailableReason('jobs')}
         />
       )
     }

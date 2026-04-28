@@ -1,6 +1,8 @@
 'use client'
 
+import type { TFunction } from 'i18next'
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -34,24 +36,43 @@ import {
 
 const QUERY_KEY = ['hermes', 'jobs'] as const
 
-function formatNextRun(nextRun?: string | null): string {
+function formatNextRun(
+  nextRun: string | null | undefined,
+  t: TFunction<'jobs'>,
+): string {
   if (!nextRun) return '—'
   try {
     const d = new Date(nextRun)
     const now = new Date()
     const diffMs = d.getTime() - now.getTime()
-    if (diffMs < 0) return 'overdue'
-    if (diffMs < 60_000) return 'in < 1m'
-    if (diffMs < 3_600_000) return `in ${Math.round(diffMs / 60_000)}m`
-    if (diffMs < 86_400_000) return `in ${Math.round(diffMs / 3_600_000)}h`
+    if (diffMs < 0) return t('nextOverdue', { defaultValue: 'overdue' })
+    if (diffMs < 60_000)
+      return t('nextInUnderOneMinute', { defaultValue: 'in < 1m' })
+    if (diffMs < 3_600_000) {
+      const m = Math.round(diffMs / 60_000)
+      return t('nextInMinutes', {
+        count: m,
+        defaultValue: `in ${m}m`,
+      })
+    }
+    if (diffMs < 86_400_000) {
+      const h = Math.round(diffMs / 3_600_000)
+      return t('nextInHours', {
+        count: h,
+        defaultValue: `in ${h}h`,
+      })
+    }
     return d.toLocaleDateString()
   } catch {
     return nextRun
   }
 }
 
-function formatRunTimestamp(value?: string | null): string {
-  if (!value) return 'Never run'
+function formatRunTimestamp(
+  value: string | null | undefined,
+  t: TFunction<'jobs'>,
+): string {
+  if (!value) return t('lastRunNever', { defaultValue: 'Never run' })
   try {
     return new Date(value).toLocaleString()
   } catch {
@@ -65,36 +86,40 @@ function getOutputPreview(content: string): string {
   return `${normalized.slice(0, 200).trimEnd()}…`
 }
 
-function getLastRunStatus(job: HermesJob): {
+function getLastRunStatus(
+  job: HermesJob,
+  t: TFunction<'jobs'>,
+): {
   label: string
   color: string
 } {
   if (!job.last_run_at) {
     return {
-      label: 'Never run',
+      label: t('lastRunNever', { defaultValue: 'Never run' }),
       color: 'var(--theme-muted)',
     }
   }
   if (job.last_run_success === true) {
     return {
-      label: 'Last run succeeded',
+      label: t('lastRunSucceeded', { defaultValue: 'Last run succeeded' }),
       color: 'var(--theme-success)',
     }
   }
   if (job.last_run_success === false) {
     return {
-      label: 'Last run failed',
+      label: t('lastRunFailed', { defaultValue: 'Last run failed' }),
       color: 'var(--theme-danger)',
     }
   }
   return {
-    label: 'Last run unknown',
+    label: t('lastRunUnknown', { defaultValue: 'Last run unknown' }),
     color: 'var(--theme-muted)',
   }
 }
 
 function JobCard({
   job,
+  t,
   onPause,
   onResume,
   onTrigger,
@@ -102,6 +127,7 @@ function JobCard({
   onEdit,
 }: {
   job: HermesJob
+  t: TFunction<'jobs'>
   onPause: (id: string) => void
   onResume: (id: string) => void
   onTrigger: (id: string) => void
@@ -111,7 +137,7 @@ function JobCard({
   const [expanded, setExpanded] = useState(false)
   const isPaused = job.state === 'paused' || !job.enabled
   const isCompleted = job.state === 'completed'
-  const lastRunStatus = getLastRunStatus(job)
+  const lastRunStatus = getLastRunStatus(job, t)
   const outputQuery = useQuery({
     queryKey: ['hermes', 'jobs', job.id, 'output'],
     queryFn: () => fetchJobOutput(job.id),
@@ -145,23 +171,42 @@ function JobCard({
               }}
             />
             <h3 className="truncate text-sm font-medium text-[var(--theme-text)]">
-              {job.name || '(unnamed)'}
+              {job.name || t('unnamed', { defaultValue: '(unnamed)' })}
             </h3>
           </div>
           <p className="mb-2 line-clamp-2 text-xs text-[var(--theme-muted)]">
             {job.prompt}
           </p>
           <div className="mb-2 flex flex-wrap items-center gap-3 text-[10px] text-[var(--theme-muted)]">
-            <span>{job.schedule_display || 'custom'}</span>
+            <span>
+              {job.schedule_display ||
+                t('scheduleCustom', { defaultValue: 'custom' })}
+            </span>
             <span>·</span>
-            <span>Next: {formatNextRun(job.next_run_at)}</span>
+            <span>
+              {t('nextLabel', {
+                when: formatNextRun(job.next_run_at, t),
+                defaultValue: 'Next: {{when}}',
+              })}
+            </span>
             <span>·</span>
-            <span>Last: {formatRunTimestamp(job.last_run_at)}</span>
+            <span>
+              {t('lastLabel', {
+                when: formatRunTimestamp(job.last_run_at, t),
+                defaultValue: 'Last: {{when}}',
+              })}
+            </span>
             {job.skills && job.skills.length > 0 && (
               <>
                 <span>·</span>
                 <span>
-                  {job.skills.length} skill{job.skills.length !== 1 ? 's' : ''}
+                  {t('skillCount', {
+                    count: job.skills.length,
+                    defaultValue:
+                      job.skills.length === 1
+                        ? '{{count}} skill'
+                        : '{{count}} skills',
+                  })}
                 </span>
               </>
             )}
@@ -178,7 +223,7 @@ function JobCard({
           <button
             onClick={() => onTrigger(job.id)}
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title="Run now"
+            title={t('runNow', { defaultValue: 'Run now' })}
           >
             <HugeiconsIcon
               icon={PlayIcon}
@@ -189,7 +234,11 @@ function JobCard({
           <button
             onClick={() => (isPaused ? onResume(job.id) : onPause(job.id))}
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title={isPaused ? 'Resume' : 'Pause'}
+            title={
+              isPaused
+                ? t('resume', { defaultValue: 'Resume' })
+                : t('pause', { defaultValue: 'Pause' })
+            }
           >
             <HugeiconsIcon
               icon={isPaused ? PlayIcon : PauseIcon}
@@ -200,7 +249,7 @@ function JobCard({
           <button
             onClick={() => onEdit(job)}
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title="Edit"
+            title={t('edit', { defaultValue: 'Edit' })}
           >
             <HugeiconsIcon
               icon={PencilEdit02Icon}
@@ -211,7 +260,11 @@ function JobCard({
           <button
             onClick={() => setExpanded((current) => !current)}
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title={expanded ? 'Hide run history' : 'Show run history'}
+            title={
+              expanded
+                ? t('hideRunHistory', { defaultValue: 'Hide run history' })
+                : t('showRunHistory', { defaultValue: 'Show run history' })
+            }
           >
             <HugeiconsIcon
               icon={expanded ? ArrowUp01Icon : ArrowDown01Icon}
@@ -222,7 +275,7 @@ function JobCard({
           <button
             onClick={() => onDelete(job.id)}
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title="Delete"
+            title={t('delete', { defaultValue: 'Delete' })}
           >
             <HugeiconsIcon
               icon={Delete01Icon}
@@ -245,19 +298,23 @@ function JobCard({
             <div className="mt-3 border-t border-[var(--theme-border)] pt-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-medium text-[var(--theme-text)]">
-                  Run history
+                  {t('runHistory', { defaultValue: 'Run history' })}
                 </p>
                 <p className="text-[10px] text-[var(--theme-muted)]">
-                  Showing recent outputs
+                  {t('showingRecentOutputs', {
+                    defaultValue: 'Showing recent outputs',
+                  })}
                 </p>
               </div>
               {outputQuery.isLoading ? (
                 <div className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3 text-xs text-[var(--theme-muted)]">
-                  Loading outputs...
+                  {t('loadingOutputs', { defaultValue: 'Loading outputs...' })}
                 </div>
               ) : outputQuery.isError ? (
                 <div className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3 text-xs text-[var(--theme-muted)]">
-                  Failed to load outputs.
+                  {t('failedOutputs', {
+                    defaultValue: 'Failed to load outputs.',
+                  })}
                 </div>
               ) : outputQuery.data && outputQuery.data.length > 0 ? (
                 <div className="space-y-2">
@@ -267,19 +324,25 @@ function JobCard({
                       className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3"
                     >
                       <div className="mb-1 flex items-center justify-between gap-2 text-[10px] text-[var(--theme-muted)]">
-                        <span>{formatRunTimestamp(output.timestamp)}</span>
+                        <span>
+                          {formatRunTimestamp(output.timestamp, t)}
+                        </span>
                         <span className="truncate">{output.filename}</span>
                       </div>
                       <p className="text-xs leading-5 text-[var(--theme-text)]">
                         {getOutputPreview(output.content) ||
-                          'No output content'}
+                          t('noOutputContent', {
+                            defaultValue: 'No output content',
+                          })}
                       </p>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3 text-xs text-[var(--theme-muted)]">
-                  No run outputs yet.
+                  {t('noRunOutputsYet', {
+                    defaultValue: 'No run outputs yet.',
+                  })}
                 </div>
               )}
             </div>
@@ -291,6 +354,8 @@ function JobCard({
 }
 
 export function JobsScreen() {
+  const { t } = useTranslation('jobs')
+  const { t: tNav } = useTranslation('nav')
   const queryClient = useQueryClient()
   const [search, setSearch] = useState('')
   const [showCreate, setShowCreate] = useState(false)
@@ -306,41 +371,46 @@ export function JobsScreen() {
     mutationFn: pauseJob,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-      toast('Job paused')
+      toast(t('toastPaused', { defaultValue: 'Job paused' }))
     },
   })
   const resumeMutation = useMutation({
     mutationFn: resumeJob,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-      toast('Job resumed')
+      toast(t('toastResumed', { defaultValue: 'Job resumed' }))
     },
   })
   const triggerMutation = useMutation({
     mutationFn: triggerJob,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-      toast('Job triggered')
+      toast(t('toastTriggered', { defaultValue: 'Job triggered' }))
     },
   })
   const deleteMutation = useMutation({
     mutationFn: deleteJob,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-      toast('Job deleted')
+      toast(t('toastDeleted', { defaultValue: 'Job deleted' }))
     },
   })
   const createMutation = useMutation({
     mutationFn: createJob,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-      toast('Job created')
+      toast(t('toastCreated', { defaultValue: 'Job created' }))
       setShowCreate(false)
     },
     onError: (error) => {
-      toast(error instanceof Error ? error.message : 'Failed to create job', {
-        type: 'error',
-      })
+      toast(
+        error instanceof Error
+          ? error.message
+          : t('failedCreate', { defaultValue: 'Failed to create job' }),
+        {
+          type: 'error',
+        },
+      )
     },
   })
   const updateMutation = useMutation({
@@ -357,13 +427,18 @@ export function JobsScreen() {
     }) => updateJob(payload.jobId, payload.updates),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-      toast('Job updated')
+      toast(t('toastUpdated', { defaultValue: 'Job updated' }))
       setEditingJob(null)
     },
     onError: (error) => {
-      toast(error instanceof Error ? error.message : 'Failed to update job', {
-        type: 'error',
-      })
+      toast(
+        error instanceof Error
+          ? error.message
+          : t('failedUpdate', { defaultValue: 'Failed to update job' }),
+        {
+          type: 'error',
+        },
+      )
     },
   })
 
@@ -404,7 +479,7 @@ export function JobsScreen() {
             className="text-[var(--theme-accent)]"
           />
           <h1 className="text-base font-semibold text-[var(--theme-text)]">
-            Jobs
+            {tNav('jobs', { defaultValue: 'Jobs' })}
           </h1>
           {jobsQuery.data && (
             <span className="ml-1 text-xs text-[var(--theme-muted)]">
@@ -418,7 +493,7 @@ export function JobsScreen() {
               void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
             }
             className="rounded-lg p-1.5 transition-colors hover:bg-[var(--theme-hover)]"
-            title="Refresh"
+            title={t('refresh', { defaultValue: 'Refresh' })}
           >
             <HugeiconsIcon
               icon={RefreshIcon}
@@ -432,7 +507,7 @@ export function JobsScreen() {
             style={{ background: 'var(--theme-accent)' }}
           >
             <HugeiconsIcon icon={Add01Icon} size={14} />
-            New Job
+            {t('newJob', { defaultValue: 'New Job' })}
           </button>
         </div>
       </div>
@@ -447,7 +522,9 @@ export function JobsScreen() {
           />
           <input
             type="text"
-            placeholder="Search jobs..."
+            placeholder={t('searchPlaceholder', {
+              defaultValue: 'Search jobs...',
+            })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-lg border border-[var(--theme-border)] bg-[var(--theme-input)] py-1.5 pl-8 pr-3 text-xs text-[var(--theme-text)] placeholder:text-[var(--theme-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-accent)]"
@@ -458,17 +535,17 @@ export function JobsScreen() {
       <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
         {jobsQuery.isLoading ? (
           <div className="flex items-center justify-center py-12 text-sm text-[var(--theme-muted)]">
-            Loading jobs...
+            {t('loadingJobs', { defaultValue: 'Loading jobs...' })}
           </div>
         ) : jobsQuery.isError ? (
           <div
             className="flex items-center justify-center py-12 text-sm"
             style={{ color: 'var(--theme-danger)' }}
           >
-            Failed to load jobs:{' '}
+            {t('loadFailedPrefix', { defaultValue: 'Failed to load jobs:' })}{' '}
             {jobsQuery.error instanceof Error
               ? jobsQuery.error.message
-              : 'Unknown error'}
+              : t('unknownError', { defaultValue: 'Unknown error' })}
           </div>
         ) : filteredJobs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-[var(--theme-muted)]">
@@ -477,8 +554,12 @@ export function JobsScreen() {
               size={32}
               className="mb-3 opacity-40"
             />
-            <p className="text-sm font-medium">No scheduled jobs</p>
-            <p className="mt-1 text-xs">Create one to get started</p>
+            <p className="text-sm font-medium">
+              {t('emptyTitle', { defaultValue: 'No scheduled jobs' })}
+            </p>
+            <p className="mt-1 text-xs">
+              {t('emptyHint', { defaultValue: 'Create one to get started' })}
+            </p>
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
@@ -486,12 +567,22 @@ export function JobsScreen() {
               <JobCard
                 key={job.id}
                 job={job}
+                t={t}
                 onPause={(id) => pauseMutation.mutate(id)}
                 onResume={(id) => resumeMutation.mutate(id)}
                 onTrigger={(id) => triggerMutation.mutate(id)}
                 onEdit={(job) => setEditingJob(job)}
                 onDelete={(id) => {
-                  if (confirm(`Delete job "${job.name}"?`)) {
+                  const name =
+                    job.name || t('unnamed', { defaultValue: '(unnamed)' })
+                  if (
+                    confirm(
+                      t('deleteConfirm', {
+                        name,
+                        defaultValue: 'Delete job "{{name}}"?',
+                      }),
+                    )
+                  ) {
                     deleteMutation.mutate(id)
                   }
                 }}

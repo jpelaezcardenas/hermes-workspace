@@ -105,6 +105,7 @@ export function initI18n(): void {
       'jobs',
       'gateway',
       'memory',
+      'profiles',
       'errors',
     ],
     returnNull: false,

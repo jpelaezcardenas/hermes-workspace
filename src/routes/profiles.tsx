@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { ProfilesScreen } from '@/screens/profiles/profiles-screen'
 import { CrewScreen } from '@/screens/crew/crew-screen'
@@ -10,7 +11,8 @@ export const Route = createFileRoute('/profiles')({
 })
 
 function ProfilesRoute() {
-  usePageTitle('Profiles')
+  const { t } = useTranslation('nav')
+  usePageTitle(t('profiles', { defaultValue: 'Profiles' }))
   const [tab, setTab] = useState<'profiles' | 'monitoring'>('profiles')
 
   return (
@@ -25,7 +27,7 @@ function ProfilesRoute() {
                 : 'text-primary-500 hover:text-ink'
             }`}
           >
-            Profiles
+            {t('profiles', { defaultValue: 'Profiles' })}
           </button>
           <button
             onClick={() => setTab('monitoring')}
@@ -35,7 +37,7 @@ function ProfilesRoute() {
                 : 'text-primary-500 hover:text-ink'
             }`}
           >
-            Monitoring
+            {t('monitoring', { defaultValue: 'Monitoring' })}
           </button>
         </div>
         {tab === 'profiles' ? <ProfilesScreen /> : <CrewScreen />}

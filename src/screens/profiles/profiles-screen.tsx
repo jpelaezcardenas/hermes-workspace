@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
@@ -53,11 +54,12 @@ async function readJson<T>(url: string): Promise<T> {
   return (await response.json()) as T
 }
 
-function formatDate(value?: string): string {
+function formatDate(value: string | undefined, locale: string): string {
   if (!value) return '—'
   const parsed = Date.parse(value)
   if (Number.isNaN(parsed)) return value
-  return new Intl.DateTimeFormat(undefined, {
+  const loc = locale === 'zh-CN' ? 'zh-CN' : undefined
+  return new Intl.DateTimeFormat(loc, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -101,6 +103,9 @@ function ProfileStat({
 }
 
 export function ProfilesScreen() {
+  const { t } = useTranslation('profiles')
+  const { t: tc } = useTranslation('common')
+  const { i18n } = useTranslation()
   const queryClient = useQueryClient()
   const [createOpen, setCreateOpen] = useState(false)
   const [detailsName, setDetailsName] = useState<string | null>(null)
@@ -201,13 +206,21 @@ export function ProfilesScreen() {
         ...(wizardModel ? { model: wizardModel } : {}),
         ...(wizardProvider ? { provider: wizardProvider } : {}),
       })
-      toast(`Created profile ${newProfileName.trim()}`, { type: 'success' })
+      toast(
+        t('toastCreated', {
+          name: newProfileName.trim(),
+          defaultValue: 'Created profile {{name}}',
+        }),
+        { type: 'success' },
+      )
       setCreateOpen(false)
       resetWizard()
       await refreshProfiles()
     } catch (error) {
       toast(
-        error instanceof Error ? error.message : 'Failed to create profile',
+        error instanceof Error
+          ? error.message
+          : t('failedCreate', { defaultValue: 'Failed to create profile' }),
         { type: 'error' },
       )
     } finally {
@@ -219,11 +232,19 @@ export function ProfilesScreen() {
     setBusyName(name)
     try {
       await postJson('/api/profiles/activate', { name })
-      toast(`Activated profile ${name}`, { type: 'success' })
+      toast(
+        t('toastActivated', {
+          name,
+          defaultValue: 'Activated profile {{name}}',
+        }),
+        { type: 'success' },
+      )
       await refreshProfiles()
     } catch (error) {
       toast(
-        error instanceof Error ? error.message : 'Failed to activate profile',
+        error instanceof Error
+          ? error.message
+          : t('failedActivate', { defaultValue: 'Failed to activate profile' }),
         { type: 'error' },
       )
     } finally {
@@ -234,17 +255,24 @@ export function ProfilesScreen() {
   async function handleDelete(name: string) {
     if (
       typeof window !== 'undefined' &&
-      !window.confirm(`Delete profile ${name}?`)
+      !window.confirm(
+        t('deleteConfirm', { name, defaultValue: 'Delete profile {{name}}?' }),
+      )
     )
       return
     setBusyName(name)
     try {
       await postJson('/api/profiles/delete', { name })
-      toast(`Deleted profile ${name}`, { type: 'success' })
+      toast(
+        t('toastDeleted', { name, defaultValue: 'Deleted profile {{name}}' }),
+        { type: 'success' },
+      )
       await refreshProfiles()
     } catch (error) {
       toast(
-        error instanceof Error ? error.message : 'Failed to delete profile',
+        error instanceof Error
+          ? error.message
+          : t('failedDelete', { defaultValue: 'Failed to delete profile' }),
         { type: 'error' },
       )
     } finally {
@@ -260,15 +288,24 @@ export function ProfilesScreen() {
         oldName: renameTarget.name,
         newName: renameValue.trim(),
       })
-      toast(`Renamed ${renameTarget.name} → ${renameValue.trim()}`, {
-        type: 'success',
-      })
+      toast(
+        t('toastRenamed', {
+          oldName: renameTarget.name,
+          newName: renameValue.trim(),
+          defaultValue: 'Renamed {{oldName}} → {{newName}}',
+        }),
+        {
+          type: 'success',
+        },
+      )
       setRenameTarget(null)
       setRenameValue('')
       await refreshProfiles()
     } catch (error) {
       toast(
-        error instanceof Error ? error.message : 'Failed to rename profile',
+        error instanceof Error
+          ? error.message
+          : t('failedRename', { defaultValue: 'Failed to rename profile' }),
         { type: 'error' },
       )
     } finally {
@@ -282,16 +319,23 @@ export function ProfilesScreen() {
         <div>
           <div className="flex items-center gap-2">
             <HugeiconsIcon icon={UserGroupIcon} size={22} strokeWidth={1.7} />
-            <h1 className="text-lg font-semibold text-primary-900">Profiles</h1>
+            <h1 className="text-lg font-semibold text-primary-900">
+              {t('title', { defaultValue: 'Profiles' })}
+            </h1>
           </div>
           <p className="mt-1 text-sm text-primary-600">
-            Browse and manage Hermes profiles stored under{' '}
-            <span className="font-mono">~/.hermes/profiles</span>.
+            {t('subtitlePrefix', {
+              defaultValue: 'Browse and manage Hermes profiles stored under ',
+            })}
+            <span className="font-mono">
+              {t('subtitlePath', { defaultValue: '~/.hermes/profiles' })}
+            </span>
+            {t('subtitleSuffix', { defaultValue: '.' })}
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)} className="gap-2">
           <HugeiconsIcon icon={Add01Icon} size={16} strokeWidth={1.8} />
-          Create profile
+          {t('createProfile', { defaultValue: 'Create profile' })}
         </Button>
       </div>
 
@@ -344,7 +388,7 @@ export function ProfilesScreen() {
                         className="text-white"
                       />
                       <span className="text-[9px] font-bold uppercase tracking-wider text-white">
-                        Active
+                        {t('badgeActive', { defaultValue: 'Active' })}
                       </span>
                     </div>
                   )}
@@ -355,21 +399,28 @@ export function ProfilesScreen() {
                   {profile.name}
                 </h2>
                 <span className="mt-1 inline-block rounded-full bg-primary-100 px-2.5 py-0.5 text-[11px] font-medium text-primary-600 dark:bg-neutral-800 dark:text-neutral-400">
-                  {profile.provider || 'no provider'}
+                  {profile.provider ||
+                    t('noProvider', { defaultValue: 'no provider' })}
                 </span>
               </div>
 
               {/* Stats ring */}
               <div className="mx-4 mt-4 grid grid-cols-4 divide-x divide-primary-200 rounded-xl border border-primary-200 bg-primary-100/50 dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900/50">
-                <ProfileStat label="Skills" value={profile.skillCount} />
-                <ProfileStat label="Sessions" value={profile.sessionCount} />
                 <ProfileStat
-                  label="Model"
+                  label={t('statSkills', { defaultValue: 'Skills' })}
+                  value={profile.skillCount}
+                />
+                <ProfileStat
+                  label={t('statSessions', { defaultValue: 'Sessions' })}
+                  value={profile.sessionCount}
+                />
+                <ProfileStat
+                  label={t('statModel', { defaultValue: 'Model' })}
                   value={profile.model || '\u2014'}
                   truncate
                 />
                 <ProfileStat
-                  label="Env"
+                  label={t('statEnv', { defaultValue: 'Env' })}
                   value={profile.hasEnv ? '\u2713' : '\u2014'}
                 />
               </div>
@@ -377,7 +428,7 @@ export function ProfilesScreen() {
               {/* Updated timestamp */}
               <div className="mx-4 mt-3 flex items-center justify-center gap-1.5 text-xs text-primary-400 dark:text-neutral-500">
                 <HugeiconsIcon icon={Clock01Icon} size={12} strokeWidth={1.7} />
-                {formatDate(profile.updatedAt)}
+                {formatDate(profile.updatedAt, i18n.language)}
               </div>
 
               {/* Actions */}
@@ -398,7 +449,7 @@ export function ProfilesScreen() {
                     size={13}
                     strokeWidth={1.8}
                   />{' '}
-                  Activate
+                  {t('activate', { defaultValue: 'Activate' })}
                 </button>
                 <button
                   type="button"
@@ -410,7 +461,7 @@ export function ProfilesScreen() {
                     size={13}
                     strokeWidth={1.8}
                   />{' '}
-                  Details
+                  {t('details', { defaultValue: 'Details' })}
                 </button>
                 <button
                   type="button"
@@ -425,7 +476,7 @@ export function ProfilesScreen() {
                     size={13}
                     strokeWidth={1.8}
                   />{' '}
-                  Rename
+                  {t('rename', { defaultValue: 'Rename' })}
                 </button>
                 <button
                   type="button"
@@ -443,7 +494,7 @@ export function ProfilesScreen() {
                     size={13}
                     strokeWidth={1.8}
                   />{' '}
-                  Delete
+                  {t('delete', { defaultValue: 'Delete' })}
                 </button>
               </div>
             </article>
@@ -453,8 +504,11 @@ export function ProfilesScreen() {
 
       {sorted.length === 0 && !profilesQuery.isLoading ? (
         <div className="rounded-2xl border border-dashed border-primary-200 bg-primary-50/70 p-8 text-center text-sm text-primary-600">
-          No named profiles found yet. The active profile is{' '}
-          <span className="font-semibold">{activeProfile}</span>.
+          {t('emptyState', {
+            name: activeProfile,
+            defaultValue:
+              'No named profiles found yet. The active profile is {{name}}.',
+          })}
         </div>
       ) : null}
 
@@ -474,14 +528,14 @@ export function ProfilesScreen() {
               </div>
               <div>
                 <DialogTitle className="text-base font-semibold">
-                  Create profile
+                  {t('dialogCreateTitle', { defaultValue: 'Create profile' })}
                 </DialogTitle>
                 <p className="mt-0.5 text-xs text-primary-500 dark:text-neutral-400">
                   {wizardStep === 1
-                    ? 'Name & template'
+                    ? t('wizardStep1', { defaultValue: 'Name & template' })
                     : wizardStep === 2
-                      ? 'Choose model'
-                      : 'Review & create'}
+                      ? t('wizardStep2', { defaultValue: 'Choose model' })
+                      : t('wizardStep3', { defaultValue: 'Review & create' })}
                 </p>
               </div>
             </div>
@@ -531,25 +585,33 @@ export function ProfilesScreen() {
               <div className="space-y-5">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-primary-600 dark:text-neutral-400">
-                    Profile name
+                    {t('profileName', { defaultValue: 'Profile name' })}
                   </label>
                   <Input
                     value={newProfileName}
                     onChange={(e) => setNewProfileName(e.target.value)}
-                    placeholder="e.g. builder, researcher, ops"
+                    placeholder={t('placeholderProfileName', {
+                      defaultValue: 'e.g. builder, researcher, ops',
+                    })}
                     className="h-11 text-sm"
                     autoFocus
                   />
                   {newProfileName.trim() && !nameValid ? (
                     <p className="text-xs text-red-500">
-                      Use letters, numbers, underscores, or hyphens. Cannot be
-                      &quot;default&quot;.
+                      {t('nameInvalid', {
+                        defaultValue:
+                          'Use letters, numbers, underscores, or hyphens. Cannot be "default".',
+                      })}
                     </p>
                   ) : newProfileName.trim() && nameValid ? (
-                    <p className="text-xs text-emerald-600">✓ Valid name</p>
+                    <p className="text-xs text-emerald-600">
+                      {t('nameValid', { defaultValue: '✓ Valid name' })}
+                    </p>
                   ) : (
                     <p className="text-xs text-primary-400 dark:text-neutral-500">
-                      Choose a short, memorable identifier
+                      {t('nameHint', {
+                        defaultValue: 'Choose a short, memorable identifier',
+                      })}
                     </p>
                   )}
                 </div>
@@ -562,7 +624,9 @@ export function ProfilesScreen() {
                         size={13}
                         strokeWidth={1.8}
                       />
-                      Clone from existing
+                      {t('cloneFromLabel', {
+                        defaultValue: 'Clone from existing',
+                      })}
                     </span>
                   </label>
                   <select
@@ -570,27 +634,44 @@ export function ProfilesScreen() {
                     onChange={(e) => setCloneFrom(e.target.value)}
                     className="h-11 w-full rounded-xl border border-primary-200 bg-primary-50 px-3 text-sm text-primary-900 outline-none transition-colors focus:border-accent-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                   >
-                    <option value="">Start fresh — empty config</option>
+                    <option value="">
+                      {t('cloneOptionFresh', {
+                        defaultValue: 'Start fresh — empty config',
+                      })}
+                    </option>
                     {profiles.map((p) => (
                       <option key={p.name} value={p.name}>
                         {p.name} {p.model ? `(${p.model})` : ''}{' '}
-                        {p.active ? '• active' : ''}
+                        {p.active
+                          ? t('cloneOptionActiveMarker', {
+                              defaultValue: '• active',
+                            })
+                          : ''}
                       </option>
                     ))}
                   </select>
                   <p className="text-xs text-primary-400 dark:text-neutral-500">
-                    Copies config, skills path, and env from the selected
-                    profile
+                    {t('cloneHint', {
+                      defaultValue:
+                        'Copies config, skills path, and env from the selected profile',
+                    })}
                   </p>
                 </div>
 
                 <div className="rounded-xl border border-primary-200 bg-primary-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/40">
                   <p className="text-xs text-primary-500 dark:text-neutral-400">
-                    Profiles are stored under{' '}
+                    {t('storageHintBefore', {
+                      defaultValue: 'Profiles are stored under',
+                    })}{' '}
                     <code className="rounded bg-primary-100 px-1 py-0.5 font-mono text-[11px] dark:bg-neutral-800">
-                      ~/.hermes/profiles/&lt;name&gt;/
+                      {t('storageHintPath', {
+                        defaultValue: '~/.hermes/profiles/<name>/',
+                      })}
                     </code>{' '}
-                    with their own config, skills, sessions, and env.
+                    {t('storageHintAfter', {
+                      defaultValue:
+                        'with their own config, skills, sessions, and env.',
+                    })}
                   </p>
                 </div>
               </div>
@@ -600,16 +681,20 @@ export function ProfilesScreen() {
               <div className="space-y-5">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold uppercase tracking-wider text-primary-600 dark:text-neutral-400">
-                    Default model
+                    {t('defaultModel', { defaultValue: 'Default model' })}
                   </label>
                   {loadingModels ? (
                     <div className="flex h-11 items-center rounded-xl border border-primary-200 bg-primary-50 px-3 text-sm text-primary-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-500">
-                      Loading configured models…
+                      {t('loadingModels', {
+                        defaultValue: 'Loading configured models…',
+                      })}
                     </div>
                   ) : allModels.length === 0 ? (
                     <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3 text-xs text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-                      No models found. Make sure Project Agent is running and
-                      has models configured.
+                      {t('noModelsWarning', {
+                        defaultValue:
+                          'No models found. Make sure Project Agent is running and has models configured.',
+                      })}
                     </div>
                   ) : (
                     <select
@@ -622,7 +707,11 @@ export function ProfilesScreen() {
                       }}
                       className="h-11 w-full rounded-xl border border-primary-200 bg-primary-50 px-3 text-sm text-primary-900 outline-none transition-colors focus:border-accent-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                     >
-                      <option value="">Skip — configure later</option>
+                      <option value="">
+                        {t('skipModel', {
+                          defaultValue: 'Skip — configure later',
+                        })}
+                      </option>
                       {allModels.map((m) => (
                         <option key={m.id} value={m.id}>
                           {m.name || m.id}
@@ -633,8 +722,16 @@ export function ProfilesScreen() {
                   )}
                   {wizardModel && (
                     <p className="text-xs text-emerald-600 dark:text-emerald-400">
-                      ✓ {wizardModel}
-                      {wizardProvider ? ` via ${wizardProvider}` : ''}
+                      {t('modelSelectedLine', {
+                        model: wizardModel,
+                        via: wizardProvider
+                          ? t('modelVia', {
+                              provider: wizardProvider,
+                              defaultValue: ' via {{provider}}',
+                            })
+                          : '',
+                        defaultValue: '✓ {{model}}{{via}}',
+                      })}
                     </p>
                   )}
                 </div>
@@ -642,8 +739,10 @@ export function ProfilesScreen() {
                 {!wizardModel && !loadingModels && allModels.length > 0 && (
                   <div className="rounded-xl border border-primary-200 bg-primary-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/40">
                     <p className="text-xs text-primary-500 dark:text-neutral-400">
-                      Select a model or skip to configure later from profile
-                      details or config.yaml.
+                      {t('skipModelHint', {
+                        defaultValue:
+                          'Select a model or skip to configure later from profile details or config.yaml.',
+                      })}
                     </p>
                   </div>
                 )}
@@ -654,20 +753,28 @@ export function ProfilesScreen() {
               <div className="space-y-4">
                 <div className="rounded-2xl border border-primary-200 bg-primary-50/80 p-4 dark:border-neutral-800 dark:bg-neutral-900/60">
                   <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary-500 dark:text-neutral-400">
-                    Profile summary
+                    {t('profileSummary', { defaultValue: 'Profile summary' })}
                   </h3>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <SummaryField label="Name" value={newProfileName.trim()} />
                     <SummaryField
-                      label="Template"
-                      value={cloneFrom || 'Fresh start'}
+                      label={t('summaryName', { defaultValue: 'Name' })}
+                      value={newProfileName.trim()}
                     />
                     <SummaryField
-                      label="Model"
+                      label={t('summaryTemplate', {
+                        defaultValue: 'Template',
+                      })}
+                      value={
+                        cloneFrom ||
+                        t('freshStart', { defaultValue: 'Fresh start' })
+                      }
+                    />
+                    <SummaryField
+                      label={t('summaryModel', { defaultValue: 'Model' })}
                       value={
                         wizardModel
                           ? `${wizardModel}${wizardProvider ? ` (${wizardProvider})` : ''}`
-                          : 'Not set'
+                          : t('notSet', { defaultValue: 'Not set' })
                       }
                       muted={!wizardModel}
                     />
@@ -676,13 +783,24 @@ export function ProfilesScreen() {
 
                 <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3 dark:border-emerald-900/40 dark:bg-emerald-950/20">
                   <p className="text-xs text-emerald-700 dark:text-emerald-300">
-                    This will create{' '}
+                    {t('createReviewBefore', { defaultValue: 'This will create' })}{' '}
                     <code className="rounded bg-emerald-100 px-1 py-0.5 font-mono text-[11px] dark:bg-emerald-900/40">
-                      ~/.hermes/profiles/{newProfileName.trim()}/
+                      {t('createReviewPathPrefix', {
+                        defaultValue: '~/.hermes/profiles/',
+                      })}
+                      {newProfileName.trim()}/
                     </code>{' '}
-                    with config.yaml
-                    {cloneFrom ? ` cloned from ${cloneFrom}` : ''}, skills/, and
-                    sessions/ directories.
+                    {t('createReviewMid', { defaultValue: 'with config.yaml' })}
+                    {cloneFrom
+                      ? t('clonePartCloned', {
+                          cloneFrom,
+                          defaultValue: ' cloned from {{cloneFrom}}',
+                        })
+                      : ''}
+                    {t('createReviewTail', {
+                      defaultValue:
+                        ', skills/, and sessions/ directories.',
+                    })}
                   </p>
                 </div>
               </div>
@@ -698,7 +816,7 @@ export function ProfilesScreen() {
                   size="sm"
                   onClick={() => setWizardStep((s) => (s - 1) as 1 | 2 | 3)}
                 >
-                  Back
+                  {tc('back', { defaultValue: 'Back' })}
                 </Button>
               )}
             </div>
@@ -711,7 +829,7 @@ export function ProfilesScreen() {
                   resetWizard()
                 }}
               >
-                Cancel
+                {tc('cancel', { defaultValue: 'Cancel' })}
               </Button>
               {wizardStep < 3 ? (
                 <Button
@@ -720,7 +838,7 @@ export function ProfilesScreen() {
                   disabled={wizardStep === 1 && !nameValid}
                   className="gap-1.5"
                 >
-                  Next
+                  {t('next', { defaultValue: 'Next' })}
                   <HugeiconsIcon
                     icon={ArrowRight01Icon}
                     size={14}
@@ -739,7 +857,9 @@ export function ProfilesScreen() {
                     size={14}
                     strokeWidth={1.8}
                   />
-                  Create Profile
+                  {t('createProfileSubmit', {
+                    defaultValue: 'Create Profile',
+                  })}
                 </Button>
               )}
             </div>
@@ -764,10 +884,10 @@ export function ProfilesScreen() {
               </div>
               <div>
                 <DialogTitle className="text-base font-semibold">
-                  Rename profile
+                  {t('renameTitle', { defaultValue: 'Rename profile' })}
                 </DialogTitle>
                 <p className="mt-0.5 text-xs text-primary-500 dark:text-neutral-400">
-                  Renaming{' '}
+                  {t('renamingLabel', { defaultValue: 'Renaming' })}{' '}
                   <span className="font-semibold text-primary-700 dark:text-neutral-200">
                     {renameTarget?.name}
                   </span>
@@ -778,19 +898,24 @@ export function ProfilesScreen() {
           <div className="px-6 py-5 space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold uppercase tracking-wider text-primary-600 dark:text-neutral-400">
-                New name
+                {t('newName', { defaultValue: 'New name' })}
               </label>
               <Input
                 value={renameValue}
                 onChange={(e) => setRenameValue(e.target.value)}
-                placeholder="new-profile-name"
+                placeholder={t('placeholderNewName', {
+                  defaultValue: 'new-profile-name',
+                })}
                 className="h-11 text-sm"
                 autoFocus
               />
               {renameValue.trim() &&
                 !/^[A-Za-z0-9_-]+$/.test(renameValue.trim()) && (
                   <p className="text-xs text-red-500">
-                    Use letters, numbers, underscores, or hyphens.
+                    {t('renameInvalid', {
+                      defaultValue:
+                        'Use letters, numbers, underscores, or hyphens.',
+                    })}
                   </p>
                 )}
             </div>
@@ -804,7 +929,7 @@ export function ProfilesScreen() {
                 setRenameValue('')
               }}
             >
-              Cancel
+              {tc('cancel', { defaultValue: 'Cancel' })}
             </Button>
             <Button
               size="sm"
@@ -815,7 +940,7 @@ export function ProfilesScreen() {
                 !/^[A-Za-z0-9_-]+$/.test(renameValue.trim())
               }
             >
-              Rename
+              {t('rename', { defaultValue: 'Rename' })}
             </Button>
           </div>
         </DialogContent>
@@ -839,7 +964,9 @@ export function ProfilesScreen() {
                   {detailsName}
                 </DialogTitle>
                 <p className="mt-0.5 text-xs text-primary-500 dark:text-neutral-400">
-                  Profile details &amp; configuration
+                  {t('detailsSubtitle', {
+                    defaultValue: 'Profile details & configuration',
+                  })}
                 </p>
               </div>
             </div>
@@ -851,36 +978,49 @@ export function ProfilesScreen() {
               <div className="space-y-4 text-sm">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <DetailField
-                    label="Name"
+                    label={t('detailName', { defaultValue: 'Name' })}
                     value={detailQuery.data.profile.name}
                   />
                   <DetailField
-                    label="Active"
-                    value={detailQuery.data.profile.active ? 'Yes' : 'No'}
+                    label={t('detailActive', { defaultValue: 'Active' })}
+                    value={
+                      detailQuery.data.profile.active
+                        ? t('detailYes', { defaultValue: 'Yes' })
+                        : t('detailNo', { defaultValue: 'No' })
+                    }
                     accent={detailQuery.data.profile.active}
                   />
                 </div>
                 <DetailField
-                  label="Path"
+                  label={t('detailPath', { defaultValue: 'Path' })}
                   value={detailQuery.data.profile.path}
                   mono
                 />
                 <div className="grid gap-3 sm:grid-cols-3">
                   <DetailField
-                    label="Env file"
-                    value={detailQuery.data.profile.envPath || 'Not set'}
+                    label={t('detailEnvFile', { defaultValue: 'Env file' })}
+                    value={
+                      detailQuery.data.profile.envPath ||
+                      t('notSet', { defaultValue: 'Not set' })
+                    }
                     mono
                     muted={!detailQuery.data.profile.envPath}
                   />
                   <DetailField
-                    label="Sessions"
-                    value={detailQuery.data.profile.sessionsDir || 'Not set'}
+                    label={t('detailSessions', { defaultValue: 'Sessions' })}
+                    value={
+                      detailQuery.data.profile.sessionsDir ||
+                      t('notSet', { defaultValue: 'Not set' })
+                    }
                     mono
                     muted={!detailQuery.data.profile.sessionsDir}
                   />
                   <DetailField
-                    label="Skills"
-                    value={detailQuery.data.profile.skillsDir || 'Not set'}
+                    label={t('detailSkills', { defaultValue: 'Skills' })}
+                    value={
+                      detailQuery.data.profile.skillsDir ||
+                      t('notSet', { defaultValue: 'Not set' })
+                    }
                     mono
                     muted={!detailQuery.data.profile.skillsDir}
                   />
@@ -892,7 +1032,7 @@ export function ProfilesScreen() {
                       size={14}
                       strokeWidth={1.8}
                     />{' '}
-                    Config
+                    {t('configSection', { defaultValue: 'Config' })}
                   </div>
                   <pre className="max-h-48 overflow-auto rounded-lg border border-primary-200 bg-primary-100/70 p-3 text-xs leading-relaxed text-primary-800 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200">
                     {JSON.stringify(detailQuery.data.profile.config, null, 2)}
@@ -901,11 +1041,13 @@ export function ProfilesScreen() {
               </div>
             ) : detailQuery.isLoading ? (
               <div className="flex min-h-[120px] items-center justify-center text-sm text-primary-500 dark:text-neutral-400">
-                Loading profile\u2026
+                {t('loadingProfile', { defaultValue: 'Loading profile…' })}
               </div>
             ) : (
               <div className="flex min-h-[120px] items-center justify-center text-sm text-red-500">
-                Failed to load profile.
+                {t('failedLoadProfile', {
+                  defaultValue: 'Failed to load profile.',
+                })}
               </div>
             )}
           </div>
@@ -917,7 +1059,7 @@ export function ProfilesScreen() {
               size="sm"
               onClick={() => setDetailsName(null)}
             >
-              Close
+              {tc('close', { defaultValue: 'Close' })}
             </Button>
           </div>
         </DialogContent>

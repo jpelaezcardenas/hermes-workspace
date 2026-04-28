@@ -1,18 +1,31 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Cancel01Icon } from '@hugeicons/core-free-icons'
 
-const SCHEDULE_PRESETS = [
-  { label: 'Every 15m', value: 'every 15m' },
-  { label: 'Every 30m', value: 'every 30m' },
-  { label: 'Every 1h', value: 'every 1h' },
-  { label: 'Every 6h', value: 'every 6h' },
-  { label: 'Daily', value: '0 9 * * *' },
-  { label: 'Weekly', value: '0 9 * * 1' },
+const SCHEDULE_PRESET_DEFS = [
+  { scheduleKey: 'schedule_every15m' as const, value: 'every 15m' },
+  { scheduleKey: 'schedule_every30m' as const, value: 'every 30m' },
+  { scheduleKey: 'schedule_every1h' as const, value: 'every 1h' },
+  { scheduleKey: 'schedule_every6h' as const, value: 'every 6h' },
+  { scheduleKey: 'schedule_daily' as const, value: '0 9 * * *' },
+  { scheduleKey: 'schedule_weekly' as const, value: '0 9 * * 1' },
 ] as const
+
+const SCHEDULE_DEFAULT_LABELS: Record<
+  (typeof SCHEDULE_PRESET_DEFS)[number]['scheduleKey'],
+  string
+> = {
+  schedule_every15m: 'Every 15m',
+  schedule_every30m: 'Every 30m',
+  schedule_every1h: 'Every 1h',
+  schedule_every6h: 'Every 6h',
+  schedule_daily: 'Daily',
+  schedule_weekly: 'Weekly',
+}
 
 const DELIVERY_OPTIONS = ['local', 'telegram', 'discord'] as const
 
@@ -48,6 +61,17 @@ export function CreateJobDialog({
   onOpenChange,
   onSubmit,
 }: CreateJobDialogProps) {
+  const { t } = useTranslation(['jobs', 'common'])
+  const schedulePresets = useMemo(
+    () =>
+      SCHEDULE_PRESET_DEFS.map((row) => ({
+        label: t(`jobs:${row.scheduleKey}`, {
+          defaultValue: SCHEDULE_DEFAULT_LABELS[row.scheduleKey],
+        }),
+        value: row.value,
+      })),
+    [t],
+  )
   const [form, setForm] = useState(getInitialState)
 
   useEffect(() => {
@@ -144,12 +168,17 @@ export function CreateJobDialog({
               style={{ borderColor: 'var(--theme-border)' }}
             >
               <div>
-                <h2 className="text-lg font-semibold">Create Job</h2>
+                <h2 className="text-lg font-semibold">
+                  {t('jobs:dialogCreateTitle', { defaultValue: 'Create Job' })}
+                </h2>
                 <p
                   className="mt-1 text-sm"
                   style={{ color: 'var(--theme-muted)' }}
                 >
-                  Build a scheduled Hermes task with preset timing options.
+                  {t('jobs:dialogCreateSubtitle', {
+                    defaultValue:
+                      'Build a scheduled Hermes task with preset timing options.',
+                  })}
                 </p>
               </div>
               <button
@@ -157,7 +186,9 @@ export function CreateJobDialog({
                 onClick={() => onOpenChange(false)}
                 className="rounded-lg p-2 transition-colors"
                 style={{ color: 'var(--theme-muted)' }}
-                aria-label="Close create job dialog"
+                aria-label={t('jobs:ariaCloseCreate', {
+                  defaultValue: 'Close create job dialog',
+                })}
               >
                 <HugeiconsIcon icon={Cancel01Icon} size={18} />
               </button>
@@ -165,7 +196,9 @@ export function CreateJobDialog({
 
             <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
               <section className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium">
+                  {t('jobs:fieldName', { defaultValue: 'Name' })}
+                </label>
                 <input
                   value={form.name}
                   onChange={(event) =>
@@ -174,7 +207,9 @@ export function CreateJobDialog({
                       name: event.target.value,
                     }))
                   }
-                  placeholder="Daily research summary"
+                  placeholder={t('jobs:placeholderName', {
+                    defaultValue: 'Daily research summary',
+                  })}
                   required
                   className="w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-1"
                   style={{
@@ -188,20 +223,25 @@ export function CreateJobDialog({
 
               <section className="space-y-3">
                 <div>
-                  <h3 className="text-sm font-medium">Schedule</h3>
+                  <h3 className="text-sm font-medium">
+                    {t('jobs:fieldSchedule', { defaultValue: 'Schedule' })}
+                  </h3>
                   <p
                     className="mt-1 text-xs"
                     style={{ color: 'var(--theme-muted)' }}
                   >
-                    Choose a preset or enter a custom schedule string below.
+                    {t('jobs:fieldScheduleHint', {
+                      defaultValue:
+                        'Choose a preset or enter a custom schedule string below.',
+                    })}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {SCHEDULE_PRESETS.map((preset) => {
+                  {schedulePresets.map((preset) => {
                     const isActive = form.schedule === preset.value
                     return (
                       <button
-                        key={preset.label}
+                        key={preset.value}
                         type="button"
                         onClick={() =>
                           setForm((current) => ({
@@ -226,7 +266,11 @@ export function CreateJobDialog({
                   })}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Custom schedule</label>
+                  <label className="text-sm font-medium">
+                    {t('jobs:fieldCustomSchedule', {
+                      defaultValue: 'Custom schedule',
+                    })}
+                  </label>
                   <input
                     value={form.schedule}
                     onChange={(event) =>
@@ -235,7 +279,9 @@ export function CreateJobDialog({
                         schedule: event.target.value,
                       }))
                     }
-                    placeholder="every 30m or 0 9 * * *"
+                    placeholder={t('jobs:placeholderCustomSchedule', {
+                      defaultValue: 'every 30m or 0 9 * * *',
+                    })}
                     required
                     className="w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-1"
                     style={{
@@ -248,13 +294,18 @@ export function CreateJobDialog({
                     className="text-xs"
                     style={{ color: 'var(--theme-muted)' }}
                   >
-                    Advanced users can enter cron expressions directly.
+                    {t('jobs:fieldCustomScheduleHint', {
+                      defaultValue:
+                        'Advanced users can enter cron expressions directly.',
+                    })}
                   </p>
                 </div>
               </section>
 
               <section className="space-y-2">
-                <label className="text-sm font-medium">Prompt</label>
+                <label className="text-sm font-medium">
+                  {t('jobs:fieldPrompt', { defaultValue: 'Prompt' })}
+                </label>
                 <textarea
                   value={form.prompt}
                   onChange={(event) =>
@@ -263,7 +314,9 @@ export function CreateJobDialog({
                       prompt: event.target.value,
                     }))
                   }
-                  placeholder="What should Hermes do?"
+                  placeholder={t('jobs:placeholderPrompt', {
+                    defaultValue: 'What should Hermes do?',
+                  })}
                   required
                   rows={5}
                   className="w-full resize-none rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-1"
@@ -277,17 +330,23 @@ export function CreateJobDialog({
 
               <section className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-medium">Options</h3>
+                  <h3 className="text-sm font-medium">
+                    {t('jobs:sectionOptions', { defaultValue: 'Options' })}
+                  </h3>
                   <p
                     className="mt-1 text-xs"
                     style={{ color: 'var(--theme-muted)' }}
                   >
-                    Optional routing and repeat controls.
+                    {t('jobs:sectionOptionsHint', {
+                      defaultValue: 'Optional routing and repeat controls.',
+                    })}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Skills</label>
+                  <label className="text-sm font-medium">
+                    {t('jobs:fieldSkills', { defaultValue: 'Skills' })}
+                  </label>
                   <input
                     value={form.skillsInput}
                     onChange={(event) =>
@@ -296,7 +355,9 @@ export function CreateJobDialog({
                         skillsInput: event.target.value,
                       }))
                     }
-                    placeholder="research, writing, synthesis"
+                    placeholder={t('jobs:placeholderSkills', {
+                      defaultValue: 'research, writing, synthesis',
+                    })}
                     className="w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-1"
                     style={{
                       background: 'var(--theme-input)',
@@ -308,12 +369,16 @@ export function CreateJobDialog({
                     className="text-xs"
                     style={{ color: 'var(--theme-muted)' }}
                   >
-                    Comma-separated for now.
+                    {t('jobs:skillsHint', {
+                      defaultValue: 'Comma-separated for now.',
+                    })}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Deliver to</label>
+                  <label className="text-sm font-medium">
+                    {t('jobs:fieldDeliver', { defaultValue: 'Deliver to' })}
+                  </label>
                   <div className="flex flex-wrap gap-2">
                     {DELIVERY_OPTIONS.map((option) => {
                       const isActive = form.deliver.includes(option)
@@ -326,7 +391,11 @@ export function CreateJobDialog({
                           onClick={() => toggleDelivery(option)}
                           title={
                             needsGateway
-                              ? `Requires Hermes Gateway with ${option} configured`
+                              ? t('jobs:deliverRequiresGateway', {
+                                  channel: option,
+                                  defaultValue:
+                                    'Requires Hermes Gateway with {{channel}} configured',
+                                })
                               : undefined
                           }
                           className="rounded-full border px-3 py-1.5 text-xs font-medium capitalize transition-colors"
@@ -353,7 +422,9 @@ export function CreateJobDialog({
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Repeat</label>
+                  <label className="text-sm font-medium">
+                    {t('jobs:fieldRepeat', { defaultValue: 'Repeat' })}
+                  </label>
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
@@ -379,7 +450,9 @@ export function CreateJobDialog({
                             : 'var(--theme-text)',
                       }}
                     >
-                      Unlimited
+                      {t('jobs:repeatUnlimited', {
+                        defaultValue: 'Unlimited',
+                      })}
                     </button>
                     <button
                       type="button"
@@ -405,7 +478,7 @@ export function CreateJobDialog({
                             : 'var(--theme-text)',
                       }}
                     >
-                      Set count
+                      {t('jobs:repeatSetCount', { defaultValue: 'Set count' })}
                     </button>
                   </div>
                   {form.repeatMode === 'limited' ? (
@@ -445,7 +518,7 @@ export function CreateJobDialog({
                   color: 'var(--theme-muted)',
                 }}
               >
-                Cancel
+                {t('common:cancel', { defaultValue: 'Cancel' })}
               </button>
               <button
                 type="submit"
@@ -458,7 +531,9 @@ export function CreateJobDialog({
                 className="rounded-xl px-4 py-2 text-sm font-medium text-white transition-opacity disabled:opacity-50"
                 style={{ background: 'var(--theme-accent)' }}
               >
-                {isSubmitting ? 'Creating...' : 'Create'}
+                {isSubmitting
+                  ? t('jobs:creating', { defaultValue: 'Creating...' })
+                  : t('jobs:create', { defaultValue: 'Create' })}
               </button>
             </div>
           </motion.form>
