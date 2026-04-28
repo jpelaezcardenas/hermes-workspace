@@ -20,6 +20,7 @@ import {
 import { Component, useCallback, useEffect, useState } from 'react'
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
+import { t as i18nStaticT } from '@/lib/i18n'
 import type { AccentColor, SettingsThemeMode } from '@/hooks/use-settings'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
@@ -867,6 +868,7 @@ function _ProfileContent() {
 }
 
 function AppearanceContent() {
+  const { t } = useTranslation('settings')
   const { settings, updateSettings } = useSettings()
 
   function handleThemeChange(value: string) {
@@ -895,18 +897,32 @@ function AppearanceContent() {
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Appearance"
-        description="Theme and color accents."
+        title={t('appearanceTitle', { defaultValue: 'Appearance' })}
+        description={t('appearanceDesc', {
+          defaultValue: 'Choose a workspace theme and accent color.',
+        })}
       />
       <div className={SETTINGS_CARD_CLASS}>
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-500">
-          Theme Mode
+          {t('dialogThemeMode', { defaultValue: 'Theme mode' })}
         </p>
         <div className="inline-flex rounded-lg border border-primary-200 p-1">
           {[
-            { value: 'light', label: 'Light', icon: Sun01Icon },
-            { value: 'dark', label: 'Dark', icon: Moon01Icon },
-            { value: 'system', label: 'System', icon: ComputerIcon },
+            {
+              value: 'light',
+              label: t('dialogThemeLight', { defaultValue: 'Light' }),
+              icon: Sun01Icon,
+            },
+            {
+              value: 'dark',
+              label: t('dialogThemeDark', { defaultValue: 'Dark' }),
+              icon: Moon01Icon,
+            },
+            {
+              value: 'system',
+              label: t('dialogThemeSystem', { defaultValue: 'System' }),
+              icon: ComputerIcon,
+            },
           ].map((option) => (
             <button
               key={option.value}
@@ -928,21 +944,28 @@ function AppearanceContent() {
       {/* Accent color removed — themes control accent */}
       <div className={SETTINGS_CARD_CLASS}>
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-500">
-          Enterprise Theme
+          {t('dialogEnterpriseThemeSection', { defaultValue: 'Enterprise theme' })}
         </p>
         <EnterpriseThemePicker />
       </div>
       <div className={SETTINGS_CARD_CLASS}>
         <Row
-          label="System metrics footer"
-          description="Show a persistent footer with CPU, RAM, disk, and Hermes status."
+          label={t('dialogSystemMetricsFooterLabel', {
+            defaultValue: 'System metrics footer',
+          })}
+          description={t('dialogSystemMetricsFooterDesc', {
+            defaultValue:
+              'Show a persistent footer with CPU, RAM, disk, and Hermes status.',
+          })}
         >
           <Switch
             checked={settings.showSystemMetricsFooter}
             onCheckedChange={(c) =>
               updateSettings({ showSystemMetricsFooter: c })
             }
-            aria-label="Show system metrics footer"
+            aria-label={t('dialogSystemMetricsFooterAria', {
+              defaultValue: 'Show system metrics footer',
+            })}
           />
         </Row>
 
@@ -1069,6 +1092,7 @@ function ThemeSwatch({
 }
 
 function EnterpriseThemePicker() {
+  const { t } = useTranslation('settings')
   const { updateSettings } = useSettings()
   const [current, setCurrent] = useState(() => {
     if (typeof window === 'undefined') return 'hermes-nous'
@@ -1102,11 +1126,15 @@ function EnterpriseThemePicker() {
       <div className="flex items-center justify-between rounded-lg border border-primary-200 px-3 py-2">
         <div>
           <p className="text-xs font-semibold text-primary-900 dark:text-neutral-100">
-            {currentMode === 'dark' ? 'Dark mode' : 'Light mode'}
+            {currentMode === 'dark'
+              ? t('dialogEnterpriseModeDark', { defaultValue: 'Dark mode' })
+              : t('dialogEnterpriseModeLight', { defaultValue: 'Light mode' })}
           </p>
           <p className="text-[11px] text-primary-500 dark:text-neutral-400">
-            Toggle the current theme family between paired light and dark
-            variants.
+            {t('dialogEnterpriseModeToggleDesc', {
+              defaultValue:
+                'Toggle the current theme family between paired light and dark variants.',
+            })}
           </p>
         </div>
         <button
@@ -1115,8 +1143,12 @@ function EnterpriseThemePicker() {
           className="inline-flex items-center gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-900 transition-colors hover:bg-primary-100"
           aria-label={
             currentMode === 'dark'
-              ? 'Switch enterprise theme to light mode'
-              : 'Switch enterprise theme to dark mode'
+              ? t('dialogEnterpriseAriaToLight', {
+                  defaultValue: 'Switch enterprise theme to light mode',
+                })
+              : t('dialogEnterpriseAriaToDark', {
+                  defaultValue: 'Switch enterprise theme to dark mode',
+                })
           }
         >
           <HugeiconsIcon
@@ -1124,17 +1156,22 @@ function EnterpriseThemePicker() {
             size={16}
             strokeWidth={1.5}
           />
-          {currentMode === 'dark' ? 'Light' : 'Dark'}
+          {currentMode === 'dark'
+            ? t('dialogEnterpriseToggleLight', { defaultValue: 'Light' })
+            : t('dialogEnterpriseToggleDark', { defaultValue: 'Dark' })}
         </button>
       </div>
       <div className="grid w-full grid-cols-2 gap-2">
-        {visibleThemes.map((t) => {
-          const isActive = current === t.id
+        {visibleThemes.map((themeEntry) => {
+          const isActive = current === themeEntry.id
+          const slug = themeEntry.id.replace(/-/g, '_')
+          const labelKey = `themeCard_${slug}_label`
+          const descKey = `themeCard_${slug}_desc`
           return (
             <button
-              key={t.id}
+              key={themeEntry.id}
               type="button"
-              onClick={() => applyEnterpriseTheme(t.id)}
+              onClick={() => applyEnterpriseTheme(themeEntry.id)}
               className={cn(
                 'flex flex-col gap-1.5 rounded-lg border p-2 text-left transition-colors',
                 isActive
@@ -1142,20 +1179,20 @@ function EnterpriseThemePicker() {
                   : 'border-primary-200 bg-primary-50/80 hover:bg-primary-100',
               )}
             >
-              <ThemeSwatch colors={t.preview} />
+              <ThemeSwatch colors={themeEntry.preview} />
               <div className="flex items-center gap-1">
-                <span className="text-xs">{t.icon}</span>
+                <span className="text-xs">{themeEntry.icon}</span>
                 <span className="text-xs font-semibold text-primary-900 dark:text-neutral-100">
-                  {t.label}
+                  {t(labelKey, { defaultValue: themeEntry.label })}
                 </span>
                 {isActive && (
                   <span className="ml-auto text-[9px] font-bold text-accent-600 uppercase tracking-wide">
-                    Active
+                    {t('themePickerActive', { defaultValue: 'Active' })}
                   </span>
                 )}
               </div>
               <p className="text-[10px] text-primary-500 dark:text-neutral-400 leading-tight">
-                {t.desc}
+                {t(descKey, { defaultValue: themeEntry.desc })}
               </p>
             </button>
           )
@@ -1235,50 +1272,81 @@ function _LoaderContent() {
 }
 
 function ChatContent() {
+  const { t } = useTranslation('settings')
   const { settings: cs, updateSettings: updateCS } = useChatSettingsStore()
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Chat"
-        description="Message visibility and response loader style."
+        title={t('sectionChat', { defaultValue: 'Chat' })}
+        description={t('chatDisplaySectionDesc', {
+          defaultValue: "Control what's visible in chat messages.",
+        })}
       />
       <div className={SETTINGS_CARD_CLASS}>
         <Row
-          label="Show tool messages"
-          description="Display tool call details in assistant responses."
+          label={t('chatShowToolMessagesLabel', {
+            defaultValue: 'Show tool messages',
+          })}
+          description={t('chatShowToolMessagesDesc', {
+            defaultValue:
+              'Display tool call details when the agent uses tools.',
+          })}
         >
           <Switch
             checked={cs.showToolMessages}
             onCheckedChange={(c) => updateCS({ showToolMessages: c })}
-            aria-label="Show tool messages"
+            aria-label={t('chatShowToolMessagesLabel', {
+              defaultValue: 'Show tool messages',
+            })}
           />
         </Row>
         <Row
-          label="Show reasoning blocks"
-          description="Display model reasoning blocks when available."
+          label={t('chatShowReasoningLabel', {
+            defaultValue: 'Show reasoning blocks',
+          })}
+          description={t('chatShowReasoningDesc', {
+            defaultValue: 'Display model thinking and reasoning process.',
+          })}
         >
           <Switch
             checked={cs.showReasoningBlocks}
             onCheckedChange={(c) => updateCS({ showReasoningBlocks: c })}
-            aria-label="Show reasoning blocks"
+            aria-label={t('chatShowReasoningLabel', {
+              defaultValue: 'Show reasoning blocks',
+            })}
           />
         </Row>
         <Row
-          label="Sound on response complete"
-          description="Play a short sound in the browser when the agent finishes replying."
+          label={t('chatSoundCompleteLabel', {
+            defaultValue: 'Sound on response complete',
+          })}
+          description={t('chatSoundCompleteDesc', {
+            defaultValue:
+              'Play a short sound in the browser when the agent finishes replying.',
+          })}
         >
           <Switch
             checked={cs.soundOnChatComplete}
             onCheckedChange={(c) => updateCS({ soundOnChatComplete: c })}
-            aria-label="Sound on response complete"
+            aria-label={t('chatSoundCompleteLabel', {
+              defaultValue: 'Sound on response complete',
+            })}
           />
         </Row>
         <Row
-          label="Enter key behavior"
+          label={t('chatEnterBehaviorLabel', {
+            defaultValue: 'Enter key behavior',
+          })}
           description={
             cs.enterBehavior === 'newline'
-              ? 'Enter inserts a newline. Use ⌘/Ctrl+Enter to send.'
-              : 'Enter sends the message. Use Shift+Enter for a newline.'
+              ? t('chatEnterNewlineHint', {
+                  defaultValue:
+                    'Enter inserts a newline. Use ⌘/Ctrl+Enter to send.',
+                })
+              : t('chatEnterSendHint', {
+                  defaultValue:
+                    'Enter sends the message. Use Shift+Enter for a newline.',
+                })
           }
         >
           <Switch
@@ -1286,12 +1354,16 @@ function ChatContent() {
             onCheckedChange={(c) =>
               updateCS({ enterBehavior: c ? 'newline' : 'send' })
             }
-            aria-label="Enter inserts newline instead of sending"
+            aria-label={t('chatEnterBehaviorLabel', {
+              defaultValue: 'Enter key behavior',
+            })}
           />
         </Row>
         <Row
-          label="Chat content width"
-          description="Max-width of the message column on wide screens."
+          label={t('chatWidthLabel', { defaultValue: 'Chat content width' })}
+          description={t('chatWidthDesc', {
+            defaultValue: 'Controls the max-width of the message column on wide screens.',
+          })}
         >
           <select
             value={cs.chatWidth}
@@ -1304,25 +1376,45 @@ function ChatContent() {
               })
             }
             className="h-8 rounded-md border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400"
-            aria-label="Chat content width"
+            aria-label={t('chatWidthLabel', {
+              defaultValue: 'Chat content width',
+            })}
           >
-            <option value="comfortable">Comfortable (900px)</option>
-            <option value="wide">Wide (1200px)</option>
-            <option value="full">Full width</option>
+            <option value="comfortable">
+              {t('chatWidthComfortable', {
+                defaultValue: 'Comfortable (900px)',
+              })}
+            </option>
+            <option value="wide">
+              {t('chatWidthWide', { defaultValue: 'Wide (1200px)' })}
+            </option>
+            <option value="full">
+              {t('chatWidthFull', { defaultValue: 'Full width' })}
+            </option>
           </select>
         </Row>
         <Row
-          label="Expand sidebar on hover"
+          label={t('chatSidebarHoverLabel', {
+            defaultValue: 'Expand sidebar on hover',
+          })}
           description={
             cs.sidebarHoverExpand
-              ? 'Collapsed sidebar expands temporarily on hover.'
-              : 'Collapsed sidebar stays at 48px until you click the toggle.'
+              ? t('chatSidebarHoverOnHint', {
+                  defaultValue:
+                    'Collapsed sidebar expands temporarily when you hover over it.',
+                })
+              : t('chatSidebarHoverOffHint', {
+                  defaultValue:
+                    'Collapsed sidebar stays at 48px until you click the toggle.',
+                })
           }
         >
           <Switch
             checked={cs.sidebarHoverExpand}
             onCheckedChange={(c) => updateCS({ sidebarHoverExpand: c })}
-            aria-label="Expand sidebar on hover"
+            aria-label={t('chatSidebarHoverLabel', {
+              defaultValue: 'Expand sidebar on hover',
+            })}
           />
         </Row>
       </div>
@@ -1332,22 +1424,37 @@ function ChatContent() {
 }
 
 function NotificationsContent() {
+  const { t } = useTranslation('settings')
   const { settings, updateSettings } = useSettings()
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Notifications"
-        description="Simple alerts and threshold controls."
+        title={t('notificationsSectionTitle', {
+          defaultValue: 'Notifications',
+        })}
+        description={t('notificationsSectionDesc', {
+          defaultValue: 'Control alert delivery and usage warning threshold.',
+        })}
       />
       <div className={SETTINGS_CARD_CLASS}>
-        <Row label="Enable alerts">
+        <Row
+          label={t('enableAlertsLabel', { defaultValue: 'Enable alerts' })}
+          description={t('enableAlertsDesc', {
+            defaultValue: 'Show usage and system alert notifications.',
+          })}
+        >
           <Switch
             checked={settings.notificationsEnabled}
             onCheckedChange={(c) => updateSettings({ notificationsEnabled: c })}
-            aria-label="Enable alerts"
+            aria-label={t('enableAlertsLabel', { defaultValue: 'Enable alerts' })}
           />
         </Row>
-        <Row label="Usage threshold">
+        <Row
+          label={t('usageThresholdLabel', { defaultValue: 'Usage threshold' })}
+          description={t('usageThresholdDesc', {
+            defaultValue: 'Set usage warning trigger between 50% and 100%.',
+          })}
+        >
           <div className="flex w-full max-w-[14rem] items-center gap-2">
             <input
               type="range"
@@ -1359,7 +1466,10 @@ function NotificationsContent() {
               }
               className="w-full accent-primary-900 dark:accent-primary-400 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!settings.notificationsEnabled}
-              aria-label={`Usage threshold: ${settings.usageThreshold} percent`}
+              aria-label={t('usageThresholdAria', {
+                percent: settings.usageThreshold,
+                defaultValue: `Usage threshold: ${settings.usageThreshold} percent`,
+              })}
               aria-valuemin={50}
               aria-valuemax={100}
               aria-valuenow={settings.usageThreshold}
@@ -1498,13 +1608,13 @@ class SettingsErrorBoundary extends Component<
         <div className="flex h-full items-center justify-center p-8 text-center">
           <div>
             <p className="mb-2 text-sm font-medium text-red-500">
-              Settings failed to load
+              {i18nStaticT('settings:configureFailed')}
             </p>
             <button
               onClick={() => this.setState({ error: null })}
               className="text-xs text-primary-600 underline hover:text-primary-900"
             >
-              Try again
+              {i18nStaticT('common:tryAgain')}
             </button>
           </div>
         </div>
@@ -1517,8 +1627,9 @@ class SettingsErrorBoundary extends Component<
 // ── Agent Behavior ──────────────────────────────────────────────────────
 
 function AgentBehaviorContent() {
+  const { t } = useTranslation(['settings', 'common'])
   const [config, setConfig] = useState<Record<string, unknown>>({})
-  const [msg, setMsg] = useState<string | null>(null)
+  const [toast, setToast] = useState<'saved' | 'failed' | null>(null)
 
   useEffect(() => {
     fetch('/api/hermes-config')
@@ -1530,7 +1641,7 @@ function AgentBehaviorContent() {
   }, [])
 
   const save = async (key: string, value: unknown) => {
-    setMsg(null)
+    setToast(null)
     try {
       await fetch('/api/hermes-config', {
         method: 'PATCH',
@@ -1538,35 +1649,43 @@ function AgentBehaviorContent() {
         body: JSON.stringify({ config: { agent: { [key]: value } } }),
       })
       setConfig((prev) => ({ ...prev, [key]: value }))
-      setMsg('Saved')
-      setTimeout(() => setMsg(null), 2000)
+      setToast('saved')
+      setTimeout(() => setToast(null), 2000)
     } catch {
-      setMsg('Failed')
+      setToast('failed')
     }
   }
 
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Agent Behavior"
-        description="Execution limits and tool access."
+        title={t('settings:agentBehaviorTitle', {
+          defaultValue: 'Agent Behavior',
+        })}
+        description={t('settings:agentBehaviorDesc', {
+          defaultValue: 'Control agent execution limits and tool access.',
+        })}
       />
-      {msg && (
+      {toast && (
         <div
           className={cn(
             'rounded-lg px-3 py-1.5 text-xs font-medium',
-            msg === 'Saved'
+            toast === 'saved'
               ? 'bg-green-500/15 text-green-400'
               : 'bg-red-500/15 text-red-400',
           )}
         >
-          {msg}
+          {toast === 'saved'
+            ? t('common:saved', { defaultValue: 'Saved' })
+            : t('settings:hermesSaveFailed', { defaultValue: 'Failed to save' })}
         </div>
       )}
       <div className={SETTINGS_CARD_CLASS}>
         <Row
-          label="Max turns"
-          description="Maximum agent turns per request (1-100)"
+          label={t('settings:maxTurnsLabel', { defaultValue: 'Max turns' })}
+          description={t('settings:maxTurnsDesc', {
+            defaultValue: 'Maximum agent turns per request (1-100).',
+          })}
         >
           <input
             type="number"
@@ -1577,7 +1696,14 @@ function AgentBehaviorContent() {
             className="h-8 w-20 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-center text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           />
         </Row>
-        <Row label="Gateway timeout" description="Seconds before timeout">
+        <Row
+          label={t('settings:gatewayTimeoutLabel', {
+            defaultValue: 'Gateway timeout',
+          })}
+          description={t('settings:gatewayTimeoutDesc', {
+            defaultValue: 'Seconds before gateway times out a request.',
+          })}
+        >
           <input
             type="number"
             min={10}
@@ -1587,15 +1713,28 @@ function AgentBehaviorContent() {
             className="h-8 w-20 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-center text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           />
         </Row>
-        <Row label="Tool enforcement" description="When agent must use tools">
+        <Row
+          label={t('settings:toolUseEnforcementLabel', {
+            defaultValue: 'Tool use enforcement',
+          })}
+          description={t('settings:toolUseEnforcementDesc', {
+            defaultValue: 'Whether the agent must use tools when available.',
+          })}
+        >
           <select
             value={String(config.tool_use_enforcement || 'auto')}
             onChange={(e) => save('tool_use_enforcement', e.target.value)}
             className="h-8 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           >
-            <option value="auto">Auto</option>
-            <option value="required">Required</option>
-            <option value="none">None</option>
+            <option value="auto">
+              {t('settings:toolUseAuto', { defaultValue: 'auto' })}
+            </option>
+            <option value="required">
+              {t('settings:toolUseRequired', { defaultValue: 'required' })}
+            </option>
+            <option value="none">
+              {t('settings:toolUseNone', { defaultValue: 'none' })}
+            </option>
           </select>
         </Row>
       </div>
@@ -1606,9 +1745,10 @@ function AgentBehaviorContent() {
 // ── Smart Routing ───────────────────────────────────────────────────────
 
 function SmartRoutingContent() {
+  const { t } = useTranslation(['settings', 'common'])
   const [config, setConfig] = useState<Record<string, unknown>>({})
   const [models, setModels] = useState<Array<{ id: string; name?: string }>>([])
-  const [msg, setMsg] = useState<string | null>(null)
+  const [toast, setToast] = useState<'saved' | 'failed' | null>(null)
 
   useEffect(() => {
     fetch('/api/hermes-config')
@@ -1628,7 +1768,7 @@ function SmartRoutingContent() {
   }, [])
 
   const save = async (key: string, value: unknown) => {
-    setMsg(null)
+    setToast(null)
     try {
       await fetch('/api/hermes-config', {
         method: 'PATCH',
@@ -1638,48 +1778,65 @@ function SmartRoutingContent() {
         }),
       })
       setConfig((prev) => ({ ...prev, [key]: value }))
-      setMsg('Saved')
-      setTimeout(() => setMsg(null), 2000)
+      setToast('saved')
+      setTimeout(() => setToast(null), 2000)
     } catch {
-      setMsg('Failed')
+      setToast('failed')
     }
   }
 
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Smart Routing"
-        description="Route simple queries to cheaper models."
+        title={t('settings:smartRoutingTitle', {
+          defaultValue: 'Smart Model Routing',
+        })}
+        description={t('settings:smartRoutingDesc', {
+          defaultValue: 'Automatically route simple queries to cheaper models.',
+        })}
       />
-      {msg && (
+      {toast && (
         <div
           className={cn(
             'rounded-lg px-3 py-1.5 text-xs font-medium',
-            msg === 'Saved'
+            toast === 'saved'
               ? 'bg-green-500/15 text-green-400'
               : 'bg-red-500/15 text-red-400',
           )}
         >
-          {msg}
+          {toast === 'saved'
+            ? t('common:saved', { defaultValue: 'Saved' })
+            : t('settings:hermesSaveFailed', { defaultValue: 'Failed to save' })}
         </div>
       )}
       <div className={SETTINGS_CARD_CLASS}>
         <Row
-          label="Enable smart routing"
-          description="Auto-route simple queries"
+          label={t('settings:enableSmartRoutingLabel', {
+            defaultValue: 'Enable smart routing',
+          })}
+          description={t('settings:enableSmartRoutingDesc', {
+            defaultValue: 'Route simple queries to a cheaper model automatically.',
+          })}
         >
           <Switch
             checked={config.enabled !== false}
             onCheckedChange={(c) => save('enabled', c)}
           />
         </Row>
-        <Row label="Cheap model" description="Model for simple queries">
+        <Row
+          label={t('settings:cheapModelLabel', { defaultValue: 'Cheap model' })}
+          description={t('settings:cheapModelDesc', {
+            defaultValue: 'Model to use for simple queries.',
+          })}
+        >
           <select
             value={String(config.cheap_model || '')}
             onChange={(e) => save('cheap_model', e.target.value)}
             className="h-8 max-w-[12rem] rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           >
-            <option value="">Auto</option>
+            <option value="">
+              {t('settings:autoDetectOption', { defaultValue: 'Auto-detect' })}
+            </option>
             {models.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.name || m.id}
@@ -1687,7 +1844,14 @@ function SmartRoutingContent() {
             ))}
           </select>
         </Row>
-        <Row label="Max chars" description="Messages shorter use cheap model">
+        <Row
+          label={t('settings:maxSimpleCharsLabel', {
+            defaultValue: 'Max simple chars',
+          })}
+          description={t('settings:maxSimpleCharsDesc', {
+            defaultValue: 'Messages shorter than this use the cheap model.',
+          })}
+        >
           <input
             type="number"
             min={10}
@@ -1698,8 +1862,12 @@ function SmartRoutingContent() {
           />
         </Row>
         <Row
-          label="Max words"
-          description="Messages with fewer words use cheap model"
+          label={t('settings:maxSimpleWordsLabel', {
+            defaultValue: 'Max simple words',
+          })}
+          description={t('settings:maxSimpleWordsDesc', {
+            defaultValue: 'Messages with fewer words use the cheap model.',
+          })}
         >
           <input
             type="number"
@@ -1718,9 +1886,10 @@ function SmartRoutingContent() {
 // ── Voice (TTS + STT) ──────────────────────────────────────────────────
 
 function VoiceContent() {
+  const { t } = useTranslation(['settings', 'common'])
   const [tts, setTts] = useState<Record<string, unknown>>({})
   const [stt, setStt] = useState<Record<string, unknown>>({})
-  const [msg, setMsg] = useState<string | null>(null)
+  const [toast, setToast] = useState<'saved' | 'failed' | null>(null)
 
   useEffect(() => {
     fetch('/api/hermes-config')
@@ -1733,7 +1902,7 @@ function VoiceContent() {
   }, [])
 
   const saveTts = async (key: string, value: unknown) => {
-    setMsg(null)
+    setToast(null)
     try {
       await fetch('/api/hermes-config', {
         method: 'PATCH',
@@ -1741,15 +1910,15 @@ function VoiceContent() {
         body: JSON.stringify({ config: { tts: { [key]: value } } }),
       })
       setTts((prev) => ({ ...prev, [key]: value }))
-      setMsg('Saved')
-      setTimeout(() => setMsg(null), 2000)
+      setToast('saved')
+      setTimeout(() => setToast(null), 2000)
     } catch {
-      setMsg('Failed')
+      setToast('failed')
     }
   }
 
   const saveStt = async (key: string, value: unknown) => {
-    setMsg(null)
+    setToast(null)
     try {
       await fetch('/api/hermes-config', {
         method: 'PATCH',
@@ -1757,10 +1926,10 @@ function VoiceContent() {
         body: JSON.stringify({ config: { stt: { [key]: value } } }),
       })
       setStt((prev) => ({ ...prev, [key]: value }))
-      setMsg('Saved')
-      setTimeout(() => setMsg(null), 2000)
+      setToast('saved')
+      setTimeout(() => setToast(null), 2000)
     } catch {
-      setMsg('Failed')
+      setToast('failed')
     }
   }
 
@@ -1769,39 +1938,61 @@ function VoiceContent() {
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Voice"
-        description="Text-to-speech and speech-to-text."
+        title={t('settings:sectionVoice', { defaultValue: 'Voice' })}
+        description={t('settings:dialogVoiceSectionDesc', {
+          defaultValue: 'Text-to-speech and speech-to-text.',
+        })}
       />
-      {msg && (
+      {toast && (
         <div
           className={cn(
             'rounded-lg px-3 py-1.5 text-xs font-medium',
-            msg === 'Saved'
+            toast === 'saved'
               ? 'bg-green-500/15 text-green-400'
               : 'bg-red-500/15 text-red-400',
           )}
         >
-          {msg}
+          {toast === 'saved'
+            ? t('common:saved', { defaultValue: 'Saved' })
+            : t('settings:hermesSaveFailed', { defaultValue: 'Failed to save' })}
         </div>
       )}
       <div className={SETTINGS_CARD_CLASS}>
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-500">
-          Text-to-Speech
+          {t('settings:ttsSectionTitle', { defaultValue: 'Text-to-Speech' })}
         </p>
-        <Row label="TTS Provider">
+        <Row
+          label={t('settings:ttsProviderLabel', { defaultValue: 'TTS provider' })}
+          description={t('settings:ttsProviderDesc', {
+            defaultValue: 'Which TTS engine to use.',
+          })}
+        >
           <select
             value={ttsProvider}
             onChange={(e) => saveTts('provider', e.target.value)}
             className="h-8 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           >
-            <option value="edge">Edge TTS</option>
-            <option value="elevenlabs">ElevenLabs</option>
-            <option value="openai">OpenAI TTS</option>
-            <option value="neutts">NeuTTS</option>
+            <option value="edge">
+              {t('settings:ttsOptionEdge', { defaultValue: 'Edge TTS (free)' })}
+            </option>
+            <option value="elevenlabs">
+              {t('settings:ttsOptionElevenlabs', { defaultValue: 'ElevenLabs' })}
+            </option>
+            <option value="openai">
+              {t('settings:ttsOptionOpenai', { defaultValue: 'OpenAI TTS' })}
+            </option>
+            <option value="neutts">
+              {t('settings:ttsOptionNeutts', { defaultValue: 'NeuTTS' })}
+            </option>
           </select>
         </Row>
         {ttsProvider === 'openai' && (
-          <Row label="Voice">
+          <Row
+            label={t('settings:ttsVoiceLabel', { defaultValue: 'Voice' })}
+            description={t('settings:ttsVoiceOpenaiDesc', {
+              defaultValue: 'alloy, echo, fable, onyx, nova, shimmer',
+            })}
+          >
             <select
               value={String(
                 (tts.openai as Record<string, unknown>)?.voice || 'nova',
@@ -1827,22 +2018,38 @@ function VoiceContent() {
       </div>
       <div className={SETTINGS_CARD_CLASS}>
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-500">
-          Speech-to-Text
+          {t('settings:sttSectionTitle', { defaultValue: 'Speech-to-Text' })}
         </p>
-        <Row label="Enable STT">
+        <Row
+          label={t('settings:sttEnableLabel', { defaultValue: 'Enable STT' })}
+          description={t('settings:sttEnableDesc', {
+            defaultValue: 'Turn on voice input.',
+          })}
+        >
           <Switch
             checked={stt.enabled !== false}
             onCheckedChange={(c) => saveStt('enabled', c)}
           />
         </Row>
-        <Row label="STT Provider">
+        <Row
+          label={t('settings:sttProviderLabel', { defaultValue: 'STT provider' })}
+          description={t('settings:sttProviderDesc', {
+            defaultValue: 'Which speech engine to use.',
+          })}
+        >
           <select
             value={String(stt.provider || 'local')}
             onChange={(e) => saveStt('provider', e.target.value)}
             className="h-8 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           >
-            <option value="local">Local (Whisper)</option>
-            <option value="openai">OpenAI Whisper</option>
+            <option value="local">
+              {t('settings:sttOptionLocal', { defaultValue: 'Local (Whisper)' })}
+            </option>
+            <option value="openai">
+              {t('settings:sttOptionOpenai', {
+                defaultValue: 'OpenAI Whisper API',
+              })}
+            </option>
           </select>
         </Row>
       </div>
@@ -1853,8 +2060,9 @@ function VoiceContent() {
 // ── Display ─────────────────────────────────────────────────────────────
 
 function DisplayContent() {
+  const { t } = useTranslation(['settings', 'common'])
   const [config, setConfig] = useState<Record<string, unknown>>({})
-  const [msg, setMsg] = useState<string | null>(null)
+  const [toast, setToast] = useState<'saved' | 'failed' | null>(null)
 
   useEffect(() => {
     fetch('/api/hermes-config')
@@ -1866,7 +2074,7 @@ function DisplayContent() {
   }, [])
 
   const save = async (key: string, value: unknown) => {
-    setMsg(null)
+    setToast(null)
     try {
       await fetch('/api/hermes-config', {
         method: 'PATCH',
@@ -1874,66 +2082,116 @@ function DisplayContent() {
         body: JSON.stringify({ config: { display: { [key]: value } } }),
       })
       setConfig((prev) => ({ ...prev, [key]: value }))
-      setMsg('Saved')
-      setTimeout(() => setMsg(null), 2000)
+      setToast('saved')
+      setTimeout(() => setToast(null), 2000)
     } catch {
-      setMsg('Failed')
+      setToast('failed')
     }
   }
 
   return (
     <div className="space-y-4">
       <SectionHeader
-        title="Display"
-        description="Agent response style and output preferences."
+        title={t('settings:sectionDisplay', { defaultValue: 'Display' })}
+        description={t('settings:displayDialogSectionDesc', {
+          defaultValue: 'Agent response style and output preferences.',
+        })}
       />
-      {msg && (
+      {toast && (
         <div
           className={cn(
             'rounded-lg px-3 py-1.5 text-xs font-medium',
-            msg === 'Saved'
+            toast === 'saved'
               ? 'bg-green-500/15 text-green-400'
               : 'bg-red-500/15 text-red-400',
           )}
         >
-          {msg}
+          {toast === 'saved'
+            ? t('common:saved', { defaultValue: 'Saved' })
+            : t('settings:hermesSaveFailed', { defaultValue: 'Failed to save' })}
         </div>
       )}
       <div className={SETTINGS_CARD_CLASS}>
-        <Row label="Personality" description="Agent response style">
+        <Row
+          label={t('settings:displayPersonalityLabel', {
+            defaultValue: 'Personality',
+          })}
+          description={t('settings:displayPersonalityDesc', {
+            defaultValue: 'Agent response style.',
+          })}
+        >
           <select
             value={String(config.personality || 'default')}
             onChange={(e) => save('personality', e.target.value)}
             className="h-8 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           >
-            <option value="default">Default</option>
-            <option value="concise">Concise</option>
-            <option value="verbose">Verbose</option>
-            <option value="creative">Creative</option>
+            <option value="default">
+              {t('settings:displayPersonalityOptionDefault', {
+                defaultValue: 'Default',
+              })}
+            </option>
+            <option value="concise">
+              {t('settings:displayPersonalityOptionConcise', {
+                defaultValue: 'Concise',
+              })}
+            </option>
+            <option value="verbose">
+              {t('settings:displayPersonalityOptionVerbose', {
+                defaultValue: 'Verbose',
+              })}
+            </option>
+            <option value="creative">
+              {t('settings:displayPersonalityOptionCreative', {
+                defaultValue: 'Creative',
+              })}
+            </option>
           </select>
         </Row>
-        <Row label="Streaming" description="Stream responses in real-time">
+        <Row
+          label={t('settings:displayStreamingLabel', {
+            defaultValue: 'Streaming',
+          })}
+          description={t('settings:displayStreamingDesc', {
+            defaultValue: 'Stream tokens as they arrive.',
+          })}
+        >
           <Switch
             checked={config.streaming !== false}
             onCheckedChange={(c) => save('streaming', c)}
           />
         </Row>
         <Row
-          label="Show reasoning"
-          description="Display model thinking process"
+          label={t('settings:displayShowReasoningLabel', {
+            defaultValue: 'Show reasoning',
+          })}
+          description={t('settings:displayShowReasoningDesc', {
+            defaultValue: 'Expose model reasoning blocks in the UI.',
+          })}
         >
           <Switch
             checked={config.show_reasoning !== false}
             onCheckedChange={(c) => save('show_reasoning', c)}
           />
         </Row>
-        <Row label="Show cost" description="Display token cost per response">
+        <Row
+          label={t('settings:displayShowCostLabel', { defaultValue: 'Show cost' })}
+          description={t('settings:displayShowCostDesc', {
+            defaultValue: 'Display usage cost metadata.',
+          })}
+        >
           <Switch
             checked={config.show_cost === true}
             onCheckedChange={(c) => save('show_cost', c)}
           />
         </Row>
-        <Row label="Compact mode" description="Reduce spacing in responses">
+        <Row
+          label={t('settings:displayCompactLabel', {
+            defaultValue: 'Compact',
+          })}
+          description={t('settings:displayCompactDesc', {
+            defaultValue: 'Use a denser display layout.',
+          })}
+        >
           <Switch
             checked={config.compact === true}
             onCheckedChange={(c) => save('compact', c)}
