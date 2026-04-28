@@ -45,6 +45,7 @@ import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
+import { Route as ApiModelSwitchRouteImport } from './routes/api/model-switch'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
@@ -275,6 +276,11 @@ const ApiPathsRoute = ApiPathsRouteImport.update({
 const ApiModelsRoute = ApiModelsRouteImport.update({
   id: '/api/models',
   path: '/api/models',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiModelSwitchRoute = ApiModelSwitchRouteImport.update({
+  id: '/api/model-switch',
+  path: '/api/model-switch',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMemoryRoute = ApiMemoryRouteImport.update({
@@ -568,6 +574,7 @@ export interface FileRoutesByFullPath {
   '/api/history': typeof ApiHistoryRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
+  '/api/model-switch': typeof ApiModelSwitchRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
@@ -656,6 +663,7 @@ export interface FileRoutesByTo {
   '/api/history': typeof ApiHistoryRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
+  '/api/model-switch': typeof ApiModelSwitchRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
@@ -746,6 +754,7 @@ export interface FileRoutesById {
   '/api/history': typeof ApiHistoryRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
+  '/api/model-switch': typeof ApiModelSwitchRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
@@ -837,6 +846,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/local-providers'
     | '/api/memory'
+    | '/api/model-switch'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
@@ -925,6 +935,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/local-providers'
     | '/api/memory'
+    | '/api/model-switch'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
@@ -1014,6 +1025,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/local-providers'
     | '/api/memory'
+    | '/api/model-switch'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
@@ -1104,6 +1116,7 @@ export interface RootRouteChildren {
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
+  ApiModelSwitchRoute: typeof ApiModelSwitchRoute
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
@@ -1397,6 +1410,13 @@ declare module '@tanstack/react-router' {
       path: '/api/models'
       fullPath: '/api/models'
       preLoaderRoute: typeof ApiModelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/model-switch': {
+      id: '/api/model-switch'
+      path: '/api/model-switch'
+      fullPath: '/api/model-switch'
+      preLoaderRoute: typeof ApiModelSwitchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/memory': {
@@ -1884,6 +1904,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHistoryRoute: ApiHistoryRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
+  ApiModelSwitchRoute: ApiModelSwitchRoute,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,
