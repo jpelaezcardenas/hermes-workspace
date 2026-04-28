@@ -10,6 +10,7 @@ Blueprint skeletons for SettleMint DALP proposals. Each skeleton is a **structur
 
 | Codename | Type | Variant | Expected Output | Suggested Usage |
 |---|---|---|---|---|
+| **COLOSSUS** | Technical | Maximum | **70–120 pages / 25k–45k words** | Regulated-bank mega-pack: narrative + annexes + evidence index + requirement traceability + proof-room structure |
 | **TITAN** | Technical | Full | **80–100 pages** | Large RFPs, tier-1 institutions, sovereign programmes, evaluators who want full architecture + security + delivery depth |
 | **FALCON** | Technical | Medium | **40–60 pages** | Mid-size technical bids, follow-up proposals, balanced depth without full exhaustive coverage |
 | **SENTINEL** | Technical | Compact | **20–30 pages** | Quick-turnaround technical bids, expressions of interest, smaller engagements needing a credible but concise technical story |
@@ -34,7 +35,7 @@ Blueprint skeletons for SettleMint DALP proposals. Each skeleton is a **structur
 ## Proposal Generation Workflow (Mandatory)
 
 ### When someone asks for a technical proposal:
-1. Present the three technical skeleton options: **TITAN** (80–100 pp), **FALCON** (40–60 pp), **SENTINEL** (20–30 pp)
+1. Present the four technical skeleton options: **COLOSSUS** (70–120 pp / 25k–45k words), **TITAN** (80–100 pp), **FALCON** (40–60 pp), **SENTINEL** (20–30 pp)
 2. Explain the difference briefly
 3. Ask: *"Which skeleton would you like to use?"*
 4. Wait for explicit confirmation
@@ -65,10 +66,12 @@ skeletons/
 ├── INDEX.md                           ← Full codename/ID index
 ├── 1_technical/
 │   ├── markdown/
+│   │   ├── technical-colossus.md      COLOSSUS, 70-120 pages / 25k-45k words
 │   │   ├── technical-full.md          TITAN , 80-100 pages
 │   │   ├── technical-medium.md        FALCON, 40-60 pages
 │   │   └── technical-compact.md       SENTINEL, 20-30 pages
 │   └── docx/
+│       ├── technical-colossus.docx
 │       ├── technical-full.docx
 │       ├── technical-medium.docx
 │       └── technical-compact.docx

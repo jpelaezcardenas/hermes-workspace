@@ -4,6 +4,7 @@
 
 | ID | Codename | Type | Variant | Version | Target length | Client focus | File |
 |---|---|---|---|---|---|---|---|
+| BM-TS-00 | COLOSSUS | Technical | Maximum | v1.0 | 70-120 pages / 25k-45k words | Regulated-bank mega-pack: proposal narrative, annexes, evidence index, requirement traceability, operating model, and proof-room structure | 1_technical/markdown/technical-colossus.md |
 | BM-TS-01 | TITAN | Technical | Full | v1.0 | 80-100 pages | Deep technical evaluators; architecture, security, operations, delivery | 1_technical/markdown/technical-full.md |
 | BM-TS-02 | FALCON | Technical | Medium | v1.0 | 40-60 pages | Balanced technical/commercial review with moderate depth | 1_technical/markdown/technical-medium.md |
 | BM-TS-03 | SENTINEL | Technical | Compact | v1.0 | 20-30 pages | Fast technical review; concise but credible | 1_technical/markdown/technical-compact.md |
@@ -29,5 +30,5 @@
 
 - These are blueprint skeletons, not finished proposal content.
 - The visible version block is embedded in each skeleton for copy/paste traceability.
-- The repository currently contains 13 markdown skeleton files under the technical/commercial/rfi/joint-response/questionnaire families. The codename map above preserves the requested ID scheme across the files that exist today.
+- The repository currently contains 14 markdown skeleton files under the technical/commercial/rfi/joint-response/questionnaire families. The codename map above preserves the requested ID scheme across the files that exist today.
 - `BM-QS-03 (GUARDIAN)` is reserved but not mapped because there is no fourth standalone questionnaire-family markdown skeleton in the current tree.

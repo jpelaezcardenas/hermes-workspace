@@ -34,6 +34,7 @@ SCRIPT_MAP = {
     "agent-contract-audit": ACTIVE / "runtime-scripts" / "run_agent_contract_audit.py",
     "final-artifact-qa": ACTIVE / "runtime-scripts" / "run_final_artifact_qa.py",
     "parity-gate": ACTIVE / "runtime-scripts" / "run_parity_gate.py",
+    "technical-colossus-build": ACTIVE / "runtime-scripts" / "build_technical_colossus.py",
     "md-to-docx": BID / "scripts" / "markdown_to_docx.py",
     "docx-to-md": BID / "scripts" / "docx_to_markdown.py",
     "xlsx-to-csv": BID / "scripts" / "xlsx_to_csv.py",

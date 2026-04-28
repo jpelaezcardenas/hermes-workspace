@@ -18,7 +18,7 @@ LEGACY_BID = ROOT / "legacy" / "bid-manager"
 SKELETONS = LEGACY_BID / "skeletons"
 
 EXPECTED = {
-    "1_technical": {"markdown": ["technical-compact.md", "technical-medium.md", "technical-full.md"], "docx": ["technical-compact.docx", "technical-medium.docx", "technical-full.docx"]},
+    "1_technical": {"markdown": ["technical-compact.md", "technical-medium.md", "technical-full.md", "technical-colossus.md"], "docx": ["technical-compact.docx", "technical-medium.docx", "technical-full.docx", "technical-colossus.docx"]},
     "2_commercial": {"markdown": ["commercial-compact.md", "commercial-medium.md", "commercial-full.md"], "docx": ["commercial-compact.docx", "commercial-medium.docx", "commercial-full.docx"]},
     "3_rfi": {"markdown": ["rfi-compact.md", "rfi-medium.md", "rfi-full.md"], "docx": ["rfi-compact.docx", "rfi-medium.docx", "rfi-full.docx"]},
     "4_joint-response": {"markdown": ["joint-response-compact.md", "joint-response-medium.md", "joint-response-full.md"], "docx": ["joint-response-compact.docx", "joint-response-medium.docx", "joint-response-full.docx"]},
