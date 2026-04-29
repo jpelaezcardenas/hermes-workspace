@@ -178,8 +178,9 @@ export function ProfilesScreen() {
     }
   }, [createOpen, wizardStep, allModels.length, fetchAllModels])
 
+  const profileNamePattern = /^[a-z0-9][a-z0-9_-]{0,63}$/
   const nameValid =
-    /^[A-Za-z0-9_-]+$/.test(newProfileName.trim()) &&
+    profileNamePattern.test(newProfileName.trim()) &&
     newProfileName.trim() !== 'default'
 
   function resetWizard() {
@@ -542,7 +543,7 @@ export function ProfilesScreen() {
                   />
                   {newProfileName.trim() && !nameValid ? (
                     <p className="text-xs text-red-500">
-                      Use letters, numbers, underscores, or hyphens. Cannot be
+                      Use lowercase letters, numbers, underscores, or hyphens. Cannot be
                       &quot;default&quot;.
                     </p>
                   ) : newProfileName.trim() && nameValid ? (
@@ -788,9 +789,9 @@ export function ProfilesScreen() {
                 autoFocus
               />
               {renameValue.trim() &&
-                !/^[A-Za-z0-9_-]+$/.test(renameValue.trim()) && (
+                !profileNamePattern.test(renameValue.trim()) && (
                   <p className="text-xs text-red-500">
-                    Use letters, numbers, underscores, or hyphens.
+                    Use lowercase letters, numbers, underscores, or hyphens.
                   </p>
                 )}
             </div>
@@ -812,7 +813,7 @@ export function ProfilesScreen() {
               disabled={
                 !renameTarget ||
                 !renameValue.trim() ||
-                !/^[A-Za-z0-9_-]+$/.test(renameValue.trim())
+                !profileNamePattern.test(renameValue.trim())
               }
             >
               Rename

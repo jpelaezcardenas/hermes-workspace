@@ -1,5 +1,9 @@
 /**
- * Jobs API proxy — forwards to Hermes FastAPI /api/jobs
+ * Jobs API proxy for Hermes Workspace.
+ *
+ * Issue #162: resolve the jobs profile in one place, then forward it to the
+ * Hermes dashboard / FastAPI jobs endpoints so the screen reflects the active
+ * Hermes Agent profile instead of silently drifting to another profile.
  */
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
@@ -9,9 +13,12 @@ import {
   HERMES_UPGRADE_INSTRUCTIONS,
   dashboardFetch,
   ensureGatewayProbed,
-  getCapabilities,
 } from '../../server/gateway-capabilities'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
+import {
+  buildJobsProfileSearch,
+  resolveJobsProfile,
+} from '../../server/jobs-profile-resolution'
 
 function authHeaders(): Record<string, string> {
   return BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
@@ -62,11 +69,13 @@ export const Route = createFileRoute('/api/hermes-jobs')({
             { status: 200, headers: { 'Content-Type': 'application/json' } },
           )
         }
+
         const url = new URL(request.url)
-        const params = url.searchParams.toString()
+        const profile = resolveJobsProfile(url)
+        const search = buildJobsProfileSearch(url, profile)
         const res = capabilities.dashboard.available
-          ? await dashboardFetch(`/api/cron/jobs${params ? `?${params}` : ''}`)
-          : await fetch(`${HERMES_API}/api/jobs${params ? `?${params}` : ''}`, {
+          ? await dashboardFetch(`/api/cron/jobs${search}`)
+          : await fetch(`${HERMES_API}/api/jobs${search}`, {
               headers: authHeaders(),
             })
         return jobsResponse(res)
@@ -88,14 +97,18 @@ export const Route = createFileRoute('/api/hermes-jobs')({
             { status: 503, headers: { 'Content-Type': 'application/json' } },
           )
         }
+
+        const url = new URL(request.url)
+        const profile = resolveJobsProfile(url)
+        const search = buildJobsProfileSearch(url, profile)
         const body = await request.text()
         const res = capabilities.dashboard.available
-          ? await dashboardFetch('/api/cron/jobs', {
+          ? await dashboardFetch(`/api/cron/jobs${search}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body,
             })
-          : await fetch(`${HERMES_API}/api/jobs`, {
+          : await fetch(`${HERMES_API}/api/jobs${search}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', ...authHeaders() },
               body,

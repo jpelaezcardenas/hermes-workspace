@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { useChatSettingsStore } from '@/hooks/use-chat-settings'
 import { formatModelName } from '@/lib/format-model-name'
 
 type ModelUsage = {
@@ -81,10 +82,10 @@ function formatTokens(value: number): string {
   return Math.round(value).toString()
 }
 
-function formatTimestamp(value?: number): string {
+function formatTimestamp(value: number | undefined, use24HourTime: boolean): string {
   if (!value) return '—'
   const date = new Date(value < 1_000_000_000_000 ? value * 1000 : value)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: !use24HourTime })
 }
 
 function formatResetTime(iso?: string): string {
@@ -259,7 +260,7 @@ function buildCsv(usage: UsageSummary): string {
   )
   usage.sessions.forEach((session) => {
     rows.push(
-      `${session.id},${session.model},${session.inputTokens},${session.outputTokens},${session.costUsd.toFixed(4)},${formatTimestamp(session.startedAt)},${formatTimestamp(session.updatedAt)}`,
+      `${session.id},${session.model},${session.inputTokens},${session.outputTokens},${session.costUsd.toFixed(4)},${formatTimestamp(session.startedAt, use24HourTime)},${formatTimestamp(session.updatedAt, use24HourTime)}`,
     )
   })
   return rows.join('\n')
@@ -441,8 +442,8 @@ export function UsageDetailsModal({
                         {formatTokens(session.outputTokens)} out
                       </div>
                       <div className="text-xs text-primary-500">
-                        {formatTimestamp(session.startedAt)} →{' '}
-                        {formatTimestamp(session.updatedAt)}
+                        {formatTimestamp(session.startedAt, use24HourTime)} →{' '}
+                        {formatTimestamp(session.updatedAt, use24HourTime)}
                       </div>
                       <div className="font-semibold text-primary-900">
                         {formatCurrency(session.costUsd)}
@@ -473,7 +474,7 @@ export function UsageDetailsModal({
             <div className="flex items-center justify-between gap-3">
               <div className="text-xs text-primary-500">
                 Auto-polls every 30s · Last updated{' '}
-                {formatTimestamp(providerUpdatedAt ?? undefined)}
+                {formatTimestamp(providerUpdatedAt ?? undefined, use24HourTime)}
               </div>
               <Button
                 size="sm"
@@ -529,7 +530,7 @@ export function UsageDetailsModal({
                         <div className="flex items-center gap-2">
                           {statusBadge(provider.status)}
                           <span className="text-[10px] text-primary-400">
-                            {formatTimestamp(provider.updatedAt)}
+                            {formatTimestamp(provider.updatedAt, use24HourTime)}
                           </span>
                         </div>
                       </div>

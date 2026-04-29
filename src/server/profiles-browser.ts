@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -27,6 +28,23 @@ export type ProfileDetail = {
   skillsDir?: string
 }
 
+const PROFILE_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/
+const TEXT_REWRITE_EXTENSIONS = new Set([
+  '.md',
+  '.txt',
+  '.yaml',
+  '.yml',
+  '.json',
+  '.jsonl',
+  '.toml',
+  '.env',
+  '.plist',
+  '.sh',
+  '.js',
+  '.ts',
+  '.tsx',
+])
+
 function getHermesRoot(): string {
   return path.join(os.homedir(), '.hermes')
 }
@@ -45,8 +63,14 @@ function getActiveProfilePath(): string {
  */
 function validateProfileName(name: string): string {
   const trimmed = validateProfileIdentifier(name)
-  if (trimmed === 'default')
+  if (trimmed === 'default') {
     throw new Error('Default profile cannot be modified here')
+  }
+  if (!PROFILE_NAME_RE.test(trimmed)) {
+    throw new Error(
+      "Invalid profile name. Use lowercase letters, numbers, underscores, or hyphens, and start with a letter or number.",
+    )
+  }
   return trimmed
 }
 
@@ -252,7 +276,7 @@ export function readProfile(name: string): ProfileDetail {
   const profilePath =
     normalized === 'default'
       ? getHermesRoot()
-      : path.join(getProfilesRoot(), validateProfileName(normalized))
+      : path.join(getProfilesRoot(), validateProfileIdentifier(normalized))
   if (!fs.existsSync(profilePath)) throw new Error('Profile not found')
   const configPath = path.join(profilePath, 'config.yaml')
   const envPath = path.join(profilePath, '.env')
@@ -279,7 +303,7 @@ export function setActiveProfile(name: string): void {
     if (fs.existsSync(activePath)) fs.unlinkSync(activePath)
     return
   }
-  const normalized = validateProfileName(trimmed)
+  const normalized = validateProfileIdentifier(trimmed)
   const profilePath = path.join(getProfilesRoot(), normalized)
   if (!fs.existsSync(profilePath)) throw new Error('Profile not found')
   fs.mkdirSync(getHermesRoot(), { recursive: true })
@@ -405,14 +429,138 @@ export function updateProfileConfig(
   return readProfile(normalized)
 }
 
+function replaceTextReferences(
+  input: string,
+  oldName: string,
+  newName: string,
+): string {
+  const escapedOld = oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const absoluteProfileOld = `${getHermesRoot()}/profiles/${oldName}`
+  const absoluteProfileNew = `${getHermesRoot()}/profiles/${newName}`
+
+  return input
+    .replaceAll(absoluteProfileOld, absoluteProfileNew)
+    .replaceAll(`~/.hermes/profiles/${oldName}`, `~/.hermes/profiles/${newName}`)
+    .replaceAll(`profiles/${oldName}/`, `profiles/${newName}/`)
+    .replaceAll(`ai.hermes.gateway-${oldName}`, `ai.hermes.gateway-${newName}`)
+    .replace(
+      new RegExp(`(<!--\\s*Profile:\\s*)${escapedOld}(\\b)`, 'g'),
+      `$1${newName}$2`,
+    )
+    .replace(
+      new RegExp(`(\\bProfile:\\s*)${escapedOld}(\\b)`, 'g'),
+      `$1${newName}$2`,
+    )
+}
+
+function rewriteTextFileIfPresent(
+  filePath: string,
+  oldName: string,
+  newName: string,
+): void {
+  if (!fs.existsSync(filePath)) return
+  try {
+    const original = safeReadText(filePath)
+    const updated = replaceTextReferences(original, oldName, newName)
+    if (updated !== original) {
+      fs.writeFileSync(filePath, updated, 'utf-8')
+    }
+  } catch {
+    // ignore non-text or unreadable files
+  }
+}
+
+function rewriteTextFilesRecursive(
+  rootPath: string,
+  oldName: string,
+  newName: string,
+): void {
+  if (!fs.existsSync(rootPath)) return
+  const stack = [rootPath]
+  while (stack.length > 0) {
+    const current = stack.pop() as string
+    let entries: Array<fs.Dirent> = []
+    try {
+      entries = fs.readdirSync(current, { withFileTypes: true })
+    } catch {
+      continue
+    }
+    for (const entry of entries) {
+      const fullPath = path.join(current, entry.name)
+      if (entry.isDirectory()) {
+        stack.push(fullPath)
+        continue
+      }
+      if (!TEXT_REWRITE_EXTENSIONS.has(path.extname(entry.name))) continue
+      rewriteTextFileIfPresent(fullPath, oldName, newName)
+    }
+  }
+}
+
+function migrateLaunchAgentProfile(
+  oldName: string,
+  newName: string,
+): void {
+  if (process.platform !== 'darwin') return
+  const launchAgentsDir = path.join(os.homedir(), 'Library', 'LaunchAgents')
+  const oldPlist = path.join(launchAgentsDir, `ai.hermes.gateway-${oldName}.plist`)
+  const newPlist = path.join(launchAgentsDir, `ai.hermes.gateway-${newName}.plist`)
+  if (!fs.existsSync(oldPlist)) return
+
+  rewriteTextFileIfPresent(oldPlist, oldName, newName)
+  try {
+    if (fs.existsSync(newPlist)) fs.rmSync(newPlist, { force: true })
+    fs.renameSync(oldPlist, newPlist)
+  } catch {
+    return
+  }
+
+  const uid = typeof process.getuid === 'function' ? process.getuid() : null
+  if (uid == null) return
+  try {
+    execFileSync('launchctl', ['bootout', `gui/${uid}`, oldPlist], {
+      stdio: 'ignore',
+    })
+  } catch {
+    // ignore bootout failures
+  }
+  try {
+    execFileSync('launchctl', ['bootstrap', `gui/${uid}`, newPlist], {
+      stdio: 'ignore',
+    })
+  } catch {
+    // ignore bootstrap failures
+  }
+}
+
+function migrateGlobalProfileReferences(oldName: string, newName: string): void {
+  const hermesRoot = getHermesRoot()
+  const directFiles = [
+    path.join(hermesRoot, 'config.yaml'),
+    path.join(hermesRoot, 'SOUL.md'),
+    path.join(hermesRoot, 'team-agents.md'),
+    path.join(hermesRoot, 'team', 'cron.md'),
+    path.join(hermesRoot, 'team', 'day-30-runbook.md'),
+  ]
+  for (const filePath of directFiles) {
+    rewriteTextFileIfPresent(filePath, oldName, newName)
+  }
+  rewriteTextFilesRecursive(path.join(hermesRoot, 'team', 'handoffs'), oldName, newName)
+}
+
 export function renameProfile(oldName: string, newName: string): ProfileDetail {
-  const from = validateProfileName(oldName)
+  const from = validateProfileIdentifier(oldName)
   const to = validateProfileName(newName)
   const fromPath = path.join(getProfilesRoot(), from)
   const toPath = path.join(getProfilesRoot(), to)
   if (!fs.existsSync(fromPath)) throw new Error('Profile not found')
   if (fs.existsSync(toPath)) throw new Error('Target profile already exists')
+
   fs.renameSync(fromPath, toPath)
+  rewriteTextFilesRecursive(toPath, from, to)
+  migrateGlobalProfileReferences(from, to)
+  migrateLaunchAgentProfile(from, to)
+
   if (getActiveProfileName() === from) {
     fs.writeFileSync(getActiveProfilePath(), `${to}\n`, 'utf-8')
   }

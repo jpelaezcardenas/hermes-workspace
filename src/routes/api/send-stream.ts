@@ -544,10 +544,10 @@ export const Route = createFileRoute('/api/send-stream')({
               }
 
               if (SESSION_BOOTSTRAP_KEYS.has(sessionKey)) {
-                // 'main' should land in the user's existing main chat,
-                // not spin up a brand new session every time. Skip cron
-                // and Operations per-agent sessions so the orchestrator
-                // chat doesn't latch onto them.
+                // 'main' should land in the user's real active chat session,
+                // not an older titled thread. Skip cron and Operations sessions,
+                // prefer the most recently active session with messages, and
+                // only fall back to a titled session when nothing active exists.
                 let reused: string | null = null
                 if (sessionKey === 'main') {
                   try {
@@ -563,18 +563,18 @@ export const Route = createFileRoute('/api/send-stream')({
                       const t = (s.title ?? '').trim()
                       return t.length > 0 && t !== s.id
                     }
-                    const titled = recent.find(
-                      (s) => !isInternal(s.id) && hasRealTitle(s),
+                    const active = recent.find(
+                      (s) =>
+                        !isInternal(s.id) &&
+                        typeof s.message_count === 'number' &&
+                        s.message_count > 0,
                     )
-                    const fallback = titled
+                    const titled = active
                       ? null
                       : recent.find(
-                          (s) =>
-                            !isInternal(s.id) &&
-                            typeof s.message_count === 'number' &&
-                            s.message_count > 0,
+                          (s) => !isInternal(s.id) && hasRealTitle(s),
                         )
-                    const candidate = titled ?? fallback
+                    const candidate = active ?? titled
                     if (candidate) reused = candidate.id
                   } catch {
                     // fall through to createSession()

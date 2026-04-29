@@ -12,7 +12,6 @@ export const Route = createFileRoute('/api/terminal-input')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // Auth check
         if (!isAuthenticated(request)) {
           return new Response(
             JSON.stringify({ ok: false, error: 'Unauthorized' }),
@@ -23,10 +22,6 @@ export const Route = createFileRoute('/api/terminal-input')({
         if (csrfCheck) return csrfCheck
 
         const ip = getClientIp(request)
-        if (!rateLimit(`terminal:${ip}`, 10, 60_000)) {
-          return rateLimitResponse()
-        }
-
         const body = (await request.json().catch(() => ({}))) as Record<
           string,
           unknown
@@ -34,6 +29,14 @@ export const Route = createFileRoute('/api/terminal-input')({
         const sessionId =
           typeof body.sessionId === 'string' ? body.sessionId : ''
         const data = typeof body.data === 'string' ? body.data : ''
+
+        const rateKey = sessionId
+          ? `terminal:${ip}:${sessionId}`
+          : `terminal:${ip}`
+        if (!rateLimit(rateKey, 600, 60_000)) {
+          return rateLimitResponse()
+        }
+
         const session = getTerminalSession(sessionId)
         if (!session) {
           return new Response(JSON.stringify({ ok: false }), {

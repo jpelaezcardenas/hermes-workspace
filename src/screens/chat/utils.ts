@@ -144,7 +144,10 @@ export function findToolResultForCall(
   messages: Array<ChatMessage>,
 ): ChatMessage | undefined {
   return messages.find(
-    (msg) => msg.role === 'toolResult' && msg.toolCallId === toolCallId,
+    (msg) =>
+      ['toolResult', 'toolresult', 'tool_result', 'tool'].includes(
+        String(msg.role || ''),
+      ) && msg.toolCallId === toolCallId,
   )
 }
 

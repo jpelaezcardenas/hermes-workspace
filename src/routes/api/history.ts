@@ -48,13 +48,9 @@ export const Route = createFileRoute('/api/history')({
             })
           }
           // "main" doesn't exist in Hermes — resolve it to the user's real
-          // main chat session. We prefer (in order):
-          //   1. The most recent session with a real human-set title
-          //      (label !== id, e.g. "hows everything"). This is what users
-          //      actually mean by "main".
-          //   2. The most recent non-internal session with messages.
-          // Cron + Operations per-agent sessions are skipped so the
-          // orchestrator chat doesn't latch onto runtime junk.
+          // active chat session. Prefer the most recently active non-internal
+          // session with messages, and only fall back to a titled session when
+          // there is no better active candidate.
           if (sessionKey === 'main') {
             try {
               const sessions = await listSessions(30, 0)
@@ -66,18 +62,18 @@ export const Route = createFileRoute('/api/history')({
                 const t = (s.title ?? '').trim()
                 return t.length > 0 && t !== s.id
               }
-              const titled = sessions.find(
-                (s) => !isInternalKey(s.id) && hasRealTitle(s),
+              const active = sessions.find(
+                (s) =>
+                  !isInternalKey(s.id) &&
+                  typeof s.message_count === 'number' &&
+                  s.message_count > 0,
               )
-              const fallback = titled
+              const titled = active
                 ? null
                 : sessions.find(
-                    (s) =>
-                      !isInternalKey(s.id) &&
-                      typeof s.message_count === 'number' &&
-                      s.message_count > 0,
+                    (s) => !isInternalKey(s.id) && hasRealTitle(s),
                   )
-              const candidate = titled ?? fallback
+              const candidate = active ?? titled
               if (candidate) {
                 sessionKey = candidate.id
               } else {

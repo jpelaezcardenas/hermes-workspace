@@ -575,7 +575,12 @@ export function buildDisplayEntries(
       return
     }
 
-    if (message.role === 'tool' || message.role === 'toolResult') {
+    if (
+      message.role === 'tool' ||
+      message.role === 'toolResult' ||
+      message.role === 'toolresult' ||
+      message.role === 'tool_result'
+    ) {
       const previousEntry = entries[entries.length - 1]
       if (previousEntry?.message.role === 'assistant') {
         previousEntry.attachedToolMessages.push(message)
@@ -1041,7 +1046,12 @@ function ChatMessageListComponent({
   const toolResultsByCallId = useMemo(() => {
     const map = new Map<string, ChatMessage>()
     for (const message of messages) {
-      if (message.role !== 'toolResult') continue
+      if (
+        message.role !== 'toolResult' &&
+        message.role !== 'toolresult' &&
+        message.role !== 'tool_result' &&
+        message.role !== 'tool'
+      ) continue
       const toolCallId = message.toolCallId
       if (typeof toolCallId === 'string' && toolCallId.trim().length > 0) {
         map.set(toolCallId, message)
@@ -1087,7 +1097,12 @@ function ChatMessageListComponent({
         count += 1
       }
 
-      if (message.role !== 'toolResult') continue
+      if (
+        message.role !== 'toolResult' &&
+        message.role !== 'toolresult' &&
+        message.role !== 'tool_result' &&
+        message.role !== 'tool'
+      ) continue
       const toolCallId = (message.toolCallId || '').trim()
       if (toolCallId.length > 0 && seenToolCallIds.has(toolCallId)) continue
       if (toolCallId.length > 0) {

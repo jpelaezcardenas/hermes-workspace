@@ -788,6 +788,18 @@ function ChatDisplaySection() {
           />
         </SettingsRow>
         <SettingsRow
+          label="Use 24-hour time"
+          description="Persist timestamp formatting in the browser across reloads."
+        >
+          <Switch
+            checked={chatSettings.use24HourTime}
+            onCheckedChange={(checked) =>
+              updateChatSettings({ use24HourTime: checked })
+            }
+            aria-label="Use 24-hour time"
+          />
+        </SettingsRow>
+        <SettingsRow
           label="Enter key behavior"
           description={
             chatSettings.enterBehavior === 'newline'

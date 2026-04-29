@@ -1,6 +1,9 @@
 /**
- * Jobs API proxy — forwards individual job operations to Hermes FastAPI
- * or the upstream dashboard cron API.
+ * Per-job Hermes Workspace jobs proxy.
+ *
+ * Issue #162: use the same Hermes Agent profile resolution as the main jobs
+ * list route so reads, updates, triggers, and deletes all hit the same
+ * profile-scoped cron state.
  */
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
@@ -11,6 +14,10 @@ import {
   dashboardFetch,
   ensureGatewayProbed,
 } from '../../server/gateway-capabilities'
+import {
+  buildJobsProfileSearch,
+  resolveJobsProfile,
+} from '../../server/jobs-profile-resolution'
 
 function authHeaders(): Record<string, string> {
   return BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
@@ -39,11 +46,13 @@ export const Route = createFileRoute('/api/hermes-jobs/$jobId')({
 
         const url = new URL(request.url)
         const action = url.searchParams.get('action') || ''
+        const profile = resolveJobsProfile(url)
+        const search = buildJobsProfileSearch(url.search, profile)
 
         if (capabilities.dashboard.available) {
           const dashboardPath = action
-            ? `/api/cron/jobs/${params.jobId}/${action === 'run' ? 'trigger' : action}`
-            : `/api/cron/jobs/${params.jobId}`
+            ? `/api/cron/jobs/${params.jobId}/${action === 'run' ? 'trigger' : action}${search}`
+            : `/api/cron/jobs/${params.jobId}${search}`
           const res = await dashboardFetch(dashboardPath)
           return new Response(await res.text(), {
             status: res.status,
@@ -52,8 +61,8 @@ export const Route = createFileRoute('/api/hermes-jobs/$jobId')({
         }
 
         const target = action
-          ? `${HERMES_API}/api/jobs/${params.jobId}/${action}${url.search}`
-          : `${HERMES_API}/api/jobs/${params.jobId}`
+          ? `${HERMES_API}/api/jobs/${params.jobId}/${action}${search}`
+          : `${HERMES_API}/api/jobs/${params.jobId}${search}`
         const res = await fetch(target, { headers: authHeaders() })
         return new Response(await res.text(), {
           status: res.status,
@@ -72,12 +81,14 @@ export const Route = createFileRoute('/api/hermes-jobs/$jobId')({
         const url = new URL(request.url)
         const action = url.searchParams.get('action') || ''
         const body = await request.text()
+        const profile = resolveJobsProfile(url)
+        const search = buildJobsProfileSearch(url.search, profile)
 
         if (capabilities.dashboard.available) {
           const dashboardAction = action === 'run' ? 'trigger' : action
           const dashboardPath = dashboardAction
-            ? `/api/cron/jobs/${params.jobId}/${dashboardAction}`
-            : `/api/cron/jobs/${params.jobId}`
+            ? `/api/cron/jobs/${params.jobId}/${dashboardAction}${search}`
+            : `/api/cron/jobs/${params.jobId}${search}`
           const method = dashboardAction ? 'POST' : 'PUT'
           const res = await dashboardFetch(dashboardPath, {
             method,
@@ -91,8 +102,8 @@ export const Route = createFileRoute('/api/hermes-jobs/$jobId')({
         }
 
         const target = action
-          ? `${HERMES_API}/api/jobs/${params.jobId}/${action}`
-          : `${HERMES_API}/api/jobs/${params.jobId}`
+          ? `${HERMES_API}/api/jobs/${params.jobId}/${action}${search}`
+          : `${HERMES_API}/api/jobs/${params.jobId}${search}`
         const res = await fetch(target, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...authHeaders() },
@@ -112,14 +123,17 @@ export const Route = createFileRoute('/api/hermes-jobs/$jobId')({
         const capabilities = await ensureGatewayProbed()
         if (!capabilities.jobs) return notSupported()
 
+        const url = new URL(request.url)
+        const profile = resolveJobsProfile(url)
+        const search = buildJobsProfileSearch(url.search, profile)
         const body = await request.text()
         const res = capabilities.dashboard.available
-          ? await dashboardFetch(`/api/cron/jobs/${params.jobId}`, {
+          ? await dashboardFetch(`/api/cron/jobs/${params.jobId}${search}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ updates: body ? JSON.parse(body) : {} }),
             })
-          : await fetch(`${HERMES_API}/api/jobs/${params.jobId}`, {
+          : await fetch(`${HERMES_API}/api/jobs/${params.jobId}${search}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json', ...authHeaders() },
               body,
@@ -138,11 +152,14 @@ export const Route = createFileRoute('/api/hermes-jobs/$jobId')({
         const capabilities = await ensureGatewayProbed()
         if (!capabilities.jobs) return notSupported()
 
+        const url = new URL(request.url)
+        const profile = resolveJobsProfile(url)
+        const search = buildJobsProfileSearch(url.search, profile)
         const res = capabilities.dashboard.available
-          ? await dashboardFetch(`/api/cron/jobs/${params.jobId}`, {
+          ? await dashboardFetch(`/api/cron/jobs/${params.jobId}${search}`, {
               method: 'DELETE',
             })
-          : await fetch(`${HERMES_API}/api/jobs/${params.jobId}`, {
+          : await fetch(`${HERMES_API}/api/jobs/${params.jobId}${search}`, {
               method: 'DELETE',
               headers: authHeaders(),
             })

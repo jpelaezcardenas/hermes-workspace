@@ -121,7 +121,7 @@ function ContextAlertModalComponent({
               )}
               <Recommendation
                 icon="🗜️"
-                text="Enable auto-compaction in Settings → Config to automatically manage context"
+                text="Auto-compaction is configured in ~/.hermes/config.yaml under the compression section"
               />
               <Recommendation
                 icon="📋"

@@ -53,6 +53,7 @@ export type ChatSettings = {
    * surprised by sound on next page load.
    */
   soundOnChatComplete: boolean
+  use24HourTime: boolean
 }
 
 type ChatSettingsState = {
@@ -72,6 +73,7 @@ function defaultChatSettings(): ChatSettings {
     chatWidth: 'comfortable',
     sidebarHoverExpand: false,
     soundOnChatComplete: false,
+    use24HourTime: false,
   }
 }
 

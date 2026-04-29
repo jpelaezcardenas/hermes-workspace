@@ -232,15 +232,40 @@ export function compactInlineToolRenderPlan(
 
 function extractToolResultText(msg: ChatMessage | undefined): string {
   if (!msg) return ''
-  // Prefer text from content blocks (exec stdout, Read output, etc.)
+  // Prefer text from structured content blocks first.
   if (Array.isArray(msg.content)) {
     const text = msg.content
-      .filter((b: any) => b?.type === 'text' && b?.text)
-      .map((b: any) => b.text as string)
+      .flatMap((block: any) => {
+        if (!block || typeof block !== 'object') return []
+        if (block.type === 'text' && typeof block.text === 'string') {
+          return [block.text]
+        }
+        if (
+          (block.type === 'tool_result' || block.type === 'toolResult') &&
+          typeof block.text === 'string'
+        ) {
+          return [block.text]
+        }
+        if (
+          (block.type === 'tool_result' || block.type === 'toolResult') &&
+          Array.isArray(block.content)
+        ) {
+          return block.content
+            .filter((part: any) => part?.type === 'text' && part?.text)
+            .map((part: any) => String(part.text))
+        }
+        return []
+      })
       .join('\n')
     if (text.trim()) return text
   }
-  // Fallback to details serialized
+  // Fallback to top-level text/body/message fields.
+  const raw = msg as Record<string, unknown>
+  for (const key of ['text', 'body', 'message']) {
+    const value = raw[key]
+    if (typeof value === 'string' && value.trim()) return value.trim()
+  }
+  // Then structured details.
   if (msg.details && typeof msg.details === 'object') {
     return JSON.stringify(msg.details, null, 2)
   }

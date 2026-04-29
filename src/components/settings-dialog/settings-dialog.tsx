@@ -1229,6 +1229,16 @@ function ChatContent() {
           />
         </Row>
         <Row
+          label="Use 24-hour time"
+          description="Persist timestamp formatting in the browser across reloads."
+        >
+          <Switch
+            checked={cs.use24HourTime}
+            onCheckedChange={(c) => updateCS({ use24HourTime: c })}
+            aria-label="Use 24-hour time"
+          />
+        </Row>
+        <Row
           label="Enter key behavior"
           description={
             cs.enterBehavior === 'newline'
@@ -1971,7 +1981,7 @@ export function SettingsDialog({
 
   return (
     <DialogRoot open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="inset-0 h-full w-full max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-none border-0 p-0 shadow-xl md:inset-auto md:left-1/2 md:top-1/2 md:h-[min(88dvh,740px)] md:min-h-[520px] md:w-full md:max-w-3xl md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-primary-200 bg-[var(--theme-bg)]">
+      <DialogContent className="left-0 top-0 h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-none border-0 p-0 shadow-xl md:left-1/2 md:top-1/2 md:h-[min(88dvh,740px)] md:min-h-[520px] md:w-full md:max-w-3xl md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-primary-200 bg-[var(--theme-bg)]">
         <div className="flex h-full min-h-0 flex-col">
           <div className="flex items-center justify-between border-b border-primary-200 bg-primary-50/80 px-4 py-4 md:rounded-t-2xl md:px-5">
             <div>
