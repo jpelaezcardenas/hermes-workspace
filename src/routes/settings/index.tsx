@@ -176,6 +176,20 @@ const THEME_PREVIEWS: Record<
     accent: '#3b82f6',
     text: '#1F2328',
   },
+  qclaw: {
+    bg: '#17191D',
+    panel: '#242832',
+    border: 'rgba(255,255,255,0.1)',
+    accent: '#34A8FF',
+    text: '#F4F6F8',
+  },
+  'qclaw-light': {
+    bg: '#FFFFFF',
+    panel: '#F7F7F8',
+    border: '#E7E8EA',
+    accent: '#168BFF',
+    text: '#202124',
+  },
 }
 
 function WorkspaceThemePicker() {

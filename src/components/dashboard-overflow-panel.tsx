@@ -14,7 +14,7 @@ import {
 } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
 import { useSettingsStore } from '@/hooks/use-settings'
-import { getTheme, getThemeVariant, isDarkTheme, setTheme as setThemeFamily } from '@/lib/theme'
+import { getTheme, isDarkTheme, toggleThemeMode } from '@/lib/theme'
 
 type OverflowItem = {
   icon: typeof File01Icon
@@ -108,11 +108,8 @@ export function DashboardOverflowPanel({ open, onClose }: Props) {
   const nextTheme = isDark ? 'light mode' : 'dark mode'
 
   function toggleThemeWithinFamily() {
-    const current = getTheme()
-    const dark = isDarkTheme(current)
-    const next = getThemeVariant(current, dark ? 'light' : 'dark')
-    setThemeFamily(next)
-    updateSettings({ theme: dark ? 'light' : 'dark' })
+    const next = toggleThemeMode()
+    updateSettings({ theme: isDarkTheme(next) ? 'dark' : 'light' })
   }
 
   return (

@@ -59,7 +59,8 @@ import {
   MenuRoot,
   MenuTrigger,
 } from '@/components/ui/menu'
-import { applyTheme, useSettingsStore } from '@/hooks/use-settings'
+import { useSettingsStore } from '@/hooks/use-settings'
+import { getTheme, isDarkTheme, toggleThemeMode } from '@/lib/theme'
 
 type WorkspaceStats = Record<string, unknown>
 
@@ -68,37 +69,14 @@ function ThemeToggleMini() {
   const _theme = useSettingsStore((state) => state.settings.theme)
   const updateSettings = useSettingsStore((state) => state.updateSettings)
   void _theme
-  // Detect dark/light from actual data-theme attribute
-  const currentDataTheme = typeof document !== 'undefined'
-    ? document.documentElement.getAttribute('data-theme') || 'hermes-nous'
-    : 'hermes-nous'
-  const isDark = !currentDataTheme.endsWith('-light')
-
-  // Map between dark and light counterparts — must include all theme families
-  const LIGHT_DARK_PAIRS: Record<string, string> = {
-    'hermes-nous': 'hermes-nous-light',
-    'hermes-nous-light': 'hermes-nous',
-    'hermes-official': 'hermes-official-light',
-    'hermes-official-light': 'hermes-official',
-    'hermes-classic': 'hermes-classic-light',
-    'hermes-classic-light': 'hermes-classic',
-    'hermes-slate': 'hermes-slate-light',
-    'hermes-slate-light': 'hermes-slate',
-  }
+  const isDark = isDarkTheme(getTheme())
 
   return (
     <button
       type="button"
       onClick={() => {
-        // Fall back to current family rather than dropping the user into hermes-official
-        const nextDataTheme = LIGHT_DARK_PAIRS[currentDataTheme] || (isDark ? `${currentDataTheme}-light` : currentDataTheme.replace(/-light$/, ''))
-        // Import and call setTheme to persist and apply
-        import('@/lib/theme').then(({ setTheme }) => {
-          setTheme(nextDataTheme as any)
-        })
-        // Also update settings hook
-        const nextMode = nextDataTheme.endsWith('-light') ? 'light' : 'dark'
-        applyTheme(nextMode)
+        const nextTheme = toggleThemeMode()
+        const nextMode = isDarkTheme(nextTheme) ? 'dark' : 'light'
         updateSettings({ theme: nextMode })
       }}
       className="shrink-0 rounded-lg p-1.5 transition-colors hover:opacity-80"

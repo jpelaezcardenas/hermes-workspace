@@ -56,6 +56,8 @@ const VALID_THEMES = [
   'hermes-classic-light',
   'hermes-slate',
   'hermes-slate-light',
+  'qclaw',
+  'qclaw-light',
 ]
 
 const themeScript = `
@@ -66,7 +68,7 @@ const themeScript = `
     const root = document.documentElement
     const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
     const theme = ${JSON.stringify(VALID_THEMES)}.includes(storedTheme) ? storedTheme : '${DEFAULT_THEME}'
-    const lightThemes = ['hermes-nous-light', 'hermes-official-light', 'hermes-classic-light', 'hermes-slate-light']
+    const lightThemes = ['hermes-nous-light', 'hermes-official-light', 'hermes-classic-light', 'hermes-slate-light', 'qclaw-light']
     const isDark = !lightThemes.includes(theme)
     root.classList.remove('light', 'dark', 'system')
     root.classList.add(isDark ? 'dark' : 'light')
@@ -97,9 +99,11 @@ const themeColorScript = `
       'hermes-classic-light': '#F5F2ED',
       'hermes-slate': '#0d1117',
       'hermes-slate-light': '#F6F8FA',
+      'qclaw': '#17191d',
+      'qclaw-light': '#FFFFFF',
     }
     const nextColor = colors[theme] || colors['${DEFAULT_THEME}']
-    const isDark = !['hermes-nous-light', 'hermes-official-light', 'hermes-classic-light', 'hermes-slate-light'].includes(String(theme))
+    const isDark = !['hermes-nous-light', 'hermes-official-light', 'hermes-classic-light', 'hermes-slate-light', 'qclaw-light'].includes(String(theme))
 
     let meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) {

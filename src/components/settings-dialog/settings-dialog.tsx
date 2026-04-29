@@ -874,9 +874,6 @@ function AppearanceContent() {
   function handleThemeChange(value: string) {
     const theme = value as SettingsThemeMode
     applyTheme(theme)
-    if (theme === 'light' || theme === 'dark') {
-      setTheme(getThemeVariant(getTheme(), theme))
-    }
     updateSettings({ theme })
   }
 
@@ -980,6 +977,7 @@ const ENTERPRISE_THEME_FAMILIES: Array<ThemeId> = [
   'hermes-official',
   'hermes-classic',
   'hermes-slate',
+  'qclaw',
 ]
 
 const ENTERPRISE_THEMES = THEMES.map((theme) => ({
@@ -1042,6 +1040,22 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                   accent: '#7eb8f6',
                   text: '#c9d1d9',
                 }
+              : theme.id === 'qclaw'
+                ? {
+                    bg: '#17191D',
+                    panel: '#242832',
+                    border: 'rgba(255,255,255,0.1)',
+                    accent: '#34A8FF',
+                    text: '#F4F6F8',
+                  }
+                : theme.id === 'qclaw-light'
+                  ? {
+                      bg: '#FFFFFF',
+                      panel: '#F7F7F8',
+                      border: '#E7E8EA',
+                      accent: '#168BFF',
+                      text: '#202124',
+                    }
               : {
                   bg: '#F6F8FA',
                   panel: '#FFFFFF',

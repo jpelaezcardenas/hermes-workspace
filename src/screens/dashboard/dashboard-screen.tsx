@@ -17,7 +17,8 @@ import { getUnavailableReason } from '@/lib/feature-gates'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
 import { cn } from '@/lib/utils'
 import { openHamburgerMenu } from '@/components/mobile-hamburger-menu'
-import { applyTheme, useSettingsStore } from '@/hooks/use-settings'
+import { useSettingsStore } from '@/hooks/use-settings'
+import { isDarkTheme, toggleThemeMode } from '@/lib/theme'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon02Icon, Sun02Icon } from '@hugeicons/core-free-icons'
 
@@ -764,21 +765,8 @@ export function DashboardScreen() {
           type="button"
           aria-label="Toggle theme"
           onClick={() => {
-            const LIGHT_DARK_PAIRS: Record<string, string> = {
-              'hermes-nous': 'hermes-nous-light',
-              'hermes-nous-light': 'hermes-nous',
-              'hermes-official': 'hermes-official-light',
-              'hermes-official-light': 'hermes-official',
-              'hermes-classic': 'hermes-classic-light',
-              'hermes-classic-light': 'hermes-classic',
-              'hermes-slate': 'hermes-slate-light',
-              'hermes-slate-light': 'hermes-slate',
-            }
-            const cur = document.documentElement.getAttribute('data-theme') || 'hermes-official'
-            const nextDataTheme = LIGHT_DARK_PAIRS[cur] || (isDark ? 'hermes-official-light' : 'hermes-official')
-            import('@/lib/theme').then(({ setTheme }) => { setTheme(nextDataTheme as any) })
-            const nextMode = nextDataTheme.endsWith('-light') ? 'light' : 'dark'
-            applyTheme(nextMode)
+            const nextTheme = toggleThemeMode()
+            const nextMode = isDarkTheme(nextTheme) ? 'dark' : 'light'
             updateSettings({ theme: nextMode })
             setIsDark(nextMode === 'dark')
           }}

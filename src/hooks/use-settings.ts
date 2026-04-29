@@ -1,8 +1,15 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { getTheme, setTheme } from '@/lib/theme'
+import {
+  applyThemeMode,
+  getSystemThemeMode,
+  getTheme,
+  resolveThemeMode,
+  setTheme,
+  type ThemeMode,
+} from '@/lib/theme'
 
-export type SettingsThemeMode = 'system' | 'light' | 'dark'
+export type SettingsThemeMode = ThemeMode
 export type AccentColor = 'orange' | 'purple' | 'blue' | 'green'
 
 export type StudioSettings = {
@@ -86,21 +93,24 @@ export function useSettings() {
 }
 
 export function resolveTheme(theme: SettingsThemeMode): 'light' | 'dark' {
-  if (theme === 'light') return 'light'
-  if (theme === 'dark') return 'dark'
-
-  if (typeof window === 'undefined') return 'dark'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light'
+  return theme === 'system' ? getSystemThemeMode() : resolveThemeMode(theme)
 }
 
-export function applyTheme(_theme?: SettingsThemeMode) {
-  setTheme(getTheme())
-  document.documentElement.setAttribute('data-accent', 'orange')
+function applyStoredAccent() {
+  if (typeof document === 'undefined' || typeof window === 'undefined') return
+  const storedAccent = localStorage.getItem('hermes-accent')
+  document.documentElement.setAttribute(
+    'data-accent',
+    storedAccent || defaultStudioSettings.accentColor,
+  )
+}
+
+export function applyTheme(theme: SettingsThemeMode = 'system') {
+  applyThemeMode(theme)
+  applyStoredAccent()
 }
 
 export function initializeSettingsAppearance() {
   setTheme(getTheme())
-  document.documentElement.setAttribute('data-accent', 'orange')
+  applyStoredAccent()
 }
