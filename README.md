@@ -547,6 +547,7 @@ Features pending cloud infrastructure:
 
 - `HERMES_PASSWORD` — required whenever `HOST ≠ 127.0.0.1`
 - `COOKIE_SECURE=1` — force the `Secure` cookie flag when terminating HTTPS at a proxy
+- `COOKIE_SECURE=0` — required for plain HTTP LAN access on `HOST=0.0.0.0` so the browser will actually send the auth cookie
 - `TRUST_PROXY=1` — trust `x-forwarded-for` / `x-real-ip` (only set behind a sanitizing reverse proxy)
 - `HERMES_DASHBOARD_TOKEN` — explicit bearer for dashboard API (preferred over the legacy HTML-scrape fallback)
 - `HERMES_ALLOW_INSECURE_REMOTE=1` — bypass the fail-closed guard (not recommended)
