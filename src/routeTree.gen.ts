@@ -17,6 +17,11 @@ import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as FleetOperationsRouteImport } from './routes/fleet-operations'
+import { Route as FleetNodeRouteImport } from './routes/fleet-node'
+import { Route as FleetCronDetailRouteImport } from './routes/fleet-cron-detail'
+import { Route as FleetCronRouteImport } from './routes/fleet-cron'
+import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
@@ -53,6 +58,11 @@ import { Route as ApiHermesTasksRouteImport } from './routes/api/hermes-tasks'
 import { Route as ApiHermesJobsRouteImport } from './routes/api/hermes-jobs'
 import { Route as ApiHermesConfigRouteImport } from './routes/api/hermes-config'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
+import { Route as ApiFleetStatusRouteImport } from './routes/api/fleet-status'
+import { Route as ApiFleetOperationsRouteImport } from './routes/api/fleet-operations'
+import { Route as ApiFleetNodeDetailRouteImport } from './routes/api/fleet-node-detail'
+import { Route as ApiFleetCronDetailRouteImport } from './routes/api/fleet-cron-detail'
+import { Route as ApiFleetCronRouteImport } from './routes/api/fleet-cron'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
@@ -135,6 +145,31 @@ const MemoryRoute = MemoryRouteImport.update({
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetOperationsRoute = FleetOperationsRouteImport.update({
+  id: '/fleet-operations',
+  path: '/fleet-operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetNodeRoute = FleetNodeRouteImport.update({
+  id: '/fleet-node',
+  path: '/fleet-node',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetCronDetailRoute = FleetCronDetailRouteImport.update({
+  id: '/fleet-cron-detail',
+  path: '/fleet-cron-detail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetCronRoute = FleetCronRouteImport.update({
+  id: '/fleet-cron',
+  path: '/fleet-cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetRoute = FleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FilesRoute = FilesRouteImport.update({
@@ -315,6 +350,31 @@ const ApiHermesConfigRoute = ApiHermesConfigRouteImport.update({
 const ApiGatewayStatusRoute = ApiGatewayStatusRouteImport.update({
   id: '/api/gateway-status',
   path: '/api/gateway-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFleetStatusRoute = ApiFleetStatusRouteImport.update({
+  id: '/api/fleet-status',
+  path: '/api/fleet-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFleetOperationsRoute = ApiFleetOperationsRouteImport.update({
+  id: '/api/fleet-operations',
+  path: '/api/fleet-operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFleetNodeDetailRoute = ApiFleetNodeDetailRouteImport.update({
+  id: '/api/fleet-node-detail',
+  path: '/api/fleet-node-detail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFleetCronDetailRoute = ApiFleetCronDetailRouteImport.update({
+  id: '/api/fleet-cron-detail',
+  path: '/api/fleet-cron-detail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFleetCronRoute = ApiFleetCronRouteImport.update({
+  id: '/api/fleet-cron',
+  path: '/api/fleet-cron',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiFilesRoute = ApiFilesRouteImport.update({
@@ -541,6 +601,11 @@ export interface FileRoutesByFullPath {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
+  '/fleet': typeof FleetRoute
+  '/fleet-cron': typeof FleetCronRoute
+  '/fleet-cron-detail': typeof FleetCronDetailRoute
+  '/fleet-node': typeof FleetNodeRoute
+  '/fleet-operations': typeof FleetOperationsRoute
   '/jobs': typeof JobsRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -560,6 +625,11 @@ export interface FileRoutesByFullPath {
   '/api/crew-status': typeof ApiCrewStatusRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
+  '/api/fleet-cron': typeof ApiFleetCronRoute
+  '/api/fleet-cron-detail': typeof ApiFleetCronDetailRoute
+  '/api/fleet-node-detail': typeof ApiFleetNodeDetailRoute
+  '/api/fleet-operations': typeof ApiFleetOperationsRoute
+  '/api/fleet-status': typeof ApiFleetStatusRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-jobs': typeof ApiHermesJobsRouteWithChildren
@@ -630,6 +700,11 @@ export interface FileRoutesByTo {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
+  '/fleet': typeof FleetRoute
+  '/fleet-cron': typeof FleetCronRoute
+  '/fleet-cron-detail': typeof FleetCronDetailRoute
+  '/fleet-node': typeof FleetNodeRoute
+  '/fleet-operations': typeof FleetOperationsRoute
   '/jobs': typeof JobsRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -648,6 +723,11 @@ export interface FileRoutesByTo {
   '/api/crew-status': typeof ApiCrewStatusRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
+  '/api/fleet-cron': typeof ApiFleetCronRoute
+  '/api/fleet-cron-detail': typeof ApiFleetCronDetailRoute
+  '/api/fleet-node-detail': typeof ApiFleetNodeDetailRoute
+  '/api/fleet-operations': typeof ApiFleetOperationsRoute
+  '/api/fleet-status': typeof ApiFleetStatusRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-jobs': typeof ApiHermesJobsRouteWithChildren
@@ -719,6 +799,11 @@ export interface FileRoutesById {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
+  '/fleet': typeof FleetRoute
+  '/fleet-cron': typeof FleetCronRoute
+  '/fleet-cron-detail': typeof FleetCronDetailRoute
+  '/fleet-node': typeof FleetNodeRoute
+  '/fleet-operations': typeof FleetOperationsRoute
   '/jobs': typeof JobsRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -738,6 +823,11 @@ export interface FileRoutesById {
   '/api/crew-status': typeof ApiCrewStatusRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
+  '/api/fleet-cron': typeof ApiFleetCronRoute
+  '/api/fleet-cron-detail': typeof ApiFleetCronDetailRoute
+  '/api/fleet-node-detail': typeof ApiFleetNodeDetailRoute
+  '/api/fleet-operations': typeof ApiFleetOperationsRoute
+  '/api/fleet-status': typeof ApiFleetStatusRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-jobs': typeof ApiHermesJobsRouteWithChildren
@@ -810,6 +900,11 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/files'
+    | '/fleet'
+    | '/fleet-cron'
+    | '/fleet-cron-detail'
+    | '/fleet-node'
+    | '/fleet-operations'
     | '/jobs'
     | '/memory'
     | '/operations'
@@ -829,6 +924,11 @@ export interface FileRouteTypes {
     | '/api/crew-status'
     | '/api/events'
     | '/api/files'
+    | '/api/fleet-cron'
+    | '/api/fleet-cron-detail'
+    | '/api/fleet-node-detail'
+    | '/api/fleet-operations'
+    | '/api/fleet-status'
     | '/api/gateway-status'
     | '/api/hermes-config'
     | '/api/hermes-jobs'
@@ -899,6 +999,11 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/files'
+    | '/fleet'
+    | '/fleet-cron'
+    | '/fleet-cron-detail'
+    | '/fleet-node'
+    | '/fleet-operations'
     | '/jobs'
     | '/memory'
     | '/operations'
@@ -917,6 +1022,11 @@ export interface FileRouteTypes {
     | '/api/crew-status'
     | '/api/events'
     | '/api/files'
+    | '/api/fleet-cron'
+    | '/api/fleet-cron-detail'
+    | '/api/fleet-node-detail'
+    | '/api/fleet-operations'
+    | '/api/fleet-status'
     | '/api/gateway-status'
     | '/api/hermes-config'
     | '/api/hermes-jobs'
@@ -987,6 +1097,11 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/files'
+    | '/fleet'
+    | '/fleet-cron'
+    | '/fleet-cron-detail'
+    | '/fleet-node'
+    | '/fleet-operations'
     | '/jobs'
     | '/memory'
     | '/operations'
@@ -1006,6 +1121,11 @@ export interface FileRouteTypes {
     | '/api/crew-status'
     | '/api/events'
     | '/api/files'
+    | '/api/fleet-cron'
+    | '/api/fleet-cron-detail'
+    | '/api/fleet-node-detail'
+    | '/api/fleet-operations'
+    | '/api/fleet-status'
     | '/api/gateway-status'
     | '/api/hermes-config'
     | '/api/hermes-jobs'
@@ -1077,6 +1197,11 @@ export interface RootRouteChildren {
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
+  FleetRoute: typeof FleetRoute
+  FleetCronRoute: typeof FleetCronRoute
+  FleetCronDetailRoute: typeof FleetCronDetailRoute
+  FleetNodeRoute: typeof FleetNodeRoute
+  FleetOperationsRoute: typeof FleetOperationsRoute
   JobsRoute: typeof JobsRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
@@ -1096,6 +1221,11 @@ export interface RootRouteChildren {
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiFilesRoute: typeof ApiFilesRoute
+  ApiFleetCronRoute: typeof ApiFleetCronRoute
+  ApiFleetCronDetailRoute: typeof ApiFleetCronDetailRoute
+  ApiFleetNodeDetailRoute: typeof ApiFleetNodeDetailRoute
+  ApiFleetOperationsRoute: typeof ApiFleetOperationsRoute
+  ApiFleetStatusRoute: typeof ApiFleetStatusRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
   ApiHermesConfigRoute: typeof ApiHermesConfigRoute
   ApiHermesJobsRoute: typeof ApiHermesJobsRouteWithChildren
@@ -1201,6 +1331,41 @@ declare module '@tanstack/react-router' {
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet-operations': {
+      id: '/fleet-operations'
+      path: '/fleet-operations'
+      fullPath: '/fleet-operations'
+      preLoaderRoute: typeof FleetOperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet-node': {
+      id: '/fleet-node'
+      path: '/fleet-node'
+      fullPath: '/fleet-node'
+      preLoaderRoute: typeof FleetNodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet-cron-detail': {
+      id: '/fleet-cron-detail'
+      path: '/fleet-cron-detail'
+      fullPath: '/fleet-cron-detail'
+      preLoaderRoute: typeof FleetCronDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet-cron': {
+      id: '/fleet-cron'
+      path: '/fleet-cron'
+      fullPath: '/fleet-cron'
+      preLoaderRoute: typeof FleetCronRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet': {
+      id: '/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/files': {
@@ -1453,6 +1618,41 @@ declare module '@tanstack/react-router' {
       path: '/api/gateway-status'
       fullPath: '/api/gateway-status'
       preLoaderRoute: typeof ApiGatewayStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/fleet-status': {
+      id: '/api/fleet-status'
+      path: '/api/fleet-status'
+      fullPath: '/api/fleet-status'
+      preLoaderRoute: typeof ApiFleetStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/fleet-operations': {
+      id: '/api/fleet-operations'
+      path: '/api/fleet-operations'
+      fullPath: '/api/fleet-operations'
+      preLoaderRoute: typeof ApiFleetOperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/fleet-node-detail': {
+      id: '/api/fleet-node-detail'
+      path: '/api/fleet-node-detail'
+      fullPath: '/api/fleet-node-detail'
+      preLoaderRoute: typeof ApiFleetNodeDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/fleet-cron-detail': {
+      id: '/api/fleet-cron-detail'
+      path: '/api/fleet-cron-detail'
+      fullPath: '/api/fleet-cron-detail'
+      preLoaderRoute: typeof ApiFleetCronDetailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/fleet-cron': {
+      id: '/api/fleet-cron'
+      path: '/api/fleet-cron'
+      fullPath: '/api/fleet-cron'
+      preLoaderRoute: typeof ApiFleetCronRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/files': {
@@ -1857,6 +2057,11 @@ const rootRouteChildren: RootRouteChildren = {
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
+  FleetRoute: FleetRoute,
+  FleetCronRoute: FleetCronRoute,
+  FleetCronDetailRoute: FleetCronDetailRoute,
+  FleetNodeRoute: FleetNodeRoute,
+  FleetOperationsRoute: FleetOperationsRoute,
   JobsRoute: JobsRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
@@ -1876,6 +2081,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCrewStatusRoute: ApiCrewStatusRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiFilesRoute: ApiFilesRoute,
+  ApiFleetCronRoute: ApiFleetCronRoute,
+  ApiFleetCronDetailRoute: ApiFleetCronDetailRoute,
+  ApiFleetNodeDetailRoute: ApiFleetNodeDetailRoute,
+  ApiFleetOperationsRoute: ApiFleetOperationsRoute,
+  ApiFleetStatusRoute: ApiFleetStatusRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
   ApiHermesConfigRoute: ApiHermesConfigRoute,
   ApiHermesJobsRoute: ApiHermesJobsRouteWithChildren,

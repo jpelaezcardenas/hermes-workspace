@@ -561,7 +561,7 @@ function ChatSidebarComponent({
   const isTasksActive = pathname === '/tasks'
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
-  const mainRoutes = ['/chat', '/new', '/files', '/terminal']
+  const mainRoutes = ['/chat', '/new', '/files', '/terminal', '/fleet', '/tasks', '/conductor', '/operations']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
 
@@ -753,6 +753,7 @@ function ChatSidebarComponent({
   }
 
   const isDashboardActive = pathname === '/dashboard'
+  const isFleetActive = pathname === '/fleet'
 
   const mainItems: Array<NavItemDef> = [
     {
@@ -761,6 +762,13 @@ function ChatSidebarComponent({
       icon: DashboardSquare01Icon,
       label: t('nav.dashboard'),
       active: isDashboardActive,
+    },
+    {
+      kind: 'link',
+      to: '/fleet',
+      icon: DashboardSquare01Icon,
+      label: 'Fleet',
+      active: isFleetActive,
     },
     {
       kind: 'link',

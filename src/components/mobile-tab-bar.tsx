@@ -51,6 +51,13 @@ const TABS: Array<TabItem> = [
     match: (p) => p === '/dashboard',
   },
   {
+    id: 'fleet',
+    label: 'Fleet',
+    icon: DashboardSquare01Icon,
+    to: '/fleet',
+    match: (p) => p.startsWith('/fleet'),
+  },
+  {
     id: 'chat',
     label: 'Chat',
     icon: Chat01Icon,
