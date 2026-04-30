@@ -26,6 +26,7 @@ import { ErrorBoundary } from '@/components/error-boundary'
 import { getRootSurfaceState } from './-root-layout-state'
 
 
+const _isDev = import.meta.env.DEV
 const APP_CSP = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -33,9 +34,13 @@ const APP_CSP = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline'",
+  _isDev
+    ? "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com"
+    : "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
-  "font-src 'self' data:",
+  _isDev
+    ? "font-src 'self' data: https://fonts.gstatic.com"
+    : "font-src 'self' data:",
   "connect-src 'self' ws: wss: http: https:",
   "worker-src 'self' blob:",
   "media-src 'self' blob: data:",
@@ -250,6 +255,12 @@ function RootLayout() {
     null,
   )
   useApplyChatWidth()
+
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      void import('react-grab')
+    }
+  }, [])
 
   useEffect(() => {
     initializeSettingsAppearance()
