@@ -7,6 +7,13 @@ import {
   registerActiveSendRun,
   unregisterActiveSendRun,
 } from '../../server/send-run-tracker'
+import {
+  appendRunText,
+  createPersistedRun,
+  markRunStatus,
+  setRunThinking,
+  upsertRunToolCall,
+} from '../../server/run-store'
 import { getChatMode } from '../../server/gateway-capabilities'
 import { ensureLocalSession, appendLocalMessage, getLocalMessages, touchLocalSession } from '../../server/local-session-store'
 import { getLocalProviderDef, getDiscoveredModels } from '../../server/local-provider-discovery'
@@ -361,6 +368,8 @@ export const Route = createFileRoute('/api/send-stream')({
         const encoder = new TextEncoder()
         let streamClosed = false
         let activeRunId: string | null = null
+        let activeRunSessionKey: string | null = null
+        let persistedRunReady: Promise<unknown> | null = null
         let unregisterTimer: ReturnType<typeof setTimeout> | null = null
         let streamTimeoutTimer: ReturnType<typeof setTimeout> | null = null
         const abortController = new AbortController()
@@ -399,6 +408,31 @@ export const Route = createFileRoute('/api/send-stream')({
               }
             }
 
+            const persistRunStarted = (
+              runId: string | undefined,
+              runSessionKey: string,
+              friendlyId: string,
+            ) => {
+              if (!runId || persistedRunReady) return
+              activeRunSessionKey = runSessionKey
+              persistedRunReady = createPersistedRun({
+                runId,
+                sessionKey: runSessionKey,
+                friendlyId,
+              }).catch(() => null)
+            }
+
+            const persistActiveRun = (
+              write: (sessionKey: string, runId: string) => Promise<unknown>,
+            ) => {
+              if (!activeRunId || !activeRunSessionKey) return
+              const runId = activeRunId
+              const runSessionKey = activeRunSessionKey
+              void (persistedRunReady ?? Promise.resolve())
+                .then(() => write(runSessionKey, runId))
+                .catch(() => null)
+            }
+
             try {
               if (chatMode === 'portable') {
                 const runId = crypto.randomUUID()
@@ -415,6 +449,7 @@ export const Route = createFileRoute('/api/send-stream')({
 
                 activeRunId = runId
                 registerActiveSendRun(runId)
+                persistRunStarted(runId, portableSessionKey, portableFriendlyId)
                 unregisterTimer = setTimeout(() => {
                   if (activeRunId) {
                     unregisterActiveSendRun(activeRunId)
@@ -478,6 +513,9 @@ export const Route = createFileRoute('/api/send-stream')({
                   for await (const chunk of stream) {
                     if (chunk.type === 'reasoning') {
                       thinking += chunk.text
+                      persistActiveRun((runSessionKey, activeId) =>
+                        setRunThinking(runSessionKey, activeId, thinking),
+                      )
                       sendEvent('thinking', {
                         text: thinking,
                         sessionKey: portableSessionKey,
@@ -485,16 +523,30 @@ export const Route = createFileRoute('/api/send-stream')({
                       })
                     } else if (chunk.type === 'tool') {
                       toolEventCount += 1
+                      const toolCallId = `${runId}:${chunk.name}:${toolEventCount}`
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: toolCallId,
+                          name: chunk.name || 'tool',
+                          phase: 'start',
+                          preview: chunk.label,
+                        }),
+                      )
                       sendEvent('tool', {
                         phase: 'start',
                         name: chunk.name,
-                        toolCallId: `${runId}:${chunk.name}:${toolEventCount}`,
+                        toolCallId,
                         preview: chunk.label,
                         sessionKey: portableSessionKey,
                         runId,
                       })
                     } else {
                       accumulated += chunk.text
+                      persistActiveRun((runSessionKey, activeId) =>
+                        appendRunText(runSessionKey, activeId, accumulated, {
+                          replace: true,
+                        }),
+                      )
                       sendEvent('chunk', {
                         text: accumulated,
                         fullReplace: true,
@@ -513,6 +565,9 @@ export const Route = createFileRoute('/api/send-stream')({
                   })
                   touchLocalSession(portableSessionKey)
 
+                  persistActiveRun((runSessionKey, activeId) =>
+                    markRunStatus(runSessionKey, activeId, 'complete'),
+                  )
                   sendEvent('done', {
                     state: 'complete',
                     sessionKey: portableSessionKey,
@@ -528,8 +583,12 @@ export const Route = createFileRoute('/api/send-stream')({
                   closeStream()
                 } catch (err) {
                   if (!streamClosed) {
+                    const errorMessage = normalizeHermesErrorMessage(err)
+                    persistActiveRun((runSessionKey, activeId) =>
+                      markRunStatus(runSessionKey, activeId, 'error', errorMessage),
+                    )
                     sendEvent('error', {
-                      message: normalizeHermesErrorMessage(err),
+                      message: errorMessage,
                       sessionKey: portableSessionKey,
                       runId,
                     })
@@ -620,6 +679,11 @@ export const Route = createFileRoute('/api/send-stream')({
                     if (runId && !activeRunId) {
                       activeRunId = runId
                       registerActiveSendRun(runId)
+                      persistRunStarted(
+                        runId,
+                        sessionKeyFromEvent,
+                        sessionKeyFromEvent,
+                      )
                       unregisterTimer = setTimeout(() => {
                         if (activeRunId) {
                           unregisterActiveSendRun(activeRunId)
@@ -692,6 +756,11 @@ export const Route = createFileRoute('/api/send-stream')({
                       const content =
                         typeof data.content === 'string' ? data.content : ''
                       if (content) {
+                        persistActiveRun((runSessionKey, activeId) =>
+                          appendRunText(runSessionKey, activeId, content, {
+                            replace: true,
+                          }),
+                        )
                         const translated = {
                           text: content,
                           fullReplace: true,
@@ -708,6 +777,9 @@ export const Route = createFileRoute('/api/send-stream')({
                       const delta =
                         typeof data.delta === 'string' ? data.delta : ''
                       if (!delta) return
+                      persistActiveRun((runSessionKey, activeId) =>
+                        appendRunText(runSessionKey, activeId, delta),
+                      )
                       const translated = {
                         text: delta,
                         sessionKey: sessionKeyFromEvent,
@@ -741,6 +813,15 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: translated.toolCallId,
+                          name: toolName,
+                          phase: translated.phase,
+                          args: translated.args,
+                          preview,
+                        }),
+                      )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
                       return
@@ -751,6 +832,9 @@ export const Route = createFileRoute('/api/send-stream')({
                       const toolName = getToolName(data)
                       if (toolName === '_thinking' || toolName === 'tool') {
                         if (!delta) return
+                        persistActiveRun((runSessionKey, activeId) =>
+                          setRunThinking(runSessionKey, activeId, delta),
+                        )
                         const translated = {
                           text: delta,
                           sessionKey: sessionKeyFromEvent,
@@ -769,6 +853,15 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: translated.toolCallId,
+                          name: toolName,
+                          phase: 'calling',
+                          args: translated.args,
+                          result: translated.result,
+                        }),
+                      )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
                       return
@@ -786,6 +879,15 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: translated.toolCallId,
+                          name: toolName,
+                          phase: 'complete',
+                          args: translated.args,
+                          result: translated.result,
+                        }),
+                      )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
                       return
@@ -827,6 +929,14 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: translated.toolCallId || `${runId || 'run'}:memory`,
+                          name: 'memory',
+                          phase: 'complete',
+                          result: translated.result,
+                        }),
+                      )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
                       return
@@ -848,6 +958,14 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: translated.toolCallId || `${runId || 'run'}:skill`,
+                          name: 'skill',
+                          phase: 'complete',
+                          result: translated.result,
+                        }),
+                      )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
                       return
@@ -868,6 +986,14 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        upsertRunToolCall(runSessionKey, activeId, {
+                          id: translated.toolCallId,
+                          name: toolName,
+                          phase: 'error',
+                          result: translated.result,
+                        }),
+                      )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
                       return
@@ -881,6 +1007,14 @@ export const Route = createFileRoute('/api/send-stream')({
                         ) ||
                         readString(data.message) ||
                         'Hermes stream error'
+                      persistActiveRun((runSessionKey, activeId) =>
+                        markRunStatus(
+                          runSessionKey,
+                          activeId,
+                          'error',
+                          errorMessage,
+                        ),
+                      )
                       sendEvent('error', {
                         message: errorMessage,
                         sessionKey: sessionKeyFromEvent,
@@ -896,6 +1030,9 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         runId,
                       }
+                      persistActiveRun((runSessionKey, activeId) =>
+                        markRunStatus(runSessionKey, activeId, 'complete'),
+                      )
                       sendEvent('done', translated)
                       skipPublish || publishChatEvent('done', translated)
                       closeStream()
@@ -937,6 +1074,9 @@ export const Route = createFileRoute('/api/send-stream')({
               streamTimeoutTimer = null
             }
             if (activeRunId) {
+              persistActiveRun((runSessionKey, activeId) =>
+                markRunStatus(runSessionKey, activeId, 'handoff'),
+              )
               unregisterActiveSendRun(activeRunId)
               activeRunId = null
             }
