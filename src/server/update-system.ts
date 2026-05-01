@@ -1,5 +1,11 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  writeFileSync,
+} from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
@@ -58,7 +64,6 @@ export type ApplyUpdateResult = {
   error?: string
 }
 
-
 function pendingNotesPath(): string {
   return join(process.cwd(), '.runtime', 'pending-update-release-notes.json')
 }
@@ -67,13 +72,17 @@ function persistPendingReleaseNotes(sections: Array<ReleaseNoteSection>): void {
   if (!sections.length) return
   const path = pendingNotesPath()
   mkdirSync(join(process.cwd(), '.runtime'), { recursive: true })
-  writeFileSync(path, JSON.stringify({ sections, updatedAt: Date.now() }, null, 2) + '
-')
+  writeFileSync(
+    path,
+    `${JSON.stringify({ sections, updatedAt: Date.now() }, null, 2)}\n`,
+  )
 }
 
 function readPendingReleaseNotes(): Array<ReleaseNoteSection> {
   try {
-    const raw = JSON.parse(readFileSync(pendingNotesPath(), 'utf8')) as { sections?: Array<ReleaseNoteSection> }
+    const raw = JSON.parse(readFileSync(pendingNotesPath(), 'utf8')) as {
+      sections?: Array<ReleaseNoteSection>
+    }
     return Array.isArray(raw.sections) ? raw.sections : []
   } catch {
     return []
