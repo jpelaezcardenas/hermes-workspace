@@ -63,12 +63,20 @@ function exec(
   options: { cwd?: string; timeout?: number; stdio?: 'pipe' | 'ignore' } = {},
 ): string | null {
   try {
+    if (options.stdio === 'ignore') {
+      execFileSync(command, args, {
+        cwd: options.cwd ?? process.cwd(),
+        timeout: options.timeout ?? 8_000,
+        stdio: 'ignore',
+      })
+      return 'ok'
+    }
     return (
       execFileSync(command, args, {
         cwd: options.cwd ?? process.cwd(),
         encoding: 'utf8',
         timeout: options.timeout ?? 8_000,
-        stdio: options.stdio === 'ignore' ? 'ignore' : ['pipe', 'pipe', 'pipe'],
+        stdio: ['pipe', 'pipe', 'pipe'],
       }).trim() || null
     )
   } catch {
