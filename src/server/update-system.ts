@@ -249,6 +249,7 @@ export function readWorkspaceUpdateStatus(
     'hermes-workspace',
     'outsourc-e/hermes-workspace',
   ])
+  if (repoMatches) git(['fetch', 'origin', '--quiet'], gitRepo, 30_000)
   const currentHead = git(['rev-parse', 'HEAD'], gitRepo)
   const branch = git(['rev-parse', '--abbrev-ref', 'HEAD'], gitRepo)
   const supportedBranch = branch === 'main' || branch === 'master'
@@ -346,6 +347,7 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
     'outsourc-e/hermes-agent',
     'NousResearch/hermes-agent',
   ])
+  if (repoMatches) git(['fetch', 'origin', '--quiet'], repoPath, 30_000)
   const currentHead = git(['rev-parse', 'HEAD'], repoPath)
   const branch = git(['rev-parse', '--abbrev-ref', 'HEAD'], repoPath)
   const latestHead = repoMatches ? remoteHead(repoPath, 'origin') : null
