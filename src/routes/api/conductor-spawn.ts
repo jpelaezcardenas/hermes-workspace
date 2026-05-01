@@ -17,12 +17,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
-import {
-  HERMES_API,
-  BEARER_TOKEN,
-  dashboardFetch,
-  ensureGatewayProbed,
-} from '../../server/gateway-capabilities'
+import { BEARER_TOKEN, HERMES_API, dashboardFetch, ensureGatewayProbed } from '../../server/gateway-capabilities'
 
 let cachedSkill: string | null = null
 
@@ -53,10 +48,7 @@ function loadDispatchSkill(): string {
     resolve(repoRoot(), 'skills/workspace-dispatch/SKILL.md'),
     resolve(process.cwd(), 'skills/workspace-dispatch/SKILL.md'),
     resolve(process.env.HOME ?? '~', '.hermes/skills/workspace-dispatch/SKILL.md'),
-    resolve(
-      process.env.HOME ?? '~',
-      '.ocplatform/workspace/skills/workspace-dispatch/SKILL.md',
-    ),
+    resolve(process.env.HOME ?? '~', '.ocplatform/workspace/skills/workspace-dispatch/SKILL.md'),
   ]
   for (const p of candidates) {
     try {
@@ -91,8 +83,7 @@ function buildOrchestratorPrompt(
   },
 ): string {
   const outputBase = options.projectsDir || '/tmp'
-  const outputPrefix =
-    outputBase === '/tmp' ? '/tmp/dispatch-<slug>' : `${outputBase}/dispatch-<slug>`
+  const outputPrefix = outputBase === '/tmp' ? '/tmp/dispatch-<slug>' : `${outputBase}/dispatch-<slug>`
 
   return [
     'You are a mission orchestrator. Execute this mission autonomously.',
@@ -104,24 +95,12 @@ function buildOrchestratorPrompt(
     '## Mission',
     '',
     `Goal: ${goal}`,
-    ...(options.orchestratorModel
-      ? ['', `Use model: ${options.orchestratorModel} for the orchestrator`]
-      : []),
-    ...(options.workerModel
-      ? ['', `Use model: ${options.workerModel} for all workers`]
-      : []),
+    ...(options.orchestratorModel ? ['', `Use model: ${options.orchestratorModel} for the orchestrator`] : []),
+    ...(options.workerModel ? ['', `Use model: ${options.workerModel} for all workers`] : []),
     ...(options.maxParallel > 1
-      ? [
-          '',
-          `Run up to ${options.maxParallel} workers in parallel when tasks are independent`,
-        ]
-      : [
-          '',
-          'Spawn workers one at a time. Do NOT wait for workers to finish — the UI handles tracking.',
-        ]),
-    ...(options.supervised
-      ? ['', 'Supervised mode is enabled. Require approval before each task.']
-      : []),
+      ? ['', `Run up to ${options.maxParallel} workers in parallel when tasks are independent`]
+      : ['', 'Spawn workers one at a time. Do NOT wait for workers to finish — the UI handles tracking.']),
+    ...(options.supervised ? ['', 'Supervised mode is enabled. Require approval before each task.'] : []),
     '',
     '## Critical Rules',
     '- Use create_task / delegate_task to create worker agents for each task',
@@ -146,30 +125,58 @@ function nowPlusSecondsIso(seconds: number): string {
   return t.toISOString().replace(/\.\d{3}Z$/, 'Z')
 }
 
-async function createHermesJob(payload: {
-  name: string
-  schedule: string
-  prompt: string
-  deliver?: string
-}): Promise<{ id?: string; name?: string; error?: string }> {
+async function createConductorMission(payload: { name: string; prompt: string }): Promise<{
+  id?: string
+  name?: string
+  sessionKey?: string
+  sessionKeyPrefix?: string
+  error?: string
+}> {
   const body = JSON.stringify({
     name: payload.name,
-    schedule: payload.schedule,
     prompt: payload.prompt,
-    deliver: payload.deliver ?? 'local',
   })
   const capabilities = await ensureGatewayProbed()
-  const res = capabilities.dashboard.available
-    ? await dashboardFetch('/api/cron/jobs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body,
-      })
-    : await fetch(`${HERMES_API}/api/jobs`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...authHeaders() },
-        body,
-      })
+  if (capabilities.dashboard.available) {
+    const res = await dashboardFetch('/api/conductor/missions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    })
+    const text = await res.text()
+    let data: {
+      id?: string
+      name?: string
+      session_id?: string
+      error?: string
+      detail?: string
+    } = {}
+    try {
+      data = JSON.parse(text)
+    } catch {
+      return { error: text || `HTTP ${res.status}` }
+    }
+    if (!res.ok || data.error || data.detail) {
+      return { error: data.error || data.detail || `HTTP ${res.status}` }
+    }
+    return {
+      id: data.id,
+      name: data.name,
+      sessionKey: data.session_id,
+    }
+  }
+
+  const cronBody = JSON.stringify({
+    name: payload.name,
+    schedule: nowPlusSecondsIso(5),
+    prompt: payload.prompt,
+    deliver: 'local',
+  })
+  const res = await fetch(`${HERMES_API}/api/jobs`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: cronBody,
+  })
   const text = await res.text()
   let data: { job?: { id?: string; name?: string }; error?: string } = {}
   try {
@@ -180,12 +187,48 @@ async function createHermesJob(payload: {
   if (!res.ok || data.error) {
     return { error: data.error || `HTTP ${res.status}` }
   }
-  return { id: data.job?.id, name: data.job?.name }
+  return {
+    id: data.job?.id,
+    name: data.job?.name,
+    sessionKeyPrefix: data.job?.id ? `cron_${data.job.id}_` : undefined,
+  }
 }
 
 export const Route = createFileRoute('/api/conductor-spawn')({
   server: {
     handlers: {
+      GET: async ({ request }) => {
+        if (!isAuthenticated(request)) {
+          return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+        }
+
+        const url = new URL(request.url)
+        const missionId = url.searchParams.get('missionId')?.trim()
+        const requestedLines = Number(url.searchParams.get('lines') || '200')
+        const lines = Number.isFinite(requestedLines) ? Math.min(2000, Math.max(1, requestedLines)) : 200
+        if (!missionId) {
+          return json({ ok: false, error: 'missionId required' }, { status: 400 })
+        }
+
+        const capabilities = await ensureGatewayProbed()
+        if (!capabilities.dashboard.available) {
+          return json({ ok: false, error: 'Hermes dashboard API is unavailable' }, { status: 503 })
+        }
+
+        const res = await dashboardFetch(`/api/conductor/missions/${encodeURIComponent(missionId)}?lines=${lines}`)
+        const text = await res.text()
+        let mission: Record<string, unknown> = {}
+        try {
+          mission = JSON.parse(text) as Record<string, unknown>
+        } catch {
+          return json({ ok: false, error: text || `HTTP ${res.status}` }, { status: res.ok ? 502 : res.status })
+        }
+        if (!res.ok) {
+          const error = typeof mission.detail === 'string' ? mission.detail : typeof mission.error === 'string' ? mission.error : `HTTP ${res.status}`
+          return json({ ok: false, error }, { status: res.status })
+        }
+        return json({ ok: true, mission })
+      },
       POST: async ({ request }) => {
         if (!isAuthenticated(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
@@ -194,9 +237,7 @@ export const Route = createFileRoute('/api/conductor-spawn')({
         if (csrfCheck) return csrfCheck
 
         try {
-          const body = (await request
-            .json()
-            .catch(() => ({}))) as ConductorSpawnBody
+          const body = (await request.json().catch(() => ({}))) as ConductorSpawnBody
           const goal = readOptionalString(body.goal)
           const orchestratorModel = readOptionalString(body.orchestratorModel)
           const workerModel = readOptionalString(body.workerModel)
@@ -218,30 +259,24 @@ export const Route = createFileRoute('/api/conductor-spawn')({
           })
 
           const jobName = `conductor-${Date.now()}`
-          // Schedule a one-shot job ~5s in the future so the cron loop
-          // picks it up promptly without racing with the create response.
-          const result = await createHermesJob({
+          const result = await createConductorMission({
             name: jobName,
-            schedule: nowPlusSecondsIso(5),
             prompt,
-            deliver: 'local',
           })
 
           if (result.error) {
-            return json(
-              { ok: false, error: result.error },
-              { status: 502 },
-            )
+            return json({ ok: false, error: result.error }, { status: 502 })
           }
 
-          // Hermes runs cron jobs in sessions keyed `cron_<jobId>_<timestamp>`.
-          // We can't know the timestamp until the cron loop fires, so we return
-          // a prefix and the UI polls for any session whose key starts with it.
+          // Dashboard-backed Conductor starts immediately. Legacy gateway-only
+          // fallback still uses cron sessions keyed `cron_<jobId>_<timestamp>`.
           const jobId = result.id ?? jobName
+          const dashboardBacked = Boolean(result.id && !result.sessionKeyPrefix)
           return json({
             ok: true,
-            sessionKey: `cron_${jobId}_pending`,
-            sessionKeyPrefix: `cron_${jobId}_`,
+            missionId: dashboardBacked ? jobId : null,
+            sessionKey: result.sessionKey ?? (dashboardBacked ? null : `cron_${jobId}_pending`),
+            sessionKeyPrefix: result.sessionKeyPrefix ?? (dashboardBacked ? null : `cron_${jobId}_`),
             jobId,
             jobName: result.name ?? jobName,
             runId: null,
@@ -250,8 +285,7 @@ export const Route = createFileRoute('/api/conductor-spawn')({
           return json(
             {
               ok: false,
-              error:
-                error instanceof Error ? error.message : String(error),
+              error: error instanceof Error ? error.message : String(error),
             },
             { status: 500 },
           )
