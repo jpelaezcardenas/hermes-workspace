@@ -518,12 +518,39 @@ export function applyAgentUpdate(): ApplyUpdateResult {
       error: before.reason || 'Hermes Agent update is not available.',
     }
   }
-  const output = execOrThrow('hermes', ['update'], { timeout: 300_000 })
+
+  const output: Array<string> = []
+  output.push(
+    execOrThrow('git', ['fetch', 'origin'], {
+      cwd: before.repoPath,
+      timeout: 60_000,
+    }),
+  )
+  const remoteRef = `origin/${before.branch || 'main'}`
+  if (!canFastForward(before.repoPath, remoteRef)) {
+    const status = readAgentUpdateStatus()
+    return {
+      ok: false,
+      product: 'agent',
+      output: output.filter(Boolean).join('\n'),
+      restartRequired: false,
+      status,
+      releaseNotes: [],
+      error: `${remoteRef} is not a fast-forward update.`,
+    }
+  }
+  output.push(
+    execOrThrow('git', ['merge', '--ff-only', remoteRef], {
+      cwd: before.repoPath,
+      timeout: 60_000,
+    }),
+  )
+
   const after = readAgentUpdateStatus()
   return {
     ok: true,
     product: 'agent',
-    output,
+    output: output.filter(Boolean).join('\n'),
     restartRequired: before.currentHead !== after.currentHead,
     status: after,
     releaseNotes: [
