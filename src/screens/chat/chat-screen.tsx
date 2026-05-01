@@ -1,8 +1,3 @@
-// Module-level local model override — set by composer when user picks a local model
-// Avoids prop threading. Reset when switching back to cloud models.
-export let _localModelOverride = ''
-export function setLocalModelOverride(model: string) { _localModelOverride = model }
-
 import {
   useCallback,
   useEffect,
@@ -92,6 +87,8 @@ import { AgentViewPanel } from '@/components/agent-view/agent-view-panel'
 import { useTerminalPanelStore } from '@/stores/terminal-panel-store'
 import { useModelSuggestions } from '@/hooks/use-model-suggestions'
 import { ModelSuggestionToast } from '@/components/model-suggestion-toast'
+import { _localModelOverride } from '@/screens/chat/local-model-override'
+import { useSessionModelStore } from '@/stores/session-model-store'
 import { MobileSessionsPanel } from '@/components/mobile-sessions-panel'
 import { ContextAlertModal } from '@/components/usage-meter/context-alert-modal'
 import { ErrorToastContainer, showErrorToast } from '@/components/error-toast'
@@ -976,7 +973,14 @@ export function ChatScreen({
   }, [modelsQuery.data])
 
   const gatewayModel = currentModelQuery.data || ''
-  const currentModel = _localModelOverride || gatewayModel
+  // Per-session model override (set in the composer dropdown). Browser-local,
+  // keyed by sessionKey. Takes precedence over the gateway-reported model so
+  // the user's choice survives refresh and is sent on every chat completion.
+  const sessionModelOverride = useSessionModelStore((s) =>
+    s.getModel(resolvedSessionKey || forcedSessionKey || null),
+  )
+  const currentModel =
+    _localModelOverride || sessionModelOverride || gatewayModel
 
   // Ref so sendMessage can always read latest thinkingLevel without being in deps
   const thinkingLevelRef = useRef<ThinkingLevel>(thinkingLevel)
