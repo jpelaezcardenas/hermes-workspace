@@ -924,7 +924,25 @@ export const Route = createFileRoute('/api/send-stream')({
             }
           },
           cancel() {
-            closeStream()
+            // Browser navigation/unmount cancels the response reader. That
+            // must not cancel the Hermes run itself: the chat/conductor should
+            // keep thinking server-side so the user can return and recover the
+            // answer from session history. Mark this client stream closed so we
+            // stop enqueueing SSE chunks, but deliberately leave the upstream
+            // abortController alone.
+            streamClosed = true
+            if (unregisterTimer) {
+              clearTimeout(unregisterTimer)
+              unregisterTimer = null
+            }
+            if (streamTimeoutTimer) {
+              clearTimeout(streamTimeoutTimer)
+              streamTimeoutTimer = null
+            }
+            if (activeRunId) {
+              unregisterActiveSendRun(activeRunId)
+              activeRunId = null
+            }
           },
         })
 

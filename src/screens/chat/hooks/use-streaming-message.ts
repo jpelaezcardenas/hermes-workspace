@@ -85,7 +85,9 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
   const finishedRef = useRef(false)
   const thinkingRef = useRef<string>('')
   const activeRunIdRef = useRef<string | null>(null)
-  const delayedUnregisterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const delayedUnregisterTimerRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const activeSessionKeyRef = useRef<string>('main')
   const lifecyclePhaseRef = useRef<StreamLifecyclePhase>('idle')
   const acceptedAtRef = useRef<number | null>(null)
@@ -263,17 +265,24 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
   ])
 
   useEffect(
-    function cleanupStreamingOnUnmount() {
+    function keepAcceptedRunAliveOnUnmount() {
       return function cleanup() {
-        if (eventSourceRef.current) {
-          eventSourceRef.current.abort()
-          eventSourceRef.current = null
-        }
-        finishedRef.current = true
-        resetActiveStreamState()
+        if (!eventSourceRef.current || finishedRef.current) return
+
+        // Navigating away from Chat unmounts this hook. Previously this cleanup
+        // aborted /api/send-stream and reset the local stream state, which made
+        // the UI look like Hermes stopped thinking. Leave the accepted request
+        // alive instead: the server-side route deliberately keeps the upstream
+        // Hermes run alive after the browser reader is cancelled, and the
+        // persisted waiting/session state lets the screen recover from history
+        // or active-run polling when the user comes back.
+        lifecyclePhaseRef.current = 'handoff'
+        clearSendStreamRun()
+        clearHandoffTimer()
+        stopFrame()
       }
     },
-    [resetActiveStreamState],
+    [clearHandoffTimer, clearSendStreamRun, stopFrame],
   )
 
   const pushTargetText = useCallback(
@@ -597,9 +606,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             type: 'done',
             state: doneState ?? 'final',
             errorMessage,
-            message: (payload).message as
-              | Record<string, unknown>
-              | undefined,
+            message: payload.message as Record<string, unknown> | undefined,
             runId: activeRunIdRef.current ?? undefined,
             sessionKey: activeSessionKeyRef.current,
             transport: 'send-stream',
@@ -698,7 +705,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
               role: 'assistant',
               content: [
                 ...(thinkingRef.current
-                  ? [{ type: 'thinking' as const, thinking: thinkingRef.current }]
+                  ? [
+                      {
+                        type: 'thinking' as const,
+                        thinking: thinkingRef.current,
+                      },
+                    ]
                   : []),
                 { type: 'text' as const, text: fullTextRef.current },
               ],
@@ -738,7 +750,10 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             attachments: params.attachments,
             idempotencyKey: params.idempotencyKey ?? crypto.randomUUID(),
             model: params.model || undefined,
-            locale: typeof window !== 'undefined' ? localStorage.getItem('hermes-workspace-locale') || 'en' : 'en',
+            locale:
+              typeof window !== 'undefined'
+                ? localStorage.getItem('hermes-workspace-locale') || 'en'
+                : 'en',
           }),
           signal: abortController.signal,
         })
@@ -771,7 +786,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
         if (params.idempotencyKey && onMessageAccepted) {
           onMessageAccepted(
             activeSessionKeyRef.current,
-            activeSessionKeyRef.current,
+            resolvedFriendlyId,
             params.idempotencyKey,
           )
         }
