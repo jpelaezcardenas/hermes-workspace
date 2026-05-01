@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, realpathSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
@@ -45,6 +45,7 @@ export type UpdateStatus = {
     agent: ProductUpdateStatus
   }
   updateAvailable: boolean
+  pendingReleaseNotes: Array<ReleaseNoteSection>
 }
 
 export type ApplyUpdateResult = {
@@ -55,6 +56,28 @@ export type ApplyUpdateResult = {
   status: ProductUpdateStatus
   releaseNotes: Array<ReleaseNoteSection>
   error?: string
+}
+
+
+function pendingNotesPath(): string {
+  return join(process.cwd(), '.runtime', 'pending-update-release-notes.json')
+}
+
+function persistPendingReleaseNotes(sections: Array<ReleaseNoteSection>): void {
+  if (!sections.length) return
+  const path = pendingNotesPath()
+  mkdirSync(join(process.cwd(), '.runtime'), { recursive: true })
+  writeFileSync(path, JSON.stringify({ sections, updatedAt: Date.now() }, null, 2) + '
+')
+}
+
+function readPendingReleaseNotes(): Array<ReleaseNoteSection> {
+  try {
+    const raw = JSON.parse(readFileSync(pendingNotesPath(), 'utf8')) as { sections?: Array<ReleaseNoteSection> }
+    return Array.isArray(raw.sections) ? raw.sections : []
+  } catch {
+    return []
+  }
 }
 
 function exec(
@@ -401,6 +424,7 @@ export function readUpdateStatus(): UpdateStatus {
     checkedAt: Date.now(),
     products: { workspace, agent },
     updateAvailable: workspace.updateAvailable || agent.updateAvailable,
+    pendingReleaseNotes: readPendingReleaseNotes(),
   }
 }
 
@@ -483,25 +507,27 @@ export function applyWorkspaceUpdate(): ApplyUpdateResult {
       }),
     )
   }
+  const releaseNotes = [
+    {
+      product: 'workspace' as const,
+      label: 'Hermes Workspace',
+      from: before.currentHead,
+      to: after.currentHead,
+      commits: readCommits(
+        before.repoPath,
+        before.currentHead,
+        after.currentHead,
+      ),
+    },
+  ]
+  persistPendingReleaseNotes(releaseNotes)
   return {
     ok: true,
     product: 'workspace',
     output: output.filter(Boolean).join('\n'),
     restartRequired: before.currentHead !== after.currentHead,
     status: after,
-    releaseNotes: [
-      {
-        product: 'workspace',
-        label: 'Hermes Workspace',
-        from: before.currentHead,
-        to: after.currentHead,
-        commits: readCommits(
-          before.repoPath,
-          before.currentHead,
-          after.currentHead,
-        ),
-      },
-    ],
+    releaseNotes,
   }
 }
 
@@ -547,24 +573,26 @@ export function applyAgentUpdate(): ApplyUpdateResult {
   )
 
   const after = readAgentUpdateStatus()
+  const releaseNotes = [
+    {
+      product: 'agent' as const,
+      label: 'Hermes Agent',
+      from: before.currentHead,
+      to: after.currentHead,
+      commits: readCommits(
+        before.repoPath,
+        before.currentHead,
+        after.currentHead,
+      ),
+    },
+  ]
+  persistPendingReleaseNotes(releaseNotes)
   return {
     ok: true,
     product: 'agent',
     output: output.filter(Boolean).join('\n'),
     restartRequired: before.currentHead !== after.currentHead,
     status: after,
-    releaseNotes: [
-      {
-        product: 'agent',
-        label: 'Hermes Agent',
-        from: before.currentHead,
-        to: after.currentHead,
-        commits: readCommits(
-          before.repoPath,
-          before.currentHead,
-          after.currentHead,
-        ),
-      },
-    ],
+    releaseNotes,
   }
 }

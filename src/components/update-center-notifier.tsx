@@ -36,6 +36,7 @@ type UpdateStatus = {
   checkedAt: number
   products: Record<ProductId, ProductUpdateStatus>
   updateAvailable: boolean
+  pendingReleaseNotes?: Array<ReleaseNoteSection>
 }
 
 type ReleaseNoteSection = {
@@ -138,6 +139,12 @@ export function UpdateCenterNotifier() {
     staleTime: CHECK_INTERVAL_MS,
     retry: false,
   })
+
+  useEffect(() => {
+    if (!data?.pendingReleaseNotes?.length) return
+    const stored = storeNotes(data.pendingReleaseNotes)
+    if (stored) setNotes((current) => current ?? stored)
+  }, [data?.pendingReleaseNotes])
 
   const visibleProducts = useMemo(() => {
     const products = data ? [data.products.workspace, data.products.agent] : []
