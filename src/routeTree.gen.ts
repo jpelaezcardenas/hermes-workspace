@@ -89,6 +89,9 @@ import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
+import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
+import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
+import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
 import { Route as ApiSwarmMemorySearchRouteImport } from './routes/api/swarm-memory/search'
 import { Route as ApiSkillsUninstallRouteImport } from './routes/api/skills/uninstall'
 import { Route as ApiSkillsToggleRouteImport } from './routes/api/skills/toggle'
@@ -525,6 +528,21 @@ const ApiArtifactsRoute = ApiArtifactsRouteImport.update({
   path: '/api/artifacts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiUpdateWorkspaceRoute = ApiUpdateWorkspaceRouteImport.update({
+  id: '/api/update/workspace',
+  path: '/api/update/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUpdateStatusRoute = ApiUpdateStatusRouteImport.update({
+  id: '/api/update/status',
+  path: '/api/update/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUpdateAgentRoute = ApiUpdateAgentRouteImport.update({
+  id: '/api/update/agent',
+  path: '/api/update/agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSwarmMemorySearchRoute = ApiSwarmMemorySearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -811,6 +829,9 @@ export interface FileRoutesByFullPath {
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
+  '/api/update/agent': typeof ApiUpdateAgentRoute
+  '/api/update/status': typeof ApiUpdateStatusRoute
+  '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -926,6 +947,9 @@ export interface FileRoutesByTo {
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
+  '/api/update/agent': typeof ApiUpdateAgentRoute
+  '/api/update/status': typeof ApiUpdateStatusRoute
+  '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1043,6 +1067,9 @@ export interface FileRoutesById {
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
+  '/api/update/agent': typeof ApiUpdateAgentRoute
+  '/api/update/status': typeof ApiUpdateStatusRoute
+  '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1161,6 +1188,9 @@ export interface FileRouteTypes {
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
     | '/api/swarm-memory/search'
+    | '/api/update/agent'
+    | '/api/update/status'
+    | '/api/update/workspace'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
@@ -1276,6 +1306,9 @@ export interface FileRouteTypes {
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
     | '/api/swarm-memory/search'
+    | '/api/update/agent'
+    | '/api/update/status'
+    | '/api/update/workspace'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   id:
@@ -1392,6 +1425,9 @@ export interface FileRouteTypes {
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
     | '/api/swarm-memory/search'
+    | '/api/update/agent'
+    | '/api/update/status'
+    | '/api/update/workspace'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
@@ -1493,6 +1529,9 @@ export interface RootRouteChildren {
   ApiProfilesReadRoute: typeof ApiProfilesReadRoute
   ApiProfilesRenameRoute: typeof ApiProfilesRenameRoute
   ApiProfilesUpdateRoute: typeof ApiProfilesUpdateRoute
+  ApiUpdateAgentRoute: typeof ApiUpdateAgentRoute
+  ApiUpdateStatusRoute: typeof ApiUpdateStatusRoute
+  ApiUpdateWorkspaceRoute: typeof ApiUpdateWorkspaceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2057,6 +2096,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiArtifactsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/update/workspace': {
+      id: '/api/update/workspace'
+      path: '/api/update/workspace'
+      fullPath: '/api/update/workspace'
+      preLoaderRoute: typeof ApiUpdateWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/update/status': {
+      id: '/api/update/status'
+      path: '/api/update/status'
+      fullPath: '/api/update/status'
+      preLoaderRoute: typeof ApiUpdateStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/update/agent': {
+      id: '/api/update/agent'
+      path: '/api/update/agent'
+      fullPath: '/api/update/agent'
+      preLoaderRoute: typeof ApiUpdateAgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/swarm-memory/search': {
       id: '/api/swarm-memory/search'
       path: '/search'
@@ -2511,6 +2571,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesReadRoute: ApiProfilesReadRoute,
   ApiProfilesRenameRoute: ApiProfilesRenameRoute,
   ApiProfilesUpdateRoute: ApiProfilesUpdateRoute,
+  ApiUpdateAgentRoute: ApiUpdateAgentRoute,
+  ApiUpdateStatusRoute: ApiUpdateStatusRoute,
+  ApiUpdateWorkspaceRoute: ApiUpdateWorkspaceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -15,6 +15,7 @@ import { MobilePromptTrigger } from '@/components/mobile-prompt/MobilePromptTrig
 import { Toaster } from '@/components/ui/toast'
 import { OnboardingTour } from '@/components/onboarding/onboarding-tour'
 import { KeyboardShortcutsModal } from '@/components/keyboard-shortcuts-modal'
+import { UpdateCenterNotifier } from '@/components/update-center-notifier'
 import { initializeSettingsAppearance } from '@/hooks/use-settings'
 import { useApplyChatWidth } from '@/hooks/use-chat-settings'
 import {
@@ -26,7 +27,6 @@ import { ErrorBoundary } from '@/components/error-boundary'
 import { LoginScreen } from '@/components/auth/login-screen'
 import { fetchClaudeAuthStatus, type AuthStatus } from '@/lib/claude-auth'
 import { getRootSurfaceState } from './-root-layout-state'
-
 
 const APP_CSP = [
   "default-src 'self'",
@@ -208,7 +208,9 @@ export const Route = createRootRoute({
 
 const queryClient = new QueryClient()
 
-export function getRootLayoutMode(onboardingComplete: string | null): 'onboarding' | 'workspace' {
+export function getRootLayoutMode(
+  onboardingComplete: string | null,
+): 'onboarding' | 'workspace' {
   return onboardingComplete === 'true' ? 'workspace' : 'onboarding'
 }
 
@@ -217,7 +219,11 @@ export function wrapInlineScript(source: string): string {
 }
 
 type ServiceWorkerLike = {
-  getRegistrations: () => Promise<ReadonlyArray<{ unregister: () => boolean | Promise<boolean> | void | Promise<void> }>>
+  getRegistrations: () => Promise<
+    ReadonlyArray<{
+      unregister: () => boolean | Promise<boolean> | void | Promise<void>
+    }>
+  >
 }
 
 type CachesLike = {
@@ -243,7 +249,9 @@ export async function unregisterServiceWorkers({
 
   await cachesApi
     ?.keys()
-    .then((names) => Promise.allSettled(names.map((name) => cachesApi.delete(name))))
+    .then((names) =>
+      Promise.allSettled(names.map((name) => cachesApi.delete(name))),
+    )
     .catch(() => undefined)
 }
 
@@ -275,12 +283,20 @@ function RootLayout() {
 
     void fetch('/api/connection-status')
       .then((res) => (res.ok ? res.json() : null))
-      .then((status: { ok?: boolean; chatReady?: boolean; modelConfigured?: boolean } | null) => {
-        if (status?.ok || (status?.chatReady && status?.modelConfigured)) {
-          localStorage.setItem(ONBOARDING_KEY, 'true')
-          syncOnboardingCompletion()
-        }
-      })
+      .then(
+        (
+          status: {
+            ok?: boolean
+            chatReady?: boolean
+            modelConfigured?: boolean
+          } | null,
+        ) => {
+          if (status?.ok || (status?.chatReady && status?.modelConfigured)) {
+            localStorage.setItem(ONBOARDING_KEY, 'true')
+            syncOnboardingCompletion()
+          }
+        },
+      )
       .catch(() => undefined)
 
     const handleStorage = (event: StorageEvent) => {
@@ -299,7 +315,8 @@ function RootLayout() {
     )
 
     void unregisterServiceWorkers({
-      serviceWorker: 'serviceWorker' in navigator ? navigator.serviceWorker : undefined,
+      serviceWorker:
+        'serviceWorker' in navigator ? navigator.serviceWorker : undefined,
       cachesApi: 'caches' in window ? caches : undefined,
     })
 
@@ -351,6 +368,7 @@ function RootLayout() {
           </WorkspaceShell>
           <SearchModal />
           <KeyboardShortcutsModal />
+          <UpdateCenterNotifier />
           {rootSurfaceState.showPostOnboardingOverlays ? (
             <>
               <MobilePromptTrigger />
@@ -382,10 +400,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         `),
           }}
         />
-        <script dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeScript) }} />
+        <script
+          dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeScript) }}
+        />
         <HeadContent />
         <script
-          dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeColorScript) }}
+          dangerouslySetInnerHTML={{
+            __html: wrapInlineScript(themeColorScript),
+          }}
         />
       </head>
       <body>
