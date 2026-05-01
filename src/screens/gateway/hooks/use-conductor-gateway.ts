@@ -250,6 +250,13 @@ function loadPersistedMission(): PersistedMission | null {
     if (!goal || (phase !== 'idle' && phase !== 'decomposing' && phase !== 'running' && phase !== 'complete') || streamText === null || planText === null || !workerKeys || !workerLabels) {
       return null
     }
+    const activeWithoutTracking =
+      (phase === 'decomposing' || phase === 'running') &&
+      !missionId &&
+      workerKeys.length === 0 &&
+      workerLabels.length === 0
+    if (activeWithoutTracking) return null
+
     return {
       missionId,
       goal,
