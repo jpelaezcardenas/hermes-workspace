@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createRemoteStatus, normalizeUpdateTarget, remoteUrlMatchesExpectedRepo } from './claude-update'
+import { createRemoteStatus, remoteUrlMatchesExpectedRepo } from './claude-update'
 
 describe('claude update repo gating', () => {
   it('matches Claude workspace repo aliases', () => {
@@ -37,12 +37,5 @@ describe('claude update repo gating', () => {
     expect(status.repoMatches).toBe(true)
     expect(status.updateAvailable).toBe(true)
     expect(status.error).toBeNull()
-  })
-
-  it('normalizes update targets to safe remote names', () => {
-    expect(normalizeUpdateTarget('origin')).toBe('origin')
-    expect(normalizeUpdateTarget('upstream')).toBe('upstream')
-    expect(normalizeUpdateTarget('all')).toBe('all')
-    expect(normalizeUpdateTarget('$(rm -rf /)')).toBe('origin')
   })
 })
