@@ -8,6 +8,7 @@ export type EnhancedFeature =
   | 'memory'
   | 'config'
   | 'jobs'
+  | 'mcp'
 
 const FEATURE_LABELS: Record<EnhancedFeature, string> = {
   sessions: 'Sessions',
@@ -15,6 +16,7 @@ const FEATURE_LABELS: Record<EnhancedFeature, string> = {
   memory: 'Memory',
   config: 'Configuration',
   jobs: 'Jobs',
+  mcp: 'MCP Servers',
 }
 
 function normalizeFeature(
@@ -26,7 +28,8 @@ function normalizeFeature(
     normalized === 'skills' ||
     normalized === 'memory' ||
     normalized === 'config' ||
-    normalized === 'jobs'
+    normalized === 'jobs' ||
+    normalized === 'mcp'
   ) {
     return normalized
   }

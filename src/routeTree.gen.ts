@@ -18,6 +18,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -70,6 +71,7 @@ import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
+import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
 import { Route as ApiIntegrationsRouteImport } from './routes/api/integrations'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
@@ -114,8 +116,12 @@ import { Route as ApiMemoryWriteRouteImport } from './routes/api/memory/write'
 import { Route as ApiMemorySearchRouteImport } from './routes/api/memory/search'
 import { Route as ApiMemoryReadRouteImport } from './routes/api/memory/read'
 import { Route as ApiMemoryListRouteImport } from './routes/api/memory/list'
+import { Route as ApiMcpTestRouteImport } from './routes/api/mcp/test'
 import { Route as ApiMcpServersRouteImport } from './routes/api/mcp/servers'
 import { Route as ApiMcpReloadRouteImport } from './routes/api/mcp/reload'
+import { Route as ApiMcpDiscoverRouteImport } from './routes/api/mcp/discover'
+import { Route as ApiMcpConfigureRouteImport } from './routes/api/mcp/configure'
+import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
 import { Route as ApiKnowledgeSyncRouteImport } from './routes/api/knowledge/sync'
 import { Route as ApiKnowledgeSearchRouteImport } from './routes/api/knowledge/search'
 import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/read'
@@ -173,6 +179,11 @@ const OperationsRoute = OperationsRouteImport.update({
 const MemoryRoute = MemoryRouteImport.update({
   id: '/memory',
   path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsRoute = JobsRouteImport.update({
@@ -436,6 +447,11 @@ const ApiMemoryRoute = ApiMemoryRouteImport.update({
   path: '/api/memory',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMcpRoute = ApiMcpRouteImport.update({
+  id: '/api/mcp',
+  path: '/api/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiLocalProvidersRoute = ApiLocalProvidersRouteImport.update({
   id: '/api/local-providers',
   path: '/api/local-providers',
@@ -656,15 +672,35 @@ const ApiMemoryListRoute = ApiMemoryListRouteImport.update({
   path: '/list',
   getParentRoute: () => ApiMemoryRoute,
 } as any)
+const ApiMcpTestRoute = ApiMcpTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => ApiMcpRoute,
+} as any)
 const ApiMcpServersRoute = ApiMcpServersRouteImport.update({
-  id: '/api/mcp/servers',
-  path: '/api/mcp/servers',
-  getParentRoute: () => rootRouteImport,
+  id: '/servers',
+  path: '/servers',
+  getParentRoute: () => ApiMcpRoute,
 } as any)
 const ApiMcpReloadRoute = ApiMcpReloadRouteImport.update({
-  id: '/api/mcp/reload',
-  path: '/api/mcp/reload',
-  getParentRoute: () => rootRouteImport,
+  id: '/reload',
+  path: '/reload',
+  getParentRoute: () => ApiMcpRoute,
+} as any)
+const ApiMcpDiscoverRoute = ApiMcpDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => ApiMcpRoute,
+} as any)
+const ApiMcpConfigureRoute = ApiMcpConfigureRouteImport.update({
+  id: '/configure',
+  path: '/configure',
+  getParentRoute: () => ApiMcpRoute,
+} as any)
+const ApiMcpNameRoute = ApiMcpNameRouteImport.update({
+  id: '/$name',
+  path: '/$name',
+  getParentRoute: () => ApiMcpRoute,
 } as any)
 const ApiKnowledgeSyncRoute = ApiKnowledgeSyncRouteImport.update({
   id: '/api/knowledge/sync',
@@ -741,6 +777,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -771,6 +808,7 @@ export interface FileRoutesByFullPath {
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
+  '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
@@ -828,8 +866,12 @@ export interface FileRoutesByFullPath {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/mcp/$name': typeof ApiMcpNameRoute
+  '/api/mcp/configure': typeof ApiMcpConfigureRoute
+  '/api/mcp/discover': typeof ApiMcpDiscoverRoute
   '/api/mcp/reload': typeof ApiMcpReloadRoute
   '/api/mcp/servers': typeof ApiMcpServersRoute
+  '/api/mcp/test': typeof ApiMcpTestRoute
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
   '/api/memory/search': typeof ApiMemorySearchRoute
@@ -863,6 +905,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -892,6 +935,7 @@ export interface FileRoutesByTo {
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
+  '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
@@ -949,8 +993,12 @@ export interface FileRoutesByTo {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/mcp/$name': typeof ApiMcpNameRoute
+  '/api/mcp/configure': typeof ApiMcpConfigureRoute
+  '/api/mcp/discover': typeof ApiMcpDiscoverRoute
   '/api/mcp/reload': typeof ApiMcpReloadRoute
   '/api/mcp/servers': typeof ApiMcpServersRoute
+  '/api/mcp/test': typeof ApiMcpTestRoute
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
   '/api/memory/search': typeof ApiMemorySearchRoute
@@ -985,6 +1033,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -1015,6 +1064,7 @@ export interface FileRoutesById {
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
+  '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
@@ -1072,8 +1122,12 @@ export interface FileRoutesById {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/mcp/$name': typeof ApiMcpNameRoute
+  '/api/mcp/configure': typeof ApiMcpConfigureRoute
+  '/api/mcp/discover': typeof ApiMcpDiscoverRoute
   '/api/mcp/reload': typeof ApiMcpReloadRoute
   '/api/mcp/servers': typeof ApiMcpServersRoute
+  '/api/mcp/test': typeof ApiMcpTestRoute
   '/api/memory/list': typeof ApiMemoryListRoute
   '/api/memory/read': typeof ApiMemoryReadRoute
   '/api/memory/search': typeof ApiMemorySearchRoute
@@ -1109,6 +1163,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/mcp'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -1139,6 +1194,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
+    | '/api/mcp'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
@@ -1196,8 +1252,12 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/mcp/$name'
+    | '/api/mcp/configure'
+    | '/api/mcp/discover'
     | '/api/mcp/reload'
     | '/api/mcp/servers'
+    | '/api/mcp/test'
     | '/api/memory/list'
     | '/api/memory/read'
     | '/api/memory/search'
@@ -1231,6 +1291,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/mcp'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -1260,6 +1321,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
+    | '/api/mcp'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
@@ -1317,8 +1379,12 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/mcp/$name'
+    | '/api/mcp/configure'
+    | '/api/mcp/discover'
     | '/api/mcp/reload'
     | '/api/mcp/servers'
+    | '/api/mcp/test'
     | '/api/memory/list'
     | '/api/memory/read'
     | '/api/memory/search'
@@ -1352,6 +1418,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/mcp'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -1382,6 +1449,7 @@ export interface FileRouteTypes {
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
+    | '/api/mcp'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
@@ -1439,8 +1507,12 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/mcp/$name'
+    | '/api/mcp/configure'
+    | '/api/mcp/discover'
     | '/api/mcp/reload'
     | '/api/mcp/servers'
+    | '/api/mcp/test'
     | '/api/memory/list'
     | '/api/memory/read'
     | '/api/memory/search'
@@ -1475,6 +1547,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
   JobsRoute: typeof JobsRoute
+  McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
   ProfilesRoute: typeof ProfilesRoute
@@ -1505,6 +1578,7 @@ export interface RootRouteChildren {
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiIntegrationsRoute: typeof ApiIntegrationsRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
+  ApiMcpRoute: typeof ApiMcpRouteWithChildren
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
@@ -1556,8 +1630,6 @@ export interface RootRouteChildren {
   ApiKnowledgeReadRoute: typeof ApiKnowledgeReadRoute
   ApiKnowledgeSearchRoute: typeof ApiKnowledgeSearchRoute
   ApiKnowledgeSyncRoute: typeof ApiKnowledgeSyncRoute
-  ApiMcpReloadRoute: typeof ApiMcpReloadRoute
-  ApiMcpServersRoute: typeof ApiMcpServersRoute
   ApiModelInfoRoute: typeof ApiModelInfoRoute
   ApiOauthDeviceCodeRoute: typeof ApiOauthDeviceCodeRoute
   ApiOauthPollTokenRoute: typeof ApiOauthPollTokenRoute
@@ -1636,6 +1708,13 @@ declare module '@tanstack/react-router' {
       path: '/memory'
       fullPath: '/memory'
       preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs': {
@@ -2002,6 +2081,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMemoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/mcp': {
+      id: '/api/mcp'
+      path: '/api/mcp'
+      fullPath: '/api/mcp'
+      preLoaderRoute: typeof ApiMcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/local-providers': {
       id: '/api/local-providers'
       path: '/api/local-providers'
@@ -2310,19 +2396,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMemoryListRouteImport
       parentRoute: typeof ApiMemoryRoute
     }
+    '/api/mcp/test': {
+      id: '/api/mcp/test'
+      path: '/test'
+      fullPath: '/api/mcp/test'
+      preLoaderRoute: typeof ApiMcpTestRouteImport
+      parentRoute: typeof ApiMcpRoute
+    }
     '/api/mcp/servers': {
       id: '/api/mcp/servers'
-      path: '/api/mcp/servers'
+      path: '/servers'
       fullPath: '/api/mcp/servers'
       preLoaderRoute: typeof ApiMcpServersRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiMcpRoute
     }
     '/api/mcp/reload': {
       id: '/api/mcp/reload'
-      path: '/api/mcp/reload'
+      path: '/reload'
       fullPath: '/api/mcp/reload'
       preLoaderRoute: typeof ApiMcpReloadRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiMcpRoute
+    }
+    '/api/mcp/discover': {
+      id: '/api/mcp/discover'
+      path: '/discover'
+      fullPath: '/api/mcp/discover'
+      preLoaderRoute: typeof ApiMcpDiscoverRouteImport
+      parentRoute: typeof ApiMcpRoute
+    }
+    '/api/mcp/configure': {
+      id: '/api/mcp/configure'
+      path: '/configure'
+      fullPath: '/api/mcp/configure'
+      preLoaderRoute: typeof ApiMcpConfigureRouteImport
+      parentRoute: typeof ApiMcpRoute
+    }
+    '/api/mcp/$name': {
+      id: '/api/mcp/$name'
+      path: '/$name'
+      fullPath: '/api/mcp/$name'
+      preLoaderRoute: typeof ApiMcpNameRouteImport
+      parentRoute: typeof ApiMcpRoute
     }
     '/api/knowledge/sync': {
       id: '/api/knowledge/sync'
@@ -2470,6 +2584,27 @@ const ApiClaudeTasksRouteWithChildren = ApiClaudeTasksRoute._addFileChildren(
   ApiClaudeTasksRouteChildren,
 )
 
+interface ApiMcpRouteChildren {
+  ApiMcpNameRoute: typeof ApiMcpNameRoute
+  ApiMcpConfigureRoute: typeof ApiMcpConfigureRoute
+  ApiMcpDiscoverRoute: typeof ApiMcpDiscoverRoute
+  ApiMcpReloadRoute: typeof ApiMcpReloadRoute
+  ApiMcpServersRoute: typeof ApiMcpServersRoute
+  ApiMcpTestRoute: typeof ApiMcpTestRoute
+}
+
+const ApiMcpRouteChildren: ApiMcpRouteChildren = {
+  ApiMcpNameRoute: ApiMcpNameRoute,
+  ApiMcpConfigureRoute: ApiMcpConfigureRoute,
+  ApiMcpDiscoverRoute: ApiMcpDiscoverRoute,
+  ApiMcpReloadRoute: ApiMcpReloadRoute,
+  ApiMcpServersRoute: ApiMcpServersRoute,
+  ApiMcpTestRoute: ApiMcpTestRoute,
+}
+
+const ApiMcpRouteWithChildren =
+  ApiMcpRoute._addFileChildren(ApiMcpRouteChildren)
+
 interface ApiMemoryRouteChildren {
   ApiMemoryListRoute: typeof ApiMemoryListRoute
   ApiMemoryReadRoute: typeof ApiMemoryReadRoute
@@ -2541,6 +2676,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
   JobsRoute: JobsRoute,
+  McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
   ProfilesRoute: ProfilesRoute,
@@ -2571,6 +2707,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHistoryRoute: ApiHistoryRoute,
   ApiIntegrationsRoute: ApiIntegrationsRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
+  ApiMcpRoute: ApiMcpRouteWithChildren,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
@@ -2622,8 +2759,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiKnowledgeReadRoute: ApiKnowledgeReadRoute,
   ApiKnowledgeSearchRoute: ApiKnowledgeSearchRoute,
   ApiKnowledgeSyncRoute: ApiKnowledgeSyncRoute,
-  ApiMcpReloadRoute: ApiMcpReloadRoute,
-  ApiMcpServersRoute: ApiMcpServersRoute,
   ApiModelInfoRoute: ApiModelInfoRoute,
   ApiOauthDeviceCodeRoute: ApiOauthDeviceCodeRoute,
   ApiOauthPollTokenRoute: ApiOauthPollTokenRoute,

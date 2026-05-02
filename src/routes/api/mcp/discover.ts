@@ -1,0 +1,73 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { json } from '@tanstack/react-start'
+import { isAuthenticated } from '../../../server/auth-middleware'
+import {
+  BEARER_TOKEN,
+  CLAUDE_API,
+  CLAUDE_UPGRADE_INSTRUCTIONS,
+  dashboardFetch,
+  ensureGatewayProbed,
+  getCapabilities,
+} from '../../../server/gateway-capabilities'
+import { requireJsonContentType, safeErrorMessage } from '../../../server/rate-limit'
+import { normalizeTestResult } from '../../../server/mcp-normalize'
+import { parseMcpServerInput } from '../mcp'
+import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
+
+const DISCOVER_TIMEOUT_MS = 30_000
+
+async function mcpFetch(path: string, init: RequestInit): Promise<Response> {
+  const capabilities = getCapabilities()
+  if (capabilities.dashboard.available) {
+    return dashboardFetch(path, init)
+  }
+  const headers = new Headers(init.headers)
+  if (BEARER_TOKEN && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${BEARER_TOKEN}`)
+  }
+  return fetch(`${CLAUDE_API}${path}`, { ...init, headers })
+}
+
+export const Route = createFileRoute('/api/mcp/discover')({
+  server: {
+    handlers: {
+      POST: async ({ request }) => {
+        if (!isAuthenticated(request)) {
+          return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+        }
+        const csrfCheck = requireJsonContentType(request)
+        if (csrfCheck) return csrfCheck
+        const capabilities = await ensureGatewayProbed()
+        if (!capabilities.mcp) {
+          return json(
+            createCapabilityUnavailablePayload('mcp', {
+              error: `Gateway does not support /api/mcp. ${CLAUDE_UPGRADE_INSTRUCTIONS}`,
+            }),
+            { status: 503 },
+          )
+        }
+        try {
+          const raw = (await request.json()) as unknown
+          const input = parseMcpServerInput(raw)
+          if (!input) {
+            return json({ ok: false, error: 'Invalid MCP discover payload' }, { status: 400 })
+          }
+          const response = await mcpFetch('/api/mcp/discover', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(input),
+            signal: AbortSignal.timeout(DISCOVER_TIMEOUT_MS),
+          })
+          const payload = (await response.json().catch(() => ({}))) as unknown
+          const result = normalizeTestResult(payload)
+          return json(
+            { ok: result.ok, tools: result.discoveredTools, error: result.error },
+            { status: response.ok ? 200 : response.status || 502 },
+          )
+        } catch (err) {
+          return json({ ok: false, tools: [], error: safeErrorMessage(err) }, { status: 500 })
+        }
+      },
+    },
+  },
+})
