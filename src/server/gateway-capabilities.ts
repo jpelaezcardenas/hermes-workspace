@@ -163,6 +163,7 @@ export type EnhancedCapabilities = {
   memory: boolean
   config: boolean
   jobs: boolean
+  mcp: boolean
 }
 
 export type DashboardCapabilities = {
@@ -205,6 +206,7 @@ let capabilities: GatewayCapabilities = {
   memory: false,
   config: false,
   jobs: false,
+  mcp: false,
   dashboard: {
     available: false,
     url: CLAUDE_DASHBOARD_URL,
@@ -392,6 +394,45 @@ async function probeChatCompletions(): Promise<boolean> {
   }
 }
 
+/**
+ * Strict MCP capability probe.
+ *
+ * Per plan §Open Questions #4: probing `dashboard.available || /api/mcp` is
+ * insufficient. The probe must hit `GET /api/mcp` directly and verify both:
+ *   1. 200 OK
+ *   2. Body parses through normalizeMcpList (i.e. shape is recognizable)
+ * If the dashboard is up but `/api/mcp` is absent (404) or returns a
+ * malformed body, capability is `false`.
+ */
+async function probeMcp(): Promise<boolean> {
+  const { normalizeMcpList } = await import('./mcp-normalize')
+  const tryFetch = async (url: string, headers: Record<string, string>): Promise<boolean> => {
+    try {
+      const res = await fetch(url, {
+        headers,
+        signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+      })
+      if (!res.ok) return false
+      const body = (await res.json().catch(() => null)) as unknown
+      if (body === null) return false
+      // Empty list is a valid configured-zero state — still indicates the
+      // endpoint is real. The shape check is "does the normalizer accept it
+      // without throwing", which it does for `{servers: []}`, `[]`, etc.
+      void normalizeMcpList(body)
+      return true
+    } catch {
+      return false
+    }
+  }
+  // Prefer dashboard route first (zero-fork), fall back to gateway.
+  const dashboardOk = await tryFetch(
+    `${CLAUDE_DASHBOARD_URL}/api/mcp`,
+    {},
+  )
+  if (dashboardOk) return true
+  return tryFetch(`${CLAUDE_API}/api/mcp`, authHeaders())
+}
+
 async function probeDashboard(): Promise<{ available: boolean; url: string }> {
   try {
     const res = await fetch(`${CLAUDE_DASHBOARD_URL}/api/status`, {
@@ -418,6 +459,7 @@ const OPTIONAL_APIS = new Set([
   'memory',
   'dashboard',
   'enhancedChat',
+  'mcp',
 ])
 
 function logCapabilities(next: GatewayCapabilities): void {
@@ -438,6 +480,7 @@ function logCapabilities(next: GatewayCapabilities): void {
     'memory',
     'config',
     'jobs',
+    'mcp',
   ]
 
   for (const key of coreKeys) {
@@ -550,6 +593,11 @@ export async function probeGateway(options?: {
       probeDashboard(),
     ])
 
+    // Strict MCP probe runs after dashboard probe so dashboard token
+    // resolution (in-page HTML scrape fallback) has had a chance to populate
+    // the cache when the dashboard is up.
+    const mcp = await probeMcp()
+
     capabilities = {
       health,
       chatCompletions,
@@ -565,6 +613,7 @@ export async function probeGateway(options?: {
       memory: true,
       config: dashboard.available || legacyConfig,
       jobs: dashboard.available || legacyJobs,
+      mcp,
       dashboard,
     }
     lastProbeAt = Date.now()
@@ -611,6 +660,7 @@ export function getEnhancedCapabilities(): EnhancedCapabilities {
     memory: capabilities.memory,
     config: capabilities.config,
     jobs: capabilities.jobs,
+    mcp: capabilities.mcp,
   }
 }
 
