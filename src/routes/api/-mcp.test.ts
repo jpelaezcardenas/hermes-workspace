@@ -5,7 +5,7 @@ import {
   normalizeMcpServer,
   payloadContainsString,
 } from '../../server/mcp-normalize'
-import { parseMcpServerInput, unavailableListPayload } from './mcp'
+import { parseMcpServerInput, toConfigEntry, unavailableListPayload } from './mcp'
 
 beforeEach(() => {
   vi.resetModules()
@@ -87,6 +87,120 @@ describe('CSRF gate (requireJsonContentType)', () => {
   it('passes GET regardless of Content-Type', () => {
     const req = new Request('http://localhost/api/mcp', { method: 'GET' })
     expect(requireJsonContentType(req)).toBeNull()
+  })
+})
+
+describe('Phase 1.5 fallback — toConfigEntry mapping', () => {
+  it('maps stdio input → config-yaml entry with command/args/env', () => {
+    const entry = toConfigEntry({
+      name: 'fs',
+      transportType: 'stdio',
+      command: 'npx',
+      args: ['-y', 'fs-mcp'],
+      env: { ROOT: '/tmp' },
+    })
+    expect(entry).toEqual({
+      transport: 'stdio',
+      command: 'npx',
+      args: ['-y', 'fs-mcp'],
+      env: { ROOT: '/tmp' },
+    })
+  })
+
+  it('maps http input → entry with url + nested auth.token', () => {
+    const entry = toConfigEntry({
+      name: 'linear',
+      transportType: 'http',
+      url: 'https://mcp.linear.app/sse',
+      authType: 'bearer',
+      bearerToken: 'sk-WRITE-PATH',
+    })
+    expect(entry).toMatchObject({
+      transport: 'http',
+      url: 'https://mcp.linear.app/sse',
+      auth: { type: 'bearer', token: 'sk-WRITE-PATH' },
+    })
+  })
+
+  it('omits empty arrays, default tool_mode, none auth', () => {
+    const entry = toConfigEntry({
+      name: 'bare',
+      transportType: 'stdio',
+      args: [],
+      includeTools: [],
+      excludeTools: [],
+      toolMode: 'all',
+      authType: 'none',
+    })
+    expect(entry).toEqual({ transport: 'stdio' })
+  })
+})
+
+describe('Phase 1.5 fallback — capability gating shape', () => {
+  it('unavailableListPayload preserves the legacy off-state contract', () => {
+    const payload = unavailableListPayload()
+    // Workspace contract: when neither mcp nor mcpFallback is true, GET /api/mcp
+    // returns this structured payload (status 200) so the UI renders an empty
+    // installed list + the upgrade banner instead of erroring.
+    expect(payload).toMatchObject({
+      ok: false,
+      code: 'capability_unavailable',
+      capability: 'mcp',
+      servers: [],
+      total: 0,
+    })
+  })
+
+  it('mcpFallback mode returns a different shape (server list, not capability_unavailable)', async () => {
+    // Mock the gateway-capabilities module to advertise fallback mode + the
+    // dashboard-config response. The route handler should walk
+    // `config.mcp_servers` through normalizeMcpListFromConfig and emit a
+    // populated `servers` array — the OPPOSITE of the capability_unavailable
+    // shape — proving the fallback transport is wired end-to-end.
+    const fakeCaps = {
+      mcp: false,
+      mcpFallback: true,
+      dashboard: { available: true, url: 'http://127.0.0.1:9119' },
+    }
+    vi.doMock('../../server/gateway-capabilities', () => ({
+      ensureGatewayProbed: () => Promise.resolve(fakeCaps),
+      getCapabilities: () => fakeCaps,
+      BEARER_TOKEN: '',
+      CLAUDE_API: 'http://127.0.0.1:8642',
+      CLAUDE_UPGRADE_INSTRUCTIONS: 'noop',
+      dashboardFetch: () => Promise.resolve(new Response(null, { status: 404 })),
+    }))
+    vi.doMock('../../server/auth-middleware', () => ({
+      isAuthenticated: () => true,
+    }))
+    vi.doMock('../../server/claude-dashboard-api', () => ({
+      getConfig: () =>
+        Promise.resolve({
+          mcp_servers: {
+            fs: { transport: 'stdio', command: 'npx', args: ['fs-mcp'] },
+          },
+        }),
+      saveConfig: () => Promise.resolve({ ok: true }),
+    }))
+    vi.doMock('@tanstack/react-router', () => ({
+      createFileRoute: () => (cfg: unknown) => cfg,
+    }))
+
+    const mod = await import('./mcp')
+    const route = mod.Route as unknown as {
+      server: { handlers: { GET: (ctx: { request: Request }) => Promise<Response> } }
+    }
+    const res = await route.server.handlers.GET({
+      request: new Request('http://localhost/api/mcp'),
+    })
+    const body = (await res.json()) as {
+      servers?: Array<{ name: string }>
+      total?: number
+      code?: string
+    }
+    expect(body.code).toBeUndefined()
+    expect(body.servers).toEqual([expect.objectContaining({ name: 'fs' })])
+    expect(body.total).toBe(1)
   })
 })
 

@@ -38,6 +38,18 @@ export const Route = createFileRoute('/api/mcp/test')({
         const csrfCheck = requireJsonContentType(request)
         if (csrfCheck) return csrfCheck
         const capabilities = await ensureGatewayProbed()
+        if (capabilities.mcpFallback && !capabilities.mcp) {
+          // Phase 1.5: live test requires the runtime endpoint, which the
+          // dashboard does not expose. Surface a 200 with a structured
+          // explanation so the UI renders inline instead of throwing.
+          return json({
+            ok: false,
+            status: 'unknown',
+            discoveredTools: [],
+            error:
+              'Live test/discover requires hermes-agent /api/mcp runtime endpoint, not yet available on this dashboard.',
+          })
+        }
         if (!capabilities.mcp) {
           return json(
             createCapabilityUnavailablePayload('mcp', {

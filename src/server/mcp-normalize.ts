@@ -208,6 +208,103 @@ export function normalizeMcpList(raw: unknown): Array<McpServer> {
 }
 
 /**
+ * Phase 1.5 fallback: normalize a single entry from `config.mcp_servers[name]`
+ * (the dashboard config-yaml shape) into the same `McpServer` read shape as
+ * `normalizeMcpServer`. Status defaults to `unknown` because no live probe
+ * runs in fallback mode.
+ *
+ * Config shape (per src/routes/api/mcp/servers.ts:25-32):
+ *   { transport, command?, args?, env?, url?, headers?, timeout?,
+ *     connectTimeout?, auth? }
+ *
+ * Local-only convenience keys are also accepted:
+ *   - enabled (bool, defaults to true)
+ *   - tool_mode / toolMode
+ *   - include_tools / includeTools
+ *   - exclude_tools / excludeTools
+ */
+export function normalizeMcpServerFromConfig(
+  name: string,
+  raw: unknown,
+): McpServer | null {
+  const trimmed = readString(name)
+  if (!trimmed) return null
+  const record = asRecord(raw)
+
+  // Transport — accept explicit `transport` field, else infer from url/command.
+  const explicitTransport = readString(record.transport ?? record.transportType).toLowerCase()
+  let transportType: McpTransport
+  if (explicitTransport === 'stdio' || explicitTransport === 'http') {
+    transportType = explicitTransport
+  } else if (readString(record.url)) {
+    transportType = 'http'
+  } else {
+    transportType = 'stdio'
+  }
+
+  // Auth detection from the loose `auth` field. May be a string ("bearer",
+  // "oauth", "none") OR an object with `{ type, token, oauth: {...} }`.
+  let authType: McpAuth = 'none'
+  let hasBearerToken = false
+  let hasOAuthClientSecret = false
+  const authRaw = record.auth
+  if (typeof authRaw === 'string') {
+    authType = readAuth(authRaw)
+  } else if (authRaw && typeof authRaw === 'object' && !Array.isArray(authRaw)) {
+    const a = authRaw as Record<string, unknown>
+    authType = readAuth(a.type ?? a.kind)
+    hasBearerToken = Boolean(readString(a.token) || readString(a.bearerToken))
+    const oauth = asRecord(a.oauth)
+    hasOAuthClientSecret = Boolean(readString(oauth.clientSecret))
+  }
+
+  const server: McpServer = {
+    id: trimmed,
+    name: trimmed,
+    enabled: readBool(record.enabled, true),
+    transportType,
+    url: readString(record.url) || undefined,
+    command: readString(record.command) || undefined,
+    args: readStringArray(record.args),
+    env: maskRecord(record.env),
+    headers: maskRecord(record.headers),
+    authType,
+    hasBearerToken,
+    hasOAuthClientSecret,
+    toolMode: readToolMode(record.tool_mode ?? record.toolMode),
+    includeTools: readStringArray(record.include_tools ?? record.includeTools),
+    excludeTools: readStringArray(record.exclude_tools ?? record.excludeTools),
+    discoveredToolsCount: 0,
+    discoveredTools: [],
+    status: 'unknown',
+    source: 'configured',
+  }
+  return server
+}
+
+/**
+ * Walk a dashboard config payload (`{ config: {...} }` or root) for an
+ * `mcp_servers` map and return a normalized list. Drops malformed entries
+ * with a warn log. Always returns an array (never throws).
+ */
+export function normalizeMcpListFromConfig(config: unknown): Array<McpServer> {
+  const root = asRecord(config)
+  const inner = asRecord(root.config)
+  const source = Object.keys(inner).length > 0 ? inner : root
+  const map = source.mcp_servers
+  if (!map || typeof map !== 'object' || Array.isArray(map)) return []
+  const out: Array<McpServer> = []
+  for (const [name, value] of Object.entries(map as Record<string, unknown>)) {
+    const normalized = normalizeMcpServerFromConfig(name, value)
+    if (normalized) out.push(normalized)
+    else if (value) {
+      console.warn(`[mcp] dropped malformed config entry: ${name}`)
+    }
+  }
+  return out
+}
+
+/**
  * Defense-in-depth: re-mask any secret-shaped key on the server before serialize.
  * Idempotent. Call as the LAST step before `json(...)`.
  */

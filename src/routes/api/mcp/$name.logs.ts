@@ -25,6 +25,16 @@ export const Route = createFileRoute('/api/mcp/$name/logs')({
           return json({ ok: false, error: 'Missing server name' }, { status: 400 })
         }
         const capabilities = await ensureGatewayProbed()
+        if (capabilities.mcpFallback && !capabilities.mcp) {
+          return json(
+            {
+              ok: false,
+              error:
+                'Live test/discover requires hermes-agent /api/mcp runtime endpoint, not yet available on this dashboard.',
+            },
+            { status: 503 },
+          )
+        }
         if (!capabilities.mcp) {
           return json(
             createCapabilityUnavailablePayload('mcp', {

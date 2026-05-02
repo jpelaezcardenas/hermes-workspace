@@ -164,6 +164,15 @@ export type EnhancedCapabilities = {
   config: boolean
   jobs: boolean
   mcp: boolean
+  /**
+   * Phase 1.5 — local-only fallback. True when the agent does NOT yet expose
+   * the `/api/mcp*` runtime endpoints but the dashboard `/api/config` route
+   * exposes a `mcp_servers` map AND the deployment is loopback-only. The
+   * workspace then performs CRUD against `config.mcp_servers` directly while
+   * disabling Test/Discover/Logs (which require runtime probing). Removed
+   * once hermes-agent ships native `/api/mcp*` endpoints.
+   */
+  mcpFallback: boolean
 }
 
 export type DashboardCapabilities = {
@@ -207,6 +216,7 @@ let capabilities: GatewayCapabilities = {
   config: false,
   jobs: false,
   mcp: false,
+  mcpFallback: false,
   dashboard: {
     available: false,
     url: CLAUDE_DASHBOARD_URL,
@@ -475,6 +485,59 @@ async function probeMcp(): Promise<boolean> {
   return tryFetch(`${CLAUDE_API}/api/mcp`, authHeaders())
 }
 
+/**
+ * Conservative loopback check. Returns true ONLY when:
+ *   1. Both `CLAUDE_API` and `CLAUDE_DASHBOARD_URL` resolve to a loopback host
+ *      (`127.0.0.1`, `::1`, or `localhost`).
+ *   2. Workspace `HOST` env is unset OR loopback. Any non-loopback `HOST`
+ *      (including `0.0.0.0`) disables fallback so we never silently expose a
+ *      remote-deploy to plaintext config.yaml writes.
+ *
+ * On any parse failure we return false. Better to under-enable than to
+ * silently enable on a remote deployment.
+ */
+export function isLocalhostDeployment(): boolean {
+  const isLoopbackHost = (host: string): boolean => {
+    const h = host.trim().toLowerCase()
+    if (!h) return false
+    return h === '127.0.0.1' || h === '::1' || h === 'localhost' || h === '[::1]'
+  }
+  const isLoopbackUrl = (raw: string): boolean => {
+    try {
+      const u = new URL(raw)
+      return isLoopbackHost(u.hostname)
+    } catch {
+      return false
+    }
+  }
+  const host = (process.env.HOST || '').trim()
+  if (host && !isLoopbackHost(host)) return false
+  return isLoopbackUrl(CLAUDE_API) && isLoopbackUrl(CLAUDE_DASHBOARD_URL)
+}
+
+/**
+ * Probe whether the dashboard's `/api/config` payload includes an
+ * `mcp_servers` entry. The presence of the key (even if empty) signals that
+ * config-fallback CRUD is safe to expose.
+ *
+ * Used as part of the `mcpFallback` capability gate.
+ */
+async function probeMcpConfigKey(): Promise<boolean> {
+  try {
+    const { getConfig } = await import('./claude-dashboard-api')
+    const cfg = await getConfig()
+    if (typeof cfg !== 'object') return false
+    if ('mcp_servers' in cfg) return true
+    const inner =
+      cfg.config && typeof cfg.config === 'object'
+        ? (cfg.config as Record<string, unknown>)
+        : null
+    return inner ? 'mcp_servers' in inner : false
+  } catch {
+    return false
+  }
+}
+
 async function probeDashboard(): Promise<{ available: boolean; url: string }> {
   try {
     const res = await fetch(`${CLAUDE_DASHBOARD_URL}/api/status`, {
@@ -502,6 +565,7 @@ const OPTIONAL_APIS = new Set([
   'dashboard',
   'enhancedChat',
   'mcp',
+  'mcpFallback',
 ])
 
 function logCapabilities(next: GatewayCapabilities): void {
@@ -523,6 +587,7 @@ function logCapabilities(next: GatewayCapabilities): void {
     'config',
     'jobs',
     'mcp',
+    'mcpFallback',
   ]
 
   for (const key of coreKeys) {
@@ -640,6 +705,17 @@ export async function probeGateway(options?: {
     // the cache when the dashboard is up.
     const mcp = await probeMcp()
 
+    // Phase 1.5 fallback: when native /api/mcp is missing but the dashboard
+    // exposes `config.mcp_servers` AND we are loopback-only, allow a config
+    // -backed CRUD path. Test/Discover/Logs remain disabled in this mode.
+    const dashboardConfigAvailable = dashboard.available || legacyConfig
+    const mcpFallback =
+      !mcp &&
+      dashboard.available &&
+      dashboardConfigAvailable &&
+      isLocalhostDeployment() &&
+      (await probeMcpConfigKey())
+
     capabilities = {
       health,
       chatCompletions,
@@ -656,6 +732,7 @@ export async function probeGateway(options?: {
       config: dashboard.available || legacyConfig,
       jobs: dashboard.available || legacyJobs,
       mcp,
+      mcpFallback,
       dashboard,
     }
     lastProbeAt = Date.now()
@@ -703,6 +780,7 @@ export function getEnhancedCapabilities(): EnhancedCapabilities {
     config: capabilities.config,
     jobs: capabilities.jobs,
     mcp: capabilities.mcp,
+    mcpFallback: capabilities.mcpFallback,
   }
 }
 
