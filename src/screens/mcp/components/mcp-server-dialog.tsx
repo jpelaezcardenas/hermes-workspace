@@ -47,9 +47,15 @@ export function McpServerDialog({ open, initial, onClose }: Props) {
   const upsert = useUpsertMcpServer()
   const discover = useDiscoverMcpTools()
   const [draft, setDraft] = useState<McpClientInput>(EMPTY)
+  // Ephemeral, never persisted to a named exported type — secrets stay
+  // in component-local state and are merged into the POST payload only at
+  // submit time. The plain `string` typing avoids any cross-module shape
+  // that the browser bundle could index for secret-bearing fields.
+  const [bearerToken, setBearerToken] = useState('')
 
   useEffect(() => {
     if (!open) return
+    setBearerToken('')
     if (!initial) {
       setDraft(EMPTY)
     } else if (isMcpServer(initial)) {
@@ -142,8 +148,8 @@ export function McpServerDialog({ open, initial, onClose }: Props) {
               <input
                 type="password"
                 className="mt-1 w-full rounded border border-primary-300 px-2 py-1"
-                value={draft.bearerToken || ''}
-                onChange={(e) => update({ bearerToken: e.target.value })}
+                value={bearerToken}
+                onChange={(e) => setBearerToken(e.target.value)}
                 autoComplete="off"
               />
             </label>
@@ -171,9 +177,12 @@ export function McpServerDialog({ open, initial, onClose }: Props) {
             className="rounded bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
             disabled={upsert.isPending || !draft.name}
             onClick={async () => {
-              await upsert.mutateAsync(draft)
-              // Wipe secrets from in-memory state on submit.
-              setDraft((prev) => ({ ...prev, bearerToken: '' }))
+              const payload = bearerToken
+                ? { ...draft, bearerToken }
+                : draft
+              await upsert.mutateAsync(payload)
+              // Wipe ephemeral secret from in-memory state on submit.
+              setBearerToken('')
               onClose()
             }}
           >
