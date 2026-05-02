@@ -458,31 +458,36 @@ async function probeChatCompletions(): Promise<boolean> {
  */
 async function probeMcp(): Promise<boolean> {
   const { normalizeMcpList } = await import('./mcp-normalize')
-  const tryFetch = async (url: string, headers: Record<string, string>): Promise<boolean> => {
-    try {
-      const res = await fetch(url, {
-        headers,
-        signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-      })
-      if (!res.ok) return false
-      const body = (await res.json().catch(() => null)) as unknown
-      if (body === null) return false
-      // Empty list is a valid configured-zero state — still indicates the
-      // endpoint is real. The shape check is "does the normalizer accept it
-      // without throwing", which it does for `{servers: []}`, `[]`, etc.
-      void normalizeMcpList(body)
-      return true
-    } catch {
-      return false
-    }
+  const validate = async (res: Response): Promise<boolean> => {
+    if (!res.ok) return false
+    const body = (await res.json().catch(() => null)) as unknown
+    if (body === null) return false
+    // Empty list is a valid configured-zero state — still indicates the
+    // endpoint is real. The shape check is "does the normalizer accept it
+    // without throwing", which it does for `{servers: []}`, `[]`, etc.
+    void normalizeMcpList(body)
+    return true
   }
-  // Prefer dashboard route first (zero-fork), fall back to gateway.
-  const dashboardOk = await tryFetch(
-    `${CLAUDE_DASHBOARD_URL}/api/mcp`,
-    {},
-  )
-  if (dashboardOk) return true
-  return tryFetch(`${CLAUDE_API}/api/mcp`, authHeaders())
+  // Use dashboardFetch so the probe goes through the same authenticated path
+  // workspace routes use at runtime — otherwise an auth-protected dashboard
+  // /api/mcp would falsely report capability=false (Codex MAJOR finding).
+  try {
+    const res = await dashboardFetch('/api/mcp', {
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    })
+    if (await validate(res)) return true
+  } catch {
+    // fall through to gateway path
+  }
+  try {
+    const res = await fetch(`${CLAUDE_API}/api/mcp`, {
+      headers: authHeaders(),
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    })
+    return await validate(res)
+  } catch {
+    return false
+  }
 }
 
 /**

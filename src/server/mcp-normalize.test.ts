@@ -138,6 +138,76 @@ describe('payloadContainsString', () => {
   })
 })
 
+describe('maskSecretsInPlace (US-503 — env-ref preservation)', () => {
+  it('preserves ${VAR_NAME} env-ref form in env without masking', () => {
+    const s = normalizeMcpServer({
+      name: 'dart',
+      env: { DART_TOKEN: '${DART_TOKEN}' },
+    })!
+    // After normalization env values are masked — but maskSecretsInPlace
+    // should preserve the env-ref form when re-applied.
+    // First, manually set the env value to the ref form to simulate
+    // a server that stores env-refs literally.
+    ;(s.env as Record<string, string>)['DART_TOKEN'] = '${DART_TOKEN}'
+    maskSecretsInPlace(s)
+    expect(s.env['DART_TOKEN']).toBe('${DART_TOKEN}')
+  })
+
+  it('preserves ${X} env-ref in oauth clientSecret via headers', () => {
+    const s = normalizeMcpServer({
+      name: 'srv',
+      headers: { Authorization: '${MY_SECRET}' },
+    })!
+    // Set the header to env-ref form before masking
+    ;(s.headers as Record<string, string>)['Authorization'] = '${MY_SECRET}'
+    maskSecretsInPlace(s)
+    expect(s.headers['Authorization']).toBe('${MY_SECRET}')
+  })
+
+  it('still masks non-env-ref values', () => {
+    const s = normalizeMcpServer({
+      name: 'gh',
+      env: { GITHUB_TOKEN: 'ghp_real_token' },
+    })!
+    maskSecretsInPlace(s)
+    expect(s.env['GITHUB_TOKEN']).toBe(MASK_SENTINEL)
+  })
+})
+
+describe('normalizeMcpServer (US-503 — authEnvRef population)', () => {
+  it('populates authEnvRef when bearer token is env-ref', () => {
+    const s = normalizeMcpServer({
+      name: 'dart',
+      auth: { type: 'bearer', token: '${DART_TOKEN}' },
+    })!
+    expect(s.authEnvRef).toBe('${DART_TOKEN}')
+  })
+
+  it('populates authEnvRef when oauth.clientSecret is env-ref', () => {
+    const s = normalizeMcpServer({
+      name: 'srv',
+      auth: { type: 'oauth', oauth: { clientSecret: '${X}' } },
+    })!
+    expect(s.authEnvRef).toBe('${X}')
+  })
+
+  it('populates authEnvRef when Authorization header is env-ref', () => {
+    const s = normalizeMcpServer({
+      name: 'srv',
+      headers: { Authorization: '${MY_SECRET}' },
+    })!
+    expect(s.authEnvRef).toBe('${MY_SECRET}')
+  })
+
+  it('does not populate authEnvRef for non-env-ref values', () => {
+    const s = normalizeMcpServer({
+      name: 'srv',
+      auth: { type: 'bearer', token: 'sk-real-token' },
+    })!
+    expect(s.authEnvRef).toBeUndefined()
+  })
+})
+
 describe('normalizeMcpServerFromConfig (Phase 1.5 fallback)', () => {
   it('returns null for empty name', () => {
     expect(normalizeMcpServerFromConfig('', {})).toBeNull()

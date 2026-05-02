@@ -11,7 +11,9 @@ import {
 } from '../../../server/gateway-capabilities'
 import { requireJsonContentType, safeErrorMessage } from '../../../server/rate-limit'
 import { normalizeTestResult } from '../../../server/mcp-normalize'
-import { parseMcpServerInput } from '../mcp'
+import { runHermesMcpTest } from '../../../server/mcp-cli-bridge'
+import { setProbe } from '../../../server/mcp-tools-cache'
+import { parseMcpServerInput } from '../../../server/mcp-input-validate'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
 const TEST_TIMEOUT_MS = 30_000
@@ -39,16 +41,43 @@ export const Route = createFileRoute('/api/mcp/test')({
         if (csrfCheck) return csrfCheck
         const capabilities = await ensureGatewayProbed()
         if (capabilities.mcpFallback && !capabilities.mcp) {
-          // Phase 1.5: live test requires the runtime endpoint, which the
-          // dashboard does not expose. Surface a 200 with a structured
-          // explanation so the UI renders inline instead of throwing.
-          return json({
-            ok: false,
-            status: 'unknown',
-            discoveredTools: [],
-            error:
-              'Live test/discover requires hermes-agent /api/mcp runtime endpoint, not yet available on this dashboard.',
-          })
+          // Phase 1.5 fallback: shell out to `hermes mcp test <name>` and
+          // parse stdout. Reuses the CLI's _probe_single_server logic
+          // without duplicating MCP protocol handling on the workspace
+          // side. Only the by-name form is supported (config-only mode);
+          // ad-hoc client-input tests still need the runtime endpoint.
+          try {
+            const raw = (await request.json()) as Record<string, unknown>
+            const name = typeof raw.name === 'string' ? raw.name : null
+            if (!name) {
+              return json({
+                ok: false,
+                status: 'unknown',
+                discoveredTools: [],
+                error:
+                  'Local fallback only supports testing existing servers by name.',
+              })
+            }
+            const result = await runHermesMcpTest(name, { timeoutMs: TEST_TIMEOUT_MS })
+            setProbe(name, {
+              status: result.status,
+              toolCount: result.discoveredTools.length,
+              toolNames: result.discoveredTools.map((t) => t.name),
+              latencyMs: result.latencyMs,
+              error: result.error,
+            })
+            return json(result)
+          } catch (err) {
+            return json(
+              {
+                ok: false,
+                status: 'failed',
+                discoveredTools: [],
+                error: safeErrorMessage(err),
+              },
+              { status: 500 },
+            )
+          }
         }
         if (!capabilities.mcp) {
           return json(
@@ -64,11 +93,14 @@ export const Route = createFileRoute('/api/mcp/test')({
           if (typeof raw.name === 'string' && Object.keys(raw).length === 1) {
             body = { name: raw.name }
           } else {
-            const input = parseMcpServerInput(raw)
-            if (!input) {
-              return json({ ok: false, error: 'Invalid MCP test payload' }, { status: 400 })
+            const parsed = parseMcpServerInput(raw)
+            if (!parsed.ok) {
+              return json(
+                { ok: false, error: 'Invalid MCP test payload', errors: parsed.errors },
+                { status: 400 },
+              )
             }
-            body = input as unknown as Record<string, unknown>
+            body = parsed.value as unknown as Record<string, unknown>
           }
           const response = await mcpFetch('/api/mcp/test', {
             method: 'POST',

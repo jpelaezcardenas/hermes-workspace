@@ -182,6 +182,9 @@ export function normalizeMcpServer(raw: unknown): McpServer | null {
   if (lastTestedAt) server.lastTestedAt = lastTestedAt
   if (lastError) server.lastError = lastError
 
+  const authEnvRef = detectAuthEnvRef(record)
+  if (authEnvRef) server.authEnvRef = authEnvRef
+
   return server
 }
 
@@ -258,6 +261,25 @@ export function normalizeMcpServerFromConfig(
     hasOAuthClientSecret = Boolean(readString(oauth.clientSecret))
   }
 
+  // Supplemental auth detection: inspect raw headers/env for bearer tokens
+  // even when no explicit `auth` field is present. Handles the common config
+  // pattern where Authorization is set directly in headers (HTTP servers) or
+  // a *_TOKEN/*_KEY/*_SECRET/*_AUTH env var is passed to a stdio server.
+  const rawHeaders = asRecord(record.headers)
+  const authHeaderValue = readString(rawHeaders.Authorization ?? rawHeaders.authorization)
+  if (authHeaderValue) {
+    hasBearerToken = true
+    if (authType === 'none') authType = 'bearer'
+  }
+  if (!hasBearerToken) {
+    const rawEnv = asRecord(record.env)
+    const AUTH_ENV_RE = /(_TOKEN|_KEY|_SECRET|_AUTH|_APIKEY|_API_KEY)$/i
+    hasBearerToken = Object.keys(rawEnv).some(
+      (k) => AUTH_ENV_RE.test(k) && readString(rawEnv[k]),
+    )
+    if (hasBearerToken && authType === 'none') authType = 'bearer'
+  }
+
   const server: McpServer = {
     id: trimmed,
     name: trimmed,
@@ -279,6 +301,10 @@ export function normalizeMcpServerFromConfig(
     status: 'unknown',
     source: 'configured',
   }
+
+  const authEnvRef = detectAuthEnvRef(record)
+  if (authEnvRef) server.authEnvRef = authEnvRef
+
   return server
 }
 
@@ -304,17 +330,26 @@ export function normalizeMcpListFromConfig(config: unknown): Array<McpServer> {
   return out
 }
 
+/** Pattern for env-variable references like ${VAR_NAME}. Preserved rather than masked. */
+const ENV_REF_RE = /^\$\{[A-Z][A-Z0-9_]*\}$/
+
 /**
  * Defense-in-depth: re-mask any secret-shaped key on the server before serialize.
+ * Env-reference values (${VAR_NAME}) are preserved as-is — they are not secrets,
+ * they are references to secrets resolved at runtime.
  * Idempotent. Call as the LAST step before `json(...)`.
  */
 export function maskSecretsInPlace(server: McpServer): McpServer {
   for (const key of Object.keys(server.env)) {
+    // Preserve env-ref form — it's a reference, not a literal secret
+    if (ENV_REF_RE.test(server.env[key])) continue
     server.env[key] = (server.env[key] && server.env[key].length > 0
       ? MASK_SENTINEL
       : ('' as McpMaskedValue))
   }
   for (const key of Object.keys(server.headers)) {
+    // Preserve env-ref form in headers too
+    if (ENV_REF_RE.test(server.headers[key])) continue
     if (isSecretKey(key)) {
       server.headers[key] = MASK_SENTINEL
     } else if (server.headers[key].length > 0) {
@@ -322,6 +357,31 @@ export function maskSecretsInPlace(server: McpServer): McpServer {
     }
   }
   return server
+}
+
+/**
+ * Detect env-reference pattern in bearer/oauth/header auth values.
+ * Returns the referenced var name (e.g. "DART_TOKEN") or null.
+ */
+export function detectAuthEnvRef(raw: unknown): string | null {
+  const record = asRecord(raw)
+
+  // Check bearer token / auth object
+  const authRaw = record.auth
+  if (authRaw && typeof authRaw === 'object' && !Array.isArray(authRaw)) {
+    const a = authRaw as Record<string, unknown>
+    const token = readString(a.token ?? a.bearerToken)
+    if (ENV_REF_RE.test(token)) return token
+    const oauth = asRecord(a.oauth)
+    const secret = readString(oauth.clientSecret)
+    if (ENV_REF_RE.test(secret)) return secret
+  }
+  // Check Authorization header
+  const rawHeaders = asRecord(record.headers)
+  const authHeader = readString(rawHeaders.Authorization ?? rawHeaders.authorization)
+  if (ENV_REF_RE.test(authHeader)) return authHeader
+
+  return null
 }
 
 export function normalizeTestResult(raw: unknown): {

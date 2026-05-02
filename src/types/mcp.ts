@@ -40,6 +40,8 @@ export interface McpServer {
   lastTestedAt?: string
   lastError?: string
   source: McpSource
+  /** Populated when a bearer/oauth/header auth value is an env-reference like ${VAR_NAME}. */
+  authEnvRef?: string
 }
 
 export interface McpTestResult {

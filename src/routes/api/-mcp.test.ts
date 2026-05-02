@@ -17,35 +17,38 @@ afterEach(() => {
 
 describe('parseMcpServerInput (POST validation)', () => {
   it('rejects payloads without a name', () => {
-    expect(parseMcpServerInput({})).toBeNull()
-    expect(parseMcpServerInput({ name: '   ' })).toBeNull()
-    expect(parseMcpServerInput(null)).toBeNull()
+    expect(parseMcpServerInput({}).ok).toBe(false)
+    expect(parseMcpServerInput({ name: '   ' }).ok).toBe(false)
+    expect(parseMcpServerInput(null).ok).toBe(false)
   })
 
   it('preserves http transport with url + bearer secret on the input', () => {
-    const input = parseMcpServerInput({
+    const result = parseMcpServerInput({
       name: 'linear',
       transportType: 'http',
       url: 'https://mcp.linear.app/sse',
       authType: 'bearer',
       bearerToken: 'sk-INPUT-SENTINEL',
     })
-    expect(input).not.toBeNull()
-    expect(input!.transportType).toBe('http')
-    expect(input!.bearerToken).toBe('sk-INPUT-SENTINEL')
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.value.transportType).toBe('http')
+    expect(result.value.bearerToken).toBe('sk-INPUT-SENTINEL')
   })
 
   it('coerces stdio transport with args + env strings', () => {
-    const input = parseMcpServerInput({
+    const result = parseMcpServerInput({
       name: 'fs',
       transportType: 'stdio',
       command: 'npx',
       args: ['-y', '@modelcontextprotocol/server-filesystem'],
       env: { ROOT: '/tmp', NUMERIC: 42 },
     })
-    expect(input!.transportType).toBe('stdio')
-    expect(input!.args).toEqual(['-y', '@modelcontextprotocol/server-filesystem'])
-    expect(input!.env).toEqual({ ROOT: '/tmp', NUMERIC: '42' })
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.value.transportType).toBe('stdio')
+    expect(result.value.args).toEqual(['-y', '@modelcontextprotocol/server-filesystem'])
+    expect(result.value.env).toEqual({ ROOT: '/tmp', NUMERIC: '42' })
   })
 })
 
@@ -207,13 +210,16 @@ describe('Phase 1.5 fallback — capability gating shape', () => {
 describe('secret echo guard (PR4 acceptance contract)', () => {
   it('round-trip server payload never echoes the submitted bearerToken', () => {
     // 1. User submits an input with a bearer token.
-    const input = parseMcpServerInput({
+    const parsed = parseMcpServerInput({
       name: 'linear',
       transportType: 'http',
       url: 'https://mcp.linear.app/sse',
       authType: 'bearer',
       bearerToken: 'sk-DO-NOT-LEAK-2026',
-    })!
+    })
+    expect(parsed.ok).toBe(true)
+    if (!parsed.ok) throw new Error('expected ok')
+    const input = parsed.value
     expect(input.bearerToken).toBe('sk-DO-NOT-LEAK-2026')
 
     // 2. Agent stores it and returns its read shape (with secret presence flag,

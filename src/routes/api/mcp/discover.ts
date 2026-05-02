@@ -11,7 +11,7 @@ import {
 } from '../../../server/gateway-capabilities'
 import { requireJsonContentType, safeErrorMessage } from '../../../server/rate-limit'
 import { normalizeTestResult } from '../../../server/mcp-normalize'
-import { parseMcpServerInput } from '../mcp'
+import { parseMcpServerInput } from '../../../server/mcp-input-validate'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
 const DISCOVER_TIMEOUT_MS = 30_000
@@ -58,10 +58,14 @@ export const Route = createFileRoute('/api/mcp/discover')({
         }
         try {
           const raw = (await request.json()) as unknown
-          const input = parseMcpServerInput(raw)
-          if (!input) {
-            return json({ ok: false, error: 'Invalid MCP discover payload' }, { status: 400 })
+          const parsed = parseMcpServerInput(raw)
+          if (!parsed.ok) {
+            return json(
+              { ok: false, error: 'Invalid MCP discover payload', errors: parsed.errors },
+              { status: 400 },
+            )
           }
+          const input = parsed.value
           const response = await mcpFetch('/api/mcp/discover', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

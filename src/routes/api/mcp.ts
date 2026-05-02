@@ -19,7 +19,9 @@ import {
 } from '../../server/mcp-normalize'
 import { getConfig, saveConfig } from '../../server/claude-dashboard-api'
 import type { McpServerInput } from '../../types/mcp-input'
+import { parseMcpServerInput } from '../../server/mcp-input-validate'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
+import { getProbe } from '../../server/mcp-tools-cache'
 
 const KNOWN_CATEGORIES = ['All', 'Connected', 'Failed', 'Disabled'] as const
 const REQUEST_TIMEOUT_MS = 30_000
@@ -43,55 +45,6 @@ function unavailableListPayload() {
     total: 0,
     categories: [...KNOWN_CATEGORIES],
   }
-}
-
-function readInput(raw: unknown): McpServerInput | null {
-  if (!raw || typeof raw !== 'object') return null
-  const r = raw as Record<string, unknown>
-  const name = typeof r.name === 'string' ? r.name.trim() : ''
-  if (!name) return null
-  const transport = r.transportType === 'stdio' ? 'stdio' : 'http'
-  const out: McpServerInput = { name, transportType: transport }
-  if (typeof r.enabled === 'boolean') out.enabled = r.enabled
-  if (typeof r.url === 'string') out.url = r.url.trim()
-  if (typeof r.command === 'string') out.command = r.command.trim()
-  if (Array.isArray(r.args)) out.args = r.args.map((a) => String(a))
-  if (r.env && typeof r.env === 'object' && !Array.isArray(r.env)) {
-    out.env = Object.fromEntries(
-      Object.entries(r.env as Record<string, unknown>).map(([k, v]) => [k, String(v ?? '')]),
-    )
-  }
-  if (r.headers && typeof r.headers === 'object' && !Array.isArray(r.headers)) {
-    out.headers = Object.fromEntries(
-      Object.entries(r.headers as Record<string, unknown>).map(([k, v]) => [k, String(v ?? '')]),
-    )
-  }
-  if (r.authType === 'bearer' || r.authType === 'oauth' || r.authType === 'none') {
-    out.authType = r.authType
-  }
-  if (typeof r.bearerToken === 'string') out.bearerToken = r.bearerToken
-  if (r.oauth && typeof r.oauth === 'object') {
-    const o = r.oauth as Record<string, unknown>
-    if (typeof o.clientId === 'string' && typeof o.clientSecret === 'string') {
-      out.oauth = {
-        clientId: o.clientId,
-        clientSecret: o.clientSecret,
-        authorizationUrl: typeof o.authorizationUrl === 'string' ? o.authorizationUrl : undefined,
-        tokenUrl: typeof o.tokenUrl === 'string' ? o.tokenUrl : undefined,
-        scopes: Array.isArray(o.scopes) ? (o.scopes as Array<string>) : undefined,
-      }
-    }
-  }
-  if (r.toolMode === 'all' || r.toolMode === 'include' || r.toolMode === 'exclude') {
-    out.toolMode = r.toolMode
-  }
-  if (Array.isArray(r.includeTools)) {
-    out.includeTools = (r.includeTools as Array<unknown>).map((t) => String(t))
-  }
-  if (Array.isArray(r.excludeTools)) {
-    out.excludeTools = (r.excludeTools as Array<unknown>).map((t) => String(t))
-  }
-  return out
 }
 
 /**
@@ -150,7 +103,7 @@ async function readConfigServersMap(): Promise<{
   return { config: root, servers }
 }
 
-export { readInput as parseMcpServerInput, unavailableListPayload, toConfigEntry }
+export { parseMcpServerInput, unavailableListPayload, toConfigEntry }
 
 export const Route = createFileRoute('/api/mcp')({
   server: {
@@ -185,9 +138,24 @@ export const Route = createFileRoute('/api/mcp')({
             const body = (await response.json().catch(() => null)) as unknown
             servers = normalizeMcpList(body).map((s) => maskSecretsInPlace(s))
           } else {
-            // Phase 1.5 fallback — read config.mcp_servers.
+            // Phase 1.5 fallback — read config.mcp_servers, then hydrate
+            // status + discoveredToolsCount from the in-memory probe cache
+            // (populated by /api/mcp/test which shells out to the hermes
+            // CLI). Cards then show the last-known tool count + status
+            // without forcing a fresh probe on every list refresh.
             const cfg = (await getConfig()) as unknown
-            servers = normalizeMcpListFromConfig(cfg).map((s) => maskSecretsInPlace(s))
+            servers = normalizeMcpListFromConfig(cfg)
+              .map((s) => maskSecretsInPlace(s))
+              .map((s) => {
+                const probe = getProbe(s.name)
+                if (!probe) return s
+                return {
+                  ...s,
+                  status: probe.status,
+                  discoveredToolsCount: probe.toolCount,
+                  lastError: probe.error || s.lastError,
+                }
+              })
           }
 
           const filtered = servers.filter((s) => {
@@ -232,10 +200,14 @@ export const Route = createFileRoute('/api/mcp')({
         }
         try {
           const raw = (await request.json()) as unknown
-          const input = readInput(raw)
-          if (!input) {
-            return json({ ok: false, error: 'Invalid MCP server payload' }, { status: 400 })
+          const parsed = parseMcpServerInput(raw)
+          if (!parsed.ok) {
+            return json(
+              { ok: false, error: 'Invalid MCP server payload', errors: parsed.errors },
+              { status: 400 },
+            )
           }
+          const input = parsed.value
           if (capabilities.mcp) {
             const response = await mcpFetch('/api/mcp', {
               method: 'POST',

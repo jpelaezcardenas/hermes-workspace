@@ -9,6 +9,7 @@ export type EnhancedFeature =
   | 'config'
   | 'jobs'
   | 'mcp'
+  | 'mcpFallback'
 
 const FEATURE_LABELS: Record<EnhancedFeature, string> = {
   sessions: 'Sessions',
@@ -17,6 +18,7 @@ const FEATURE_LABELS: Record<EnhancedFeature, string> = {
   config: 'Configuration',
   jobs: 'Jobs',
   mcp: 'MCP Servers',
+  mcpFallback: 'MCP Servers (config fallback)',
 }
 
 function normalizeFeature(
@@ -29,9 +31,10 @@ function normalizeFeature(
     normalized === 'memory' ||
     normalized === 'config' ||
     normalized === 'jobs' ||
-    normalized === 'mcp'
+    normalized === 'mcp' ||
+    normalized === 'mcpfallback'
   ) {
-    return normalized
+    return normalized === 'mcpfallback' ? 'mcpFallback' : normalized
   }
 
   return null
