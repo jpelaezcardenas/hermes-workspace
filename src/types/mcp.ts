@@ -57,10 +57,10 @@ export interface McpListResponse {
 }
 
 /**
- * Browser-safe write shape. Forms collect secrets separately and submit via the
- * workspace's CSRF-protected POST endpoint. The full server-side write shape with
- * `bearerToken` / `oauth.clientSecret` lives in `mcp-input.ts` and is lint-blocked
- * from client paths.
+ * Browser-safe form payload. **No secret fields.** Forms collect
+ * `bearerToken` / `oauth.clientSecret` in ephemeral local state and merge
+ * them into the POST body at submit time only. The full server-side write
+ * shape (with secrets) lives in `mcp-input.ts` and is server-only.
  */
 export interface McpClientInput {
   name: string
@@ -72,14 +72,6 @@ export interface McpClientInput {
   env?: Record<string, string>
   headers?: Record<string, string>
   authType?: McpAuth
-  bearerToken?: string
-  oauth?: {
-    clientId: string
-    clientSecret: string
-    authorizationUrl?: string
-    tokenUrl?: string
-    scopes?: Array<string>
-  }
   toolMode?: McpToolMode
   includeTools?: Array<string>
   excludeTools?: Array<string>

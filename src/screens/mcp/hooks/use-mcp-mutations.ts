@@ -36,12 +36,17 @@ export function useDiscoverMcpTools() {
 
 export function useUpsertMcpServer() {
   const qc = useQueryClient()
-  return useMutation<{ ok: boolean; server: McpServer }, Error, McpClientInput>({
-    mutationFn: (payload) => {
-      // Drop secrets from in-memory state after submission — defense-in-depth.
-      const submission: McpClientInput = { ...payload }
-      return postJson<{ ok: boolean; server: McpServer }>('/api/mcp', submission)
-    },
+  // Inline `& { bearerToken? }` keeps the secret-bearing shape unexported —
+  // no client module re-exports a type containing `bearerToken` or
+  // `oauth.clientSecret`. Server-side `parseMcpServerInput` re-validates and
+  // strips before persistence.
+  return useMutation<
+    { ok: boolean; server: McpServer },
+    Error,
+    McpClientInput & { bearerToken?: string }
+  >({
+    mutationFn: (payload) =>
+      postJson<{ ok: boolean; server: McpServer }>('/api/mcp', payload),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['mcp', 'servers'] }),
   })
 }
