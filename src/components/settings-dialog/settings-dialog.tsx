@@ -417,11 +417,11 @@ function HermesContent() {
               (p.authType === 'api_key' &&
                 !!p.envKey &&
                 !!configuredKeys[p.envKey])
-            const missingKey = p.authType === 'api_key' && !verified
+            const missingKey = p.authType === 'api_key' && !verified && p.id !== 'custom'
             // hasKey gates click — keep OAuth + local clickable (existing
             // behaviour) so users can still authenticate via the card.
             const hasKey =
-              p.authType === 'none' || p.authType === 'oauth' || verified
+              p.authType === 'none' || p.authType === 'oauth' || verified || p.id === 'custom'
             return (
               <button
                 key={p.id}
