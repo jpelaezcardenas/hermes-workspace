@@ -29,6 +29,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsToolsRouteImport } from './routes/settings/tools'
+import { Route as SettingsRoutingRouteImport } from './routes/settings/routing'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as SettingsMcpRouteImport } from './routes/settings/mcp'
 import { Route as SettingsGatewayRouteImport } from './routes/settings/gateway'
@@ -241,6 +242,11 @@ const ChatIndexRoute = ChatIndexRouteImport.update({
 const SettingsToolsRoute = SettingsToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsRoutingRoute = SettingsRoutingRouteImport.update({
+  id: '/routing',
+  path: '/routing',
   getParentRoute: () => SettingsRoute,
 } as any)
 const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
@@ -900,6 +906,7 @@ export interface FileRoutesByFullPath {
   '/settings/gateway': typeof SettingsGatewayRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/settings/routing': typeof SettingsRoutingRoute
   '/settings/tools': typeof SettingsToolsRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
@@ -1034,6 +1041,7 @@ export interface FileRoutesByTo {
   '/settings/gateway': typeof SettingsGatewayRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/settings/routing': typeof SettingsRoutingRoute
   '/settings/tools': typeof SettingsToolsRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
@@ -1170,6 +1178,7 @@ export interface FileRoutesById {
   '/settings/gateway': typeof SettingsGatewayRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/settings/routing': typeof SettingsRoutingRoute
   '/settings/tools': typeof SettingsToolsRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
@@ -1307,6 +1316,7 @@ export interface FileRouteTypes {
     | '/settings/gateway'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/settings/routing'
     | '/settings/tools'
     | '/chat/'
     | '/settings/'
@@ -1441,6 +1451,7 @@ export interface FileRouteTypes {
     | '/settings/gateway'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/settings/routing'
     | '/settings/tools'
     | '/chat'
     | '/settings'
@@ -1576,6 +1587,7 @@ export interface FileRouteTypes {
     | '/settings/gateway'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/settings/routing'
     | '/settings/tools'
     | '/chat/'
     | '/settings/'
@@ -1878,6 +1890,13 @@ declare module '@tanstack/react-router' {
       path: '/tools'
       fullPath: '/settings/tools'
       preLoaderRoute: typeof SettingsToolsRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/routing': {
+      id: '/settings/routing'
+      path: '/routing'
+      fullPath: '/settings/routing'
+      preLoaderRoute: typeof SettingsRoutingRouteImport
       parentRoute: typeof SettingsRoute
     }
     '/settings/providers': {
@@ -2678,6 +2697,7 @@ interface SettingsRouteChildren {
   SettingsGatewayRoute: typeof SettingsGatewayRoute
   SettingsMcpRoute: typeof SettingsMcpRoute
   SettingsProvidersRoute: typeof SettingsProvidersRoute
+  SettingsRoutingRoute: typeof SettingsRoutingRoute
   SettingsToolsRoute: typeof SettingsToolsRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
 }
@@ -2686,6 +2706,7 @@ const SettingsRouteChildren: SettingsRouteChildren = {
   SettingsGatewayRoute: SettingsGatewayRoute,
   SettingsMcpRoute: SettingsMcpRoute,
   SettingsProvidersRoute: SettingsProvidersRoute,
+  SettingsRoutingRoute: SettingsRoutingRoute,
   SettingsToolsRoute: SettingsToolsRoute,
   SettingsIndexRoute: SettingsIndexRoute,
 }

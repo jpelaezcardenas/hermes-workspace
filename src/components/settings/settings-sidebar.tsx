@@ -14,6 +14,7 @@ export type SettingsNavId =
   | 'mcp'
   | 'tools'
   | 'gateway'
+  | 'routing'
   | 'language'
 
 type NavItem = { id: SettingsNavId; label: string }
@@ -31,6 +32,7 @@ export const SETTINGS_NAV_ITEMS: Array<NavItem> = [
   { id: 'mcp', label: 'MCP Servers' },
   { id: 'tools', label: 'Tools' },
   { id: 'gateway', label: 'Gateway Config' },
+  { id: 'routing', label: 'Routing' },
   { id: 'language', label: 'Language' },
 ]
 
@@ -156,6 +158,13 @@ export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
         if (item.id === 'gateway') {
           return (
             <Link key={item.id} to="/settings/gateway" className={className}>
+              {item.label}
+            </Link>
+          )
+        }
+        if (item.id === 'routing') {
+          return (
+            <Link key={item.id} to="/settings/routing" className={className}>
               {item.label}
             </Link>
           )
