@@ -5,6 +5,33 @@
 
 ---
 
+## Recent additions (Phase 3 + 3D + 3C audit, 2026-05-03)
+
+New screens shipped:
+
+- **`/settings/gateway`** — gateway connection, capability + token settings panel
+- **`/settings/tools`** — toolset enablement and dashboard-toolsets management
+- **`/settings/routing`** — provider routing rules and per-task model overrides
+- **`/system`** — launchagent + log tail surface for local services
+- **`/kanban`** — swarm task kanban (backlog / ready / running / review / blocked / done)
+
+New wired API routes shipped in Phase 3D:
+
+- `GET  /api/cli-agents` — list locally-detected CLI agent processes
+- `POST /api/cli-agents/$pid/kill` — terminate a CLI agent by pid
+- `GET  /api/config-get` — read split config surface (replaces direct `/api/claude-config` for new screens)
+- `PATCH /api/config-patch` — patch config keys atomically
+- `POST /api/validate-provider` — validate a provider credential before save
+- `GET  /api/provider-usage` — per-provider token / cost rollup
+- `GET  /api/workspace/stats` — aggregate workspace stats for dashboard tiles
+
+Server proxy routes:
+
+- `/api/dashboard-proxy/*` — passthrough to the Hermes dashboard API (port 9119)
+- `/api/dashboard-toolsets` — toolsets catalog for the Tools screen
+
+---
+
 ## Table of Contents
 
 1. [Frontend Screens & Features](#1-frontend-screens--features)
@@ -172,8 +199,11 @@
 
 | Endpoint      | Method | Description                               |
 | ------------- | ------ | ----------------------------------------- |
-| `/api/skills` | GET    | List skills (paginated, filtered, sorted) |
-| `/api/skills` | POST   | Skill installation (currently disabled)   |
+| `/api/skills`         | GET    | List skills (paginated, filtered, sorted)                      |
+| `/api/skills/install` | POST   | Install skill (501 in zero-fork mode; legacy fork only)        |
+| `/api/skills/uninstall` | POST | Uninstall a skill                                              |
+| `/api/skills/toggle`  | POST   | Enable/disable an installed skill                              |
+| `/api/skills/hub-search` | GET | Search the skills hub registry                                 |
 
 ### 2.6 Models & Config
 
@@ -346,14 +376,14 @@
 
 | Theme                 | Description                     | Mode  |
 | --------------------- | ------------------------------- | ----- |
+| Claude Nous           | Deep teal / cream — Nous chrome | Dark  |
+| Claude Nous Light     | Cold paper white with cobalt    | Light |
 | Claude Official       | Navy and indigo flagship        | Dark  |
 | Claude Official Light | Soft indigo light palette       | Light |
 | Claude Classic        | Bronze accents on dark charcoal | Dark  |
 | Classic Light         | Warm parchment with bronze      | Light |
 | Slate                 | Cool blue developer theme       | Dark  |
 | Slate Light           | GitHub-light with blue accents  | Light |
-| Mono                  | Clean monochrome grayscale      | Dark  |
-| Mono Light            | Bright monochrome grayscale     | Light |
 
 ### 4.3 Workspace State (Zustand, persisted)
 
@@ -454,11 +484,14 @@
 - Spawns uvicorn with health polling (15 attempts, 1s interval)
 - Reads `~/.hermes/.env` for agent configuration
 
-### 5.8 Workspace Daemon (Optional)
+### 5.8 Workspace Daemon (Removed)
 
-- Separate workspace daemon process on port 3099
-- Auto-restart with exponential backoff (max 20 retries)
-- Provides workspace-level APIs (checkpoints, agents, etc.)
+- The standalone `workspace-daemon` process on port 3099 has been removed; the
+  `workspace-daemon/` directory no longer ships with the repo. Workspace-level
+  APIs that used to live there (checkpoints, agents, stats) are now served
+  in-process via the TanStack server routes (`/api/workspace/stats`,
+  `/api/cli-agents`, etc.). Any leftover daemon spawn code in `vite.config.ts`
+  is dead and short-circuits when the directory is absent.
 
 ---
 

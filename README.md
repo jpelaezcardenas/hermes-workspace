@@ -42,7 +42,7 @@ Start here: [docs/swarm/](./docs/swarm/)
 ## ✨ Features
 
 - 🤖 **Hermes Agent Integration** — Direct gateway connection with real-time SSE streaming
-- 🎨 **8-Theme System** — Official, Classic, Slate, Mono — each with light and dark variants
+- 🎨 **8-Theme System** — Nous, Official, Classic, Slate — each with light and dark variants
 - 🔒 **Security Hardened** — Auth middleware on all API routes, CSP headers, exec approval prompts
 - 📱 **Mobile-First PWA** — Full feature parity on any device via Tailscale
 - ⚡ **Live SSE Streaming** — Real-time agent output with tool call rendering
@@ -560,7 +560,7 @@ Features pending cloud infrastructure:
 
 ### 🎨 Themes
 
-- 8 themes: Official, Classic, Slate, Mono — each with light and dark variants
+- 8 themes: Nous, Official, Classic, Slate — each with light and dark variants
 - Theme persists across sessions
 - Full mobile dark mode support
 

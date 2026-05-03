@@ -63,7 +63,7 @@ We will acknowledge your report within 48 hours and aim to provide a fix within 
 
 ### SEC-3 (2026-02-25)
 
-- Completed full API audit for auth coverage; no new private route auth gaps found (`/api/config-get`, `/api/debug-analyze`, `/api/context-usage`, `/api/paths` verified authenticated).
+- Completed full API audit for auth coverage; no new private route auth gaps found (`/api/config-get`, `/api/context-usage`, `/api/paths` verified authenticated). The legacy `/api/debug-analyze` endpoint and its terminal "Debug Analyze" button have since been removed.
 - Added CSRF content-type enforcement (`requireJsonContentType`) to remaining POST handlers, including auth and terminal management endpoints.
 - Tightened rate limiting to 10 requests/minute per IP (sliding window) on high-risk endpoints:
   - `/api/terminal-input`
