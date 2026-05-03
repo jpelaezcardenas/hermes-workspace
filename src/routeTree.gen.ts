@@ -30,6 +30,7 @@ import { Route as SettingsProvidersRouteImport } from './routes/settings/provide
 import { Route as SettingsMcpRouteImport } from './routes/settings/mcp'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
+import { Route as ApiValidateProviderRouteImport } from './routes/api/validate-provider'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
@@ -62,6 +63,7 @@ import { Route as ApiSessionSendRouteImport } from './routes/api/session-send'
 import { Route as ApiSessionHistoryRouteImport } from './routes/api/session-history'
 import { Route as ApiSendStreamRouteImport } from './routes/api/send-stream'
 import { Route as ApiSendRouteImport } from './routes/api/send'
+import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
@@ -78,8 +80,11 @@ import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
 import { Route as ApiConnectionSettingsRouteImport } from './routes/api/connection-settings'
+import { Route as ApiConfigPatchRouteImport } from './routes/api/config-patch'
+import { Route as ApiConfigGetRouteImport } from './routes/api/config-get'
 import { Route as ApiConductorStopRouteImport } from './routes/api/conductor-stop'
 import { Route as ApiConductorSpawnRouteImport } from './routes/api/conductor-spawn'
+import { Route as ApiCliAgentsRouteImport } from './routes/api/cli-agents'
 import { Route as ApiClaudeUpdateRouteImport } from './routes/api/claude-update'
 import { Route as ApiClaudeTasksAssigneesRouteImport } from './routes/api/claude-tasks-assignees'
 import { Route as ApiClaudeTasksRouteImport } from './routes/api/claude-tasks'
@@ -89,6 +94,7 @@ import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
+import { Route as ApiWorkspaceStatsRouteImport } from './routes/api/workspace/stats'
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
 import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
@@ -126,6 +132,7 @@ import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
+import { Route as ApiCliAgentsPidKillRouteImport } from './routes/api/cli-agents.$pid.kill'
 
 const TerminalRoute = TerminalRouteImport.update({
   id: '/terminal',
@@ -230,6 +237,11 @@ const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   id: '/api/workspace',
   path: '/api/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiValidateProviderRoute = ApiValidateProviderRouteImport.update({
+  id: '/api/validate-provider',
+  path: '/api/validate-provider',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTerminalStreamRoute = ApiTerminalStreamRouteImport.update({
@@ -393,6 +405,11 @@ const ApiSendRoute = ApiSendRouteImport.update({
   path: '/api/send',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiProviderUsageRoute = ApiProviderUsageRouteImport.update({
+  id: '/api/provider-usage',
+  path: '/api/provider-usage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPreviewFileRoute = ApiPreviewFileRouteImport.update({
   id: '/api/preview-file',
   path: '/api/preview-file',
@@ -473,6 +490,16 @@ const ApiConnectionSettingsRoute = ApiConnectionSettingsRouteImport.update({
   path: '/api/connection-settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiConfigPatchRoute = ApiConfigPatchRouteImport.update({
+  id: '/api/config-patch',
+  path: '/api/config-patch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiConfigGetRoute = ApiConfigGetRouteImport.update({
+  id: '/api/config-get',
+  path: '/api/config-get',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiConductorStopRoute = ApiConductorStopRouteImport.update({
   id: '/api/conductor-stop',
   path: '/api/conductor-stop',
@@ -481,6 +508,11 @@ const ApiConductorStopRoute = ApiConductorStopRouteImport.update({
 const ApiConductorSpawnRoute = ApiConductorSpawnRouteImport.update({
   id: '/api/conductor-spawn',
   path: '/api/conductor-spawn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCliAgentsRoute = ApiCliAgentsRouteImport.update({
+  id: '/api/cli-agents',
+  path: '/api/cli-agents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiClaudeUpdateRoute = ApiClaudeUpdateRouteImport.update({
@@ -527,6 +559,11 @@ const ApiArtifactsRoute = ApiArtifactsRouteImport.update({
   id: '/api/artifacts',
   path: '/api/artifacts',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWorkspaceStatsRoute = ApiWorkspaceStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => ApiWorkspaceRoute,
 } as any)
 const ApiUpdateWorkspaceRoute = ApiUpdateWorkspaceRouteImport.update({
   id: '/api/update/workspace',
@@ -715,6 +752,11 @@ const ApiSessionsSessionKeyActiveRunRoute =
     path: '/$sessionKey/active-run',
     getParentRoute: () => ApiSessionsRoute,
   } as any)
+const ApiCliAgentsPidKillRoute = ApiCliAgentsPidKillRouteImport.update({
+  id: '/$pid/kill',
+  path: '/$pid/kill',
+  getParentRoute: () => ApiCliAgentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -741,8 +783,11 @@ export interface FileRoutesByFullPath {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/cli-agents': typeof ApiCliAgentsRouteWithChildren
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
+  '/api/config-get': typeof ApiConfigGetRoute
+  '/api/config-patch': typeof ApiConfigPatchRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
@@ -759,6 +804,7 @@ export interface FileRoutesByFullPath {
   '/api/ping': typeof ApiPingRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
   '/api/session-history': typeof ApiSessionHistoryRoute
@@ -791,7 +837,8 @@ export interface FileRoutesByFullPath {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/workspace': typeof ApiWorkspaceRoute
+  '/api/validate-provider': typeof ApiValidateProviderRoute
+  '/api/workspace': typeof ApiWorkspaceRouteWithChildren
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -832,6 +879,8 @@ export interface FileRoutesByFullPath {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/workspace/stats': typeof ApiWorkspaceStatsRoute
+  '/api/cli-agents/$pid/kill': typeof ApiCliAgentsPidKillRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -859,8 +908,11 @@ export interface FileRoutesByTo {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/cli-agents': typeof ApiCliAgentsRouteWithChildren
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
+  '/api/config-get': typeof ApiConfigGetRoute
+  '/api/config-patch': typeof ApiConfigPatchRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
@@ -877,6 +929,7 @@ export interface FileRoutesByTo {
   '/api/ping': typeof ApiPingRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
   '/api/session-history': typeof ApiSessionHistoryRoute
@@ -909,7 +962,8 @@ export interface FileRoutesByTo {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/workspace': typeof ApiWorkspaceRoute
+  '/api/validate-provider': typeof ApiValidateProviderRoute
+  '/api/workspace': typeof ApiWorkspaceRouteWithChildren
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -950,6 +1004,8 @@ export interface FileRoutesByTo {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/workspace/stats': typeof ApiWorkspaceStatsRoute
+  '/api/cli-agents/$pid/kill': typeof ApiCliAgentsPidKillRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -979,8 +1035,11 @@ export interface FileRoutesById {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/cli-agents': typeof ApiCliAgentsRouteWithChildren
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
+  '/api/config-get': typeof ApiConfigGetRoute
+  '/api/config-patch': typeof ApiConfigPatchRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
@@ -997,6 +1056,7 @@ export interface FileRoutesById {
   '/api/ping': typeof ApiPingRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
   '/api/session-history': typeof ApiSessionHistoryRoute
@@ -1029,7 +1089,8 @@ export interface FileRoutesById {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/workspace': typeof ApiWorkspaceRoute
+  '/api/validate-provider': typeof ApiValidateProviderRoute
+  '/api/workspace': typeof ApiWorkspaceRouteWithChildren
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1070,6 +1131,8 @@ export interface FileRoutesById {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/workspace/stats': typeof ApiWorkspaceStatsRoute
+  '/api/cli-agents/$pid/kill': typeof ApiCliAgentsPidKillRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1100,8 +1163,11 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/cli-agents'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
+    | '/api/config-get'
+    | '/api/config-patch'
     | '/api/connection-settings'
     | '/api/connection-status'
     | '/api/context-usage'
@@ -1118,6 +1184,7 @@ export interface FileRouteTypes {
     | '/api/ping'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
     | '/api/session-history'
@@ -1150,6 +1217,7 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/validate-provider'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/mcp'
@@ -1191,6 +1259,8 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/workspace/stats'
+    | '/api/cli-agents/$pid/kill'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
@@ -1218,8 +1288,11 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/cli-agents'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
+    | '/api/config-get'
+    | '/api/config-patch'
     | '/api/connection-settings'
     | '/api/connection-status'
     | '/api/context-usage'
@@ -1236,6 +1309,7 @@ export interface FileRouteTypes {
     | '/api/ping'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
     | '/api/session-history'
@@ -1268,6 +1342,7 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/validate-provider'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/mcp'
@@ -1309,6 +1384,8 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/workspace/stats'
+    | '/api/cli-agents/$pid/kill'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   id:
@@ -1337,8 +1414,11 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/cli-agents'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
+    | '/api/config-get'
+    | '/api/config-patch'
     | '/api/connection-settings'
     | '/api/connection-status'
     | '/api/context-usage'
@@ -1355,6 +1435,7 @@ export interface FileRouteTypes {
     | '/api/ping'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
     | '/api/session-history'
@@ -1387,6 +1468,7 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/validate-provider'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/mcp'
@@ -1428,6 +1510,8 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/workspace/stats'
+    | '/api/cli-agents/$pid/kill'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
@@ -1457,8 +1541,11 @@ export interface RootRouteChildren {
   ApiClaudeTasksRoute: typeof ApiClaudeTasksRouteWithChildren
   ApiClaudeTasksAssigneesRoute: typeof ApiClaudeTasksAssigneesRoute
   ApiClaudeUpdateRoute: typeof ApiClaudeUpdateRoute
+  ApiCliAgentsRoute: typeof ApiCliAgentsRouteWithChildren
   ApiConductorSpawnRoute: typeof ApiConductorSpawnRoute
   ApiConductorStopRoute: typeof ApiConductorStopRoute
+  ApiConfigGetRoute: typeof ApiConfigGetRoute
+  ApiConfigPatchRoute: typeof ApiConfigPatchRoute
   ApiConnectionSettingsRoute: typeof ApiConnectionSettingsRoute
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
@@ -1475,6 +1562,7 @@ export interface RootRouteChildren {
   ApiPingRoute: typeof ApiPingRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
+  ApiProviderUsageRoute: typeof ApiProviderUsageRoute
   ApiSendRoute: typeof ApiSendRoute
   ApiSendStreamRoute: typeof ApiSendStreamRoute
   ApiSessionHistoryRoute: typeof ApiSessionHistoryRoute
@@ -1507,7 +1595,8 @@ export interface RootRouteChildren {
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
-  ApiWorkspaceRoute: typeof ApiWorkspaceRoute
+  ApiValidateProviderRoute: typeof ApiValidateProviderRoute
+  ApiWorkspaceRoute: typeof ApiWorkspaceRouteWithChildren
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
@@ -1681,6 +1770,13 @@ declare module '@tanstack/react-router' {
       path: '/api/workspace'
       fullPath: '/api/workspace'
       preLoaderRoute: typeof ApiWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/validate-provider': {
+      id: '/api/validate-provider'
+      path: '/api/validate-provider'
+      fullPath: '/api/validate-provider'
+      preLoaderRoute: typeof ApiValidateProviderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/terminal-stream': {
@@ -1907,6 +2003,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSendRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/provider-usage': {
+      id: '/api/provider-usage'
+      path: '/api/provider-usage'
+      fullPath: '/api/provider-usage'
+      preLoaderRoute: typeof ApiProviderUsageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/preview-file': {
       id: '/api/preview-file'
       path: '/api/preview-file'
@@ -2019,6 +2122,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiConnectionSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/config-patch': {
+      id: '/api/config-patch'
+      path: '/api/config-patch'
+      fullPath: '/api/config-patch'
+      preLoaderRoute: typeof ApiConfigPatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/config-get': {
+      id: '/api/config-get'
+      path: '/api/config-get'
+      fullPath: '/api/config-get'
+      preLoaderRoute: typeof ApiConfigGetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/conductor-stop': {
       id: '/api/conductor-stop'
       path: '/api/conductor-stop'
@@ -2031,6 +2148,13 @@ declare module '@tanstack/react-router' {
       path: '/api/conductor-spawn'
       fullPath: '/api/conductor-spawn'
       preLoaderRoute: typeof ApiConductorSpawnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cli-agents': {
+      id: '/api/cli-agents'
+      path: '/api/cli-agents'
+      fullPath: '/api/cli-agents'
+      preLoaderRoute: typeof ApiCliAgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/claude-update': {
@@ -2095,6 +2219,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/artifacts'
       preLoaderRoute: typeof ApiArtifactsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/workspace/stats': {
+      id: '/api/workspace/stats'
+      path: '/stats'
+      fullPath: '/api/workspace/stats'
+      preLoaderRoute: typeof ApiWorkspaceStatsRouteImport
+      parentRoute: typeof ApiWorkspaceRoute
     }
     '/api/update/workspace': {
       id: '/api/update/workspace'
@@ -2355,6 +2486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSessionsSessionKeyActiveRunRouteImport
       parentRoute: typeof ApiSessionsRoute
     }
+    '/api/cli-agents/$pid/kill': {
+      id: '/api/cli-agents/$pid/kill'
+      path: '/$pid/kill'
+      fullPath: '/api/cli-agents/$pid/kill'
+      preLoaderRoute: typeof ApiCliAgentsPidKillRouteImport
+      parentRoute: typeof ApiCliAgentsRoute
+    }
   }
 }
 
@@ -2408,6 +2546,18 @@ const ApiClaudeTasksRouteChildren: ApiClaudeTasksRouteChildren = {
 
 const ApiClaudeTasksRouteWithChildren = ApiClaudeTasksRoute._addFileChildren(
   ApiClaudeTasksRouteChildren,
+)
+
+interface ApiCliAgentsRouteChildren {
+  ApiCliAgentsPidKillRoute: typeof ApiCliAgentsPidKillRoute
+}
+
+const ApiCliAgentsRouteChildren: ApiCliAgentsRouteChildren = {
+  ApiCliAgentsPidKillRoute: ApiCliAgentsPidKillRoute,
+}
+
+const ApiCliAgentsRouteWithChildren = ApiCliAgentsRoute._addFileChildren(
+  ApiCliAgentsRouteChildren,
 )
 
 interface ApiMemoryRouteChildren {
@@ -2474,6 +2624,18 @@ const ApiSwarmMemoryRouteWithChildren = ApiSwarmMemoryRoute._addFileChildren(
   ApiSwarmMemoryRouteChildren,
 )
 
+interface ApiWorkspaceRouteChildren {
+  ApiWorkspaceStatsRoute: typeof ApiWorkspaceStatsRoute
+}
+
+const ApiWorkspaceRouteChildren: ApiWorkspaceRouteChildren = {
+  ApiWorkspaceStatsRoute: ApiWorkspaceStatsRoute,
+}
+
+const ApiWorkspaceRouteWithChildren = ApiWorkspaceRoute._addFileChildren(
+  ApiWorkspaceRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
@@ -2499,8 +2661,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiClaudeTasksRoute: ApiClaudeTasksRouteWithChildren,
   ApiClaudeTasksAssigneesRoute: ApiClaudeTasksAssigneesRoute,
   ApiClaudeUpdateRoute: ApiClaudeUpdateRoute,
+  ApiCliAgentsRoute: ApiCliAgentsRouteWithChildren,
   ApiConductorSpawnRoute: ApiConductorSpawnRoute,
   ApiConductorStopRoute: ApiConductorStopRoute,
+  ApiConfigGetRoute: ApiConfigGetRoute,
+  ApiConfigPatchRoute: ApiConfigPatchRoute,
   ApiConnectionSettingsRoute: ApiConnectionSettingsRoute,
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
@@ -2517,6 +2682,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPingRoute: ApiPingRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
+  ApiProviderUsageRoute: ApiProviderUsageRoute,
   ApiSendRoute: ApiSendRoute,
   ApiSendStreamRoute: ApiSendStreamRoute,
   ApiSessionHistoryRoute: ApiSessionHistoryRoute,
@@ -2549,7 +2715,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
-  ApiWorkspaceRoute: ApiWorkspaceRoute,
+  ApiValidateProviderRoute: ApiValidateProviderRoute,
+  ApiWorkspaceRoute: ApiWorkspaceRouteWithChildren,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
