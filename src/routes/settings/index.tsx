@@ -160,6 +160,20 @@ const THEME_PREVIEWS: Record<
     accent: '#b98a44',
     text: '#1a1f26',
   },
+  'matrix': {
+    bg: '#020804',
+    panel: '#07130A',
+    border: 'rgba(0,255,65,0.28)',
+    accent: '#00FF41',
+    text: '#D8FFE3',
+  },
+  'matrix-light': {
+    bg: '#F4FFF6',
+    panel: '#FFFFFF',
+    border: 'rgba(0,126,34,0.2)',
+    accent: '#008F2D',
+    text: '#062A12',
+  },
   'claude-slate-light': {
     bg: '#F6F8FA',
     panel: '#FFFFFF',
