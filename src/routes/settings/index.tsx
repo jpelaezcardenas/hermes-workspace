@@ -1006,7 +1006,7 @@ function ClaudeConfigSection({
     setProviderInput(configData.activeProvider || '')
     setBaseUrlInput((configData.config?.base_url as string) || '')
     const providersConfig = configData.config?.providers as Record<string, unknown> | undefined
-    const customConfig = providersConfig?.custom as Record<string, unknown> | undefined
+    const customConfig = (providersConfig?.manifest || providersConfig?.custom) as Record<string, unknown> | undefined
     setCustomBaseUrl((customConfig?.base_url as string) || '')
   }, [])
 
@@ -1493,10 +1493,12 @@ function ClaudeConfigSection({
                     onClick={() => {
                       void saveConfig({
                         config: {
+                          model: { provider: 'manifest' },
                           providers: {
-                            custom: {
+                            manifest: {
                               type: 'openai',
                               base_url: customBaseUrl,
+                              key_env: 'CUSTOM_API_KEY',
                             },
                           },
                         },

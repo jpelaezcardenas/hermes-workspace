@@ -526,7 +526,7 @@ function HermesContent() {
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                              save({ config: { provider: 'custom', providers: { custom: { type: 'openai', base_url: customBaseUrl } } } })
+                              save({ config: { model: { provider: 'manifest' }, providers: { manifest: { type: 'openai', base_url: customBaseUrl, key_env: 'CUSTOM_API_KEY' } } } })
                                 .then(() => setEditingKey(null))
                             }
                             if (e.key === 'Escape') setEditingKey(null)
@@ -539,7 +539,7 @@ function HermesContent() {
                     <span className={cn('size-2 rounded-full', hasValue ? 'bg-green-500' : 'bg-neutral-500')} />
                     {isEditing ? (
                       <>
-                        <button type="button" onClick={() => { save({ config: { provider: 'custom', providers: { custom: { type: 'openai', base_url: customBaseUrl } } } }).then(() => setEditingKey(null)) }} className="text-xs font-medium text-green-400">Save</button>
+                        <button type="button" onClick={() => { save({ config: { model: { provider: 'manifest' }, providers: { manifest: { type: 'openai', base_url: customBaseUrl, key_env: 'CUSTOM_API_KEY' } } } }).then(() => setEditingKey(null)) }} className="text-xs font-medium text-green-400">Save</button>
                         <button type="button" onClick={() => setEditingKey(null)} className="text-xs" style={mutedStyle}>Cancel</button>
                       </>
                     ) : (
