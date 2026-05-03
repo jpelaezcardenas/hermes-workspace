@@ -8,6 +8,7 @@ import {
   CommandLineIcon,
   DashboardSquare01Icon,
   File01Icon,
+  KanbanIcon,
   Menu01Icon,
   PuzzleIcon,
   Rocket01Icon,
@@ -52,6 +53,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: Clock01Icon,
     to: '/jobs',
     match: (p: string) => p.startsWith('/jobs'),
+  },
+  {
+    id: 'kanban',
+    label: 'Kanban',
+    icon: KanbanIcon,
+    to: '/kanban',
+    match: (p: string) => p.startsWith('/kanban'),
   },
   {
     id: 'conductor',

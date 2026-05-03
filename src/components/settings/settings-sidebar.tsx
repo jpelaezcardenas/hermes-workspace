@@ -12,6 +12,8 @@ export type SettingsNavId =
   | 'chat'
   | 'notifications'
   | 'mcp'
+  | 'tools'
+  | 'gateway'
   | 'language'
 
 type NavItem = { id: SettingsNavId; label: string }
@@ -27,6 +29,8 @@ export const SETTINGS_NAV_ITEMS: Array<NavItem> = [
   { id: 'chat', label: 'Chat' },
   { id: 'notifications', label: 'Notifications' },
   { id: 'mcp', label: 'MCP Servers' },
+  { id: 'tools', label: 'Tools' },
+  { id: 'gateway', label: 'Gateway Config' },
   { id: 'language', label: 'Language' },
 ]
 
@@ -58,6 +62,20 @@ function renderItem({
   if (item.id === 'mcp') {
     return (
       <Link key={item.id} to="/settings/mcp" className={className}>
+        {content}
+      </Link>
+    )
+  }
+  if (item.id === 'tools') {
+    return (
+      <Link key={item.id} to="/settings/tools" className={className}>
+        {content}
+      </Link>
+    )
+  }
+  if (item.id === 'gateway') {
+    return (
+      <Link key={item.id} to="/settings/gateway" className={className}>
         {content}
       </Link>
     )
@@ -124,6 +142,20 @@ export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
         if (item.id === 'mcp') {
           return (
             <Link key={item.id} to="/settings/mcp" className={className}>
+              {item.label}
+            </Link>
+          )
+        }
+        if (item.id === 'tools') {
+          return (
+            <Link key={item.id} to="/settings/tools" className={className}>
+              {item.label}
+            </Link>
+          )
+        }
+        if (item.id === 'gateway') {
+          return (
+            <Link key={item.id} to="/settings/gateway" className={className}>
               {item.label}
             </Link>
           )

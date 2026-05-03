@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as SystemRouteImport } from './routes/system'
 import { Route as Swarm2RouteImport } from './routes/swarm2'
 import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
@@ -18,6 +19,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as KanbanRouteImport } from './routes/kanban'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -26,8 +28,10 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
+import { Route as SettingsToolsRouteImport } from './routes/settings/tools'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as SettingsMcpRouteImport } from './routes/settings/mcp'
+import { Route as SettingsGatewayRouteImport } from './routes/settings/gateway'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
 import { Route as ApiValidateProviderRouteImport } from './routes/api/validate-provider'
@@ -76,6 +80,7 @@ import { Route as ApiHistoryRouteImport } from './routes/api/history'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
+import { Route as ApiDashboardToolsetsRouteImport } from './routes/api/dashboard-toolsets'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
@@ -98,6 +103,7 @@ import { Route as ApiWorkspaceStatsRouteImport } from './routes/api/workspace/st
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
 import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
+import { Route as ApiSystemLaunchagentsRouteImport } from './routes/api/system/launchagents'
 import { Route as ApiSwarmMemorySearchRouteImport } from './routes/api/swarm-memory/search'
 import { Route as ApiSkillsUninstallRouteImport } from './routes/api/skills/uninstall'
 import { Route as ApiSkillsToggleRouteImport } from './routes/api/skills/toggle'
@@ -126,10 +132,13 @@ import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/rea
 import { Route as ApiKnowledgeListRouteImport } from './routes/api/knowledge/list'
 import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/graph'
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
+import { Route as ApiDashboardProxySplatRouteImport } from './routes/api/dashboard-proxy/$'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
+import { Route as ApiSystemRestartLabelRouteImport } from './routes/api/system/restart/$label'
+import { Route as ApiSystemLogsTailRouteImport } from './routes/api/system/logs.tail'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 import { Route as ApiCliAgentsPidKillRouteImport } from './routes/api/cli-agents.$pid.kill'
@@ -142,6 +151,11 @@ const TerminalRoute = TerminalRouteImport.update({
 const TasksRoute = TasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemRoute = SystemRouteImport.update({
+  id: '/system',
+  path: '/system',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Swarm2Route = Swarm2RouteImport.update({
@@ -177,6 +191,11 @@ const OperationsRoute = OperationsRouteImport.update({
 const MemoryRoute = MemoryRouteImport.update({
   id: '/memory',
   path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KanbanRoute = KanbanRouteImport.update({
+  id: '/kanban',
+  path: '/kanban',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsRoute = JobsRouteImport.update({
@@ -219,6 +238,11 @@ const ChatIndexRoute = ChatIndexRouteImport.update({
   path: '/chat/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsToolsRoute = SettingsToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => SettingsRoute,
+} as any)
 const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
@@ -227,6 +251,11 @@ const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
 const SettingsMcpRoute = SettingsMcpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => SettingsRoute,
+} as any)
+const SettingsGatewayRoute = SettingsGatewayRouteImport.update({
+  id: '/gateway',
+  path: '/gateway',
   getParentRoute: () => SettingsRoute,
 } as any)
 const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
@@ -470,6 +499,11 @@ const ApiEventsRoute = ApiEventsRouteImport.update({
   path: '/api/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDashboardToolsetsRoute = ApiDashboardToolsetsRouteImport.update({
+  id: '/api/dashboard-toolsets',
+  path: '/api/dashboard-toolsets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCrewStatusRoute = ApiCrewStatusRouteImport.update({
   id: '/api/crew-status',
   path: '/api/crew-status',
@@ -578,6 +612,11 @@ const ApiUpdateStatusRoute = ApiUpdateStatusRouteImport.update({
 const ApiUpdateAgentRoute = ApiUpdateAgentRouteImport.update({
   id: '/api/update/agent',
   path: '/api/update/agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSystemLaunchagentsRoute = ApiSystemLaunchagentsRouteImport.update({
+  id: '/api/system/launchagents',
+  path: '/api/system/launchagents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSwarmMemorySearchRoute = ApiSwarmMemorySearchRouteImport.update({
@@ -720,6 +759,11 @@ const ApiKnowledgeConfigRoute = ApiKnowledgeConfigRouteImport.update({
   path: '/api/knowledge/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDashboardProxySplatRoute = ApiDashboardProxySplatRouteImport.update({
+  id: '/api/dashboard-proxy/$',
+  path: '/api/dashboard-proxy/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiClaudeTasksTaskIdRoute = ApiClaudeTasksTaskIdRouteImport.update({
   id: '/$taskId',
   path: '/$taskId',
@@ -739,6 +783,16 @@ const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   id: '/$artifactId',
   path: '/$artifactId',
   getParentRoute: () => ApiArtifactsRoute,
+} as any)
+const ApiSystemRestartLabelRoute = ApiSystemRestartLabelRouteImport.update({
+  id: '/api/system/restart/$label',
+  path: '/api/system/restart/$label',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSystemLogsTailRoute = ApiSystemLogsTailRouteImport.update({
+  id: '/api/system/logs/tail',
+  path: '/api/system/logs/tail',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
@@ -765,6 +819,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/kanban': typeof KanbanRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -772,6 +827,7 @@ export interface FileRoutesByFullPath {
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
   '/swarm2': typeof Swarm2Route
+  '/system': typeof SystemRoute
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -792,6 +848,7 @@ export interface FileRoutesByFullPath {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/dashboard-toolsets': typeof ApiDashboardToolsetsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -840,14 +897,17 @@ export interface FileRoutesByFullPath {
   '/api/validate-provider': typeof ApiValidateProviderRoute
   '/api/workspace': typeof ApiWorkspaceRouteWithChildren
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
+  '/settings/gateway': typeof SettingsGatewayRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/settings/tools': typeof SettingsToolsRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/dashboard-proxy/$': typeof ApiDashboardProxySplatRoute
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -876,6 +936,7 @@ export interface FileRoutesByFullPath {
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
+  '/api/system/launchagents': typeof ApiSystemLaunchagentsRoute
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
@@ -883,6 +944,8 @@ export interface FileRoutesByFullPath {
   '/api/cli-agents/$pid/kill': typeof ApiCliAgentsPidKillRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/system/logs/tail': typeof ApiSystemLogsTailRoute
+  '/api/system/restart/$label': typeof ApiSystemRestartLabelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -891,12 +954,14 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/kanban': typeof KanbanRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
   '/swarm2': typeof Swarm2Route
+  '/system': typeof SystemRoute
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -917,6 +982,7 @@ export interface FileRoutesByTo {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/dashboard-toolsets': typeof ApiDashboardToolsetsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -965,14 +1031,17 @@ export interface FileRoutesByTo {
   '/api/validate-provider': typeof ApiValidateProviderRoute
   '/api/workspace': typeof ApiWorkspaceRouteWithChildren
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
+  '/settings/gateway': typeof SettingsGatewayRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/settings/tools': typeof SettingsToolsRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/dashboard-proxy/$': typeof ApiDashboardProxySplatRoute
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1001,6 +1070,7 @@ export interface FileRoutesByTo {
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
+  '/api/system/launchagents': typeof ApiSystemLaunchagentsRoute
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
@@ -1008,6 +1078,8 @@ export interface FileRoutesByTo {
   '/api/cli-agents/$pid/kill': typeof ApiCliAgentsPidKillRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/system/logs/tail': typeof ApiSystemLogsTailRoute
+  '/api/system/restart/$label': typeof ApiSystemRestartLabelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1017,6 +1089,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/kanban': typeof KanbanRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -1024,6 +1097,7 @@ export interface FileRoutesById {
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
   '/swarm2': typeof Swarm2Route
+  '/system': typeof SystemRoute
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -1044,6 +1118,7 @@ export interface FileRoutesById {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/dashboard-toolsets': typeof ApiDashboardToolsetsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -1092,14 +1167,17 @@ export interface FileRoutesById {
   '/api/validate-provider': typeof ApiValidateProviderRoute
   '/api/workspace': typeof ApiWorkspaceRouteWithChildren
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
+  '/settings/gateway': typeof SettingsGatewayRoute
   '/settings/mcp': typeof SettingsMcpRoute
   '/settings/providers': typeof SettingsProvidersRoute
+  '/settings/tools': typeof SettingsToolsRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/dashboard-proxy/$': typeof ApiDashboardProxySplatRoute
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1128,6 +1206,7 @@ export interface FileRoutesById {
   '/api/skills/toggle': typeof ApiSkillsToggleRoute
   '/api/skills/uninstall': typeof ApiSkillsUninstallRoute
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
+  '/api/system/launchagents': typeof ApiSystemLaunchagentsRoute
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
@@ -1135,6 +1214,8 @@ export interface FileRoutesById {
   '/api/cli-agents/$pid/kill': typeof ApiCliAgentsPidKillRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/system/logs/tail': typeof ApiSystemLogsTailRoute
+  '/api/system/restart/$label': typeof ApiSystemRestartLabelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1145,6 +1226,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/kanban'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -1152,6 +1234,7 @@ export interface FileRouteTypes {
     | '/skills'
     | '/swarm'
     | '/swarm2'
+    | '/system'
     | '/tasks'
     | '/terminal'
     | '/api/artifacts'
@@ -1172,6 +1255,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/dashboard-toolsets'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-status'
@@ -1220,14 +1304,17 @@ export interface FileRouteTypes {
     | '/api/validate-provider'
     | '/api/workspace'
     | '/chat/$sessionKey'
+    | '/settings/gateway'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/settings/tools'
     | '/chat/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/dashboard-proxy/$'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1256,6 +1343,7 @@ export interface FileRouteTypes {
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
     | '/api/swarm-memory/search'
+    | '/api/system/launchagents'
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
@@ -1263,6 +1351,8 @@ export interface FileRouteTypes {
     | '/api/cli-agents/$pid/kill'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/system/logs/tail'
+    | '/api/system/restart/$label'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1271,12 +1361,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/kanban'
     | '/memory'
     | '/operations'
     | '/profiles'
     | '/skills'
     | '/swarm'
     | '/swarm2'
+    | '/system'
     | '/tasks'
     | '/terminal'
     | '/api/artifacts'
@@ -1297,6 +1389,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/dashboard-toolsets'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-status'
@@ -1345,14 +1438,17 @@ export interface FileRouteTypes {
     | '/api/validate-provider'
     | '/api/workspace'
     | '/chat/$sessionKey'
+    | '/settings/gateway'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/settings/tools'
     | '/chat'
     | '/settings'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/dashboard-proxy/$'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1381,6 +1477,7 @@ export interface FileRouteTypes {
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
     | '/api/swarm-memory/search'
+    | '/api/system/launchagents'
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
@@ -1388,6 +1485,8 @@ export interface FileRouteTypes {
     | '/api/cli-agents/$pid/kill'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/system/logs/tail'
+    | '/api/system/restart/$label'
   id:
     | '__root__'
     | '/'
@@ -1396,6 +1495,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/kanban'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -1403,6 +1503,7 @@ export interface FileRouteTypes {
     | '/skills'
     | '/swarm'
     | '/swarm2'
+    | '/system'
     | '/tasks'
     | '/terminal'
     | '/api/artifacts'
@@ -1423,6 +1524,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/dashboard-toolsets'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-status'
@@ -1471,14 +1573,17 @@ export interface FileRouteTypes {
     | '/api/validate-provider'
     | '/api/workspace'
     | '/chat/$sessionKey'
+    | '/settings/gateway'
     | '/settings/mcp'
     | '/settings/providers'
+    | '/settings/tools'
     | '/chat/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/dashboard-proxy/$'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1507,6 +1612,7 @@ export interface FileRouteTypes {
     | '/api/skills/toggle'
     | '/api/skills/uninstall'
     | '/api/swarm-memory/search'
+    | '/api/system/launchagents'
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
@@ -1514,6 +1620,8 @@ export interface FileRouteTypes {
     | '/api/cli-agents/$pid/kill'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/system/logs/tail'
+    | '/api/system/restart/$label'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1523,6 +1631,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
   JobsRoute: typeof JobsRoute
+  KanbanRoute: typeof KanbanRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
   ProfilesRoute: typeof ProfilesRoute
@@ -1530,6 +1639,7 @@ export interface RootRouteChildren {
   SkillsRoute: typeof SkillsRoute
   SwarmRoute: typeof SwarmRoute
   Swarm2Route: typeof Swarm2Route
+  SystemRoute: typeof SystemRoute
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
@@ -1550,6 +1660,7 @@ export interface RootRouteChildren {
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
+  ApiDashboardToolsetsRoute: typeof ApiDashboardToolsetsRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
@@ -1600,6 +1711,7 @@ export interface RootRouteChildren {
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
+  ApiDashboardProxySplatRoute: typeof ApiDashboardProxySplatRoute
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
   ApiKnowledgeGraphRoute: typeof ApiKnowledgeGraphRoute
   ApiKnowledgeListRoute: typeof ApiKnowledgeListRoute
@@ -1618,9 +1730,12 @@ export interface RootRouteChildren {
   ApiProfilesReadRoute: typeof ApiProfilesReadRoute
   ApiProfilesRenameRoute: typeof ApiProfilesRenameRoute
   ApiProfilesUpdateRoute: typeof ApiProfilesUpdateRoute
+  ApiSystemLaunchagentsRoute: typeof ApiSystemLaunchagentsRoute
   ApiUpdateAgentRoute: typeof ApiUpdateAgentRoute
   ApiUpdateStatusRoute: typeof ApiUpdateStatusRoute
   ApiUpdateWorkspaceRoute: typeof ApiUpdateWorkspaceRoute
+  ApiSystemLogsTailRoute: typeof ApiSystemLogsTailRoute
+  ApiSystemRestartLabelRoute: typeof ApiSystemRestartLabelRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1637,6 +1752,13 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/tasks'
       preLoaderRoute: typeof TasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system': {
+      id: '/system'
+      path: '/system'
+      fullPath: '/system'
+      preLoaderRoute: typeof SystemRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/swarm2': {
@@ -1686,6 +1808,13 @@ declare module '@tanstack/react-router' {
       path: '/memory'
       fullPath: '/memory'
       preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kanban': {
+      id: '/kanban'
+      path: '/kanban'
+      fullPath: '/kanban'
+      preLoaderRoute: typeof KanbanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs': {
@@ -1744,6 +1873,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/tools': {
+      id: '/settings/tools'
+      path: '/tools'
+      fullPath: '/settings/tools'
+      preLoaderRoute: typeof SettingsToolsRouteImport
+      parentRoute: typeof SettingsRoute
+    }
     '/settings/providers': {
       id: '/settings/providers'
       path: '/providers'
@@ -1756,6 +1892,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/settings/mcp'
       preLoaderRoute: typeof SettingsMcpRouteImport
+      parentRoute: typeof SettingsRoute
+    }
+    '/settings/gateway': {
+      id: '/settings/gateway'
+      path: '/gateway'
+      fullPath: '/settings/gateway'
+      preLoaderRoute: typeof SettingsGatewayRouteImport
       parentRoute: typeof SettingsRoute
     }
     '/chat/$sessionKey': {
@@ -2094,6 +2237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/dashboard-toolsets': {
+      id: '/api/dashboard-toolsets'
+      path: '/api/dashboard-toolsets'
+      fullPath: '/api/dashboard-toolsets'
+      preLoaderRoute: typeof ApiDashboardToolsetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/crew-status': {
       id: '/api/crew-status'
       path: '/api/crew-status'
@@ -2246,6 +2396,13 @@ declare module '@tanstack/react-router' {
       path: '/api/update/agent'
       fullPath: '/api/update/agent'
       preLoaderRoute: typeof ApiUpdateAgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/system/launchagents': {
+      id: '/api/system/launchagents'
+      path: '/api/system/launchagents'
+      fullPath: '/api/system/launchagents'
+      preLoaderRoute: typeof ApiSystemLaunchagentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/swarm-memory/search': {
@@ -2444,6 +2601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiKnowledgeConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/dashboard-proxy/$': {
+      id: '/api/dashboard-proxy/$'
+      path: '/api/dashboard-proxy/$'
+      fullPath: '/api/dashboard-proxy/$'
+      preLoaderRoute: typeof ApiDashboardProxySplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/claude-tasks/$taskId': {
       id: '/api/claude-tasks/$taskId'
       path: '/$taskId'
@@ -2472,6 +2636,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiArtifactsArtifactIdRouteImport
       parentRoute: typeof ApiArtifactsRoute
     }
+    '/api/system/restart/$label': {
+      id: '/api/system/restart/$label'
+      path: '/api/system/restart/$label'
+      fullPath: '/api/system/restart/$label'
+      preLoaderRoute: typeof ApiSystemRestartLabelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/system/logs/tail': {
+      id: '/api/system/logs/tail'
+      path: '/api/system/logs/tail'
+      fullPath: '/api/system/logs/tail'
+      preLoaderRoute: typeof ApiSystemLogsTailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
       path: '/$sessionKey/status'
@@ -2497,14 +2675,18 @@ declare module '@tanstack/react-router' {
 }
 
 interface SettingsRouteChildren {
+  SettingsGatewayRoute: typeof SettingsGatewayRoute
   SettingsMcpRoute: typeof SettingsMcpRoute
   SettingsProvidersRoute: typeof SettingsProvidersRoute
+  SettingsToolsRoute: typeof SettingsToolsRoute
   SettingsIndexRoute: typeof SettingsIndexRoute
 }
 
 const SettingsRouteChildren: SettingsRouteChildren = {
+  SettingsGatewayRoute: SettingsGatewayRoute,
   SettingsMcpRoute: SettingsMcpRoute,
   SettingsProvidersRoute: SettingsProvidersRoute,
+  SettingsToolsRoute: SettingsToolsRoute,
   SettingsIndexRoute: SettingsIndexRoute,
 }
 
@@ -2643,6 +2825,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
   JobsRoute: JobsRoute,
+  KanbanRoute: KanbanRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
   ProfilesRoute: ProfilesRoute,
@@ -2650,6 +2833,7 @@ const rootRouteChildren: RootRouteChildren = {
   SkillsRoute: SkillsRoute,
   SwarmRoute: SwarmRoute,
   Swarm2Route: Swarm2Route,
+  SystemRoute: SystemRoute,
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
@@ -2670,6 +2854,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
   ApiCrewStatusRoute: ApiCrewStatusRoute,
+  ApiDashboardToolsetsRoute: ApiDashboardToolsetsRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
@@ -2720,6 +2905,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
+  ApiDashboardProxySplatRoute: ApiDashboardProxySplatRoute,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
   ApiKnowledgeGraphRoute: ApiKnowledgeGraphRoute,
   ApiKnowledgeListRoute: ApiKnowledgeListRoute,
@@ -2738,9 +2924,12 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesReadRoute: ApiProfilesReadRoute,
   ApiProfilesRenameRoute: ApiProfilesRenameRoute,
   ApiProfilesUpdateRoute: ApiProfilesUpdateRoute,
+  ApiSystemLaunchagentsRoute: ApiSystemLaunchagentsRoute,
   ApiUpdateAgentRoute: ApiUpdateAgentRoute,
   ApiUpdateStatusRoute: ApiUpdateStatusRoute,
   ApiUpdateWorkspaceRoute: ApiUpdateWorkspaceRoute,
+  ApiSystemLogsTailRoute: ApiSystemLogsTailRoute,
+  ApiSystemRestartLabelRoute: ApiSystemRestartLabelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

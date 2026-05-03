@@ -8,6 +8,7 @@ import {
   CheckListIcon,
   Clock01Icon,
   ComputerTerminal01Icon,
+  KanbanIcon,
   DashboardSquare01Icon,
   File01Icon,
   MessageMultiple01Icon,
@@ -564,6 +565,7 @@ function ChatSidebarComponent({
   const isFilesActive = pathname === '/files'
   const isTerminalActive = pathname === '/terminal'
   const isJobsActive = pathname === '/jobs'
+  const isKanbanActive = pathname === '/kanban'
   const isMemoryActive = pathname === '/memory'
   const isTasksActive = pathname === '/tasks'
   const isConductorActive = pathname === '/conductor'
@@ -797,6 +799,13 @@ function ChatSidebarComponent({
       icon: Clock01Icon,
       label: t('nav.jobs'),
       active: isJobsActive,
+    },
+    {
+      kind: 'link',
+      to: '/kanban',
+      icon: KanbanIcon,
+      label: 'Kanban',
+      active: isKanbanActive,
     },
     {
       kind: 'link',
