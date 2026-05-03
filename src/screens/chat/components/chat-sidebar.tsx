@@ -570,7 +570,8 @@ function ChatSidebarComponent({
   const isTasksActive = pathname === '/tasks'
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
-  const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
+  const isSwarmActive = pathname === '/missions'
+  const isSystemActive = pathname === '/system'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
@@ -804,7 +805,7 @@ function ChatSidebarComponent({
       kind: 'link',
       to: '/kanban',
       icon: KanbanIcon,
-      label: 'Kanban',
+      label: 'Tasks Board',
       active: isKanbanActive,
     },
     {
@@ -830,9 +831,9 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
-      to: '/swarm',
+      to: '/missions',
       icon: UserGroupIcon,
-      label: 'Swarm',
+      label: 'Missions',
       active: isSwarmActive,
     },
 
@@ -863,7 +864,15 @@ function ChatSidebarComponent({
     },
   ]
 
-  const systemItems: Array<NavItemDef> = []
+  const systemItems: Array<NavItemDef> = [
+    {
+      kind: 'link',
+      to: '/system',
+      icon: DashboardSquare01Icon,
+      label: 'System',
+      active: isSystemActive,
+    },
+  ]
 
   return (
     <motion.aside

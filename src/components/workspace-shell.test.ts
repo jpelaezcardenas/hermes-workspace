@@ -10,20 +10,24 @@ describe('workspace shell sidebar backdrop', () => {
   })
 })
 
-describe('swarm2 navigation alias handling', () => {
-  it('keeps /swarm as the only user-visible swarm entry in the mobile hamburger menu', () => {
+describe('missions navigation', () => {
+  it('keeps /missions as the only user-visible missions entry in the mobile hamburger menu', () => {
+    const missions = MOBILE_HAMBURGER_NAV_ITEMS.find((item) => item.id === 'missions')
     const swarm = MOBILE_HAMBURGER_NAV_ITEMS.find((item) => item.id === 'swarm')
     const swarm2 = MOBILE_HAMBURGER_NAV_ITEMS.find((item) => item.id === 'swarm2')
 
-    expect(swarm?.to).toBe('/swarm')
+    expect(missions?.to).toBe('/missions')
+    expect(swarm).toBeUndefined()
     expect(swarm2).toBeUndefined()
   })
 
-  it('keeps /swarm as the only user-visible swarm tab', () => {
+  it('keeps /missions as the only user-visible missions tab', () => {
+    const missions = MOBILE_NAV_TABS.find((item) => item.id === 'missions')
     const swarm = MOBILE_NAV_TABS.find((item) => item.id === 'swarm')
     const swarm2 = MOBILE_NAV_TABS.find((item) => item.id === 'swarm2')
 
-    expect(swarm?.to).toBe('/swarm')
+    expect(missions?.to).toBe('/missions')
+    expect(swarm).toBeUndefined()
     expect(swarm2).toBeUndefined()
   })
 })

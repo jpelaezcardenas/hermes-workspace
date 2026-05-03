@@ -260,6 +260,14 @@ async function validate(
 export const Route = createFileRoute('/api/validate-provider')({
   server: {
     handlers: {
+      GET: async () => {
+        // Wave 2 Lane B (F06): explicit 405 instead of falling through
+        // to the SPA index when someone hits this URL with a browser.
+        return json(
+          { ok: false, error: 'Method Not Allowed', allowed: ['POST'] },
+          { status: 405, headers: { Allow: 'POST' } },
+        )
+      },
       POST: async ({ request }) => {
         if (!isAuthenticated(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })

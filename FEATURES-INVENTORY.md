@@ -32,6 +32,15 @@ Server proxy routes:
 
 ---
 
+## Surface Ownership
+
+- **Workspace owns:** settings UI (`/settings/*`), terminal, files browser, conductor, `/missions`, `/tasks-board` (proxied), `/system`
+- **Built-in `hermes dashboard` owns:** kanban data store (`~/.hermes/kanban/kanban.db`), env editor, sessions browser, model_catalog, skills API
+- **Both can edit `config.yaml`;** Workspace `/api/config-patch` is canonical going forward
+- **Skill management:** Workspace `/skills` is canonical; built-in dashboard `/api/skills` is a backend API only and not a primary UI surface.
+
+---
+
 ## Table of Contents
 
 1. [Frontend Screens & Features](#1-frontend-screens--features)
@@ -204,6 +213,8 @@ Server proxy routes:
 | `/api/skills/uninstall` | POST | Uninstall a skill                                              |
 | `/api/skills/toggle`  | POST   | Enable/disable an installed skill                              |
 | `/api/skills/hub-search` | GET | Search the skills hub registry                                 |
+
+> **Skill management:** Workspace `/skills` is the canonical UI surface. The built-in `hermes dashboard` `/api/skills` is a backend API only and not a primary UI surface.
 
 ### 2.6 Models & Config
 
@@ -424,6 +435,7 @@ Server proxy routes:
 - **Read/write `~/.hermes/.env`** — environment variables
 - **Provider status** with masked API keys
 - **Auth store integration** — reads from `~/.hermes/auth-profiles.json` and `~/.openclaw/agents/main/agent/auth-profiles.json`
+- **Canonical config writer:** Workspace's `/api/config-patch` is the source of truth. Built-in `hermes dashboard` `PUT /api/config` still works but should be considered legacy.
 
 ---
 

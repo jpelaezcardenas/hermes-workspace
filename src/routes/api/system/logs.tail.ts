@@ -77,6 +77,55 @@ export const Route = createFileRoute('/api/system/logs/tail')({
           )
         }
 
+        // Wave 2 Lane B (F24): optional via=dashboard proxy delegate.
+        // Forwards to /api/dashboard-proxy/api/logs?... with a 5s timeout
+        // and falls back to local SSE tail if the dashboard is unreachable.
+        const via = (url.searchParams.get('via') || '').trim().toLowerCase()
+        if (via === 'dashboard') {
+          try {
+            const forwardParams = new URLSearchParams(url.searchParams)
+            forwardParams.delete('via')
+            // Reuse same hostname:port (workspace) and hit our same-origin proxy.
+            const forwardedUrl = new URL(request.url)
+            forwardedUrl.pathname = '/api/dashboard-proxy/api/logs'
+            forwardedUrl.search = forwardParams.toString()
+
+            const controller = new AbortController()
+            const timer = setTimeout(() => controller.abort(), 5_000)
+            const incomingCookie = request.headers.get('cookie') || ''
+            const incomingAccept = request.headers.get('accept') || ''
+            try {
+              const upstream = await fetch(forwardedUrl, {
+                method: 'GET',
+                headers: {
+                  ...(incomingCookie ? { cookie: incomingCookie } : {}),
+                  ...(incomingAccept ? { accept: incomingAccept } : {}),
+                },
+                signal: controller.signal,
+              })
+              clearTimeout(timer)
+              if (upstream.ok && upstream.body) {
+                return new Response(upstream.body, {
+                  status: upstream.status,
+                  headers: {
+                    'Content-Type':
+                      upstream.headers.get('content-type') || 'application/json',
+                    'Cache-Control': 'no-cache, no-transform',
+                    'X-Logs-Via': 'dashboard',
+                  },
+                })
+              }
+              // Non-OK upstream — fall through to local tail below.
+            } catch {
+              clearTimeout(timer)
+              // Network error / timeout — fall through to local tail below.
+            }
+          } catch {
+            // URL construction failure — fall through.
+          }
+          // Falls through to local SSE tail when dashboard unreachable.
+        }
+
         const encoder = new TextEncoder()
         let streamClosed = false
         let watcher: fs.FSWatcher | null = null

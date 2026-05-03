@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils'
 
 export type SettingsNavId =
   | 'connection'
+  | 'providers'
   | 'claude'
   | 'agent'
   | 'routing'
@@ -14,13 +15,13 @@ export type SettingsNavId =
   | 'mcp'
   | 'tools'
   | 'gateway'
-  | 'routing'
   | 'language'
 
 type NavItem = { id: SettingsNavId; label: string }
 
 export const SETTINGS_NAV_ITEMS: Array<NavItem> = [
   { id: 'connection', label: 'Connection' },
+  { id: 'providers', label: 'Providers' },
   { id: 'claude', label: 'Model & Provider' },
   { id: 'agent', label: 'Agent Behavior' },
   { id: 'routing', label: 'Smart Routing' },
@@ -32,7 +33,6 @@ export const SETTINGS_NAV_ITEMS: Array<NavItem> = [
   { id: 'mcp', label: 'MCP Servers' },
   { id: 'tools', label: 'Tools' },
   { id: 'gateway', label: 'Gateway Config' },
-  { id: 'routing', label: 'Routing' },
   { id: 'language', label: 'Language' },
 ]
 
@@ -78,6 +78,20 @@ function renderItem({
   if (item.id === 'gateway') {
     return (
       <Link key={item.id} to="/settings/gateway" className={className}>
+        {content}
+      </Link>
+    )
+  }
+  if (item.id === 'providers') {
+    return (
+      <Link key={item.id} to="/settings/providers" className={className}>
+        {content}
+      </Link>
+    )
+  }
+  if (item.id === 'routing') {
+    return (
+      <Link key={item.id} to="/settings/routing" className={className}>
         {content}
       </Link>
     )
@@ -158,6 +172,13 @@ export function SettingsMobilePills({ activeId }: { activeId: SettingsNavId }) {
         if (item.id === 'gateway') {
           return (
             <Link key={item.id} to="/settings/gateway" className={className}>
+              {item.label}
+            </Link>
+          )
+        }
+        if (item.id === 'providers') {
+          return (
+            <Link key={item.id} to="/settings/providers" className={className}>
               {item.label}
             </Link>
           )

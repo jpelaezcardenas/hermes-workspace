@@ -14,8 +14,6 @@ import {
 } from '../../server/gateway-capabilities'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
-type AuthResult = Response | true
-
 const CLAUDE_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
 const CONFIG_PATH = path.join(CLAUDE_HOME, 'config.yaml')
 const ENV_PATH = path.join(CLAUDE_HOME, '.env')
@@ -165,8 +163,9 @@ export const Route = createFileRoute('/api/claude-config')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const authResult = isAuthenticated(request) as AuthResult
-        if (authResult !== true) return authResult
+        if (!isAuthenticated(request)) {
+          return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+        }
         await ensureGatewayProbed()
         if (!getCapabilities().config) {
           return Response.json({
@@ -234,8 +233,9 @@ export const Route = createFileRoute('/api/claude-config')({
       },
 
       PATCH: async ({ request }) => {
-        const authResult = isAuthenticated(request) as AuthResult
-        if (authResult !== true) return authResult
+        if (!isAuthenticated(request)) {
+          return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
+        }
         await ensureGatewayProbed()
         if (!getCapabilities().config) {
           return new Response(

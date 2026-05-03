@@ -55,11 +55,25 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     match: (p: string) => p.startsWith('/jobs'),
   },
   {
+    id: 'files',
+    label: 'Files',
+    icon: File01Icon,
+    to: '/files',
+    match: (p: string) => p.startsWith('/files'),
+  },
+  {
     id: 'kanban',
-    label: 'Kanban',
+    label: 'Tasks Board',
     icon: KanbanIcon,
     to: '/kanban',
     match: (p: string) => p.startsWith('/kanban'),
+  },
+  {
+    id: 'tasks',
+    label: 'Tasks',
+    icon: KanbanIcon,
+    to: '/tasks',
+    match: (p: string) => p.startsWith('/tasks'),
   },
   {
     id: 'conductor',
@@ -76,11 +90,11 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     match: (p: string) => p.startsWith('/operations'),
   },
   {
-    id: 'swarm',
-    label: 'Swarm',
+    id: 'missions',
+    label: 'Missions',
     icon: UserGroupIcon,
-    to: '/swarm',
-    match: (p: string) => p === '/swarm' || p.startsWith('/swarm2'),
+    to: '/missions',
+    match: (p: string) => p === '/missions',
   },
 
   {
@@ -103,6 +117,20 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: UserGroupIcon,
     to: '/profiles',
     match: (p: string) => p.startsWith('/profiles'),
+  },
+  {
+    id: 'system',
+    label: 'System',
+    icon: DashboardSquare01Icon,
+    to: '/system',
+    match: (p: string) => p.startsWith('/system'),
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    icon: Settings01Icon,
+    to: '/settings',
+    match: (p: string) => p.startsWith('/settings'),
   },
 ]
 

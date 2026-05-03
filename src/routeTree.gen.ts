@@ -12,12 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as SystemRouteImport } from './routes/system'
-import { Route as Swarm2RouteImport } from './routes/swarm2'
-import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
+import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as KanbanRouteImport } from './routes/kanban'
 import { Route as JobsRouteImport } from './routes/jobs'
@@ -40,6 +39,7 @@ import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-str
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
 import { Route as ApiTerminalCloseRouteImport } from './routes/api/terminal-close'
+import { Route as ApiTasksRouteImport } from './routes/api/tasks'
 import { Route as ApiSwarmTmuxStopRouteImport } from './routes/api/swarm-tmux-stop'
 import { Route as ApiSwarmTmuxStartRouteImport } from './routes/api/swarm-tmux-start'
 import { Route as ApiSwarmTmuxScrollRouteImport } from './routes/api/swarm-tmux-scroll'
@@ -100,6 +100,7 @@ import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
+import { Route as ApiAgentDispatchRouteImport } from './routes/api/agent-dispatch'
 import { Route as ApiWorkspaceStatsRouteImport } from './routes/api/workspace/stats'
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
@@ -159,16 +160,6 @@ const SystemRoute = SystemRouteImport.update({
   path: '/system',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Swarm2Route = Swarm2RouteImport.update({
-  id: '/swarm2',
-  path: '/swarm2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SwarmRoute = SwarmRouteImport.update({
-  id: '/swarm',
-  path: '/swarm',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SkillsRoute = SkillsRouteImport.update({
   id: '/skills',
   path: '/skills',
@@ -187,6 +178,11 @@ const ProfilesRoute = ProfilesRouteImport.update({
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionsRoute = MissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemoryRoute = MemoryRouteImport.update({
@@ -297,6 +293,11 @@ const ApiTerminalInputRoute = ApiTerminalInputRouteImport.update({
 const ApiTerminalCloseRoute = ApiTerminalCloseRouteImport.update({
   id: '/api/terminal-close',
   path: '/api/terminal-close',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTasksRoute = ApiTasksRouteImport.update({
+  id: '/api/tasks',
+  path: '/api/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSwarmTmuxStopRoute = ApiSwarmTmuxStopRouteImport.update({
@@ -600,6 +601,11 @@ const ApiArtifactsRoute = ApiArtifactsRouteImport.update({
   path: '/api/artifacts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAgentDispatchRoute = ApiAgentDispatchRouteImport.update({
+  id: '/api/agent-dispatch',
+  path: '/api/agent-dispatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWorkspaceStatsRoute = ApiWorkspaceStatsRouteImport.update({
   id: '/stats',
   path: '/stats',
@@ -827,15 +833,15 @@ export interface FileRoutesByFullPath {
   '/jobs': typeof JobsRoute
   '/kanban': typeof KanbanRoute
   '/memory': typeof MemoryRoute
+  '/missions': typeof MissionsRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
-  '/swarm': typeof SwarmRoute
-  '/swarm2': typeof Swarm2Route
   '/system': typeof SystemRoute
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/api/agent-dispatch': typeof ApiAgentDispatchRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -896,6 +902,7 @@ export interface FileRoutesByFullPath {
   '/api/swarm-tmux-scroll': typeof ApiSwarmTmuxScrollRoute
   '/api/swarm-tmux-start': typeof ApiSwarmTmuxStartRoute
   '/api/swarm-tmux-stop': typeof ApiSwarmTmuxStopRoute
+  '/api/tasks': typeof ApiTasksRoute
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
@@ -963,14 +970,14 @@ export interface FileRoutesByTo {
   '/jobs': typeof JobsRoute
   '/kanban': typeof KanbanRoute
   '/memory': typeof MemoryRoute
+  '/missions': typeof MissionsRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/skills': typeof SkillsRoute
-  '/swarm': typeof SwarmRoute
-  '/swarm2': typeof Swarm2Route
   '/system': typeof SystemRoute
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/api/agent-dispatch': typeof ApiAgentDispatchRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1031,6 +1038,7 @@ export interface FileRoutesByTo {
   '/api/swarm-tmux-scroll': typeof ApiSwarmTmuxScrollRoute
   '/api/swarm-tmux-start': typeof ApiSwarmTmuxStartRoute
   '/api/swarm-tmux-stop': typeof ApiSwarmTmuxStopRoute
+  '/api/tasks': typeof ApiTasksRoute
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
@@ -1099,15 +1107,15 @@ export interface FileRoutesById {
   '/jobs': typeof JobsRoute
   '/kanban': typeof KanbanRoute
   '/memory': typeof MemoryRoute
+  '/missions': typeof MissionsRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
-  '/swarm': typeof SwarmRoute
-  '/swarm2': typeof Swarm2Route
   '/system': typeof SystemRoute
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/api/agent-dispatch': typeof ApiAgentDispatchRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1168,6 +1176,7 @@ export interface FileRoutesById {
   '/api/swarm-tmux-scroll': typeof ApiSwarmTmuxScrollRoute
   '/api/swarm-tmux-start': typeof ApiSwarmTmuxStartRoute
   '/api/swarm-tmux-stop': typeof ApiSwarmTmuxStopRoute
+  '/api/tasks': typeof ApiTasksRoute
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
@@ -1237,15 +1246,15 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/kanban'
     | '/memory'
+    | '/missions'
     | '/operations'
     | '/profiles'
     | '/settings'
     | '/skills'
-    | '/swarm'
-    | '/swarm2'
     | '/system'
     | '/tasks'
     | '/terminal'
+    | '/api/agent-dispatch'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1306,6 +1315,7 @@ export interface FileRouteTypes {
     | '/api/swarm-tmux-scroll'
     | '/api/swarm-tmux-start'
     | '/api/swarm-tmux-stop'
+    | '/api/tasks'
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
@@ -1373,14 +1383,14 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/kanban'
     | '/memory'
+    | '/missions'
     | '/operations'
     | '/profiles'
     | '/skills'
-    | '/swarm'
-    | '/swarm2'
     | '/system'
     | '/tasks'
     | '/terminal'
+    | '/api/agent-dispatch'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1441,6 +1451,7 @@ export interface FileRouteTypes {
     | '/api/swarm-tmux-scroll'
     | '/api/swarm-tmux-start'
     | '/api/swarm-tmux-stop'
+    | '/api/tasks'
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
@@ -1508,15 +1519,15 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/kanban'
     | '/memory'
+    | '/missions'
     | '/operations'
     | '/profiles'
     | '/settings'
     | '/skills'
-    | '/swarm'
-    | '/swarm2'
     | '/system'
     | '/tasks'
     | '/terminal'
+    | '/api/agent-dispatch'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1577,6 +1588,7 @@ export interface FileRouteTypes {
     | '/api/swarm-tmux-scroll'
     | '/api/swarm-tmux-start'
     | '/api/swarm-tmux-stop'
+    | '/api/tasks'
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
@@ -1645,15 +1657,15 @@ export interface RootRouteChildren {
   JobsRoute: typeof JobsRoute
   KanbanRoute: typeof KanbanRoute
   MemoryRoute: typeof MemoryRoute
+  MissionsRoute: typeof MissionsRoute
   OperationsRoute: typeof OperationsRoute
   ProfilesRoute: typeof ProfilesRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
-  SwarmRoute: typeof SwarmRoute
-  Swarm2Route: typeof Swarm2Route
   SystemRoute: typeof SystemRoute
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
+  ApiAgentDispatchRoute: typeof ApiAgentDispatchRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
@@ -1714,6 +1726,7 @@ export interface RootRouteChildren {
   ApiSwarmTmuxScrollRoute: typeof ApiSwarmTmuxScrollRoute
   ApiSwarmTmuxStartRoute: typeof ApiSwarmTmuxStartRoute
   ApiSwarmTmuxStopRoute: typeof ApiSwarmTmuxStopRoute
+  ApiTasksRoute: typeof ApiTasksRoute
   ApiTerminalCloseRoute: typeof ApiTerminalCloseRoute
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
@@ -1773,20 +1786,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SystemRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/swarm2': {
-      id: '/swarm2'
-      path: '/swarm2'
-      fullPath: '/swarm2'
-      preLoaderRoute: typeof Swarm2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/swarm': {
-      id: '/swarm'
-      path: '/swarm'
-      fullPath: '/swarm'
-      preLoaderRoute: typeof SwarmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/skills': {
       id: '/skills'
       path: '/skills'
@@ -1813,6 +1812,13 @@ declare module '@tanstack/react-router' {
       path: '/operations'
       fullPath: '/operations'
       preLoaderRoute: typeof OperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/missions': {
+      id: '/missions'
+      path: '/missions'
+      fullPath: '/missions'
+      preLoaderRoute: typeof MissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memory': {
@@ -1967,6 +1973,13 @@ declare module '@tanstack/react-router' {
       path: '/api/terminal-close'
       fullPath: '/api/terminal-close'
       preLoaderRoute: typeof ApiTerminalCloseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tasks': {
+      id: '/api/tasks'
+      path: '/api/tasks'
+      fullPath: '/api/tasks'
+      preLoaderRoute: typeof ApiTasksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/swarm-tmux-stop': {
@@ -2387,6 +2400,13 @@ declare module '@tanstack/react-router' {
       path: '/api/artifacts'
       fullPath: '/api/artifacts'
       preLoaderRoute: typeof ApiArtifactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agent-dispatch': {
+      id: '/api/agent-dispatch'
+      path: '/api/agent-dispatch'
+      fullPath: '/api/agent-dispatch'
+      preLoaderRoute: typeof ApiAgentDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/workspace/stats': {
@@ -2848,15 +2868,15 @@ const rootRouteChildren: RootRouteChildren = {
   JobsRoute: JobsRoute,
   KanbanRoute: KanbanRoute,
   MemoryRoute: MemoryRoute,
+  MissionsRoute: MissionsRoute,
   OperationsRoute: OperationsRoute,
   ProfilesRoute: ProfilesRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
-  SwarmRoute: SwarmRoute,
-  Swarm2Route: Swarm2Route,
   SystemRoute: SystemRoute,
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
+  ApiAgentDispatchRoute: ApiAgentDispatchRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
@@ -2917,6 +2937,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSwarmTmuxScrollRoute: ApiSwarmTmuxScrollRoute,
   ApiSwarmTmuxStartRoute: ApiSwarmTmuxStartRoute,
   ApiSwarmTmuxStopRoute: ApiSwarmTmuxStopRoute,
+  ApiTasksRoute: ApiTasksRoute,
   ApiTerminalCloseRoute: ApiTerminalCloseRoute,
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,

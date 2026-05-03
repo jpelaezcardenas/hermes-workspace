@@ -22,9 +22,10 @@ export const Route = createFileRoute('/api/claude-jobs')({
     handlers: {
       GET: async ({ request }) => {
         if (!isAuthenticated(request)) {
-          return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-            status: 401,
-          })
+          return new Response(
+            JSON.stringify({ ok: false, error: 'unauthenticated' }),
+            { status: 401, headers: { 'Content-Type': 'application/json' } },
+          )
         }
         const capabilities = await ensureGatewayProbed()
         if (!capabilities.jobs) {
@@ -51,9 +52,10 @@ export const Route = createFileRoute('/api/claude-jobs')({
       },
       POST: async ({ request }) => {
         if (!isAuthenticated(request)) {
-          return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-            status: 401,
-          })
+          return new Response(
+            JSON.stringify({ ok: false, error: 'unauthenticated' }),
+            { status: 401, headers: { 'Content-Type': 'application/json' } },
+          )
         }
         const capabilities = await ensureGatewayProbed()
         if (!capabilities.jobs) {

@@ -2,17 +2,17 @@ import { createFileRoute } from '@tanstack/react-router'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { Swarm2Screen } from '@/screens/swarm2/swarm2-screen'
 
-export const Route = createFileRoute('/swarm')({
+export const Route = createFileRoute('/missions')({
   ssr: false,
-  component: function SwarmRoute() {
-    usePageTitle('Swarm')
+  component: function MissionsRoute() {
+    usePageTitle('Missions')
     return <Swarm2Screen />
   },
-  errorComponent: function SwarmError({ error }) {
+  errorComponent: function MissionsError({ error }) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center bg-primary-50">
         <h2 className="text-xl font-semibold text-primary-900 mb-3">
-          Failed to Load Swarm
+          Failed to Load Missions
         </h2>
         <p className="text-sm text-primary-600 mb-4 max-w-md">
           {error instanceof Error
@@ -28,12 +28,12 @@ export const Route = createFileRoute('/swarm')({
       </div>
     )
   },
-  pendingComponent: function SwarmPending() {
+  pendingComponent: function MissionsPending() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-accent-500 border-r-transparent mb-3" />
-          <p className="text-sm text-primary-500">Loading swarm...</p>
+          <p className="text-sm text-primary-500">Loading missions...</p>
         </div>
       </div>
     )

@@ -9,12 +9,18 @@ import { usePageTitle } from '@/hooks/use-page-title'
 export const Route = createFileRoute('/kanban')({
   ssr: false,
   component: function KanbanRoute() {
-    usePageTitle('Kanban')
+    usePageTitle('Tasks Board')
     return (
       <div className="flex h-full min-h-0 w-full flex-1 flex-col bg-primary-950">
+        <div className="px-4 py-2 border-b border-primary-800">
+          <h1 className="text-sm font-semibold text-primary-100">
+            Tasks Board (proxied from built-in Hermes kanban)
+          </h1>
+        </div>
         <iframe
           src="/api/dashboard-proxy/kanban-board"
-          title="Hermes Kanban Board"
+          title="Tasks Board"
+          aria-label="Durable task board (built-in Hermes kanban)"
           className="h-full w-full flex-1 border-0"
           style={{
             border: 0,
