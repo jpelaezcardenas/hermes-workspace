@@ -9,6 +9,7 @@ import { Add01Icon, CheckListIcon, RefreshIcon } from '@hugeicons/core-free-icon
 import { TaskCard } from './task-card'
 import { TaskDialog } from './task-dialog'
 import { TaskDetailDrawer } from './task-detail-drawer'
+import { useKanbanEvents } from '@/hooks/use-kanban-events'
 import { toast } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
 import {
@@ -122,6 +123,19 @@ export function TasksScreen() {
   const invalidate = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
   }, [queryClient])
+
+  // Live event stream — invalidate board and open detail drawer on task events
+  useKanbanEvents({
+    enabled: true,
+    onEvent: (event) => {
+      // Invalidate the board on any task event
+      invalidate()
+      // If a detail drawer is open for this task, also invalidate its query
+      if (editingTask && event.task_id === editingTask.id) {
+        void queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', editingTask.id] })
+      }
+    },
+  })
 
   const createMutation = useMutation({
     mutationFn: createTask,
