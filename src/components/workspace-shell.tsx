@@ -184,6 +184,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const activeFriendlyId = chatMatch ? chatMatch[1] : 'main'
   const isOnChatRoute = Boolean(chatMatch) || pathname === '/new'
   const isOnTerminalRoute = pathname.startsWith('/terminal')
+  const isOnPlaygroundRoute = pathname === '/playground' || pathname.startsWith('/playground/')
   const hideChatSidebar = isOnChatRoute && chatFocusMode
   const showDesktopSidebarBackdrop =
     !isMobile && !isOnChatRoute && !sidebarCollapsed
@@ -414,12 +415,12 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
             </div>
           </main>
 
-          {/* Chat panel — visible on non-chat routes */}
-          {!isOnChatRoute && !isMobile && <ChatPanel />}
+          {/* Chat panel — visible on non-chat routes (but not in HermesWorld, which has its own in-game chat) */}
+          {!isOnChatRoute && !isOnPlaygroundRoute && !isMobile && <ChatPanel />}
         </div>
 
-        {/* Floating chat toggle — visible on non-chat routes */}
-        {!isOnChatRoute && !isMobile && <ChatPanelToggle />}
+        {/* Floating chat toggle — visible on non-chat routes (but not in HermesWorld) */}
+        {!isOnChatRoute && !isOnPlaygroundRoute && !isMobile && <ChatPanelToggle />}
 
         {showDesktopSidebarBackdrop ? (
           <button

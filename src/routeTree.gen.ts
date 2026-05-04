@@ -16,6 +16,7 @@ import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfilesRouteImport } from './routes/profiles'
+import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -23,6 +24,7 @@ import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
+import { Route as AgoraRouteImport } from './routes/agora'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -66,6 +68,7 @@ import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
+import { Route as ApiPlaygroundNpcRouteImport } from './routes/api/playground-npc'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
@@ -173,6 +176,11 @@ const ProfilesRoute = ProfilesRouteImport.update({
   path: '/profiles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlaygroundRoute = PlaygroundRouteImport.update({
+  id: '/playground',
+  path: '/playground',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
@@ -206,6 +214,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConductorRoute = ConductorRouteImport.update({
   id: '/conductor',
   path: '/conductor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgoraRoute = AgoraRouteImport.update({
+  id: '/agora',
+  path: '/agora',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -422,6 +435,11 @@ const ApiPreviewFileRoute = ApiPreviewFileRouteImport.update({
 const ApiPluginsRoute = ApiPluginsRouteImport.update({
   id: '/api/plugins',
   path: '/api/plugins',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPlaygroundNpcRoute = ApiPlaygroundNpcRouteImport.update({
+  id: '/api/playground-npc',
+  path: '/api/playground-npc',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPingRoute = ApiPingRouteImport.update({
@@ -785,6 +803,7 @@ const ApiMcpNameLogsRoute = ApiMcpNameLogsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -792,6 +811,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
+  '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
@@ -825,6 +845,7 @@ export interface FileRoutesByFullPath {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
+  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -915,6 +936,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -922,6 +944,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
+  '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -954,6 +977,7 @@ export interface FileRoutesByTo {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
+  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1045,6 +1069,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -1052,6 +1077,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
+  '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
@@ -1085,6 +1111,7 @@ export interface FileRoutesById {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
+  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1177,6 +1204,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/agora'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -1184,6 +1212,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/memory'
     | '/operations'
+    | '/playground'
     | '/profiles'
     | '/settings'
     | '/skills'
@@ -1217,6 +1246,7 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
+    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1307,6 +1337,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/agora'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -1314,6 +1345,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/memory'
     | '/operations'
+    | '/playground'
     | '/profiles'
     | '/skills'
     | '/swarm'
@@ -1346,6 +1378,7 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
+    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1436,6 +1469,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/agora'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -1443,6 +1477,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/memory'
     | '/operations'
+    | '/playground'
     | '/profiles'
     | '/settings'
     | '/skills'
@@ -1476,6 +1511,7 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
+    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1567,6 +1603,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AgoraRoute: typeof AgoraRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
@@ -1574,6 +1611,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
+  PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
@@ -1607,6 +1645,7 @@ export interface RootRouteChildren {
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
+  ApiPlaygroundNpcRoute: typeof ApiPlaygroundNpcRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
   ApiProviderUsageRoute: typeof ApiProviderUsageRoute
@@ -1720,6 +1759,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/playground': {
+      id: '/playground'
+      path: '/playground'
+      fullPath: '/playground'
+      preLoaderRoute: typeof PlaygroundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/operations': {
       id: '/operations'
       path: '/operations'
@@ -1767,6 +1813,13 @@ declare module '@tanstack/react-router' {
       path: '/conductor'
       fullPath: '/conductor'
       preLoaderRoute: typeof ConductorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agora': {
+      id: '/agora'
+      path: '/agora'
+      fullPath: '/agora'
+      preLoaderRoute: typeof AgoraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -2068,6 +2121,13 @@ declare module '@tanstack/react-router' {
       path: '/api/plugins'
       fullPath: '/api/plugins'
       preLoaderRoute: typeof ApiPluginsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/playground-npc': {
+      id: '/api/playground-npc'
+      path: '/api/playground-npc'
+      fullPath: '/api/playground-npc'
+      preLoaderRoute: typeof ApiPlaygroundNpcRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ping': {
@@ -2733,6 +2793,7 @@ const ApiSwarmMemoryRouteWithChildren = ApiSwarmMemoryRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AgoraRoute: AgoraRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
@@ -2740,6 +2801,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
+  PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
@@ -2773,6 +2835,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,
+  ApiPlaygroundNpcRoute: ApiPlaygroundNpcRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
   ApiProviderUsageRoute: ApiProviderUsageRoute,
