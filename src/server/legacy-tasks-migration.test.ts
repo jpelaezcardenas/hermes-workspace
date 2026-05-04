@@ -1,7 +1,9 @@
-import { describe, expect, it, vi, afterEach } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('./hermes-kanban-client', () => ({
-  createKanbanTask: vi.fn(async (input) => ({ task: { id: 'new-' + input.idempotency_key, ...input } })),
+  createKanbanTask: vi.fn(async (input) => ({
+    task: { id: 'new-' + input.idempotency_key, ...input },
+  })),
 }))
 
 vi.mock('node:fs', () => {
@@ -49,51 +51,56 @@ vi.mock('node:fs', () => {
 })
 
 describe('legacy-tasks-migration', () => {
-  afterEach(() => { vi.clearAllMocks() })
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
 
   it('maps high priority to numeric 3', async () => {
     const { previewMigration } = await import('./legacy-tasks-migration')
     const preview = previewMigration()
-    const highTask = preview.tasks.find(t => t.title === 'Fix UI')
+    const highTask = preview.tasks.find((t) => t.title === 'Fix UI')
     expect(highTask).toBeDefined()
     // Verify status mapping: in_progress → running
     expect(highTask?.target_status).toBe('running')
   })
 
   it('maps medium priority to numeric 1 (not 0)', async () => {
-    const { mapLegacyPriorityToNumeric } = await import('../lib/hermes-kanban-types')
+    const { mapLegacyPriorityToNumeric } =
+      await import('../lib/hermes-kanban-types')
     expect(mapLegacyPriorityToNumeric('medium')).toBe(1)
     // This guards the silent regression where medium → 0 showed as Low/Normal
   })
 
   it('maps low priority to -1', async () => {
-    const { mapLegacyPriorityToNumeric } = await import('../lib/hermes-kanban-types')
+    const { mapLegacyPriorityToNumeric } =
+      await import('../lib/hermes-kanban-types')
     expect(mapLegacyPriorityToNumeric('low')).toBe(-1)
   })
 
   it('maps high priority to 3', async () => {
-    const { mapLegacyPriorityToNumeric } = await import('../lib/hermes-kanban-types')
+    const { mapLegacyPriorityToNumeric } =
+      await import('../lib/hermes-kanban-types')
     expect(mapLegacyPriorityToNumeric('high')).toBe(3)
   })
 
   it('maps backlog → triage', async () => {
     const { previewMigration } = await import('./legacy-tasks-migration')
     const preview = previewMigration()
-    const backlogTask = preview.tasks.find(t => t.title === 'Research')
+    const backlogTask = preview.tasks.find((t) => t.title === 'Research')
     expect(backlogTask?.target_status).toBe('triage')
   })
 
   it('maps done → done', async () => {
     const { previewMigration } = await import('./legacy-tasks-migration')
     const preview = previewMigration()
-    const doneTask = preview.tasks.find(t => t.title === 'Old done task')
+    const doneTask = preview.tasks.find((t) => t.title === 'Old done task')
     expect(doneTask?.target_status).toBe('done')
   })
 
   it('maps review → triage (no review Agent status)', async () => {
     const { previewMigration } = await import('./legacy-tasks-migration')
     const preview = previewMigration()
-    const reviewTask = preview.tasks.find(t => t.title === 'Review task')
+    const reviewTask = preview.tasks.find((t) => t.title === 'Review task')
     expect(reviewTask?.target_status).toBe('triage')
   })
 
@@ -107,7 +114,7 @@ describe('legacy-tasks-migration', () => {
   it('generates stable idempotency keys for tasks with and without IDs', async () => {
     const { previewMigration } = await import('./legacy-tasks-migration')
     const preview = previewMigration()
-    const keys = preview.tasks.map(t => t.idempotency_key)
+    const keys = preview.tasks.map((t) => t.idempotency_key)
     // All keys should be unique
     expect(new Set(keys).size).toBe(keys.length)
     // All keys should start with switchui-legacy:
@@ -121,7 +128,9 @@ describe('legacy-tasks-migration', () => {
     const { createKanbanTask } = await import('./hermes-kanban-client')
     await performMigration()
     const calls = (createKanbanTask as ReturnType<typeof vi.fn>).mock.calls
-    const fixUiCall = calls.find((c: unknown[]) => (c[0] as { title: string }).title === 'Fix UI')
+    const fixUiCall = calls.find(
+      (c: Array<unknown>) => (c[0] as { title: string }).title === 'Fix UI',
+    )
     expect(fixUiCall).toBeDefined()
     const input = fixUiCall![0] as { body: string }
     expect(input.body).toContain('[Imported from SwitchUI tasks.json]')

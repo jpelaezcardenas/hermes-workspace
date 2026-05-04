@@ -4,18 +4,19 @@
  * All calls go through the Workspace proxy routes at /api/hermes-kanban/*.
  * The legacy /api/claude-tasks routes are deprecated (see Task 16).
  */
-import type {
-  HermesKanbanTask,
-  HermesKanbanStatus,
-  HermesKanbanBoard,
-  HermesKanbanAssignee,
-  CreateKanbanTaskInput,
-  UpdateKanbanTaskInput,
-} from './hermes-kanban-types'
 import {
-  HERMES_KANBAN_VISIBLE_STATUS_ORDER,
   HERMES_KANBAN_STATUS_LABELS,
+  HERMES_KANBAN_VISIBLE_STATUS_ORDER,
+  boardColumnsToMap,
   kanbanPriorityColor,
+} from './hermes-kanban-types'
+import type {
+  CreateKanbanTaskInput,
+  HermesKanbanAssignee,
+  HermesKanbanBoard,
+  HermesKanbanStatus,
+  HermesKanbanTask,
+  UpdateKanbanTaskInput,
 } from './hermes-kanban-types'
 
 export type { HermesKanbanTask as ClaudeTask, HermesKanbanStatus as TaskColumn }
@@ -30,22 +31,30 @@ export type CreateTaskInput = CreateKanbanTaskInput
 export type UpdateTaskInput = UpdateKanbanTaskInput
 
 export type TaskAssignee = HermesKanbanAssignee
-export type AssigneesResponse = { assignees: HermesKanbanAssignee[]; humanReviewer: null }
+export type AssigneesResponse = {
+  assignees: Array<HermesKanbanAssignee>
+  humanReviewer: null
+}
 
 const KANBAN_BASE = '/api/hermes-kanban'
 
 async function kanbanJson<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init)
   if (!res.ok) {
-    const body = await res.json().catch(() => ({})) as { error?: string; detail?: string }
-    throw new Error(body.error ?? body.detail ?? `Request failed: ${res.status}`)
+    const body = (await res.json().catch(() => ({}))) as {
+      error?: string
+      detail?: string
+    }
+    throw new Error(
+      body.error ?? body.detail ?? `Request failed: ${res.status}`,
+    )
   }
   return res.json() as Promise<T>
 }
 
 export async function fetchAssignees(): Promise<AssigneesResponse> {
   try {
-    const data = await kanbanJson<{ assignees: HermesKanbanAssignee[] }>(
+    const data = await kanbanJson<{ assignees: Array<HermesKanbanAssignee> }>(
       `${KANBAN_BASE}/assignees`,
     )
     return { assignees: data.assignees, humanReviewer: null }
@@ -59,7 +68,7 @@ export async function fetchTasks(params?: {
   assignee?: string
   include_done?: boolean
   include_archived?: boolean
-}): Promise<HermesKanbanTask[]> {
+}): Promise<Array<HermesKanbanTask>> {
   const q = new URLSearchParams()
   if (params?.tenant) q.set('tenant', params.tenant)
   if (params?.include_archived) q.set('include_archived', 'true')
@@ -68,27 +77,33 @@ export async function fetchTasks(params?: {
     `${KANBAN_BASE}/board${qs ? `?${qs}` : ''}`,
   )
   const board = data.board
+  // Agent API returns columns as [{name, tasks}] list — convert to a status map
+  const colMap = boardColumnsToMap(board.columns ?? [])
   const statuses = params?.include_done
     ? HERMES_KANBAN_VISIBLE_STATUS_ORDER
     : HERMES_KANBAN_VISIBLE_STATUS_ORDER.filter((s) => s !== 'done')
 
-  const tasks: HermesKanbanTask[] = []
+  const tasks: Array<HermesKanbanTask> = []
   for (const status of statuses) {
-    const col = board.columns?.[status as HermesKanbanStatus]
+    const col = colMap[status]
     if (Array.isArray(col)) tasks.push(...col)
   }
-  if (params?.assignee) return tasks.filter((t) => t.assignee === params.assignee)
+  if (params?.assignee)
+    return tasks.filter((t) => t.assignee === params.assignee)
   return tasks
 }
 
 export async function createTask(
   input: CreateKanbanTaskInput,
 ): Promise<HermesKanbanTask> {
-  const data = await kanbanJson<{ task: HermesKanbanTask }>(`${KANBAN_BASE}/tasks`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
-  })
+  const data = await kanbanJson<{ task: HermesKanbanTask }>(
+    `${KANBAN_BASE}/tasks`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    },
+  )
   return data.task
 }
 
@@ -156,4 +171,3 @@ export const COLUMN_COLORS: Record<HermesKanbanStatus, string> = {
   done: '#22c55e',
   archived: '#94a3b8',
 }
-

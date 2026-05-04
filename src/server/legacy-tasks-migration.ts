@@ -14,11 +14,17 @@ import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import crypto from 'node:crypto'
-import type { CreateKanbanTaskInput } from '../lib/hermes-kanban-types'
-import { mapLegacyColumnToKanbanStatus, mapLegacyPriorityToNumeric } from '../lib/hermes-kanban-types'
-import { createKanbanTask } from './hermes-kanban-client'
+import {
+  mapLegacyColumnToKanbanStatus,
+  mapLegacyPriorityToNumeric,
+} from '../lib/hermes-kanban-types'
+import { createKanbanTask, updateKanbanTask } from './hermes-kanban-client'
+import type { CreateKanbanTaskInput, HermesKanbanStatus } from '../lib/hermes-kanban-types'
 
-const HERMES_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
+const HERMES_HOME =
+  process.env.HERMES_HOME ??
+  process.env.CLAUDE_HOME ??
+  path.join(os.homedir(), '.hermes')
 const TASKS_FILE = path.join(HERMES_HOME, 'tasks.json')
 
 type LegacyTask = {
@@ -29,7 +35,7 @@ type LegacyTask = {
   column?: string
   priority?: string
   assignee?: string
-  tags?: string[]
+  tags?: Array<string>
   due_date?: string
   created_at?: string
 }
@@ -63,12 +69,15 @@ function derivedIdempotencyKey(task: LegacyTask, index: number): string {
   return `switchui-legacy:${crypto.createHash('sha256').update(stable).digest('hex').slice(0, 16)}`
 }
 
-function legacyTaskToCreateInput(task: LegacyTask, index: number): CreateKanbanTaskInput {
+function legacyTaskToCreateInput(
+  task: LegacyTask,
+  index: number,
+): { input: CreateKanbanTaskInput; desiredStatus: HermesKanbanStatus } {
   const targetStatus = mapLegacyColumnToKanbanStatus(task.column ?? 'backlog')
   const priority = mapLegacyPriorityToNumeric(task.priority ?? 'medium')
   const isTriage = targetStatus === 'triage'
 
-  const annotations: string[] = ['[Imported from SwitchUI tasks.json]']
+  const annotations: Array<string> = ['[Imported from SwitchUI tasks.json]']
   if (task.due_date) annotations.push(`Due date: ${task.due_date}`)
   if (task.tags?.length) annotations.push(`Tags: ${task.tags.join(', ')}`)
   const body = [annotations.join('\n'), task.description ?? task.body ?? '']
@@ -76,19 +85,22 @@ function legacyTaskToCreateInput(task: LegacyTask, index: number): CreateKanbanT
     .join('\n\n')
 
   return {
-    title: task.title,
-    body: body || null,
-    priority,
-    assignee: task.assignee ?? null,
-    triage: isTriage,
-    idempotency_key: derivedIdempotencyKey(task, index),
+    desiredStatus: targetStatus,
+    input: {
+      title: task.title,
+      body: body || null,
+      priority,
+      assignee: task.assignee ?? null,
+      triage: isTriage,
+      idempotency_key: derivedIdempotencyKey(task, index),
+    },
   }
 }
 
-export function readLegacyTasks(): LegacyTask[] {
+export function readLegacyTasks(): Array<LegacyTask> {
   try {
     const raw = fs.readFileSync(TASKS_FILE, 'utf-8')
-    const parsed = JSON.parse(raw) as { tasks?: LegacyTask[] }
+    const parsed = JSON.parse(raw) as { tasks?: Array<LegacyTask> }
     return Array.isArray(parsed.tasks) ? parsed.tasks : []
   } catch {
     return []
@@ -120,10 +132,15 @@ export async function performMigration(): Promise<MigrationResult> {
   let skipped = 0
 
   for (let i = 0; i < tasks.length; i++) {
-    const task = tasks[i]!
+    const task = tasks[i]
     try {
-      const input = legacyTaskToCreateInput(task, i)
-      await createKanbanTask(input)
+      const { input, desiredStatus } = legacyTaskToCreateInput(task, i)
+      const { task: created } = await createKanbanTask(input)
+      // Two-step: patch to correct status when Agent create cannot set it directly
+      // (running/todo/done/blocked require a PATCH; triage and ready are set at create)
+      if (desiredStatus !== 'triage' && desiredStatus !== 'ready') {
+        await updateKanbanTask(created.id, { status: desiredStatus })
+      }
       imported++
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -145,12 +162,28 @@ export async function performMigration(): Promise<MigrationResult> {
     fs.copyFileSync(TASKS_FILE, backupPath)
     fs.writeFileSync(
       markerPath,
-      JSON.stringify({ timestamp: new Date().toISOString(), imported, skipped, errors: errors.length, backup: backupPath }, null, 2),
+      JSON.stringify(
+        {
+          timestamp: new Date().toISOString(),
+          imported,
+          skipped,
+          errors: errors.length,
+          backup: backupPath,
+        },
+        null,
+        2,
+      ),
       'utf-8',
     )
   } catch {
     // Marker/backup failure is non-fatal
   }
 
-  return { imported, skipped, errors, backup_path: backupPath, marker_path: markerPath }
+  return {
+    imported,
+    skipped,
+    errors,
+    backup_path: backupPath,
+    marker_path: markerPath,
+  }
 }

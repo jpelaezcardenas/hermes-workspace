@@ -1,21 +1,32 @@
 import { describe, expect, it } from 'vitest'
 import {
-  HERMES_KANBAN_VISIBLE_STATUS_ORDER,
   HERMES_KANBAN_ALL_STATUSES,
+  HERMES_KANBAN_VISIBLE_STATUS_ORDER,
+  kanbanPriorityColor,
+  kanbanPriorityLabel,
   mapLegacyColumnToKanbanStatus,
   mapLegacyPriorityToNumeric,
-  kanbanPriorityLabel,
-  kanbanPriorityColor,
   normalizeKanbanAssignee,
 } from './hermes-kanban-types'
 
 describe('hermes-kanban-types', () => {
   it('separates visible board order from the full status set', () => {
     expect(HERMES_KANBAN_VISIBLE_STATUS_ORDER).toEqual([
-      'triage', 'todo', 'ready', 'running', 'blocked', 'done',
+      'triage',
+      'todo',
+      'ready',
+      'running',
+      'blocked',
+      'done',
     ])
     expect(HERMES_KANBAN_ALL_STATUSES).toEqual([
-      'triage', 'todo', 'ready', 'running', 'blocked', 'done', 'archived',
+      'triage',
+      'todo',
+      'ready',
+      'running',
+      'blocked',
+      'done',
+      'archived',
     ])
     expect(HERMES_KANBAN_VISIBLE_STATUS_ORDER).not.toContain('archived')
     expect(HERMES_KANBAN_ALL_STATUSES).toContain('archived')
@@ -60,7 +71,15 @@ describe('hermes-kanban-types', () => {
       const result = normalizeKanbanAssignee({
         name: 'agent-worker-1',
         on_disk: false,
-        counts: { triage: 0, todo: 1, ready: 2, running: 1, blocked: 0, done: 5, archived: 0 },
+        counts: {
+          triage: 0,
+          todo: 1,
+          ready: 2,
+          running: 1,
+          blocked: 0,
+          done: 5,
+          archived: 0,
+        },
       })
       expect(result.id).toBe('agent-worker-1')
       expect(result.name).toBe('agent-worker-1')
@@ -70,8 +89,20 @@ describe('hermes-kanban-types', () => {
     })
 
     it('preserves counts when present', () => {
-      const counts = { triage: 1, todo: 2, ready: 3, running: 4, blocked: 5, done: 6, archived: 7 }
-      const result = normalizeKanbanAssignee({ name: 'x', on_disk: true, counts })
+      const counts = {
+        triage: 1,
+        todo: 2,
+        ready: 3,
+        running: 4,
+        blocked: 5,
+        done: 6,
+        archived: 7,
+      }
+      const result = normalizeKanbanAssignee({
+        name: 'x',
+        on_disk: true,
+        counts,
+      })
       expect(result.counts).toEqual(counts)
       expect(result.onDisk).toBe(true)
     })
@@ -82,7 +113,11 @@ describe('hermes-kanban-types', () => {
     })
 
     it('treats unknown names as non-human by default', () => {
-      const result = normalizeKanbanAssignee({ name: 'some-ai-agent', on_disk: false, counts: {} })
+      const result = normalizeKanbanAssignee({
+        name: 'some-ai-agent',
+        on_disk: false,
+        counts: {},
+      })
       expect(result.isHuman).toBe(false)
     })
   })

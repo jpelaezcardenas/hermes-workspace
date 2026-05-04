@@ -17,12 +17,13 @@ export type HermesKanbanStatus =
   | 'archived'
 
 /** Ordered list of statuses shown as board columns (archived hidden by default). */
-export const HERMES_KANBAN_VISIBLE_STATUS_ORDER: Exclude<HermesKanbanStatus, 'archived'>[] = [
-  'triage', 'todo', 'ready', 'running', 'blocked', 'done',
-]
+export const HERMES_KANBAN_VISIBLE_STATUS_ORDER: Array<Exclude<
+  HermesKanbanStatus,
+  'archived'
+>> = ['triage', 'todo', 'ready', 'running', 'blocked', 'done']
 
 /** Full set including archived — used for filters and migration. */
-export const HERMES_KANBAN_ALL_STATUSES: HermesKanbanStatus[] = [
+export const HERMES_KANBAN_ALL_STATUSES: Array<HermesKanbanStatus> = [
   ...HERMES_KANBAN_VISIBLE_STATUS_ORDER,
   'archived',
 ]
@@ -64,7 +65,7 @@ export type HermesKanbanTask = {
   current_run_id: number | null
   workflow_template_id: string | null
   current_step_key: string | null
-  skills: string[] | string | null
+  skills: Array<string> | string | null
   block_reason?: string | null
   summary?: string | null
   age?: {
@@ -105,23 +106,41 @@ export type HermesKanbanRun = {
 }
 
 export type HermesKanbanLinks = {
-  parents: HermesKanbanTask[]
-  children: HermesKanbanTask[]
+  parents: Array<HermesKanbanTask>
+  children: Array<HermesKanbanTask>
 }
 
 export type HermesKanbanTaskDetail = {
   task: HermesKanbanTask
-  comments: HermesKanbanComment[]
-  events: HermesKanbanEvent[]
+  comments: Array<HermesKanbanComment>
+  events: Array<HermesKanbanEvent>
   links: HermesKanbanLinks
-  runs: HermesKanbanRun[]
+  runs: Array<HermesKanbanRun>
+}
+
+/** A single column as returned by the Agent /board endpoint. */
+export type HermesKanbanColumn = {
+  name: HermesKanbanStatus
+  tasks: Array<HermesKanbanTask>
 }
 
 export type HermesKanbanBoard = {
-  columns: Record<HermesKanbanStatus, HermesKanbanTask[]>
-  tenants: string[]
-  assignees: HermesKanbanAssigneeRaw[]
+  /** Agent API returns columns as an ordered list [{name, tasks}], not a dict. */
+  columns: Array<HermesKanbanColumn>
+  tenants: Array<string>
+  assignees: Array<HermesKanbanAssigneeRaw>
   latest_event_id: number | null
+}
+
+/** Convenience: flatten board columns list into a status-keyed map. */
+export function boardColumnsToMap(
+  columns: Array<HermesKanbanColumn>,
+): Record<HermesKanbanStatus, Array<HermesKanbanTask>> {
+  const map = {} as Record<HermesKanbanStatus, Array<HermesKanbanTask>>
+  for (const col of columns) {
+    map[col.name] = col.tasks
+  }
+  return map
 }
 
 // ── Assignees ────────────────────────────────────────────────────────────────
@@ -151,11 +170,11 @@ export type CreateKanbanTaskInput = {
   priority?: number
   workspace_kind?: string | null
   workspace_path?: string | null
-  parents?: string[]
+  parents?: Array<string>
   triage?: boolean
   idempotency_key?: string
   max_runtime_seconds?: number | null
-  skills?: string[] | null
+  skills?: Array<string> | null
 }
 
 export type UpdateKanbanTaskInput = {
@@ -170,7 +189,7 @@ export type UpdateKanbanTaskInput = {
 }
 
 export type BulkKanbanInput = {
-  ids: string[]
+  ids: Array<string>
   status?: HermesKanbanStatus
   assignee?: string | null
   priority?: number
@@ -196,29 +215,42 @@ export function kanbanPriorityColor(priority: number): string {
 /** Map old string priority labels to Agent numeric values. */
 export function mapLegacyPriorityToNumeric(priority: string): number {
   switch (priority.toLowerCase()) {
-    case 'high': return 3
-    case 'medium': return 1
-    case 'low': return -1
-    default: return 0
+    case 'high':
+      return 3
+    case 'medium':
+      return 1
+    case 'low':
+      return -1
+    default:
+      return 0
   }
 }
 
 // ── Legacy column mapping ─────────────────────────────────────────────────────
 
 /** Map old SwitchUI task column names to Agent Kanban statuses. */
-export function mapLegacyColumnToKanbanStatus(column: string): HermesKanbanStatus {
+export function mapLegacyColumnToKanbanStatus(
+  column: string,
+): HermesKanbanStatus {
   switch (column) {
-    case 'backlog': return 'triage'
-    case 'todo': return 'todo'
-    case 'in_progress': return 'running'
-    case 'review': return 'triage' // review has no Agent status; safer default is triage
-    case 'done': return 'done'
-    default: return 'triage'
+    case 'backlog':
+      return 'triage'
+    case 'todo':
+      return 'todo'
+    case 'in_progress':
+      return 'running'
+    case 'review':
+      return 'triage' // review has no Agent status; safer default is triage
+    case 'done':
+      return 'done'
+    default:
+      return 'triage'
   }
 }
 
-
-export function normalizeKanbanAssignee(raw: HermesKanbanAssigneeRaw): HermesKanbanAssignee {
+export function normalizeKanbanAssignee(
+  raw: HermesKanbanAssigneeRaw,
+): HermesKanbanAssignee {
   return {
     id: raw.name,
     name: raw.name,
