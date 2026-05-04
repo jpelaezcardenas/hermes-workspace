@@ -305,8 +305,6 @@ async function fetchModelsForProvider(
   }))
 }
 
-import { setLocalModelOverride } from '@/screens/chat/local-model-override'
-
 const LOCAL_PROVIDERS_SET = new Set(['ollama', 'atomic-chat'])
 
 async function switchModel(
