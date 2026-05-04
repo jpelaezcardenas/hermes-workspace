@@ -7,8 +7,31 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import type { ClaudeTask, CreateTaskInput, TaskColumn, TaskPriority, TaskAssignee } from '@/lib/tasks-api'
+import type { ClaudeTask, CreateTaskInput, TaskColumn, TaskAssignee } from '@/lib/tasks-api'
 import { COLUMN_LABELS, COLUMN_ORDER } from '@/lib/tasks-api'
+import { mapLegacyPriorityToNumeric } from '@/lib/hermes-kanban-types'
+
+// Priority labels in the form (friendly) → map to Agent numeric on submit
+const PRIORITY_OPTIONS = [
+  { label: 'High', value: 'high' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'Normal', value: 'normal' },
+  { label: 'Low', value: 'low' },
+] as const
+type FormPriority = typeof PRIORITY_OPTIONS[number]['value']
+
+function formPriorityToNumeric(p: FormPriority): number {
+  if (p === 'high') return 3
+  if (p === 'medium') return 1
+  if (p === 'normal') return 0
+  return -1
+}
+
+// Map column/status to Agent create payload fields
+function columnToCreatePayload(column: TaskColumn): { triage?: boolean } {
+  if (column === 'triage') return { triage: true }
+  return { triage: false }
+}
 
 type Props = {
   open: boolean
@@ -24,44 +47,47 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
   const isEdit = Boolean(task)
 
   const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [column, setColumn] = useState<TaskColumn>(defaultColumn ?? 'backlog')
-  const [priority, setPriority] = useState<TaskPriority>('medium')
+  const [body, setBody] = useState('')
+  const [column, setColumn] = useState<TaskColumn>(defaultColumn ?? 'triage')
+  const [priority, setPriority] = useState<FormPriority>('normal')
   const [assignee, setAssignee] = useState<string>('')
-  const [tags, setTags] = useState('')
-  const [dueDate, setDueDate] = useState('')
+  const [tenant, setTenant] = useState('')
+  const [skills, setSkills] = useState('')
 
   useEffect(() => {
     if (task) {
       setTitle(task.title)
-      setDescription(task.description)
-      setColumn(task.column)
-      setPriority(task.priority)
+      setBody(task.body ?? '')
+      setColumn((task.status as TaskColumn) ?? 'triage')
+      const numPri = typeof task.priority === 'number' ? task.priority : mapLegacyPriorityToNumeric(String(task.priority))
+      setPriority(numPri >= 3 ? 'high' : numPri >= 1 ? 'medium' : numPri === 0 ? 'normal' : 'low')
       setAssignee(task.assignee ?? '')
-      setTags(task.tags.join(', '))
-      setDueDate(task.due_date ?? '')
+      setTenant(task.tenant ?? '')
+      setSkills(Array.isArray(task.skills) ? task.skills.join(', ') : (task.skills ?? ''))
     } else {
       setTitle('')
-      setDescription('')
-      setColumn(defaultColumn ?? 'backlog')
-      setPriority('medium')
+      setBody('')
+      setColumn(defaultColumn ?? 'triage')
+      setPriority('normal')
       setAssignee('')
-      setTags('')
-      setDueDate('')
+      setTenant('')
+      setSkills('')
     }
   }, [task, open, defaultColumn])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!title.trim()) return
+    const skillsArr = skills.split(',').map(s => s.trim()).filter(Boolean)
+    const payload = columnToCreatePayload(column)
     await onSubmit({
       title: title.trim(),
-      description: description.trim(),
-      column,
-      priority,
+      body: body.trim() || null,
+      priority: formPriorityToNumeric(priority),
       assignee: assignee || null,
-      tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-      due_date: dueDate || null,
+      tenant: tenant.trim() || null,
+      skills: skillsArr.length > 0 ? skillsArr : null,
+      ...payload,
     })
   }
 
@@ -102,19 +128,19 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
             </div>
 
             <div>
-              <label className={labelClass}>Description</label>
+              <label className={labelClass}>Body</label>
               <textarea
                 className={cn(inputClass, 'resize-none')}
                 rows={3}
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                placeholder="Optional details..."
+                value={body}
+                onChange={e => setBody(e.target.value)}
+                placeholder="Optional details, acceptance criteria, context…"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelClass}>Column</label>
+                <label className={labelClass}>Status</label>
                 <select
                   className={inputClass}
                   style={{ colorScheme: 'dark' }}
@@ -125,6 +151,9 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                     <option key={col} value={col}>{COLUMN_LABELS[col]}</option>
                   ))}
                 </select>
+                <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
+                  Triage = backlog. Ready = dispatchable immediately.
+                </p>
               </div>
               <div>
                 <label className={labelClass}>Priority</label>
@@ -132,11 +161,11 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                   className={inputClass}
                   style={{ colorScheme: 'dark' }}
                   value={priority}
-                  onChange={e => setPriority(e.target.value as TaskPriority)}
+                  onChange={e => setPriority(e.target.value as FormPriority)}
                 >
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
+                  {PRIORITY_OPTIONS.map(o => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -155,29 +184,25 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                     <option key={id} value={id}>{label}</option>
                   ))}
                 </select>
-                <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
-                  Assignee is separate from status. Dragging a card changes its column only.
-                </p>
               </div>
               <div>
-                <label className={labelClass}>Due Date</label>
+                <label className={labelClass}>Tenant</label>
                 <input
-                  type="date"
                   className={inputClass}
-                  style={{ colorScheme: 'dark' }}
-                  value={dueDate}
-                  onChange={e => setDueDate(e.target.value)}
+                  value={tenant}
+                  onChange={e => setTenant(e.target.value)}
+                  placeholder="e.g. mission-42 (optional)"
                 />
               </div>
             </div>
 
             <div>
-              <label className={labelClass}>Tags (comma-separated)</label>
+              <label className={labelClass}>Skills (comma-separated)</label>
               <input
                 className={inputClass}
-                value={tags}
-                onChange={e => setTags(e.target.value)}
-                placeholder="frontend, bug, research"
+                value={skills}
+                onChange={e => setSkills(e.target.value)}
+                placeholder="e.g. python, code-review, research"
               />
             </div>
 
