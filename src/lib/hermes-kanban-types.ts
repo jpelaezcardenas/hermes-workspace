@@ -190,6 +190,7 @@ export type UpdateKanbanTaskInput = {
   summary?: string | null
   workspace_kind?: string | null
   workspace_path?: string | null
+  skills?: Array<string> | null
 }
 
 export type BulkKanbanInput = {

@@ -7,11 +7,12 @@ import { Cancel01Icon, HierarchyIcon, CpuIcon, Alert02Icon } from '@hugeicons/co
 import { cn } from '@/lib/utils'
 import {
   kanbanPriorityLabel,
+  kanbanPriorityColor,
   HERMES_KANBAN_STATUS_LABELS,
   HERMES_KANBAN_VISIBLE_STATUS_ORDER,
 } from '@/lib/hermes-kanban-types'
 import type { HermesKanbanTask, HermesKanbanTaskDetail, HermesKanbanStatus } from '@/lib/hermes-kanban-types'
-import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink } from '@/lib/tasks-api'
+import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink, createTask, deleteTask, COLUMN_COLORS } from '@/lib/tasks-api'
 
 type LogResponse = { log: { content: string; exists: boolean; truncated: boolean; size_bytes: number } }
 
@@ -88,6 +89,20 @@ type Props = {
 
 export function TaskDetailDrawer({ task, onClose }: Props) {
   const [activeTab, setActiveTab] = useState<DrawerTab>('overview')
+  const queryClient = useQueryClient()
+  const [archiving, setArchiving] = useState(false)
+
+  async function handleArchive() {
+    if (archiving) return
+    setArchiving(true)
+    try {
+      await deleteTask(task.id)
+      await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
+      onClose()
+    } finally {
+      setArchiving(false)
+    }
+  }
 
   const detailQuery = useQuery<HermesKanbanTaskDetail>({
     queryKey: ['hermes-kanban', 'task', task.id],
@@ -121,26 +136,40 @@ export function TaskDetailDrawer({ task, onClose }: Props) {
       <div className="relative z-10 flex h-full w-full max-w-xl flex-col bg-[var(--theme-card)] border-l border-[var(--theme-border)] shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-[var(--theme-border)] px-5 py-4">
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-[10px] font-mono text-[var(--theme-muted)] mb-0.5">{task.id}</p>
             <h2 className="text-sm font-semibold text-[var(--theme-text)] line-clamp-2">{task.title}</h2>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--theme-hover)] text-[var(--theme-muted)]">
+            <div className="flex flex-wrap items-center gap-1.5 mt-2">
+              {/* Status pill */}
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+                style={{ background: COLUMN_COLORS[task.status] }}>
                 {HERMES_KANBAN_STATUS_LABELS[task.status]}
               </span>
-              <span className="text-[10px] text-[var(--theme-muted)]">
+              {/* Priority pill */}
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+                style={{ background: kanbanPriorityColor(task.priority ?? 0) }}>
                 {kanbanPriorityLabel(task.priority ?? 0)} priority
               </span>
+              {/* Assignee pill */}
               {task.assignee && (
-                <span className="text-[10px] text-[var(--theme-muted)]">
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--theme-hover)] text-[var(--theme-muted)]">
                   @{task.assignee}
                 </span>
               )}
             </div>
           </div>
-          <button onClick={onClose} className="shrink-0 rounded-lg p-1.5 hover:bg-[var(--theme-hover)] transition-colors">
-            <HugeiconsIcon icon={Cancel01Icon} size={16} className="text-[var(--theme-muted)]" />
-          </button>
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              onClick={handleArchive}
+              disabled={archiving}
+              className="rounded-lg px-2 py-1 text-[11px] font-medium text-[var(--theme-muted)] hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-40"
+            >
+              {archiving ? 'Archiving…' : 'Archive'}
+            </button>
+            <button onClick={onClose} className="rounded-lg p-1.5 hover:bg-[var(--theme-hover)] transition-colors">
+              <HugeiconsIcon icon={Cancel01Icon} size={16} className="text-[var(--theme-muted)]" />
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -194,6 +223,82 @@ export function TaskDetailDrawer({ task, onClose }: Props) {
   )
 }
 
+function SkillsCombobox({
+  selected,
+  onChange,
+  suggestions,
+}: {
+  selected: string[]
+  onChange: (skills: string[]) => void
+  suggestions: string[]
+}) {
+  const [query, setQuery] = useState('')
+  const [open, setOpen] = useState(false)
+
+  const filtered = suggestions.filter(
+    s => !selected.includes(s) && s.toLowerCase().includes(query.toLowerCase()),
+  )
+
+  function add(skill: string) {
+    const s = skill.trim().toLowerCase().replace(/,$/, '')
+    if (s && !selected.includes(s)) onChange([...selected, s])
+    setQuery('')
+  }
+
+  function remove(skill: string) {
+    onChange(selected.filter(s => s !== skill))
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if ((e.key === 'Enter' || e.key === ',') && query.trim()) {
+      e.preventDefault(); add(query)
+    }
+    if (e.key === 'Backspace' && !query && selected.length > 0) {
+      remove(selected[selected.length - 1])
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {selected.map(skill => (
+            <span key={skill}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full border border-[var(--theme-border)] bg-[var(--theme-hover)] text-[var(--theme-text)]">
+              {skill}
+              <button onClick={() => remove(skill)} className="hover:text-red-400 transition-colors">
+                <HugeiconsIcon icon={Cancel01Icon} size={9} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="relative">
+        <input
+          className={inputClass}
+          value={query}
+          placeholder={selected.length ? 'Add more skills…' : 'python, code-review, research…'}
+          onChange={e => { setQuery(e.target.value); setOpen(true) }}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 180)}
+          onKeyDown={handleKeyDown}
+        />
+        {open && filtered.length > 0 && (
+          <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-40 overflow-y-auto rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-xl">
+            {filtered.slice(0, 12).map(s => (
+              <button key={s} onMouseDown={e => e.preventDefault()}
+                onClick={() => { add(s); setOpen(false) }}
+                className="w-full px-3 py-1.5 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors text-[var(--theme-text)]">
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanbanTaskDetail }) {
   const td = detail.task ?? task
   const queryClient = useQueryClient()
@@ -216,6 +321,25 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
   const assignees = assigneesQuery.data?.assignees ?? []
   const [assignee, setAssignee] = useState(td.assignee ?? '')
 
+  // Skills: normalise the stored value (string | string[] | null) → string[]
+  function normaliseSkills(raw: typeof td.skills): string[] {
+    if (!raw) return []
+    if (Array.isArray(raw)) return raw
+    return raw.split(',').map(s => s.trim()).filter(Boolean)
+  }
+  const [skills, setSkills] = useState<string[]>(normaliseSkills(td.skills))
+
+  // Collect all unique skill suggestions from the board task cache
+  const boardQuery = useQuery({
+    queryKey: ['claude', 'tasks', 'all'],
+    queryFn: () => fetchTasks({ include_done: true }),
+    staleTime: 60_000,
+  })
+  const skillSuggestions = Array.from(new Set(
+    (boardQuery.data ?? []).flatMap(t => normaliseSkills(t.skills)),
+  )).sort()
+
+  const initialSkills = normaliseSkills(td.skills)
   const isDirty =
     title !== td.title ||
     body !== (td.body ?? '') ||
@@ -225,7 +349,8 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
     summary !== (td.summary ?? '') ||
     assignee !== (td.assignee ?? '') ||
     workspaceKind !== (td.workspace_kind ?? '') ||
-    workspacePath !== (td.workspace_path ?? '')
+    workspacePath !== (td.workspace_path ?? '') ||
+    JSON.stringify([...skills].sort()) !== JSON.stringify([...initialSkills].sort())
 
   async function handleSave() {
     if (!title.trim() || saving) return
@@ -241,6 +366,7 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         summary: summary.trim() || null,
         workspace_kind: workspaceKind || null,
         workspace_path: workspacePath.trim() || null,
+        skills: skills.length > 0 ? skills : null,
       })
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
       await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
@@ -336,6 +462,12 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         </div>
       </div>
 
+      {/* Skills */}
+      <div>
+        <label className={labelClass}>Skills</label>
+        <SkillsCombobox selected={skills} onChange={setSkills} suggestions={skillSuggestions} />
+      </div>
+
       {/* Summary */}
       <div>
         <label className={labelClass}>Summary</label>
@@ -359,14 +491,13 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
       )}
 
       {/* Read-only metadata */}
-      {(td.tenant || td.skills || td.max_runtime_seconds || td.result ||
+      {(td.tenant || td.max_runtime_seconds || td.result ||
         td.created_at || td.started_at || td.completed_at || (td.spawn_failures ?? 0) > 0) && (
           <div className="pt-2 border-t border-[var(--theme-border)] space-y-2">
             <p className={labelClass}>Task metadata</p>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               {td.tenant && <MetaField label="Tenant" value={td.tenant} />}
               {td.max_runtime_seconds && <MetaField label="Max runtime" value={`${td.max_runtime_seconds}s`} />}
-              {td.skills && <MetaField label="Skills" value={Array.isArray(td.skills) ? td.skills.join(', ') : String(td.skills)} />}
               {td.result && <MetaField label="Result" value={td.result} />}
               {td.created_at && <MetaField label="Created" value={relativeTime(td.created_at)} />}
               {td.started_at && <MetaField label="Started" value={relativeTime(td.started_at)} />}
@@ -503,12 +634,59 @@ function TaskCombobox({
   )
 }
 
+function InlineCreateForm({
+  mode,
+  onSubmit,
+  onCancel,
+  submitting,
+}: {
+  mode: 'parent' | 'child'
+  onSubmit: (title: string, body: string) => void
+  onCancel: () => void
+  submitting: boolean
+}) {
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
+  return (
+    <div className="mt-2 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-hover)] p-3 space-y-2">
+      <p className="text-[10px] font-medium text-[var(--theme-muted)] uppercase tracking-wide">
+        New {mode === 'parent' ? 'parent' : 'child'} task
+      </p>
+      <div>
+        <label className={labelClass}>Title *</label>
+        <input className={inputClass} autoFocus value={title}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="What needs to be done?" />
+      </div>
+      <div>
+        <label className={labelClass}>Body</label>
+        <textarea className={cn(inputClass, 'resize-none')} rows={2} value={body}
+          onChange={e => setBody(e.target.value)}
+          placeholder="Acceptance criteria, context…" />
+      </div>
+      <div className="flex justify-end gap-2 pt-1">
+        <button onClick={onCancel} disabled={submitting}
+          className="rounded-lg px-3 py-1.5 text-xs text-[var(--theme-muted)] hover:bg-[var(--theme-hover)] transition-colors">
+          Cancel
+        </button>
+        <button onClick={() => onSubmit(title, body)}
+          disabled={!title.trim() || submitting}
+          className="rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+          style={{ background: 'var(--theme-accent)' }}>
+          {submitting ? 'Creating…' : 'Create & link'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanbanTaskDetail }) {
   const { parents, children } = detail.links ?? { parents: [], children: [] }
   const queryClient = useQueryClient()
   const [linking, setLinking] = useState(false)
+  const [creating, setCreating] = useState<'parent' | 'child' | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
-  // Fetch all board tasks for the autocomplete (uses shared TanStack cache)
   const boardQuery = useQuery({
     queryKey: ['claude', 'tasks', 'all'],
     queryFn: () => fetchTasks({ include_done: true }),
@@ -525,9 +703,7 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
     try {
       await addLink(parentId, childId)
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
-    } finally {
-      setLinking(false)
-    }
+    } finally { setLinking(false) }
   }
 
   async function handleRemove(parentId: string, childId: string) {
@@ -535,49 +711,85 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
     try {
       await removeLink(parentId, childId)
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
-    } finally {
-      setLinking(false)
-    }
+    } finally { setLinking(false) }
   }
+
+  async function handleCreateAndLink(mode: 'parent' | 'child', title: string, body: string) {
+    if (!title.trim() || submitting) return
+    setSubmitting(true)
+    try {
+      const newTask = await createTask({ title: title.trim(), body: body.trim() || null, triage: true })
+      if (mode === 'parent') await addLink(newTask.id, task.id)
+      else await addLink(task.id, newTask.id)
+      await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
+      await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks', 'all'] })
+      await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
+      setCreating(null)
+    } finally { setSubmitting(false) }
+  }
+
+  const busy = linking || submitting
 
   return (
     <div className="space-y-5">
       {/* Parents */}
       <section>
-        <p className={labelClass}>
-          <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
-          Parents ({parents.length})
-        </p>
-        {parents.length === 0 ? (
+        <div className="flex items-center justify-between mb-1">
+          <p className={labelClass}>
+            <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
+            Parents ({parents.length})
+          </p>
+          {creating !== 'parent' && (
+            <button onClick={() => setCreating('parent')} disabled={busy}
+              className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
+              + Create
+            </button>
+          )}
+        </div>
+        {parents.length === 0 && creating !== 'parent' && (
           <p className="text-xs text-[var(--theme-muted)]">No parent dependencies.</p>
-        ) : parents.map(p => (
-          <TaskRef key={p.id} task={p} onRemove={linking ? undefined : () => handleRemove(p.id, task.id)} />
+        )}
+        {parents.map(p => (
+          <TaskRef key={p.id} task={p} onRemove={busy ? undefined : () => handleRemove(p.id, task.id)} />
         ))}
-        <TaskCombobox
-          placeholder="Search tasks to add as parent…"
-          candidates={parentCandidates}
-          disabled={linking}
-          onSelect={t => handleAdd(t.id, task.id)}
-        />
+        {creating === 'parent'
+          ? <InlineCreateForm mode="parent" submitting={submitting}
+            onSubmit={(t, b) => handleCreateAndLink('parent', t, b)}
+            onCancel={() => setCreating(null)} />
+          : <TaskCombobox placeholder="Search tasks to add as parent…"
+            candidates={parentCandidates} disabled={busy}
+            onSelect={t => handleAdd(t.id, task.id)} />
+        }
       </section>
 
       {/* Children */}
       <section>
-        <p className={labelClass}>
-          <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
-          Children / subtasks ({children.length})
-        </p>
-        {children.length === 0 ? (
+        <div className="flex items-center justify-between mb-1">
+          <p className={labelClass}>
+            <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
+            Children / subtasks ({children.length})
+          </p>
+          {creating !== 'child' && (
+            <button onClick={() => setCreating('child')} disabled={busy}
+              className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
+              + Create
+            </button>
+          )}
+        </div>
+        {children.length === 0 && creating !== 'child' && (
           <p className="text-xs text-[var(--theme-muted)]">No child tasks.</p>
-        ) : children.map(c => (
-          <TaskRef key={c.id} task={c} onRemove={linking ? undefined : () => handleRemove(task.id, c.id)} />
+        )}
+        {children.map(c => (
+          <TaskRef key={c.id} task={c} onRemove={busy ? undefined : () => handleRemove(task.id, c.id)} />
         ))}
-        <TaskCombobox
-          placeholder="Search tasks to add as child…"
-          candidates={childCandidates}
-          disabled={linking}
-          onSelect={t => handleAdd(task.id, t.id)}
-        />
+        {creating === 'child'
+          ? <InlineCreateForm mode="child" submitting={submitting}
+            onSubmit={(t, b) => handleCreateAndLink('child', t, b)}
+            onCancel={() => setCreating(null)} />
+          : <TaskCombobox placeholder="Search tasks to add as child…"
+            candidates={childCandidates} disabled={busy}
+            onSelect={t => handleAdd(task.id, t.id)} />
+        }
       </section>
     </div>
   )
