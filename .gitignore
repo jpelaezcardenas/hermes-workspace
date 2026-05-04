@@ -145,3 +145,7 @@ skills-bundle/
 # Local agent artifacts (audit dumps, temporary playwright scripts)
 .hermes/
 .env.bak-*
+
+# OMC / Claude Code local state
+.omc/
+.omx/
