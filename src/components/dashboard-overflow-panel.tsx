@@ -4,11 +4,14 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import {
   BrainIcon,
   ComputerTerminal01Icon,
+  Clock01Icon,
+  DashboardSquare01Icon,
   File01Icon,
   McpServerIcon,
   MessageMultiple01Icon,
   Moon02Icon,
   PuzzleIcon,
+  Rocket01Icon,
   Settings01Icon,
   Sun02Icon,
   UserGroupIcon,
@@ -24,9 +27,12 @@ type OverflowItem = {
 }
 
 const SYSTEM_ITEMS: Array<OverflowItem> = [
+  { icon: DashboardSquare01Icon, label: 'Company Flow', to: '/company-flow' },
+  { icon: Clock01Icon, label: 'Schedule', to: '/schedule' },
+  { icon: BrainIcon, label: 'Domains', to: '/domains' },
   { icon: File01Icon, label: 'Files', to: '/files' },
   { icon: ComputerTerminal01Icon, label: 'Terminal', to: '/terminal' },
-  { icon: BrainIcon, label: 'Memory', to: '/memory' },
+  { icon: BrainIcon, label: 'Brain', to: '/memory' },
 ]
 
 const CLAUDE_ITEMS: Array<OverflowItem> = [
