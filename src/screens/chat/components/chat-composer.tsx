@@ -2553,6 +2553,62 @@ function ChatComposerComponent({
             />
             <PromptInputActions className="justify-between px-1.5 md:px-3 gap-0.5 md:gap-2">
               <div className="flex min-w-0 flex-1 items-center gap-0 md:gap-1">
+                {voiceInput.isSupported || voiceRecorder.isSupported ? (
+                  <PromptInputAction
+                    tooltip={
+                      voiceRecorder.isRecording
+                        ? `Recording… ${Math.round(voiceRecorder.durationMs / 1000)}s`
+                        : voiceInput.isListening
+                          ? 'Listening — tap to stop'
+                          : 'Tap: dictate · Hold: voice note'
+                    }
+                  >
+                    <Button
+                      onClick={() => {
+                        if (voiceInput.isListening) {
+                          voiceInput.stop()
+                        } else if (voiceRecorder.isRecording) {
+                          voiceRecorder.stop()
+                        } else {
+                          voiceInput.start()
+                        }
+                      }}
+                      onPointerDown={handleMicPointerDown}
+                      onPointerUp={handleMicPointerUp}
+                      onPointerLeave={handleMicPointerUp}
+                      size="icon-sm"
+                      variant="ghost"
+                      className={cn(
+                        'rounded-lg transition-colors select-none',
+                        voiceRecorder.isRecording
+                          ? 'text-red-600 bg-red-100 hover:bg-red-200 animate-pulse'
+                          : voiceInput.isListening
+                            ? 'text-red-500 bg-red-50 hover:bg-red-100 animate-pulse'
+                            : 'text-primary-500 hover:bg-primary-100 dark:hover:bg-primary-800 hover:text-primary-700',
+                      )}
+                      aria-label={
+                        voiceRecorder.isRecording
+                          ? 'Recording voice note'
+                          : voiceInput.isListening
+                            ? 'Stop listening'
+                            : 'Voice input'
+                      }
+                      disabled={disabled}
+                    >
+                      <HugeiconsIcon
+                        icon={Mic01Icon}
+                        size={20}
+                        strokeWidth={1.5}
+                      />
+                      {voiceRecorder.isRecording ? (
+                        <span className="absolute -top-1 -right-1 flex size-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                          <span className="relative inline-flex size-3 rounded-full bg-red-500" />
+                        </span>
+                      ) : null}
+                    </Button>
+                  </PromptInputAction>
+                ) : null}
                 <PromptInputAction tooltip="Add attachment">
                   <Button
                     size="icon-sm"
@@ -3056,62 +3112,6 @@ function ChatComposerComponent({
               </div>
               <div className="ml-1 flex shrink-0 items-center gap-0.5 md:gap-1">
                 <ContextBar compact sessionId={sessionKey} />
-                {voiceInput.isSupported || voiceRecorder.isSupported ? (
-                  <PromptInputAction
-                    tooltip={
-                      voiceRecorder.isRecording
-                        ? `Recording… ${Math.round(voiceRecorder.durationMs / 1000)}s`
-                        : voiceInput.isListening
-                          ? 'Listening — tap to stop'
-                          : 'Tap: dictate · Hold: voice note'
-                    }
-                  >
-                    <Button
-                      onClick={() => {
-                        if (voiceInput.isListening) {
-                          voiceInput.stop()
-                        } else if (voiceRecorder.isRecording) {
-                          voiceRecorder.stop()
-                        } else {
-                          voiceInput.start()
-                        }
-                      }}
-                      onPointerDown={handleMicPointerDown}
-                      onPointerUp={handleMicPointerUp}
-                      onPointerLeave={handleMicPointerUp}
-                      size="icon-sm"
-                      variant="ghost"
-                      className={cn(
-                        'rounded-lg transition-colors select-none',
-                        voiceRecorder.isRecording
-                          ? 'text-red-600 bg-red-100 hover:bg-red-200 animate-pulse'
-                          : voiceInput.isListening
-                            ? 'text-red-500 bg-red-50 hover:bg-red-100 animate-pulse'
-                            : 'text-primary-500 hover:bg-primary-100 dark:hover:bg-primary-800 hover:text-primary-700',
-                      )}
-                      aria-label={
-                        voiceRecorder.isRecording
-                          ? 'Recording voice note'
-                          : voiceInput.isListening
-                            ? 'Stop listening'
-                            : 'Voice input'
-                      }
-                      disabled={disabled}
-                    >
-                      <HugeiconsIcon
-                        icon={Mic01Icon}
-                        size={20}
-                        strokeWidth={1.5}
-                      />
-                      {voiceRecorder.isRecording ? (
-                        <span className="absolute -top-1 -right-1 flex size-3">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                          <span className="relative inline-flex size-3 rounded-full bg-red-500" />
-                        </span>
-                      ) : null}
-                    </Button>
-                  </PromptInputAction>
-                ) : null}
                 {isLoading ? (
                   <PromptInputAction tooltip="Stop generation">
                     <Button
