@@ -422,21 +422,23 @@ function CommentsTab({ detail, taskId }: { detail: HermesKanbanTaskDetail; taskI
 function DepsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
   const { parents, children } = detail.links ?? { parents: [], children: [] }
   return (
-    <div className="space-y-4 text-xs">
+    <div className="space-y-4">
       <section>
-        <p className="text-[var(--theme-muted)] uppercase tracking-wide text-[9px] mb-2 flex items-center gap-1">
-          <HugeiconsIcon icon={HierarchyIcon} size={10} /> Parents ({parents.length})
+        <p className={labelClass}>
+          <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
+          Parents ({parents.length})
         </p>
         {parents.length === 0 ? (
-          <p className="text-[var(--theme-muted)]">No parent dependencies.</p>
+          <p className="text-xs text-[var(--theme-muted)]">No parent dependencies.</p>
         ) : parents.map(p => <TaskRef key={p.id} task={p} />)}
       </section>
       <section>
-        <p className="text-[var(--theme-muted)] uppercase tracking-wide text-[9px] mb-2 flex items-center gap-1">
-          <HugeiconsIcon icon={HierarchyIcon} size={10} /> Children / subtasks ({children.length})
+        <p className={labelClass}>
+          <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
+          Children / subtasks ({children.length})
         </p>
         {children.length === 0 ? (
-          <p className="text-[var(--theme-muted)]">No child tasks.</p>
+          <p className="text-xs text-[var(--theme-muted)]">No child tasks.</p>
         ) : children.map(c => <TaskRef key={c.id} task={c} />)}
       </section>
     </div>
@@ -480,16 +482,83 @@ function RunsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
   )
 }
 
+const EVENT_KIND_COLORS: Record<string, string> = {
+  created: '#22c55e',
+  claimed: '#3b82f6',
+  spawned: '#f97316',
+  unclaimed: '#6b7280',
+  completed: '#22c55e',
+  failed: '#ef4444',
+  status_changed: '#a78bfa',
+  heartbeat: '#374151',
+  timed_out: '#ef4444',
+}
+
+function eventKindColor(kind: string): string {
+  return EVENT_KIND_COLORS[kind] ?? '#6b7280'
+}
+
+function eventPayloadSummary(kind: string, payload: unknown): string | null {
+  if (!payload || typeof payload !== 'object') return null
+  const p = payload as Record<string, unknown>
+  if (kind === 'created') {
+    const parts: string[] = []
+    if (p.status) parts.push(`status: ${p.status}`)
+    if (p.assignee) parts.push(`assignee: ${p.assignee}`)
+    return parts.join(' · ') || null
+  }
+  if (kind === 'status_changed') {
+    return p.from && p.to ? `${p.from} → ${p.to}` : null
+  }
+  if (kind === 'claimed') {
+    return p.lock ? `by ${String(p.lock).split(':')[0]}` : null
+  }
+  if (kind === 'spawned') {
+    return p.pid ? `PID ${p.pid}` : null
+  }
+  if (kind === 'failed') {
+    return typeof p.error === 'string' ? p.error.slice(0, 80) : null
+  }
+  return null
+}
+
 function EventsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
+  if (detail.events.length === 0) {
+    return <p className="text-xs text-[var(--theme-muted)]">No events recorded.</p>
+  }
   return (
-    <div className="space-y-1.5">
-      {detail.events.length === 0 && <p className="text-xs text-[var(--theme-muted)]">No events recorded.</p>}
-      {detail.events.map(ev => (
-        <div key={ev.id} className="flex items-start gap-2 text-xs">
-          <span className="text-[var(--theme-muted)] tabular-nums shrink-0">{relativeTime(ev.created_at)}</span>
-          <span className="text-[var(--theme-text)]">{ev.event_type}</span>
-        </div>
-      ))}
+    <div className="relative">
+      {/* Vertical timeline line */}
+      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[var(--theme-border)]" />
+      <div className="space-y-3">
+        {detail.events.map(ev => {
+          const color = eventKindColor(ev.kind)
+          const summary = eventPayloadSummary(ev.kind, ev.payload)
+          return (
+            <div key={ev.id} className="flex items-start gap-3 pl-1">
+              {/* Dot */}
+              <span className="relative z-10 mt-1 w-3 h-3 rounded-full shrink-0 ring-2 ring-[var(--theme-card)]"
+                style={{ background: color }} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xs font-medium text-[var(--theme-text)] capitalize">
+                    {ev.kind.replace(/_/g, ' ')}
+                  </span>
+                  {ev.run_id != null && (
+                    <span className="text-[10px] text-[var(--theme-muted)] font-mono">run #{ev.run_id}</span>
+                  )}
+                  <span className="ml-auto text-[10px] text-[var(--theme-muted)] tabular-nums shrink-0">
+                    {relativeTime(ev.created_at)}
+                  </span>
+                </div>
+                {summary && (
+                  <p className="text-[11px] text-[var(--theme-muted)] mt-0.5 truncate">{summary}</p>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

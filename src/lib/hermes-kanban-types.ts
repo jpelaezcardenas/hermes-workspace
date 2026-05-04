@@ -89,9 +89,11 @@ export type HermesKanbanComment = {
 export type HermesKanbanEvent = {
   id: number
   task_id: string
-  event_type: string
+  /** Agent API field name is "kind", not "event_type". */
+  kind: string
   payload: unknown
   created_at: number
+  run_id: number | null
 }
 
 export type HermesKanbanRun = {
