@@ -130,10 +130,20 @@ export async function createJob(input: {
   skills?: Array<string>
   repeat?: number
 }): Promise<ClaudeJob> {
+  // Normalize deliver: backend expects a string, but the form sends an array
+  const normalizedDeliver = Array.isArray(input.deliver)
+    ? input.deliver.join(',')
+    : input.deliver
+
+  const payload = {
+    ...input,
+    ...(normalizedDeliver !== undefined ? { deliver: normalizedDeliver } : {}),
+  }
+
   const res = await fetch(CLAUDE_API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
+    body: JSON.stringify(payload),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
