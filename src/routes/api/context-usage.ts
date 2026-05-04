@@ -49,6 +49,61 @@ function authHeaders(): Record<string, string> {
 
 const CHARS_PER_TOKEN = 3.5
 
+type EstimableMessage = {
+  content?: unknown
+  text?: unknown
+  reasoning?: unknown
+  tool_calls?: unknown
+}
+
+export function estimateContextTokensFromMessages(
+  messages: ReadonlyArray<EstimableMessage>,
+): number {
+  let totalChars = 0
+  for (const msg of messages) {
+    let contentChars = 0
+    let innerTexts: Array<string> = []
+    const content = msg.content
+    if (typeof content === 'string') {
+      contentChars += content.length
+    } else if (Array.isArray(content)) {
+      contentChars += JSON.stringify(content).length
+      for (const block of content) {
+        if (block && typeof block === 'object') {
+          const text = (block as { text?: unknown }).text
+          if (typeof text === 'string') innerTexts.push(text)
+        }
+      }
+    } else if (content != null) {
+      contentChars += JSON.stringify(content).length
+    }
+
+    // De-dup top-level text if it mirrors any inner content block text
+    if (typeof msg.text === 'string') {
+      if (!innerTexts.includes(msg.text)) {
+        contentChars += msg.text.length
+      }
+    }
+    if (typeof msg.reasoning === 'string') {
+      contentChars += msg.reasoning.length
+    }
+    if (msg.tool_calls != null) {
+      contentChars += JSON.stringify(msg.tool_calls).length
+    }
+    totalChars += contentChars
+  }
+  return Math.ceil(totalChars / CHARS_PER_TOKEN)
+}
+
+export function estimateContextTokensFromCacheRead(
+  cacheReadTokens: number,
+  messageCount: number,
+): number {
+  const assistantTurns = Math.max(1, Math.ceil(messageCount / 2))
+  if (cacheReadTokens <= 0) return 0
+  return Math.ceil((cacheReadTokens / assistantTurns) * 1.2)
+}
+
 export const Route = createFileRoute('/api/context-usage')({
   server: {
     handlers: {

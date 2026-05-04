@@ -22,7 +22,9 @@ vi.mock('node:fs', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks()
+  vi.unstubAllEnvs()
   delete process.env.CLAUDE_HOME
+  delete process.env.HERMES_HOME
 })
 
 async function loadMod() {

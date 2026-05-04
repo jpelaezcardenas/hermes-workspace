@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import path from 'node:path'
 
 const { existsSync, readFileSync, writeFileSync, mkdirSync } = vi.hoisted(() => ({
@@ -27,9 +27,17 @@ vi.mock('node:os', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks()
-  delete process.env.CLAUDE_HOME
-  delete process.env.CLAUDE_API_URL
-  delete process.env.CLAUDE_DASHBOARD_URL
+  vi.unstubAllEnvs()
+  vi.stubEnv('CLAUDE_HOME', '')
+  vi.stubEnv('HERMES_HOME', '')
+  vi.stubEnv('CLAUDE_API_URL', '')
+  vi.stubEnv('HERMES_API_URL', '')
+  vi.stubEnv('CLAUDE_DASHBOARD_URL', '')
+  vi.stubEnv('HERMES_DASHBOARD_URL', '')
+})
+
+afterEach(() => {
+  vi.unstubAllEnvs()
 })
 
 async function loadMod() {

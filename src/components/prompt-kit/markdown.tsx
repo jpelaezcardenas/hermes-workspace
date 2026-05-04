@@ -1,11 +1,17 @@
 import { marked } from 'marked'
 import { createContext, memo, useContext, useId, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import { CodeBlock } from './code-block'
 import type { Components } from 'react-markdown'
+import 'katex/dist/katex.min.css'
 import { cn } from '@/lib/utils'
+
+const MARKDOWN_REMARK_PLUGINS = [remarkGfm, remarkBreaks, remarkMath]
+const MARKDOWN_REHYPE_PLUGINS = [rehypeKatex]
 
 export type MarkdownProps = {
   children: string
@@ -309,7 +315,8 @@ const MemoizedMarkdownBlock = memo(
   }) {
     return (
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkBreaks]}
+        remarkPlugins={MARKDOWN_REMARK_PLUGINS}
+        rehypePlugins={MARKDOWN_REHYPE_PLUGINS}
         components={components}
       >
         {content}
@@ -354,4 +361,4 @@ function MarkdownComponent({
 const Markdown = memo(MarkdownComponent)
 Markdown.displayName = 'Markdown'
 
-export { Markdown }
+export { Markdown, MARKDOWN_REMARK_PLUGINS, MARKDOWN_REHYPE_PLUGINS }

@@ -92,6 +92,44 @@ function readServers(payload: unknown): Array<McpServerRecord> {
   )
 }
 
+const DASHBOARD_CONFIG_URL = 'http://127.0.0.1:9119/api/config'
+const GATEWAY_CONFIG_URL = 'http://127.0.0.1:8642/api/config'
+
+export async function loadMcpServersFromConfig(): Promise<{
+  ok: boolean
+  servers: Array<McpServerRecord>
+  message?: string
+}> {
+  const headers = authHeaders()
+  try {
+    const dashRes = await fetch(DASHBOARD_CONFIG_URL, { headers })
+    if (dashRes.ok) {
+      const payload = (await dashRes.json().catch(() => ({}))) as unknown
+      return { ok: true, servers: readServers(payload) }
+    }
+  } catch {
+    /* fall through to gateway */
+  }
+  try {
+    const gwRes = await fetch(GATEWAY_CONFIG_URL, { headers })
+    if (gwRes.ok) {
+      const payload = (await gwRes.json().catch(() => ({}))) as unknown
+      return { ok: true, servers: readServers(payload) }
+    }
+    return {
+      ok: false,
+      servers: [],
+      message: `Failed to load MCP servers from gateway config (${gwRes.status}).`,
+    }
+  } catch {
+    return {
+      ok: false,
+      servers: [],
+      message: 'Could not reach Hermes config endpoint.',
+    }
+  }
+}
+
 export const Route = createFileRoute('/api/mcp/servers')({
   server: {
     handlers: {

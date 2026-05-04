@@ -1,4 +1,44 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+const { existsSyncImpl, execFileSyncImpl } = vi.hoisted(() => ({
+  existsSyncImpl: { fn: (_path: string) => false as boolean },
+  execFileSyncImpl: { fn: (_command: string, _args?: string[]) => '' as string },
+}))
+
+vi.mock('node:fs', () => {
+  const existsSync = (path: string) => existsSyncImpl.fn(path)
+  const stub = (..._args: unknown[]) => undefined
+  const fsApi = {
+    existsSync,
+    readFileSync: stub,
+    writeFileSync: stub,
+    mkdirSync: stub,
+    rmSync: stub,
+    statSync: stub,
+    readdirSync: () => [],
+  }
+  return {
+    ...fsApi,
+    default: fsApi,
+  }
+})
+
+vi.mock('node:child_process', () => {
+  const execFileSync = (command: string, args?: string[]) => execFileSyncImpl.fn(command, args)
+  return {
+    execFileSync,
+    default: { execFileSync },
+  }
+})
+
+beforeEach(() => {
+  existsSyncImpl.fn = () => false
+  execFileSyncImpl.fn = () => ''
+  vi.unstubAllEnvs()
+  vi.stubEnv('HERMES_HOME', '')
+  delete process.env.HERMES_HOME
+  delete process.env.CLAUDE_HOME
+})
 
 afterEach(() => {
   vi.resetModules()
@@ -10,6 +50,9 @@ async function loadKanbanBackend(options?: {
   existsSync?: (path: string) => boolean
   execFileSync?: (command: string, args?: string[]) => string
 }) {
+  if (options?.existsSync) existsSyncImpl.fn = options.existsSync
+  if (options?.execFileSync) execFileSyncImpl.fn = options.execFileSync
+
   vi.doMock('./swarm-kanban-store', () => ({
     SWARM_KANBAN_FILE: '/tmp/swarm2-kanban.json',
     createSwarmKanbanCard: vi.fn((input) => ({
@@ -54,14 +97,6 @@ async function loadKanbanBackend(options?: {
       createdAt: 1,
       updatedAt: 2,
     })),
-  }))
-
-  vi.doMock('node:fs', () => ({
-    existsSync: vi.fn((path: string) => options?.existsSync?.(path) ?? false),
-  }))
-
-  vi.doMock('node:child_process', () => ({
-    execFileSync: vi.fn((command: string, args?: string[]) => options?.execFileSync?.(command, args) ?? ''),
   }))
 
   return import('./kanban-backend')

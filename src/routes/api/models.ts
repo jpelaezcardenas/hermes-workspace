@@ -16,9 +16,19 @@ import {
   ensureProviderInConfig,
 } from '../../server/local-provider-discovery'
 
-const CLAUDE_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
-const MODELS_PATH = path.join(CLAUDE_HOME, 'models.json')
-const CONFIG_PATH = path.join(CLAUDE_HOME, 'config.yaml')
+function getClaudeHome(): string {
+  return (
+    process.env.CLAUDE_HOME ??
+    process.env.HERMES_HOME ??
+    path.join(os.homedir(), '.hermes')
+  )
+}
+function getModelsPath(): string {
+  return path.join(getClaudeHome(), 'models.json')
+}
+function getConfigPath(): string {
+  return path.join(getClaudeHome(), 'config.yaml')
+}
 
 type ModelEntry = {
   provider?: string
@@ -71,8 +81,8 @@ function normalizeModel(entry: unknown): ModelEntry | null {
  */
 function readClaudeModelsJson(): Array<ModelEntry> {
   try {
-    if (!fs.existsSync(MODELS_PATH)) return []
-    const raw = fs.readFileSync(MODELS_PATH, 'utf-8')
+    if (!fs.existsSync(getModelsPath())) return []
+    const raw = fs.readFileSync(getModelsPath(), 'utf-8')
     const entries = JSON.parse(raw)
     if (!Array.isArray(entries)) return []
     return entries
@@ -100,8 +110,8 @@ function readStreamTimeouts(): { streamAcceptedTimeoutMs: number; streamHandoffT
   let acceptedS = DEFAULT_ACCEPTED_TIMEOUT_S
   let handoffS = DEFAULT_HANDOFF_TIMEOUT_S
   try {
-    if (fs.existsSync(CONFIG_PATH)) {
-      const parsed = YAML.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'))
+    if (fs.existsSync(getConfigPath())) {
+      const parsed = YAML.parse(fs.readFileSync(getConfigPath(), 'utf-8'))
       const ws =
         parsed && typeof parsed === 'object' && typeof (parsed as Record<string, unknown>).workspace === 'object'
           ? ((parsed as Record<string, unknown>).workspace as Record<string, unknown>)
@@ -127,8 +137,8 @@ function readStreamTimeouts(): { streamAcceptedTimeoutMs: number; streamHandoffT
  */
 function readClaudeDefaultModel(): ModelEntry | null {
   try {
-    if (!fs.existsSync(CONFIG_PATH)) return null
-    const raw = fs.readFileSync(CONFIG_PATH, 'utf-8')
+    if (!fs.existsSync(getConfigPath())) return null
+    const raw = fs.readFileSync(getConfigPath(), 'utf-8')
     const parsed = YAML.parse(raw)
     if (!parsed || typeof parsed !== 'object') return null
     const config = parsed as Record<string, unknown>
