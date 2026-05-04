@@ -45,7 +45,7 @@ Default skills:
 - `swarm-review-learning-loop`
 - `self-improvement`
 
-Default model: GPT-5.4
+Default model: GPT-5.5
 
 When to use:
 
@@ -110,7 +110,7 @@ Default skills:
 - `byte-verified-code-review`
 - `swarm-review-learning-loop`
 
-Default model: GPT-5.4
+Default model: GPT-5.5
 
 When to use:
 
@@ -173,7 +173,7 @@ Default skills:
 - `pc1-ollama-gguf-bench`
 - `swarm-bench-worker`
 
-Default model: GPT-5.4
+Default model: GPT-5.5
 
 When to use:
 
@@ -259,7 +259,7 @@ Default skills:
 
 - `swarm-worker-core`
 
-Default model: GPT-5.4
+Default model: GPT-5.5
 
 When to use:
 
@@ -289,7 +289,7 @@ Default skills:
 - `swarm-worker-core`
 - `byte-verified-code-review`
 
-Default model: GPT-5.4
+Default model: GPT-5.5
 
 When to use:
 
@@ -318,7 +318,7 @@ Default skills:
 - `claude-promo`
 - `songwriting-and-ai-music`
 
-Default model: GPT-5.4
+Default model: GPT-5.5
 
 When to use:
 
