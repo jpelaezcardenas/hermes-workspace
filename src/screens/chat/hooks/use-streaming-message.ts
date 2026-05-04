@@ -41,6 +41,58 @@ type PortableHistoryMessage = {
   content: string
 }
 
+/**
+ * Build a user-facing error message from a non-OK /api/send-stream response.
+ * Pure helper — exported so it can be unit-tested without rendering the hook.
+ *
+ * Tries to surface the structured `{ ok: false, error: '...' }` body Workspace
+ * routes return; falls back to the raw text or HTTP status text.
+ */
+export function buildSendStreamErrorMessage(
+  status: number,
+  statusText: string,
+  body: string,
+): string {
+  let parsedError: string | undefined
+  try {
+    const parsed = JSON.parse(body) as Record<string, unknown>
+    if (typeof parsed?.error === 'string' && parsed.error.trim()) {
+      parsedError = parsed.error
+    } else if (
+      typeof parsed?.message === 'string' &&
+      (parsed as { message: string }).message.trim()
+    ) {
+      parsedError = (parsed as { message: string }).message
+    }
+  } catch {
+    /* not JSON, fall through */
+  }
+  const detail =
+    parsedError ||
+    (typeof body === 'string' ? body.slice(0, 200) : '') ||
+    statusText ||
+    'Stream request failed'
+  return `HTTP ${status}: ${detail}`
+}
+
+/**
+ * True iff a fetch rejection should be treated as a user-initiated abort
+ * (in which case the chat composer should NOT surface an error toast).
+ * Pure helper — exported for unit tests.
+ */
+export function isFetchAbortError(err: unknown): boolean {
+  if (!err) return false
+  if (err instanceof Error && err.name === 'AbortError') return true
+  if (
+    typeof err === 'object' &&
+    err !== null &&
+    (err as { name?: unknown }).name === 'AbortError'
+  ) {
+    return true
+  }
+  return false
+}
+
 type UseStreamingMessageOptions = {
   onStarted?: (payload: { runId: string | null }) => void
   onChunk?: (text: string, fullText: string) => void
@@ -182,7 +234,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
   }, [])
 
   const markFailed = useCallback(
-    (message: string) => {
+    (message: string, debug?: Record<string, unknown>) => {
       if (finishedRef.current) return
       finishedRef.current = true
       eventSourceRef.current = null
@@ -191,6 +243,17 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       clearHandoffTimer()
       clearSendStreamRun()
       clearStreamingSession(activeSessionKeyRef.current)
+      // Surface the failure in devtools so the user can see exactly what went
+      // wrong on /api/send-stream without re-deriving from network panel.
+      // eslint-disable-next-line no-console
+      console.error('[chat-send]', {
+        phase: 'markFailed',
+        message,
+        sessionKey: activeSessionKeyRef.current,
+        runId: activeRunIdRef.current,
+        lifecyclePhase: lifecyclePhaseRef.current,
+        ...(debug ?? {}),
+      })
       setState((prev) => ({
         ...prev,
         isStreaming: false,
@@ -800,8 +863,22 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
         })
 
         if (!response.ok) {
-          const errorText = await response.text()
-          throw new Error(errorText || 'Stream request failed')
+          const errorText = await response.text().catch(() => '')
+          // eslint-disable-next-line no-console
+          console.error('[chat-send]', {
+            phase: 'response-not-ok',
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText.slice(0, 500),
+            sessionKey: params.sessionKey,
+          })
+          throw new Error(
+            buildSendStreamErrorMessage(
+              response.status,
+              response.statusText,
+              errorText,
+            ),
+          )
         }
 
         const resolvedHeaders = readResolvedSessionHeaders(response.headers, {
@@ -869,8 +946,19 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             if (!currentEvent || !currentData) continue
             try {
               processEvent(currentEvent, JSON.parse(currentData))
-            } catch {
-              // Ignore invalid SSE data.
+            } catch (parseErr) {
+              // eslint-disable-next-line no-console
+              console.error('[chat-send]', {
+                phase: 'sse-parse',
+                event: currentEvent,
+                preview: currentData.slice(0, 200),
+                errorMessage:
+                  parseErr instanceof Error
+                    ? parseErr.message
+                    : String(parseErr),
+                sessionKey: activeSessionKeyRef.current,
+                runId: activeRunIdRef.current,
+              })
             }
           }
         }
@@ -880,7 +968,13 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           finishStream()
         }
       } catch (err) {
-        if ((err as Error).name === 'AbortError') {
+        if (isFetchAbortError(err)) {
+          // eslint-disable-next-line no-console
+          console.error('[chat-send]', {
+            phase: 'abort',
+            sessionKey: activeSessionKeyRef.current,
+            runId: activeRunIdRef.current,
+          })
           eventSourceRef.current = null
           clearHandoffTimer()
           clearSendStreamRun()
@@ -892,7 +986,14 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           return
         }
         const errorMessage = err instanceof Error ? err.message : String(err)
-        markFailed(errorMessage)
+        markFailed(errorMessage, {
+          phase: 'fetch-catch',
+          errorName: err instanceof Error ? err.name : undefined,
+          stack:
+            err instanceof Error && typeof err.stack === 'string'
+              ? err.stack.split('\n').slice(0, 3).join('\n')
+              : undefined,
+        })
       }
     },
     [

@@ -225,4 +225,67 @@ describe('kanban-backend', () => {
     expect(sqliteCalls.some((call) => call.includes('insert into tasks'))).toBe(true)
     expect(sqliteCalls.some((call) => call.includes('update tasks set'))).toBe(true)
   })
+
+  it('mapRunningCardsToSessions returns only running cards in merged session shape', async () => {
+    const mod = await loadKanbanBackend()
+    const cards = [
+      { id: 't_run1', title: 'Running task', spec: '', acceptanceCriteria: [], assignedWorker: 'coding', reviewer: null, status: 'running' as const, missionId: null, reportPath: null, createdBy: 'claude-kanban', createdAt: 1_700_000_000_000, updatedAt: 1_700_000_500_000, startedAt: 1_700_000_100_000, workspace: '/tmp/ws/t_run1' },
+      { id: 't_done1', title: 'Done task', spec: '', acceptanceCriteria: [], assignedWorker: null, reviewer: null, status: 'done' as const, missionId: null, reportPath: null, createdBy: 'claude-kanban', createdAt: 1_700_000_000_000, updatedAt: 1_700_000_400_000 },
+      { id: 't_ready1', title: 'Ready task', spec: '', acceptanceCriteria: [], assignedWorker: 'research', reviewer: null, status: 'ready' as const, missionId: null, reportPath: null, createdBy: 'claude-kanban', createdAt: 1_700_000_000_000, updatedAt: 1_700_000_300_000 },
+      { id: 't_run2', title: 'Running fallback', spec: '', acceptanceCriteria: [], assignedWorker: null, reviewer: null, status: 'running' as const, missionId: null, reportPath: null, createdBy: 'claude-kanban', createdAt: 1_700_000_200_000, updatedAt: 1_700_000_600_000 },
+    ]
+
+    const sessions = mod.mapRunningCardsToSessions(cards)
+
+    expect(sessions).toHaveLength(2)
+    expect(sessions.map((s) => s.id)).toEqual(['t_run1', 't_run2'])
+
+    const [first, second] = sessions
+    expect(first).toMatchObject({
+      key: 't_run1',
+      id: 't_run1',
+      title: '🤖 Running task',
+      startedAt: 1_700_000_100_000,
+      updatedAt: 1_700_000_500_000,
+      message_count: 0,
+      model: 'coding',
+      source: 'kanban-worker',
+      kanban: {
+        taskId: 't_run1',
+        assignee: 'coding',
+        status: 'running',
+        workspace: '/tmp/ws/t_run1',
+      },
+    })
+
+    // Falls back to createdAt when startedAt absent and workspace null when missing.
+    expect(second).toMatchObject({
+      key: 't_run2',
+      startedAt: 1_700_000_200_000,
+      model: null,
+      kanban: { workspace: null, assignee: null, status: 'running' },
+    })
+  })
+
+  it('mapRunningCardsToSessions returns empty array when no running cards', async () => {
+    const mod = await loadKanbanBackend()
+    const sessions = mod.mapRunningCardsToSessions([
+      { id: 't_d', title: 'd', spec: '', acceptanceCriteria: [], assignedWorker: null, reviewer: null, status: 'done', missionId: null, reportPath: null, createdBy: 'x', createdAt: 1, updatedAt: 1 },
+      { id: 't_b', title: 'b', spec: '', acceptanceCriteria: [], assignedWorker: null, reviewer: null, status: 'backlog', missionId: null, reportPath: null, createdBy: 'x', createdAt: 1, updatedAt: 1 },
+    ])
+    expect(sessions).toEqual([])
+  })
+
+  it('listRunningKanbanWorkers returns merged-shape sessions, never crashes (local fallback path)', async () => {
+    // When the canonical Hermes DB is not detected, listRunningKanbanWorkers
+    // falls back to listKanbanCards() (local Swarm board). The default mock
+    // returns a single backlog card, so the result must be an empty array of
+    // merged-shape sessions — proves the public helper handles the
+    // no-running-workers case without throwing and without leaking non-running
+    // cards into /api/sessions.
+    const mod = await loadKanbanBackend({ existsSync: () => false })
+    const sessions = mod.listRunningKanbanWorkers()
+    expect(Array.isArray(sessions)).toBe(true)
+    expect(sessions).toEqual([])
+  })
 })

@@ -48,6 +48,15 @@ export type ClaudeSession = {
   parent_session_id?: string | null
   last_active?: number | null
   preview?: string | null
+  // Optional discriminator + nested metadata used when /api/sessions
+  // surfaces non-gateway sources (e.g. kanban workers, local Ollama chats).
+  // These remain optional so existing call sites keep type-checking.
+  kanban?: {
+    taskId: string
+    assignee: string | null
+    status: string
+    workspace: string | null
+  }
 }
 
 export type ClaudeMessage = {

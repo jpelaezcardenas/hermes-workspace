@@ -370,6 +370,25 @@ const AUXILIARY_SURFACES = [
   'flush_memories',
 ] as const
 
+// Inline copy so the Routing table is self-explanatory for surfaces that
+// aren't surfaced as runtime agents under Missions. Keep entries short — they
+// render as a `title` tooltip on the surface name and feed the WS-E test.
+export const AUXILIARY_SURFACE_DESCRIPTIONS: Partial<
+  Record<(typeof AUXILIARY_SURFACES)[number], string>
+> = {
+  curator:
+    'Background curator (`hermes curator`) that maintains skills/memory libraries — not a live Missions agent.',
+  vision: 'Image understanding model used by vision_analyze and screenshots.',
+  web_extract: 'Page summarization model for web_extract on long pages.',
+  compression: 'Conversation compression model that rewrites long histories.',
+  session_search: 'Per-result summarization model for session_search.',
+  skills_hub: 'Skill discovery / autoload model for the Skills Hub.',
+  approval: 'Reviewer model that scores destructive command approvals.',
+  mcp: 'MCP routing model that selects which MCP server handles a call.',
+  title_generation: 'Auto-titles new chat sessions from the first user message.',
+  flush_memories: 'Distills long-term memory and rewrites the user/agent profiles.',
+}
+
 function AuxiliaryTable({
   payload,
   onSaved,
@@ -397,7 +416,7 @@ function AuxiliaryTable({
                 key={name}
                 className="border-t border-primary-200 align-top"
               >
-                <td className="px-2 py-1.5 font-medium text-primary-900">
+                <td className="px-2 py-1.5 font-medium text-primary-900" title={AUXILIARY_SURFACE_DESCRIPTIONS[name] ?? undefined}>
                   {name}
                 </td>
                 <td className="px-2 py-1.5">

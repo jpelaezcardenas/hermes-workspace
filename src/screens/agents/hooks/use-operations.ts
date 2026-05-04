@@ -505,6 +505,137 @@ export function getOperationsSessionKey(agentId: string): string {
   return `agent:main:ops-${agentId}`
 }
 
+export type RunningKanbanWorker = {
+  taskId: string
+  title: string
+  assignee: string | null
+  startedAt: number
+}
+
+type SwarmKanbanCardLike = {
+  id?: unknown
+  title?: unknown
+  status?: unknown
+  assignedWorker?: unknown
+  createdAt?: unknown
+  updatedAt?: unknown
+}
+
+type SessionSourceLike = {
+  source?: unknown
+  taskId?: unknown
+  task_id?: unknown
+  key?: unknown
+  title?: unknown
+  derivedTitle?: unknown
+  task?: unknown
+  assignee?: unknown
+  profile?: unknown
+  startedAt?: unknown
+  createdAt?: unknown
+  updatedAt?: unknown
+}
+
+function readUnixTimestamp(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value > 1_000_000_000_000 ? value : Math.round(value * 1000)
+  }
+  if (typeof value === 'string' && value.trim()) {
+    const asNum = Number(value)
+    if (Number.isFinite(asNum)) return readUnixTimestamp(asNum)
+    const parsed = Date.parse(value)
+    return Number.isNaN(parsed) ? null : parsed
+  }
+  return null
+}
+
+// Primary path: W-A's /api/sessions augmented with source: 'kanban-worker'.
+// Returns null when the discriminator isn't present so the caller can fall back.
+async function fetchRunningWorkersFromSessions(): Promise<RunningKanbanWorker[] | null> {
+  try {
+    const response = await fetch('/api/sessions')
+    if (!response.ok) return null
+    const payload = (await response.json().catch(() => ({}))) as {
+      sessions?: SessionSourceLike[]
+    }
+    const sessions = Array.isArray(payload.sessions) ? payload.sessions : []
+    const tagged = sessions.filter((entry) => entry?.source === 'kanban-worker')
+    // No discriminator yet (W-A not landed) — let caller fall back.
+    if (tagged.length === 0 && !sessions.some((entry) => 'source' in (entry ?? {}))) {
+      return null
+    }
+    return tagged
+      .map((entry) => {
+        const taskId =
+          readString(entry.taskId) ||
+          readString(entry.task_id) ||
+          readString(entry.key) ||
+          ''
+        if (!taskId) return null
+        const startedAt =
+          readUnixTimestamp(entry.startedAt) ??
+          readUnixTimestamp(entry.createdAt) ??
+          readUnixTimestamp(entry.updatedAt) ??
+          Date.now()
+        return {
+          taskId,
+          title:
+            readString(entry.title) ||
+            readString(entry.derivedTitle) ||
+            readString(entry.task) ||
+            taskId,
+          assignee: readString(entry.assignee) || readString(entry.profile) || null,
+          startedAt,
+        } satisfies RunningKanbanWorker
+      })
+      .filter((entry): entry is RunningKanbanWorker => entry !== null)
+  } catch {
+    return null
+  }
+}
+
+// Fallback: /api/swarm-kanban filtered to status === 'running'.
+async function fetchRunningWorkersFromKanban(): Promise<RunningKanbanWorker[]> {
+  const response = await fetch('/api/swarm-kanban')
+  if (!response.ok) return []
+  const payload = (await response.json().catch(() => ({}))) as {
+    cards?: SwarmKanbanCardLike[]
+  }
+  const cards = Array.isArray(payload.cards) ? payload.cards : []
+  return cards
+    .filter((card) => readString(card?.status) === 'running')
+    .map((card) => {
+      const taskId = readString(card?.id)
+      if (!taskId) return null
+      const startedAt =
+        readUnixTimestamp(card?.updatedAt) ??
+        readUnixTimestamp(card?.createdAt) ??
+        Date.now()
+      return {
+        taskId,
+        title: readString(card?.title) || taskId,
+        assignee: readString(card?.assignedWorker) || null,
+        startedAt,
+      } satisfies RunningKanbanWorker
+    })
+    .filter((entry): entry is RunningKanbanWorker => entry !== null)
+}
+
+export async function fetchRunningKanbanWorkers(): Promise<RunningKanbanWorker[]> {
+  const fromSessions = await fetchRunningWorkersFromSessions()
+  if (fromSessions !== null) return fromSessions
+  return fetchRunningWorkersFromKanban()
+}
+
+export function selectRunningWorkersForAgent(
+  workers: RunningKanbanWorker[],
+  agent: { id: string; name: string },
+): RunningKanbanWorker[] {
+  return workers.filter(
+    (worker) => worker.assignee === agent.name || worker.assignee === agent.id,
+  )
+}
+
 export function useOperations() {
   const queryClient = useQueryClient()
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
@@ -530,6 +661,12 @@ export function useOperations() {
     queryKey: ['operations', 'cron'],
     queryFn: fetchCronJobs,
     refetchInterval: 30_000,
+  })
+
+  const runningWorkersQuery = useQuery({
+    queryKey: ['operations', 'running-workers'],
+    queryFn: fetchRunningKanbanWorkers,
+    refetchInterval: 10_000,
   })
 
   const agents = useMemo(() => {
@@ -732,6 +869,8 @@ export function useOperations() {
     configQuery,
     sessionsQuery,
     cronJobsQuery,
+    runningWorkersQuery,
+    runningWorkers: runningWorkersQuery.data ?? [],
     recentActivity,
     settings,
     saveSettings,

@@ -16,6 +16,7 @@ import { OperationsAgentDetail } from './components/operations-agent-detail'
 import { OperationsNewAgentModal } from './components/operations-new-agent-modal'
 import { OperationsSettingsModal } from './components/operations-settings-modal'
 import { FullOutputsView } from './components/full-outputs-view'
+import { LiveWorkersCard } from './components/live-workers-card'
 import { useOperations } from './hooks/use-operations'
 
 export const THEME_STYLE: CSSProperties = {
@@ -54,6 +55,8 @@ export function OperationsScreen() {
     configQuery,
     sessionsQuery,
     cronJobsQuery,
+    runningWorkers,
+    runningWorkersQuery,
     settings,
     saveSettings,
     defaultModel,
@@ -159,20 +162,37 @@ export function OperationsScreen() {
               />
             </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.04 }}
+            >
+              <LiveWorkersCard
+                workers={runningWorkers}
+                isLoading={runningWorkersQuery.isFetching}
+              />
+            </motion.div>
+
             <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {agents.map((agent, index) => (
-                <motion.div
-                  key={agent.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04, duration: 0.22 }}
-                >
-                  <OperationsAgentCard
-                    agent={agent}
-                    onOpenSettings={(agentId) => setSettingsAgentId(agentId)}
-                  />
-                </motion.div>
-              ))}
+              {agents.map((agent, index) => {
+                const runningForAgent = runningWorkers.filter(
+                  (worker) => worker.assignee === agent.name || worker.assignee === agent.id,
+                )
+                return (
+                  <motion.div
+                    key={agent.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04, duration: 0.22 }}
+                  >
+                    <OperationsAgentCard
+                      agent={agent}
+                      onOpenSettings={(agentId) => setSettingsAgentId(agentId)}
+                      runningWorkers={runningForAgent}
+                    />
+                  </motion.div>
+                )
+              })}
               <motion.button
                 type="button"
                 initial={{ opacity: 0, y: 12 }}

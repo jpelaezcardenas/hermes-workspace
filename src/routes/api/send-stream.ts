@@ -284,6 +284,12 @@ export const Route = createFileRoute('/api/send-stream')({
       POST: async ({ request }) => {
         // Auth check
         if (!isAuthenticated(request)) {
+          // eslint-disable-next-line no-console
+          console.error('[send-stream]', {
+            reason: 'unauthorized',
+            mode: getChatMode(),
+            capabilities: getGatewayCapabilities(),
+          })
           return new Response(
             JSON.stringify({ ok: false, error: 'Unauthorized' }),
             { status: 401, headers: { 'Content-Type': 'application/json' } },
@@ -313,6 +319,13 @@ export const Route = createFileRoute('/api/send-stream')({
         const attachments = normalizeAttachments(body.attachments)
         const history = normalizePortableHistory(body.history)
         if (!message.trim() && (!attachments || attachments.length === 0)) {
+          // eslint-disable-next-line no-console
+          console.error('[send-stream]', {
+            reason: 'message-required',
+            sessionKey: rawSessionKey,
+            mode: getChatMode(),
+            capabilities: getGatewayCapabilities(),
+          })
           return new Response(
             JSON.stringify({ ok: false, error: 'message required' }),
             {
@@ -336,6 +349,14 @@ export const Route = createFileRoute('/api/send-stream')({
         } catch (err) {
           const errorMsg = normalizeClaudeErrorMessage(err)
           if (errorMsg === 'session not found') {
+            // eslint-disable-next-line no-console
+            console.error('[send-stream]', {
+              reason: 'session-not-found',
+              sessionKey: rawSessionKey,
+              friendlyId: requestedFriendlyId,
+              mode: getChatMode(),
+              capabilities: getGatewayCapabilities(),
+            })
             return new Response(
               JSON.stringify({ ok: false, error: 'session not found' }),
               {
@@ -344,6 +365,15 @@ export const Route = createFileRoute('/api/send-stream')({
               },
             )
           }
+          // eslint-disable-next-line no-console
+          console.error('[send-stream]', {
+            reason: 'resolve-session-failed',
+            errorMessage: errorMsg,
+            sessionKey: rawSessionKey,
+            friendlyId: requestedFriendlyId,
+            mode: getChatMode(),
+            capabilities: getGatewayCapabilities(),
+          })
           return new Response(JSON.stringify({ ok: false, error: errorMsg }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },

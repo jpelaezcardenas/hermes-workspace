@@ -17,7 +17,7 @@ import { toast } from '@/components/ui/toast'
 import { runCronJob, toggleCronJob } from '@/lib/cron-api'
 import { cn } from '@/lib/utils'
 import { useAgentChat, type OperationsChatMessage } from '../hooks/use-agent-chat'
-import type { OperationsAgent } from '../hooks/use-operations'
+import type { OperationsAgent, RunningKanbanWorker } from '../hooks/use-operations'
 
 function getStatusStyles(status: OperationsAgent['status']) {
   if (status === 'error') {
@@ -166,12 +166,51 @@ export function OperationsInlineChat({
   )
 }
 
+export function emitFocusLiveWorker(taskId: string): void {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(
+    new CustomEvent('operations:focus-live-worker', { detail: { taskId } }),
+  )
+}
+
+/** Stateless pill so it's renderable in tests without a hook dispatcher.
+ *  Click delegates to emitFocusLiveWorker which is also exported for direct
+ *  unit tests of the dispatch payload. */
+export function RunningWorkersPill({
+  count,
+  firstTaskId,
+  agentDisplayName,
+}: {
+  count: number
+  firstTaskId: string | null
+  agentDisplayName: string
+}) {
+  return (
+    <button
+      type="button"
+      data-testid="agent-running-pill"
+      data-running-count={count}
+      onClick={() => {
+        if (!firstTaskId) return
+        emitFocusLiveWorker(firstTaskId)
+      }}
+      aria-label={`${count} running worker${count === 1 ? '' : 's'} for ${agentDisplayName}`}
+      className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-700 hover:bg-emerald-500/25"
+    >
+      <span aria-hidden>🟢</span>
+      <span>{count} running</span>
+    </button>
+  )
+}
+
 export function OperationsAgentCard({
   agent,
   onOpenSettings,
+  runningWorkers = [],
 }: {
   agent: OperationsAgent
   onOpenSettings: (agentId: string) => void
+  runningWorkers?: RunningKanbanWorker[]
 }) {
   const queryClient = useQueryClient()
   const status = getStatusStyles(agent.status)
@@ -322,6 +361,13 @@ export function OperationsAgentCard({
         <p className="w-full truncate text-[10px] text-[var(--theme-muted)]/80">
           {agent.jobs.length > 0 ? `${agent.jobs.length} scheduled job${agent.jobs.length === 1 ? '' : 's'}` : 'Manual only'}
         </p>
+        {runningWorkers.length > 0 ? (
+          <RunningWorkersPill
+            count={runningWorkers.length}
+            firstTaskId={runningWorkers[0]?.taskId ?? null}
+            agentDisplayName={displayName}
+          />
+        ) : null}
       </div>
 
       <AnimatePresence initial={false}>

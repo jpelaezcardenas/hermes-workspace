@@ -143,6 +143,34 @@ function readClaudeTasks(): ClaudeTaskRow[] {
   return Array.isArray(parsed) ? parsed : []
 }
 
+type ClaudeRunningTaskRow = ClaudeTaskRow & {
+  started_at?: number | string | null
+  workspace_path?: string | null
+}
+
+function readClaudeRunningTasks(): ClaudeRunningTaskRow[] {
+  const detection = detectClaudeKanban()
+  if (!detection.available) return []
+  const query = [
+    'select',
+    'id,',
+    'title,',
+    'body,',
+    'status,',
+    'assignee,',
+    'created_at,',
+    'started_at,',
+    'workspace_path,',
+    'coalesce(last_heartbeat_at, completed_at, started_at, created_at) as updated_at',
+    'from tasks',
+    "where status in ('running', 'claimed', 'in_progress')",
+    'order by coalesce(started_at, created_at) desc, id desc;',
+  ].join(' ')
+  const raw = runSqlite(detection.dbPath, query)
+  const parsed = raw ? (JSON.parse(raw) as ClaudeRunningTaskRow[]) : []
+  return Array.isArray(parsed) ? parsed : []
+}
+
 function readClaudeTask(taskId: string): ClaudeTaskRow | null {
   const detection = detectClaudeKanban()
   if (!detection.available) return null
@@ -344,4 +372,80 @@ export function createKanbanCard(input: CreateSwarmKanbanCardInput): SwarmKanban
 
 export function updateKanbanCard(cardId: string, updates: UpdateSwarmKanbanCardInput): SwarmKanbanCard | null {
   return resolveKanbanBackend().update(cardId, updates)
+}
+
+// /api/sessions surfaces running kanban workers so the Operations / Tasks /
+// Chat tabs can see live agent runs alongside gateway and local chat sessions.
+// We filter to status === 'running' and tag each item with source='kanban-worker'
+// so consumers can distinguish the merged origin without re-fetching the board.
+
+/** Card shape accepted by mapRunningCardsToSessions. Extends SwarmKanbanCard
+ *  with the optional run-time fields that only the canonical Hermes kanban DB
+ *  exposes (started_at, workspace_path). The local Swarm board fallback omits
+ *  them and the helper falls back to createdAt / null respectively. */
+export type RunningKanbanCardLike = SwarmKanbanCard & {
+  startedAt?: number | null
+  workspace?: string | null
+}
+
+export type RunningKanbanWorkerSession = {
+  key: string
+  id: string
+  title: string
+  startedAt: number
+  updatedAt: number
+  message_count: number
+  model: string | null
+  source: 'kanban-worker'
+  kanban: {
+    taskId: string
+    assignee: string | null
+    status: SwarmKanbanCard['status']
+    workspace: string | null
+  }
+}
+
+/** Pure mapping from kanban cards → merged session-summary items.
+ *  Filters to status === 'running' so callers can pass any card list. */
+export function mapRunningCardsToSessions(
+  cards: ReadonlyArray<RunningKanbanCardLike>,
+): RunningKanbanWorkerSession[] {
+  return cards
+    .filter((card) => card.status === 'running')
+    .map((card) => ({
+      key: card.id,
+      id: card.id,
+      title: `🤖 ${card.title}`,
+      startedAt: card.startedAt ?? card.createdAt,
+      updatedAt: card.updatedAt,
+      message_count: 0,
+      model: card.assignedWorker ?? null,
+      source: 'kanban-worker' as const,
+      kanban: {
+        taskId: card.id,
+        assignee: card.assignedWorker,
+        status: card.status,
+        workspace: card.workspace ?? null,
+      },
+    }))
+}
+
+/** Returns the currently-running kanban workers in the merged session shape.
+ *  Uses the canonical Hermes kanban DB when available (richer fields:
+ *  started_at, workspace_path); falls back to the local Swarm board otherwise. */
+export function listRunningKanbanWorkers(): RunningKanbanWorkerSession[] {
+  const detection = detectClaudeKanban()
+  if (detection.available) {
+    const rows = readClaudeRunningTasks()
+    const enriched: RunningKanbanCardLike[] = rows.map((row) => {
+      const base = claudeTaskToCard(row)
+      return {
+        ...base,
+        startedAt: row.started_at != null ? normalizeTimestamp(row.started_at) : null,
+        workspace: row.workspace_path ?? null,
+      }
+    })
+    return mapRunningCardsToSessions(enriched)
+  }
+  return mapRunningCardsToSessions(listKanbanCards())
 }

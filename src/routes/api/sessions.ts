@@ -15,6 +15,7 @@ import {
 } from '../../server/claude-api'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 import { deleteLocalSession, getLocalSession, listLocalSessions } from '../../server/local-session-store'
+import { listRunningKanbanWorkers } from '../../server/kanban-backend'
 
 export const Route = createFileRoute('/api/sessions')({
   server: {
@@ -54,6 +55,22 @@ export const Route = createFileRoute('/api/sessions')({
                 source: 'local',
               } as any)
             }
+          }
+
+          // Merge running kanban workers so the Operations / Tasks / Chat tabs
+          // can surface live agent runs spawned by `hermes kanban dispatch`
+          // alongside gateway sessions. Tagged with source='kanban-worker'.
+          try {
+            const kanbanWorkers = listRunningKanbanWorkers()
+            for (const worker of kanbanWorkers) {
+              if (!gatewayIds.has(worker.id)) {
+                gatewaySessions.push(worker as any)
+                gatewayIds.add(worker.id)
+              }
+            }
+          } catch (kanbanErr) {
+            // Kanban backend issues must not break /api/sessions for chat users.
+            console.warn('[api/sessions] kanban merge skipped:', kanbanErr instanceof Error ? kanbanErr.message : kanbanErr)
           }
 
           return json({ sessions: gatewaySessions })
