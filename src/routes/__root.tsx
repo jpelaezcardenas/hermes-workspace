@@ -265,6 +265,12 @@ function RootLayout() {
   useApplyChatWidth()
 
   useEffect(() => {
+    if (import.meta.env.DEV) {
+      void import('react-grab')
+    }
+  }, [])
+
+  useEffect(() => {
     setMounted(true)
     initializeSettingsAppearance()
 
