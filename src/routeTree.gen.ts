@@ -131,6 +131,16 @@ import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/rea
 import { Route as ApiKnowledgeListRouteImport } from './routes/api/knowledge/list'
 import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/graph'
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
+import { Route as ApiHermesKanbanTasksRouteImport } from './routes/api/hermes-kanban/tasks'
+import { Route as ApiHermesKanbanStatsRouteImport } from './routes/api/hermes-kanban/stats'
+import { Route as ApiHermesKanbanMigrateLegacyTasksRouteImport } from './routes/api/hermes-kanban/migrate-legacy-tasks'
+import { Route as ApiHermesKanbanLinksRouteImport } from './routes/api/hermes-kanban/links'
+import { Route as ApiHermesKanbanEventsTokenRouteImport } from './routes/api/hermes-kanban/events-token'
+import { Route as ApiHermesKanbanEventsRouteImport } from './routes/api/hermes-kanban/events'
+import { Route as ApiHermesKanbanDispatchRouteImport } from './routes/api/hermes-kanban/dispatch'
+import { Route as ApiHermesKanbanBulkRouteImport } from './routes/api/hermes-kanban/bulk'
+import { Route as ApiHermesKanbanBoardRouteImport } from './routes/api/hermes-kanban/board'
+import { Route as ApiHermesKanbanAssigneesRouteImport } from './routes/api/hermes-kanban/assignees'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
@@ -140,6 +150,9 @@ import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/se
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
+import { Route as ApiHermesKanbanTasksTaskIdRouteImport } from './routes/api/hermes-kanban/tasks.$taskId'
+import { Route as ApiHermesKanbanTasksTaskIdLogRouteImport } from './routes/api/hermes-kanban/tasks.$taskId.log'
+import { Route as ApiHermesKanbanTasksTaskIdCommentsRouteImport } from './routes/api/hermes-kanban/tasks.$taskId.comments'
 
 const TerminalRoute = TerminalRouteImport.update({
   id: '/terminal',
@@ -752,6 +765,59 @@ const ApiKnowledgeConfigRoute = ApiKnowledgeConfigRouteImport.update({
   path: '/api/knowledge/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHermesKanbanTasksRoute = ApiHermesKanbanTasksRouteImport.update({
+  id: '/api/hermes-kanban/tasks',
+  path: '/api/hermes-kanban/tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanStatsRoute = ApiHermesKanbanStatsRouteImport.update({
+  id: '/api/hermes-kanban/stats',
+  path: '/api/hermes-kanban/stats',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanMigrateLegacyTasksRoute =
+  ApiHermesKanbanMigrateLegacyTasksRouteImport.update({
+    id: '/api/hermes-kanban/migrate-legacy-tasks',
+    path: '/api/hermes-kanban/migrate-legacy-tasks',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiHermesKanbanLinksRoute = ApiHermesKanbanLinksRouteImport.update({
+  id: '/api/hermes-kanban/links',
+  path: '/api/hermes-kanban/links',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanEventsTokenRoute =
+  ApiHermesKanbanEventsTokenRouteImport.update({
+    id: '/api/hermes-kanban/events-token',
+    path: '/api/hermes-kanban/events-token',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiHermesKanbanEventsRoute = ApiHermesKanbanEventsRouteImport.update({
+  id: '/api/hermes-kanban/events',
+  path: '/api/hermes-kanban/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanDispatchRoute = ApiHermesKanbanDispatchRouteImport.update({
+  id: '/api/hermes-kanban/dispatch',
+  path: '/api/hermes-kanban/dispatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanBulkRoute = ApiHermesKanbanBulkRouteImport.update({
+  id: '/api/hermes-kanban/bulk',
+  path: '/api/hermes-kanban/bulk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanBoardRoute = ApiHermesKanbanBoardRouteImport.update({
+  id: '/api/hermes-kanban/board',
+  path: '/api/hermes-kanban/board',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHermesKanbanAssigneesRoute =
+  ApiHermesKanbanAssigneesRouteImport.update({
+    id: '/api/hermes-kanban/assignees',
+    path: '/api/hermes-kanban/assignees',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   id: '/api/dashboard/overview',
   path: '/api/dashboard/overview',
@@ -799,6 +865,24 @@ const ApiMcpNameLogsRoute = ApiMcpNameLogsRouteImport.update({
   path: '/logs',
   getParentRoute: () => ApiMcpNameRoute,
 } as any)
+const ApiHermesKanbanTasksTaskIdRoute =
+  ApiHermesKanbanTasksTaskIdRouteImport.update({
+    id: '/$taskId',
+    path: '/$taskId',
+    getParentRoute: () => ApiHermesKanbanTasksRoute,
+  } as any)
+const ApiHermesKanbanTasksTaskIdLogRoute =
+  ApiHermesKanbanTasksTaskIdLogRouteImport.update({
+    id: '/log',
+    path: '/log',
+    getParentRoute: () => ApiHermesKanbanTasksTaskIdRoute,
+  } as any)
+const ApiHermesKanbanTasksTaskIdCommentsRoute =
+  ApiHermesKanbanTasksTaskIdCommentsRouteImport.update({
+    id: '/comments',
+    path: '/comments',
+    getParentRoute: () => ApiHermesKanbanTasksTaskIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -892,6 +976,16 @@ export interface FileRoutesByFullPath {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/hermes-kanban/assignees': typeof ApiHermesKanbanAssigneesRoute
+  '/api/hermes-kanban/board': typeof ApiHermesKanbanBoardRoute
+  '/api/hermes-kanban/bulk': typeof ApiHermesKanbanBulkRoute
+  '/api/hermes-kanban/dispatch': typeof ApiHermesKanbanDispatchRoute
+  '/api/hermes-kanban/events': typeof ApiHermesKanbanEventsRoute
+  '/api/hermes-kanban/events-token': typeof ApiHermesKanbanEventsTokenRoute
+  '/api/hermes-kanban/links': typeof ApiHermesKanbanLinksRoute
+  '/api/hermes-kanban/migrate-legacy-tasks': typeof ApiHermesKanbanMigrateLegacyTasksRoute
+  '/api/hermes-kanban/stats': typeof ApiHermesKanbanStatsRoute
+  '/api/hermes-kanban/tasks': typeof ApiHermesKanbanTasksRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -928,10 +1022,13 @@ export interface FileRoutesByFullPath {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/hermes-kanban/tasks/$taskId': typeof ApiHermesKanbanTasksTaskIdRouteWithChildren
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/hermes-kanban/tasks/$taskId/comments': typeof ApiHermesKanbanTasksTaskIdCommentsRoute
+  '/api/hermes-kanban/tasks/$taskId/log': typeof ApiHermesKanbanTasksTaskIdLogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1024,6 +1121,16 @@ export interface FileRoutesByTo {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/hermes-kanban/assignees': typeof ApiHermesKanbanAssigneesRoute
+  '/api/hermes-kanban/board': typeof ApiHermesKanbanBoardRoute
+  '/api/hermes-kanban/bulk': typeof ApiHermesKanbanBulkRoute
+  '/api/hermes-kanban/dispatch': typeof ApiHermesKanbanDispatchRoute
+  '/api/hermes-kanban/events': typeof ApiHermesKanbanEventsRoute
+  '/api/hermes-kanban/events-token': typeof ApiHermesKanbanEventsTokenRoute
+  '/api/hermes-kanban/links': typeof ApiHermesKanbanLinksRoute
+  '/api/hermes-kanban/migrate-legacy-tasks': typeof ApiHermesKanbanMigrateLegacyTasksRoute
+  '/api/hermes-kanban/stats': typeof ApiHermesKanbanStatsRoute
+  '/api/hermes-kanban/tasks': typeof ApiHermesKanbanTasksRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1060,10 +1167,13 @@ export interface FileRoutesByTo {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/hermes-kanban/tasks/$taskId': typeof ApiHermesKanbanTasksTaskIdRouteWithChildren
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/hermes-kanban/tasks/$taskId/comments': typeof ApiHermesKanbanTasksTaskIdCommentsRoute
+  '/api/hermes-kanban/tasks/$taskId/log': typeof ApiHermesKanbanTasksTaskIdLogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1158,6 +1268,16 @@ export interface FileRoutesById {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/hermes-kanban/assignees': typeof ApiHermesKanbanAssigneesRoute
+  '/api/hermes-kanban/board': typeof ApiHermesKanbanBoardRoute
+  '/api/hermes-kanban/bulk': typeof ApiHermesKanbanBulkRoute
+  '/api/hermes-kanban/dispatch': typeof ApiHermesKanbanDispatchRoute
+  '/api/hermes-kanban/events': typeof ApiHermesKanbanEventsRoute
+  '/api/hermes-kanban/events-token': typeof ApiHermesKanbanEventsTokenRoute
+  '/api/hermes-kanban/links': typeof ApiHermesKanbanLinksRoute
+  '/api/hermes-kanban/migrate-legacy-tasks': typeof ApiHermesKanbanMigrateLegacyTasksRoute
+  '/api/hermes-kanban/stats': typeof ApiHermesKanbanStatsRoute
+  '/api/hermes-kanban/tasks': typeof ApiHermesKanbanTasksRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1194,10 +1314,13 @@ export interface FileRoutesById {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/hermes-kanban/tasks/$taskId': typeof ApiHermesKanbanTasksTaskIdRouteWithChildren
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/hermes-kanban/tasks/$taskId/comments': typeof ApiHermesKanbanTasksTaskIdCommentsRoute
+  '/api/hermes-kanban/tasks/$taskId/log': typeof ApiHermesKanbanTasksTaskIdLogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1293,6 +1416,16 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/hermes-kanban/assignees'
+    | '/api/hermes-kanban/board'
+    | '/api/hermes-kanban/bulk'
+    | '/api/hermes-kanban/dispatch'
+    | '/api/hermes-kanban/events'
+    | '/api/hermes-kanban/events-token'
+    | '/api/hermes-kanban/links'
+    | '/api/hermes-kanban/migrate-legacy-tasks'
+    | '/api/hermes-kanban/stats'
+    | '/api/hermes-kanban/tasks'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1329,10 +1462,13 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/hermes-kanban/tasks/$taskId'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/hermes-kanban/tasks/$taskId/comments'
+    | '/api/hermes-kanban/tasks/$taskId/log'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1425,6 +1561,16 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/hermes-kanban/assignees'
+    | '/api/hermes-kanban/board'
+    | '/api/hermes-kanban/bulk'
+    | '/api/hermes-kanban/dispatch'
+    | '/api/hermes-kanban/events'
+    | '/api/hermes-kanban/events-token'
+    | '/api/hermes-kanban/links'
+    | '/api/hermes-kanban/migrate-legacy-tasks'
+    | '/api/hermes-kanban/stats'
+    | '/api/hermes-kanban/tasks'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1461,10 +1607,13 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/hermes-kanban/tasks/$taskId'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/hermes-kanban/tasks/$taskId/comments'
+    | '/api/hermes-kanban/tasks/$taskId/log'
   id:
     | '__root__'
     | '/'
@@ -1558,6 +1707,16 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/hermes-kanban/assignees'
+    | '/api/hermes-kanban/board'
+    | '/api/hermes-kanban/bulk'
+    | '/api/hermes-kanban/dispatch'
+    | '/api/hermes-kanban/events'
+    | '/api/hermes-kanban/events-token'
+    | '/api/hermes-kanban/links'
+    | '/api/hermes-kanban/migrate-legacy-tasks'
+    | '/api/hermes-kanban/stats'
+    | '/api/hermes-kanban/tasks'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1594,10 +1753,13 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/hermes-kanban/tasks/$taskId'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/hermes-kanban/tasks/$taskId/comments'
+    | '/api/hermes-kanban/tasks/$taskId/log'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1687,6 +1849,16 @@ export interface RootRouteChildren {
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
+  ApiHermesKanbanAssigneesRoute: typeof ApiHermesKanbanAssigneesRoute
+  ApiHermesKanbanBoardRoute: typeof ApiHermesKanbanBoardRoute
+  ApiHermesKanbanBulkRoute: typeof ApiHermesKanbanBulkRoute
+  ApiHermesKanbanDispatchRoute: typeof ApiHermesKanbanDispatchRoute
+  ApiHermesKanbanEventsRoute: typeof ApiHermesKanbanEventsRoute
+  ApiHermesKanbanEventsTokenRoute: typeof ApiHermesKanbanEventsTokenRoute
+  ApiHermesKanbanLinksRoute: typeof ApiHermesKanbanLinksRoute
+  ApiHermesKanbanMigrateLegacyTasksRoute: typeof ApiHermesKanbanMigrateLegacyTasksRoute
+  ApiHermesKanbanStatsRoute: typeof ApiHermesKanbanStatsRoute
+  ApiHermesKanbanTasksRoute: typeof ApiHermesKanbanTasksRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
   ApiKnowledgeGraphRoute: typeof ApiKnowledgeGraphRoute
   ApiKnowledgeListRoute: typeof ApiKnowledgeListRoute
@@ -2564,6 +2736,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiKnowledgeConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hermes-kanban/tasks': {
+      id: '/api/hermes-kanban/tasks'
+      path: '/api/hermes-kanban/tasks'
+      fullPath: '/api/hermes-kanban/tasks'
+      preLoaderRoute: typeof ApiHermesKanbanTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/stats': {
+      id: '/api/hermes-kanban/stats'
+      path: '/api/hermes-kanban/stats'
+      fullPath: '/api/hermes-kanban/stats'
+      preLoaderRoute: typeof ApiHermesKanbanStatsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/migrate-legacy-tasks': {
+      id: '/api/hermes-kanban/migrate-legacy-tasks'
+      path: '/api/hermes-kanban/migrate-legacy-tasks'
+      fullPath: '/api/hermes-kanban/migrate-legacy-tasks'
+      preLoaderRoute: typeof ApiHermesKanbanMigrateLegacyTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/links': {
+      id: '/api/hermes-kanban/links'
+      path: '/api/hermes-kanban/links'
+      fullPath: '/api/hermes-kanban/links'
+      preLoaderRoute: typeof ApiHermesKanbanLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/events-token': {
+      id: '/api/hermes-kanban/events-token'
+      path: '/api/hermes-kanban/events-token'
+      fullPath: '/api/hermes-kanban/events-token'
+      preLoaderRoute: typeof ApiHermesKanbanEventsTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/events': {
+      id: '/api/hermes-kanban/events'
+      path: '/api/hermes-kanban/events'
+      fullPath: '/api/hermes-kanban/events'
+      preLoaderRoute: typeof ApiHermesKanbanEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/dispatch': {
+      id: '/api/hermes-kanban/dispatch'
+      path: '/api/hermes-kanban/dispatch'
+      fullPath: '/api/hermes-kanban/dispatch'
+      preLoaderRoute: typeof ApiHermesKanbanDispatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/bulk': {
+      id: '/api/hermes-kanban/bulk'
+      path: '/api/hermes-kanban/bulk'
+      fullPath: '/api/hermes-kanban/bulk'
+      preLoaderRoute: typeof ApiHermesKanbanBulkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/board': {
+      id: '/api/hermes-kanban/board'
+      path: '/api/hermes-kanban/board'
+      fullPath: '/api/hermes-kanban/board'
+      preLoaderRoute: typeof ApiHermesKanbanBoardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/hermes-kanban/assignees': {
+      id: '/api/hermes-kanban/assignees'
+      path: '/api/hermes-kanban/assignees'
+      fullPath: '/api/hermes-kanban/assignees'
+      preLoaderRoute: typeof ApiHermesKanbanAssigneesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dashboard/overview': {
       id: '/api/dashboard/overview'
       path: '/api/dashboard/overview'
@@ -2626,6 +2868,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mcp/$name/logs'
       preLoaderRoute: typeof ApiMcpNameLogsRouteImport
       parentRoute: typeof ApiMcpNameRoute
+    }
+    '/api/hermes-kanban/tasks/$taskId': {
+      id: '/api/hermes-kanban/tasks/$taskId'
+      path: '/$taskId'
+      fullPath: '/api/hermes-kanban/tasks/$taskId'
+      preLoaderRoute: typeof ApiHermesKanbanTasksTaskIdRouteImport
+      parentRoute: typeof ApiHermesKanbanTasksRoute
+    }
+    '/api/hermes-kanban/tasks/$taskId/log': {
+      id: '/api/hermes-kanban/tasks/$taskId/log'
+      path: '/log'
+      fullPath: '/api/hermes-kanban/tasks/$taskId/log'
+      preLoaderRoute: typeof ApiHermesKanbanTasksTaskIdLogRouteImport
+      parentRoute: typeof ApiHermesKanbanTasksTaskIdRoute
+    }
+    '/api/hermes-kanban/tasks/$taskId/comments': {
+      id: '/api/hermes-kanban/tasks/$taskId/comments'
+      path: '/comments'
+      fullPath: '/api/hermes-kanban/tasks/$taskId/comments'
+      preLoaderRoute: typeof ApiHermesKanbanTasksTaskIdCommentsRouteImport
+      parentRoute: typeof ApiHermesKanbanTasksTaskIdRoute
     }
   }
 }
@@ -2790,6 +3053,34 @@ const ApiSwarmMemoryRouteWithChildren = ApiSwarmMemoryRoute._addFileChildren(
   ApiSwarmMemoryRouteChildren,
 )
 
+interface ApiHermesKanbanTasksTaskIdRouteChildren {
+  ApiHermesKanbanTasksTaskIdCommentsRoute: typeof ApiHermesKanbanTasksTaskIdCommentsRoute
+  ApiHermesKanbanTasksTaskIdLogRoute: typeof ApiHermesKanbanTasksTaskIdLogRoute
+}
+
+const ApiHermesKanbanTasksTaskIdRouteChildren: ApiHermesKanbanTasksTaskIdRouteChildren =
+  {
+    ApiHermesKanbanTasksTaskIdCommentsRoute:
+      ApiHermesKanbanTasksTaskIdCommentsRoute,
+    ApiHermesKanbanTasksTaskIdLogRoute: ApiHermesKanbanTasksTaskIdLogRoute,
+  }
+
+const ApiHermesKanbanTasksTaskIdRouteWithChildren =
+  ApiHermesKanbanTasksTaskIdRoute._addFileChildren(
+    ApiHermesKanbanTasksTaskIdRouteChildren,
+  )
+
+interface ApiHermesKanbanTasksRouteChildren {
+  ApiHermesKanbanTasksTaskIdRoute: typeof ApiHermesKanbanTasksTaskIdRouteWithChildren
+}
+
+const ApiHermesKanbanTasksRouteChildren: ApiHermesKanbanTasksRouteChildren = {
+  ApiHermesKanbanTasksTaskIdRoute: ApiHermesKanbanTasksTaskIdRouteWithChildren,
+}
+
+const ApiHermesKanbanTasksRouteWithChildren =
+  ApiHermesKanbanTasksRoute._addFileChildren(ApiHermesKanbanTasksRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
@@ -2877,6 +3168,17 @@ const rootRouteChildren: RootRouteChildren = {
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
+  ApiHermesKanbanAssigneesRoute: ApiHermesKanbanAssigneesRoute,
+  ApiHermesKanbanBoardRoute: ApiHermesKanbanBoardRoute,
+  ApiHermesKanbanBulkRoute: ApiHermesKanbanBulkRoute,
+  ApiHermesKanbanDispatchRoute: ApiHermesKanbanDispatchRoute,
+  ApiHermesKanbanEventsRoute: ApiHermesKanbanEventsRoute,
+  ApiHermesKanbanEventsTokenRoute: ApiHermesKanbanEventsTokenRoute,
+  ApiHermesKanbanLinksRoute: ApiHermesKanbanLinksRoute,
+  ApiHermesKanbanMigrateLegacyTasksRoute:
+    ApiHermesKanbanMigrateLegacyTasksRoute,
+  ApiHermesKanbanStatsRoute: ApiHermesKanbanStatsRoute,
+  ApiHermesKanbanTasksRoute: ApiHermesKanbanTasksRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
   ApiKnowledgeGraphRoute: ApiKnowledgeGraphRoute,
   ApiKnowledgeListRoute: ApiKnowledgeListRoute,
