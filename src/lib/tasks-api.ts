@@ -141,6 +141,27 @@ export function priorityColor(priority: number): string {
   return kanbanPriorityColor(priority)
 }
 
+/**
+ * Link two tasks: parentId becomes a blocker of childId.
+ * Uses POST /api/hermes-kanban/links.
+ */
+export async function addLink(parentId: string, childId: string): Promise<void> {
+  await kanbanJson<{ ok: true }>(`${KANBAN_BASE}/links`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ parent_id: parentId, child_id: childId }),
+  })
+}
+
+/**
+ * Remove a parent→child link.
+ * Uses DELETE /api/hermes-kanban/links?parent_id=...&child_id=...
+ */
+export async function removeLink(parentId: string, childId: string): Promise<void> {
+  const q = new URLSearchParams({ parent_id: parentId, child_id: childId })
+  await kanbanJson<{ ok: boolean }>(`${KANBAN_BASE}/links?${q}`, { method: 'DELETE' })
+}
+
 // ── Legacy compat shims (Task 5 bridge — removed in Task 6/7) ────────────────
 
 /** @deprecated Agent Kanban tasks have no due_date field. Always returns false. */

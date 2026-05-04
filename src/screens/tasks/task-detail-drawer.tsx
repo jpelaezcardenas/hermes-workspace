@@ -11,7 +11,7 @@ import {
   HERMES_KANBAN_VISIBLE_STATUS_ORDER,
 } from '@/lib/hermes-kanban-types'
 import type { HermesKanbanTask, HermesKanbanTaskDetail, HermesKanbanStatus } from '@/lib/hermes-kanban-types'
-import { updateTask, fetchAssignees } from '@/lib/tasks-api'
+import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink } from '@/lib/tasks-api'
 
 type LogResponse = { log: { content: string; exists: boolean; truncated: boolean; size_bytes: number } }
 
@@ -174,7 +174,7 @@ export function TaskDetailDrawer({ task, onClose }: Props) {
             <>
               {activeTab === 'overview' && <OverviewTab task={task} detail={detail} />}
               {activeTab === 'comments' && <CommentsTab detail={detail} taskId={task.id} />}
-              {activeTab === 'dependencies' && <DepsTab detail={detail} />}
+              {activeTab === 'dependencies' && <DepsTab task={task} detail={detail} />}
               {activeTab === 'runs' && <RunsTab detail={detail} />}
               {activeTab === 'events' && <EventsTab detail={detail} />}
               {activeTab === 'log' && <LogTab query={logQuery} />}
@@ -419,10 +419,98 @@ function CommentsTab({ detail, taskId }: { detail: HermesKanbanTaskDetail; taskI
   )
 }
 
-function DepsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
-  const { parents, children } = detail.links ?? { parents: [], children: [] }
+/** Combobox for searching + selecting a task to link. */
+function TaskCombobox({
+  placeholder,
+  candidates,
+  onSelect,
+  disabled,
+}: {
+  placeholder: string
+  candidates: HermesKanbanTask[]
+  onSelect: (task: HermesKanbanTask) => void
+  disabled: boolean
+}) {
+  const [query, setQuery] = useState('')
+  const [open, setOpen] = useState(false)
+
+  const filtered = query.trim()
+    ? candidates.filter(t =>
+      t.id.toLowerCase().includes(query.toLowerCase()) ||
+      t.title.toLowerCase().includes(query.toLowerCase()),
+    )
+    : candidates
+
   return (
-    <div className="space-y-4">
+    <div className="relative mt-2">
+      <input
+        className={inputClass}
+        placeholder={placeholder}
+        value={query}
+        disabled={disabled}
+        onChange={e => { setQuery(e.target.value); setOpen(true) }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 180)}
+      />
+      {open && filtered.length > 0 && (
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-52 overflow-y-auto rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-xl">
+          {filtered.map(t => (
+            <button
+              key={t.id}
+              onMouseDown={e => e.preventDefault()} // keep focus on input so onBlur fires after
+              onClick={() => { onSelect(t); setQuery(''); setOpen(false) }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[var(--theme-hover)] transition-colors"
+            >
+              <span className="text-[10px] font-mono text-[var(--theme-muted)] shrink-0 uppercase">{t.id}</span>
+              <span className="text-xs text-[var(--theme-text)] truncate">— {t.title}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanbanTaskDetail }) {
+  const { parents, children } = detail.links ?? { parents: [], children: [] }
+  const queryClient = useQueryClient()
+  const [linking, setLinking] = useState(false)
+
+  // Fetch all board tasks for the autocomplete (uses shared TanStack cache)
+  const boardQuery = useQuery({
+    queryKey: ['claude', 'tasks', 'all'],
+    queryFn: () => fetchTasks({ include_done: true }),
+    staleTime: 60_000,
+  })
+  const allTasks = boardQuery.data ?? []
+
+  const linkedIds = new Set([task.id, ...parents.map(p => p.id), ...children.map(c => c.id)])
+  const parentCandidates = allTasks.filter(t => !linkedIds.has(t.id))
+  const childCandidates = allTasks.filter(t => !linkedIds.has(t.id))
+
+  async function handleAdd(parentId: string, childId: string) {
+    setLinking(true)
+    try {
+      await addLink(parentId, childId)
+      await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
+    } finally {
+      setLinking(false)
+    }
+  }
+
+  async function handleRemove(parentId: string, childId: string) {
+    setLinking(true)
+    try {
+      await removeLink(parentId, childId)
+      await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
+    } finally {
+      setLinking(false)
+    }
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* Parents */}
       <section>
         <p className={labelClass}>
           <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
@@ -430,8 +518,18 @@ function DepsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
         </p>
         {parents.length === 0 ? (
           <p className="text-xs text-[var(--theme-muted)]">No parent dependencies.</p>
-        ) : parents.map(p => <TaskRef key={p.id} task={p} />)}
+        ) : parents.map(p => (
+          <TaskRef key={p.id} task={p} onRemove={linking ? undefined : () => handleRemove(p.id, task.id)} />
+        ))}
+        <TaskCombobox
+          placeholder="Search tasks to add as parent…"
+          candidates={parentCandidates}
+          disabled={linking}
+          onSelect={t => handleAdd(t.id, task.id)}
+        />
       </section>
+
+      {/* Children */}
       <section>
         <p className={labelClass}>
           <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
@@ -439,18 +537,35 @@ function DepsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
         </p>
         {children.length === 0 ? (
           <p className="text-xs text-[var(--theme-muted)]">No child tasks.</p>
-        ) : children.map(c => <TaskRef key={c.id} task={c} />)}
+        ) : children.map(c => (
+          <TaskRef key={c.id} task={c} onRemove={linking ? undefined : () => handleRemove(task.id, c.id)} />
+        ))}
+        <TaskCombobox
+          placeholder="Search tasks to add as child…"
+          candidates={childCandidates}
+          disabled={linking}
+          onSelect={t => handleAdd(task.id, t.id)}
+        />
       </section>
     </div>
   )
 }
 
-function TaskRef({ task }: { task: HermesKanbanTask }) {
+function TaskRef({ task, onRemove }: { task: HermesKanbanTask; onRemove?: () => void }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-[var(--theme-border)] px-3 py-2 mb-1.5">
+    <div className="flex items-center gap-2 rounded-lg border border-[var(--theme-border)] px-3 py-2 mb-1.5 group">
       <span className="text-[10px] text-[var(--theme-muted)] font-mono shrink-0">{task.id.slice(0, 10)}</span>
-      <span className="text-xs text-[var(--theme-text)] truncate">{task.title}</span>
-      <span className="ml-auto text-[10px] text-[var(--theme-muted)] shrink-0">{HERMES_KANBAN_STATUS_LABELS[task.status]}</span>
+      <span className="text-xs text-[var(--theme-text)] truncate flex-1">{task.title}</span>
+      <span className="text-[10px] text-[var(--theme-muted)] shrink-0">{HERMES_KANBAN_STATUS_LABELS[task.status]}</span>
+      {onRemove && (
+        <button
+          onClick={onRemove}
+          className="ml-1 shrink-0 opacity-0 group-hover:opacity-100 rounded p-0.5 hover:bg-[var(--theme-hover)] transition-opacity"
+          title="Remove link"
+        >
+          <HugeiconsIcon icon={Cancel01Icon} size={12} className="text-[var(--theme-muted)]" />
+        </button>
+      )}
     </div>
   )
 }
