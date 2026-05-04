@@ -467,8 +467,9 @@ const config = defineConfig(({ mode, command }) => {
       ],
     },
     server: {
-      // Force IPv4 — 'localhost' resolves to ::1 (IPv6) on Windows, breaking connectivity
-      host: '0.0.0.0',
+      // Bind to loopback by default for local safety. Operators who need LAN,
+      // Tailscale, or container exposure can opt in explicitly with HOST=0.0.0.0.
+      host: process.env.HOST || '127.0.0.1',
       // Port precedence:
       //   1. --port CLI flag (wins, but we no longer hardcode it in package.json)
       //   2. $PORT env var (for containers, reverse proxies, WhatsApp bridge collisions, etc. — see #96)
