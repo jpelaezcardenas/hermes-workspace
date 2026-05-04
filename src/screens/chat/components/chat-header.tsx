@@ -306,7 +306,7 @@ function ChatHeaderComponent({
   }
 
   return (
-    <div ref={wrapperRef} className="shrink-0 bg-surface">
+    <div ref={wrapperRef} className="shrink-0" style={{ background: 'var(--composer-bg)', borderBottom: '1px solid var(--composer-border)' }}>
       <div className="px-4 h-12 flex items-center">
         {showFileExplorerButton ? (
           <TooltipProvider>
