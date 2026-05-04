@@ -575,6 +575,29 @@ async function ensureLiveTmuxSession(workerId: string): Promise<{ ok: true; tmux
 
   // Give the agent a moment to render its prompt before sending keys.
   await sleep(1200)
+
+  // Verify the session survived startup — if hermes exits immediately (bad PATH,
+  // missing API key, model not configured, etc.) the tmux session dies and all
+  // subsequent send-keys/paste-buffer calls would fail with "can't find pane".
+  // Surfacing the actual exit output here is much more helpful than propagating
+  // tmux's cryptic pane-not-found error downstream.
+  if (!(await tmuxHasSession(tmuxBin, sessionName))) {
+    // Try to capture whatever the pane printed before dying.
+    const captured = await execFileAsync(tmuxBin, [
+      'capture-pane',
+      '-t', sessionName,
+      '-p',
+      '-S', '-50',
+    ], 3_000)
+    const lastLines = (captured.ok ? captured.stdout : '').trim().slice(-800)
+    return {
+      ok: false,
+      error: lastLines
+        ? `Session ${sessionName} exited immediately. Last output:\n${lastLines}`
+        : `Session ${sessionName} exited immediately — agent binary may not be in PATH or failed to start`,
+    }
+  }
+
   return { ok: true, tmuxBin, sessionName }
 }
 
