@@ -3,12 +3,46 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Cancel01Icon, BubbleChatIcon, HierarchyIcon, CpuIcon, Alert02Icon } from '@hugeicons/core-free-icons'
+import { Cancel01Icon, HierarchyIcon, CpuIcon, Alert02Icon } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
-import { kanbanPriorityLabel, HERMES_KANBAN_STATUS_LABELS } from '@/lib/hermes-kanban-types'
-import type { HermesKanbanTask, HermesKanbanTaskDetail } from '@/lib/hermes-kanban-types'
+import {
+  kanbanPriorityLabel,
+  HERMES_KANBAN_STATUS_LABELS,
+  HERMES_KANBAN_VISIBLE_STATUS_ORDER,
+} from '@/lib/hermes-kanban-types'
+import type { HermesKanbanTask, HermesKanbanTaskDetail, HermesKanbanStatus } from '@/lib/hermes-kanban-types'
+import { updateTask, fetchAssignees } from '@/lib/tasks-api'
 
 type LogResponse = { log: { content: string; exists: boolean; truncated: boolean; size_bytes: number } }
+
+const PRIORITY_OPTIONS = [
+  { label: 'High', value: 'high' },
+  { label: 'Medium', value: 'medium' },
+  { label: 'Normal', value: 'normal' },
+  { label: 'Low', value: 'low' },
+] as const
+type FormPriority = (typeof PRIORITY_OPTIONS)[number]['value']
+
+function numericToFormPriority(n: number): FormPriority {
+  if (n >= 3) return 'high'
+  if (n >= 1) return 'medium'
+  if (n === 0) return 'normal'
+  return 'low'
+}
+function formPriorityToNumeric(p: FormPriority): number {
+  if (p === 'high') return 3
+  if (p === 'medium') return 1
+  if (p === 'normal') return 0
+  return -1
+}
+
+const inputClass = cn(
+  'w-full rounded-lg border px-3 py-2 text-xs',
+  'bg-[var(--theme-input)] border-[var(--theme-border)] text-[var(--theme-text)]',
+  'focus:outline-none focus:ring-1 focus:ring-[var(--theme-accent)]',
+  'placeholder:text-[var(--theme-muted)]',
+)
+const labelClass = 'block text-[10px] font-medium text-[var(--theme-muted)] uppercase tracking-wide mb-1'
 
 export const DRAWER_TABS = ['overview', 'comments', 'dependencies', 'runs', 'events', 'log'] as const
 export type DrawerTab = typeof DRAWER_TABS[number]
@@ -153,42 +187,168 @@ export function TaskDetailDrawer({ task, onClose }: Props) {
 }
 
 function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanbanTaskDetail }) {
-  const taskData = detail.task ?? task
+  const td = detail.task ?? task
+  const queryClient = useQueryClient()
+
+  const [title, setTitle] = useState(td.title)
+  const [body, setBody] = useState(td.body ?? '')
+  const [status, setStatus] = useState<HermesKanbanStatus>(td.status)
+  const [priority, setPriority] = useState<FormPriority>(numericToFormPriority(td.priority ?? 0))
+  const [blockReason, setBlockReason] = useState(td.block_reason ?? '')
+  const [summary, setSummary] = useState(td.summary ?? '')
+  const [saving, setSaving] = useState(false)
+
+  const assigneesQuery = useQuery({
+    queryKey: ['hermes-kanban', 'assignees'],
+    queryFn: fetchAssignees,
+    staleTime: 60_000,
+  })
+  const assignees = assigneesQuery.data?.assignees ?? []
+  const [assignee, setAssignee] = useState(td.assignee ?? '')
+
+  const isDirty =
+    title !== td.title ||
+    body !== (td.body ?? '') ||
+    status !== td.status ||
+    formPriorityToNumeric(priority) !== (td.priority ?? 0) ||
+    blockReason !== (td.block_reason ?? '') ||
+    summary !== (td.summary ?? '') ||
+    assignee !== (td.assignee ?? '')
+
+  async function handleSave() {
+    if (!title.trim() || saving) return
+    setSaving(true)
+    try {
+      await updateTask(task.id, {
+        title: title.trim(),
+        body: body.trim() || null,
+        status,
+        priority: formPriorityToNumeric(priority),
+        assignee: assignee || null,
+        block_reason: blockReason.trim() || null,
+        summary: summary.trim() || null,
+      })
+      await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
+      await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
-    <div className="space-y-4 text-xs">
-      {taskData.body && (
-        <div>
-          <p className="text-[var(--theme-muted)] uppercase tracking-wide text-[9px] mb-1">Body</p>
-          <p className="text-[var(--theme-text)] whitespace-pre-wrap">{taskData.body}</p>
-        </div>
-      )}
-      <div className="grid grid-cols-2 gap-3">
-        {taskData.tenant && <Field label="Tenant" value={taskData.tenant} />}
-        {taskData.workspace_kind && <Field label="Workspace" value={`${taskData.workspace_kind}${taskData.workspace_path ? ` — ${taskData.workspace_path}` : ''}`} />}
-        {taskData.max_runtime_seconds && <Field label="Max runtime" value={`${taskData.max_runtime_seconds}s`} />}
-        {taskData.skills && <Field label="Skills" value={Array.isArray(taskData.skills) ? taskData.skills.join(', ') : String(taskData.skills)} />}
-        {taskData.result && <Field label="Result" value={taskData.result} />}
-        {taskData.block_reason && <Field label="Block reason" value={taskData.block_reason} />}
-        {taskData.summary && <Field label="Summary" value={taskData.summary} />}
-        {taskData.created_at && <Field label="Created" value={relativeTime(taskData.created_at)} />}
-        {taskData.started_at && <Field label="Started" value={relativeTime(taskData.started_at)} />}
-        {taskData.completed_at && <Field label="Completed" value={relativeTime(taskData.completed_at)} />}
+    <div className="space-y-3">
+      {/* Title */}
+      <div>
+        <label className={labelClass}>Title</label>
+        <input className={inputClass} value={title} onChange={e => setTitle(e.target.value)} />
       </div>
-      {(taskData.spawn_failures ?? 0) > 0 && (
-        <div className="flex items-center gap-1.5 text-red-400 text-xs">
-          <HugeiconsIcon icon={Alert02Icon} size={12} />
-          <span>{taskData.spawn_failures} spawn failure(s){taskData.last_spawn_error ? `: ${taskData.last_spawn_error}` : ''}</span>
+
+      {/* Body */}
+      <div>
+        <label className={labelClass}>Body</label>
+        <textarea className={cn(inputClass, 'resize-none')} rows={3} value={body}
+          onChange={e => setBody(e.target.value)}
+          placeholder="Acceptance criteria, context, links…" />
+      </div>
+
+      {/* Status + Priority */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className={labelClass}>Status</label>
+          <select className={inputClass} style={{ colorScheme: 'dark' }}
+            value={status} onChange={e => setStatus(e.target.value as HermesKanbanStatus)}>
+            {HERMES_KANBAN_VISIBLE_STATUS_ORDER.map(s => (
+              <option key={s} value={s}>{HERMES_KANBAN_STATUS_LABELS[s]}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className={labelClass}>Priority</label>
+          <select className={inputClass} style={{ colorScheme: 'dark' }}
+            value={priority} onChange={e => setPriority(e.target.value as FormPriority)}>
+            {PRIORITY_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Block reason — conditional */}
+      {status === 'blocked' && (
+        <div>
+          <label className={labelClass}>Block reason</label>
+          <input className={inputClass} value={blockReason}
+            onChange={e => setBlockReason(e.target.value)}
+            placeholder="Why is this task blocked?" />
         </div>
       )}
+
+      {/* Assignee */}
+      <div>
+        <label className={labelClass}>Assignee</label>
+        <select className={inputClass} style={{ colorScheme: 'dark' }}
+          value={assignee} onChange={e => setAssignee(e.target.value)}>
+          <option value="">Unassigned</option>
+          {assignees.map(({ id, label }) => (
+            <option key={id} value={id}>{label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Summary */}
+      <div>
+        <label className={labelClass}>Summary</label>
+        <textarea className={cn(inputClass, 'resize-none')} rows={2} value={summary}
+          onChange={e => setSummary(e.target.value)}
+          placeholder="Agent-written summary of work done…" />
+      </div>
+
+      {/* Save */}
+      {isDirty && (
+        <div className="flex justify-end pt-1">
+          <button
+            onClick={handleSave}
+            disabled={!title.trim() || saving}
+            className="rounded-lg px-4 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+            style={{ background: 'var(--theme-accent)' }}
+          >
+            {saving ? 'Saving…' : 'Save changes'}
+          </button>
+        </div>
+      )}
+
+      {/* Read-only metadata */}
+      {(td.tenant || td.skills || td.workspace_kind || td.max_runtime_seconds || td.result ||
+        td.created_at || td.started_at || td.completed_at || (td.spawn_failures ?? 0) > 0) && (
+          <div className="pt-2 border-t border-[var(--theme-border)] space-y-2">
+            <p className={labelClass}>Task metadata</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              {td.tenant && <MetaField label="Tenant" value={td.tenant} />}
+              {td.workspace_kind && <MetaField label="Workspace" value={`${td.workspace_kind}${td.workspace_path ? ` — ${td.workspace_path}` : ''}`} />}
+              {td.max_runtime_seconds && <MetaField label="Max runtime" value={`${td.max_runtime_seconds}s`} />}
+              {td.skills && <MetaField label="Skills" value={Array.isArray(td.skills) ? td.skills.join(', ') : String(td.skills)} />}
+              {td.result && <MetaField label="Result" value={td.result} />}
+              {td.created_at && <MetaField label="Created" value={relativeTime(td.created_at)} />}
+              {td.started_at && <MetaField label="Started" value={relativeTime(td.started_at)} />}
+              {td.completed_at && <MetaField label="Completed" value={relativeTime(td.completed_at)} />}
+            </div>
+            {(td.spawn_failures ?? 0) > 0 && (
+              <div className="flex items-center gap-1.5 text-red-400 text-xs">
+                <HugeiconsIcon icon={Alert02Icon} size={12} />
+                <span>{td.spawn_failures} spawn failure(s){td.last_spawn_error ? `: ${td.last_spawn_error}` : ''}</span>
+              </div>
+            )}
+          </div>
+        )}
     </div>
   )
 }
 
-function Field({ label, value }: { label: string; value: string }) {
+function MetaField({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-[var(--theme-muted)] uppercase tracking-wide text-[9px] mb-0.5">{label}</p>
-      <p className="text-[var(--theme-text)] break-words">{value}</p>
+      <p className="text-[var(--theme-text)] break-words text-xs">{value}</p>
     </div>
   )
 }
