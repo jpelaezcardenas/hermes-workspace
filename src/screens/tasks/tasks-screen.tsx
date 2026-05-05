@@ -1,6 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import {
   keepPreviousData,
@@ -96,6 +97,17 @@ export function TasksScreen() {
     try { return JSON.parse(localStorage.getItem(COLS_KEY) ?? '{}').blocked ?? true } catch { return true }
   })
   const [showViewDropdown, setShowViewDropdown] = useState(false)
+  // Ref to the trigger button so we can measure its position for fixed-panel placement
+  const colsButtonRef = useRef<HTMLButtonElement>(null)
+  const [colsPanelPos, setColsPanelPos] = useState<{ top: number; right: number } | null>(null)
+
+  function openColsDropdown() {
+    if (colsButtonRef.current) {
+      const r = colsButtonRef.current.getBoundingClientRect()
+      setColsPanelPos({ top: r.bottom + 6, right: window.innerWidth - r.right })
+    }
+    setShowViewDropdown(v => !v)
+  }
   const [blockedPending, setBlockedPending] = useState<BlockedDropPending>(null)
   const [blockedReason, setBlockedReason] = useState('')
   const [runningMovePending, setRunningMovePending] = useState<RunningMovePending>(null)
@@ -504,9 +516,10 @@ export function TasksScreen() {
                   { key: 'archived', label: 'Archived', checked: showArchived, toggle: () => setShowArchived(v => !v) },
                 ]
                 return (
-                  <div className="relative">
+                  <>
                     <button
-                      onClick={() => setShowViewDropdown(v => !v)}
+                      ref={colsButtonRef}
+                      onClick={openColsDropdown}
                       className={cn(
                         'flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border transition-colors',
                         showViewDropdown || anyHidden
@@ -523,10 +536,13 @@ export function TasksScreen() {
                       )}
                       <span className="opacity-50 text-[10px]">▾</span>
                     </button>
-                    {showViewDropdown && (
+                    {showViewDropdown && colsPanelPos && createPortal(
                       <>
-                        <div className="fixed inset-0 z-[200]" onClick={() => setShowViewDropdown(false)} />
-                        <div className="absolute top-full right-0 mt-1.5 z-[201] w-52 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-2xl p-1.5">
+                        <div className="fixed inset-0 z-[9998]" onClick={() => setShowViewDropdown(false)} />
+                        <div
+                          className="fixed z-[9999] w-52 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-2xl p-1.5"
+                          style={{ top: colsPanelPos.top, right: colsPanelPos.right, backgroundColor: 'var(--theme-card)' }}
+                        >
                           <p className="px-3 pt-1.5 pb-1 text-[9px] uppercase tracking-widest text-[var(--theme-muted)] font-medium">
                             Visible columns
                           </p>
@@ -550,9 +566,10 @@ export function TasksScreen() {
                             </button>
                           ))}
                         </div>
-                      </>
+                      </>,
+                      document.body,
                     )}
-                  </div>
+                  </>
                 )
               })()}
               {/* Tenant filter */}
