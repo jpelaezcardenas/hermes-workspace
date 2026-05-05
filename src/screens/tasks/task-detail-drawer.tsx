@@ -911,7 +911,7 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
   const rawLinks = detail.links ?? { parents: [], children: [] }
   const queryClient = useQueryClient()
   const [linking, setLinking] = useState(false)
-  const [dialogMode, setDialogMode] = useState<'parent' | 'child' | null>(null)
+  const [dialogMode, setDialogMode] = useState<'blocker' | 'unblocks' | null>(null)
   const [dialogSubmitting, setDialogSubmitting] = useState(false)
 
   const boardQuery = useQuery({
@@ -964,7 +964,7 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
           block_reason: payload.blockReason ?? null,
         })
       }
-      if (dialogMode === 'parent') await addLink(newTask.id, task.id)
+      if (dialogMode === 'blocker') await addLink(newTask.id, task.id)
       else await addLink(task.id, newTask.id)
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
       await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks', 'all'] })
@@ -977,48 +977,50 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
 
   return (
     <div className="space-y-5">
-      {/* Parents */}
+      <p className="text-[10px] text-[var(--theme-muted)] mb-2">A task only becomes Ready once everything in "Blocked by" is Done.</p>
+
+      {/* Blocked by */}
       <section>
         <div className="flex items-center justify-between mb-1">
           <p className={labelClass}>
             <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
-            Parents ({parents.length})
+            Blocked by — must finish first ({parents.length})
           </p>
-          <button onClick={() => setDialogMode('parent')} disabled={busy}
+          <button onClick={() => setDialogMode('blocker')} disabled={busy}
             className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
             + Create new
           </button>
         </div>
         {parents.length === 0 && (
-          <p className="text-xs text-[var(--theme-muted)]">No parent dependencies.</p>
+          <p className="text-xs text-[var(--theme-muted)]">Nothing blocks this task.</p>
         )}
         {parents.map(p => (
           <TaskRef key={p.id} task={p} onRemove={busy ? undefined : () => handleRemove(p.id, task.id)} />
         ))}
-        <TaskCombobox placeholder="Search tasks to add as parent…"
+        <TaskCombobox placeholder="Search tasks that must finish before this one…"
           candidates={parentCandidates} disabled={busy}
           onSelect={t => handleAdd(t.id, task.id)} />
       </section>
 
-      {/* Children */}
+      {/* Unblocks */}
       <section>
         <div className="flex items-center justify-between mb-1">
           <p className={labelClass}>
             <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
-            Children / subtasks ({children.length})
+            Unblocks — runs after this ({children.length})
           </p>
-          <button onClick={() => setDialogMode('child')} disabled={busy}
+          <button onClick={() => setDialogMode('unblocks')} disabled={busy}
             className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
             + Create new
           </button>
         </div>
         {children.length === 0 && (
-          <p className="text-xs text-[var(--theme-muted)]">No child tasks.</p>
+          <p className="text-xs text-[var(--theme-muted)]">This task does not block any others.</p>
         )}
         {children.map(c => (
           <TaskRef key={c.id} task={c} onRemove={busy ? undefined : () => handleRemove(task.id, c.id)} />
         ))}
-        <TaskCombobox placeholder="Search tasks to add as child…"
+        <TaskCombobox placeholder="Search tasks that should wait for this one…"
           candidates={childCandidates} disabled={busy}
           onSelect={t => handleAdd(task.id, t.id)} />
       </section>

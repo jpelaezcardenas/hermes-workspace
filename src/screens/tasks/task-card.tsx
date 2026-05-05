@@ -110,6 +110,7 @@ export function TaskCard({
           </span>
         )}
 
+        {/* TODO: show "🔒 blocked by N" amber badge when any parent is non-done (needs parent status data, not just count) */}
         {/* Dependency/subtask links */}
         {(linkParents > 0 || linkChildren > 0) && (
           <span
