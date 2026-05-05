@@ -303,6 +303,7 @@ export function TasksScreen() {
       else toast(`${data.results.length} tasks updated`)
       setSelectedIds(new Set())
       invalidate()
+      void queryClient.invalidateQueries({ queryKey: ['claude', 'tasks', 'stats'] })
     },
     onError: (e) =>
       toast(e instanceof Error ? e.message : 'Bulk update failed', {
@@ -487,6 +488,27 @@ export function TasksScreen() {
                     {selectedIds.size}×
                   </span>
                   <button
+                    onClick={() => void bulkMutation.mutate({ status: 'triage' })}
+                    className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-[var(--theme-muted)]"
+                    disabled={bulkMutation.isPending}
+                  >
+                    Triage
+                  </button>
+                  <button
+                    onClick={() => void bulkMutation.mutate({ status: 'ready' })}
+                    className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-[var(--theme-muted)]"
+                    disabled={bulkMutation.isPending}
+                  >
+                    Ready
+                  </button>
+                  <button
+                    onClick={() => void bulkMutation.mutate({ status: 'blocked' })}
+                    className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-[var(--theme-muted)]"
+                    disabled={bulkMutation.isPending}
+                  >
+                    Blocked
+                  </button>
+                  <button
                     onClick={() => void bulkMutation.mutate({ status: 'done' })}
                     className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-[var(--theme-muted)]"
                     disabled={bulkMutation.isPending}
@@ -494,20 +516,18 @@ export function TasksScreen() {
                     Done
                   </button>
                   <button
-                    onClick={() =>
-                      void bulkMutation.mutate({ status: 'ready' })
-                    }
-                    className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-[var(--theme-muted)]"
-                    disabled={bulkMutation.isPending}
-                  >
-                    Ready
-                  </button>
-                  <button
                     onClick={() => void bulkMutation.mutate({ archive: true })}
                     className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-red-400"
                     disabled={bulkMutation.isPending}
                   >
                     Archive
+                  </button>
+                  <button
+                    onClick={() => setSelectedIds(new Set())}
+                    className="text-xs px-1.5 py-0.5 rounded hover:bg-[var(--theme-border)] text-[var(--theme-muted)] ml-1 border-l border-[var(--theme-border)] pl-2"
+                    disabled={bulkMutation.isPending}
+                  >
+                    Clear
                   </button>
                   <button
                     onClick={() => setSelectedIds(new Set())}
