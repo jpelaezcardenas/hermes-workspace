@@ -51,7 +51,10 @@ export const Route = createFileRoute('/api/sessions')({
               gatewaySessions.push({
                 key: ls.id,
                 id: ls.id,
+                friendlyId: ls.id,
                 title: ls.title || 'Local Chat',
+                label: ls.title || 'Local Chat',
+                derivedTitle: ls.title || 'Local Chat',
                 startedAt: ls.createdAt,
                 updatedAt: ls.updatedAt,
                 message_count: ls.messageCount,
