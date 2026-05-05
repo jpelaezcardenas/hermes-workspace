@@ -886,17 +886,19 @@ export function TasksScreen() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -6 }}
                             onDragEnd={handleDragEnd}
-                            className="relative"
+                            className="relative group"
                           >
-                            {/* Multi-select checkbox */}
+                            {/* Multi-select checkbox — visible on hover, always visible when selected or any selected */}
                             <button
                               type="button"
                               onClick={(e) => toggleSelect(task.id, e)}
                               className={cn(
                                 'absolute top-2 left-2 z-10 w-4 h-4 rounded border transition-all',
                                 selectedIds.has(task.id)
-                                  ? 'bg-[var(--theme-accent)] border-[var(--theme-accent)]'
-                                  : 'bg-transparent border-[var(--theme-border)] opacity-0 group-hover:opacity-60',
+                                  ? 'bg-[var(--theme-accent)] border-[var(--theme-accent)] opacity-100'
+                                  : selectedIds.size > 0
+                                    ? 'bg-transparent border-[var(--theme-border)] opacity-60 hover:opacity-100'
+                                    : 'bg-transparent border-[var(--theme-border)] opacity-0 group-hover:opacity-60 hover:opacity-100',
                               )}
                               title="Select task"
                             >
