@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { useSearch } from '@tanstack/react-router'
+import { useSearch, useNavigate } from '@tanstack/react-router'
 import {
   keepPreviousData,
   useMutation,
@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Add01Icon,
+  Alert02Icon,
   CheckListIcon,
   RefreshIcon,
 } from '@hugeicons/core-free-icons'
@@ -72,6 +73,7 @@ type RunningMovePending = {
 
 export function TasksScreen() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const [showCreate, setShowCreate] = useState(false)
   const [createColumn, setCreateColumn] = useState<TaskColumn>('triage')
   const [editingTask, setEditingTask] = useState<ClaudeTask | null>(null)
@@ -116,6 +118,8 @@ export function TasksScreen() {
   })
 
   const assignees: Array<TaskAssignee> = assigneesQuery.data?.assignees ?? []
+  const orphanAssignees = assignees.filter((a) => !a.onDisk)
+  const [orphanBannerDismissed, setOrphanBannerDismissed] = useState(false)
 
   const assigneeLabels = useMemo(() => {
     const map: Record<string, string> = {}
@@ -591,6 +595,45 @@ export function TasksScreen() {
             {TASKS_BOARD_HELP_TEXT}
           </p>
         </header>
+
+        {/* Orphan-assignee resilience banner */}
+        {orphanAssignees.length > 0 && !orphanBannerDismissed && (
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+            <div className="flex items-start gap-3">
+              <HugeiconsIcon icon={Alert02Icon} size={16} className="text-amber-400 mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-amber-300">
+                  {orphanAssignees.length} orphan assignee{orphanAssignees.length !== 1 ? 's' : ''} with no profile on disk
+                </p>
+                <p className="text-xs text-amber-400/80 mt-0.5">
+                  {orphanAssignees.slice(0, 5).map((a) => a.label).join(', ')}
+                  {orphanAssignees.length > 5 ? ` +${orphanAssignees.length - 5} more` : ''}
+                </p>
+                <p className="text-xs text-amber-400/70 mt-1">
+                  Tasks assigned to these fall back to the default profile when dispatched. Reassign tasks or add a profile yaml under{' '}
+                  <code className="font-mono text-amber-300/90">~/.hermes/profiles/</code>.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => void navigate({ to: '/profiles' })}
+                  className="text-xs px-2.5 py-1 rounded-lg border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 transition-colors"
+                >
+                  Open Profiles
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOrphanBannerDismissed(true)}
+                  className="text-amber-400/60 hover:text-amber-300 transition-colors text-xs leading-none"
+                  title="Dismiss"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Board */}
         <div
