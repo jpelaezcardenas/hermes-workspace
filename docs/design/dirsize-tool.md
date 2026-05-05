@@ -22,6 +22,36 @@ python scripts/dirsize.py <path> [options]
 | `--ignore-permission-denied` | 标志位 | `false` | 跳过权限不足的目录 |
 | `--disk-usage` | 标志位 | `false` | 使用 `stat.st_blocks` 计算磁盘占用，而非 apparent size |
 
+### 退出码
+
+| 退出码 | 含义 |
+|--------|------|
+| 0 | 成功 |
+| 1 | 参数错误 |
+| 2 | 路径不存在 |
+| 3 | 权限不足（未使用 `--ignore-permission-denied`） |
+
+### 使用示例
+
+```bash
+# 默认输出
+python scripts/dirsize.py /some/dir
+# Total: 117.7 MB (42 files)
+
+# JSON 格式供自动化使用
+python scripts/dirsize.py /some/dir --json
+# {"path":"/some/dir","total_bytes":123456789,"human_size":"117.7 MB",...}
+
+# 排除 node_modules 和 .git
+python scripts/dirsize.py . --exclude node_modules --exclude .git
+
+# 限制深度
+python scripts/dirsize.py /deep/tree --max-depth 3
+
+# 磁盘占用（而非 apparent size）
+python scripts/dirsize.py /some/dir --disk-usage
+```
+
 ### 输出格式
 
 **默认（人类可读）**：
