@@ -14,7 +14,12 @@ import {
   updateSession,
 } from '../../server/claude-api'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
-import { deleteLocalSession, getLocalSession, listLocalSessions } from '../../server/local-session-store'
+import {
+  deleteLocalSession,
+  getLocalSession,
+  listLocalSessions,
+  updateLocalSessionTitle,
+} from '../../server/local-session-store'
 
 export const Route = createFileRoute('/api/sessions')({
   server: {
@@ -191,6 +196,30 @@ export const Route = createFileRoute('/api/sessions')({
               { ok: false, error: 'sessionKey required' },
               { status: 400 },
             )
+          }
+
+          const localSession = getLocalSession(sessionKey)
+          if (localSession) {
+            if (label) updateLocalSessionTitle(sessionKey, label)
+            return json({
+              ok: true,
+              sessionKey,
+              friendlyId: rawFriendlyId || sessionKey,
+              entry: {
+                key: sessionKey,
+                id: sessionKey,
+                title: label || sessionKey,
+                label: label || sessionKey,
+                derivedTitle: label || sessionKey,
+                startedAt: localSession.createdAt,
+                updatedAt: Date.now(),
+                message_count: localSession.messageCount,
+                model: localSession.model,
+                source: 'local',
+              },
+              updated: true,
+              source: 'local',
+            })
           }
 
           if (capabilities.dashboard.available && !capabilities.enhancedChat) {
