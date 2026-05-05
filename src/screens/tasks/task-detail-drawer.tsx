@@ -375,6 +375,10 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
     workspacePath !== (td.workspace_path ?? '') ||
     JSON.stringify([...skills].sort()) !== JSON.stringify([...initialSkills].sort())
 
+  const isSpawnFailed = td.status === 'running' && ((td.spawn_failures ?? 0) > 0 || !!td.last_spawn_error)
+  const isClaimLocked = td.status === 'running' && !!td.claim_lock
+  const [rescuing, setRescuing] = useState(false)
+
   async function handleSave() {
     if (!title.trim() || saving) return
     setSaving(true)
@@ -398,8 +402,42 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
     }
   }
 
+  async function handleRescue() {
+    if (rescuing) return
+    setRescuing(true)
+    try {
+      await updateTask(task.id, { status: 'ready', claim_lock: null, worker_pid: null })
+      await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
+      await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
+      setStatus('ready')
+    } finally {
+      setRescuing(false)
+    }
+  }
+
   return (
     <div className="space-y-3">
+      {/* Rescue banner — spawn failure or stale claim */}
+      {(isSpawnFailed || isClaimLocked) && (
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 flex items-start gap-2">
+          <HugeiconsIcon icon={Alert02Icon} size={14} className="text-amber-400 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-amber-300">
+              {isSpawnFailed
+                ? `Spawn failed${td.last_spawn_error ? `: ${td.last_spawn_error}` : ` (${td.spawn_failures} attempt${(td.spawn_failures ?? 0) !== 1 ? 's' : ''})`}. Reset to Ready to re-queue.`
+                : 'Task appears claimed but worker may have died. Reset to Ready to release the claim and re-queue.'}
+            </p>
+            <button
+              onClick={handleRescue}
+              disabled={rescuing}
+              className="mt-1.5 rounded px-2 py-1 text-[11px] font-medium bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 transition-colors disabled:opacity-40"
+            >
+              {rescuing ? 'Resetting…' : 'Reset to Ready'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Title */}
       <div>
         <label className={labelClass}>Title</label>

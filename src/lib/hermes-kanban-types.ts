@@ -191,6 +191,9 @@ export type UpdateKanbanTaskInput = {
   workspace_kind?: string | null
   workspace_path?: string | null
   skills?: Array<string> | null
+  claim_lock?: string | null
+  worker_pid?: number | null
+  claimed_at?: number | null
 }
 
 export type BulkKanbanInput = {
