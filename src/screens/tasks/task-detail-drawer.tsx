@@ -13,6 +13,7 @@ import {
 } from '@/lib/hermes-kanban-types'
 import type { HermesKanbanTask, HermesKanbanTaskDetail, HermesKanbanStatus } from '@/lib/hermes-kanban-types'
 import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink, createTask, deleteTask, hardDeleteTask, COLUMN_COLORS } from '@/lib/tasks-api'
+import { unionAssigneesWithProfiles } from '@/lib/assignee-profile-union'
 import { TaskDialog } from './task-dialog'
 import type { TaskDialogSubmit } from './task-dialog'
 
@@ -410,7 +411,17 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
     queryFn: fetchAssignees,
     staleTime: 60_000,
   })
+  const profilesQuery = useQuery({
+    queryKey: ['profiles', 'list'],
+    queryFn: () => fetch('/api/profiles/list').then(r => r.json()) as Promise<{ profiles: Array<{ name: string }>; activeProfile: string }>,
+    staleTime: 60_000,
+  })
   const assignees = assigneesQuery.data?.assignees ?? []
+  const options = unionAssigneesWithProfiles(
+    assignees,
+    profilesQuery.data?.profiles ?? [],
+    profilesQuery.data?.activeProfile,
+  )
   const [assignee, setAssignee] = useState(td.assignee ?? '')
 
   const [skills, setSkills] = useState<string[]>(normaliseSkills(td.skills))
@@ -624,7 +635,7 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
           value={assignee} onChange={e => setAssignee(e.target.value)}
           disabled={isClaimLocked}>
           <option value="">Unassigned — any worker can claim</option>
-          {assignees.map(({ id, label, onDisk }) => (
+          {options.map(({ id, label, onDisk }) => (
             <option key={id} value={id}>
               {onDisk ? label : `${label} ⚠ (profile not installed)`}
             </option>
@@ -635,7 +646,7 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
             Profile cannot be changed while task is actively claimed. Use <span className="text-amber-400">Reset to Ready</span> above first.
           </p>
         )}
-        {!isClaimLocked && assignee && !assignees.find(a => a.id === assignee)?.onDisk && (
+        {!isClaimLocked && assignee && !options.find(a => a.id === assignee)?.onDisk && (
           <p className="mt-1 text-[10px] text-amber-400 flex items-start gap-1">
             <span>⚠</span>
             <span>

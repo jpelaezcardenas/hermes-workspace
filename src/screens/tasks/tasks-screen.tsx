@@ -37,6 +37,7 @@ import {
   updateTask,
 } from '@/lib/tasks-api'
 import { HERMES_KANBAN_VISIBLE_STATUS_ORDER } from '@/lib/hermes-kanban-types'
+import { unionAssigneesWithProfiles } from '@/lib/assignee-profile-union'
 
 const KANBAN_BASE = '/api/hermes-kanban'
 
@@ -118,6 +119,16 @@ export function TasksScreen() {
   })
 
   const assignees: Array<TaskAssignee> = assigneesQuery.data?.assignees ?? []
+  const profilesQuery = useQuery({
+    queryKey: ['profiles', 'list'],
+    queryFn: () => fetch('/api/profiles/list').then(r => r.json()) as Promise<{ profiles: Array<{ name: string }>; activeProfile: string }>,
+    staleTime: 60_000,
+  })
+  const assigneeOptions = unionAssigneesWithProfiles(
+    assignees,
+    profilesQuery.data?.profiles ?? [],
+    profilesQuery.data?.activeProfile,
+  )
   const orphanAssignees = assignees.filter((a) => !a.onDisk)
   const [orphanBannerDismissed, setOrphanBannerDismissed] = useState(false)
 
@@ -795,7 +806,7 @@ export function TasksScreen() {
           open={showCreate}
           onOpenChange={setShowCreate}
           defaultColumn={createColumn}
-          assignees={assignees}
+          assignees={assigneeOptions}
           isSubmitting={createMutation.isPending}
           onSubmit={async (payload) => {
             await createMutation.mutateAsync(payload)
