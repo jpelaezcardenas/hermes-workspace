@@ -394,7 +394,7 @@ export function TasksScreen() {
               {(assigneeFilter || tenantFilter) && (
                 <div className="flex items-center gap-2 text-xs text-[var(--theme-muted)]">
                   {assigneeFilter && (() => {
-                    const a = assignees.find(x => x.id === assigneeFilter)
+                    const a = assigneeOptions.find(x => x.id === assigneeFilter)
                     return (
                       <span className={a && !a.onDisk ? 'text-amber-400' : ''}>
                         profile:{assigneeFilter}{a && !a.onDisk ? ' ⚠' : ''}
@@ -551,7 +551,7 @@ export function TasksScreen() {
                 </select>
               )}
               {/* Agent profile filter */}
-              {assignees.length > 0 && (
+              {assigneeOptions.length > 0 && (
                 <select
                   className="text-xs px-2 py-1 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] text-[var(--theme-text)] focus:outline-none focus:border-[var(--theme-accent)]"
                   style={{ colorScheme: 'dark' }}
@@ -560,9 +560,9 @@ export function TasksScreen() {
                   title="Filter by agent profile"
                 >
                   <option value="">All profiles</option>
-                  {assignees.map((a) => (
+                  {assigneeOptions.map((a) => (
                     <option key={a.id} value={a.id}>
-                      {a.onDisk ? a.label : `${a.label} ⚠`}
+                      {a.onDisk ? `${a.label}${a.isActive ? ' (active)' : ''}` : `${a.label} ⚠`}
                     </option>
                   ))}
                 </select>
