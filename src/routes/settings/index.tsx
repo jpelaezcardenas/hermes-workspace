@@ -20,6 +20,7 @@ import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
 import type { ThemeId } from '@/lib/theme'
 import type { SettingsNavId } from '@/components/settings/settings-sidebar'
+import type {LocaleId} from '@/lib/i18n';
 import {
   SETTINGS_NAV_ITEMS,
   SettingsMobilePills,
@@ -29,7 +30,7 @@ import { usePageTitle } from '@/hooks/use-page-title'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { useSettings } from '@/hooks/use-settings'
-import { getLocale, setLocale, LOCALE_LABELS, type LocaleId } from '@/lib/i18n'
+import { LOCALE_LABELS,  getLocale, setLocale } from '@/lib/i18n'
 import { THEMES, getTheme, isDarkTheme, setTheme } from '@/lib/theme'
 import { cn } from '@/lib/utils'
 import {
@@ -180,6 +181,20 @@ const THEME_PREVIEWS: Record<
     border: '#D0D7DE',
     accent: '#3b82f6',
     text: '#1F2328',
+  },
+  'scifi': {
+    bg: '#060b18',
+    panel: '#0a1628',
+    border: '#1a3a5c',
+    accent: '#00f0ff',
+    text: '#e0f7fa',
+  },
+  'scifi-light': {
+    bg: '#EEF1F5',
+    panel: '#FFFFFF',
+    border: '#B0BEC5',
+    accent: '#0097A7',
+    text: '#0A1628',
   },
 }
 
@@ -454,8 +469,12 @@ function SettingsRoute() {
                   }}
                   className="h-9 w-full rounded-lg border border-primary-200 dark:border-gray-600 bg-primary-50 dark:bg-gray-800 px-3 text-sm text-primary-900 dark:text-gray-100 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400 md:max-w-xs"
                 >
-                  {(Object.entries(LOCALE_LABELS) as Array<[LocaleId, string]>).map(([id, label]) => (
-                    <option key={id} value={id}>{label}</option>
+                  {(
+                    Object.entries(LOCALE_LABELS) as Array<[LocaleId, string]>
+                  ).map(([id, label]) => (
+                    <option key={id} value={id}>
+                      {label}
+                    </option>
                   ))}
                 </select>
               </SettingsRow>
@@ -827,10 +846,7 @@ function ChatDisplaySection() {
             value={chatSettings.chatWidth}
             onChange={(e) =>
               updateChatSettings({
-                chatWidth: e.target.value as
-                  | 'comfortable'
-                  | 'wide'
-                  | 'full',
+                chatWidth: e.target.value as 'comfortable' | 'wide' | 'full',
               })
             }
             className="h-8 rounded-md border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary-400"
@@ -869,7 +885,7 @@ type LoaderStyleOption = { value: LoaderStyle; label: string }
 
 const LOADER_STYLES: Array<LoaderStyleOption> = [
   { value: 'dots', label: 'Dots' },
-  { value: 'braille-claude', label: 'Hermes' },
+  { value: 'braille-claude', label: 'Claude' },
   { value: 'braille-orbit', label: 'Orbit' },
   { value: 'braille-breathe', label: 'Breathe' },
   { value: 'braille-pulse', label: 'Pulse' },
@@ -966,7 +982,10 @@ type ClaudeConfigData = {
   claudeHome: string
 }
 
-const CLAUDE_API = process.env.HERMES_API_URL || process.env.CLAUDE_API_URL || 'http://127.0.0.1:8642'
+const CLAUDE_API =
+  process.env.HERMES_API_URL ||
+  process.env.CLAUDE_API_URL ||
+  'http://127.0.0.1:8642'
 
 type AvailableModelsResponse = {
   provider: string
@@ -1193,7 +1212,7 @@ function ClaudeConfigSection({
         </SettingsRow>
         <SettingsRow
           label="Model"
-          description="The default model Hermes Agent uses for conversations."
+          description="The model Claude uses for conversations."
         >
           <div className="flex w-full max-w-sm gap-2">
             {availableModels.length > 0 ? (
@@ -1545,7 +1564,7 @@ function ClaudeConfigSection({
       >
         <SettingsRow
           label="Config location"
-          description="Where Hermes Agent stores its configuration."
+          description="Where Claude stores its configuration."
         >
           <span
             className="text-xs font-mono"
@@ -2130,11 +2149,11 @@ function ConnectionSection() {
       </div>
 
       <div className="mt-3 rounded-lg border border-primary-200 bg-primary-100/50 p-3 text-xs text-primary-600">
-        <strong className="font-semibold">Tailscale / remote tip:</strong>{' '}
-        Set the gateway to its Tailscale IP (e.g. <code>http://100.x.y.z:8642</code>)
-        and ensure the gateway listens on <code>0.0.0.0</code> (set{' '}
-        <code>API_SERVER_HOST=0.0.0.0</code> in the agent-side <code>.env</code>).
-        No workspace restart needed — capabilities reprobe on save.
+        <strong className="font-semibold">Tailscale / remote tip:</strong> Set
+        the gateway to its Tailscale IP (e.g. <code>http://100.x.y.z:8642</code>
+        ) and ensure the gateway listens on <code>0.0.0.0</code> (set{' '}
+        <code>API_SERVER_HOST=0.0.0.0</code> in the agent-side <code>.env</code>
+        ). No workspace restart needed — capabilities reprobe on save.
       </div>
     </SettingsSection>
   )

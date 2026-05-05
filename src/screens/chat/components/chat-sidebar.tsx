@@ -578,6 +578,8 @@ function ChatSidebarComponent({
   const isSkillsActive = pathname === '/skills'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
+  const isPlaygroundActive = pathname === '/playground'
+  const isAgoraActive = pathname === '/agora'
   const isTerminalActive = pathname === '/terminal'
   const isJobsActive = pathname === '/jobs'
   const isMemoryActive = pathname === '/memory'
@@ -795,6 +797,7 @@ function ChatSidebarComponent({
       label: t('nav.chat'),
       active: isChatActive,
     },
+
     {
       kind: 'link',
       to: '/files',

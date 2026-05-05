@@ -98,9 +98,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
   > | null>(null)
   const activeSessionKeyRef = useRef<string>('main')
   // Monotonically increasing token. Each call to startStreaming bumps this so
-  // any in-flight fetch-reader loop, or pending microtask processing chunks it
-  // already read into the SSE buffer, can detect that it is stale and refuse to
-  // dispatch events into the newly active session. See #297.
+  // any in-flight processStream loop (or pending microtask processing chunks
+  // it has already read into the SSE buffer) can detect that it's stale and
+  // refuse to dispatch its events. Without this, chunks from an aborted stream
+  // can still write into the new session's chat history during the brief
+  // window between abort() and the underlying fetch reader actually stopping.
+  // See #297 (cross-session response contamination).
   const streamGenerationRef = useRef<number>(0)
   const lifecyclePhaseRef = useRef<StreamLifecyclePhase>('idle')
   const acceptedAtRef = useRef<number | null>(null)
@@ -602,6 +605,18 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             phase: 'complete',
             name: `artifact:${kind}`,
             result: path ? `${title} — ${path}` : title,
+            preview:
+              typeof payload.preview === 'string' && payload.preview.trim()
+                ? payload.preview.trim()
+                : undefined,
+            // Preserve the structured artifact metadata so the chat renderer
+            // can show a first-class artifact card instead of degrading the
+            // event to a generic tool row. See #295.
+            args: {
+              title,
+              kind,
+              path: path || undefined,
+            },
             runId: activeRunIdRef.current ?? undefined,
             sessionKey: activeSessionKeyRef.current,
             transport: 'send-stream',
@@ -806,11 +821,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       lifecyclePhaseRef.current = 'requesting'
 
       // Bump the generation token so any chunks the previous stream had
-      // already buffered but not yet dispatched (after abort) get rejected
-      // when they reach processEvent. The local capture is what this run
-      // compares against. See #297.
+      // already buffered but not yet dispatched (after our abort() call)
+      // get rejected when they reach processEvent. The local capture is
+      // what this run will compare against. See #297.
       streamGenerationRef.current += 1
       const myGeneration = streamGenerationRef.current
+      const mySessionKey = params.sessionKey
 
       const messageId = `streaming-${Date.now()}`
 
@@ -890,9 +906,10 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           if (done) break
 
           // Guard against stale streams writing into a newer session.
-          // If startStreaming was called again, streamGenerationRef has been
-          // bumped; this loop is now for an aborted/superseded stream and
-          // must not dispatch events. See #297.
+          // If startStreaming was called again with a different sessionKey,
+          // streamGenerationRef has been bumped; this loop's reads are now
+          // for an aborted/superseded stream and must not dispatch events.
+          // See #297.
           if (streamGenerationRef.current !== myGeneration) {
             try {
               await reader.cancel()

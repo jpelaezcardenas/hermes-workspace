@@ -150,7 +150,13 @@ export function UpdateCenterNotifier() {
   const visibleProducts = useMemo(() => {
     const products = data ? [data.products.workspace, data.products.agent] : []
     return products.filter((product) => {
+      // Product decision: only show the top-of-app update banner when a
+      // one-click update is actually safe. Dirty checkouts, non-main branches,
+      // and blocked/conflicting states still exist, but they belong in an
+      // advanced update center view rather than a disruptive banner. See
+      // Eric feedback 2026-05-04.
       if (!product.updateAvailable) return false
+      if (!product.canUpdate) return false
       if (phases[product.id] === 'done') return false
       return !dismissed.has(productDismissKey(product))
     })
@@ -258,7 +264,13 @@ function UpdateCard({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -24, scale: 0.96 }}
       transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-      className="pointer-events-auto overflow-hidden rounded-2xl shadow-2xl"
+      // Firefox/Linux right-clicks on this card were intermittently eaten by
+      // the surrounding motion/backdrop layers, making the modal feel
+      // unresponsive and preventing copy/open-in-new-tab actions. Let the
+      // native context menu open on the card itself and keep the event from
+      // bubbling to the backdrop. See #286.
+      onContextMenu={(event) => event.stopPropagation()}
+      className="pointer-events-auto overflow-hidden rounded-2xl shadow-2xl select-text"
       style={{
         background: 'var(--theme-card)',
         border: '1px solid var(--theme-border)',
@@ -409,10 +421,11 @@ function ReleaseNotes({
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl"
+          className="w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl select-text"
           initial={{ opacity: 0, y: 24, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.96 }}
+          onContextMenu={(event) => event.stopPropagation()}
           style={{
             background: 'var(--theme-card)',
             border: '1px solid var(--theme-border)',

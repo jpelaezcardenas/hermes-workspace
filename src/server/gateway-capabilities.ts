@@ -142,7 +142,18 @@ export const CLAUDE_UPGRADE_INSTRUCTIONS =
 export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your Hermes backend does not support the sessions API. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
 
 const PROBE_TIMEOUT_MS = 3_000
+// Probe TTL: 120s when the gateway is healthy, 15s when it isn't. The
+// shorter window during 'disconnected' state means a Docker stack where
+// the workspace boots before the agent recovers within ~15s of the agent
+// becoming reachable, instead of being stuck on the first failed probe
+// for two minutes. See #275.
 const PROBE_TTL_MS = 120_000
+const PROBE_TTL_DISCONNECTED_MS = 15_000
+
+function effectiveProbeTtl(caps: { health: boolean; chatCompletions: boolean }): number {
+  if (caps.health || caps.chatCompletions) return PROBE_TTL_MS
+  return PROBE_TTL_DISCONNECTED_MS
+}
 const DASHBOARD_TOKEN_REGEX =
   /window\.__(?:CLAUDE|HERMES)_SESSION_TOKEN__\s*=\s*["'](.+?)["']/
 
@@ -180,9 +191,12 @@ export type EnhancedCapabilities = {
    */
   conductor: boolean
   /**
-   * True when the Hermes Agent Dashboard Kanban plugin is available at
-   * `/api/plugins/kanban/*`. The Tasks board requires this; degrades
-   * gracefully to a BackendUnavailableState when absent.
+   * True when the dashboard exposes `/api/plugins/kanban/board` (the native
+   * Hermes kanban plugin shipped upstream). When available, the workspace's
+   * /swarm kanban surface can sync with the dashboard's kanban DB so both
+   * UIs read/write the same SQLite source of truth instead of running
+   * separate stores. When false, the workspace falls back to its local
+   * file-backed swarm-kanban store. See v2.3.0 plan.
    */
   kanban: boolean
 }
@@ -630,6 +644,30 @@ async function probeConductor(dashboardAvailable: boolean): Promise<boolean> {
   }
 }
 
+/**
+ * Lightweight probe for the upstream Hermes kanban plugin. When the dashboard
+ * exposes `/api/plugins/kanban/board` we assume the kanban plugin is loaded
+ * and the workspace can sync its /swarm kanban surface with the dashboard's
+ * SQLite-backed kanban DB. Mounted by hermes_cli.web_server
+ * `_mount_plugin_api_routes()`. See v2.3.0 plan.
+ */
+async function probeKanban(dashboardAvailable: boolean): Promise<boolean> {
+  if (!dashboardAvailable) return false
+  try {
+    const res = await dashboardFetch('/api/plugins/kanban/board', {
+      method: 'GET',
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    })
+    if (res.status === 404 || res.status === 405) return false
+    // The plugin route is unauthenticated by design (loopback-only), so
+    // 200 is the normal success. Some auth setups may return 401 — still
+    // means the route exists.
+    return true
+  } catch {
+    return false
+  }
+}
+
 
 // Vanilla hermes-agent 0.10.0 satisfies: health, chatCompletions, models, streaming,
 // sessions, skills, config, jobs. Dashboard-only endpoints (themes/plugins) and the
@@ -835,11 +873,21 @@ export async function probeGateway(options?: {
 }
 
 export async function ensureGatewayProbed(): Promise<GatewayCapabilities> {
-  const isStale = Date.now() - lastProbeAt > PROBE_TTL_MS
+  const isStale =
+    Date.now() - lastProbeAt > effectiveProbeTtl(capabilities)
   if (!capabilities.probed || isStale) {
     return probeGateway({ force: isStale })
   }
   return capabilities
+}
+
+/**
+ * Force-reprobe regardless of TTL. Used by the UI 'Reconnect' action
+ * and by any tool that wants to validate the current state immediately
+ * (for example after a docker compose restart). See #275.
+ */
+export async function forceReprobeGateway(): Promise<GatewayCapabilities> {
+  return probeGateway({ force: true })
 }
 
 // ── Accessors ─────────────────────────────────────────────────────
