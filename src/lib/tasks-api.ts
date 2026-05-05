@@ -224,6 +224,18 @@ export const COLUMN_COLORS: Record<HermesKanbanStatus, string> = {
   archived: '#94a3b8',
 }
 
+export type KanbanConfig = {
+  default_tenant?: string
+  lane_by_profile?: boolean
+  include_archived_by_default?: boolean
+  render_markdown?: boolean
+  [k: string]: unknown
+}
+
+export async function fetchKanbanConfig(): Promise<KanbanConfig> {
+  return kanbanJson<KanbanConfig>(`${KANBAN_BASE}/config`)
+}
+
 export type HomeChannel = {
   platform: string
   chat_id?: string

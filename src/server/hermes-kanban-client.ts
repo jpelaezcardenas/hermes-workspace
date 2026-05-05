@@ -154,6 +154,10 @@ export async function dispatchKanban(
   })
 }
 
+export async function getKanbanConfig(): Promise<unknown> {
+  return kanbanFetch<unknown>(`${BASE}/config`, {})
+}
+
 export async function getKanbanHomeChannels(taskId?: string): Promise<unknown> {
   const q = taskId ? `?task_id=${encodeURIComponent(taskId)}` : ''
   return kanbanFetch<unknown>(`${BASE}/home-channels${q}`, {})

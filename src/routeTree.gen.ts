@@ -139,6 +139,7 @@ import { Route as ApiHermesKanbanHomeChannelsRouteImport } from './routes/api/he
 import { Route as ApiHermesKanbanEventsTokenRouteImport } from './routes/api/hermes-kanban/events-token'
 import { Route as ApiHermesKanbanEventsRouteImport } from './routes/api/hermes-kanban/events'
 import { Route as ApiHermesKanbanDispatchRouteImport } from './routes/api/hermes-kanban/dispatch'
+import { Route as ApiHermesKanbanConfigRouteImport } from './routes/api/hermes-kanban/config'
 import { Route as ApiHermesKanbanBulkRouteImport } from './routes/api/hermes-kanban/bulk'
 import { Route as ApiHermesKanbanBoardRouteImport } from './routes/api/hermes-kanban/board'
 import { Route as ApiHermesKanbanAssigneesRouteImport } from './routes/api/hermes-kanban/assignees'
@@ -810,6 +811,11 @@ const ApiHermesKanbanDispatchRoute = ApiHermesKanbanDispatchRouteImport.update({
   path: '/api/hermes-kanban/dispatch',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHermesKanbanConfigRoute = ApiHermesKanbanConfigRouteImport.update({
+  id: '/api/hermes-kanban/config',
+  path: '/api/hermes-kanban/config',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHermesKanbanBulkRoute = ApiHermesKanbanBulkRouteImport.update({
   id: '/api/hermes-kanban/bulk',
   path: '/api/hermes-kanban/bulk',
@@ -993,6 +999,7 @@ export interface FileRoutesByFullPath {
   '/api/hermes-kanban/assignees': typeof ApiHermesKanbanAssigneesRoute
   '/api/hermes-kanban/board': typeof ApiHermesKanbanBoardRoute
   '/api/hermes-kanban/bulk': typeof ApiHermesKanbanBulkRoute
+  '/api/hermes-kanban/config': typeof ApiHermesKanbanConfigRoute
   '/api/hermes-kanban/dispatch': typeof ApiHermesKanbanDispatchRoute
   '/api/hermes-kanban/events': typeof ApiHermesKanbanEventsRoute
   '/api/hermes-kanban/events-token': typeof ApiHermesKanbanEventsTokenRoute
@@ -1140,6 +1147,7 @@ export interface FileRoutesByTo {
   '/api/hermes-kanban/assignees': typeof ApiHermesKanbanAssigneesRoute
   '/api/hermes-kanban/board': typeof ApiHermesKanbanBoardRoute
   '/api/hermes-kanban/bulk': typeof ApiHermesKanbanBulkRoute
+  '/api/hermes-kanban/config': typeof ApiHermesKanbanConfigRoute
   '/api/hermes-kanban/dispatch': typeof ApiHermesKanbanDispatchRoute
   '/api/hermes-kanban/events': typeof ApiHermesKanbanEventsRoute
   '/api/hermes-kanban/events-token': typeof ApiHermesKanbanEventsTokenRoute
@@ -1289,6 +1297,7 @@ export interface FileRoutesById {
   '/api/hermes-kanban/assignees': typeof ApiHermesKanbanAssigneesRoute
   '/api/hermes-kanban/board': typeof ApiHermesKanbanBoardRoute
   '/api/hermes-kanban/bulk': typeof ApiHermesKanbanBulkRoute
+  '/api/hermes-kanban/config': typeof ApiHermesKanbanConfigRoute
   '/api/hermes-kanban/dispatch': typeof ApiHermesKanbanDispatchRoute
   '/api/hermes-kanban/events': typeof ApiHermesKanbanEventsRoute
   '/api/hermes-kanban/events-token': typeof ApiHermesKanbanEventsTokenRoute
@@ -1439,6 +1448,7 @@ export interface FileRouteTypes {
     | '/api/hermes-kanban/assignees'
     | '/api/hermes-kanban/board'
     | '/api/hermes-kanban/bulk'
+    | '/api/hermes-kanban/config'
     | '/api/hermes-kanban/dispatch'
     | '/api/hermes-kanban/events'
     | '/api/hermes-kanban/events-token'
@@ -1586,6 +1596,7 @@ export interface FileRouteTypes {
     | '/api/hermes-kanban/assignees'
     | '/api/hermes-kanban/board'
     | '/api/hermes-kanban/bulk'
+    | '/api/hermes-kanban/config'
     | '/api/hermes-kanban/dispatch'
     | '/api/hermes-kanban/events'
     | '/api/hermes-kanban/events-token'
@@ -1734,6 +1745,7 @@ export interface FileRouteTypes {
     | '/api/hermes-kanban/assignees'
     | '/api/hermes-kanban/board'
     | '/api/hermes-kanban/bulk'
+    | '/api/hermes-kanban/config'
     | '/api/hermes-kanban/dispatch'
     | '/api/hermes-kanban/events'
     | '/api/hermes-kanban/events-token'
@@ -1878,6 +1890,7 @@ export interface RootRouteChildren {
   ApiHermesKanbanAssigneesRoute: typeof ApiHermesKanbanAssigneesRoute
   ApiHermesKanbanBoardRoute: typeof ApiHermesKanbanBoardRoute
   ApiHermesKanbanBulkRoute: typeof ApiHermesKanbanBulkRoute
+  ApiHermesKanbanConfigRoute: typeof ApiHermesKanbanConfigRoute
   ApiHermesKanbanDispatchRoute: typeof ApiHermesKanbanDispatchRoute
   ApiHermesKanbanEventsRoute: typeof ApiHermesKanbanEventsRoute
   ApiHermesKanbanEventsTokenRoute: typeof ApiHermesKanbanEventsTokenRoute
@@ -2819,6 +2832,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesKanbanDispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hermes-kanban/config': {
+      id: '/api/hermes-kanban/config'
+      path: '/api/hermes-kanban/config'
+      fullPath: '/api/hermes-kanban/config'
+      preLoaderRoute: typeof ApiHermesKanbanConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hermes-kanban/bulk': {
       id: '/api/hermes-kanban/bulk'
       path: '/api/hermes-kanban/bulk'
@@ -3215,6 +3235,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHermesKanbanAssigneesRoute: ApiHermesKanbanAssigneesRoute,
   ApiHermesKanbanBoardRoute: ApiHermesKanbanBoardRoute,
   ApiHermesKanbanBulkRoute: ApiHermesKanbanBulkRoute,
+  ApiHermesKanbanConfigRoute: ApiHermesKanbanConfigRoute,
   ApiHermesKanbanDispatchRoute: ApiHermesKanbanDispatchRoute,
   ApiHermesKanbanEventsRoute: ApiHermesKanbanEventsRoute,
   ApiHermesKanbanEventsTokenRoute: ApiHermesKanbanEventsTokenRoute,

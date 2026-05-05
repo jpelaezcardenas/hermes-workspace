@@ -16,6 +16,7 @@ import {
   Alert02Icon,
   CheckListIcon,
   RefreshIcon,
+  Settings01Icon,
 } from '@hugeicons/core-free-icons'
 import { TaskCard } from './task-card'
 import { TaskDialog } from './task-dialog'
@@ -33,6 +34,7 @@ import {
   createTask,
   deleteTask,
   fetchAssignees,
+  fetchKanbanConfig,
   fetchStats,
   fetchTasks,
   moveTask,
@@ -549,6 +551,7 @@ export function TasksScreen() {
                   </>
                 )
               })()}
+              <KanbanSettingsButton />
               {/* Tenant filter */}
               {uniqueTenants.length > 0 && (
                 <select
@@ -1026,5 +1029,84 @@ export function TasksScreen() {
         document.body,
       )}
     </div>
+  )
+}
+
+function KanbanSettingsButton() {
+  const [open, setOpen] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [pos, setPos] = useState<{ top: number; right: number } | null>(null)
+  const cfgQuery = useQuery({
+    queryKey: ['hermes-kanban', 'config'],
+    queryFn: fetchKanbanConfig,
+    staleTime: 5 * 60_000,
+    enabled: open,
+  })
+
+  function toggle() {
+    if (!open && buttonRef.current) {
+      const r = buttonRef.current.getBoundingClientRect()
+      setPos({ top: r.bottom + 6, right: window.innerWidth - r.right })
+    }
+    setOpen((v) => !v)
+  }
+
+  const cfg = cfgQuery.data ?? {}
+  const rows: Array<[string, string]> = [
+    ['Default tenant', String((cfg as Record<string, unknown>).default_tenant ?? '—') || '—'],
+    ['Lane by profile', (cfg as Record<string, unknown>).lane_by_profile ? 'Yes' : 'No'],
+    ['Include archived by default', (cfg as Record<string, unknown>).include_archived_by_default ? 'Yes' : 'No'],
+    ['Render markdown', (cfg as Record<string, unknown>).render_markdown ? 'Yes' : 'No'],
+  ]
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        onClick={toggle}
+        title="Kanban settings"
+        className={cn(
+          'flex items-center gap-1 text-xs px-2 py-1 rounded-lg border transition-colors',
+          open
+            ? 'border-[var(--theme-accent)] text-[var(--theme-accent)] bg-[var(--theme-hover)]'
+            : 'border-[var(--theme-border)] text-[var(--theme-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-accent)]',
+        )}
+      >
+        <HugeiconsIcon icon={Settings01Icon} size={12} />
+      </button>
+      {open && pos && createPortal(
+        <>
+          <div className="fixed inset-0 z-[9998]" onClick={() => setOpen(false)} />
+          <div
+            className="fixed z-[9999] w-72 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-2xl p-3"
+            style={{ top: pos.top, right: pos.right, backgroundColor: 'var(--theme-card)' }}
+          >
+            <p className="text-[10px] uppercase tracking-widest text-[var(--theme-muted)] font-medium mb-2">
+              Kanban settings
+            </p>
+            {cfgQuery.isLoading && (
+              <p className="text-xs text-[var(--theme-muted)]">Loading…</p>
+            )}
+            {cfgQuery.isError && (
+              <p className="text-xs text-red-400">Failed to load config.</p>
+            )}
+            {!cfgQuery.isLoading && !cfgQuery.isError && (
+              <div className="space-y-1.5">
+                {rows.map(([k, v]) => (
+                  <div key={k} className="flex items-center justify-between gap-3 text-xs">
+                    <span className="text-[var(--theme-muted)]">{k}</span>
+                    <span className="text-[var(--theme-text)] font-medium">{v}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="mt-3 pt-2 border-t border-[var(--theme-border)] text-[10px] text-[var(--theme-muted)]">
+              Read-only. Edit <span className="font-mono">~/.hermes/config.yaml</span> and restart the dashboard to change.
+            </p>
+          </div>
+        </>,
+        document.body,
+      )}
+    </>
   )
 }
