@@ -237,17 +237,24 @@ export function TaskDialog({
               </div>
             )}
 
-            {/* Assignee + Tenant */}
+            {/* Agent profile + Tenant */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelClass}>Assignee</label>
+                <label className={labelClass}>Agent profile</label>
                 <select className={inputClass} style={{ colorScheme: 'dark' }}
                   value={assignee} onChange={e => setAssignee(e.target.value)}>
                   <option value="">Unassigned</option>
-                  {assignees.map(({ id, label }) => (
-                    <option key={id} value={id}>{label}</option>
+                  {assignees.map(({ id, label, onDisk }) => (
+                    <option key={id} value={id}>
+                      {onDisk ? label : `${label} ⚠ (not installed)`}
+                    </option>
                   ))}
                 </select>
+                {assignee && !assignees.find(a => a.id === assignee)?.onDisk && (
+                  <p className="mt-1 text-[10px] text-amber-400">
+                    ⚠ Profile not installed — dispatching will fail
+                  </p>
+                )}
               </div>
               <div>
                 <label className={labelClass}>Tenant</label>

@@ -79,9 +79,15 @@ export async function fetchTasks(params?: {
   const board = data.board
   // Agent API returns columns as [{name, tasks}] list — convert to a status map
   const colMap = boardColumnsToMap(board.columns ?? [])
-  const statuses = params?.include_done
-    ? HERMES_KANBAN_VISIBLE_STATUS_ORDER
-    : HERMES_KANBAN_VISIBLE_STATUS_ORDER.filter((s) => s !== 'done')
+  // Build the list of statuses to collect from colMap.
+  // HERMES_KANBAN_VISIBLE_STATUS_ORDER excludes 'archived', so we append it
+  // explicitly when the caller requested archived tasks.
+  const statuses: Array<HermesKanbanStatus> = [
+    ...(params?.include_done
+      ? HERMES_KANBAN_VISIBLE_STATUS_ORDER
+      : HERMES_KANBAN_VISIBLE_STATUS_ORDER.filter((s) => s !== 'done')),
+    ...(params?.include_archived ? (['archived'] as Array<HermesKanbanStatus>) : []),
+  ]
 
   const tasks: Array<HermesKanbanTask> = []
   for (const status of statuses) {
@@ -123,11 +129,20 @@ export async function updateTask(
 }
 
 /**
- * deleteTask → archive. Agent Kanban has no hard-delete endpoint.
- * UI copy should say "Archive" to match actual behavior.
+ * deleteTask → archive. Soft-delete; task moves to the Archived column.
  */
 export async function deleteTask(taskId: string): Promise<void> {
   await updateTask(taskId, { status: 'archived' })
+}
+
+/**
+ * hardDeleteTask → permanent removal via DELETE.
+ * Only call this on tasks that are already archived.
+ */
+export async function hardDeleteTask(taskId: string): Promise<void> {
+  await kanbanJson<{ ok: boolean }>(`${KANBAN_BASE}/tasks/${taskId}`, {
+    method: 'DELETE',
+  })
 }
 
 export async function moveTask(

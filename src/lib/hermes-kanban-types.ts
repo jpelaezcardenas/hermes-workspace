@@ -108,8 +108,9 @@ export type HermesKanbanRun = {
 }
 
 export type HermesKanbanLinks = {
-  parents: Array<HermesKanbanTask>
-  children: Array<HermesKanbanTask>
+  /** Gateway returns either full task objects or bare ID strings — handle both. */
+  parents: Array<HermesKanbanTask | string>
+  children: Array<HermesKanbanTask | string>
 }
 
 export type HermesKanbanTaskDetail = {

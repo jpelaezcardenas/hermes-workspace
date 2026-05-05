@@ -65,6 +65,11 @@ type BlockedDropPending = {
   targetStatus: HermesKanbanStatus
 } | null
 
+type RunningMovePending = {
+  taskId: string
+  targetStatus: HermesKanbanStatus
+} | null
+
 export function TasksScreen() {
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
@@ -75,8 +80,12 @@ export function TasksScreen() {
     useState<HermesKanbanStatus | null>(null)
   const [showDone, setShowDone] = useState(false)
   const [showArchived, setShowArchived] = useState(false)
+  const [showTriage, setShowTriage] = useState(true)
+  const [showBlocked, setShowBlocked] = useState(true)
+  const [showViewDropdown, setShowViewDropdown] = useState(false)
   const [blockedPending, setBlockedPending] = useState<BlockedDropPending>(null)
   const [blockedReason, setBlockedReason] = useState('')
+  const [runningMovePending, setRunningMovePending] = useState<RunningMovePending>(null)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
   const search = useSearch({ from: '/tasks' })
@@ -274,14 +283,10 @@ export function TasksScreen() {
     }
     // Warn when manually pulling a running task off-execution
     if (task.status === 'running' && targetStatus !== 'running') {
-      const confirmed = window.confirm(
-        'This task has an active worker run. Moving it away from Running may affect the worker. Continue?',
-      )
-      if (!confirmed) {
-        setDraggingId(null)
-        setDragOverColumn(null)
-        return
-      }
+      setRunningMovePending({ taskId, targetStatus })
+      setDraggingId(null)
+      setDragOverColumn(null)
+      return
     }
     moveMutation.mutate({ id: taskId, status: targetStatus })
     setDraggingId(null)
@@ -291,6 +296,12 @@ export function TasksScreen() {
   function handleDragEnd() {
     setDraggingId(null)
     setDragOverColumn(null)
+  }
+
+  function confirmRunningMove() {
+    if (!runningMovePending) return
+    moveMutation.mutate({ id: runningMovePending.taskId, status: runningMovePending.targetStatus })
+    setRunningMovePending(null)
   }
 
   function confirmBlocked() {
@@ -344,13 +355,17 @@ export function TasksScreen() {
     })
   }
 
-  // Agent lifecycle columns
-  const baseStatuses: Array<HermesKanbanStatus> = showDone
-    ? HERMES_KANBAN_VISIBLE_STATUS_ORDER
-    : HERMES_KANBAN_VISIBLE_STATUS_ORDER.filter((s) => s !== 'done')
-  const visibleStatuses: Array<HermesKanbanStatus> = showArchived
-    ? [...baseStatuses, 'archived']
-    : baseStatuses
+  // Agent lifecycle columns — filtered by the four view toggles
+  const visibleStatuses: Array<HermesKanbanStatus> = [
+    ...HERMES_KANBAN_VISIBLE_STATUS_ORDER,
+    'archived' as HermesKanbanStatus,
+  ].filter((s) => {
+    if (s === 'triage' && !showTriage) return false
+    if (s === 'blocked' && !showBlocked) return false
+    if (s === 'done' && !showDone) return false
+    if (s === 'archived' && !showArchived) return false
+    return true
+  })
   const colMaxWidth = Math.floor(1200 / visibleStatuses.length)
 
   return (
@@ -363,7 +378,14 @@ export function TasksScreen() {
               <h1 className="text-2xl font-medium text-ink">Tasks</h1>
               {(assigneeFilter || tenantFilter) && (
                 <div className="flex items-center gap-2 text-xs text-[var(--theme-muted)]">
-                  {assigneeFilter && <span>@{assigneeFilter}</span>}
+                  {assigneeFilter && (() => {
+                    const a = assignees.find(x => x.id === assigneeFilter)
+                    return (
+                      <span className={a && !a.onDisk ? 'text-amber-400' : ''}>
+                        profile:{assigneeFilter}{a && !a.onDisk ? ' ⚠' : ''}
+                      </span>
+                    )
+                  })()}
                   {tenantFilter && <span>tenant:{tenantFilter}</span>}
                   <button
                     type="button"
@@ -436,28 +458,67 @@ export function TasksScreen() {
                   </button>
                 </div>
               )}
-              <button
-                onClick={() => setShowDone((v) => !v)}
-                className={cn(
-                  'text-xs px-2.5 py-1 rounded-lg border transition-colors',
-                  showDone
-                    ? 'border-[var(--theme-accent)] text-[var(--theme-accent)] bg-[var(--theme-hover)]'
-                    : 'border-[var(--theme-border)] text-[var(--theme-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-accent)]',
-                )}
-              >
-                {showDone ? 'Hide Done' : 'Show Done'}
-              </button>
-              <button
-                onClick={() => setShowArchived((v) => !v)}
-                className={cn(
-                  'text-xs px-2.5 py-1 rounded-lg border transition-colors',
-                  showArchived
-                    ? 'border-[var(--theme-accent)] text-[var(--theme-accent)] bg-[var(--theme-hover)]'
-                    : 'border-[var(--theme-border)] text-[var(--theme-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-accent)]',
-                )}
-              >
-                {showArchived ? 'Hide Archived' : 'Archived'}
-              </button>
+              {/* Consolidated columns visibility dropdown */}
+              {(() => {
+                const anyHidden = !showTriage || !showBlocked || !showDone || !showArchived
+                const cols = [
+                  { key: 'triage', label: 'Triage / Backlog', checked: showTriage, toggle: () => setShowTriage(v => !v) },
+                  { key: 'blocked', label: 'Blocked', checked: showBlocked, toggle: () => setShowBlocked(v => !v) },
+                  { key: 'done', label: 'Done', checked: showDone, toggle: () => setShowDone(v => !v) },
+                  { key: 'archived', label: 'Archived', checked: showArchived, toggle: () => setShowArchived(v => !v) },
+                ]
+                return (
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowViewDropdown(v => !v)}
+                      className={cn(
+                        'flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border transition-colors',
+                        showViewDropdown || anyHidden
+                          ? 'border-[var(--theme-accent)] text-[var(--theme-accent)] bg-[var(--theme-hover)]'
+                          : 'border-[var(--theme-border)] text-[var(--theme-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-accent)]',
+                      )}
+                    >
+                      <HugeiconsIcon icon={CheckListIcon} size={12} />
+                      Columns
+                      {anyHidden && (
+                        <span className="ml-0.5 text-[9px] font-bold opacity-70">
+                          {cols.filter(c => !c.checked).length}
+                        </span>
+                      )}
+                      <span className="opacity-50 text-[10px]">▾</span>
+                    </button>
+                    {showViewDropdown && (
+                      <>
+                        <div className="fixed inset-0 z-10" onClick={() => setShowViewDropdown(false)} />
+                        <div className="absolute top-full right-0 mt-1.5 z-20 w-52 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-2xl p-1.5">
+                          <p className="px-3 pt-1.5 pb-1 text-[9px] uppercase tracking-widest text-[var(--theme-muted)] font-medium">
+                            Visible columns
+                          </p>
+                          {cols.map(({ key, label, checked, toggle }) => (
+                            <button
+                              key={key}
+                              onClick={toggle}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs hover:bg-[var(--theme-hover)] transition-colors"
+                            >
+                              <span className={cn(
+                                'w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors',
+                                checked
+                                  ? 'border-[var(--theme-accent)] bg-[var(--theme-accent)]'
+                                  : 'border-[var(--theme-border)] bg-transparent',
+                              )}>
+                                {checked && <span className="text-white text-[9px] leading-none">✓</span>}
+                              </span>
+                              <span className={checked ? 'text-[var(--theme-text)]' : 'text-[var(--theme-muted)]'}>
+                                {label}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )
+              })()}
               {/* Tenant filter */}
               {uniqueTenants.length > 0 && (
                 <select
@@ -474,18 +535,19 @@ export function TasksScreen() {
                   ))}
                 </select>
               )}
-              {/* Assignee filter */}
+              {/* Agent profile filter */}
               {assignees.length > 0 && (
                 <select
                   className="text-xs px-2 py-1 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] text-[var(--theme-text)] focus:outline-none focus:border-[var(--theme-accent)]"
                   style={{ colorScheme: 'dark' }}
                   value={assigneeFilter ?? ''}
                   onChange={(e) => setAssigneeFilter(e.target.value || null)}
+                  title="Filter by agent profile"
                 >
-                  <option value="">All assignees</option>
+                  <option value="">All profiles</option>
                   {assignees.map((a) => (
                     <option key={a.id} value={a.id}>
-                      {a.label}
+                      {a.onDisk ? a.label : `${a.label} ⚠`}
                     </option>
                   ))}
                 </select>
@@ -532,7 +594,7 @@ export function TasksScreen() {
 
         {/* Board */}
         <div
-          className="mx-auto flex w-full max-w-[1200px] flex-1 gap-3 overflow-x-auto overflow-y-hidden p-4 min-h-0"
+          className="mx-auto flex w-full max-w-[1200px] flex-1 gap-3 overflow-x-auto overflow-y-hidden min-h-0"
           style={{ boxShadow: 'inset 0 8px 24px rgba(0,0,0,0.2)' }}
         >
           {visibleStatuses.map((status) => {
@@ -703,6 +765,42 @@ export function TasksScreen() {
             task={editingTask}
             onClose={() => setEditingTask(null)}
           />
+        )}
+
+        {/* Running-task move confirmation */}
+        {runningMovePending && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="w-full max-w-sm rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-orange-400 shrink-0 animate-pulse" />
+                <h3 className="text-sm font-semibold text-[var(--theme-text)]">
+                  Move active task?
+                </h3>
+              </div>
+              <p className="text-xs text-[var(--theme-muted)] mb-5 leading-relaxed">
+                This task has an active worker run. Moving it away from{' '}
+                <span className="font-medium text-orange-400">Running</span> may
+                interrupt the worker mid-execution. Continue anyway?
+              </p>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setRunningMovePending(null)}
+                  className="rounded-lg px-3 py-1.5 text-xs text-[var(--theme-muted)] hover:text-[var(--theme-text)] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmRunningMove}
+                  className="rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
+                  style={{ background: '#f97316' }}
+                >
+                  Move anyway
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Blocked confirmation dialog (v1 requirement) */}

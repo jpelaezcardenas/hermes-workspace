@@ -72,6 +72,13 @@ export async function updateKanbanTask(
   })
 }
 
+/** Permanently hard-delete a task. Only valid for archived tasks. */
+export async function deleteKanbanTask(taskId: string): Promise<{ ok: boolean }> {
+  return kanbanFetch<{ ok: boolean }>(`${BASE}/tasks/${taskId}`, {
+    method: 'DELETE',
+  })
+}
+
 export async function addKanbanComment(
   taskId: string,
   input: { body: string; author?: string },

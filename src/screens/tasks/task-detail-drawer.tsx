@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Cancel01Icon, HierarchyIcon, CpuIcon, Alert02Icon } from '@hugeicons/core-free-icons'
@@ -12,7 +12,9 @@ import {
   HERMES_KANBAN_VISIBLE_STATUS_ORDER,
 } from '@/lib/hermes-kanban-types'
 import type { HermesKanbanTask, HermesKanbanTaskDetail, HermesKanbanStatus } from '@/lib/hermes-kanban-types'
-import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink, createTask, deleteTask, COLUMN_COLORS } from '@/lib/tasks-api'
+import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink, createTask, deleteTask, hardDeleteTask, COLUMN_COLORS } from '@/lib/tasks-api'
+import { TaskDialog } from './task-dialog'
+import type { TaskDialogSubmit } from './task-dialog'
 
 type LogResponse = { log: { content: string; exists: boolean; truncated: boolean; size_bytes: number } }
 
@@ -94,10 +96,44 @@ type Props = {
   onClose: () => void
 }
 
+function HeaderMetaStrip({ td }: { td: HermesKanbanTask }) {
+  const fields: Array<[string, string]> = []
+  if (td.created_at) fields.push(['Created', relativeTime(td.created_at)])
+  if (td.started_at) fields.push(['Started', relativeTime(td.started_at)])
+  if (td.completed_at) fields.push(['Completed', relativeTime(td.completed_at)])
+  if (td.tenant) fields.push(['Tenant', td.tenant])
+  if (td.max_runtime_seconds) fields.push(['Runtime', `${td.max_runtime_seconds}s`])
+  if (td.result) fields.push(['Result', td.result])
+  const hasWarning = (td.spawn_failures ?? 0) > 0
+  if (fields.length === 0 && !hasWarning) return null
+  return (
+    <div className="flex flex-col gap-1 pt-1.5 border-t border-[var(--theme-border)]/40">
+      {fields.length > 0 && (
+        <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+          {fields.map(([label, value]) => (
+            <span key={label} className="inline-flex items-center gap-1 text-[9px]">
+              <span className="uppercase tracking-wide text-[var(--theme-muted)] opacity-60">{label}</span>
+              <span className="text-[var(--theme-text)] opacity-80">{value}</span>
+            </span>
+          ))}
+        </div>
+      )}
+      {hasWarning && (
+        <div className="flex items-center gap-1 text-red-400 text-[9px]">
+          <HugeiconsIcon icon={Alert02Icon} size={9} />
+          <span>{td.spawn_failures} spawn failure(s){td.last_spawn_error ? `: ${td.last_spawn_error}` : ''}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function TaskDetailDrawer({ task, onClose }: Props) {
   const [activeTab, setActiveTab] = useState<DrawerTab>('overview')
   const queryClient = useQueryClient()
   const [archiving, setArchiving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const isArchived = task.status === 'archived'
 
   async function handleArchive() {
     if (archiving) return
@@ -108,6 +144,18 @@ export function TaskDetailDrawer({ task, onClose }: Props) {
       onClose()
     } finally {
       setArchiving(false)
+    }
+  }
+
+  async function handleHardDelete() {
+    if (deleting) return
+    setDeleting(true)
+    try {
+      await hardDeleteTask(task.id)
+      await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
+      onClose()
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -135,66 +183,87 @@ export function TaskDetailDrawer({ task, onClose }: Props) {
   const detail = detailQuery.data
 
   return (
-    <div className="fixed inset-0 z-40 flex items-stretch justify-end">
+    <div className="fixed inset-0 z-40 flex items-stretch justify-end py-3 pr-3">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Drawer */}
-      <div className="relative z-10 flex h-full w-full max-w-xl flex-col bg-[var(--theme-card)] border-l border-[var(--theme-border)] shadow-2xl">
+      {/* Drawer — floats with rounded corners */}
+      <div className="relative z-10 flex h-full w-full max-w-xl flex-col bg-[var(--theme-card)] border border-[var(--theme-border)] shadow-2xl rounded-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--theme-border)] px-5 py-4">
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-mono text-[var(--theme-muted)] mb-0.5">{task.id}</p>
-            <h2 className="text-sm font-semibold text-[var(--theme-text)] line-clamp-2">{task.title}</h2>
-            <div className="flex flex-wrap items-center gap-1.5 mt-2">
-              {/* Status pill */}
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
-                style={{ background: COLUMN_COLORS[task.status] }}>
-                {HERMES_KANBAN_STATUS_LABELS[task.status]}
-              </span>
-              {/* Priority pill */}
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
-                style={{ background: kanbanPriorityColor(task.priority ?? 0) }}>
-                {kanbanPriorityLabel(task.priority ?? 0)} priority
-              </span>
-              {/* Assignee pill */}
-              {task.assignee && (
-                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--theme-hover)] text-[var(--theme-muted)]">
-                  @{task.assignee}
-                </span>
+        <div className="flex flex-col gap-1.5 border-b border-[var(--theme-border)] px-5 pt-3 pb-3">
+          {/* Top row: task ID + actions */}
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[10px] font-mono text-[var(--theme-muted)] truncate">{task.id}</p>
+            <div className="flex items-center gap-1 shrink-0">
+              {isArchived ? (
+                <button
+                  onClick={handleHardDelete}
+                  disabled={deleting}
+                  className="rounded-lg px-3 py-1.5 text-[11px] font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+                  style={{ background: '#ef4444' }}
+                  title="Permanently delete this task — cannot be undone"
+                >
+                  {deleting ? 'Deleting…' : '🗑 Delete permanently'}
+                </button>
+              ) : (
+                <button
+                  onClick={handleArchive}
+                  disabled={archiving}
+                  className="rounded-lg px-3 py-1.5 text-[11px] font-medium border border-[var(--theme-border)] text-[var(--theme-muted)] hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-colors disabled:opacity-40"
+                >
+                  {archiving ? 'Archiving…' : 'Archive'}
+                </button>
               )}
+              <button
+                onClick={onClose}
+                className="rounded-md p-1.5 hover:bg-[var(--theme-hover)] transition-colors"
+                title="Close"
+              >
+                <HugeiconsIcon icon={Cancel01Icon} size={15} className="text-[var(--theme-muted)]" />
+              </button>
             </div>
           </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              onClick={handleArchive}
-              disabled={archiving}
-              className="rounded-lg px-2 py-1 text-[11px] font-medium text-[var(--theme-muted)] hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-40"
-            >
-              {archiving ? 'Archiving…' : 'Archive'}
-            </button>
-            <button onClick={onClose} className="rounded-lg p-1.5 hover:bg-[var(--theme-hover)] transition-colors">
-              <HugeiconsIcon icon={Cancel01Icon} size={16} className="text-[var(--theme-muted)]" />
-            </button>
+          {/* Title */}
+          <h2 className="text-sm font-semibold text-[var(--theme-text)] line-clamp-2 leading-snug">{task.title}</h2>
+          {/* Status / priority / assignee pills */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+              style={{ background: COLUMN_COLORS[task.status] }}>
+              {HERMES_KANBAN_STATUS_LABELS[task.status]}
+            </span>
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+              style={{ background: kanbanPriorityColor(task.priority ?? 0) }}>
+              {kanbanPriorityLabel(task.priority ?? 0)} priority
+            </span>
+            {task.assignee && (
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[var(--theme-hover)] text-[var(--theme-muted)]">
+                @{task.assignee}
+              </span>
+            )}
           </div>
+
+          {/* Compact metadata strip — visible once detail loads */}
+          {detail?.task && <HeaderMetaStrip td={detail.task} />}
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-[var(--theme-border)] px-4 overflow-x-auto gap-0 shrink-0">
+        <div className="flex border-b border-[var(--theme-border)] px-3 py-1 overflow-x-auto gap-0.5 shrink-0">
           {DRAWER_TABS.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={cn(
-                'px-3 py-2.5 text-xs font-medium transition-colors whitespace-nowrap border-b-2 -mb-px',
+                'px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap rounded-lg',
                 activeTab === tab
-                  ? 'border-[var(--theme-accent)] text-[var(--theme-accent)]'
-                  : 'border-transparent text-[var(--theme-muted)] hover:text-[var(--theme-text)]',
+                  ? 'bg-[var(--theme-accent)] text-white shadow-sm'
+                  : 'text-[var(--theme-muted)] hover:bg-[var(--theme-hover)] hover:text-[var(--theme-text)]',
               )}
             >
               {TAB_LABELS[tab]}
               {tab === 'comments' && (detail?.comments?.length ?? 0) > 0 && (
-                <span className="ml-1 text-[9px] opacity-60">{detail?.comments.length}</span>
+                <span className={cn('ml-1 text-[9px]', activeTab === tab ? 'opacity-70' : 'opacity-50')}>
+                  {detail?.comments.length}
+                </span>
               )}
             </button>
           ))}
@@ -333,6 +402,8 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
   const [workspaceKind, setWorkspaceKind] = useState(td.workspace_kind ?? '')
   const [workspacePath, setWorkspacePath] = useState(td.workspace_path ?? '')
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [rescuing, setRescuing] = useState(false)
 
   const assigneesQuery = useQuery({
     queryKey: ['hermes-kanban', 'assignees'],
@@ -343,6 +414,21 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
   const [assignee, setAssignee] = useState(td.assignee ?? '')
 
   const [skills, setSkills] = useState<string[]>(normaliseSkills(td.skills))
+
+  // Re-sync server-driven fields whenever the underlying task data refreshes
+  // (e.g. after rescue actions, SSE-triggered board updates, or manual refetch).
+  // User-edited text fields (title, body, workspacePath) are intentionally
+  // excluded so in-progress edits are not discarded mid-typing.
+  useEffect(() => {
+    setStatus(td.status)
+    setAssignee(td.assignee ?? '')
+    setBlockReason(td.block_reason ?? '')
+    setSummary(td.summary ?? '')
+    setWorkspaceKind(td.workspace_kind ?? '')
+    setPriority(numericToFormPriority(td.priority ?? 0))
+    setSaveError(null)
+  }, [td.id, td.status, td.assignee, td.claim_lock, td.priority,
+  td.block_reason, td.summary, td.workspace_kind])
 
   // Fetch the installed Hermes skills — same source as the Skills screen.
   // Query key matches ['skills-browser','installed'] so it shares the TanStack
@@ -375,13 +461,15 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
     workspacePath !== (td.workspace_path ?? '') ||
     JSON.stringify([...skills].sort()) !== JSON.stringify([...initialSkills].sort())
 
+  // Detected: task is in running state but the spawn failed
   const isSpawnFailed = td.status === 'running' && ((td.spawn_failures ?? 0) > 0 || !!td.last_spawn_error)
-  const isClaimLocked = td.status === 'running' && !!td.claim_lock
-  const [rescuing, setRescuing] = useState(false)
+  // Detected: gateway will refuse assignee/profile change while claim_lock is held
+  const isClaimLocked = !!td.claim_lock && td.status === 'running'
 
   async function handleSave() {
     if (!title.trim() || saving) return
     setSaving(true)
+    setSaveError(null)
     try {
       await updateTask(task.id, {
         title: title.trim(),
@@ -395,21 +483,31 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         workspace_path: workspacePath.trim() || null,
         skills: skills.length > 0 ? skills : null,
       })
+      setSaveError(null)
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
       await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Save failed')
     } finally {
       setSaving(false)
     }
   }
 
-  async function handleRescue() {
+  async function handleRescue(targetStatus: 'ready' | 'blocked') {
     if (rescuing) return
     setRescuing(true)
     try {
-      await updateTask(task.id, { status: 'ready', claim_lock: null, worker_pid: null })
+      await updateTask(task.id, {
+        status: targetStatus,
+        ...(targetStatus === 'ready'
+          ? { claim_lock: null, worker_pid: null }
+          : { block_reason: td.last_spawn_error ?? 'Spawn failure: profile not found' }),
+      })
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
       await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
-      setStatus('ready')
+      if (targetStatus === 'ready') setStatus('ready')
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Rescue failed')
     } finally {
       setRescuing(false)
     }
@@ -417,23 +515,48 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
 
   return (
     <div className="space-y-3">
-      {/* Rescue banner — spawn failure or stale claim */}
+
+      {/* ── Rescue banner: spawn failure or stale claim_lock ────────────── */}
       {(isSpawnFailed || isClaimLocked) && (
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 flex items-start gap-2">
-          <HugeiconsIcon icon={Alert02Icon} size={14} className="text-amber-400 mt-0.5 shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-amber-300">
-              {isSpawnFailed
-                ? `Spawn failed${td.last_spawn_error ? `: ${td.last_spawn_error}` : ` (${td.spawn_failures} attempt${(td.spawn_failures ?? 0) !== 1 ? 's' : ''})`}. Reset to Ready to re-queue.`
-                : 'Task appears claimed but worker may have died. Reset to Ready to release the claim and re-queue.'}
-            </p>
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 space-y-2">
+          <div className="flex items-start gap-2">
+            <HugeiconsIcon icon={Alert02Icon} size={14} className="text-amber-400 mt-0.5 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-amber-300 mb-0.5">
+                {isSpawnFailed
+                  ? `Task stuck — spawn failed ${(td.spawn_failures ?? 0) > 0 ? `(${td.spawn_failures}×)` : ''}`
+                  : 'Task appears claimed but worker may have died'}
+              </p>
+              {isSpawnFailed && td.last_spawn_error && (
+                <p className="text-[10px] text-amber-400/80 font-mono break-words leading-relaxed">
+                  {td.last_spawn_error}
+                </p>
+              )}
+              {!isSpawnFailed && (
+                <p className="text-[10px] text-amber-400/80 leading-relaxed">
+                  Reset to Ready to release the claim and re-queue.
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-2 pl-5">
             <button
-              onClick={handleRescue}
+              onClick={() => handleRescue('ready')}
               disabled={rescuing}
-              className="mt-1.5 rounded px-2 py-1 text-[11px] font-medium bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 transition-colors disabled:opacity-40"
+              className="rounded-lg px-3 py-1.5 text-[11px] font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+              style={{ background: '#8b5cf6' }}
             >
               {rescuing ? 'Resetting…' : 'Reset to Ready'}
             </button>
+            {isSpawnFailed && (
+              <button
+                onClick={() => handleRescue('blocked')}
+                disabled={rescuing}
+                className="rounded-lg px-3 py-1.5 text-[11px] font-medium border border-red-500/40 text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-40"
+              >
+                Mark Blocked
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -444,10 +567,10 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         <input className={inputClass} value={title} onChange={e => setTitle(e.target.value)} />
       </div>
 
-      {/* Body */}
+      {/* Task Description */}
       <div>
-        <label className={labelClass}>Body</label>
-        <textarea className={cn(inputClass, 'resize-none')} rows={3} value={body}
+        <label className={labelClass}>Task Description</label>
+        <textarea className={cn(inputClass, 'resize-none')} rows={5} value={body}
           onChange={e => setBody(e.target.value)}
           placeholder="Acceptance criteria, context, links…" />
       </div>
@@ -492,16 +615,38 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         </div>
       )}
 
-      {/* Assignee */}
+      {/* Agent profile (assignee = profile the dispatcher will run as) */}
       <div>
-        <label className={labelClass}>Assignee</label>
+        <label className={labelClass}>Agent profile</label>
         <select className={inputClass} style={{ colorScheme: 'dark' }}
-          value={assignee} onChange={e => setAssignee(e.target.value)}>
-          <option value="">Unassigned</option>
-          {assignees.map(({ id, label }) => (
-            <option key={id} value={id}>{label}</option>
+          value={assignee} onChange={e => setAssignee(e.target.value)}
+          disabled={isClaimLocked}>
+          <option value="">Unassigned — any worker can claim</option>
+          {assignees.map(({ id, label, onDisk }) => (
+            <option key={id} value={id}>
+              {onDisk ? label : `${label} ⚠ (profile not installed)`}
+            </option>
           ))}
         </select>
+        {isClaimLocked && (
+          <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
+            Profile cannot be changed while task is actively claimed. Use <span className="text-amber-400">Reset to Ready</span> above first.
+          </p>
+        )}
+        {!isClaimLocked && assignee && !assignees.find(a => a.id === assignee)?.onDisk && (
+          <p className="mt-1 text-[10px] text-amber-400 flex items-start gap-1">
+            <span>⚠</span>
+            <span>
+              Profile <span className="font-mono">"{assignee}"</span> is not installed on disk — dispatching will fail.
+              Run: <span className="font-mono">hermes profile create {assignee}</span>
+            </span>
+          </p>
+        )}
+        {!assignee && (
+          <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
+            The dispatcher will run this task as whichever agent profile claims it.
+          </p>
+        )}
       </div>
 
       {/* Workspace kind + path */}
@@ -538,40 +683,28 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
       </div>
 
       {/* Save */}
-      {isDirty && (
-        <div className="flex justify-end pt-1">
-          <button
-            onClick={handleSave}
-            disabled={!title.trim() || saving}
-            className="rounded-lg px-4 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
-            style={{ background: 'var(--theme-accent)' }}
-          >
-            {saving ? 'Saving…' : 'Save changes'}
-          </button>
+      {(isDirty || saveError) && (
+        <div className="flex flex-col gap-1.5 pt-1">
+          {saveError && (
+            <p className="text-[10px] text-red-400 flex items-start gap-1">
+              <HugeiconsIcon icon={Alert02Icon} size={11} className="mt-0.5 shrink-0" />
+              <span>{saveError}</span>
+            </p>
+          )}
+          {isDirty && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleSave}
+                disabled={!title.trim() || saving}
+                className="rounded-lg px-4 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+                style={{ background: 'var(--theme-accent)' }}
+              >
+                {saving ? 'Saving…' : 'Save changes'}
+              </button>
+            </div>
+          )}
         </div>
       )}
-
-      {/* Read-only metadata */}
-      {(td.tenant || td.max_runtime_seconds || td.result ||
-        td.created_at || td.started_at || td.completed_at || (td.spawn_failures ?? 0) > 0) && (
-          <div className="pt-2 border-t border-[var(--theme-border)] space-y-2">
-            <p className={labelClass}>Task metadata</p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              {td.tenant && <MetaField label="Tenant" value={td.tenant} />}
-              {td.max_runtime_seconds && <MetaField label="Max runtime" value={`${td.max_runtime_seconds}s`} />}
-              {td.result && <MetaField label="Result" value={td.result} />}
-              {td.created_at && <MetaField label="Created" value={relativeTime(td.created_at)} />}
-              {td.started_at && <MetaField label="Started" value={relativeTime(td.started_at)} />}
-              {td.completed_at && <MetaField label="Completed" value={relativeTime(td.completed_at)} />}
-            </div>
-            {(td.spawn_failures ?? 0) > 0 && (
-              <div className="flex items-center gap-1.5 text-red-400 text-xs">
-                <HugeiconsIcon icon={Alert02Icon} size={12} />
-                <span>{td.spawn_failures} spawn failure(s){td.last_spawn_error ? `: ${td.last_spawn_error}` : ''}</span>
-              </div>
-            )}
-          </div>
-        )}
     </div>
   )
 }
@@ -609,35 +742,57 @@ function CommentsTab({ detail, taskId }: { detail: HermesKanbanTaskDetail; taskI
   }
 
   return (
-    <div className="space-y-3">
-      {detail.comments.length === 0 && (
-        <p className="text-xs text-[var(--theme-muted)]">No comments yet.</p>
-      )}
-      {detail.comments.map(c => (
-        <div key={c.id} className="rounded-lg border border-[var(--theme-border)] p-3 text-xs">
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-medium text-[var(--theme-text)]">{c.author ?? 'Unknown'}</span>
-            <span className="text-[var(--theme-muted)]">{relativeTime(c.created_at)}</span>
-          </div>
-          <p className="text-[var(--theme-muted)] whitespace-pre-wrap">{c.body}</p>
-        </div>
-      ))}
-      <div className="pt-2 border-t border-[var(--theme-border)]">
+    <div className="flex flex-col gap-0">
+      {/* Message list */}
+      <div className="flex flex-col gap-1.5 mb-3">
+        {detail.comments.length === 0 && (
+          <p className="text-xs text-[var(--theme-muted)] text-center py-4">No comments yet.</p>
+        )}
+        {detail.comments.map(c => {
+          const isOwn = c.author === 'SwitchUI'
+          return (
+            <div key={c.id} className={cn('flex flex-col gap-0.5', isOwn ? 'items-end' : 'items-start')}>
+              <div className={cn(
+                'max-w-[85%] rounded-2xl px-3 py-2 text-xs',
+                isOwn
+                  ? 'rounded-br-sm text-white'
+                  : 'rounded-bl-sm bg-[var(--theme-hover)] text-[var(--theme-text)]',
+              )}
+                style={isOwn ? { background: 'var(--theme-accent)' } : undefined}
+              >
+                <p className="whitespace-pre-wrap leading-relaxed">{c.body}</p>
+              </div>
+              <div className={cn('flex items-center gap-1 px-1', isOwn ? 'flex-row-reverse' : 'flex-row')}>
+                <span className="text-[9px] font-medium text-[var(--theme-muted)]">{c.author ?? 'Agent'}</span>
+                <span className="text-[9px] text-[var(--theme-muted)] opacity-60">·</span>
+                <span className="text-[9px] text-[var(--theme-muted)] opacity-60">{relativeTime(c.created_at)}</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Compose */}
+      <div className="border-t border-[var(--theme-border)] pt-3">
         <textarea
           className="w-full rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-2 text-xs text-[var(--theme-text)] placeholder:text-[var(--theme-muted)] resize-none focus:outline-none focus:border-[var(--theme-accent)] mb-2"
-          rows={3}
+          rows={2}
           placeholder="Add a comment…"
           value={body}
           onChange={e => setBody(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit() }}
         />
-        <button
-          onClick={submit}
-          disabled={!body.trim() || submitting}
-          className="rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
-          style={{ background: 'var(--theme-accent)' }}
-        >
-          {submitting ? 'Posting…' : 'Post comment'}
-        </button>
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] text-[var(--theme-muted)] opacity-50">⌘↵ to send</span>
+          <button
+            onClick={submit}
+            disabled={!body.trim() || submitting}
+            className="rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+            style={{ background: 'var(--theme-accent)' }}
+          >
+            {submitting ? 'Posting…' : 'Send'}
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -695,58 +850,56 @@ function TaskCombobox({
   )
 }
 
-function InlineCreateForm({
-  mode,
-  onSubmit,
-  onCancel,
-  submitting,
-}: {
-  mode: 'parent' | 'child'
-  onSubmit: (title: string, body: string) => void
-  onCancel: () => void
-  submitting: boolean
-}) {
-  const [title, setTitle] = useState('')
-  const [body, setBody] = useState('')
-  return (
-    <div className="mt-2 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-hover)] p-3 space-y-2">
-      <p className="text-[10px] font-medium text-[var(--theme-muted)] uppercase tracking-wide">
-        New {mode === 'parent' ? 'parent' : 'child'} task
-      </p>
-      <div>
-        <label className={labelClass}>Title *</label>
-        <input className={inputClass} autoFocus value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder="What needs to be done?" />
-      </div>
-      <div>
-        <label className={labelClass}>Body</label>
-        <textarea className={cn(inputClass, 'resize-none')} rows={2} value={body}
-          onChange={e => setBody(e.target.value)}
-          placeholder="Acceptance criteria, context…" />
-      </div>
-      <div className="flex justify-end gap-2 pt-1">
-        <button onClick={onCancel} disabled={submitting}
-          className="rounded-lg px-3 py-1.5 text-xs text-[var(--theme-muted)] hover:bg-[var(--theme-hover)] transition-colors">
-          Cancel
-        </button>
-        <button onClick={() => onSubmit(title, body)}
-          disabled={!title.trim() || submitting}
-          className="rounded-lg px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
-          style={{ background: 'var(--theme-accent)' }}>
-          {submitting ? 'Creating…' : 'Create & link'}
-        </button>
-      </div>
-    </div>
-  )
+/**
+ * The gateway may return links.parents/children as bare ID strings OR as full
+ * task objects, depending on the plugin version. Normalise to task objects by
+ * looking them up from the board cache; fall back to a minimal stub so the UI
+ * never crashes on a missing field.
+ */
+function resolveLinked(
+  raw: Array<HermesKanbanTask | string>,
+  taskMap: Map<string, HermesKanbanTask>,
+): HermesKanbanTask[] {
+  return raw.map(entry => {
+    if (typeof entry === 'string') {
+      return taskMap.get(entry) ?? ({
+        id: entry,
+        title: entry,
+        status: 'triage',
+        priority: 0,
+        body: null,
+        assignee: null,
+        created_by: null,
+        created_at: 0,
+        started_at: null,
+        completed_at: null,
+        workspace_kind: null,
+        workspace_path: null,
+        claim_lock: null,
+        claim_expires: null,
+        tenant: null,
+        result: null,
+        spawn_failures: 0,
+        worker_pid: null,
+        last_spawn_error: null,
+        max_runtime_seconds: null,
+        last_heartbeat_at: null,
+        current_run_id: null,
+        workflow_template_id: null,
+        current_step_key: null,
+        skills: null,
+      } satisfies HermesKanbanTask)
+    }
+    return entry
+  })
 }
 
 function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanbanTaskDetail }) {
-  const { parents, children } = detail.links ?? { parents: [], children: [] }
+  const rawLinks = detail.links ?? { parents: [], children: [] }
   const queryClient = useQueryClient()
   const [linking, setLinking] = useState(false)
-  const [creating, setCreating] = useState<'parent' | 'child' | null>(null)
-  const [submitting, setSubmitting] = useState(false)
+  const [dialogMode, setDialogMode] = useState<'parent' | 'child' | null>(null)
+  const [dialogSubmitting, setDialogSubmitting] = useState(false)
 
   const boardQuery = useQuery({
     queryKey: ['claude', 'tasks', 'all'],
@@ -754,6 +907,18 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
     staleTime: 60_000,
   })
   const allTasks = boardQuery.data ?? []
+  const taskMap = new Map(allTasks.map(t => [t.id, t]))
+
+  const assigneesQuery = useQuery({
+    queryKey: ['hermes-kanban', 'assignees'],
+    queryFn: fetchAssignees,
+    staleTime: 60_000,
+  })
+  const assignees = assigneesQuery.data?.assignees ?? []
+
+  // Normalise: string IDs → full task objects (or stubs if not yet in board cache)
+  const parents = resolveLinked(rawLinks.parents, taskMap)
+  const children = resolveLinked(rawLinks.children, taskMap)
 
   const linkedIds = new Set([task.id, ...parents.map(p => p.id), ...children.map(c => c.id)])
   const parentCandidates = allTasks.filter(t => !linkedIds.has(t.id))
@@ -775,21 +940,27 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
     } finally { setLinking(false) }
   }
 
-  async function handleCreateAndLink(mode: 'parent' | 'child', title: string, body: string) {
-    if (!title.trim() || submitting) return
-    setSubmitting(true)
+  async function handleDialogSubmit(payload: TaskDialogSubmit) {
+    if (!dialogMode) return
+    setDialogSubmitting(true)
     try {
-      const newTask = await createTask({ title: title.trim(), body: body.trim() || null, triage: true })
-      if (mode === 'parent') await addLink(newTask.id, task.id)
+      const newTask = await createTask(payload.createInput)
+      if (payload.desiredStatus) {
+        await updateTask(newTask.id, {
+          status: payload.desiredStatus,
+          block_reason: payload.blockReason ?? null,
+        })
+      }
+      if (dialogMode === 'parent') await addLink(newTask.id, task.id)
       else await addLink(task.id, newTask.id)
       await queryClient.invalidateQueries({ queryKey: ['hermes-kanban', 'task', task.id] })
       await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks', 'all'] })
       await queryClient.invalidateQueries({ queryKey: ['claude', 'tasks'] })
-      setCreating(null)
-    } finally { setSubmitting(false) }
+      setDialogMode(null)
+    } finally { setDialogSubmitting(false) }
   }
 
-  const busy = linking || submitting
+  const busy = linking || dialogSubmitting
 
   return (
     <div className="space-y-5">
@@ -800,27 +971,20 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
             <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
             Parents ({parents.length})
           </p>
-          {creating !== 'parent' && (
-            <button onClick={() => setCreating('parent')} disabled={busy}
-              className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
-              + Create
-            </button>
-          )}
+          <button onClick={() => setDialogMode('parent')} disabled={busy}
+            className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
+            + Create new
+          </button>
         </div>
-        {parents.length === 0 && creating !== 'parent' && (
+        {parents.length === 0 && (
           <p className="text-xs text-[var(--theme-muted)]">No parent dependencies.</p>
         )}
         {parents.map(p => (
           <TaskRef key={p.id} task={p} onRemove={busy ? undefined : () => handleRemove(p.id, task.id)} />
         ))}
-        {creating === 'parent'
-          ? <InlineCreateForm mode="parent" submitting={submitting}
-            onSubmit={(t, b) => handleCreateAndLink('parent', t, b)}
-            onCancel={() => setCreating(null)} />
-          : <TaskCombobox placeholder="Search tasks to add as parent…"
-            candidates={parentCandidates} disabled={busy}
-            onSelect={t => handleAdd(t.id, task.id)} />
-        }
+        <TaskCombobox placeholder="Search tasks to add as parent…"
+          candidates={parentCandidates} disabled={busy}
+          onSelect={t => handleAdd(t.id, task.id)} />
       </section>
 
       {/* Children */}
@@ -830,38 +994,43 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
             <HugeiconsIcon icon={HierarchyIcon} size={11} className="inline mr-1 -mt-0.5" />
             Children / subtasks ({children.length})
           </p>
-          {creating !== 'child' && (
-            <button onClick={() => setCreating('child')} disabled={busy}
-              className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
-              + Create
-            </button>
-          )}
+          <button onClick={() => setDialogMode('child')} disabled={busy}
+            className="text-[10px] font-medium text-[var(--theme-accent)] hover:opacity-80 transition-opacity disabled:opacity-40">
+            + Create new
+          </button>
         </div>
-        {children.length === 0 && creating !== 'child' && (
+        {children.length === 0 && (
           <p className="text-xs text-[var(--theme-muted)]">No child tasks.</p>
         )}
         {children.map(c => (
           <TaskRef key={c.id} task={c} onRemove={busy ? undefined : () => handleRemove(task.id, c.id)} />
         ))}
-        {creating === 'child'
-          ? <InlineCreateForm mode="child" submitting={submitting}
-            onSubmit={(t, b) => handleCreateAndLink('child', t, b)}
-            onCancel={() => setCreating(null)} />
-          : <TaskCombobox placeholder="Search tasks to add as child…"
-            candidates={childCandidates} disabled={busy}
-            onSelect={t => handleAdd(task.id, t.id)} />
-        }
+        <TaskCombobox placeholder="Search tasks to add as child…"
+          candidates={childCandidates} disabled={busy}
+          onSelect={t => handleAdd(task.id, t.id)} />
       </section>
+
+      {/* TaskDialog for creating + auto-linking */}
+      <TaskDialog
+        open={dialogMode !== null}
+        onOpenChange={(open) => { if (!open) setDialogMode(null) }}
+        assignees={assignees}
+        isSubmitting={dialogSubmitting}
+        onSubmit={handleDialogSubmit}
+      />
     </div>
   )
 }
 
 function TaskRef({ task, onRemove }: { task: HermesKanbanTask; onRemove?: () => void }) {
+  const displayId = task.id ?? '???'
+  const displayTitle = task.title ?? displayId
+  const displayStatus = HERMES_KANBAN_STATUS_LABELS[task.status] ?? task.status ?? '—'
   return (
     <div className="flex items-center gap-2 rounded-lg border border-[var(--theme-border)] px-3 py-2 mb-1.5 group">
-      <span className="text-[10px] text-[var(--theme-muted)] font-mono shrink-0">{task.id.slice(0, 10)}</span>
-      <span className="text-xs text-[var(--theme-text)] truncate flex-1">{task.title}</span>
-      <span className="text-[10px] text-[var(--theme-muted)] shrink-0">{HERMES_KANBAN_STATUS_LABELS[task.status]}</span>
+      <span className="text-[10px] text-[var(--theme-muted)] font-mono shrink-0">{displayId.slice(0, 10)}</span>
+      <span className="text-xs text-[var(--theme-text)] truncate flex-1">{displayTitle}</span>
+      <span className="text-[10px] text-[var(--theme-muted)] shrink-0">{displayStatus}</span>
       {onRemove && (
         <button
           onClick={onRemove}
