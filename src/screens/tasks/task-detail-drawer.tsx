@@ -242,53 +242,34 @@ function SkillsCombobox({
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
 
-  const q = query.trim().toLowerCase().replace(/,$/, '')
+  const q = query.trim().toLowerCase()
 
-  // When query is empty show all unselected suggestions; otherwise filter.
-  const filtered = (q
+  // Empty query → show all unselected suggestions. Typing → filter by substring.
+  const options = (q
     ? suggestions.filter(s => s.includes(q))
     : suggestions
   ).filter(s => !selected.includes(s))
 
-  // True when the typed value is non-empty and not already selected/suggested.
-  const canAddCustom = Boolean(q) && !selected.includes(q) && !suggestions.includes(q)
-
-  const showDropdown = open && (filtered.length > 0 || canAddCustom)
-
-  function add(skill: string) {
-    const s = skill.trim().toLowerCase().replace(/,$/, '')
-    if (s && !selected.includes(s)) onChange([...selected, s])
+  function select(skill: string) {
+    onChange([...selected, skill])
     setQuery('')
-    // Keep dropdown open so successive skills can be added without re-focusing.
+    // Keep dropdown open to allow selecting multiple skills in one pass.
   }
 
   function remove(skill: string) {
     onChange(selected.filter(s => s !== skill))
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if ((e.key === 'Enter' || e.key === ',') && q) {
-      e.preventDefault()
-      add(q)
-    }
-    if (e.key === 'Backspace' && !query && selected.length > 0) {
-      remove(selected[selected.length - 1])
-    }
-    if (e.key === 'Escape') setOpen(false)
-  }
-
   return (
     <div className="space-y-2">
-      {/* Selected skill tags */}
+      {/* Selected skill pills */}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {selected.map(skill => (
             <span key={skill}
               className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full border border-[var(--theme-border)] bg-[var(--theme-hover)] text-[var(--theme-text)]">
               {skill}
-              <button
-                type="button"
-                onClick={() => remove(skill)}
+              <button type="button" onClick={() => remove(skill)}
                 className="flex items-center hover:text-red-400 transition-colors">
                 <HugeiconsIcon icon={Cancel01Icon} size={9} />
               </button>
@@ -297,53 +278,41 @@ function SkillsCombobox({
         </div>
       )}
 
-      {/* Search input + dropdown */}
+      {/* Filter input + suggestions dropdown */}
       <div className="relative">
         <input
           type="text"
           className={inputClass}
           value={query}
-          placeholder={selected.length ? 'Add more skills…' : 'python, code-review, research…'}
+          placeholder={suggestions.length === 0 ? 'No skills found on this agent' : selected.length ? 'Filter to add more…' : 'Filter skills…'}
           onChange={e => { setQuery(e.target.value); setOpen(true) }}
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 180)}
-          onKeyDown={handleKeyDown}
+          onKeyDown={e => { if (e.key === 'Escape') { setOpen(false); setQuery('') } }}
         />
 
-        {showDropdown && (
+        {open && options.length > 0 && (
           <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-xl">
-            {/* Existing skill matches */}
-            {filtered.map(s => (
-              <button
-                key={s}
-                type="button"
+            {options.map(s => (
+              <button key={s} type="button"
                 onMouseDown={e => e.preventDefault()}
-                onClick={() => add(s)}
-                className="w-full px-3 py-2 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors text-[var(--theme-text)] flex items-center gap-2">
-                {/* Highlight the matching portion */}
+                onClick={() => select(s)}
+                className="w-full px-3 py-2 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors text-[var(--theme-text)]">
                 {q ? (
-                  <>
-                    <span>{s.slice(0, s.indexOf(q))}</span>
-                    <span className="font-semibold text-[var(--theme-accent)]">{q}</span>
-                    <span>{s.slice(s.indexOf(q) + q.length)}</span>
-                  </>
+                  // Highlight the matching substring in accent colour
+                  (() => {
+                    const idx = s.indexOf(q)
+                    return <>{s.slice(0, idx)}<span className="font-semibold text-[var(--theme-accent)]">{s.slice(idx, idx + q.length)}</span>{s.slice(idx + q.length)}</>
+                  })()
                 ) : s}
               </button>
             ))}
+          </div>
+        )}
 
-            {/* "Add custom" row when query has no suggestion match */}
-            {canAddCustom && (
-              <button
-                type="button"
-                onMouseDown={e => e.preventDefault()}
-                onClick={() => add(q)}
-                className="w-full px-3 py-2 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors flex items-center gap-1.5 border-t border-[var(--theme-border)]">
-                <span className="font-semibold text-[var(--theme-accent)]">+</span>
-                <span className="text-[var(--theme-muted)]">Add</span>
-                <span className="text-[var(--theme-text)] font-medium">"{q}"</span>
-                <span className="ml-auto text-[10px] text-[var(--theme-muted)]">Enter</span>
-              </button>
-            )}
+        {open && q && options.length === 0 && (
+          <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 shadow-xl">
+            <p className="text-xs text-[var(--theme-muted)]">No matching skills.</p>
           </div>
         )}
       </div>
