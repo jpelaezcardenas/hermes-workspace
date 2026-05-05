@@ -16,6 +16,13 @@ import { updateTask, fetchAssignees, fetchTasks, addLink, removeLink, createTask
 
 type LogResponse = { log: { content: string; exists: boolean; truncated: boolean; size_bytes: number } }
 
+/** Normalise the skills field (string | string[] | null) → trimmed lowercase string[]. */
+function normaliseSkills(raw: Array<string> | string | null | undefined): string[] {
+  if (!raw) return []
+  if (Array.isArray(raw)) return raw.map(s => s.trim().toLowerCase()).filter(Boolean)
+  return raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
+}
+
 const PRIORITY_OPTIONS = [
   { label: 'High', value: 'high' },
   { label: 'Medium', value: 'medium' },
@@ -235,14 +242,24 @@ function SkillsCombobox({
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
 
-  const filtered = suggestions.filter(
-    s => !selected.includes(s) && s.toLowerCase().includes(query.toLowerCase()),
-  )
+  const q = query.trim().toLowerCase().replace(/,$/, '')
+
+  // When query is empty show all unselected suggestions; otherwise filter.
+  const filtered = (q
+    ? suggestions.filter(s => s.includes(q))
+    : suggestions
+  ).filter(s => !selected.includes(s))
+
+  // True when the typed value is non-empty and not already selected/suggested.
+  const canAddCustom = Boolean(q) && !selected.includes(q) && !suggestions.includes(q)
+
+  const showDropdown = open && (filtered.length > 0 || canAddCustom)
 
   function add(skill: string) {
     const s = skill.trim().toLowerCase().replace(/,$/, '')
     if (s && !selected.includes(s)) onChange([...selected, s])
     setQuery('')
+    // Keep dropdown open so successive skills can be added without re-focusing.
   }
 
   function remove(skill: string) {
@@ -250,31 +267,40 @@ function SkillsCombobox({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if ((e.key === 'Enter' || e.key === ',') && query.trim()) {
-      e.preventDefault(); add(query)
+    if ((e.key === 'Enter' || e.key === ',') && q) {
+      e.preventDefault()
+      add(q)
     }
     if (e.key === 'Backspace' && !query && selected.length > 0) {
       remove(selected[selected.length - 1])
     }
+    if (e.key === 'Escape') setOpen(false)
   }
 
   return (
     <div className="space-y-2">
+      {/* Selected skill tags */}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {selected.map(skill => (
             <span key={skill}
               className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full border border-[var(--theme-border)] bg-[var(--theme-hover)] text-[var(--theme-text)]">
               {skill}
-              <button onClick={() => remove(skill)} className="hover:text-red-400 transition-colors">
+              <button
+                type="button"
+                onClick={() => remove(skill)}
+                className="flex items-center hover:text-red-400 transition-colors">
                 <HugeiconsIcon icon={Cancel01Icon} size={9} />
               </button>
             </span>
           ))}
         </div>
       )}
+
+      {/* Search input + dropdown */}
       <div className="relative">
         <input
+          type="text"
           className={inputClass}
           value={query}
           placeholder={selected.length ? 'Add more skills…' : 'python, code-review, research…'}
@@ -283,15 +309,41 @@ function SkillsCombobox({
           onBlur={() => setTimeout(() => setOpen(false), 180)}
           onKeyDown={handleKeyDown}
         />
-        {open && filtered.length > 0 && (
-          <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-40 overflow-y-auto rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-xl">
-            {filtered.slice(0, 12).map(s => (
-              <button key={s} onMouseDown={e => e.preventDefault()}
-                onClick={() => { add(s); setOpen(false) }}
-                className="w-full px-3 py-1.5 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors text-[var(--theme-text)]">
-                {s}
+
+        {showDropdown && (
+          <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] shadow-xl">
+            {/* Existing skill matches */}
+            {filtered.map(s => (
+              <button
+                key={s}
+                type="button"
+                onMouseDown={e => e.preventDefault()}
+                onClick={() => add(s)}
+                className="w-full px-3 py-2 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors text-[var(--theme-text)] flex items-center gap-2">
+                {/* Highlight the matching portion */}
+                {q ? (
+                  <>
+                    <span>{s.slice(0, s.indexOf(q))}</span>
+                    <span className="font-semibold text-[var(--theme-accent)]">{q}</span>
+                    <span>{s.slice(s.indexOf(q) + q.length)}</span>
+                  </>
+                ) : s}
               </button>
             ))}
+
+            {/* "Add custom" row when query has no suggestion match */}
+            {canAddCustom && (
+              <button
+                type="button"
+                onMouseDown={e => e.preventDefault()}
+                onClick={() => add(q)}
+                className="w-full px-3 py-2 text-left text-xs hover:bg-[var(--theme-hover)] transition-colors flex items-center gap-1.5 border-t border-[var(--theme-border)]">
+                <span className="font-semibold text-[var(--theme-accent)]">+</span>
+                <span className="text-[var(--theme-muted)]">Add</span>
+                <span className="text-[var(--theme-text)] font-medium">"{q}"</span>
+                <span className="ml-auto text-[10px] text-[var(--theme-muted)]">Enter</span>
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -321,12 +373,6 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
   const assignees = assigneesQuery.data?.assignees ?? []
   const [assignee, setAssignee] = useState(td.assignee ?? '')
 
-  // Skills: normalise the stored value (string | string[] | null) → string[]
-  function normaliseSkills(raw: typeof td.skills): string[] {
-    if (!raw) return []
-    if (Array.isArray(raw)) return raw
-    return raw.split(',').map(s => s.trim()).filter(Boolean)
-  }
   const [skills, setSkills] = useState<string[]>(normaliseSkills(td.skills))
 
   // Collect all unique skill suggestions from the board task cache
