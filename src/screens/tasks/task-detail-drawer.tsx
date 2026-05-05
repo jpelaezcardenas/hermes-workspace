@@ -1059,6 +1059,12 @@ function TaskRef({ task, onRemove }: { task: HermesKanbanTask; onRemove?: () => 
   )
 }
 
+function outcomeColor(outcome: string): string {
+  if (outcome === 'completed') return '#22c55e'
+  if (outcome === 'crashed') return '#ef4444'
+  return '#f59e0b'
+}
+
 function RunsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
   return (
     <div className="space-y-2">
@@ -1069,6 +1075,14 @@ function RunsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full shrink-0" style={{ background: runStatusColor(run.status) }} />
               <span className="font-medium capitalize">{run.status}</span>
+              {run.outcome && (
+                <span
+                  className="px-1.5 py-0.5 rounded text-[10px] font-medium capitalize"
+                  style={{ background: outcomeColor(run.outcome) + '22', color: outcomeColor(run.outcome) }}
+                >
+                  {run.outcome}
+                </span>
+              )}
               {run.worker_pid && (
                 <span className="flex items-center gap-0.5 text-[var(--theme-muted)]">
                   <HugeiconsIcon icon={CpuIcon} size={10} /> PID {run.worker_pid}
@@ -1079,6 +1093,28 @@ function RunsTab({ detail }: { detail: HermesKanbanTaskDetail }) {
               <span className="text-[var(--theme-muted)]">{relativeTime(run.started_at)}</span>
             )}
           </div>
+          {run.summary && (
+            <div className="mt-1.5">
+              <span className="text-[var(--theme-muted)] uppercase tracking-wide text-[9px] font-semibold">Summary</span>
+              <p className="text-xs text-[var(--theme-text)] opacity-90 leading-relaxed mt-0.5">{run.summary}</p>
+            </div>
+          )}
+          {run.metadata && Object.keys(run.metadata).length > 0 && (
+            <div className="mt-1.5 rounded border border-[var(--theme-border)] p-1.5 bg-[var(--theme-surface)]">
+              {Object.entries(run.metadata).map(([k, v]) => {
+                const display =
+                  typeof v === 'object' && v !== null
+                    ? JSON.stringify(v).slice(0, 80)
+                    : String(v).slice(0, 80)
+                return (
+                  <div key={k} className="flex gap-1.5 font-mono text-[10px] leading-relaxed">
+                    <span className="text-[var(--theme-muted)] shrink-0">{k}</span>
+                    <span className="text-[var(--theme-text)] opacity-80 truncate">{display}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
           {run.error && <p className="text-red-400 text-[10px] mt-1">{run.error}</p>}
         </div>
       ))}

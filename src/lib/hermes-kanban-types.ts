@@ -105,6 +105,9 @@ export type HermesKanbanRun = {
   ended_at: number | null
   exit_code: number | null
   error: string | null
+  summary?: string | null
+  metadata?: Record<string, unknown> | null
+  outcome?: 'completed' | 'blocked' | 'crashed' | 'timeout' | string | null
 }
 
 export type HermesKanbanLinks = {
