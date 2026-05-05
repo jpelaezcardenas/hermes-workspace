@@ -7,6 +7,35 @@ import { CodeBlock } from './code-block'
 import type { Components } from 'react-markdown'
 import { cn } from '@/lib/utils'
 
+/**
+ * Rewrite `MEDIA:<local-path>` tokens in markdown content so local filesystem
+ * paths are served through the Workspace `/api/media` endpoint instead of being
+ * used as raw `<img src>` values (which the browser cannot load).
+ *
+ * Handles both markdown image syntax `![alt](MEDIA:/path)` and raw HTML
+ * `<img src="MEDIA:/path">`. Remote URLs like `MEDIA:https://...` are left
+ * untouched — the gateway handles those.
+ */
+export function rewriteLocalMediaSources(content: string): string {
+  // Markdown image: ![alt](MEDIA:/path) → ![alt](/api/media?path=/path)
+  const mdImageRe = /(!\[[^\]]*\]\()MEDIA:([^)\s]+)/g
+  let result = content.replace(mdImageRe, (_match, prefix, path) => {
+    if (/^https?:\/\//i.test(path)) return `${prefix}MEDIA:${path}`
+    return `${prefix}/api/media?path=${encodeURIComponent(path)}`
+  })
+
+  // HTML image: <img src="MEDIA:/path"> → <img src="/api/media?path=/path">
+  const htmlImgRe = /(<img\s[^>]*src=["'])MEDIA:([^"']+)["']/gi
+  result = result.replace(htmlImgRe, (_match, prefix, path) => {
+    if (/^https?:\/\//i.test(path)) return `${prefix}MEDIA:${path}"`
+
+    return `${prefix}/api/media?path=${encodeURIComponent(path)}"`
+
+  })
+
+  return result
+}
+
 export type MarkdownProps = {
   children: string
   id?: string
@@ -331,7 +360,10 @@ function MarkdownComponent({
 }: MarkdownProps) {
   const generatedId = useId()
   const blockId = id ?? generatedId
-  const blocks = useMemo(() => parseMarkdownIntoBlocks(children), [children])
+  const blocks = useMemo(
+    () => parseMarkdownIntoBlocks(rewriteLocalMediaSources(children)),
+    [children],
+  )
 
   return (
     <div
