@@ -129,7 +129,8 @@ export function TasksScreen() {
     profilesQuery.data?.profiles ?? [],
     profilesQuery.data?.activeProfile,
   )
-  const orphanAssignees = assignees.filter((a) => !a.onDisk)
+  const profileNameSet = new Set((profilesQuery.data?.profiles ?? []).map((p) => p.name))
+  const orphanAssignees = assignees.filter((a) => !profileNameSet.has(a.id))
   const [orphanBannerDismissed, setOrphanBannerDismissed] = useState(false)
 
   const assigneeLabels = useMemo(() => {
