@@ -629,38 +629,41 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         </div>
       )}
 
-      {/* Agent profile (assignee = profile the dispatcher will run as) */}
-      <div>
-        <label className={labelClass}>Agent profile</label>
-        <select className={inputClass} style={{ colorScheme: 'dark' }}
-          value={assignee} onChange={e => setAssignee(e.target.value)}
-          disabled={isClaimLocked}>
-          <option value="">Unassigned — any worker can claim</option>
-          {options.map(({ id, label, onDisk }) => (
-            <option key={id} value={id}>
-              {onDisk ? label : `${label} ⚠ (profile not installed)`}
-            </option>
-          ))}
-        </select>
-        {isClaimLocked && (
-          <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
-            Profile cannot be changed while task is actively claimed. Use <span className="text-amber-400">Reset to Ready</span> above first.
-          </p>
-        )}
-        {!isClaimLocked && assignee && !options.find(a => a.id === assignee)?.onDisk && (
-          <p className="mt-1 text-[10px] text-amber-400 flex items-start gap-1">
-            <span>⚠</span>
-            <span>
-              Profile <span className="font-mono">"{assignee}"</span> is not installed on disk — dispatching will fail.
-              Run: <span className="font-mono">hermes profile create {assignee}</span>
-            </span>
-          </p>
-        )}
-        {!assignee && (
-          <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
-            The dispatcher will run this task as whichever agent profile claims it.
-          </p>
-        )}
+      {/* Agent profile + Notifications side-by-side */}
+      <div className="grid grid-cols-[1fr_auto] gap-3 items-start">
+        <div>
+          <label className={labelClass}>Agent profile</label>
+          <select className={inputClass} style={{ colorScheme: 'dark' }}
+            value={assignee} onChange={e => setAssignee(e.target.value)}
+            disabled={isClaimLocked}>
+            <option value="">Unassigned — any worker can claim</option>
+            {options.map(({ id, label, onDisk }) => (
+              <option key={id} value={id}>
+                {onDisk ? label : `${label} ⚠ (profile not installed)`}
+              </option>
+            ))}
+          </select>
+          {isClaimLocked && (
+            <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
+              Profile cannot be changed while task is actively claimed. Use <span className="text-amber-400">Reset to Ready</span> above first.
+            </p>
+          )}
+          {!isClaimLocked && assignee && !options.find(a => a.id === assignee)?.onDisk && (
+            <p className="mt-1 text-[10px] text-amber-400 flex items-start gap-1">
+              <span>⚠</span>
+              <span>
+                Profile <span className="font-mono">"{assignee}"</span> is not installed on disk — dispatching will fail.
+                Run: <span className="font-mono">hermes profile create {assignee}</span>
+              </span>
+            </p>
+          )}
+          {!assignee && (
+            <p className="mt-1 text-[10px] text-[var(--theme-muted)]">
+              The dispatcher will run this task as whichever agent profile claims it.
+            </p>
+          )}
+        </div>
+        <NotificationsSection taskId={task.id} compact />
       </div>
 
       {/* Workspace kind + path */}
@@ -687,8 +690,6 @@ function OverviewTab({ task, detail }: { task: HermesKanbanTask; detail: HermesK
         <label className={labelClass}>Skills</label>
         <SkillsCombobox selected={skills} onChange={setSkills} suggestions={skillSuggestions} />
       </div>
-
-      <NotificationsSection taskId={task.id} />
 
       {/* Summary */}
       <div>
@@ -1040,7 +1041,7 @@ function DepsTab({ task, detail }: { task: HermesKanbanTask; detail: HermesKanba
   )
 }
 
-function NotificationsSection({ taskId }: { taskId: string }) {
+function NotificationsSection({ taskId, compact = false }: { taskId: string; compact?: boolean }) {
   const queryClient = useQueryClient()
   const channelsQuery = useQuery({
     queryKey: ['hermes-kanban', 'home-channels', taskId],
@@ -1067,8 +1068,8 @@ function NotificationsSection({ taskId }: { taskId: string }) {
 
   return (
     <div>
-      <p className={labelClass}>Notifications</p>
-      <div className="space-y-1">
+      <p className={labelClass}>Notify on done</p>
+      <div className={compact ? 'flex flex-wrap gap-1.5' : 'space-y-1'}>
         {channels.map((ch) => {
           const subscribed = !!ch.subscribed
           const platformLabel = ch.platform.charAt(0).toUpperCase() + ch.platform.slice(1)
@@ -1077,20 +1078,33 @@ function NotificationsSection({ taskId }: { taskId: string }) {
               key={ch.platform}
               onClick={() => toggle(ch.platform, subscribed)}
               disabled={pending === ch.platform}
-              className="w-full flex items-center gap-2 rounded-lg border border-[var(--theme-border)] px-3 py-2 text-left hover:bg-[var(--theme-hover)] transition-colors disabled:opacity-50"
+              title={ch.name ? `${platformLabel} · ${ch.name}` : platformLabel}
+              className={cn(
+                'flex items-center gap-1.5 rounded-lg border transition-colors disabled:opacity-50',
+                compact
+                  ? 'px-2 py-1.5 text-xs hover:bg-[var(--theme-hover)]'
+                  : 'w-full px-3 py-2 text-left hover:bg-[var(--theme-hover)]',
+                subscribed
+                  ? 'border-[var(--theme-accent)] bg-[var(--theme-accent)]/10'
+                  : 'border-[var(--theme-border)]',
+              )}
             >
               <span className={cn(
-                'w-4 h-4 rounded border flex items-center justify-center shrink-0',
+                'w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0',
                 subscribed
                   ? 'border-[var(--theme-accent)] bg-[var(--theme-accent)]'
                   : 'border-[var(--theme-border)] bg-transparent',
               )}>
                 {subscribed && <span className="text-white text-[9px] leading-none">✓</span>}
               </span>
-              <span className="text-xs flex-1">
-                Notify on completion via <span className="capitalize">{platformLabel}</span>
-                {ch.channel ? <span className="text-[var(--theme-muted)]"> · {ch.channel}</span> : null}
-              </span>
+              {compact ? (
+                <span className="capitalize">{platformLabel}</span>
+              ) : (
+                <span className="text-xs flex-1">
+                  Notify on completion via <span className="capitalize">{platformLabel}</span>
+                  {ch.name ? <span className="text-[var(--theme-muted)]"> · {ch.name}</span> : null}
+                </span>
+              )}
             </button>
           )
         })}
