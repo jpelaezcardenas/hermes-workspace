@@ -60,17 +60,9 @@ if (isNonLoopbackHost(host)) {
     )
   }
 
-  // Warn when serving over plain HTTP with a password: NODE_ENV=production
-  // sets the Secure flag on session cookies, which browsers silently drop
-  // over http://.  Operators must set COOKIE_SECURE=0 for plain-HTTP LAN
-  // deployments.  See #149.
-  const cookieSecureOverride = (process.env.COOKIE_SECURE || '')
-    .trim()
-    .toLowerCase()
-  const cookieSecureExplicit =
-    cookieSecureOverride === '0' ||
-    cookieSecureOverride === 'false' ||
-    cookieSecureOverride === 'no'
+
+  const cookieSecureOverride = (process.env.COOKIE_SECURE || '').trim().toLowerCase()
+  const cookieSecureExplicit = cookieSecureOverride === '0' || cookieSecureOverride === 'false' || cookieSecureOverride === 'no'
   if (!cookieSecureExplicit && process.env.NODE_ENV === 'production') {
     console.warn(
       '\n[workspace] warning: plain-HTTP LAN deployment detected.\n' +
