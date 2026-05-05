@@ -198,6 +198,18 @@ export const PRIORITY_COLORS: Record<string, string> = {
   '-1': '#94a3b8',
 }
 
+export type KanbanStats = {
+  counts?: Partial<Record<HermesKanbanStatus, number>>
+  total?: number
+  oldestTodoAgeSeconds?: number | null
+  staleRunningCount?: number | null
+  [k: string]: unknown
+}
+
+export async function fetchStats(): Promise<KanbanStats> {
+  return kanbanJson<KanbanStats>(`${KANBAN_BASE}/stats`)
+}
+
 export const COLUMN_COLORS: Record<HermesKanbanStatus, string> = {
   triage: '#6b7280',
   todo: '#3b82f6',

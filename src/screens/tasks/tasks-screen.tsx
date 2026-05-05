@@ -33,6 +33,7 @@ import {
   createTask,
   deleteTask,
   fetchAssignees,
+  fetchStats,
   fetchTasks,
   moveTask,
   updateTask,
@@ -148,6 +149,13 @@ export function TasksScreen() {
     queryKey: ASSIGNEES_KEY,
     queryFn: fetchAssignees,
     staleTime: 5 * 60_000,
+  })
+
+  const statsQuery = useQuery({
+    queryKey: ['claude', 'tasks', 'stats'],
+    queryFn: fetchStats,
+    staleTime: 30_000,
+    refetchInterval: 30_000,
   })
 
   const assignees: Array<TaskAssignee> = assigneesQuery.data?.assignees ?? []
@@ -447,8 +455,11 @@ export function TasksScreen() {
                   </button>
                 </div>
               )}
-              {/* Stats */}
-              <div className="flex items-center gap-2 text-xs text-[var(--theme-muted)] flex-wrap">
+              {/* Stats — filtered view tally */}
+              <div
+                className="flex items-center gap-2 text-xs text-[var(--theme-muted)] flex-wrap opacity-60"
+                title="filtered view"
+              >
                 <span>{stats.total} total</span>
                 <span className="hidden sm:inline">·</span>
                 <span className="hidden sm:inline">
@@ -457,7 +468,7 @@ export function TasksScreen() {
                 {stats.blocked > 0 && (
                   <>
                     <span>·</span>
-                    <span className="text-red-400">
+                    <span className="text-red-400/60">
                       {stats.blocked} blocked
                     </span>
                   </>
@@ -682,6 +693,62 @@ export function TasksScreen() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Gateway stats bar */}
+        {!statsQuery.isLoading || statsQuery.data ? (
+          statsQuery.data ? (() => {
+            const counts = statsQuery.data.counts ?? {}
+            const total = statsQuery.data.total
+            const stale = statsQuery.data.staleRunningCount
+            const oldestSecs = statsQuery.data.oldestTodoAgeSeconds
+
+            const statusEntries = (Object.entries(counts) as Array<[string, number]>)
+              .filter(([, n]) => n > 0)
+
+            function fmtAge(secs: number): string {
+              const d = Math.floor(secs / 86400)
+              if (d > 0) return `${d}d`
+              const h = Math.floor(secs / 3600)
+              if (h > 0) return `${h}h`
+              return `${Math.floor(secs / 60)}m`
+            }
+
+            return (
+              <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-4 py-2.5 flex items-center justify-between gap-4 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] uppercase tracking-widest text-[var(--theme-muted)] font-medium mr-1">
+                    Global
+                  </span>
+                  {total !== undefined && (
+                    <span className="text-xs text-[var(--theme-muted)]">{total} total</span>
+                  )}
+                  {statusEntries.map(([status, count], i) => {
+                    const color = COLUMN_COLORS[status as keyof typeof COLUMN_COLORS] ?? '#6b7280'
+                    const label = COLUMN_LABELS[status as keyof typeof COLUMN_LABELS] ?? status
+                    return (
+                      <span key={status} className="flex items-center gap-1 text-xs">
+                        {(total !== undefined || i > 0) && <span className="text-[var(--theme-border)]">·</span>}
+                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
+                        <span style={{ color }}>{count}</span>
+                        <span className="text-[var(--theme-muted)]">{label}</span>
+                      </span>
+                    )
+                  })}
+                </div>
+                <div className="flex items-center gap-3 text-[10px] text-[var(--theme-muted)]">
+                  {oldestSecs != null && oldestSecs > 0 && (
+                    <span>oldest todo: {fmtAge(oldestSecs)} ago</span>
+                  )}
+                  {stale != null && stale > 0 && (
+                    <span className="text-amber-400">stale running: {stale}</span>
+                  )}
+                </div>
+              </div>
+            )
+          })() : null
+        ) : (
+          <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-4 py-2.5 h-9 animate-pulse" />
         )}
 
         {/* Board */}
