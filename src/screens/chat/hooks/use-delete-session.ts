@@ -9,6 +9,7 @@ import { clearPendingSendForSession, resetPendingSend } from '../pending-send'
 import { clearSessionDeleted, markSessionDeleted } from '../session-tombstones'
 import { readError } from '../utils'
 import { clearSessionTitleState } from '../session-title-store'
+import { useSessionModelStore } from '@/stores/session-model-store'
 
 export type DeleteSessionResult = {
   deleteSession: (
@@ -75,6 +76,12 @@ export function useDeleteSession(): DeleteSessionResult {
         resetPendingSend()
       }
       clearSessionTitleState(payload.friendlyId || payload.sessionKey)
+      // Clear any browser-local per-session model preference for this key.
+      const clearModel = useSessionModelStore.getState().clearModel
+      if (payload.sessionKey) clearModel(payload.sessionKey)
+      if (payload.friendlyId && payload.friendlyId !== payload.sessionKey) {
+        clearModel(payload.friendlyId)
+      }
       queryClient.invalidateQueries({ queryKey: chatQueryKeys.sessions })
     },
     onSettled: function onSettled() {

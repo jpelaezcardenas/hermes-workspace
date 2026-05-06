@@ -332,7 +332,7 @@ export function usePlaygroundRpg() {
   const markObjective = useCallback((questId: string, objectiveId: string) => {
     const quest = PLAYGROUND_QUESTS.find((entry) => entry.id === questId)
     if (!quest) return
-    let completedQuest: PlaygroundQuest | null = null
+    let completedQuest: PlaygroundQuest | undefined
     setState((prev) => {
       const progress = prev.playerProfile.questProgress[questId] ?? {
         completed: false,

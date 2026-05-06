@@ -1077,36 +1077,36 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                     text: '#16315F',
                   }
                 : theme.id === 'claude-classic'
-              ? {
-                  bg: '#0d0f12',
-                  panel: '#1a1f26',
-                  border: '#2a313b',
-                  accent: '#b98a44',
-                  text: '#eceff4',
-                }
-              : theme.id === 'claude-classic-light'
-                ? {
-                    bg: '#F5F2ED',
-                    panel: '#FCFAF7',
-                    border: '#D8CCBC',
-                    accent: '#b98a44',
-                    text: '#1a1f26',
-                  }
-                : theme.id === 'claude-slate'
                   ? {
-                      bg: '#0d1117',
-                      panel: '#1c2128',
-                      border: '#30363d',
-                      accent: '#7eb8f6',
-                      text: '#c9d1d9',
+                      bg: '#0d0f12',
+                      panel: '#1a1f26',
+                      border: '#2a313b',
+                      accent: '#b98a44',
+                      text: '#eceff4',
                     }
-                  : {
-                      bg: '#F6F8FA',
-                      panel: '#FFFFFF',
-                      border: '#D0D7DE',
-                      accent: '#3b82f6',
-                      text: '#24292f',
-                    },
+                  : theme.id === 'claude-classic-light'
+                    ? {
+                        bg: '#F5F2ED',
+                        panel: '#FCFAF7',
+                        border: '#D8CCBC',
+                        accent: '#b98a44',
+                        text: '#1a1f26',
+                      }
+                    : theme.id === 'claude-slate'
+                      ? {
+                          bg: '#0d1117',
+                          panel: '#1c2128',
+                          border: '#30363d',
+                          accent: '#7eb8f6',
+                          text: '#c9d1d9',
+                        }
+                      : {
+                          bg: '#F6F8FA',
+                          panel: '#FFFFFF',
+                          border: '#D0D7DE',
+                          accent: '#3b82f6',
+                          text: '#24292f',
+                        },
 }))
 
 function ThemeSwatch({
