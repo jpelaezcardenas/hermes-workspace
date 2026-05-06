@@ -91,6 +91,7 @@ import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection
 import { Route as ApiConnectionSettingsRouteImport } from './routes/api/connection-settings'
 import { Route as ApiConductorStopRouteImport } from './routes/api/conductor-stop'
 import { Route as ApiConductorSpawnRouteImport } from './routes/api/conductor-spawn'
+import { Route as ApiCliReadinessRouteImport } from './routes/api/cli-readiness'
 import { Route as ApiClaudeUpdateRouteImport } from './routes/api/claude-update'
 import { Route as ApiClaudeTasksAssigneesRouteImport } from './routes/api/claude-tasks-assignees'
 import { Route as ApiClaudeTasksRouteImport } from './routes/api/claude-tasks'
@@ -557,6 +558,11 @@ const ApiConductorSpawnRoute = ApiConductorSpawnRouteImport.update({
   path: '/api/conductor-spawn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCliReadinessRoute = ApiCliReadinessRouteImport.update({
+  id: '/api/cli-readiness',
+  path: '/api/cli-readiness',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiClaudeUpdateRoute = ApiClaudeUpdateRouteImport.update({
   id: '/api/claude-update',
   path: '/api/claude-update',
@@ -860,6 +866,7 @@ export interface FileRoutesByFullPath {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/cli-readiness': typeof ApiCliReadinessRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -997,6 +1004,7 @@ export interface FileRoutesByTo {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/cli-readiness': typeof ApiCliReadinessRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -1136,6 +1144,7 @@ export interface FileRoutesById {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/cli-readiness': typeof ApiCliReadinessRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -1276,6 +1285,7 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/cli-readiness'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1413,6 +1423,7 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/cli-readiness'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1551,6 +1562,7 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/cli-readiness'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1690,6 +1702,7 @@ export interface RootRouteChildren {
   ApiClaudeTasksRoute: typeof ApiClaudeTasksRouteWithChildren
   ApiClaudeTasksAssigneesRoute: typeof ApiClaudeTasksAssigneesRoute
   ApiClaudeUpdateRoute: typeof ApiClaudeUpdateRoute
+  ApiCliReadinessRoute: typeof ApiCliReadinessRoute
   ApiConductorSpawnRoute: typeof ApiConductorSpawnRoute
   ApiConductorStopRoute: typeof ApiConductorStopRoute
   ApiConnectionSettingsRoute: typeof ApiConnectionSettingsRoute
@@ -2349,6 +2362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiConductorSpawnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/cli-readiness': {
+      id: '/api/cli-readiness'
+      path: '/api/cli-readiness'
+      fullPath: '/api/cli-readiness'
+      preLoaderRoute: typeof ApiCliReadinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/claude-update': {
       id: '/api/claude-update'
       path: '/api/claude-update'
@@ -2920,6 +2940,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiClaudeTasksRoute: ApiClaudeTasksRouteWithChildren,
   ApiClaudeTasksAssigneesRoute: ApiClaudeTasksAssigneesRoute,
   ApiClaudeUpdateRoute: ApiClaudeUpdateRoute,
+  ApiCliReadinessRoute: ApiCliReadinessRoute,
   ApiConductorSpawnRoute: ApiConductorSpawnRoute,
   ApiConductorStopRoute: ApiConductorStopRoute,
   ApiConnectionSettingsRoute: ApiConnectionSettingsRoute,

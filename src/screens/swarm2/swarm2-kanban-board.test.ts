@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { getKanbanBackendPresentation } from './swarm2-kanban-board'
+import {
+  buildSwarm2KanbanCardsUrl,
+  buildSwarm2KanbanQueryKey,
+  getKanbanBackendPresentation,
+  withSwarm2KanbanProjectId,
+} from './swarm2-kanban-board'
 
 describe('Swarm2 Kanban backend presentation', () => {
   it('keeps the initial backend state quiet and non-committal while auto-detecting', () => {
@@ -41,5 +46,38 @@ describe('Swarm2 Kanban backend presentation', () => {
       toastTitle: 'Using local Swarm Board',
       toastBody: 'Using local Swarm board JSON store.',
     })
+  })
+})
+
+describe('Swarm2 Kanban project scoping', () => {
+  it('scopes board query keys by active project with a default fallback', () => {
+    expect(buildSwarm2KanbanQueryKey(' solarbot ')).toEqual([
+      'swarm2',
+      'kanban',
+      'solarbot',
+    ])
+    expect(buildSwarm2KanbanQueryKey(null)).toEqual([
+      'swarm2',
+      'kanban',
+      'default',
+    ])
+  })
+
+  it('adds projectId to Kanban API URLs only when explicitly present', () => {
+    expect(buildSwarm2KanbanCardsUrl('solarbot')).toBe(
+      '/api/swarm-kanban?projectId=solarbot',
+    )
+    expect(buildSwarm2KanbanCardsUrl(null)).toBe('/api/swarm-kanban')
+  })
+
+  it('injects projectId into Kanban mutation bodies without mutating the caller input', () => {
+    const input = { title: 'Fix cache bleed' }
+
+    expect(withSwarm2KanbanProjectId(input, 'solarbot')).toEqual({
+      title: 'Fix cache bleed',
+      projectId: 'solarbot',
+    })
+    expect(input).toEqual({ title: 'Fix cache bleed' })
+    expect(withSwarm2KanbanProjectId(input, '   ')).toEqual(input)
   })
 })

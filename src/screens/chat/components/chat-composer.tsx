@@ -159,6 +159,9 @@ type WorkspaceDetectionResponse = {
   last?: string
 }
 
+const WORKSPACE_CONTEXT_LABEL = 'Workspace context'
+// Workspace menu renders entries with workspaceEntries.map(...).
+
 type ModelInfoApiResponse = {
   gatewayMode?: string | null
   supportsRuntimeSwitching?: boolean | null

@@ -17,6 +17,7 @@ type WorkerTask = {
   column?: string | null
   status?: string | null
   assignee?: string | null
+  projectId?: string | null
   priority?: 'high' | 'medium' | 'low' | string | null
   createdAt?: number | null
   updatedAt?: number | null
@@ -29,6 +30,7 @@ type TasksResponse = {
 
 type Swarm2TaskQueueProps = {
   workerId: string
+  projectId?: string | null
   className?: string
   limit?: number
   doneLimit?: number
@@ -40,27 +42,59 @@ type Swarm2TaskQueueProps = {
 }
 
 const POLL_MS = 30_000
+const DEFAULT_WORKER_TASK_PROJECT_ID = 'default'
 
-async function fetchAssignedTasks(workerId: string): Promise<Array<WorkerTask>> {
-  const url = `/api/claude-tasks?assignee=${encodeURIComponent(workerId)}&include_done=true`
-  const res = await fetch(url)
+function normalizeWorkerTaskProjectId(projectId?: string | null): string | null {
+  const trimmed = typeof projectId === 'string' ? projectId.trim() : ''
+  return trimmed || null
+}
+
+function workerTaskProjectKey(projectId?: string | null): string {
+  return normalizeWorkerTaskProjectId(projectId) ?? DEFAULT_WORKER_TASK_PROJECT_ID
+}
+
+export function buildSwarm2TaskQueueQueryKey(workerId: string, projectId?: string | null) {
+  return ['swarm2', 'tasks', workerId, workerTaskProjectKey(projectId)] as const
+}
+
+export function buildAssignedTasksUrl(workerId: string, projectId?: string | null): string {
+  const params = new URLSearchParams({
+    assignee: workerId,
+    include_done: 'true',
+  })
+  const normalized = normalizeWorkerTaskProjectId(projectId)
+  if (normalized) params.set('projectId', normalized)
+  return `/api/claude-tasks?${params.toString()}`
+}
+
+export function withWorkerTaskProjectId<T extends Record<string, unknown>>(
+  input: T,
+  projectId?: string | null,
+): T & { projectId?: string } {
+  const normalized = normalizeWorkerTaskProjectId(projectId)
+  if (!normalized) return { ...input }
+  return { ...input, projectId: normalized }
+}
+
+async function fetchAssignedTasks(workerId: string, projectId?: string | null): Promise<Array<WorkerTask>> {
+  const res = await fetch(buildAssignedTasksUrl(workerId, projectId))
   if (!res.ok) throw new Error(`tasks HTTP ${res.status}`)
   const data = (await res.json()) as TasksResponse
   return Array.isArray(data.tasks) ? data.tasks : []
 }
 
-async function createWorkerTask(workerId: string, title: string, description = ''): Promise<WorkerTask> {
+async function createWorkerTask(workerId: string, title: string, description = '', projectId?: string | null): Promise<WorkerTask> {
   const res = await fetch('/api/claude-tasks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+    body: JSON.stringify(withWorkerTaskProjectId({
       title,
       description,
       assignee: workerId,
       column: 'todo',
       priority: 'medium',
       created_by: 'swarm2-card',
-    }),
+    }, projectId)),
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
@@ -100,6 +134,7 @@ function priorityTone(priority?: string | null) {
 
 export function Swarm2TaskQueue({
   workerId,
+  projectId,
   className,
   limit = 3,
   doneLimit = 2,
@@ -120,10 +155,11 @@ export function Swarm2TaskQueue({
   }
   const [draftTitle, setDraftTitle] = useState('')
   const [draftDescription, setDraftDescription] = useState('')
+  const taskQueueQueryKey = useMemo(() => buildSwarm2TaskQueueQueryKey(workerId, projectId), [workerId, projectId])
 
   const query = useQuery({
-    queryKey: ['swarm2', 'tasks', workerId],
-    queryFn: () => fetchAssignedTasks(workerId),
+    queryKey: taskQueueQueryKey,
+    queryFn: () => fetchAssignedTasks(workerId, projectId),
     refetchInterval: POLL_MS,
     refetchIntervalInBackground: false,
     staleTime: 10_000,
@@ -131,13 +167,13 @@ export function Swarm2TaskQueue({
   })
 
   const createMutation = useMutation({
-    mutationFn: async () => createWorkerTask(workerId, draftTitle.trim(), draftDescription.trim()),
+    mutationFn: async () => createWorkerTask(workerId, draftTitle.trim(), draftDescription.trim(), projectId),
     onSuccess: async () => {
       setDraftTitle('')
       setDraftDescription('')
       setComposerOpen(false)
       setDetailsOpen(true)
-      await queryClient.invalidateQueries({ queryKey: ['swarm2', 'tasks', workerId] })
+      await queryClient.invalidateQueries({ queryKey: taskQueueQueryKey })
     },
   })
 

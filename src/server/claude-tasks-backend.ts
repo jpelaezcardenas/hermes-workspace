@@ -29,6 +29,7 @@ type TaskFilters = {
   assignee?: string | null
   priority?: string | null
   includeDone?: boolean
+  projectId?: string | null
 }
 
 type CreateTaskInput = {
@@ -40,6 +41,7 @@ type CreateTaskInput = {
   tags?: string[]
   due_date?: string | null
   created_by?: string
+  projectId?: string | null
 }
 
 type UpdateTaskInput = Partial<Omit<CreateTaskInput, 'created_by'>>
@@ -110,12 +112,13 @@ function mapCardToTask(card: {
   }
 }
 
-export function getClaudeTasksBackendMeta(): KanbanBackendMeta {
-  return getKanbanBackendMeta()
+export function getClaudeTasksBackendMeta(projectId?: string | null): KanbanBackendMeta {
+  return getKanbanBackendMeta(projectId)
 }
 
 export async function listClaudeTasks(filters: TaskFilters = {}): Promise<ClaudeTaskRecord[]> {
-  let tasks = (await listKanbanCards()).map(mapCardToTask)
+  const cards = filters.projectId ? await listKanbanCards(filters.projectId) : await listKanbanCards()
+  let tasks = cards.map(mapCardToTask)
   if (!filters.includeDone) {
     tasks = tasks.filter((task) => task.column !== 'done')
   }
@@ -131,25 +134,29 @@ export async function listClaudeTasks(filters: TaskFilters = {}): Promise<Claude
   return tasks.sort((a, b) => b.position - a.position || a.title.localeCompare(b.title))
 }
 
-export async function getClaudeTask(taskId: string): Promise<ClaudeTaskRecord | null> {
-  const tasks = await listKanbanCards()
+export async function getClaudeTask(taskId: string, projectId?: string | null): Promise<ClaudeTaskRecord | null> {
+  const tasks = await listKanbanCards(projectId)
   const card = tasks.find((entry) => entry.id === taskId)
   return card ? mapCardToTask(card) : null
 }
 
 export async function createClaudeTask(input: CreateTaskInput): Promise<ClaudeTaskRecord> {
-  const card = await createKanbanCard({
+  const cardInput = {
     title: input.title,
     spec: input.description ?? '',
     assignedWorker: input.assignee ?? null,
     status: mapTaskColumnToKanbanStatus(input.column ?? 'backlog'),
     createdBy: input.created_by ?? 'user',
-  })
+    projectId: input.projectId,
+  }
+  const card = input.projectId
+    ? await createKanbanCard(cardInput, input.projectId)
+    : await createKanbanCard(cardInput)
   return mapCardToTask(card)
 }
 
 export async function updateClaudeTask(taskId: string, updates: UpdateTaskInput): Promise<ClaudeTaskRecord | null> {
-  const card = await updateKanbanCard(taskId, {
+  const cardUpdates = {
     title: typeof updates.title === 'string' ? updates.title : undefined,
     spec: typeof updates.description === 'string' ? updates.description : undefined,
     assignedWorker:
@@ -157,10 +164,14 @@ export async function updateClaudeTask(taskId: string, updates: UpdateTaskInput)
         ? updates.assignee
         : undefined,
     status: updates.column ? mapTaskColumnToKanbanStatus(updates.column) : undefined,
-  })
+    projectId: updates.projectId,
+  }
+  const card = updates.projectId
+    ? await updateKanbanCard(taskId, cardUpdates, updates.projectId)
+    : await updateKanbanCard(taskId, cardUpdates)
   return card ? mapCardToTask(card) : null
 }
 
-export async function moveClaudeTask(taskId: string, column: TaskColumn): Promise<ClaudeTaskRecord | null> {
-  return updateClaudeTask(taskId, { column })
+export async function moveClaudeTask(taskId: string, column: TaskColumn, projectId?: string | null): Promise<ClaudeTaskRecord | null> {
+  return updateClaudeTask(taskId, { column, projectId })
 }

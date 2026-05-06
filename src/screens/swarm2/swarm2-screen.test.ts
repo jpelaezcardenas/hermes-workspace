@@ -1,10 +1,13 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import {
+  DEFAULT_SWARM2_PROJECT_ID,
   SWARM2_CARD_DENSITY_CONTRACT,
   SWARM2_INFORMATION_HIERARCHY,
   SWARM2_OPERATIONS_REUSE,
   SWARM2_REAL_API_ENDPOINTS,
   SWARM2_SURFACE_CONTRACT,
+  resolveActiveSwarm2ProjectIdForRender,
 } from './swarm2-screen'
 
 describe('Swarm2 surface contract', () => {
@@ -46,6 +49,7 @@ describe('Swarm2 surface contract', () => {
   it('only depends on existing first-party APIs', () => {
     expect(SWARM2_REAL_API_ENDPOINTS).toEqual([
       '/api/crew-status',
+      '/api/workspace',
       '/api/swarm-environment',
       '/api/swarm-runtime',
       '/api/swarm-missions',
@@ -80,6 +84,26 @@ describe('Swarm2 surface contract', () => {
     expect(SWARM2_CARD_DENSITY_CONTRACT.workerCardMinHeightRem).toBeLessThanOrEqual(30)
     expect(SWARM2_CARD_DENSITY_CONTRACT.laptopGridColumns).toBeGreaterThanOrEqual(2)
     expect(SWARM2_CARD_DENSITY_CONTRACT.duplicateEmptyStates).toBe(false)
+  })
+})
+
+describe('Swarm2 active project gating', () => {
+  it('resolves a safe scoped project id only after /api/workspace succeeds', () => {
+    expect(resolveActiveSwarm2ProjectIdForRender('solarbot', 'success')).toBe('solarbot')
+    expect(resolveActiveSwarm2ProjectIdForRender('  solarbot  ', 'success')).toBe('solarbot')
+    expect(resolveActiveSwarm2ProjectIdForRender(null, 'success')).toBe(DEFAULT_SWARM2_PROJECT_ID)
+    expect(resolveActiveSwarm2ProjectIdForRender(undefined, 'success')).toBe(DEFAULT_SWARM2_PROJECT_ID)
+    expect(resolveActiveSwarm2ProjectIdForRender('solarbot', 'pending')).toBeNull()
+    expect(resolveActiveSwarm2ProjectIdForRender('solarbot', 'error')).toBeNull()
+  })
+
+  it('keeps project-scoped child fetchers behind the active project gate', () => {
+    const source = readFileSync(new URL('./swarm2-screen.tsx', import.meta.url), 'utf8')
+    expect(source).toContain('const projectScopedStageReady = activeProjectId !== null')
+    expect(source).toContain('projectScopedStageReady ? (')
+    expect(source).toContain('<ControlPlaneStage')
+    expect(source).toContain('projectId={activeProjectId}')
+    expect(source).toContain('data-testid="swarm2-project-loading"')
   })
 })
 

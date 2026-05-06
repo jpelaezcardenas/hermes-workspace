@@ -2,6 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { z } from 'zod'
 import { createKanbanCard, getKanbanBackendMeta, listKanbanCards, updateKanbanCard } from '../../server/kanban-backend'
+import { sanitizeProjectSlug } from '../../server/project-catalog'
+import { loadWorkspaceCatalog } from './workspace'
 
 const CreateCardSchema = z.object({
   title: z.string().trim().min(1).max(200),
@@ -13,21 +15,42 @@ const CreateCardSchema = z.object({
   missionId: z.string().trim().max(200).optional().nullable(),
   reportPath: z.string().trim().max(500).optional().nullable(),
   createdBy: z.string().trim().max(120).optional().default('aurora'),
+  projectId: z.string().trim().max(120).optional().nullable(),
 })
 
 const UpdateCardSchema = CreateCardSchema.partial().extend({
   id: z.string().trim().min(1),
 })
 
+function parseAcceptanceCriteria(value: string | undefined): string[] | undefined {
+  if (value === undefined) return undefined
+  return value.split('\n').map((item) => item.trim()).filter(Boolean)
+}
+
+async function requestProjectId(request: Request, body?: Record<string, unknown>): Promise<string | null> {
+  const url = new URL(request.url)
+  const explicit = sanitizeProjectSlug(
+    typeof body?.projectId === 'string' ? body.projectId : url.searchParams.get('projectId'),
+  )
+  if (explicit) return explicit
+  const catalog = await loadWorkspaceCatalog()
+  return catalog.projectSlug ?? null
+}
+
+export async function getSwarmKanbanResponse(request: Request) {
+  const projectId = await requestProjectId(request)
+  return json({
+    ok: true,
+    cards: await listKanbanCards(projectId),
+    backend: getKanbanBackendMeta(projectId),
+  })
+}
+
 export const Route = createFileRoute('/api/swarm-kanban')({
   server: {
     handlers: {
-      GET: async () => {
-        return json({
-          ok: true,
-          cards: await listKanbanCards(),
-          backend: getKanbanBackendMeta(),
-        })
+      GET: async ({ request }) => {
+        return getSwarmKanbanResponse(request)
       },
       POST: async ({ request }) => {
         let body: unknown
@@ -40,8 +63,14 @@ export const Route = createFileRoute('/api/swarm-kanban')({
         if (!parsed.success) {
           return json({ ok: false, error: parsed.error.issues.map((issue) => issue.message).join('; ') }, { status: 400 })
         }
-        const card = await createKanbanCard(parsed.data)
-        return json({ ok: true, card, backend: getKanbanBackendMeta() })
+        const projectId = await requestProjectId(request, body as Record<string, unknown>)
+        const { acceptanceCriteria, ...input } = parsed.data
+        const card = await createKanbanCard({
+          ...input,
+          acceptanceCriteria: parseAcceptanceCriteria(acceptanceCriteria) ?? [],
+          projectId,
+        }, projectId)
+        return json({ ok: true, card, backend: getKanbanBackendMeta(projectId) })
       },
       PATCH: async ({ request }) => {
         let body: unknown
@@ -54,10 +83,15 @@ export const Route = createFileRoute('/api/swarm-kanban')({
         if (!parsed.success) {
           return json({ ok: false, error: parsed.error.issues.map((issue) => issue.message).join('; ') }, { status: 400 })
         }
-        const { id, ...updates } = parsed.data
-        const card = await updateKanbanCard(id, updates)
+        const projectId = await requestProjectId(request, body as Record<string, unknown>)
+        const { id, acceptanceCriteria, createdBy: _createdBy, ...updates } = parsed.data
+        const card = await updateKanbanCard(id, {
+          ...updates,
+          acceptanceCriteria: parseAcceptanceCriteria(acceptanceCriteria),
+          projectId,
+        }, projectId)
         if (!card) return json({ ok: false, error: 'Card not found' }, { status: 404 })
-        return json({ ok: true, card, backend: getKanbanBackendMeta() })
+        return json({ ok: true, card, backend: getKanbanBackendMeta(projectId) })
       },
     },
   },

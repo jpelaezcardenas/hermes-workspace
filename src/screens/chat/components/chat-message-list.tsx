@@ -470,6 +470,51 @@ function isAssistantToolCallOnlyMessage(message: ChatMessage): boolean {
   return hasToolCalls && text.trim().length === 0
 }
 
+function isToolResultOnlyMessage(message: ChatMessage): boolean {
+  return message.role === 'tool' || message.role === 'toolResult'
+}
+
+export function getTrailingToolOnlyTurnSummary(
+  messages: Array<ChatMessage>,
+): { count: number; toolNames: Array<string>; hasFinalAssistantText: boolean } | null {
+  const trailingMessages: Array<ChatMessage> = []
+  let precedingAssistantHasText = false
+
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index]
+    if (isAssistantToolCallOnlyMessage(message) || isToolResultOnlyMessage(message)) {
+      trailingMessages.unshift(message)
+      continue
+    }
+
+    precedingAssistantHasText =
+      message.role === 'assistant' && textFromMessage(message).trim().length > 0
+    break
+  }
+
+  if (trailingMessages.length === 0 || !precedingAssistantHasText) return null
+
+  const toolNames = new Set<string>()
+  for (const message of trailingMessages) {
+    for (const call of getToolCallsFromMessage(message)) {
+      if (call.name) toolNames.add(call.name)
+    }
+    const toolName =
+      typeof message.toolName === 'string'
+        ? message.toolName
+        : typeof (message as unknown as Record<string, unknown>).name === 'string'
+          ? ((message as unknown as Record<string, unknown>).name as string)
+          : ''
+    if (toolName) toolNames.add(toolName)
+  }
+
+  return {
+    count: trailingMessages.length,
+    toolNames: Array.from(toolNames),
+    hasFinalAssistantText: true,
+  }
+}
+
 export function buildDisplayEntries(
   displayMessages: Array<ChatMessage>,
 ): Array<DisplayEntry> {
@@ -482,12 +527,12 @@ export function buildDisplayEntries(
       return
     }
 
-    if (message.role === 'tool' || message.role === 'toolResult') {
+    if (isToolResultOnlyMessage(message)) {
       const previousEntry = entries[entries.length - 1]
-      if (previousEntry?.message.role === 'assistant') {
-        previousEntry.attachedToolMessages.push(message)
-      } else if (pendingAssistantToolMessages.length > 0) {
+      if (pendingAssistantToolMessages.length > 0) {
         pendingAssistantToolMessages.push(message)
+      } else if (previousEntry?.message.role === 'assistant') {
+        previousEntry.attachedToolMessages.push(message)
       }
       return
     }
@@ -506,12 +551,10 @@ export function buildDisplayEntries(
     entries.push(entry)
   })
 
-  if (pendingAssistantToolMessages.length > 0) {
-    const previousEntry = entries[entries.length - 1]
-    if (previousEntry?.message.role === 'assistant') {
-      previousEntry.attachedToolMessages.push(...pendingAssistantToolMessages)
-    }
-  }
+  // Pending assistant/toolResult messages left at EOF are persisted tool-only
+  // bookkeeping after the final assistant text. Keep them hidden instead of
+  // attaching stale tool pills to the last visible reply.
+  pendingAssistantToolMessages = []
 
   return entries
 }

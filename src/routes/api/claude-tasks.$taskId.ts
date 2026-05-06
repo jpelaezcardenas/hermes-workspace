@@ -2,6 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { getClaudeTask, moveClaudeTask, updateClaudeTask } from '../../server/claude-tasks-backend'
 import type { TaskColumn, TaskPriority } from '../../server/claude-tasks-backend'
+import { sanitizeProjectSlug } from '../../server/project-catalog'
+import { loadWorkspaceCatalog } from './workspace'
 
 function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -25,6 +27,16 @@ function isTaskPriority(value: unknown): value is TaskPriority {
   return value === 'high' || value === 'medium' || value === 'low'
 }
 
+async function requestProjectId(request: Request, body?: Record<string, unknown>): Promise<string | null> {
+  const url = new URL(request.url)
+  const explicit = sanitizeProjectSlug(
+    typeof body?.projectId === 'string' ? body.projectId : url.searchParams.get('projectId'),
+  )
+  if (explicit) return explicit
+  const catalog = await loadWorkspaceCatalog()
+  return catalog.projectSlug ?? null
+}
+
 export const Route = createFileRoute('/api/claude-tasks/$taskId')({
   server: {
     handlers: {
@@ -33,7 +45,7 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
-        const task = await getClaudeTask(params.taskId)
+        const task = await getClaudeTask(params.taskId, await requestProjectId(request))
         if (!task) return jsonResponse({ error: 'Task not found' }, 404)
         return jsonResponse({ task })
       },
@@ -45,6 +57,7 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
 
         try {
           const body = (await request.json()) as Record<string, unknown>
+          const projectId = await requestProjectId(request, body)
           const task = await updateClaudeTask(params.taskId, {
             title: typeof body.title === 'string' ? body.title : undefined,
             description: typeof body.description === 'string' ? body.description : undefined,
@@ -53,6 +66,7 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
             assignee: body.assignee === null || typeof body.assignee === 'string' ? body.assignee : undefined,
             tags: Array.isArray(body.tags) ? body.tags.filter((tag): tag is string => typeof tag === 'string') : undefined,
             due_date: body.due_date === null || typeof body.due_date === 'string' ? body.due_date : undefined,
+            projectId,
           })
 
           if (!task) return jsonResponse({ error: 'Task not found' }, 404)
@@ -86,7 +100,7 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
           if (!isTaskColumn(body.column)) {
             return jsonResponse({ error: 'column is required' }, 400)
           }
-          const task = await moveClaudeTask(params.taskId, body.column)
+          const task = await moveClaudeTask(params.taskId, body.column, await requestProjectId(request, body))
           if (!task) return jsonResponse({ error: 'Task not found' }, 404)
           return jsonResponse({ task })
         } catch {

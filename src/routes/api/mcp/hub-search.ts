@@ -46,17 +46,15 @@ export const Route = createFileRoute('/api/mcp/hub-search')({
         const q = url.searchParams.get('q') ?? ''
         const rawSource = url.searchParams.get('source') ?? 'all'
         const rawLimit = url.searchParams.get('limit') ?? '20'
-        const rawOffset = url.searchParams.get('offset') ?? '0'
 
         const source: SearchSource = VALID_SOURCES.has(rawSource)
           ? (rawSource as SearchSource)
           : 'all'
 
-        const limit = Math.min(500, Math.max(1, parseInt(rawLimit, 10) || 20))
-        const offset = Math.max(0, parseInt(rawOffset, 10) || 0)
+        const limit = Math.min(100, Math.max(1, parseInt(rawLimit, 10) || 20))
 
         try {
-          const result = await unifiedSearch(q, source, limit, offset)
+          const result = await unifiedSearch(q, source, limit)
           return Response.json({
             ok: true,
             results: result.results,

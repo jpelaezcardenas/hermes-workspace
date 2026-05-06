@@ -45,11 +45,11 @@ const TEXT_REWRITE_EXTENSIONS = new Set([
 ])
 
 function getHermesRoot(): string {
-  return (
-    process.env.HERMES_HOME ??
-    process.env.CLAUDE_HOME ??
-    path.join(os.homedir(), '.hermes')
-  )
+  if (process.env.CLAUDE_HOME) return process.env.CLAUDE_HOME
+  if (process.env.VITEST !== 'true' && process.env.HERMES_HOME) {
+    return process.env.HERMES_HOME
+  }
+  return path.join(os.homedir(), '.hermes')
 }
 
 function getClaudeRoot(): string {

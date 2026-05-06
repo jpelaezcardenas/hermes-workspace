@@ -2,6 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { createClaudeTask, listClaudeTasks } from '../../server/claude-tasks-backend'
 import type { TaskColumn, TaskPriority } from '../../server/claude-tasks-backend'
+import { sanitizeProjectSlug } from '../../server/project-catalog'
+import { loadWorkspaceCatalog } from './workspace'
 
 function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -25,6 +27,16 @@ function isTaskPriority(value: unknown): value is TaskPriority {
   return value === 'high' || value === 'medium' || value === 'low'
 }
 
+async function requestProjectId(request: Request, body?: Record<string, unknown>): Promise<string | null> {
+  const url = new URL(request.url)
+  const explicit = sanitizeProjectSlug(
+    typeof body?.projectId === 'string' ? body.projectId : url.searchParams.get('projectId'),
+  )
+  if (explicit) return explicit
+  const catalog = await loadWorkspaceCatalog()
+  return catalog.projectSlug ?? null
+}
+
 export const Route = createFileRoute('/api/claude-tasks')({
   server: {
     handlers: {
@@ -34,11 +46,13 @@ export const Route = createFileRoute('/api/claude-tasks')({
         }
 
         const url = new URL(request.url)
+        const projectId = await requestProjectId(request)
         const tasks = await listClaudeTasks({
           column: url.searchParams.get('column'),
           assignee: url.searchParams.get('assignee'),
           priority: url.searchParams.get('priority'),
           includeDone: url.searchParams.get('include_done') === 'true',
+          projectId,
         })
 
         return jsonResponse({ tasks })
@@ -55,6 +69,7 @@ export const Route = createFileRoute('/api/claude-tasks')({
             return jsonResponse({ error: 'title is required' }, 400)
           }
 
+          const projectId = await requestProjectId(request, body)
           const task = await createClaudeTask({
             title: body.title,
             description: typeof body.description === 'string' ? body.description : '',
@@ -64,6 +79,7 @@ export const Route = createFileRoute('/api/claude-tasks')({
             tags: Array.isArray(body.tags) ? body.tags.filter((tag): tag is string => typeof tag === 'string') : [],
             due_date: typeof body.due_date === 'string' ? body.due_date : null,
             created_by: typeof body.created_by === 'string' ? body.created_by : 'user',
+            projectId,
           })
 
           return jsonResponse({ task }, 201)

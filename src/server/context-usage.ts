@@ -39,6 +39,7 @@ const MODEL_CONTEXT_WINDOWS: Record<string, number> = {
 }
 
 const CHARS_PER_TOKEN = 3.5
+const BYTES_PER_TOKEN = CHARS_PER_TOKEN
 
 function getContextWindow(model: string): number {
   if (MODEL_CONTEXT_WINDOWS[model]) return MODEL_CONTEXT_WINDOWS[model]
@@ -50,6 +51,55 @@ function getContextWindow(model: string): number {
       return value
   }
   return 200_000
+}
+
+
+function serializedLength(value: unknown): number {
+  if (typeof value === 'string') return value.length
+  if (value == null) return 0
+  try {
+    return JSON.stringify(value).length
+  } catch {
+    return String(value).length
+  }
+}
+
+function messageContentLength(message: Record<string, unknown>): number {
+  const contentLength = serializedLength(message.content)
+  let total = contentLength
+
+  const topLevelText =
+    typeof message.text === 'string'
+      ? message.text
+      : typeof message.output === 'string'
+        ? message.output
+        : ''
+  if (contentLength === 0 && topLevelText) total += topLevelText.length
+
+  if (typeof message.reasoning === 'string') total += message.reasoning.length
+  if (message.tool_calls) total += serializedLength(message.tool_calls)
+  if (message.toolResults) total += serializedLength(message.toolResults)
+  if (message.tool_results) total += serializedLength(message.tool_results)
+
+  return total
+}
+
+export function estimateContextTokensFromMessages(
+  messages: Array<Record<string, unknown>>,
+): number {
+  const totalChars = messages.reduce(
+    (sum, message) => sum + messageContentLength(message),
+    0,
+  )
+  return Math.ceil(totalChars / CHARS_PER_TOKEN)
+}
+
+export function estimateContextTokensFromCacheRead(
+  cacheReadBytes: number,
+  messageCount = 0,
+): number {
+  const assistantTurns = Math.max(1, Math.ceil(messageCount / 2))
+  return Math.ceil((cacheReadBytes / BYTES_PER_TOKEN / assistantTurns) * 1.2)
 }
 
 function authHeaders(): Record<string, string> {
@@ -137,7 +187,7 @@ export async function readContextUsage(
     const assistantTurns = Math.max(1, Math.ceil(messageCount / 2))
 
     if (cacheReadTokens > 0 && assistantTurns > 0) {
-      usedTokens = Math.ceil((cacheReadTokens / assistantTurns) * 1.2)
+      usedTokens = estimateContextTokensFromCacheRead(cacheReadTokens, messageCount)
     } else if (messageCount > 0) {
       try {
         const targetSessionId = sessionId || String(sessionData.id || '')
@@ -173,13 +223,7 @@ export async function readContextUsage(
             const messages = capabilitiesNow.dashboard.available
               ? (msgData.messages ?? [])
               : (msgData.items ?? [])
-            let totalChars = 0
-            for (const msg of messages) {
-              totalChars += (msg.content || '').length
-              if (msg.reasoning) totalChars += msg.reasoning.length
-              if (msg.tool_calls) totalChars += JSON.stringify(msg.tool_calls).length
-            }
-            usedTokens = Math.ceil(totalChars / CHARS_PER_TOKEN)
+            usedTokens = estimateContextTokensFromMessages(messages)
           }
         }
       } catch {
