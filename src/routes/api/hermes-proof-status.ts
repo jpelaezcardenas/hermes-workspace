@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { execFileSync } from 'node:child_process'
+import { createFileRoute } from '@tanstack/react-router'
+import { isAuthenticated } from '../../server/auth-middleware'
 
 function todayChicago(): string {
   return new Intl.DateTimeFormat('en-CA', {
@@ -16,7 +16,7 @@ function todayChicago(): string {
 export const Route = createFileRoute('/api/hermes-proof-status')({
   server: {
     handlers: {
-      GET: async ({ request }) => {
+      GET: ({ request }) => {
         if (!isAuthenticated(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
         }

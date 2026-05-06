@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import os from 'node:os'
 import { join } from 'node:path'
 import { listTasks } from './tasks-store'
@@ -640,7 +640,7 @@ function buildHermesCompany({
         id: `skill-${slug(path.slice(SKILLS_DIR.length + 1))}`,
         source_path: path,
         source_type: 'skill' as const,
-        owner_agent: owners.length ? owners.map((owner) => HERMES_AGENT_DEFAULTS[owner]?.name ?? displayNameFromId(owner)).join(', ') : 'Unmapped',
+        owner_agent: owners.length ? owners.map((owner) => HERMES_AGENT_DEFAULTS[owner].name).join(', ') : 'Unmapped',
         project: skillCategory(path),
         freshness: statSync(path).mtime.toISOString(),
         confidence: owners.length ? 'medium' as const : 'low' as const,
@@ -797,7 +797,7 @@ export async function buildCommandCenterStatus({ refresh = false } = {}): Promis
   const proofPath = latestProofPath()
   const proof = proofPath ? readJson(proofPath) as Record<string, unknown> | null : null
   const proofSummary = (proof?.summary && typeof proof.summary === 'object')
-    ? proof.summary as Record<string, number>
+    ? proof.summary as Partial<Record<string, number>>
     : {}
   const jobs = normalizeJobs(readJson(JOBS_FILE))
   const tasks = listTasks({ includeDone: true })

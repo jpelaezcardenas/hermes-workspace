@@ -21,9 +21,9 @@ type CommandStatus = {
   generated_at: string
   health: Record<string, string>
   summary: Record<string, number>
-  schedule: StatusItem[]
-  next_moves: StatusItem[]
-  needs_wilson: StatusItem[]
+  schedule: Array<StatusItem>
+  next_moves: Array<StatusItem>
+  needs_wilson: Array<StatusItem>
 }
 
 async function createScheduleTask(item: StatusItem) {

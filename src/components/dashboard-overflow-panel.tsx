@@ -3,8 +3,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   BrainIcon,
-  ComputerTerminal01Icon,
   Clock01Icon,
+  ComputerTerminal01Icon,
   DashboardSquare01Icon,
   File01Icon,
   McpServerIcon,

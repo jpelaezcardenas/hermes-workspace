@@ -41,20 +41,20 @@ type CompanyFlowPacket = {
   generated_at: string
   summary: Record<string, number>
   health: Record<string, string>
-  nodes: FlowNode[]
-  edges: FlowEdge[]
-  needs_wilson: FlowItem[]
-  bottlenecks: FlowItem[]
-  gains: FlowItem[]
-  next_moves: FlowItem[]
-  skill_candidates: FlowItem[]
+  nodes: Array<FlowNode>
+  edges: Array<FlowEdge>
+  needs_wilson: Array<FlowItem>
+  bottlenecks: Array<FlowItem>
+  gains: Array<FlowItem>
+  next_moves: Array<FlowItem>
+  skill_candidates: Array<FlowItem>
   company?: {
     operating_model: string
     primary_drivers: Array<{ id: string; name: string }>
     support_specialists: Array<{ id: string; name: string }>
     skill_inventory: { total: number; mapped_to_hermes: number }
   }
-  automation_queue?: FlowItem[]
+  automation_queue?: Array<FlowItem>
 }
 
 const COLUMN_LABELS = [
@@ -148,7 +148,7 @@ export function CompanyFlowScreen() {
   }, [filter, packet])
 
   const nodesByColumn = useMemo(() => {
-    const grouped = new Map<number, FlowNode[]>()
+    const grouped = new Map<number, Array<FlowNode>>()
     for (const node of visibleNodes) {
       const list = grouped.get(node.column) ?? []
       list.push(node)

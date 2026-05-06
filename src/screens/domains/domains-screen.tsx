@@ -14,10 +14,10 @@ type DomainHub = {
   currentTruth: string
   nextAction: string
   agent: string
-  sources: string[]
+  sources: Array<string>
 }
 
-const DOMAINS: DomainHub[] = [
+const DOMAINS: Array<DomainHub> = [
   {
     id: 'finance',
     title: 'Finance Intelligence',

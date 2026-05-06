@@ -51,9 +51,7 @@ type CommandAction = {
   label: string
   keywords: string
   shortcut?: string
-  icon: React.ComponentProps<
-    typeof import('@hugeicons/react').HugeiconsIcon
-  >['icon']
+  icon: React.ComponentProps<typeof HugeiconsIcon>['icon']
   onSelect: () => void
 }
 
