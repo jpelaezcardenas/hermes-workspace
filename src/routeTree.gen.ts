@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorldRouteImport } from './routes/world'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as Swarm2RouteImport } from './routes/swarm2'
@@ -21,6 +22,7 @@ import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
@@ -69,15 +71,18 @@ import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usag
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
 import { Route as ApiPlaygroundNpcRouteImport } from './routes/api/playground-npc'
+import { Route as ApiPlaygroundAdminRouteImport } from './routes/api/playground-admin'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
+import { Route as ApiMediaRouteImport } from './routes/api/media'
 import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
 import { Route as ApiIntegrationsRouteImport } from './routes/api/integrations'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
+import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
@@ -141,6 +146,11 @@ import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 
+const WorldRoute = WorldRouteImport.update({
+  id: '/world',
+  path: '/world',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TerminalRoute = TerminalRouteImport.update({
   id: '/terminal',
   path: '/terminal',
@@ -199,6 +209,11 @@ const McpRoute = McpRouteImport.update({
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HermesWorldRoute = HermesWorldRouteImport.update({
+  id: '/hermes-world',
+  path: '/hermes-world',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FilesRoute = FilesRouteImport.update({
@@ -442,6 +457,11 @@ const ApiPlaygroundNpcRoute = ApiPlaygroundNpcRouteImport.update({
   path: '/api/playground-npc',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPlaygroundAdminRoute = ApiPlaygroundAdminRouteImport.update({
+  id: '/api/playground-admin',
+  path: '/api/playground-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPingRoute = ApiPingRouteImport.update({
   id: '/api/ping',
   path: '/api/ping',
@@ -460,6 +480,11 @@ const ApiModelsRoute = ApiModelsRouteImport.update({
 const ApiMemoryRoute = ApiMemoryRouteImport.update({
   id: '/api/memory',
   path: '/api/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMediaRoute = ApiMediaRouteImport.update({
+  id: '/api/media',
+  path: '/api/media',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMcpRoute = ApiMcpRouteImport.update({
@@ -485,6 +510,11 @@ const ApiHistoryRoute = ApiHistoryRouteImport.update({
 const ApiGatewayStatusRoute = ApiGatewayStatusRouteImport.update({
   id: '/api/gateway-status',
   path: '/api/gateway-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGatewayReprobeRoute = ApiGatewayReprobeRouteImport.update({
+  id: '/api/gateway-reprobe',
+  path: '/api/gateway-reprobe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiFilesRoute = ApiFilesRouteImport.update({
@@ -807,6 +837,7 @@ export interface FileRoutesByFullPath {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
+  '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
@@ -819,6 +850,7 @@ export interface FileRoutesByFullPath {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -836,15 +868,18 @@ export interface FileRoutesByFullPath {
   '/api/crew-status': typeof ApiCrewStatusRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
+  '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
+  '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
+  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
@@ -940,6 +975,7 @@ export interface FileRoutesByTo {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
+  '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
@@ -951,6 +987,7 @@ export interface FileRoutesByTo {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -968,15 +1005,18 @@ export interface FileRoutesByTo {
   '/api/crew-status': typeof ApiCrewStatusRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
+  '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
+  '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
+  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
@@ -1073,6 +1113,7 @@ export interface FileRoutesById {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
+  '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
@@ -1085,6 +1126,7 @@ export interface FileRoutesById {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1102,15 +1144,18 @@ export interface FileRoutesById {
   '/api/crew-status': typeof ApiCrewStatusRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
+  '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
+  '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
+  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
@@ -1208,6 +1253,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/files'
+    | '/hermes-world'
     | '/jobs'
     | '/mcp'
     | '/memory'
@@ -1220,6 +1266,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/world'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1237,15 +1284,18 @@ export interface FileRouteTypes {
     | '/api/crew-status'
     | '/api/events'
     | '/api/files'
+    | '/api/gateway-reprobe'
     | '/api/gateway-status'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
     | '/api/mcp'
+    | '/api/media'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
+    | '/api/playground-admin'
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
@@ -1341,6 +1391,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/files'
+    | '/hermes-world'
     | '/jobs'
     | '/mcp'
     | '/memory'
@@ -1352,6 +1403,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/world'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1369,15 +1421,18 @@ export interface FileRouteTypes {
     | '/api/crew-status'
     | '/api/events'
     | '/api/files'
+    | '/api/gateway-reprobe'
     | '/api/gateway-status'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
     | '/api/mcp'
+    | '/api/media'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
+    | '/api/playground-admin'
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
@@ -1473,6 +1528,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/files'
+    | '/hermes-world'
     | '/jobs'
     | '/mcp'
     | '/memory'
@@ -1485,6 +1541,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/world'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1502,15 +1559,18 @@ export interface FileRouteTypes {
     | '/api/crew-status'
     | '/api/events'
     | '/api/files'
+    | '/api/gateway-reprobe'
     | '/api/gateway-status'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
     | '/api/mcp'
+    | '/api/media'
     | '/api/memory'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
+    | '/api/playground-admin'
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
@@ -1607,6 +1667,7 @@ export interface RootRouteChildren {
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
+  HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
@@ -1619,6 +1680,7 @@ export interface RootRouteChildren {
   Swarm2Route: typeof Swarm2Route
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
+  WorldRoute: typeof WorldRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
@@ -1636,15 +1698,18 @@ export interface RootRouteChildren {
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiFilesRoute: typeof ApiFilesRoute
+  ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiIntegrationsRoute: typeof ApiIntegrationsRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
   ApiMcpRoute: typeof ApiMcpRouteWithChildren
+  ApiMediaRoute: typeof ApiMediaRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
+  ApiPlaygroundAdminRoute: typeof ApiPlaygroundAdminRoute
   ApiPlaygroundNpcRoute: typeof ApiPlaygroundNpcRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
@@ -1710,6 +1775,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/world': {
+      id: '/world'
+      path: '/world'
+      fullPath: '/world'
+      preLoaderRoute: typeof WorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terminal': {
       id: '/terminal'
       path: '/terminal'
@@ -1792,6 +1864,13 @@ declare module '@tanstack/react-router' {
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hermes-world': {
+      id: '/hermes-world'
+      path: '/hermes-world'
+      fullPath: '/hermes-world'
+      preLoaderRoute: typeof HermesWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/files': {
@@ -2130,6 +2209,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPlaygroundNpcRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/playground-admin': {
+      id: '/api/playground-admin'
+      path: '/api/playground-admin'
+      fullPath: '/api/playground-admin'
+      preLoaderRoute: typeof ApiPlaygroundAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ping': {
       id: '/api/ping'
       path: '/api/ping'
@@ -2156,6 +2242,13 @@ declare module '@tanstack/react-router' {
       path: '/api/memory'
       fullPath: '/api/memory'
       preLoaderRoute: typeof ApiMemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/media': {
+      id: '/api/media'
+      path: '/api/media'
+      fullPath: '/api/media'
+      preLoaderRoute: typeof ApiMediaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/mcp': {
@@ -2191,6 +2284,13 @@ declare module '@tanstack/react-router' {
       path: '/api/gateway-status'
       fullPath: '/api/gateway-status'
       preLoaderRoute: typeof ApiGatewayStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/gateway-reprobe': {
+      id: '/api/gateway-reprobe'
+      path: '/api/gateway-reprobe'
+      fullPath: '/api/gateway-reprobe'
+      preLoaderRoute: typeof ApiGatewayReprobeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/files': {
@@ -2797,6 +2897,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
+  HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
@@ -2809,6 +2910,7 @@ const rootRouteChildren: RootRouteChildren = {
   Swarm2Route: Swarm2Route,
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
+  WorldRoute: WorldRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
@@ -2826,15 +2928,18 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCrewStatusRoute: ApiCrewStatusRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiFilesRoute: ApiFilesRoute,
+  ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
   ApiHistoryRoute: ApiHistoryRoute,
   ApiIntegrationsRoute: ApiIntegrationsRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
   ApiMcpRoute: ApiMcpRouteWithChildren,
+  ApiMediaRoute: ApiMediaRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,
+  ApiPlaygroundAdminRoute: ApiPlaygroundAdminRoute,
   ApiPlaygroundNpcRoute: ApiPlaygroundNpcRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,

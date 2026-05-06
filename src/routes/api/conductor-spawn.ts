@@ -179,10 +179,14 @@ export const Route = createFileRoute('/api/conductor-spawn')({
           )
 
         const capabilities = await ensureGatewayProbed()
-        if (!capabilities.dashboard.available) {
+        if (!capabilities.conductor) {
           return json(
-            { ok: false, error: 'Hermes dashboard API is unavailable' },
-            { status: 503 },
+            {
+              ok: false,
+              error:
+                'Conductor dashboard mode is unavailable on this Hermes Agent build. Update Hermes Workspace to use portable mode for mission execution, or run a backend that exposes /api/conductor/missions.',
+            },
+            { status: 501 },
           )
         }
 
@@ -250,7 +254,7 @@ export const Route = createFileRoute('/api/conductor-spawn')({
           const missionName = `conductor-${Date.now()}`
           const capabilities = await ensureGatewayProbed()
 
-          if (!capabilities.dashboard.available) {
+          if (!capabilities.conductor) {
             return json({
               ok: true,
               mode: 'portable',
