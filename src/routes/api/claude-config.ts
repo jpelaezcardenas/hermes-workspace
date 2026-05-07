@@ -136,12 +136,16 @@ function maskKey(key: string): string {
   return key.slice(0, 4) + '...' + key.slice(-4)
 }
 
-function checkAuthStore(providerId: string): {
+function nonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0
+}
+
+export function checkAuthStore(providerId: string): {
   hasToken: boolean
   source: string
   maskedKey?: string
 } {
-  // Check Claude auth store
+  // 1. Legacy ~/.hermes/auth-profiles.json lookup
   const storePath = path.join(CLAUDE_HOME, 'auth-profiles.json')
   try {
     if (fs.existsSync(storePath)) {
@@ -158,6 +162,51 @@ function checkAuthStore(providerId: string): {
       }
     }
   } catch {}
+
+  // 2. Current ~/.hermes/auth.json lookup (OAuth tokens + credential_pool)
+  const authJsonPath = path.join(CLAUDE_HOME, 'auth.json')
+  try {
+    if (fs.existsSync(authJsonPath)) {
+      const data = JSON.parse(fs.readFileSync(authJsonPath, 'utf-8')) as Record<string, unknown>
+
+      const providers = (data?.providers ?? {}) as Record<string, unknown>
+      const providerEntry = providers[providerId]
+      if (providerEntry && typeof providerEntry === 'object') {
+        const state = (providerEntry as Record<string, unknown>).state
+        if (state && typeof state === 'object') {
+          const tokens = (state as Record<string, unknown>).tokens
+          if (tokens && typeof tokens === 'object') {
+            const t = tokens as Record<string, unknown>
+            if (nonEmptyString(t.access_token)) {
+              return { hasToken: true, source: 'hermes-auth-json', maskedKey: maskKey(t.access_token) }
+            }
+            if (nonEmptyString(t.id_token)) {
+              return { hasToken: true, source: 'hermes-auth-json', maskedKey: maskKey(t.id_token) }
+            }
+          }
+        }
+      }
+
+      const pool = (data?.credential_pool ?? {}) as Record<string, unknown>
+      const bucket = pool[providerId]
+      if (Array.isArray(bucket) && bucket.length > 0) {
+        const first = bucket[0]
+        if (first && typeof first === 'object') {
+          const f = first as Record<string, unknown>
+          if (nonEmptyString(f.access_token)) {
+            return { hasToken: true, source: 'hermes-auth-json', maskedKey: maskKey(f.access_token) }
+          }
+          if (nonEmptyString(f.token)) {
+            return { hasToken: true, source: 'hermes-auth-json', maskedKey: maskKey(f.token) }
+          }
+          if (nonEmptyString(f.key)) {
+            return { hasToken: true, source: 'hermes-auth-json', maskedKey: maskKey(f.key) }
+          }
+        }
+      }
+    }
+  } catch {}
+
   return { hasToken: false, source: '' }
 }
 
