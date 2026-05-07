@@ -1375,7 +1375,7 @@ function NPC({
       {/* nameplate w/ portrait chip — replaces floating PNG */}
       <Html position={[0, 1.95, 0]} center distanceFactor={8}>
         <div style={{display:'flex',alignItems:'center',gap:6,padding:'2px 8px 2px 2px',background:'rgba(0,0,0,0.78)',color:'white',borderRadius:14,fontSize:11,fontWeight:600,whiteSpace:'nowrap',border:`1px solid ${color}`,boxShadow:`0 0 8px ${color}55`}}>
-          <img src={`/avatars/${avatar}.png`} alt="" style={{width:22,height:22,borderRadius:'50%',background:color,objectFit:'cover',border:`1px solid ${color}`}} />
+          <img src={`/avatars/${avatar}.png`} alt="" loading="lazy" decoding="async" style={{width:22,height:22,borderRadius:'50%',background:color,objectFit:'cover',border:`1px solid ${color}`}} />
           <span>{name}</span>
         </div>
       </Html>
@@ -2136,7 +2136,7 @@ function PlayerAndCamera({
       {/* nameplate w/ portrait chip — "You" */}
       <Html position={[0, 2.2, 0]} center distanceFactor={8}>
         <div style={{display:'flex',alignItems:'center',gap:6,padding:'2px 8px 2px 2px',background:'rgba(0,0,0,0.78)',color:'#a7f3d0',borderRadius:14,fontSize:11,fontWeight:700,whiteSpace:'nowrap',border:'1px solid #34d39955',boxShadow:'0 0 8px #34d39933'}}>
-          <img src={`/avatars/${portraitId}.png`} alt="" style={{width:22,height:22,borderRadius:'50%',background:gearAccent || cfg.outfitAccent,objectFit:'cover',border:'1px solid #34d399'}} />
+          <img src={`/avatars/${portraitId}.png`} alt="" loading="lazy" decoding="async" style={{width:22,height:22,borderRadius:'50%',background:gearAccent || cfg.outfitAccent,objectFit:'cover',border:'1px solid #34d399'}} />
           <span>{displayName}</span>
         </div>
       </Html>
@@ -2361,7 +2361,7 @@ function BotPlayer({
       {/* nameplate w/ portrait chip */}
       <Html position={[0, 1.95, 0]} center distanceFactor={8}>
         <div style={{display:'flex',alignItems:'center',gap:6,padding:'2px 8px 2px 2px',background:'rgba(0,0,0,0.78)',color:bot.color,borderRadius:14,fontSize:11,fontWeight:700,whiteSpace:'nowrap',border:`1px solid ${bot.color}55`,boxShadow:`0 0 8px ${bot.color}33`}}>
-          <img src={`/avatars/${bot.avatar}.png`} alt="" style={{width:22,height:22,borderRadius:'50%',background:bot.color,objectFit:'cover',border:`1px solid ${bot.color}`}} />
+          <img src={`/avatars/${bot.avatar}.png`} alt="" loading="lazy" decoding="async" style={{width:22,height:22,borderRadius:'50%',background:bot.color,objectFit:'cover',border:`1px solid ${bot.color}`}} />
           <span>{bot.name}</span>
         </div>
       </Html>
@@ -2739,7 +2739,7 @@ function RemotePlayer({ remote }: { remote: MpRemotePlayer }) {
       <Html position={[0, 1.95, 0]} center distanceFactor={8}>
         <div style={{display:'flex',alignItems:'center',gap:6,padding:'2px 8px 2px 2px',background:'rgba(0,0,0,0.78)',color:'white',borderRadius:14,fontSize:11,fontWeight:700,whiteSpace:'nowrap',border:`1px solid ${remote.color}`,boxShadow:`0 0 8px ${remote.color}55`,transform: pinged ? 'scale(1.08)' : 'scale(1)', transition: 'transform 180ms ease, box-shadow 180ms ease'}}>
           {remote.avatar?.portrait && (
-            <img src={`/avatars/${remote.avatar.portrait}.png`} alt="" style={{width:22,height:22,borderRadius:'50%',background:remote.color,objectFit:'cover',border:`1px solid ${remote.color}`}} />
+            <img src={`/avatars/${remote.avatar.portrait}.png`} alt="" loading="lazy" decoding="async" style={{width:22,height:22,borderRadius:'50%',background:remote.color,objectFit:'cover',border:`1px solid ${remote.color}`}} />
           )}
           <span>{remote.name}</span>
         </div>
@@ -3051,6 +3051,15 @@ function Scene({
 }
 
 
+function usePerfDebugEnabled() {
+  const [enabled, setEnabled] = useState(false)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setEnabled(new URLSearchParams(window.location.search).get('debug') === 'perf')
+  }, [])
+  return enabled
+}
+
 function DevFpsSampler() {
   const sample = useRef({ last: 0, frames: 0, sum: 0, max: 0, heap: 0 })
   useFrame(({ clock }, delta) => {
@@ -3068,6 +3077,52 @@ function DevFpsSampler() {
     sample.current = { last: now, frames: 0, sum: 0, max: 0, heap: stats.heap }
   })
   return null
+}
+
+function PerfDebugOverlay() {
+  const enabled = usePerfDebugEnabled()
+  const { gl } = useThree()
+  const sample = useRef({ last: 0, frames: 0, sum: 0, max: 0 })
+  const [stats, setStats] = useState({ fps: 0, frameMs: 0, maxFrameMs: 0, calls: 0, triangles: 0, heap: 'n/a' as string | number })
+
+  useFrame(({ clock }, delta) => {
+    if (!enabled) return
+    const now = clock.elapsedTime
+    const ms = delta * 1000
+    const current = sample.current
+    current.frames += 1
+    current.sum += ms
+    current.max = Math.max(current.max, ms)
+    if (now - current.last < 0.5) return
+    const frameMs = current.sum / Math.max(1, current.frames)
+    const heap = typeof performance !== 'undefined' && 'memory' in performance
+      ? Number((((performance as any).memory?.usedJSHeapSize || 0) / 1048576).toFixed(1))
+      : 'n/a'
+    setStats({
+      fps: Number((1000 / Math.max(1, frameMs)).toFixed(1)),
+      frameMs: Number(frameMs.toFixed(2)),
+      maxFrameMs: Number(current.max.toFixed(2)),
+      calls: gl.info.render.calls,
+      triangles: gl.info.render.triangles,
+      heap,
+    })
+    sample.current = { last: now, frames: 0, sum: 0, max: 0 }
+  })
+
+  if (!enabled) return null
+  return (
+    <Html fullscreen prepend>
+      <div style={{ position: 'fixed', left: 12, top: 12, zIndex: 1000, width: 190, border: '1px solid rgba(94,234,212,.35)', borderRadius: 14, background: 'rgba(2,8,13,.78)', color: '#dffcff', padding: '10px 12px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 11, lineHeight: 1.55, pointerEvents: 'none', boxShadow: '0 14px 40px rgba(0,0,0,.35)', backdropFilter: 'blur(10px)' }}>
+        <div style={{ color: '#facc15', fontWeight: 900, letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4 }}>Perf debug</div>
+        <div>FPS: {stats.fps}</div>
+        <div>Frame: {stats.frameMs}ms</div>
+        <div>Max: {stats.maxFrameMs}ms</div>
+        <div>Draw calls: {stats.calls}</div>
+        <div>Triangles: {stats.triangles}</div>
+        <div>Heap: {stats.heap} MB</div>
+      </div>
+    </Html>
+  )
 }
 
 /* ── Public component ── */
@@ -3130,11 +3185,12 @@ export function PlaygroundWorld3D({
   useEffect(() => {
     // Sample player position at presence cadence (~5Hz). The hook
     // skip-sends when delta < epsilon, so this is cheap.
+    const isMobile = window.matchMedia?.('(pointer: coarse), (max-width: 760px)').matches ?? false
     const id = window.setInterval(() => {
       const p = { x: playerPos.current.x, y: playerPos.current.y, z: playerPos.current.z }
       positionForMp.current = p
       ;(window as any).__hermesPlaygroundPlayerPos = p
-    }, 200)
+    }, isMobile ? Math.ceil(1000 / 30) : Math.ceil(1000 / 60))
     return () => window.clearInterval(id)
   }, [])
   const { remotePlayers, online, transport, serverCount, sendChat, myName, myColor, selfId } = usePlaygroundMultiplayer({
@@ -3176,7 +3232,7 @@ export function PlaygroundWorld3D({
     const sig = Object.values(remotePlayers).map((player) => `${player.id}:${player.world}:${player.x.toFixed(1)}:${player.z.toFixed(1)}:${player.ts}:${player.lastChatAt ?? 0}`).sort().join('|')
     if (sig === remotePublishRef.current.sig) return
     const isMobile = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse), (max-width: 760px)').matches
-    const minDelay = isMobile ? 50 : 0
+    const minDelay = isMobile ? Math.ceil(1000 / 30) : Math.ceil(1000 / 60)
     const elapsed = Date.now() - remotePublishRef.current.ts
     const publish = () => {
       remotePublishRef.current = { sig, ts: Date.now(), timer: null }
@@ -3216,7 +3272,7 @@ export function PlaygroundWorld3D({
         camera={{ position: [10, 12, 10], fov: 45 }}
         // Adaptive DPR: matches device pixel ratio up to 1.5 for crispness on retina,
         // drops to 1 on lower-end devices to keep frame times under 16ms.
-        dpr={[1, Math.min(1.5, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)]}
+        dpr={[1, Math.min(typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1, 2)]}
         // Render on demand when no animation needed reduces CPU when idle on title screen.
         // Game loop still runs because useFrame components subscribe.
         frameloop="always"
@@ -3233,6 +3289,7 @@ export function PlaygroundWorld3D({
       >
         <Suspense fallback={null}>
           <DevFpsSampler />
+          <PerfDebugOverlay />
           <EffectComposer enableNormalPass={false}>
             <Bloom mipmapBlur intensity={photosensitiveMode ? 0.18 : 0.78} luminanceThreshold={0.72} luminanceSmoothing={0.35} radius={0.85} />
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />

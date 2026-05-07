@@ -1,8 +1,6 @@
 import { Component, lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { PlaygroundActionBar } from './components/playground-actionbar'
-import { PlaygroundAdminPanel } from './components/playground-admin-panel'
 import { PlaygroundChat, type ChatMessage } from './components/playground-chat'
-import { PlaygroundDialog } from './components/playground-dialog'
 import { PlaygroundHeroCanvas } from './components/playground-hero-canvas'
 import { PlaygroundHud } from './components/playground-hud'
 import { PlaygroundMinimap } from './components/playground-minimap'
@@ -11,7 +9,6 @@ import { Toast } from './components/toast'
 import { FpsCounter } from './components/fps-counter'
 import { KeyboardShortcutsOverlay } from './components/keyboard-shortcuts-overlay'
 import { PhotosensitiveWarningSplash } from './components/photosensitive-warning-splash'
-import { SettingsPanel } from './components/settings-panel'
 import { useHermesWorldSettings } from './components/hermesworld-settings'
 import { usePlaygroundRpg } from './hooks/use-playground-rpg'
 import { playgroundAudio, usePlaygroundAudioMuted } from './lib/playground-audio'
@@ -22,10 +19,13 @@ import type { RemotePlayer } from './hooks/use-playground-multiplayer'
 import { useWorkspaceStore } from '@/stores/workspace-store'
 
 
+const PlaygroundAdminPanel = lazy(() => import('./components/playground-admin-panel').then((module) => ({ default: module.PlaygroundAdminPanel })))
 const PlaygroundCustomizer = lazy(() => import('./components/playground-customizer').then((module) => ({ default: module.PlaygroundCustomizer })))
+const PlaygroundDialog = lazy(() => import('./components/playground-dialog').then((module) => ({ default: module.PlaygroundDialog })))
 const PlaygroundJournal = lazy(() => import('./components/playground-journal').then((module) => ({ default: module.PlaygroundJournal })))
 const PlaygroundMap = lazy(() => import('./components/playground-map').then((module) => ({ default: module.PlaygroundMap })))
 const PlaygroundSidePanel = lazy(() => import('./components/playground-sidepanel').then((module) => ({ default: module.PlaygroundSidePanel })))
+const SettingsPanel = lazy(() => import('./components/settings-panel').then((module) => ({ default: module.SettingsPanel })))
 
 function LazyPanelBoundary({ children }: { children: ReactNode }) {
   return <Suspense fallback={null}>{children}</Suspense>
@@ -590,15 +590,19 @@ export function PlaygroundScreen() {
           objectivePulseKey={objectivePulseKey}
         />
 
-        <PlaygroundDialog
-          npcId={dialogNpc}
-          activeQuest={activeQuest ?? null}
-          onClose={() => setDialogNpc(null)}
-          onCompleteQuest={(questId) => rpg.completeQuestById(questId)}
-          onGrantItems={(items) => rpg.grantItems(items)}
-          onGrantSkillXp={(skills) => rpg.grantSkillXp(skills)}
-          onChoice={onDialogChoice}
-        />
+        {dialogNpc ? (
+          <LazyPanelBoundary>
+            <PlaygroundDialog
+              npcId={dialogNpc}
+              activeQuest={activeQuest ?? null}
+              onClose={() => setDialogNpc(null)}
+              onCompleteQuest={(questId) => rpg.completeQuestById(questId)}
+              onGrantItems={(items) => rpg.grantItems(items)}
+              onGrantSkillXp={(skills) => rpg.grantSkillXp(skills)}
+              onChoice={onDialogChoice}
+            />
+          </LazyPanelBoundary>
+        ) : null}
         {journalOpen ? (
           <LazyPanelBoundary><PlaygroundJournal open={journalOpen} onClose={() => setJournalOpen(false)} state={rpg.state} /></LazyPanelBoundary>
         ) : null}
@@ -661,7 +665,7 @@ export function PlaygroundScreen() {
         />
         {/* Online chip removed — the chat header now shows live player count + NPC count. */}
         {!focusMode && <NearbyBuildersChip players={remotePlayersInZone} />}
-        {!focusMode && (
+        {!focusMode && (!isNarrow || mobileMenuOpen) ? (
           <LazyPanelBoundary>
             <PlaygroundSidePanel
               state={rpg.state}
@@ -690,7 +694,7 @@ export function PlaygroundScreen() {
             onOpenChange={setMobileMenuOpen}
             />
           </LazyPanelBoundary>
-        )}
+        ) : null}
         {/* Focus mode toggle — eyeball icon (sits in the gap between minimap and quest tracker) */}
         <button
           type="button"
@@ -745,9 +749,17 @@ export function PlaygroundScreen() {
         <MobileAbilityControls />
         <OnboardingHintCard open={onboardingHintOpen} />
         <PhotosensitiveWarningSplash onOpenSettings={() => setSettingsOpen(true)} />
-        <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} signedInName={rpg.state.playerProfile.displayName || null} />
+        {settingsOpen ? (
+          <LazyPanelBoundary>
+            <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} signedInName={rpg.state.playerProfile.displayName || null} />
+          </LazyPanelBoundary>
+        ) : null}
         <PlaygroundHelpHud worldName={WORLD_META[world].name} />
-        {adminMode ? <PlaygroundAdminPanel /> : null}
+        {adminMode ? (
+          <LazyPanelBoundary>
+            <PlaygroundAdminPanel />
+          </LazyPanelBoundary>
+        ) : null}
         <PlaygroundUtilityDock
           audioMuted={audioMuted}
           narrationMuted={narrationMuted}
@@ -899,6 +911,8 @@ function TitleScreen({
               alt="HermesWorld"
               width={760}
               height={228}
+              fetchPriority="high"
+              decoding="async"
               className="mt-2 w-[min(760px,82vw)] max-w-full"
               style={{
                 filter:

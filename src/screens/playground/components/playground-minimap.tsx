@@ -58,15 +58,22 @@ export function PlaygroundMinimap({ worldId, worldName, worldAccent }: Props) {
   const map = (v: number) => 75 + (v / 30) * 70
 
   useEffect(() => {
-    const sync = () => {
-      const player = (window as any).__hermesPlaygroundPlayerPos as { x?: number; z?: number } | undefined
-      const x = typeof player?.x === 'number' ? player.x : 0
-      const z = typeof player?.z === 'number' ? player.z : 0
-      setPlayerPos((prev) => (Math.abs(prev.x - x) < 0.15 && Math.abs(prev.z - z) < 0.15 ? prev : { x, z }))
+    let raf = 0
+    let last = 0
+    const isMobile = window.matchMedia?.('(pointer: coarse), (max-width: 760px)').matches ?? false
+    const minFrameMs = isMobile ? 1000 / 30 : 1000 / 60
+    const sync = (now: number) => {
+      if (now - last >= minFrameMs) {
+        last = now
+        const player = (window as any).__hermesPlaygroundPlayerPos as { x?: number; z?: number } | undefined
+        const x = typeof player?.x === 'number' ? player.x : 0
+        const z = typeof player?.z === 'number' ? player.z : 0
+        setPlayerPos((prev) => (Math.abs(prev.x - x) < 0.15 && Math.abs(prev.z - z) < 0.15 ? prev : { x, z }))
+      }
+      raf = window.requestAnimationFrame(sync)
     }
-    sync()
-    const id = window.setInterval(sync, 200)
-    return () => window.clearInterval(id)
+    raf = window.requestAnimationFrame(sync)
+    return () => window.cancelAnimationFrame(raf)
   }, [worldId])
 
   return (
