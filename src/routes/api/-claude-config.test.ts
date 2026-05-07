@@ -7,6 +7,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 // module after setting the env var, since CLAUDE_HOME is captured at
 // module-load time.
 let tempHome = ''
+let fakeUserHome = ''
+let homedirSpy: ReturnType<typeof vi.spyOn> | undefined
 
 async function importFresh() {
   // resetModules clears the registry so the module re-runs and picks up
@@ -17,18 +19,36 @@ async function importFresh() {
 
 beforeEach(() => {
   tempHome = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-auth-test-'))
+  fakeUserHome = fs.mkdtempSync(path.join(os.tmpdir(), 'hermes-userhome-test-'))
   process.env.HERMES_HOME = tempHome
+  // Redirect os.homedir() so the Claude Code branch reads from a tmpdir,
+  // never the real ~/.claude/.credentials.json.
+  homedirSpy = vi.spyOn(os, 'homedir').mockReturnValue(fakeUserHome)
 })
 
 afterEach(() => {
   delete process.env.HERMES_HOME
+  homedirSpy?.mockRestore()
+  homedirSpy = undefined
   if (tempHome) {
     try {
       fs.rmSync(tempHome, { recursive: true, force: true })
     } catch {}
     tempHome = ''
   }
+  if (fakeUserHome) {
+    try {
+      fs.rmSync(fakeUserHome, { recursive: true, force: true })
+    } catch {}
+    fakeUserHome = ''
+  }
 })
+
+function writeClaudeCodeCreds(json: unknown) {
+  const dir = path.join(fakeUserHome, '.claude')
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(path.join(dir, '.credentials.json'), JSON.stringify(json))
+}
 
 describe('checkAuthStore: ~/.hermes/auth.json detection', () => {
   it('returns hasToken=true when credential_pool[providerId][0].access_token is set', async () => {
@@ -114,5 +134,68 @@ describe('checkAuthStore: ~/.hermes/auth.json detection', () => {
     const result = checkAuthStore('anthropic')
     expect(result.hasToken).toBe(true)
     expect(result.source).toBe('claude-auth-store')
+  })
+})
+
+describe('checkAuthStore: ~/.claude/.credentials.json (Claude Code) detection', () => {
+  it('returns hasToken=true and source=claude-code when claudeAiOauth.accessToken is set', async () => {
+    writeClaudeCodeCreds({
+      claudeAiOauth: {
+        accessToken: 'sk-ant-oat01-EXAMPLEEXAMPLE',
+        refreshToken: 'sk-ant-ort01-EXAMPLEEXAMPLE',
+        expiresAt: 1730000000000,
+        scopes: ['user:inference'],
+        subscriptionType: 'pro',
+      },
+    })
+    const { checkAuthStore } = await importFresh()
+    const result = checkAuthStore('anthropic')
+    expect(result.hasToken).toBe(true)
+    expect(result.source).toBe('claude-code')
+    expect(result.maskedKey).toBeDefined()
+    expect(result.maskedKey).not.toContain('EXAMPLEEXAMPLE')
+  })
+
+  it('returns hasToken=false when ~/.claude/.credentials.json is missing and no other store has a token', async () => {
+    // Nothing written under fakeUserHome/.claude — file simply does not exist.
+    const { checkAuthStore } = await importFresh()
+    const result = checkAuthStore('anthropic')
+    expect(result.hasToken).toBe(false)
+    expect(result.source).toBe('')
+  })
+
+  it('does NOT trigger claude-code branch for non-anthropic providers, even when file is present', async () => {
+    writeClaudeCodeCreds({
+      claudeAiOauth: { accessToken: 'sk-ant-oat01-EXAMPLEEXAMPLE' },
+    })
+    const { checkAuthStore } = await importFresh()
+    const result = checkAuthStore('openai-codex')
+    expect(result.hasToken).toBe(false)
+    expect(result.source).not.toBe('claude-code')
+  })
+
+  it('finds token via alternate shape data.oauth.accessToken', async () => {
+    writeClaudeCodeCreds({
+      oauth: { accessToken: 'sk-ant-oat01-ALT-SHAPE-EXAMPLE' },
+    })
+    const { checkAuthStore } = await importFresh()
+    const result = checkAuthStore('anthropic')
+    expect(result.hasToken).toBe(true)
+    expect(result.source).toBe('claude-code')
+  })
+
+  it('finds token via top-level data.accessToken', async () => {
+    writeClaudeCodeCreds({ accessToken: 'sk-ant-oat01-TOPLEVEL-EXAMPLE' })
+    const { checkAuthStore } = await importFresh()
+    const result = checkAuthStore('anthropic')
+    expect(result.hasToken).toBe(true)
+    expect(result.source).toBe('claude-code')
+  })
+
+  it('returns hasToken=false when claudeAiOauth.accessToken is empty string', async () => {
+    writeClaudeCodeCreds({ claudeAiOauth: { accessToken: '' } })
+    const { checkAuthStore } = await importFresh()
+    const result = checkAuthStore('anthropic')
+    expect(result.hasToken).toBe(false)
   })
 })

@@ -207,6 +207,30 @@ export function checkAuthStore(providerId: string): {
     }
   } catch {}
 
+  // 3. Claude Code OAuth — ~/.claude/.credentials.json (anthropic-only).
+  // Hardcode path off os.homedir() at call time (NOT process.env.CLAUDE_HOME,
+  // which is overloaded in this codebase to mean Hermes home).
+  if (providerId === 'anthropic') {
+    try {
+      const claudeCodePath = path.join(os.homedir(), '.claude', '.credentials.json')
+      if (fs.existsSync(claudeCodePath)) {
+        const data = JSON.parse(fs.readFileSync(claudeCodePath, 'utf-8')) as Record<string, unknown>
+        const candidates: Array<unknown> = []
+        const oauth = (data?.claudeAiOauth ?? {}) as Record<string, unknown>
+        candidates.push(oauth.accessToken, oauth.access_token)
+        const altOauth = (data?.oauth ?? {}) as Record<string, unknown>
+        candidates.push(altOauth.accessToken, altOauth.access_token)
+        candidates.push((data as Record<string, unknown>).accessToken)
+        candidates.push((data as Record<string, unknown>).access_token)
+        for (const c of candidates) {
+          if (nonEmptyString(c)) {
+            return { hasToken: true, source: 'claude-code', maskedKey: maskKey(c) }
+          }
+        }
+      }
+    } catch {}
+  }
+
   return { hasToken: false, source: '' }
 }
 
