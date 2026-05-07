@@ -16,6 +16,7 @@ import { Route as Swarm2RouteImport } from './routes/swarm2'
 import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
@@ -24,9 +25,12 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
+import { Route as DomainsRouteImport } from './routes/domains'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
+import { Route as CompanyFlowRouteImport } from './routes/company-flow'
 import { Route as AgoraRouteImport } from './routes/agora'
+import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -81,6 +85,7 @@ import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
 import { Route as ApiIntegrationsRouteImport } from './routes/api/integrations'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
+import { Route as ApiHermesProofStatusRouteImport } from './routes/api/hermes-proof-status'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
@@ -91,6 +96,8 @@ import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection
 import { Route as ApiConnectionSettingsRouteImport } from './routes/api/connection-settings'
 import { Route as ApiConductorStopRouteImport } from './routes/api/conductor-stop'
 import { Route as ApiConductorSpawnRouteImport } from './routes/api/conductor-spawn'
+import { Route as ApiCompanyFlowRouteImport } from './routes/api/company-flow'
+import { Route as ApiCommandCenterStatusRouteImport } from './routes/api/command-center-status'
 import { Route as ApiClaudeUpdateRouteImport } from './routes/api/claude-update'
 import { Route as ApiClaudeTasksAssigneesRouteImport } from './routes/api/claude-tasks-assignees'
 import { Route as ApiClaudeTasksRouteImport } from './routes/api/claude-tasks'
@@ -181,6 +188,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleRoute = ScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfilesRoute = ProfilesRouteImport.update({
   id: '/profiles',
   path: '/profiles',
@@ -221,6 +233,11 @@ const FilesRoute = FilesRouteImport.update({
   path: '/files',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DomainsRoute = DomainsRouteImport.update({
+  id: '/domains',
+  path: '/domains',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -231,9 +248,19 @@ const ConductorRoute = ConductorRouteImport.update({
   path: '/conductor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompanyFlowRoute = CompanyFlowRouteImport.update({
+  id: '/company-flow',
+  path: '/company-flow',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgoraRoute = AgoraRouteImport.update({
   id: '/agora',
   path: '/agora',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentsRoute = AgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -507,6 +534,11 @@ const ApiHistoryRoute = ApiHistoryRouteImport.update({
   path: '/api/history',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHermesProofStatusRoute = ApiHermesProofStatusRouteImport.update({
+  id: '/api/hermes-proof-status',
+  path: '/api/hermes-proof-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiGatewayStatusRoute = ApiGatewayStatusRouteImport.update({
   id: '/api/gateway-status',
   path: '/api/gateway-status',
@@ -555,6 +587,16 @@ const ApiConductorStopRoute = ApiConductorStopRouteImport.update({
 const ApiConductorSpawnRoute = ApiConductorSpawnRouteImport.update({
   id: '/api/conductor-spawn',
   path: '/api/conductor-spawn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCompanyFlowRoute = ApiCompanyFlowRouteImport.update({
+  id: '/api/company-flow',
+  path: '/api/company-flow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCommandCenterStatusRoute = ApiCommandCenterStatusRouteImport.update({
+  id: '/api/command-center-status',
+  path: '/api/command-center-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiClaudeUpdateRoute = ApiClaudeUpdateRouteImport.update({
@@ -833,9 +875,12 @@ const ApiMcpNameLogsRoute = ApiMcpNameLogsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agents': typeof AgentsRoute
   '/agora': typeof AgoraRoute
+  '/company-flow': typeof CompanyFlowRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/domains': typeof DomainsRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -844,6 +889,7 @@ export interface FileRoutesByFullPath {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -860,6 +906,8 @@ export interface FileRoutesByFullPath {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/command-center-status': typeof ApiCommandCenterStatusRoute
+  '/api/company-flow': typeof ApiCompanyFlowRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -870,6 +918,7 @@ export interface FileRoutesByFullPath {
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
+  '/api/hermes-proof-status': typeof ApiHermesProofStatusRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
@@ -971,9 +1020,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agents': typeof AgentsRoute
   '/agora': typeof AgoraRoute
+  '/company-flow': typeof CompanyFlowRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/domains': typeof DomainsRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -982,6 +1034,7 @@ export interface FileRoutesByTo {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/schedule': typeof ScheduleRoute
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
   '/swarm2': typeof Swarm2Route
@@ -997,6 +1050,8 @@ export interface FileRoutesByTo {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/command-center-status': typeof ApiCommandCenterStatusRoute
+  '/api/company-flow': typeof ApiCompanyFlowRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -1007,6 +1062,7 @@ export interface FileRoutesByTo {
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
+  '/api/hermes-proof-status': typeof ApiHermesProofStatusRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
@@ -1109,9 +1165,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agents': typeof AgentsRoute
   '/agora': typeof AgoraRoute
+  '/company-flow': typeof CompanyFlowRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/domains': typeof DomainsRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -1120,6 +1179,7 @@ export interface FileRoutesById {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -1136,6 +1196,8 @@ export interface FileRoutesById {
   '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
   '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
   '/api/claude-update': typeof ApiClaudeUpdateRoute
+  '/api/command-center-status': typeof ApiCommandCenterStatusRoute
+  '/api/company-flow': typeof ApiCompanyFlowRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -1146,6 +1208,7 @@ export interface FileRoutesById {
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
+  '/api/hermes-proof-status': typeof ApiHermesProofStatusRoute
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
@@ -1249,9 +1312,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/agents'
     | '/agora'
+    | '/company-flow'
     | '/conductor'
     | '/dashboard'
+    | '/domains'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1260,6 +1326,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/schedule'
     | '/settings'
     | '/skills'
     | '/swarm'
@@ -1276,6 +1343,8 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/command-center-status'
+    | '/api/company-flow'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1286,6 +1355,7 @@ export interface FileRouteTypes {
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
+    | '/api/hermes-proof-status'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
@@ -1387,9 +1457,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/agents'
     | '/agora'
+    | '/company-flow'
     | '/conductor'
     | '/dashboard'
+    | '/domains'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1398,6 +1471,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/schedule'
     | '/skills'
     | '/swarm'
     | '/swarm2'
@@ -1413,6 +1487,8 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/command-center-status'
+    | '/api/company-flow'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1423,6 +1499,7 @@ export interface FileRouteTypes {
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
+    | '/api/hermes-proof-status'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
@@ -1524,9 +1601,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/agents'
     | '/agora'
+    | '/company-flow'
     | '/conductor'
     | '/dashboard'
+    | '/domains'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1535,6 +1615,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/schedule'
     | '/settings'
     | '/skills'
     | '/swarm'
@@ -1551,6 +1632,8 @@ export interface FileRouteTypes {
     | '/api/claude-tasks'
     | '/api/claude-tasks-assignees'
     | '/api/claude-update'
+    | '/api/command-center-status'
+    | '/api/company-flow'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1561,6 +1644,7 @@ export interface FileRouteTypes {
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
+    | '/api/hermes-proof-status'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
@@ -1663,9 +1747,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AgentsRoute: typeof AgentsRoute
   AgoraRoute: typeof AgoraRoute
+  CompanyFlowRoute: typeof CompanyFlowRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
+  DomainsRoute: typeof DomainsRoute
   FilesRoute: typeof FilesRoute
   HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
@@ -1674,6 +1761,7 @@ export interface RootRouteChildren {
   OperationsRoute: typeof OperationsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
+  ScheduleRoute: typeof ScheduleRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
   SwarmRoute: typeof SwarmRoute
@@ -1690,6 +1778,8 @@ export interface RootRouteChildren {
   ApiClaudeTasksRoute: typeof ApiClaudeTasksRouteWithChildren
   ApiClaudeTasksAssigneesRoute: typeof ApiClaudeTasksAssigneesRoute
   ApiClaudeUpdateRoute: typeof ApiClaudeUpdateRoute
+  ApiCommandCenterStatusRoute: typeof ApiCommandCenterStatusRoute
+  ApiCompanyFlowRoute: typeof ApiCompanyFlowRoute
   ApiConductorSpawnRoute: typeof ApiConductorSpawnRoute
   ApiConductorStopRoute: typeof ApiConductorStopRoute
   ApiConnectionSettingsRoute: typeof ApiConnectionSettingsRoute
@@ -1700,6 +1790,7 @@ export interface RootRouteChildren {
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
+  ApiHermesProofStatusRoute: typeof ApiHermesProofStatusRoute
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiIntegrationsRoute: typeof ApiIntegrationsRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
@@ -1824,6 +1915,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schedule': {
+      id: '/schedule'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof ScheduleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profiles': {
       id: '/profiles'
       path: '/profiles'
@@ -1880,6 +1978,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/domains': {
+      id: '/domains'
+      path: '/domains'
+      fullPath: '/domains'
+      preLoaderRoute: typeof DomainsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -1894,11 +1999,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConductorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/company-flow': {
+      id: '/company-flow'
+      path: '/company-flow'
+      fullPath: '/company-flow'
+      preLoaderRoute: typeof CompanyFlowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agora': {
       id: '/agora'
       path: '/agora'
       fullPath: '/agora'
       preLoaderRoute: typeof AgoraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agents': {
+      id: '/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -2279,6 +2398,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hermes-proof-status': {
+      id: '/api/hermes-proof-status'
+      path: '/api/hermes-proof-status'
+      fullPath: '/api/hermes-proof-status'
+      preLoaderRoute: typeof ApiHermesProofStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/gateway-status': {
       id: '/api/gateway-status'
       path: '/api/gateway-status'
@@ -2347,6 +2473,20 @@ declare module '@tanstack/react-router' {
       path: '/api/conductor-spawn'
       fullPath: '/api/conductor-spawn'
       preLoaderRoute: typeof ApiConductorSpawnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/company-flow': {
+      id: '/api/company-flow'
+      path: '/api/company-flow'
+      fullPath: '/api/company-flow'
+      preLoaderRoute: typeof ApiCompanyFlowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center-status': {
+      id: '/api/command-center-status'
+      path: '/api/command-center-status'
+      fullPath: '/api/command-center-status'
+      preLoaderRoute: typeof ApiCommandCenterStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/claude-update': {
@@ -2893,9 +3033,12 @@ const ApiSwarmMemoryRouteWithChildren = ApiSwarmMemoryRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AgentsRoute: AgentsRoute,
   AgoraRoute: AgoraRoute,
+  CompanyFlowRoute: CompanyFlowRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
+  DomainsRoute: DomainsRoute,
   FilesRoute: FilesRoute,
   HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
@@ -2904,6 +3047,7 @@ const rootRouteChildren: RootRouteChildren = {
   OperationsRoute: OperationsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
+  ScheduleRoute: ScheduleRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
   SwarmRoute: SwarmRoute,
@@ -2920,6 +3064,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiClaudeTasksRoute: ApiClaudeTasksRouteWithChildren,
   ApiClaudeTasksAssigneesRoute: ApiClaudeTasksAssigneesRoute,
   ApiClaudeUpdateRoute: ApiClaudeUpdateRoute,
+  ApiCommandCenterStatusRoute: ApiCommandCenterStatusRoute,
+  ApiCompanyFlowRoute: ApiCompanyFlowRoute,
   ApiConductorSpawnRoute: ApiConductorSpawnRoute,
   ApiConductorStopRoute: ApiConductorStopRoute,
   ApiConnectionSettingsRoute: ApiConnectionSettingsRoute,
@@ -2930,6 +3076,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
+  ApiHermesProofStatusRoute: ApiHermesProofStatusRoute,
   ApiHistoryRoute: ApiHistoryRoute,
   ApiIntegrationsRoute: ApiIntegrationsRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,

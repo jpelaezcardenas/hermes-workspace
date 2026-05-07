@@ -8,11 +8,15 @@ import {
   ArrowUp01Icon,
   BrainIcon,
   Chat01Icon,
+  Clock01Icon,
   CommandLineIcon,
+  DashboardSquare01Icon,
   File01Icon,
   McpServerIcon,
   PuzzleIcon,
+  Rocket01Icon,
   Settings01Icon,
+  UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import type React from 'react'
 import type { SessionMeta } from '@/screens/chat/types'
@@ -47,9 +51,7 @@ type CommandAction = {
   label: string
   keywords: string
   shortcut?: string
-  icon: React.ComponentProps<
-    typeof import('@hugeicons/react').HugeiconsIcon
-  >['icon']
+  icon: React.ComponentProps<typeof HugeiconsIcon>['icon']
   onSelect: () => void
 }
 
@@ -168,6 +170,33 @@ export function CommandPalette({ pathname, sessions }: CommandPaletteProps) {
   const screenActions = useMemo<Array<CommandAction>>(
     () => [
       {
+        id: 'screen-home',
+        group: 'Screens',
+        label: 'Home',
+        keywords: 'dashboard needs wilson cockpit command center',
+        shortcut: 'Go',
+        icon: DashboardSquare01Icon,
+        onSelect: () => void navigate({ to: '/dashboard' }),
+      },
+      {
+        id: 'screen-company-flow',
+        group: 'Screens',
+        label: 'Company Flow',
+        keywords: 'agents graph circuit bottlenecks proof approvals next moves',
+        shortcut: 'Go',
+        icon: Rocket01Icon,
+        onSelect: () => void navigate({ to: '/company-flow' }),
+      },
+      {
+        id: 'screen-agents',
+        group: 'Screens',
+        label: 'Agents',
+        keywords: 'hermes employees company drivers support specialists capability map',
+        shortcut: 'Go',
+        icon: UserGroupIcon,
+        onSelect: () => void navigate({ to: '/agents' }),
+      },
+      {
         id: 'screen-chat',
         group: 'Screens',
         label: 'Chat',
@@ -175,6 +204,33 @@ export function CommandPalette({ pathname, sessions }: CommandPaletteProps) {
         shortcut: 'Go',
         icon: Chat01Icon,
         onSelect: () => void navigate({ to: '/chat' }),
+      },
+      {
+        id: 'screen-work',
+        group: 'Screens',
+        label: 'Work',
+        keywords: 'tasks projects approvals execution loops',
+        shortcut: 'Go',
+        icon: Clock01Icon,
+        onSelect: () => void navigate({ to: '/tasks' }),
+      },
+      {
+        id: 'screen-schedule',
+        group: 'Screens',
+        label: 'Schedule',
+        keywords: 'calendar reminders daily agenda apple today tomorrow',
+        shortcut: 'Go',
+        icon: Clock01Icon,
+        onSelect: () => void navigate({ to: '/schedule' }),
+      },
+      {
+        id: 'screen-domains',
+        group: 'Screens',
+        label: 'Domains',
+        keywords: 'finance research worldview performance golf treasure ideas inbox',
+        shortcut: 'Go',
+        icon: BrainIcon,
+        onSelect: () => void navigate({ to: '/domains' }),
       },
       {
         id: 'screen-files',
