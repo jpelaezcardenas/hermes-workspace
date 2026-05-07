@@ -57,7 +57,7 @@ const SWARM2_OPERATION_THEME: CSSProperties = {
 
 export const SWARM2_INFORMATION_HIERARCHY = [
   'Status header: online workers, active room, refresh state, view switch.',
-  'Orchestrator hub card: top-center primary routing hub with aggregate state and router affordance.',
+  'Aurora/orchestrator hub card: top-center primary routing hub with aggregate state and router affordance.',
   'Visible routing wires: subdued connection lines from the orchestrator to every worker, highlighted for selected and wired room nodes.',
   'Operations-style worker node cards: role, state, current task, last useful signal, direct inline chat/action affordances.',
   'Minimal attention rail: only auth, worker availability, room count, selected runtime metadata.',
@@ -97,6 +97,7 @@ export const SWARM2_CARD_DENSITY_CONTRACT = {
 
 export const SWARM2_REAL_API_ENDPOINTS = [
   '/api/crew-status',
+  '/api/workspace',
   '/api/swarm-environment',
   '/api/swarm-runtime',
   '/api/swarm-missions',
@@ -195,6 +196,27 @@ type SwarmRosterWorker = {
 type SwarmRosterResponse = {
   ok?: boolean
   roster?: { workers?: Array<SwarmRosterWorker> }
+}
+
+type WorkspaceResponse = {
+  projectSlug?: string | null
+}
+
+export const DEFAULT_SWARM2_PROJECT_ID = 'default'
+
+type Swarm2WorkspaceQueryStatus = 'pending' | 'error' | 'success'
+
+export function normalizeActiveSwarm2ProjectId(projectSlug?: string | null): string | null {
+  const trimmed = projectSlug?.trim()
+  return trimmed ? trimmed : null
+}
+
+export function resolveActiveSwarm2ProjectIdForRender(
+  projectSlug: string | null | undefined,
+  workspaceStatus: Swarm2WorkspaceQueryStatus,
+): string | null {
+  if (workspaceStatus !== 'success') return null
+  return normalizeActiveSwarm2ProjectId(projectSlug) ?? DEFAULT_SWARM2_PROJECT_ID
 }
 
 type SwarmMissionSummary = {
@@ -366,6 +388,13 @@ async function fetchRoster(): Promise<Array<SwarmRosterWorker>> {
   if (!res.ok) throw new Error(`Roster request failed: ${res.status}`)
   const data = (await res.json()) as SwarmRosterResponse
   return Array.isArray(data.roster?.workers) ? data.roster!.workers! : []
+}
+
+async function fetchActiveSwarm2ProjectId(): Promise<string | null> {
+  const res = await fetch('/api/workspace')
+  if (!res.ok) return null
+  const data = (await res.json()) as WorkspaceResponse
+  return normalizeActiveSwarm2ProjectId(data.projectSlug)
 }
 
 async function fetchMissions(): Promise<Array<SwarmMissionSummary>> {
@@ -660,6 +689,7 @@ type ControlPlaneStageProps = {
   authErrors: number
   selectedLabel: string
   workspaceModel: string | null
+  projectId?: string | null
   lanes: Array<{ role: string; count: number; active: number }>
   activeAgents: Array<{ workerId: string; workerName: string; role: string; task: string; progress: number; state: 'working' | 'reviewing' | 'blocked' | 'ready'; age: string }>
   recentUpdates: Array<{ workerId: string; workerName: string; text: string; age: string; tone: 'idle' | 'active' | 'warning' }>
@@ -697,6 +727,7 @@ function ControlPlaneStage({
   authErrors,
   selectedLabel,
   workspaceModel,
+  projectId = null,
   lanes,
   activeAgents,
   recentUpdates,
@@ -838,6 +869,7 @@ function ControlPlaneStage({
                       key={member.id}
                       cardRef={setWorkerRef(member.id)}
                       member={member}
+                      projectId={projectId}
                       currentTask={runtime?.currentTask ?? null}
                       recentLines={recentLines(runtime)}
                       recentOutputAt={runtime?.lastOutputAt ?? runtime?.lastSessionStartedAt ?? null}
@@ -939,6 +971,7 @@ function ControlPlaneStage({
 
           <div className={cn('relative z-10', viewMode === 'kanban' ? 'block' : 'hidden')}>
             <Swarm2KanbanBoard
+              projectId={projectId}
               workers={members}
               latestMission={latestMission}
               selectedWorkerId={selectedId}
@@ -1019,6 +1052,14 @@ export function Swarm2Screen() {
     queryFn: fetchRuntime,
     refetchInterval: 30_000,
   })
+  const workspaceQuery = useQuery({
+    queryKey: ['workspace', 'active-project'],
+    queryFn: fetchActiveSwarm2ProjectId,
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  })
+  const activeProjectId = resolveActiveSwarm2ProjectIdForRender(workspaceQuery.data, workspaceQuery.status)
+  const projectScopedStageReady = activeProjectId !== null
   const healthQuery = useQuery({
     queryKey: ['swarm2', 'health'],
     queryFn: fetchHealth,
@@ -1592,55 +1633,65 @@ export function Swarm2Screen() {
         </header>
 
         <div className="grid min-h-0 grid-cols-1 gap-3">
-          <ControlPlaneStage
-            members={members}
-            selectedId={selectedId}
-            roomIds={roomIds}
-            activeRuntimeCount={activeRuntimeCount}
-            authErrors={healthQuery.data?.summary.totalAuthErrors24h ?? 0}
-            selectedLabel={selectedLabel}
-            workspaceModel={healthQuery.data?.workspaceModel ?? null}
-            lanes={rosterLanes}
-            activeAgents={activeAgents}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            onOpenRouter={() => setRouterOpen(true)}
-            onRouterResults={() => {
-              void runtimeQuery.refetch()
-              void missionsQuery.refetch()
-            }}
-            onSelect={(workerId) => setSelectedId(workerId)}
-            onToggleRoom={(workerId) => toggleRoom(workerId)}
-            onOpenTui={(workerId) => {
-              setSelectedId(workerId)
-              setViewMode('runtime')
-            }}
-            onOpenTasks={(workerId) => {
-              setSelectedId(workerId)
-              setRouterOpen(true)
-            }}
-            runtimeByWorker={runtimeByWorker}
-            recentUpdates={recentUpdates}
-            latestMission={latestMission}
-            missions={missionsQuery.data ?? []}
-            runtimeEntries={runtimeQuery.data?.entries ?? []}
-            inboxCounts={{
-              needsReview: inboxLanes.needs_review.length,
-              blocked: inboxLanes.blocked.length,
-              ready: inboxLanes.ready.length,
-            }}
-            routerSeed={routerSeed}
-            onOpenInboxItem={openInboxItem}
-            onRouteToReviewer={routeInboxItemToReviewer}
-            terminalTargets={terminalTargets}
-            tmuxAvailable={tmuxAvailable}
-            pendingTmux={pendingTmux}
-            focusedRuntimeWorkerId={focusedRuntimeWorkerId}
-            onToggleFocusedRuntimeWorker={toggleFocusedRuntimeWorker}
-            onClearFocusedRuntimeWorker={() => setFocusedRuntimeWorkerId(null)}
-            onStartAgentSession={(workerId) => { void startAgentSession(workerId) }}
-            onScrollTmuxSession={(workerId, direction, session) => { void scrollTmuxSession(workerId, direction, session) }}
-          />
+          {projectScopedStageReady ? (
+            <ControlPlaneStage
+              members={members}
+              selectedId={selectedId}
+              roomIds={roomIds}
+              activeRuntimeCount={activeRuntimeCount}
+              authErrors={healthQuery.data?.summary.totalAuthErrors24h ?? 0}
+              selectedLabel={selectedLabel}
+              workspaceModel={healthQuery.data?.workspaceModel ?? null}
+              projectId={activeProjectId}
+              lanes={rosterLanes}
+              activeAgents={activeAgents}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              onOpenRouter={() => setRouterOpen(true)}
+              onRouterResults={() => {
+                void runtimeQuery.refetch()
+                void missionsQuery.refetch()
+              }}
+              onSelect={(workerId) => setSelectedId(workerId)}
+              onToggleRoom={(workerId) => toggleRoom(workerId)}
+              onOpenTui={(workerId) => {
+                setSelectedId(workerId)
+                setViewMode('runtime')
+              }}
+              onOpenTasks={(workerId) => {
+                setSelectedId(workerId)
+                setRouterOpen(true)
+              }}
+              runtimeByWorker={runtimeByWorker}
+              recentUpdates={recentUpdates}
+              latestMission={latestMission}
+              missions={missionsQuery.data ?? []}
+              runtimeEntries={runtimeQuery.data?.entries ?? []}
+              inboxCounts={{
+                needsReview: inboxLanes.needs_review.length,
+                blocked: inboxLanes.blocked.length,
+                ready: inboxLanes.ready.length,
+              }}
+              routerSeed={routerSeed}
+              onOpenInboxItem={openInboxItem}
+              onRouteToReviewer={routeInboxItemToReviewer}
+              terminalTargets={terminalTargets}
+              tmuxAvailable={tmuxAvailable}
+              pendingTmux={pendingTmux}
+              focusedRuntimeWorkerId={focusedRuntimeWorkerId}
+              onToggleFocusedRuntimeWorker={toggleFocusedRuntimeWorker}
+              onClearFocusedRuntimeWorker={() => setFocusedRuntimeWorkerId(null)}
+              onStartAgentSession={(workerId) => { void startAgentSession(workerId) }}
+              onScrollTmuxSession={(workerId, direction, session) => { void scrollTmuxSession(workerId, direction, session) }}
+            />
+          ) : (
+            <div
+              data-testid="swarm2-project-loading"
+              className="rounded-2xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-card)] px-4 py-8 text-center text-sm text-[var(--theme-muted)]"
+            >
+              Loading active project…
+            </div>
+          )}
         </div>
 
         {viewMode === 'cards' && members.length > 0 ? (

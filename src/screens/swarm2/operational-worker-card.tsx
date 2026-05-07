@@ -190,6 +190,7 @@ const AVATAR_OPTIONS = ['','🤖','🧠','🛠️','📊','🧪','📝','⚙️'
 
 export type OperationalWorkerCardProps = {
   member: CrewMember
+  projectId?: string | null
   currentTask?: string | null
   recentLines?: Array<string>
   recentOutputAt?: number | null
@@ -207,6 +208,7 @@ export type OperationalWorkerCardProps = {
 
 export function OperationalWorkerCard({
   member,
+  projectId = null,
   currentTask = null,
   recentOutputAt = null,
   recentSummary = null,
@@ -236,7 +238,7 @@ export function OperationalWorkerCard({
   // Reuse the project endpoint so artifacts can fall back to git-changed files
   // and so the inline preview gets a verified URL.
   const projectQuery = useQuery({
-    queryKey: ['swarm2', 'card-project', member.id],
+    queryKey: ['swarm2', 'card-project', member.id, projectId?.trim() || 'default'],
     queryFn: () => fetchWorkerProject(member.id),
     enabled: Boolean(member.id),
     refetchInterval: 60_000,
@@ -505,6 +507,7 @@ export function OperationalWorkerCard({
           {focusPanel === 'tasks' ? (
             <Swarm2TaskQueue
               workerId={member.id}
+              projectId={projectId}
               limit={selected ? 5 : 3}
               doneLimit={selected ? 3 : 2}
               showHeader={false}

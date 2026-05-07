@@ -243,16 +243,19 @@ void ensureDiscovery()
 // Config auto-writer
 // -------------------------------------------------------------------
 
-const CONFIG_PATH = path.join(
-  process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes'),
-  'config.yaml',
-)
+function getClaudeHome(): string {
+  return process.env.CLAUDE_HOME ?? process.env.HERMES_HOME ?? path.join(os.homedir(), '.hermes')
+}
+
+function getConfigPath(): string {
+  return path.join(getClaudeHome(), 'config.yaml')
+}
 
 const loggedWarnings = new Set<string>()
 
 function readYamlConfig(): Record<string, unknown> {
   try {
-    const raw = fs.readFileSync(CONFIG_PATH, 'utf-8')
+    const raw = fs.readFileSync(getConfigPath(), 'utf-8')
     const parsed = YAML.parse(raw)
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
       return parsed as Record<string, unknown>

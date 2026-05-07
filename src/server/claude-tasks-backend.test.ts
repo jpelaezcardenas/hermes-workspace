@@ -97,6 +97,18 @@ describe('claude-tasks-backend', () => {
     expect(task).toMatchObject({ id: 'card-created', column: 'todo', assignee: 'swarm3' })
   })
 
+  it('passes projectId through to the shared kanban backend', async () => {
+    const { mod, listKanbanCards, createKanbanCard, updateKanbanCard } = await loadBackend()
+
+    await mod.listClaudeTasks({ includeDone: true, projectId: 'solarbot' })
+    await mod.createClaudeTask({ title: 'Scoped task', projectId: 'solarbot' })
+    await mod.updateClaudeTask('card-1', { column: 'todo', projectId: 'solarbot' })
+
+    expect(listKanbanCards).toHaveBeenCalledWith('solarbot')
+    expect(createKanbanCard).toHaveBeenCalledWith(expect.objectContaining({ projectId: 'solarbot' }), 'solarbot')
+    expect(updateKanbanCard).toHaveBeenCalledWith('card-1', expect.objectContaining({ projectId: 'solarbot' }), 'solarbot')
+  })
+
   it('moves running and blocked cards through kanban status updates', async () => {
     const { mod, updateKanbanCard } = await loadBackend({
       updatedCard: {

@@ -16,6 +16,7 @@ type SwarmKanbanCard = {
   status: KanbanLane
   missionId: string | null
   reportPath: string | null
+  projectId?: string | null
   createdBy: string
   createdAt: number
   updatedAt: number
@@ -28,7 +29,7 @@ type KanbanWorker = {
 }
 
 type KanbanBackendMeta = {
-  id: 'local' | 'claude'
+  id: 'local' | 'claude' | 'hermes-proxy'
   label: string
   detected: boolean
   writable: boolean
@@ -45,6 +46,7 @@ type Swarm2KanbanBoardProps = {
   workers: Array<KanbanWorker>
   latestMission?: { id: string; title: string; state: string } | null
   selectedWorkerId?: string | null
+  projectId?: string | null
   onSelectWorker?: (workerId: string) => void
   onOpenRouter?: () => void
   className?: string
@@ -125,8 +127,38 @@ const LANE_TONE: Record<KanbanLane, string> = {
   done: 'border-green-400/40 bg-green-500/10 text-green-700',
 }
 
-async function fetchKanbanCards(): Promise<{ cards: Array<SwarmKanbanCard>; backend: KanbanBackendMeta | null }> {
-  const res = await fetch('/api/swarm-kanban')
+const DEFAULT_SWARM2_PROJECT_ID = 'default'
+
+function normalizeSwarm2ProjectId(projectId?: string | null): string | null {
+  const trimmed = typeof projectId === 'string' ? projectId.trim() : ''
+  return trimmed || null
+}
+
+function swarm2ProjectKey(projectId?: string | null): string {
+  return normalizeSwarm2ProjectId(projectId) ?? DEFAULT_SWARM2_PROJECT_ID
+}
+
+export function buildSwarm2KanbanQueryKey(projectId?: string | null) {
+  return ['swarm2', 'kanban', swarm2ProjectKey(projectId)] as const
+}
+
+export function buildSwarm2KanbanCardsUrl(projectId?: string | null): string {
+  const normalized = normalizeSwarm2ProjectId(projectId)
+  if (!normalized) return '/api/swarm-kanban'
+  return `/api/swarm-kanban?projectId=${encodeURIComponent(normalized)}`
+}
+
+export function withSwarm2KanbanProjectId<T extends Record<string, unknown>>(
+  input: T,
+  projectId?: string | null,
+): T & { projectId?: string } {
+  const normalized = normalizeSwarm2ProjectId(projectId)
+  if (!normalized) return { ...input }
+  return { ...input, projectId: normalized }
+}
+
+async function fetchKanbanCards(projectId?: string | null): Promise<{ cards: Array<SwarmKanbanCard>; backend: KanbanBackendMeta | null }> {
+  const res = await fetch(buildSwarm2KanbanCardsUrl(projectId))
   if (!res.ok) throw new Error(`Kanban request failed: ${res.status}`)
   const data = (await res.json()) as KanbanResponse
   return {
@@ -143,22 +175,22 @@ async function createKanbanCard(input: {
   reviewer: string | null
   status: KanbanLane
   missionId: string | null
-}): Promise<SwarmKanbanCard> {
+}, projectId?: string | null): Promise<SwarmKanbanCard> {
   const res = await fetch('/api/swarm-kanban', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
+    body: JSON.stringify(withSwarm2KanbanProjectId(input, projectId)),
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok || data?.ok === false) throw new Error(data?.error || `Kanban create failed: ${res.status}`)
   return data.card
 }
 
-async function updateKanbanCard(id: string, updates: Partial<SwarmKanbanCard>): Promise<SwarmKanbanCard> {
+async function updateKanbanCard(id: string, updates: Partial<SwarmKanbanCard>, projectId?: string | null): Promise<SwarmKanbanCard> {
   const res = await fetch('/api/swarm-kanban', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, ...updates }),
+    body: JSON.stringify(withSwarm2KanbanProjectId({ id, ...updates }, projectId)),
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok || data?.ok === false) throw new Error(data?.error || `Kanban update failed: ${res.status}`)
@@ -182,6 +214,7 @@ export function Swarm2KanbanBoard({
   workers,
   latestMission,
   selectedWorkerId,
+  projectId,
   onSelectWorker,
   onOpenRouter,
   className,
@@ -202,9 +235,10 @@ export function Swarm2KanbanBoard({
   // without a manual refresh. The Hermes plugin also exposes a WebSocket
   // (/api/plugins/kanban/events) for true live updates; wiring that in is
   // the next step on the v2.3.0 kanban roadmap.
+  const kanbanQueryKey = useMemo(() => buildSwarm2KanbanQueryKey(projectId), [projectId])
   const query = useQuery({
-    queryKey: ['swarm2', 'kanban'],
-    queryFn: fetchKanbanCards,
+    queryKey: kanbanQueryKey,
+    queryFn: () => fetchKanbanCards(projectId),
     refetchInterval: 5_000,
     staleTime: 2_000,
   })
@@ -240,7 +274,7 @@ export function Swarm2KanbanBoard({
       reviewer: draftReviewer || null,
       status: draftStatus,
       missionId: linkLatestMission ? latestMission?.id ?? null : null,
-    }),
+    }, projectId),
     onSuccess: async () => {
       setDraftTitle('')
       setDraftSpec('')
@@ -249,14 +283,14 @@ export function Swarm2KanbanBoard({
       setDraftReviewer('')
       setDraftStatus('backlog')
       setComposerOpen(false)
-      await queryClient.invalidateQueries({ queryKey: ['swarm2', 'kanban'] })
+      await queryClient.invalidateQueries({ queryKey: kanbanQueryKey })
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<SwarmKanbanCard> }) => updateKanbanCard(id, updates),
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<SwarmKanbanCard> }) => updateKanbanCard(id, updates, projectId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['swarm2', 'kanban'] })
+      await queryClient.invalidateQueries({ queryKey: kanbanQueryKey })
     },
   })
 

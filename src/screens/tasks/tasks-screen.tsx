@@ -26,6 +26,41 @@ import type { ClaudeTask, TaskColumn, CreateTaskInput, TaskAssignee } from '@/li
 
 const QUERY_KEY = ['claude', 'tasks'] as const
 const ASSIGNEES_KEY = ['claude', 'tasks', 'assignees'] as const
+const ACTIVE_PROJECT_QUERY_KEY = ['workspace', 'active-project'] as const
+const DEFAULT_PROJECT_ID = 'default'
+
+type WorkspaceDetectionResponse = {
+  projectSlug?: string | null
+}
+
+async function fetchActiveProjectId(): Promise<string | null> {
+  const response = await fetch('/api/workspace')
+  if (!response.ok) return null
+  const payload = (await response.json()) as WorkspaceDetectionResponse
+  return typeof payload.projectSlug === 'string' && payload.projectSlug.trim()
+    ? payload.projectSlug.trim()
+    : null
+}
+
+function projectKey(projectId: string | null | undefined): string {
+  return projectId?.trim() || DEFAULT_PROJECT_ID
+}
+
+export function buildTasksQueryKey(showDone: boolean, projectId: string | null | undefined) {
+  return [...QUERY_KEY, projectKey(projectId), showDone] as const
+}
+
+function buildProjectTasksQueryKey(projectId: string | null | undefined) {
+  return [...QUERY_KEY, projectKey(projectId)] as const
+}
+
+export function withActiveProjectId<T extends { projectId?: string | null }>(
+  input: T,
+  projectId: string | null | undefined,
+): T {
+  if (!projectId?.trim()) return { ...input }
+  return { ...input, projectId: projectId.trim() }
+}
 
 export const TASKS_BOARD_HELP_TEXT =
   'Drag cards to change status. Open a card to set assignee and due date.'
@@ -57,9 +92,18 @@ export function TasksScreen() {
   const initialAssignee = typeof search.assignee === 'string' ? search.assignee : null
   const [assigneeFilter, setAssigneeFilter] = useState<string | null>(initialAssignee)
 
+  const activeProjectQuery = useQuery({
+    queryKey: ACTIVE_PROJECT_QUERY_KEY,
+    queryFn: fetchActiveProjectId,
+    staleTime: 30_000,
+    retry: false,
+  })
+  const activeProjectId = activeProjectQuery.data ?? null
+
   const tasksQuery = useQuery({
-    queryKey: [...QUERY_KEY, showDone],
-    queryFn: () => fetchTasks({ include_done: showDone }),
+    queryKey: buildTasksQueryKey(showDone, activeProjectId),
+    queryFn: () => fetchTasks({ include_done: showDone, projectId: activeProjectId }),
+    enabled: !activeProjectQuery.isLoading,
     refetchInterval: 30_000,
     placeholderData: keepPreviousData,
   })
@@ -82,6 +126,7 @@ export function TasksScreen() {
   }, [assignees])
 
   const tasks = tasksQuery.data ?? []
+  const isTasksInitialLoading = activeProjectQuery.isLoading || tasksQuery.isLoading
 
   const tasksByColumn = useMemo(() => {
     const map: Record<TaskColumn, Array<ClaudeTask>> = {
@@ -108,29 +153,31 @@ export function TasksScreen() {
   }, [tasks])
 
   const invalidate = useCallback(() => {
-    void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-  }, [queryClient])
+    void queryClient.invalidateQueries({ queryKey: buildProjectTasksQueryKey(activeProjectId) })
+  }, [queryClient, activeProjectId])
 
   const createMutation = useMutation({
-    mutationFn: createTask,
+    mutationFn: (input: CreateTaskInput) => createTask(withActiveProjectId(input, activeProjectId)),
     onSuccess: () => { invalidate(); toast('Task created'); setShowCreate(false) },
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to create task', { type: 'error' }),
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, input }: { id: string; input: CreateTaskInput }) => updateTask(id, input),
+    mutationFn: ({ id, input }: { id: string; input: CreateTaskInput }) =>
+      updateTask(id, withActiveProjectId(input, activeProjectId)),
     onSuccess: () => { invalidate(); toast('Task updated'); setEditingTask(null) },
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to update task', { type: 'error' }),
   })
 
   const deleteMutation = useMutation({
-    mutationFn: deleteTask,
+    mutationFn: (taskId: string) => deleteTask(taskId, activeProjectId),
     onSuccess: () => { invalidate(); toast('Task deleted') },
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to delete task', { type: 'error' }),
   })
 
   const moveMutation = useMutation({
-    mutationFn: ({ id, column }: { id: string; column: TaskColumn }) => moveTask(id, column, 'user'),
+    mutationFn: ({ id, column }: { id: string; column: TaskColumn }) =>
+      moveTask(id, column, 'user', activeProjectId),
     onSuccess: () => invalidate(),
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to move task', { type: 'error' }),
   })
@@ -286,7 +333,7 @@ export function TasksScreen() {
                     {COLUMN_LABELS[col]}
                   </span>
                   <span className="text-xs text-[var(--theme-muted)]">
-                    ({tasksQuery.isFetching && tasksQuery.data === undefined ? '…' : colTasks.length})
+                    ({isTasksInitialLoading && tasksQuery.data === undefined ? '…' : colTasks.length})
                   </span>
                 </div>
                 <button
@@ -315,7 +362,7 @@ export function TasksScreen() {
                       Retry
                     </button>
                   </motion.div>
-                ) : tasksQuery.isLoading ? (
+                ) : isTasksInitialLoading ? (
                   <>
                     <SkeletonCard />
                     <SkeletonCard />

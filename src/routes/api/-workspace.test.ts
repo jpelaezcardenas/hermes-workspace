@@ -20,6 +20,8 @@ beforeEach(async () => {
   delete process.env.HERMES_WORKSPACE_DIR
   delete process.env.CLAUDE_WORKSPACE_DIR
   delete process.env.HERMES_WEBUI_DEFAULT_WORKSPACE
+  process.env.HERMES_PROJECTS_MD = path.join(tempRoot, 'NO_PROJECTS.md')
+  process.env.HERMES_PROJECTS_ROOT = path.join(tempRoot, 'projects')
   await fs.mkdir(process.env.HERMES_HOME, { recursive: true })
 })
 
@@ -48,6 +50,46 @@ describe('workspace API catalog semantics', () => {
     })
     expect(catalog.workspaces).toEqual([{ name: 'Home', path: project }])
     expect(catalog.path).not.toBe(process.env.HERMES_HOME)
+  })
+
+  it('adds existing PROJECTS.md entries to the workspace catalog and exposes the active project slug', async () => {
+    const projectsRoot = await makeDir(tempRoot, 'projects')
+    const solarbot = await makeDir(projectsRoot, 'solarbot')
+    process.env.HERMES_PROJECTS_ROOT = projectsRoot
+    process.env.HERMES_PROJECTS_MD = path.join(tempRoot, 'PROJECTS.md')
+    await fs.writeFile(
+      process.env.HERMES_PROJECTS_MD,
+      `# Proje İndeksi
+
+## Aktif Projeler
+
+| Klasör | Açıklama | Dil/Platform | GitHub |
+|--------|----------|-------------|--------|
+| \`solarbot\` | Solar bot projesi | Python | kaankirsan/solarbot |
+`,
+      'utf-8',
+    )
+    await fs.writeFile(
+      path.join(process.env.HERMES_HOME!, 'config.yaml'),
+      `default_workspace: ${JSON.stringify(solarbot)}\n`,
+      'utf-8',
+    )
+
+    const catalog = await loadWorkspaceCatalog()
+
+    expect(catalog).toMatchObject({
+      path: solarbot,
+      folderName: 'solarbot',
+      source: 'projects-md',
+      projectSlug: 'solarbot',
+    })
+    expect(catalog.workspaces).toContainEqual(expect.objectContaining({
+      name: 'solarbot',
+      path: solarbot,
+      projectSlug: 'solarbot',
+      github: 'kaankirsan/solarbot',
+      source: 'projects-md',
+    }))
   })
 
   it('ignores legacy persisted Hermes state paths as workspaces', async () => {

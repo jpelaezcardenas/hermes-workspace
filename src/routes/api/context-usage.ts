@@ -1,7 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '@/server/auth-middleware'
-import { readContextUsage } from '@/server/context-usage'
+import {
+  estimateContextTokensFromCacheRead,
+  estimateContextTokensFromMessages,
+  readContextUsage,
+} from '@/server/context-usage'
+
+export { estimateContextTokensFromCacheRead, estimateContextTokensFromMessages }
 
 export const Route = createFileRoute('/api/context-usage')({
   server: {

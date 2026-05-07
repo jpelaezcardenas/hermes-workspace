@@ -27,6 +27,7 @@ export type CreateTaskInput = {
   tags?: Array<string>
   due_date?: string | null
   created_by?: string
+  projectId?: string | null
 }
 
 export type UpdateTaskInput = Partial<Omit<CreateTaskInput, 'created_by'>>
@@ -53,12 +54,14 @@ export async function fetchTasks(params?: {
   assignee?: string
   priority?: TaskPriority
   include_done?: boolean
+  projectId?: string | null
 }): Promise<Array<ClaudeTask>> {
   const q = new URLSearchParams()
   if (params?.column) q.set('column', params.column)
   if (params?.assignee) q.set('assignee', params.assignee)
   if (params?.priority) q.set('priority', params.priority)
   if (params?.include_done) q.set('include_done', 'true')
+  if (params?.projectId) q.set('projectId', params.projectId)
   const url = q.toString() ? `${BASE}?${q}` : BASE
   const res = await fetch(url)
   if (!res.ok) throw new Error(`Failed to fetch tasks: ${res.status}`)
@@ -80,7 +83,10 @@ export async function createTask(input: CreateTaskInput): Promise<ClaudeTask> {
 }
 
 export async function updateTask(taskId: string, input: UpdateTaskInput): Promise<ClaudeTask> {
-  const res = await fetch(`${BASE}/${taskId}`, {
+  const q = new URLSearchParams()
+  if (input.projectId) q.set('projectId', input.projectId)
+  const url = q.toString() ? `${BASE}/${taskId}?${q}` : `${BASE}/${taskId}`
+  const res = await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
@@ -89,16 +95,21 @@ export async function updateTask(taskId: string, input: UpdateTaskInput): Promis
   return (await res.json()).task
 }
 
-export async function deleteTask(taskId: string): Promise<void> {
-  const res = await fetch(`${BASE}/${taskId}`, { method: 'DELETE' })
+export async function deleteTask(taskId: string, projectId?: string | null): Promise<void> {
+  const q = new URLSearchParams()
+  if (projectId) q.set('projectId', projectId)
+  const url = q.toString() ? `${BASE}/${taskId}?${q}` : `${BASE}/${taskId}`
+  const res = await fetch(url, { method: 'DELETE' })
   if (!res.ok) throw new Error(`Failed to delete task: ${res.status}`)
 }
 
-export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user'): Promise<ClaudeTask> {
-  const res = await fetch(`${BASE}/${taskId}?action=move`, {
+export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user', projectId?: string | null): Promise<ClaudeTask> {
+  const q = new URLSearchParams({ action: 'move' })
+  if (projectId) q.set('projectId', projectId)
+  const res = await fetch(`${BASE}/${taskId}?${q}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ column, moved_by: movedBy }),
+    body: JSON.stringify({ column, moved_by: movedBy, projectId }),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))

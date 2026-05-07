@@ -18,10 +18,18 @@ import {
   getActiveProfileName,
   readProfile,
 } from '../../server/profiles-browser'
+import { loadProjectCatalog, projectSlugForPath } from '../../server/project-catalog'
 
 type WorkspaceEntry = {
   name: string
   path: string
+  projectSlug?: string | null
+  description?: string | null
+  language?: string | null
+  github?: string | null
+  section?: string | null
+  source?: string | null
+  exists?: boolean
 }
 
 type WorkspaceDetectionResponse = {
@@ -31,6 +39,7 @@ type WorkspaceDetectionResponse = {
   isValid: boolean
   workspaces: Array<WorkspaceEntry>
   last: string
+  projectSlug?: string | null
 }
 
 type WorkspaceState = {
@@ -187,16 +196,23 @@ async function firstValidDirectory(
   return null
 }
 
+function explicitProfileHome(): string {
+  const explicitClaudeHome = readString(process.env.CLAUDE_HOME)
+  if (explicitClaudeHome) return normalizeCandidate(explicitClaudeHome)
+  const explicitHermesHome = readString(process.env.HERMES_HOME)
+  if (explicitHermesHome) return normalizeCandidate(explicitHermesHome)
+  return ''
+}
+
 function activeProfileHome(): string {
+  const explicitHome = explicitProfileHome()
+  const defaultHome = normalizeCandidate(path.join(os.homedir(), '.hermes'))
+  if (explicitHome && explicitHome !== defaultHome) return explicitHome
   try {
     const active = getActiveProfileName()
     return readProfile(active).path
   } catch {
-    return (
-      process.env.HERMES_HOME ??
-      process.env.CLAUDE_HOME ??
-      path.join(os.homedir(), '.hermes')
-    )
+    return explicitHome || defaultHome
   }
 }
 
@@ -291,7 +307,18 @@ function dedupeWorkspaces(
     if (seen.has(normalized)) continue
     seen.add(normalized)
     const name = readString(workspace.name) || extractFolderName(normalized)
-    cleaned.push({ name: name === 'default' ? 'Home' : name, path: normalized })
+    const entry: WorkspaceEntry = {
+      name: name === 'default' ? 'Home' : name,
+      path: normalized,
+    }
+    if (workspace.projectSlug) entry.projectSlug = workspace.projectSlug
+    if (workspace.description) entry.description = workspace.description
+    if (workspace.language) entry.language = workspace.language
+    if (workspace.github) entry.github = workspace.github
+    if (workspace.section) entry.section = workspace.section
+    if (workspace.source) entry.source = workspace.source
+    if (workspace.exists !== undefined) entry.exists = workspace.exists
+    cleaned.push(entry)
   }
   return cleaned
 }
@@ -311,7 +338,24 @@ export async function loadWorkspaceCatalog(): Promise<WorkspaceDetectionResponse
   const state = await readWorkspaceState()
   const configured = await configuredDefaultWorkspace()
   const fallback = configured ?? { path: '', source: 'none' }
-  let workspaces = await cleanExistingWorkspaces(state.workspaces ?? [])
+  const projects = await loadProjectCatalog()
+  const projectWorkspaces: WorkspaceEntry[] = projects
+    .filter((project) => project.exists)
+    .map((project) => ({
+      name: project.name,
+      path: project.path,
+      projectSlug: project.slug,
+      description: project.description,
+      language: project.language,
+      github: project.github,
+      section: project.section,
+      source: 'projects-md',
+      exists: project.exists,
+    }))
+  let workspaces = await cleanExistingWorkspaces([
+    ...projectWorkspaces,
+    ...(state.workspaces ?? []),
+  ])
 
   if (workspaces.length === 0 && fallback.path) {
     workspaces = [{ name: 'Home', path: fallback.path }]
@@ -331,6 +375,7 @@ export async function loadWorkspaceCatalog(): Promise<WorkspaceDetectionResponse
         isValid: true,
         workspaces,
         last: envWorkspace,
+        projectSlug: projectSlugForPath(envWorkspace, projects),
       }
     }
   }
@@ -357,13 +402,15 @@ export async function loadWorkspaceCatalog(): Promise<WorkspaceDetectionResponse
   return {
     path: activePath,
     folderName: active ? active.name || extractFolderName(active.path) : '',
-    source:
+    source: active?.source ?? (
       activePath && activePath === fallback.path
         ? fallback.source
-        : 'workspace-state',
+        : 'workspace-state'
+    ),
     isValid: Boolean(activePath),
     workspaces,
     last: activePath,
+    projectSlug: active?.projectSlug ?? projectSlugForPath(activePath, projects),
   }
 }
 
