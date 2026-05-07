@@ -75,8 +75,13 @@ function ChatRoute() {
   useEffect(() => {
     if (isNewChat) {
       queryClient.removeQueries({ queryKey: ['chat', 'history', 'new', 'new'] })
+      navigate({
+        to: '/chat/$sessionKey',
+        params: { sessionKey: 'main' },
+        replace: true,
+      })
     }
-  }, [isNewChat, queryClient])
+  }, [isNewChat, navigate, queryClient])
 
   const handleSessionResolved = useCallback(
     function handleSessionResolved(payload: {
@@ -114,6 +119,14 @@ function ChatRoute() {
     return (
       <div className="flex h-full items-center justify-center text-primary-400">
         Loading chat…
+      </div>
+    )
+  }
+
+  if (isNewChat) {
+    return (
+      <div className="flex h-full items-center justify-center text-primary-400">
+        Redirecting chat…
       </div>
     )
   }

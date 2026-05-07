@@ -1,7 +1,4 @@
-import { HERMES_API } from './gateway-capabilities'
-
-/** Optional bearer token for authenticated OpenAI-compatible endpoints (e.g. Codex OAuth). */
-const BEARER_TOKEN = process.env.HERMES_API_TOKEN || ''
+import { BEARER_TOKEN, HERMES_API } from './gateway-capabilities'
 
 /** Cached first available model from /v1/models — used as fallback when no model is specified. */
 let _cachedDefaultModel: string | null = null
@@ -108,8 +105,7 @@ function parseHermesToolProgressChunk(payload: string): StreamChunkType | null {
     const parsed = JSON.parse(payload) as unknown
     const record = readRecord(parsed)
     if (!record) return null
-    const name =
-      readString(record.tool) || readString(record.name) || 'tool'
+    const name = readString(record.tool) || readString(record.name) || 'tool'
     const emoji = readString(record.emoji)
     const labelText = readString(record.label)
     const label = [emoji, labelText].filter(Boolean).join(' ').trim()

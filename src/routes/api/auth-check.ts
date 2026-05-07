@@ -10,6 +10,9 @@ export const Route = createFileRoute('/api/auth-check')({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        const authRequired = isPasswordProtectionEnabled()
+        const authenticated = isAuthenticated(request)
+
         try {
           // Use ensureGatewayProbed() which handles auto-detection across
           // multiple ports (8642, 8643) instead of checking a single
@@ -20,31 +23,22 @@ export const Route = createFileRoute('/api/auth-check')({
           const reachable = caps.health || caps.chatCompletions || caps.models
 
           if (!reachable) {
-            return json(
-              {
-                authenticated: false,
-                authRequired: false,
-                error: 'hermes_agent_unreachable',
-              },
-              { status: 503 },
-            )
+            return json({
+              authenticated,
+              authRequired,
+              error: 'hermes_agent_unreachable',
+            })
           }
         } catch (error) {
-          return json(
-            {
-              authenticated: false,
-              authRequired: false,
-              error:
-                error instanceof DOMException && error.name === 'AbortError'
-                  ? 'hermes_agent_timeout'
-                  : 'hermes_agent_unreachable',
-            },
-            { status: 503 },
-          )
+          return json({
+            authenticated,
+            authRequired,
+            error:
+              error instanceof DOMException && error.name === 'AbortError'
+                ? 'hermes_agent_timeout'
+                : 'hermes_agent_unreachable',
+          })
         }
-
-        const authRequired = isPasswordProtectionEnabled()
-        const authenticated = isAuthenticated(request)
 
         return json({
           authenticated,

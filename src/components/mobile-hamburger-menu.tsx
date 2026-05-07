@@ -39,6 +39,13 @@ const NAV_ITEMS = [
     match: (p: string) => p.startsWith('/dashboard'),
   },
   {
+    id: 'll-ops',
+    label: 'LL Ops',
+    icon: DashboardSquare01Icon,
+    to: '/ll-ops',
+    match: (p: string) => p.startsWith('/ll-ops'),
+  },
+  {
     id: 'terminal',
     label: 'Terminal',
     icon: CommandLineIcon,
@@ -236,9 +243,13 @@ export function MobileHamburgerMenu() {
                     ? {
                         background:
                           'var(--theme-accent-subtle, color-mix(in srgb, var(--theme-accent, #6366f1) 12%, transparent))',
-                        color: 'var(--theme-accent, var(--color-accent, #6366f1))',
+                        color:
+                          'var(--theme-accent, var(--color-accent, #6366f1))',
                       }
-                    : { color: 'var(--theme-muted, var(--color-ink-muted, #555))' }
+                    : {
+                        color:
+                          'var(--theme-muted, var(--color-ink-muted, #555))',
+                      }
                 }
               >
                 <HugeiconsIcon
@@ -275,7 +286,9 @@ export function MobileHamburgerMenu() {
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                style={{ color: 'var(--theme-accent, var(--color-accent, #6366f1))' }}
+                style={{
+                  color: 'var(--theme-accent, var(--color-accent, #6366f1))',
+                }}
               >
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />

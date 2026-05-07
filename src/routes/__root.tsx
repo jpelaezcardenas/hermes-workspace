@@ -24,13 +24,11 @@ import {
 import { ErrorBoundary } from '@/components/error-boundary'
 import { getRootSurfaceState } from './-root-layout-state'
 
-
 const APP_CSP = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   "form-action 'self'",
-  "frame-ancestors 'none'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
@@ -205,8 +203,10 @@ export const Route = createRootRoute({
 
 const queryClient = new QueryClient()
 
-export function getRootLayoutMode(onboardingComplete: string | null): 'onboarding' | 'workspace' {
-  return onboardingComplete === 'true' ? 'workspace' : 'onboarding'
+export function getRootLayoutMode(
+  onboardingComplete: string | null,
+): 'onboarding' | 'workspace' {
+  return onboardingComplete === 'false' ? 'onboarding' : 'workspace'
 }
 
 export function wrapInlineScript(source: string): string {
@@ -214,7 +214,11 @@ export function wrapInlineScript(source: string): string {
 }
 
 type ServiceWorkerLike = {
-  getRegistrations: () => Promise<ReadonlyArray<{ unregister: () => boolean | Promise<boolean> | void | Promise<void> }>>
+  getRegistrations: () => Promise<
+    ReadonlyArray<{
+      unregister: () => boolean | Promise<boolean> | void | Promise<void>
+    }>
+  >
 }
 
 type CachesLike = {
@@ -240,7 +244,9 @@ export async function unregisterServiceWorkers({
 
   await cachesApi
     ?.keys()
-    .then((names) => Promise.allSettled(names.map((name) => cachesApi.delete(name))))
+    .then((names) =>
+      Promise.allSettled(names.map((name) => cachesApi.delete(name))),
+    )
     .catch(() => undefined)
 }
 
@@ -254,9 +260,9 @@ function RootLayout() {
 
     const syncOnboardingCompletion = () => {
       try {
-        setOnboardingComplete(localStorage.getItem(ONBOARDING_KEY) === 'true')
+        setOnboardingComplete(localStorage.getItem(ONBOARDING_KEY) !== 'false')
       } catch {
-        setOnboardingComplete(false)
+        setOnboardingComplete(true)
       }
     }
 
@@ -282,7 +288,8 @@ function RootLayout() {
     )
 
     void unregisterServiceWorkers({
-      serviceWorker: 'serviceWorker' in navigator ? navigator.serviceWorker : undefined,
+      serviceWorker:
+        'serviceWorker' in navigator ? navigator.serviceWorker : undefined,
       cachesApi: 'caches' in window ? caches : undefined,
     })
 
@@ -347,120 +354,19 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         `),
           }}
         />
-        <script dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeScript) }} />
+        <script
+          dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeScript) }}
+        />
         <HeadContent />
         <script
-          dangerouslySetInnerHTML={{ __html: wrapInlineScript(themeColorScript) }}
+          dangerouslySetInnerHTML={{
+            __html: wrapInlineScript(themeColorScript),
+          }}
         />
       </head>
       <body>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: wrapInlineScript(`
-          (function(){
-            if (document.getElementById('splash-screen')) return;
-            var bg = '#031A1A', txt = '#F8F1E3', muted = '#9CB2AE', accent = '#FFAC02';
-            try {
-              var theme = localStorage.getItem('${THEME_STORAGE_KEY}') || '${DEFAULT_THEME}';
-              if (theme === 'hermes-nous') {
-                bg = '#031A1A';
-                txt = '#F8F1E3';
-                muted = '#9CB2AE';
-                accent = '#FFAC02';
-              } else if (theme === 'hermes-nous-light') {
-                bg = '#F8FAF8';
-                txt = '#16315F';
-                muted = '#6F7D96';
-                accent = '#2557B7';
-              } else if (theme === 'hermes-classic') {
-                bg = '#0d0f12';
-                txt = '#eceff4';
-                muted = '#7f8a96';
-                accent = '#b98a44';
-              } else if (theme === 'hermes-official-light') {
-                bg = '#F7F7F1';
-                txt = '#16315F';
-                muted = '#6F7D96';
-                accent = '#2557B7';
-              } else if (theme === 'hermes-classic-light') {
-                bg = '#F5F2ED';
-                txt = '#1a1f26';
-                muted = '#6F675E';
-                accent = '#b98a44';
-              } else if (theme === 'hermes-slate') {
-                bg = '#0d1117';
-                txt = '#c9d1d9';
-                muted = '#8b949e';
-                accent = '#7eb8f6';
-              } else if (theme === 'hermes-slate-light') {
-                bg = '#F6F8FA';
-                txt = '#24292f';
-                muted = '#57606A';
-                accent = '#3b82f6';
-              }
-            } catch(e){}
-
-            var isDark = !['hermes-nous-light','hermes-official-light','hermes-classic-light','hermes-slate-light'].includes(theme);
-            var quips = ["Consulting the oracle...","Loading ancient knowledge...","Warming up the messenger...","Calibrating tool chain...","Summoning Hermes...","Preparing the workspace...","Bridging realms...","Initializing agent runtime..."];
-            var quip = quips[Math.floor(Math.random() * quips.length)];
-
-            var d = document.createElement('div');
-            d.id = 'splash-screen';
-            d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';transition:opacity 0.5s ease;';
-            d.innerHTML = '<img src="/hermes-avatar.webp" alt="Hermes" style="width:80px;height:80px;margin-bottom:20px;border-radius:16px;filter:drop-shadow(0 8px 32px color-mix(in srgb,'+accent+' 45%, transparent))" />'
-              + '<img src="'+(isDark ? '/hermes-banner.png' : '/hermes-banner-light.png')+'" alt="Hermes Workspace" style="width:280px;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
-              + '<div style="font:400 14px/1 system-ui,-apple-system,sans-serif;letter-spacing:0.04em;color:'+muted+'">Workspace</div>'
-              + '<div style="margin-top:28px;width:140px;height:3px;background:'+(isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')+';border-radius:3px;overflow:hidden;position:relative"><div id=splash-bar style="width:0%;height:100%;background:'+accent+';border-radius:3px;transition:width 0.4s ease"></div></div>';
-            document.body.prepend(d);
-
-            var bar = document.getElementById('splash-bar');
-            if (bar) {
-              setTimeout(function(){ bar.style.width='15%' }, 300);
-              setTimeout(function(){ bar.style.width='40%' }, 800);
-              setTimeout(function(){ bar.style.width='65%' }, 1500);
-              setTimeout(function(){ bar.style.width='85%' }, 2500);
-              setTimeout(function(){ bar.style.width='92%' }, 3200);
-            }
-
-            window.__dismissSplash = function() {
-              var el = document.getElementById('splash-screen');
-              if (!el) return;
-              if (bar) bar.style.width = '100%';
-              setTimeout(function(){
-                el.style.opacity = '0';
-                setTimeout(function(){ el.remove(); }, 500);
-              }, 300);
-            };
-            // Fallback: always dismiss after 5s
-            setTimeout(function(){ window.__dismissSplash && window.__dismissSplash(); }, 5000);
-            // Fast dismiss: returning users skip quickly
-            try {
-              if (localStorage.getItem('hermes-hermes-url') || localStorage.getItem('hermes-url')) {
-                setTimeout(function(){ window.__dismissSplash && window.__dismissSplash(); }, 600);
-              }
-            } catch(e) {}
-          })()
-        `),
-          }}
-        />
         <div className="root">{children}</div>
         <Scripts />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: wrapInlineScript(`
-          (function(){
-            var start = Date.now();
-            function check() {
-              var el = document.querySelector('nav, aside, .workspace-shell, [data-testid]');
-              var elapsed = Date.now() - start;
-              if (el && elapsed > 2500) { window.__dismissSplash && window.__dismissSplash(); }
-              else { setTimeout(check, 200); }
-            }
-            setTimeout(check, 2500);
-          })()
-        `),
-          }}
-        />
       </body>
     </html>
   )

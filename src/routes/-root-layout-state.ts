@@ -9,8 +9,8 @@ export function getRootSurfaceState(
 ): RootSurfaceState {
   if (onboardingComplete !== true) {
     return {
-      showOnboarding: true,
-      showWorkspaceShell: false,
+      showOnboarding: false,
+      showWorkspaceShell: true,
       showPostOnboardingOverlays: false,
     }
   }

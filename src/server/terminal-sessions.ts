@@ -4,6 +4,7 @@
  */
 import { randomUUID } from 'node:crypto'
 import { spawn } from 'node:child_process'
+import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { homedir } from 'node:os'
@@ -33,6 +34,64 @@ const __dirname_resolved =
     : dirname(fileURLToPath(import.meta.url))
 const PTY_HELPER = resolve(__dirname_resolved, 'pty-helper.py')
 
+const TERMINAL_ENV_FILE_LIST = [
+  '/home/lucas/.hermes/.env.shared',
+  '~/.hermes/.env.shared',
+  '~/.hermes/.env',
+]
+
+function parseEnvFile(path: string): Record<string, string> {
+  const env: Record<string, string> = {}
+  if (!existsSync(path)) return env
+
+  const raw = readFileSync(path, 'utf-8')
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('#')) continue
+
+    const exportPrefix = 'export '
+    const normalized = trimmed.startsWith(exportPrefix)
+      ? trimmed.slice(exportPrefix.length).trim()
+      : trimmed
+    const equalsIndex = normalized.indexOf('=')
+    if (equalsIndex <= 0) continue
+
+    const key = normalized.slice(0, equalsIndex).trim()
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) continue
+
+    let value = normalized.slice(equalsIndex + 1).trim()
+    const quote = value[0]
+    if (
+      (quote === '"' || quote === "'") &&
+      value.endsWith(quote) &&
+      value.length >= 2
+    ) {
+      value = value.slice(1, -1)
+    }
+    env[key] = value
+  }
+
+  return env
+}
+
+function expandHome(path: string, home: string): string {
+  return path.startsWith('~') ? path.replace('~', home) : path
+}
+
+function loadTerminalEnv(home: string): Record<string, string> {
+  const configured = process.env.HERMES_TERMINAL_ENV_FILES
+  const paths = configured
+    ? configured.split(':').map((item) => item.trim()).filter(Boolean)
+    : TERMINAL_ENV_FILE_LIST
+
+  return paths.reduce<Record<string, string>>((acc, item) => {
+    return {
+      ...acc,
+      ...parseEnvFile(expandHome(item, home)),
+    }
+  }, {})
+}
+
 export function createTerminalSession(params: {
   command?: Array<string>
   cwd?: string
@@ -43,7 +102,7 @@ export function createTerminalSession(params: {
   const emitter = new EventEmitter()
   const sessionId = randomUUID()
 
-  const home = process.env.HOME ?? homedir() ?? '/tmp'
+  const home = process.env.HOME || homedir()
   const defaultShell =
     process.platform === 'win32'
       ? 'powershell.exe'
@@ -58,6 +117,7 @@ export function createTerminalSession(params: {
 
   const cols = params.cols ?? 80
   const rows = params.rows ?? 24
+  const terminalEnv = loadTerminalEnv(home)
 
   // Buffer early output before any listener registers
   const earlyBuffer: Array<TerminalSessionEvent> = []
@@ -90,6 +150,7 @@ export function createTerminalSession(params: {
     {
       env: {
         ...process.env,
+        ...terminalEnv,
         ...params.env,
         TERM: 'xterm-256color',
         COLORTERM: 'truecolor',

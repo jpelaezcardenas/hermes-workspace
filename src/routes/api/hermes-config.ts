@@ -19,6 +19,7 @@ type AuthResult = Response | true
 const HERMES_HOME = path.join(os.homedir(), '.hermes')
 const CONFIG_PATH = path.join(HERMES_HOME, 'config.yaml')
 const ENV_PATH = path.join(HERMES_HOME, '.env')
+const SHARED_ENV_PATH = path.join(HERMES_HOME, '.env.shared')
 
 // Known Hermes providers
 const PROVIDERS = [
@@ -29,6 +30,12 @@ const PROVIDERS = [
     name: 'Anthropic',
     authType: 'api_key',
     envKeys: ['ANTHROPIC_API_KEY'],
+  },
+  {
+    id: 'google',
+    name: 'Google Gemini',
+    authType: 'api_key',
+    envKeys: ['GOOGLE_API_KEY'],
   },
   {
     id: 'openrouter',
@@ -98,9 +105,9 @@ function writeConfig(config: Record<string, unknown>): void {
   fs.writeFileSync(CONFIG_PATH, YAML.stringify(config), 'utf-8')
 }
 
-function readEnv(): Record<string, string> {
+function readEnvFile(envPath: string): Record<string, string> {
   try {
-    const raw = fs.readFileSync(ENV_PATH, 'utf-8')
+    const raw = fs.readFileSync(envPath, 'utf-8')
     const env: Record<string, string> = {}
     for (const line of raw.split('\n')) {
       const trimmed = line.trim()
@@ -122,6 +129,13 @@ function readEnv(): Record<string, string> {
     return env
   } catch {
     return {}
+  }
+}
+
+function readEnv(): Record<string, string> {
+  return {
+    ...readEnvFile(SHARED_ENV_PATH),
+    ...readEnvFile(ENV_PATH),
   }
 }
 
@@ -181,16 +195,7 @@ export const Route = createFileRoute('/api/hermes-config')({
         const authResult = isAuthenticated(request) as AuthResult
         if (authResult !== true) return authResult
         await ensureGatewayProbed()
-        if (!getCapabilities().config) {
-          return Response.json({
-            ...createCapabilityUnavailablePayload('config'),
-            config: {},
-            providers: [],
-            activeProvider: '',
-            activeModel: '',
-            hermesHome: HERMES_HOME,
-          })
-        }
+        const configWritable = getCapabilities().config
 
         const config = readConfig()
         const env = readEnv()
@@ -232,13 +237,20 @@ export const Route = createFileRoute('/api/hermes-config')({
           activeProvider = (config.provider as string) || ''
         } else if (modelField && typeof modelField === 'object') {
           const modelObj = modelField as Record<string, unknown>
-          activeModel = (modelObj.default as string) || ''
+          activeModel =
+            (modelObj.name as string) || (modelObj.default as string) || ''
           activeProvider =
             (modelObj.provider as string) || (config.provider as string) || ''
         }
 
         return Response.json({
+          ok: true,
           config,
+          configWritable,
+          capability:
+            configWritable === true
+              ? undefined
+              : createCapabilityUnavailablePayload('config'),
           providers: providerStatus,
           activeProvider,
           activeModel,

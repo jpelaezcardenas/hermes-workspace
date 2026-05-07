@@ -24,7 +24,7 @@ function readActiveModel(): string {
     if (typeof modelField === 'string') return modelField
     if (modelField && typeof modelField === 'object') {
       const obj = modelField as Record<string, unknown>
-      return (obj.default as string) || ''
+      return (obj.default as string) || (obj.name as string) || ''
     }
   } catch {
     // config missing or unreadable
@@ -33,6 +33,9 @@ function readActiveModel(): string {
 }
 
 type ConnectionStatus = {
+  ok: boolean
+  mode: 'enhanced' | 'portable' | 'disconnected'
+  backend: string
   status: 'connected' | 'enhanced' | 'partial' | 'disconnected'
   label: 'Connected' | 'Enhanced' | 'Partial' | 'Disconnected'
   detail: string
@@ -100,6 +103,14 @@ export const Route = createFileRoute('/api/connection-status')({
         }
 
         const body: ConnectionStatus = {
+          ok: status !== 'disconnected',
+          mode:
+            status === 'enhanced'
+              ? 'enhanced'
+              : status === 'disconnected'
+                ? 'disconnected'
+                : 'portable',
+          backend: HERMES_API,
           status,
           label,
           detail,

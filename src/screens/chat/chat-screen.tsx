@@ -1,7 +1,9 @@
 // Module-level local model override — set by composer when user picks a local model
 // Avoids prop threading. Reset when switching back to cloud models.
 export let _localModelOverride = ''
-export function setLocalModelOverride(model: string) { _localModelOverride = model }
+export function setLocalModelOverride(model: string) {
+  _localModelOverride = model
+}
 
 import {
   useCallback,
@@ -594,7 +596,8 @@ export function ChatScreen({
   // If so, re-set waitingForResponse in the store so the UI shows the spinner.
   useActiveRunCheck({
     sessionKey: resolvedSessionKey ?? '',
-    enabled: !isNewChat && Boolean(resolvedSessionKey) && historyQuery.isSuccess,
+    enabled:
+      !isNewChat && Boolean(resolvedSessionKey) && historyQuery.isSuccess,
   })
 
   // Wire SSE realtime stream for instant message delivery
@@ -617,9 +620,9 @@ export function ChatScreen({
       : isNewChat
         ? 'new'
         : resolvedSessionKey ||
-        sessionKeyForHistory ||
-        activeCanonicalKey ||
-        'main',
+          sessionKeyForHistory ||
+          activeCanonicalKey ||
+          'main',
     friendlyId: portableChatFriendlyId,
     historyMessages,
     portableMode: isPortableMode,
@@ -906,7 +909,11 @@ export function ChatScreen({
         )
         if (!res.ok) return
         const data = await res.json()
-        if (!data.ok || !data.run || !['accepted', 'active', 'handoff'].includes(data.run.status)) {
+        if (
+          !data.ok ||
+          !data.run ||
+          !['accepted', 'active', 'handoff'].includes(data.run.status)
+        ) {
           streamFinish()
           refreshHistoryRef.current()
         }
@@ -1162,10 +1169,12 @@ export function ChatScreen({
     activeRealtimeStreamingText,
     activeIsRealtimeStreaming,
   )
-  const stickyStreamingTextRef = useRef<{ runId: string | null; text: string }>({
-    runId: null,
-    text: '',
-  })
+  const stickyStreamingTextRef = useRef<{ runId: string | null; text: string }>(
+    {
+      runId: null,
+      text: '',
+    },
+  )
   stickyStreamingTextRef.current = advanceStickyStreamingText({
     isStreaming: activeIsRealtimeStreaming,
     runId: streamingRunId ?? null,
@@ -2759,7 +2768,7 @@ export function ChatScreen({
             setSessionsOpen(false)
             void navigate({
               to: '/chat/$sessionKey',
-              params: { sessionKey: 'new' },
+              params: { sessionKey: 'main' },
             })
           }}
         />

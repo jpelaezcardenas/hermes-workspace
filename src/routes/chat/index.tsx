@@ -4,13 +4,13 @@ export const Route = createFileRoute('/chat/')({
   ssr: false,
   beforeLoad: () => {
     // Try to restore last active session from localStorage
-    let lastSession = 'new'
+    let lastSession = 'main'
     try {
       const stored =
         typeof window !== 'undefined'
           ? localStorage.getItem('hermes-last-session')
           : null
-      if (stored && stored !== 'main') lastSession = stored
+      if (stored && stored !== 'main' && stored !== 'new') lastSession = stored
     } catch {}
     throw redirect({
       to: '/chat/$sessionKey',

@@ -15,6 +15,7 @@ import type * as FitAddonModule from 'xterm-addon-fit'
 import type { Terminal } from 'xterm'
 import type * as XtermModule from 'xterm'
 import type * as WebLinksAddonModule from 'xterm-addon-web-links'
+import 'xterm/css/xterm.css'
 import type { DebugAnalysis } from '@/components/terminal/debug-panel'
 import type { TerminalTab } from '@/stores/terminal-panel-store'
 import { DebugPanel } from '@/components/terminal/debug-panel'
@@ -35,8 +36,6 @@ async function ensureXterm() {
     import('xterm-addon-fit'),
     import('xterm-addon-web-links'),
   ])
-  // Load CSS on client only
-  await import('xterm/css/xterm.css')
   TerminalCtor = xtermMod.Terminal
   FitAddonCtor = fitMod.FitAddon
   WebLinksAddonCtor = linksMod.WebLinksAddon

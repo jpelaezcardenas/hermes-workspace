@@ -100,6 +100,35 @@ Verify: `curl http://127.0.0.1:8642/health` should return ok. Then start the wor
 
 ---
 
+## Dashboard
+
+Hermes Workspace has two dashboard surfaces:
+
+- `/dashboard` — general Hermes workspace overview with quick navigation, session metrics, model/config status, skills, and recent sessions.
+- `/ll-ops` — LL Empire Hermes-only operating cockpit for briefing, pipeline, agents, clients, performance placeholders, and integration gates.
+
+Both routes open even when the Hermes gateway or dashboard companion API is offline. In that state the UI shows safe fixture/fallback data and explicit unavailable states instead of blocking the whole app behind setup. Live data is enabled by these optional env vars:
+
+```bash
+HERMES_API_URL=http://127.0.0.1:8645
+HERMES_DASHBOARD_URL=http://127.0.0.1:9119
+HERMES_API_TOKEN=<same value as API_SERVER_KEY when gateway auth is enabled>
+```
+
+The terminal route uses a real PTY. If the CLI needs Hermes credentials, configure `HERMES_TERMINAL_ENV_FILES` or keep the default env file locations documented in `.env.example`; secret values are loaded into the terminal process without being printed by the workspace.
+
+Useful checks:
+
+```bash
+npm run test
+npm run build
+./node_modules/.bin/eslint src/screens/ll-ops/ll-ops-dashboard-screen.tsx src/screens/dashboard/dashboard-screen.tsx src/components/workspace-shell.tsx src/server/terminal-sessions.ts src/routes/api/auth-check.ts src/routes/api/debug-analyze.ts
+```
+
+See [`docs/dashboard.md`](./docs/dashboard.md) for the operating tutorial and current limitations.
+
+---
+
 ### Manual install
 
 Hermes Workspace works with any OpenAI-compatible backend. If your backend also exposes Hermes gateway APIs, enhanced features like sessions, memory, skills, and jobs unlock automatically.

@@ -11,14 +11,20 @@
  * Chat routes get the full ChatScreen treatment.
  * Non-chat routes show the sub-page content.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Suspense, lazy } from 'react'
 import type { SessionMeta } from '@/screens/chat/types'
 import type { AuthStatus } from '@/lib/hermes-auth'
 import { cn } from '@/lib/utils'
-import { ConnectionStartupScreen } from '@/components/connection-startup-screen'
 import { ChatSidebar } from '@/screens/chat/components/chat-sidebar'
 import { chatQueryKeys } from '@/screens/chat/chat-queries'
 import { useWorkspaceStore } from '@/stores/workspace-store'
@@ -37,6 +43,7 @@ import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard'
 // System metrics footer removed — not used in Hermes Workspace
 import { CommandPalette } from '@/components/command-palette'
 import { useSettings } from '@/hooks/use-settings'
+import { fetchHermesAuthStatus } from '@/lib/hermes-auth'
 // ActivityTicker moved to dashboard-only (too noisy for global header)
 
 const TerminalWorkspace = lazy(() =>
@@ -98,6 +105,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   // Map pathname to tab index (mirrors TABS order in mobile-tab-bar)
   const getTabIndex = useCallback((path: string): number => {
     if (path === '/dashboard') return 0
+    if (path.startsWith('/ll-ops')) return 1
     if (path.startsWith('/chat') || path === '/new' || path === '/') return 1
     if (path.startsWith('/files')) return 2
     if (path.startsWith('/terminal')) return 3
@@ -112,10 +120,8 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   }, [])
 
   const isClient = typeof window !== 'undefined'
-  // Both SSR and client start with the same value to avoid hydration mismatch.
-  // The ConnectionStartupScreen overlay verifies the real status on mount.
   const [authStatus, setAuthStatus] = useState<AuthStatus | null>(null)
-  const [connectionVerified, setConnectionVerified] = useState(false)
+  const [connectionVerified, setConnectionVerified] = useState(true)
 
   const authState = {
     checked: !isClient || connectionVerified,
@@ -123,14 +129,29 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     authRequired: authStatus?.authRequired ?? false,
   }
 
-  const handleStartupConnected = useCallback((status: AuthStatus) => {
-    setAuthStatus(status)
-    setConnectionVerified(true)
+  useEffect(() => {
+    let cancelled = false
+
+    fetchHermesAuthStatus()
+      .then((status) => {
+        if (cancelled) return
+        setAuthStatus(status)
+        setConnectionVerified(true)
+      })
+      .catch(() => {
+        if (cancelled) return
+        setConnectionVerified(true)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   // Derive active session from URL
   const mobilePageTitle = (() => {
     if (pathname.startsWith('/terminal')) return 'Terminal'
+    if (pathname.startsWith('/ll-ops')) return 'LL Ops'
     if (pathname.startsWith('/files')) return 'Files'
     if (pathname.startsWith('/jobs')) return 'Jobs'
     if (pathname.startsWith('/conductor')) return 'Conductor'
@@ -175,7 +196,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
 
   const startNewChat = useCallback(() => {
     setCreatingSession(true)
-    navigate({ to: '/chat/$sessionKey', params: { sessionKey: 'new' } }).then(
+    navigate({ to: '/chat/$sessionKey', params: { sessionKey: 'main' } }).then(
       () => {
         setCreatingSession(false)
       },
@@ -401,9 +422,6 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
           />
         ) : null}
 
-        {!authState.checked ? (
-          <ConnectionStartupScreen onConnected={handleStartupConnected} />
-        ) : null}
       </div>
 
       <MobileHamburgerMenu />

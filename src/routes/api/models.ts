@@ -91,19 +91,17 @@ function readHermesModelsJson(): Array<ModelEntry> {
   }
 }
 
-/**
- * Read the default model from ~/.hermes/config.yaml without a YAML parser.
- * Looks for "default: <model-id>" under the "model:" section.
- */
 function readHermesDefaultModel(): ModelEntry | null {
   const configPath = path.join(os.homedir(), '.hermes', 'config.yaml')
   try {
     if (!fs.existsSync(configPath)) return null
     const raw = fs.readFileSync(configPath, 'utf-8')
-    const defaultMatch = raw.match(/^\s*default:\s*(.+)$/m)
-    const providerMatch = raw.match(/^\s*provider:\s*(.+)$/m)
-    if (!defaultMatch) return null
-    const modelId = defaultMatch[1].trim()
+    const modelBlock = raw.match(/^model:\s*\n((?:\s{2,}.+\n?)*)/m)
+    const block = modelBlock?.[1] ?? ''
+    const nameMatch = block.match(/^\s+name:\s*(.+)$/m)
+    const providerMatch = block.match(/^\s+provider:\s*(.+)$/m)
+    if (!nameMatch) return null
+    const modelId = nameMatch[1].trim()
     const provider = providerMatch ? providerMatch[1].trim() : 'unknown'
     return { id: modelId, name: modelId, provider }
   } catch {
@@ -143,7 +141,7 @@ export const Route = createFileRoute('/api/models')({
         try {
           // Primary: read user-configured models from ~/.hermes/models.json
           let models = readHermesModelsJson()
-          let source = 'models.json'
+          let source = models.length > 0 ? 'models.json' : 'config.yaml'
 
           // Ensure the default model from config.yaml is always included
           const defaultModel = readHermesDefaultModel()

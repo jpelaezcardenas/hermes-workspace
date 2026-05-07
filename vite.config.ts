@@ -1,10 +1,11 @@
 import { URL, fileURLToPath } from 'node:url'
 import { execSync, spawn } from 'node:child_process'
 import type { ChildProcess } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import net from 'node:net'
 import { resolve, dirname } from 'node:path'
 import os from 'node:os'
+import YAML from 'yaml'
 
 // devtools removed
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -85,6 +86,96 @@ async function isHermesAgentHealthy(port = 8642): Promise<boolean> {
 const config = defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const hermesApiUrl = env.HERMES_API_URL?.trim() || 'http://127.0.0.1:8642'
+  const hermesApiToken =
+    env.HERMES_API_TOKEN ||
+    env.API_SERVER_KEY ||
+    env.HERMES_GATEWAY_TOKEN ||
+    process.env.HERMES_API_TOKEN ||
+    process.env.API_SERVER_KEY ||
+    process.env.HERMES_GATEWAY_TOKEN ||
+    ''
+
+  function hermesAuthHeaders(): Record<string, string> {
+    return hermesApiToken ? { Authorization: `Bearer ${hermesApiToken}` } : {}
+  }
+
+  function readActiveModel(): string {
+    try {
+      const raw = readFileSync(resolve(os.homedir(), '.hermes', 'config.yaml'), 'utf-8')
+      const config = (YAML.parse(raw) as Record<string, unknown>) || {}
+      const modelField = config.model
+      if (typeof modelField === 'string') return modelField
+      if (modelField && typeof modelField === 'object') {
+        const model = modelField as Record<string, unknown>
+        return (model.default as string) || (model.name as string) || ''
+      }
+    } catch {
+      // The API still reports backend reachability when the config file is missing.
+    }
+    return ''
+  }
+
+  function writeConnectionStatus(
+    res: {
+      statusCode: number
+      setHeader: (name: string, value: string) => void
+      end: (chunk?: string) => void
+    },
+    input: {
+      httpStatus: number
+      status: 'connected' | 'enhanced' | 'partial' | 'disconnected'
+      detail: string
+      hasModels: boolean
+      hasSessions: boolean
+      health: boolean
+    },
+  ) {
+    const activeModel = readActiveModel()
+    const ok = input.status !== 'disconnected'
+    const mode =
+      input.status === 'enhanced'
+        ? 'enhanced'
+        : input.status === 'disconnected'
+          ? 'disconnected'
+          : 'portable'
+    res.statusCode = input.httpStatus
+    res.setHeader('content-type', 'application/json')
+    res.end(
+      JSON.stringify({
+        ok,
+        mode,
+        backend: hermesApiUrl,
+        status: input.status,
+        label:
+          input.status === 'enhanced'
+            ? 'Enhanced'
+            : input.status === 'connected'
+              ? 'Connected'
+              : input.status === 'partial'
+                ? 'Partial'
+                : 'Disconnected',
+        detail: input.detail,
+        health: input.health,
+        chatReady: input.hasModels,
+        modelConfigured: Boolean(activeModel),
+        activeModel,
+        chatMode: mode === 'enhanced' ? 'enhanced-hermes' : mode,
+        capabilities: {
+          health: input.health,
+          chatCompletions: input.hasModels,
+          models: input.hasModels,
+          streaming: input.hasModels,
+          sessions: input.hasSessions,
+          skills: false,
+          memory: true,
+          config: false,
+          jobs: true,
+          dashboard: false,
+        },
+        hermesUrl: hermesApiUrl,
+      }),
+    )
+  }
 
   // Hermes Agent auto-start state
   let hermesAgentChild: ChildProcess | null = null
@@ -519,61 +610,62 @@ const config = defineConfig(({ mode, command }) => {
                 // Check for enhanced Hermes gateway first (has /api/sessions)
                 const [modelsRes, sessionsRes] = await Promise.all([
                   fetch(`${hermesApiUrl}/v1/models`, {
+                    headers: hermesAuthHeaders(),
                     signal: AbortSignal.timeout(3000),
                   }).catch(() => null),
                   fetch(`${hermesApiUrl}/api/sessions?limit=1`, {
+                    headers: hermesAuthHeaders(),
                     signal: AbortSignal.timeout(3000),
                   }).catch(() => null),
                 ])
                 const hasModels = modelsRes?.ok ?? false
                 const hasSessions = sessionsRes?.ok ?? false
                 if (hasModels && hasSessions) {
-                  res.statusCode = 200
-                  res.setHeader('content-type', 'application/json')
-                  res.end(
-                    JSON.stringify({
-                      ok: true,
-                      mode: 'enhanced',
-                      backend: hermesApiUrl,
-                    }),
-                  )
+                  writeConnectionStatus(res, {
+                    httpStatus: 200,
+                    status: 'enhanced',
+                    detail:
+                      'Core chat works and Hermes gateway sessions are available.',
+                    hasModels,
+                    hasSessions,
+                    health: true,
+                  })
                   return
                 }
                 if (hasModels) {
-                  res.statusCode = 200
-                  res.setHeader('content-type', 'application/json')
-                  res.end(
-                    JSON.stringify({
-                      ok: true,
-                      mode: 'portable',
-                      backend: hermesApiUrl,
-                    }),
-                  )
+                  writeConnectionStatus(res, {
+                    httpStatus: 200,
+                    status: 'connected',
+                    detail: 'Core chat is ready on this backend.',
+                    hasModels,
+                    hasSessions,
+                    health: true,
+                  })
                   return
                 }
                 // Fall back to /health for full Hermes backends
                 const healthRes = await fetch(`${hermesApiUrl}/health`, {
                   signal: AbortSignal.timeout(3000),
                 })
-                res.statusCode = healthRes.ok ? 200 : 502
-                res.setHeader('content-type', 'application/json')
-                res.end(
-                  JSON.stringify({
-                    ok: healthRes.ok,
-                    mode: 'enhanced',
-                    backend: hermesApiUrl,
-                  }),
-                )
+                writeConnectionStatus(res, {
+                  httpStatus: healthRes.ok ? 200 : 502,
+                  status: healthRes.ok ? 'partial' : 'disconnected',
+                  detail: healthRes.ok
+                    ? 'Backend is reachable, but chat API is not ready yet.'
+                    : 'No compatible backend detected.',
+                  hasModels: false,
+                  hasSessions: false,
+                  health: healthRes.ok,
+                })
               } catch {
-                res.statusCode = 502
-                res.setHeader('content-type', 'application/json')
-                res.end(
-                  JSON.stringify({
-                    ok: false,
-                    mode: 'disconnected',
-                    backend: hermesApiUrl,
-                  }),
-                )
+                writeConnectionStatus(res, {
+                  httpStatus: 502,
+                  status: 'disconnected',
+                  detail: 'No compatible backend detected.',
+                  hasModels: false,
+                  hasSessions: false,
+                  health: false,
+                })
               }
               return
             }

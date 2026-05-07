@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Cancel01Icon } from '@hugeicons/core-free-icons'
@@ -10,12 +10,8 @@ export function MobilePromptTrigger() {
   const [showPrompt, setShowPrompt] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [dontShowAgain, setDontShowAgain] = useState(false)
-  const [isDismissedForSession, setIsDismissedForSession] = useState(false)
-  const mountTimeRef = useRef<number | null>(null)
 
   useEffect(() => {
-    mountTimeRef.current = Date.now()
-
     // ?mobile-preview forces modal open immediately (dev/review only)
     // Strip the param from URL so navigation doesn't re-trigger it
     if (
@@ -28,33 +24,7 @@ export function MobilePromptTrigger() {
       return
     }
 
-    const isDismissed =
-      localStorage.getItem('hermes-mobile-access-dismissed') === 'true' ||
-      localStorage.getItem('hermes-mobile-prompt-dismissed') === 'true'
-    const isSetup = localStorage.getItem('hermes-mobile-setup-seen') === 'true'
-
-    if (isDismissed || isSetup) {
-      return
-    }
-
-    const checkPrompt = () => {
-      if (!mountTimeRef.current) {
-        return
-      }
-
-      const elapsedTime = Date.now() - mountTimeRef.current
-      const isDesktop = window.innerWidth > 768
-      const hasBeenOnPageLongEnough = elapsedTime >= 45_000
-
-      if (isDesktop && hasBeenOnPageLongEnough && !isDismissedForSession) {
-        setShowPrompt(true)
-      }
-    }
-
-    checkPrompt()
-    const interval = window.setInterval(checkPrompt, 5_000)
-    return () => window.clearInterval(interval)
-  }, [isDismissedForSession])
+  }, [])
 
   const persistDismissalPreference = () => {
     if (dontShowAgain) {
@@ -64,13 +34,11 @@ export function MobilePromptTrigger() {
 
   const dismissPrompt = () => {
     persistDismissalPreference()
-    setIsDismissedForSession(true)
     setShowPrompt(false)
   }
 
   const openSetup = () => {
     persistDismissalPreference()
-    setIsDismissedForSession(true)
     setShowPrompt(false)
     setIsModalOpen(true)
   }

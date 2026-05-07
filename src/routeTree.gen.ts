@@ -16,6 +16,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as LlOpsRouteImport } from './routes/ll-ops'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -47,6 +48,7 @@ import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
+import { Route as ApiLlOpsStatusRouteImport } from './routes/api/ll-ops-status'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
 import { Route as ApiHermesTasksAssigneesRouteImport } from './routes/api/hermes-tasks-assignees'
 import { Route as ApiHermesTasksRouteImport } from './routes/api/hermes-tasks'
@@ -55,6 +57,7 @@ import { Route as ApiHermesConfigRouteImport } from './routes/api/hermes-config'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
+import { Route as ApiDebugAnalyzeRouteImport } from './routes/api/debug-analyze'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
@@ -129,6 +132,11 @@ const OperationsRoute = OperationsRouteImport.update({
 const MemoryRoute = MemoryRouteImport.update({
   id: '/memory',
   path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlOpsRoute = LlOpsRouteImport.update({
+  id: '/ll-ops',
+  path: '/ll-ops',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsRoute = JobsRouteImport.update({
@@ -286,6 +294,11 @@ const ApiLocalProvidersRoute = ApiLocalProvidersRouteImport.update({
   path: '/api/local-providers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLlOpsStatusRoute = ApiLlOpsStatusRouteImport.update({
+  id: '/api/ll-ops-status',
+  path: '/api/ll-ops-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHistoryRoute = ApiHistoryRouteImport.update({
   id: '/api/history',
   path: '/api/history',
@@ -324,6 +337,11 @@ const ApiFilesRoute = ApiFilesRouteImport.update({
 const ApiEventsRoute = ApiEventsRouteImport.update({
   id: '/api/events',
   path: '/api/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDebugAnalyzeRoute = ApiDebugAnalyzeRouteImport.update({
+  id: '/api/debug-analyze',
+  path: '/api/debug-analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCrewStatusRoute = ApiCrewStatusRouteImport.update({
@@ -536,6 +554,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/ll-ops': typeof LlOpsRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -551,6 +570,7 @@ export interface FileRoutesByFullPath {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/debug-analyze': typeof ApiDebugAnalyzeRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -559,6 +579,7 @@ export interface FileRoutesByFullPath {
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/hermes-tasks-assignees': typeof ApiHermesTasksAssigneesRoute
   '/api/history': typeof ApiHistoryRoute
+  '/api/ll-ops-status': typeof ApiLlOpsStatusRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
@@ -624,6 +645,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/ll-ops': typeof LlOpsRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -638,6 +660,7 @@ export interface FileRoutesByTo {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/debug-analyze': typeof ApiDebugAnalyzeRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -646,6 +669,7 @@ export interface FileRoutesByTo {
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/hermes-tasks-assignees': typeof ApiHermesTasksAssigneesRoute
   '/api/history': typeof ApiHistoryRoute
+  '/api/ll-ops-status': typeof ApiLlOpsStatusRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
@@ -712,6 +736,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
   '/jobs': typeof JobsRoute
+  '/ll-ops': typeof LlOpsRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
@@ -727,6 +752,7 @@ export interface FileRoutesById {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/debug-analyze': typeof ApiDebugAnalyzeRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -735,6 +761,7 @@ export interface FileRoutesById {
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/hermes-tasks-assignees': typeof ApiHermesTasksAssigneesRoute
   '/api/history': typeof ApiHistoryRoute
+  '/api/ll-ops-status': typeof ApiLlOpsStatusRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
@@ -802,6 +829,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/ll-ops'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -817,6 +845,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/debug-analyze'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-status'
@@ -825,6 +854,7 @@ export interface FileRouteTypes {
     | '/api/hermes-tasks'
     | '/api/hermes-tasks-assignees'
     | '/api/history'
+    | '/api/ll-ops-status'
     | '/api/local-providers'
     | '/api/memory'
     | '/api/models'
@@ -890,6 +920,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/ll-ops'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -904,6 +935,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/debug-analyze'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-status'
@@ -912,6 +944,7 @@ export interface FileRouteTypes {
     | '/api/hermes-tasks'
     | '/api/hermes-tasks-assignees'
     | '/api/history'
+    | '/api/ll-ops-status'
     | '/api/local-providers'
     | '/api/memory'
     | '/api/models'
@@ -977,6 +1010,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/jobs'
+    | '/ll-ops'
     | '/memory'
     | '/operations'
     | '/profiles'
@@ -992,6 +1026,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/debug-analyze'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-status'
@@ -1000,6 +1035,7 @@ export interface FileRouteTypes {
     | '/api/hermes-tasks'
     | '/api/hermes-tasks-assignees'
     | '/api/history'
+    | '/api/ll-ops-status'
     | '/api/local-providers'
     | '/api/memory'
     | '/api/models'
@@ -1066,6 +1102,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
   JobsRoute: typeof JobsRoute
+  LlOpsRoute: typeof LlOpsRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
   ProfilesRoute: typeof ProfilesRoute
@@ -1081,6 +1118,7 @@ export interface RootRouteChildren {
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
+  ApiDebugAnalyzeRoute: typeof ApiDebugAnalyzeRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
@@ -1089,6 +1127,7 @@ export interface RootRouteChildren {
   ApiHermesTasksRoute: typeof ApiHermesTasksRouteWithChildren
   ApiHermesTasksAssigneesRoute: typeof ApiHermesTasksAssigneesRoute
   ApiHistoryRoute: typeof ApiHistoryRoute
+  ApiLlOpsStatusRoute: typeof ApiLlOpsStatusRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
   ApiModelsRoute: typeof ApiModelsRoute
@@ -1181,6 +1220,13 @@ declare module '@tanstack/react-router' {
       path: '/memory'
       fullPath: '/memory'
       preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ll-ops': {
+      id: '/ll-ops'
+      path: '/ll-ops'
+      fullPath: '/ll-ops'
+      preLoaderRoute: typeof LlOpsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs': {
@@ -1400,6 +1446,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiLocalProvidersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ll-ops-status': {
+      id: '/api/ll-ops-status'
+      path: '/api/ll-ops-status'
+      fullPath: '/api/ll-ops-status'
+      preLoaderRoute: typeof ApiLlOpsStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/history': {
       id: '/api/history'
       path: '/api/history'
@@ -1454,6 +1507,13 @@ declare module '@tanstack/react-router' {
       path: '/api/events'
       fullPath: '/api/events'
       preLoaderRoute: typeof ApiEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/debug-analyze': {
+      id: '/api/debug-analyze'
+      path: '/api/debug-analyze'
+      fullPath: '/api/debug-analyze'
+      preLoaderRoute: typeof ApiDebugAnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/crew-status': {
@@ -1838,6 +1898,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
   JobsRoute: JobsRoute,
+  LlOpsRoute: LlOpsRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
   ProfilesRoute: ProfilesRoute,
@@ -1853,6 +1914,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
   ApiCrewStatusRoute: ApiCrewStatusRoute,
+  ApiDebugAnalyzeRoute: ApiDebugAnalyzeRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
@@ -1861,6 +1923,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHermesTasksRoute: ApiHermesTasksRouteWithChildren,
   ApiHermesTasksAssigneesRoute: ApiHermesTasksAssigneesRoute,
   ApiHistoryRoute: ApiHistoryRoute,
+  ApiLlOpsStatusRoute: ApiLlOpsStatusRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
   ApiModelsRoute: ApiModelsRoute,

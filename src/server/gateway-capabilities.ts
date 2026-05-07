@@ -50,8 +50,7 @@ export type DashboardCapabilities = {
 }
 
 /** Full capabilities — backward compat with existing code */
-export type GatewayCapabilities =
-  CoreCapabilities &
+export type GatewayCapabilities = CoreCapabilities &
   EnhancedCapabilities &
   DashboardCapabilities
 
@@ -96,7 +95,11 @@ let dashboardTokenPromise: Promise<string> | null = null
 let dashboardTokenCache = ''
 
 /** Optional bearer token for authenticated gateway endpoints. */
-export const BEARER_TOKEN = process.env.HERMES_API_TOKEN || ''
+export const BEARER_TOKEN =
+  process.env.HERMES_API_TOKEN ||
+  process.env.API_SERVER_KEY ||
+  process.env.HERMES_GATEWAY_TOKEN ||
+  ''
 
 function authHeaders(): Record<string, string> {
   return BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
@@ -319,7 +322,9 @@ async function autoDetectGatewayUrl(): Promise<void> {
     }
   }
 
-  console.warn('[gateway] Could not reach Hermes gateway on 8645, 8642, or 8643')
+  console.warn(
+    '[gateway] Could not reach Hermes gateway on 8645, 8642, or 8643',
+  )
 }
 
 async function autoDetectDashboardUrl(): Promise<void> {

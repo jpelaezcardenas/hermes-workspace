@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=2048\" vite dev --port 3000",
     "build": "vite build",
-    "start": "NODE_OPTIONS=\"--max-old-space-size=2048\" node .output/server/index.mjs",
+    "start": "NODE_OPTIONS=\"--max-old-space-size=2048\" vite dev --host 0.0.0.0 --port ${PORT:-3000}",
     "start:dev": "NODE_OPTIONS=\"--max-old-space-size=2048\" vite dev --port 3000",
     "preview": "vite preview",
     "test": "vitest run",

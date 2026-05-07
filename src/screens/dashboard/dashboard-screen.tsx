@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
+import {
+  Moon02Icon,
+  Sun02Icon,
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import { useEffect, useMemo, useState } from 'react'
 import {
   Area,
@@ -12,14 +17,11 @@ import {
 } from 'recharts'
 import type { ReactNode } from 'react'
 import type { HermesSession } from '@/server/hermes-api'
-import { chatQueryKeys } from '@/screens/chat/chat-queries'
 import { getUnavailableReason } from '@/lib/feature-gates'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
 import { cn } from '@/lib/utils'
 import { openHamburgerMenu } from '@/components/mobile-hamburger-menu'
 import { applyTheme, useSettingsStore } from '@/hooks/use-settings'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Moon02Icon, Sun02Icon } from '@hugeicons/core-free-icons'
 
 // ── Helpers ──────────────────────────────────────────────────────
 
@@ -473,7 +475,7 @@ function ModelCard({ palette }: { palette: ReturnType<typeof readDashboardPalett
                 {fallbackModel}
               </div>
               <div className="text-[10px] text-muted font-mono truncate">
-                {(fallbackBlock?.provider as string) ?? ''}
+                {String(fallbackBlock.provider ?? '')}
               </div>
             </div>
           </div>
@@ -700,7 +702,7 @@ export function DashboardScreen() {
     enabled: sessionsAvailable,
   })
 
-  const sessions = (sessionsQuery.data ?? []) as HermesSession[]
+  const sessions = sessionsQuery.data ?? []
 
   const stats = useMemo(() => {
     let totalMessages = 0,
@@ -808,7 +810,7 @@ export function DashboardScreen() {
             onClick={() =>
               navigate({
                 to: '/chat/$sessionKey',
-                params: { sessionKey: 'new' },
+                params: { sessionKey: 'main' },
               })
             }
           />
@@ -823,7 +825,6 @@ export function DashboardScreen() {
             icon="🧩"
             accentColor={palette.warning}
             onClick={() => navigate({ to: '/skills' })}
-            disabled={!skillsAvailable}
             badge={!skillsAvailable ? 'Enhanced' : undefined}
           />
           <QuickAction
