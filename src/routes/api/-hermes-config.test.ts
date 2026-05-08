@@ -80,6 +80,72 @@ describe('canonical /api/hermes-config route', () => {
     expect(openrouter.isDefault).toBe(true)
   })
 
+  it('PATCH dispatches set-default-model and returns the action message', async () => {
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          action: 'set-default-model',
+          providerId: 'openrouter',
+          modelId: 'auto',
+        }),
+      }),
+    })
+    const body = await res.json()
+
+    expect(body).toMatchObject({ ok: true, message: 'Default model updated.' })
+    expect(
+      fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8'),
+    ).toMatch(/provider: openrouter/)
+  })
+
+  it('PATCH legacy { config } body deep-merges and preserves siblings', async () => {
+    fs.writeFileSync(
+      path.join(tmpHome, 'config.yaml'),
+      'memory:\n  user_profile_enabled: true\n',
+      'utf-8',
+    )
+
+    const handlers = await loadHandlers('./hermes-config')
+    await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({ config: { memory: { memory_enabled: true } } }),
+      }),
+    })
+
+    const onDisk = fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8')
+    expect(onDisk).toContain('memory_enabled: true')
+    expect(onDisk).toContain('user_profile_enabled: true')
+  })
+
+  it('PATCH rejects malformed action bodies with 400', async () => {
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({ action: 'set-default-model' }),
+      }),
+    })
+    expect(res.status).toBe(400)
+  })
+
+  it('PATCH returns 503 when the gateway capability is unavailable', async () => {
+    vi.doMock('../../server/gateway-capabilities', () => ({
+      ensureGatewayProbed: vi.fn(),
+      getCapabilities: () => ({ config: false }),
+    }))
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({ action: 'set-api-key', envKey: 'X', value: 'y' }),
+      }),
+    })
+    expect(res.status).toBe(503)
+    vi.doUnmock('../../server/gateway-capabilities')
+  })
 })
 
 describe('legacy /api/claude-config alias', () => {

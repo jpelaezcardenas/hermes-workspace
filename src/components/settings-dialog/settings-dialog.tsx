@@ -17,7 +17,7 @@ import {
   Sun01Icon,
   VolumeHighIcon,
 } from '@hugeicons/core-free-icons'
-import { Component, useCallback, useEffect, useState } from 'react'
+import { Component, useCallback, useEffect, useRef, useState } from 'react'
 import type * as React from 'react'
 import type { AccentColor, SettingsThemeMode } from '@/hooks/use-settings'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
@@ -280,6 +280,9 @@ const LOCAL_PROVIDER_SETUP: Partial<Record<
 
 export type OAuthStatus = 'idle' | 'starting' | 'pending' | 'success' | 'error'
 
+const DEFAULT_OAUTH_EXPIRES_SECONDS = 600
+const DEFAULT_OAUTH_POLL_INTERVAL_SECONDS = 3
+
 export function getOAuthStartButtonLabel(status: OAuthStatus): string {
   return status === 'starting' || status === 'pending'
     ? 'Waiting...'
@@ -323,6 +326,7 @@ function HermesContent() {
   const [oauthMessage, setOauthMessage] = useState('')
   const [oauthUserCode, setOauthUserCode] = useState('')
   const [oauthVerificationUri, setOauthVerificationUri] = useState('')
+  const oauthAbortRef = useRef<AbortController | null>(null)
   const [localProviderId, setLocalProviderId] = useState<string | null>(null)
   const [localDiscovery, setLocalDiscovery] = useState<{
     providers: Array<{
@@ -404,13 +408,31 @@ function HermesContent() {
       .catch(() => {})
   }, [])
 
+  const refreshConfig = async () => {
+    const ref = await fetch('/api/hermes-config')
+    const d = await ref.json()
+    setDefaultProvider(d.activeProvider || '')
+    setDefaultModelId(d.activeModel || '')
+    if (
+      (d.activeProvider === 'custom' || d.activeProvider === 'manifest') &&
+      d.activeModel
+    ) {
+      setCustomModel(d.activeModel)
+    }
+    const keys: Record<string, string> = {}
+    for (const p of d.providers || []) {
+      const envKey = p.envKeys?.[0]
+      if (!p.configured || !envKey) continue
+      keys[envKey] = p.maskedCredentials?.[envKey] || '••••'
+    }
+    setConfiguredKeys(keys)
+  }
+
   const save = async (
     updates:
       | { config?: Record<string, unknown>; env?: Record<string, string> }
       | { action: string; [key: string]: unknown },
-    options: { showMessage?: boolean } = {},
   ) => {
-    const showMessage = options.showMessage !== false
     setSaving(true)
     setMsg(null)
     try {
@@ -420,26 +442,9 @@ function HermesContent() {
         body: JSON.stringify(updates),
       })
       const r = (await res.json()) as { message?: string }
-      if (showMessage) {
-        setMsg(
-          (r.message || 'Saved').replace('Restart Claude', 'Restart Hermes'),
-        )
-      }
-      const ref = await fetch('/api/hermes-config')
-      const d = await ref.json()
-      setDefaultProvider(d.activeProvider || '')
-      setDefaultModelId(d.activeModel || '')
-      if (d.activeProvider === 'custom' && d.activeModel) {
-        setCustomModel(d.activeModel)
-      }
-      const keys: Record<string, string> = {}
-      for (const p of d.providers || []) {
-        const envKey = p.envKeys?.[0]
-        if (!p.configured || !envKey) continue
-        keys[envKey] = p.maskedCredentials?.[envKey] || '••••'
-      }
-      setConfiguredKeys(keys)
-      if (showMessage) setTimeout(() => setMsg(null), 3000)
+      setMsg(r.message || 'Saved')
+      await refreshConfig()
+      setTimeout(() => setMsg(null), 3000)
     } catch {
       setMsg('Failed to save')
     }
@@ -465,7 +470,13 @@ function HermesContent() {
     setAvailableModels([])
   }
 
+  const abortOAuth = () => {
+    oauthAbortRef.current?.abort()
+    oauthAbortRef.current = null
+  }
+
   const resetOAuthState = (providerId: string) => {
+    abortOAuth()
     setOauthProviderId(providerId)
     setLocalProviderId(null)
     clearProviderPreview()
@@ -477,6 +488,7 @@ function HermesContent() {
   }
 
   const showLocalProviderSetup = (providerId: string) => {
+    abortOAuth()
     setOauthProviderId(null)
     setLocalProviderId(providerId)
     clearProviderPreview()
@@ -484,6 +496,7 @@ function HermesContent() {
   }
 
   const showCustomProviderSetup = () => {
+    abortOAuth()
     setOauthProviderId(null)
     setLocalProviderId(null)
     setActiveProvider('custom')
@@ -491,9 +504,35 @@ function HermesContent() {
     setMsg(null)
   }
 
+  useEffect(() => {
+    return () => abortOAuth()
+  }, [])
+
+  const sleepUnlessAborted = (ms: number, signal: AbortSignal) =>
+    new Promise<void>((resolve, reject) => {
+      const timer = globalThis.setTimeout(() => {
+        signal.removeEventListener('abort', onAbort)
+        resolve()
+      }, ms)
+      const onAbort = () => {
+        clearTimeout(timer)
+        reject(new DOMException('Aborted', 'AbortError'))
+      }
+      if (signal.aborted) {
+        onAbort()
+        return
+      }
+      signal.addEventListener('abort', onAbort, { once: true })
+    })
+
   const startOAuthFlow = async () => {
     const provider = PROVIDER_CARDS.find((p) => p.id === oauthProviderId)
     if (!provider) return
+
+    abortOAuth()
+    const controller = new AbortController()
+    oauthAbortRef.current = controller
+    const { signal } = controller
 
     setOauthStatus('starting')
     setOauthMessage(`Starting ${provider.name} OAuth...`)
@@ -505,6 +544,7 @@ function HermesContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider: provider.id }),
+        signal,
       })
       const codeData = (await codeRes.json()) as OAuthDeviceCodeResponse
       if (!codeRes.ok || codeData.error || !codeData.device_code) {
@@ -525,11 +565,16 @@ function HermesContent() {
         window.open(verificationUri, '_blank', 'noopener,noreferrer')
       }
 
-      const deadline = Date.now() + (codeData.expires_in || 600) * 1000
-      const intervalMs = Math.max(1, codeData.interval || 3) * 1000
+      const expiresInSeconds = codeData.expires_in || DEFAULT_OAUTH_EXPIRES_SECONDS
+      const intervalSeconds = Math.max(
+        1,
+        codeData.interval || DEFAULT_OAUTH_POLL_INTERVAL_SECONDS,
+      )
+      const deadline = Date.now() + expiresInSeconds * 1000
+      const intervalMs = intervalSeconds * 1000
 
       while (Date.now() < deadline) {
-        await new Promise((resolve) => globalThis.setTimeout(resolve, intervalMs))
+        await sleepUnlessAborted(intervalMs, signal)
         const pollRes = await fetch('/api/oauth/poll-token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -537,6 +582,7 @@ function HermesContent() {
             provider: provider.id,
             deviceCode: codeData.device_code,
           }),
+          signal,
         })
         const pollData = (await pollRes.json()) as OAuthPollResponse
         if (pollData.status === 'pending') continue
@@ -545,6 +591,7 @@ function HermesContent() {
           setOauthMessage(
             `${provider.name} OAuth is connected. TUI and WebUI will use the shared Hermes credentials.`,
           )
+          await refreshConfig()
           return
         }
         throw new Error(pollData.message || 'OAuth authorization failed')
@@ -552,10 +599,15 @@ function HermesContent() {
 
       throw new Error('OAuth authorization timed out')
     } catch (error) {
+      if ((error as { name?: string })?.name === 'AbortError') return
       setOauthStatus('error')
       setOauthMessage(
         error instanceof Error ? error.message : 'OAuth authorization failed',
       )
+    } finally {
+      if (oauthAbortRef.current === controller) {
+        oauthAbortRef.current = null
+      }
     }
   }
 
@@ -792,6 +844,10 @@ function HermesContent() {
                         <button
                           key={model.id}
                           type="button"
+                          aria-pressed={
+                            activeProvider === provider.id &&
+                            activeModel === model.id
+                          }
                           onClick={() => {
                             setActiveProvider(provider.id)
                             setActiveModel(model.id)
@@ -813,6 +869,19 @@ function HermesContent() {
                         </button>
                       ))}
                     </div>
+                    {activeProvider === provider.id &&
+                    activeModel &&
+                    (defaultProvider !== provider.id ||
+                      activeModel !== defaultModelId) ? (
+                      <div className="mt-2 flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => setDefaultModel(provider.id, activeModel)}
+                        >
+                          Set as default: {provider.id} · {activeModel}
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 ) : null}
               </div>
@@ -846,6 +915,7 @@ function HermesContent() {
               <button
                 key={model}
                 type="button"
+                aria-pressed={activeModel === model}
                 onClick={() => setActiveModel(model)}
                 className={cn(
                   'rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
@@ -2646,7 +2716,7 @@ export function SettingsDialog({
           </SettingsErrorBoundary>
 
           <div className="sticky bottom-0 z-10 border-t border-primary-200 bg-primary-50/60 px-4 py-3 text-xs text-primary-500 dark:text-neutral-400 md:rounded-b-2xl md:px-5">
-            Changes saved automatically.{' '}
+            Most changes save automatically; the default model commits only when you click Set as default.{' '}
             <a
               href="/settings"
               className="ml-2 font-medium underline underline-offset-2 hover:text-primary-700 dark:hover:text-neutral-200"

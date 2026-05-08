@@ -4,8 +4,8 @@ import { z } from 'zod'
 import { dashboardFetch } from '../../server/gateway-capabilities'
 
 const BodySchema = z.object({
-  provider: z.string(),
-  deviceCode: z.string(),
+  provider: z.string().min(1),
+  deviceCode: z.string().min(1),
 })
 
 type DashboardOAuthPollResponse = {
@@ -18,10 +18,16 @@ function readString(value: unknown): string {
   return typeof value === 'string' ? value : ''
 }
 
+// Dashboard OAuth poll statuses we forward as still-in-flight. `slow_down` and
+// `authorization_pending` are RFC 8628 device-flow intermediate states; the
+// dashboard relays them through, and treating them as errors halts polling
+// prematurely.
+const PENDING_STATUSES = new Set(['pending', 'authorization_pending', 'slow_down'])
+
 export function mapDashboardOAuthPoll(data: DashboardOAuthPollResponse) {
   const status = readString(data.status)
   if (status === 'approved') return { status: 'success' }
-  if (status === 'pending') return { status: 'pending' }
+  if (PENDING_STATUSES.has(status)) return { status: 'pending' }
 
   return {
     status: 'error',

@@ -52,4 +52,23 @@ describe('normalizeHermesConfigState', () => {
     })
   })
 
+  it('falls back to nested model when only a partial flat field is set', () => {
+    const state = normalizeHermesConfigState({
+      paths,
+      config: {
+        provider: 'openrouter',
+        model: { provider: 'openrouter', default: 'auto' },
+      },
+      env: {},
+      authProfiles: {},
+      localProviders: [],
+      localModels: [],
+    })
+
+    expect(state.defaultModel).toEqual({
+      provider: 'openrouter',
+      model: 'auto',
+      source: 'nested',
+    })
+  })
 })

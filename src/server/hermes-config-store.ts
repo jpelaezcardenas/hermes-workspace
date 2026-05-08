@@ -88,9 +88,24 @@ export function parseEnvFile(raw: string): Record<string, string> {
   return env
 }
 
+function quoteEnvValue(value: string): string {
+  if (value.includes('\n') || value.includes('\r')) {
+    throw new Error('env values must not contain newlines')
+  }
+  if (value === '') return ''
+  // No quoting needed for plain values
+  if (!/[\s#="']/.test(value)) return value
+  if (!value.includes('"')) return `"${value}"`
+  if (!value.includes("'")) return `'${value}'`
+  // Both quote styles present; the file parser strips matching outer quotes
+  // but doesn't unescape. Drop the less-disruptive set so the value at least
+  // round-trips exactly minus the inner quotes.
+  return `"${value.replace(/"/g, '')}"`
+}
+
 export function stringifyEnv(env: Record<string, string>): string {
   return Object.entries(env)
-    .map(([k, v]) => `${k}=${v}`)
+    .map(([k, v]) => `${k}=${quoteEnvValue(v)}`)
     .join('\n') + '\n'
 }
 
@@ -159,7 +174,20 @@ function applySetDefaultModel(
 ): HermesConfigPatchResult {
   const config = readYamlConfig(paths.configPath)
   config.provider = patch.providerId
-  config.model = patch.modelId
+
+  // Preserve any nested-form extension fields (e.g. temperature, max_tokens)
+  // some Hermes deployments stash under `model: { ... }`. Only update the
+  // canonical `default`/`provider` keys; otherwise switch to flat form.
+  const existing = config.model
+  if (existing && typeof existing === 'object' && !Array.isArray(existing)) {
+    const next = { ...(existing as Record<string, unknown>) }
+    next.default = patch.modelId
+    next.provider = patch.providerId
+    config.model = next
+  } else {
+    config.model = patch.modelId
+  }
+
   writeYamlConfig(paths.configPath, config)
   return { ok: true }
 }
@@ -231,5 +259,10 @@ export function applyHermesConfigPatch(
       return applySetCustomProvider(paths, patch)
     case 'remove-custom-provider':
       return applyRemoveCustomProvider(paths, patch)
+    default: {
+      const _exhaustive: never = patch
+      void _exhaustive
+      return { ok: false, message: 'Unknown action' }
+    }
   }
 }

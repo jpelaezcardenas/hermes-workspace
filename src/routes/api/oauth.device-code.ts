@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { dashboardFetch } from '../../server/gateway-capabilities'
 
 const BodySchema = z.object({
-  provider: z.string(),
+  provider: z.string().min(1),
 })
 
 type DashboardOAuthStartResponse = {

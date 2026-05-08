@@ -119,15 +119,13 @@ function maskSecret(value: string): string {
 function readDefaultModel(config: Record<string, unknown>): HermesConfigState['defaultModel'] {
   const flatModel = readString(config.model)
   const flatProvider = readString(config.provider)
-  if (flatModel || flatProvider) {
-    return flatProvider && flatModel
-      ? { provider: flatProvider, model: flatModel, source: 'flat' }
-      : null
+  if (flatModel && flatProvider) {
+    return { provider: flatProvider, model: flatModel, source: 'flat' }
   }
 
   const model = readRecord(config.model)
   const nestedProvider = readString(model.provider) || flatProvider
-  const nestedModel = readString(model.default)
+  const nestedModel = readString(model.default) || flatModel
   if (!nestedProvider || !nestedModel) return null
   return { provider: nestedProvider, model: nestedModel, source: 'nested' }
 }
