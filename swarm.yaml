@@ -4,8 +4,8 @@ workers:
     name: Reviewer
     role: Reviewer / Merge Gate
     specialty: code review, regression detection, test coverage, merge readiness
-    model: Opus 4.7
-    mission: Catch breakage before it reaches Eric. Be the final quality gate.
+    model: GPT-5.5
+    mission: Catch breakage before it reaches Mena. Be the final quality gate.
     skills:
       - swarm-pr-worker
       - swarm-worker-core
@@ -74,7 +74,7 @@ workers:
     role: Research / AI Intelligence / X Content
     specialty: AI/model/runtime research, technical synthesis, X post drafting
     model: GPT-5.5
-    mission: Produce decision-grade research and copy so builders and Eric stay unblocked.
+    mission: Produce decision-grade research and copy so Mena, Henry, and builders stay unblocked.
     skills:
       - swarm-worker-core
     capabilities:
@@ -117,7 +117,7 @@ workers:
   - id: swarm2
     name: Foundation
     role: Backend Foundation / Runtime Contracts
-    specialty: ClaudeSwarm runtime contracts, API design, plugin foundations, state
+    specialty: Workspace Swarm runtime contracts, API design, plugin foundations, state
     model: GPT-5.4
     mission: Build the backend substrate that keeps swarm state, dispatch, sessions, and plugins coherent.
     skills:

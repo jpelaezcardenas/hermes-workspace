@@ -36,6 +36,14 @@ export const SwarmRosterUpsertSchema = SwarmRosterWorkerSchema.extend({
 
 export type SwarmRosterUpsert = z.infer<typeof SwarmRosterUpsertSchema>
 
+function titleCase(value: string): string {
+  return value
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+}
+
 function defaultRoleFromId(id: string): string {
   const n = id.match(/(\d+)/)?.[1] ?? ''
   switch (n) {
@@ -76,6 +84,12 @@ export function fallbackRoster(ids: Array<string> = []): SwarmRoster {
       model: 'Worker',
       mission: 'Awaiting orchestrator dispatch.',
       skills: [],
+      capabilities: [],
+      defaultCwd: undefined,
+      preferredTaskTypes: [],
+      maxConcurrentTasks: 1,
+      acceptsBroadcast: true,
+      reviewRequired: false,
     })),
   }
 }
@@ -120,4 +134,17 @@ export function upsertSwarmRosterWorker(input: SwarmRosterUpsert, ids: Array<str
 
 export function rosterByWorkerId(ids: Array<string> = []): Map<string, SwarmRosterWorker> {
   return new Map(readSwarmRoster(ids).workers.map((worker) => [worker.id, worker]))
+}
+
+export function resolveSwarmWorkerDisplayName(workerId: string, worker?: Pick<SwarmRosterWorker, 'name'> | null): string {
+  return worker ? worker.name.trim() || titleCase(workerId) : titleCase(workerId)
+}
+
+export function formatSwarmWorkerLabel(
+  workerId: string,
+  worker?: Pick<SwarmRosterWorker, 'name' | 'role'> | null,
+): string {
+  const displayName = resolveSwarmWorkerDisplayName(workerId, worker)
+  const role = worker ? worker.role.trim() || defaultRoleFromId(workerId) : defaultRoleFromId(workerId)
+  return `${displayName} — ${role}`
 }
