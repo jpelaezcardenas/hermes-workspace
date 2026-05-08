@@ -27,6 +27,7 @@ import { OperatorTipCard } from './components/operator-tip-card'
 import { WidgetShell } from './components/widget-shell'
 import { EditModePanel } from './components/edit-mode-panel'
 import { useDashboardLayout } from './lib/use-dashboard-layout'
+import { normalizeDashboardSessionsPayload } from './lib/sessions-query'
 import {
   Area,
   AreaChart,
@@ -639,7 +640,6 @@ function SessionRow({
 
 export function DashboardScreen() {
   const navigate = useNavigate()
-  const sessionsAvailable = useFeatureAvailable('sessions')
   const skillsAvailable = useFeatureAvailable('skills')
   const sessionsQuery = useQuery({
     // Use a dedicated query key — NOT chatQueryKeys.sessions — to avoid
@@ -648,25 +648,32 @@ export function DashboardScreen() {
     // Also use the workspace proxy (/api/sessions) rather than the server-side
     // listSessions() — the latter calls the gateway via CLAUDE_API which is
     // only available server-side and returns nothing when called from the client.
+    // Do not gate this direct proof behind /api/gateway-status. That probe can
+    // be stale/loading while /api/sessions already works, which made the
+    // dashboard show a bogus “Enhanced API required” warning even though
+    // sessions were healthy.
     queryKey: ['dashboard', 'sessions'],
     queryFn: async () => {
       const res = await fetch('/api/sessions?limit=200&offset=0')
-      if (!res.ok) return [] as Array<Record<string, unknown>>
-      const data = (await res.json()) as {
-        sessions?: Array<Record<string, unknown>>
+      if (!res.ok) {
+        throw new Error(`Sessions API returned HTTP ${res.status}`)
       }
-      return data.sessions ?? []
+      const data = await res.json()
+      return normalizeDashboardSessionsPayload(data)
     },
     staleTime: 10_000,
     refetchInterval: 30_000,
-    enabled: sessionsAvailable,
+    retry: 1,
   })
+
+  const sessionsResult = sessionsQuery.data
 
   // Raw rows from the sessions endpoint. Used both for hero stats
   // (count/tokens) and for the SessionsIntelligenceCard below.
-  const rawSessions = (sessionsQuery.data ?? []) as Array<
-    Record<string, unknown>
-  >
+  const rawSessions = sessionsResult?.sessions ?? []
+  const sessionsUnavailable = Boolean(sessionsResult?.unavailable)
+  const sessionsUnavailableMessage =
+    sessionsResult?.message ?? getUnavailableReason('sessions')
 
   // Adapter shape kept for the legacy fallbacks that still reference
   // ClaudeSession (HeroMetrics fallback path, etc.).
@@ -1142,13 +1149,17 @@ export function DashboardScreen() {
           {layout.isVisible('sessions_intelligence') ? (
             <div className="flex min-h-0 flex-1 flex-col">
               <WidgetShell id="sessions_intelligence" layout={layout}>
-                {sessionsAvailable ? (
-                  <SessionsIntelligenceCard sessions={sessionRows} />
-                ) : (
+                {sessionsQuery.isError || sessionsUnavailable ? (
                   <UnavailableWidget
                     title="Recent Sessions"
-                    description={getUnavailableReason('sessions')}
+                    description={
+                      sessionsQuery.isError
+                        ? getUnavailableReason('sessions')
+                        : sessionsUnavailableMessage
+                    }
                   />
+                ) : (
+                  <SessionsIntelligenceCard sessions={sessionRows} />
                 )}
               </WidgetShell>
             </div>
