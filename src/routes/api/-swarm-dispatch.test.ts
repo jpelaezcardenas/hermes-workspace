@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildWorkerPrompt,
   checkpointFromRuntimeSnapshot,
   runtimeCheckpointSignature,
   runtimeSnapshotIsFresh,
@@ -71,5 +72,62 @@ describe('runtimeSnapshotIsFresh', () => {
     }
 
     expect(runtimeSnapshotIsFresh(updated, runtimeCheckpointSignature(baseline), dispatchedAt)).toBe(true)
+  })
+})
+
+describe('buildWorkerPrompt', () => {
+  const roster = {
+    id: 'swarm5',
+    name: 'Builder',
+    role: 'Primary Builder',
+    specialty: 'full-stack implementation across Hermes Workspace and Swarm2',
+    model: 'GPT-5.5',
+    mission: 'Ship focused product slices with tests and clean diffs.',
+    skills: ['swarm-ui-worker', 'swarm-worker-core'],
+    capabilities: ['code-editing', 'ui-implementation', 'build-verification'],
+    preferredTaskTypes: ['implementation'],
+    maxConcurrentTasks: 1,
+    acceptsBroadcast: true,
+    reviewRequired: false,
+  }
+
+  it('uses Name — Role as the human-facing label while preserving swarmN as machine ID', () => {
+    const prompt = buildWorkerPrompt({
+      workerId: 'swarm5',
+      task: 'Patch the conductor card copy.',
+      rationale: 'Builder executes implementation work.',
+      roster,
+    })
+
+    expect(prompt).toContain('Worker: Builder — Primary Builder')
+    expect(prompt).toContain('Machine ID: swarm5')
+    expect(prompt).toContain('Mission: Ship focused product slices with tests and clean diffs.')
+    expect(prompt).toContain('Capabilities: code-editing, ui-implementation, build-verification')
+    expect(prompt).toContain('Skills: swarm-ui-worker, swarm-worker-core')
+  })
+
+  it('still injects role context for direct one-shot dispatch unless raw mode is explicit', () => {
+    const prompt = buildWorkerPrompt({
+      workerId: 'swarm5',
+      task: 'Reply with exactly: BUILDER_OK',
+      roster,
+      direct: true,
+    })
+
+    expect(prompt).toContain('Worker: Builder — Primary Builder')
+    expect(prompt).toContain('## Assigned Task')
+    expect(prompt).toContain('Reply with exactly: BUILDER_OK')
+  })
+
+  it('keeps explicit raw/smoke dispatch unwrapped for minimal probes', () => {
+    const prompt = buildWorkerPrompt({
+      workerId: 'swarm5',
+      task: 'RAW_PING_ONLY',
+      roster,
+      direct: true,
+      raw: true,
+    })
+
+    expect(prompt).toBe('RAW_PING_ONLY')
   })
 })

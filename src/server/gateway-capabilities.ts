@@ -36,8 +36,8 @@ function overridesPath(): string {
 function readOverrides(): WorkspaceOverrides {
   try {
     const raw = fs.readFileSync(overridesPath(), 'utf-8')
-    const parsed = JSON.parse(raw) as WorkspaceOverrides
-    return parsed && typeof parsed === 'object' ? parsed : {}
+    const parsed = JSON.parse(raw) as unknown
+    return parsed !== null && typeof parsed === 'object' ? (parsed as WorkspaceOverrides) : {}
   } catch {
     return {}
   }
@@ -289,8 +289,8 @@ let loggedHtmlScrapeFallback = false
  * Resolve a bearer token for dashboard API calls.
  *
  * Lookup order:
- *   1.  CLAUDE_DASHBOARD_TOKEN / CLAUDE_API_TOKEN env (preferred)
- *   2.  Inline token injected into the dashboard's root HTML (legacy
+ *   1. CLAUDE_DASHBOARD_TOKEN / CLAUDE_API_TOKEN env (preferred)
+ *   2. Inline token injected into the dashboard's root HTML (legacy
  *      fallback — logs a deprecation warning; to be removed once all
  *      supported dashboards expose a first-class token endpoint). See #124.
  */
@@ -621,7 +621,15 @@ async function probeConductor(dashboardAvailable: boolean): Promise<boolean> {
     if (res.status === 404 || res.status === 405) return false
     // 401 means the path exists but the auth token isn't accepted yet —
     // treat as available so token-gated setups don't hide the feature.
-    return true
+    if (res.status === 401) return true
+
+    const contentType = res.headers.get('content-type') ?? ''
+    // Vite/TanStack's SPA fallback returns HTTP 200 + text/html for missing
+    // API routes. Do not mark Conductor available unless the dashboard gives
+    // us a JSON API response; otherwise /api/conductor-spawn tries to POST to
+    // the dashboard and the user sees "Method Not Allowed".
+    if (!contentType.toLowerCase().includes('application/json')) return false
+    return res.ok
   } catch {
     return false
   }
@@ -896,6 +904,8 @@ export function getEnhancedCapabilities(): EnhancedCapabilities {
     jobs: capabilities.jobs,
     mcp: capabilities.mcp,
     mcpFallback: capabilities.mcpFallback,
+    conductor: capabilities.conductor,
+    kanban: capabilities.kanban,
   }
 }
 
