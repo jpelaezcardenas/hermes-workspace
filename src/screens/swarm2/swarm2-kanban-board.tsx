@@ -28,7 +28,7 @@ type KanbanWorker = {
 }
 
 type KanbanBackendMeta = {
-  id: 'local' | 'claude'
+  id: 'local' | 'claude' | 'hermes-proxy'
   label: string
   detected: boolean
   writable: boolean
@@ -56,8 +56,18 @@ type KanbanBackendPresentation = {
   toastTitle: string
   toastBody: string
   title: string | undefined
-  /** When set, the badge becomes a deep-link to the dashboard kanban tab. */
+  /** When set, the badge becomes a deep-link to a dashboard that is safe/reachable from the current browser. */
   dashboardUrl?: string
+}
+
+function isLoopbackDashboardUrl(value: string | null | undefined): boolean {
+  if (!value) return false
+  try {
+    const url = new URL(value)
+    return ['127.0.0.1', 'localhost', '::1'].includes(url.hostname)
+  } catch {
+    return false
+  }
 }
 
 export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null | undefined): KanbanBackendPresentation {
@@ -71,9 +81,14 @@ export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null |
     }
   }
   if (backend.id === 'hermes-proxy' && backend.detected) {
-    // Backend.path is the dashboard origin (e.g. http://127.0.0.1:9119).
+    // Backend.path is the dashboard origin. Do not deep-link to loopback
+    // origins (127.0.0.1/localhost): in a remote browser that points at the
+    // user's own device, not the VPS. The board still syncs via Workspace's
+    // server-side proxy, so the safe UI is to show a non-clickable status.
     const dashboardUrl =
-      typeof backend.path === 'string' && backend.path.startsWith('http')
+      typeof backend.path === 'string' &&
+      backend.path.startsWith('http') &&
+      !isLoopbackDashboardUrl(backend.path)
         ? `${backend.path.replace(/\/+$/, '')}/kanban`
         : undefined
     return {
