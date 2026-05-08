@@ -55,7 +55,9 @@ async function resolveBackend(): Promise<BackendResolution> {
     const useHermes = hermesCount >= claudeCount
     _resolved = {
       base: useHermes ? HERMES_BASE : CLAUDE_BASE,
-      assigneesBase: useHermes ? '/api/hermes-tasks-assignees' : '/api/claude-tasks-assignees',
+      assigneesBase: useHermes
+        ? '/api/hermes-tasks-assignees'
+        : '/api/claude-tasks-assignees',
       backend: useHermes ? 'hermes' : 'claude',
     }
     return _resolved
@@ -77,7 +79,14 @@ export function resetBackendResolution(): void {
 
 // --- Types --------------------------------------------------------------
 
-export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
+export type TaskColumn =
+  | 'backlog'
+  | 'todo'
+  | 'in_progress'
+  | 'review'
+  | 'blocked'
+  | 'done'
+  | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
 export type ClaudeTask = {
@@ -94,6 +103,58 @@ export type ClaudeTask = {
   created_at: string
   updated_at: string
   session_id?: string | null
+}
+
+export type TaskEventPayload =
+  | Record<string, unknown>
+  | Array<unknown>
+  | string
+  | number
+  | boolean
+  | null
+
+export type TaskComment = {
+  id: number | string
+  task_id: string
+  author: string
+  body: string
+  created_at: number | string
+}
+
+export type TaskEvent = {
+  id: number | string
+  task_id: string
+  kind: string
+  payload?: TaskEventPayload
+  created_at: number | string
+  run_id?: number | null
+}
+
+export type TaskRun = {
+  id: number | string
+  task_id: string
+  profile?: string | null
+  step_key?: string | null
+  status: string
+  claim_lock?: string | null
+  claim_expires?: number | null
+  worker_pid?: number | null
+  max_runtime_seconds?: number | null
+  last_heartbeat_at?: number | null
+  started_at: number | string
+  ended_at?: number | string | null
+  outcome?: string | null
+  summary?: string | null
+  metadata?: Record<string, unknown> | null
+  error?: string | null
+}
+
+export type TaskDetail = {
+  task: ClaudeTask
+  comments: Array<TaskComment>
+  events: Array<TaskEvent>
+  links: { parents: Array<string>; children: Array<string> }
+  runs: Array<TaskRun>
 }
 
 export type CreateTaskInput = {
@@ -148,6 +209,35 @@ export async function fetchTasks(params?: {
   return data.tasks ?? []
 }
 
+function emptyTaskDetail(task: ClaudeTask): TaskDetail {
+  return {
+    task,
+    comments: [],
+    events: [],
+    links: { parents: [], children: [] },
+    runs: [],
+  }
+}
+
+export async function fetchTaskDetail(taskId: string): Promise<TaskDetail> {
+  const { base } = await resolveBackend()
+  const res = await fetch(`${base}/${encodeURIComponent(taskId)}`)
+  if (!res.ok) throw new Error(`Failed to fetch task detail: ${res.status}`)
+  const data = await res.json()
+  const task = data.task as ClaudeTask | undefined
+  if (!task) throw new Error('Task detail response did not include a task')
+  return {
+    ...emptyTaskDetail(task),
+    comments: Array.isArray(data.comments) ? data.comments : [],
+    events: Array.isArray(data.events) ? data.events : [],
+    links: {
+      parents: Array.isArray(data.links?.parents) ? data.links.parents : [],
+      children: Array.isArray(data.links?.children) ? data.links.children : [],
+    },
+    runs: Array.isArray(data.runs) ? data.runs : [],
+  }
+}
+
 export async function createTask(input: CreateTaskInput): Promise<ClaudeTask> {
   const { base } = await resolveBackend()
   const res = await fetch(base, {
@@ -157,12 +247,18 @@ export async function createTask(input: CreateTaskInput): Promise<ClaudeTask> {
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    throw new Error((body as { detail?: string }).detail || `Failed to create task: ${res.status}`)
+    throw new Error(
+      (body as { detail?: string }).detail ||
+        `Failed to create task: ${res.status}`,
+    )
   }
   return (await res.json()).task
 }
 
-export async function updateTask(taskId: string, input: UpdateTaskInput): Promise<ClaudeTask> {
+export async function updateTask(
+  taskId: string,
+  input: UpdateTaskInput,
+): Promise<ClaudeTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}`, {
     method: 'PATCH',
@@ -179,7 +275,10 @@ export async function deleteTask(taskId: string): Promise<void> {
   if (!res.ok) throw new Error(`Failed to delete task: ${res.status}`)
 }
 
-export async function linkSession(taskId: string, sessionId: string | null): Promise<ClaudeTask> {
+export async function linkSession(
+  taskId: string,
+  sessionId: string | null,
+): Promise<ClaudeTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}`, {
     method: 'PATCH',
@@ -190,7 +289,9 @@ export async function linkSession(taskId: string, sessionId: string | null): Pro
   return (await res.json()).task
 }
 
-export async function launchSession(taskId: string): Promise<{ sessionId: string; briefing: string; task: ClaudeTask }> {
+export async function launchSession(
+  taskId: string,
+): Promise<{ sessionId: string; briefing: string; task: ClaudeTask }> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}?action=launch`, {
     method: 'POST',
@@ -201,7 +302,11 @@ export async function launchSession(taskId: string): Promise<{ sessionId: string
   return res.json()
 }
 
-export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user'): Promise<ClaudeTask> {
+export async function moveTask(
+  taskId: string,
+  column: TaskColumn,
+  movedBy = 'user',
+): Promise<ClaudeTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}?action=move`, {
     method: 'POST',
@@ -210,7 +315,10 @@ export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'us
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
-    throw new Error((body as { detail?: string }).detail || `Failed to move task: ${res.status}`)
+    throw new Error(
+      (body as { detail?: string }).detail ||
+        `Failed to move task: ${res.status}`,
+    )
   }
   return (await res.json()).task
 }
@@ -227,7 +335,14 @@ export const COLUMN_LABELS: Record<TaskColumn, string> = {
   deleted: 'Deleted',
 }
 
-export const COLUMN_ORDER: Array<TaskColumn> = ['backlog', 'todo', 'in_progress', 'review', 'blocked', 'done']
+export const COLUMN_ORDER: Array<TaskColumn> = [
+  'backlog',
+  'todo',
+  'in_progress',
+  'review',
+  'blocked',
+  'done',
+]
 
 export const PRIORITY_COLORS: Record<TaskPriority, string> = {
   high: '#ef4444',
