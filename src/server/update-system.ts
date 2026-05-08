@@ -217,6 +217,23 @@ function canFastForward(repoPath: string, remoteRef: string): boolean {
   )
 }
 
+function containsRemoteRef(repoPath: string, remoteRef: string): boolean {
+  return (
+    exec('git', ['merge-base', '--is-ancestor', remoteRef, 'HEAD'], {
+      cwd: repoPath,
+      stdio: 'ignore',
+    }) !== null
+  )
+}
+
+function remoteBehindCount(repoPath: string, remoteRef: string): number | null {
+  const raw = git(['rev-list', '--left-right', '--count', `HEAD...${remoteRef}`], repoPath)
+  if (!raw) return null
+  const [, behind] = raw.split(/\s+/)
+  const parsed = Number(behind)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
 function canResetToRemote(repoPath: string, remoteRef: string): boolean {
   return Boolean(git(['rev-parse', '--verify', remoteRef], repoPath, 10_000))
 }
@@ -338,10 +355,16 @@ export function readWorkspaceUpdateStatus(
   const latestHead =
     repoMatches && supportedBranch ? remoteHead(gitRepo, 'origin') : null
   const dirty = isDirty(gitRepo)
-  const updateAvailable = Boolean(
-    supportedBranch && currentHead && latestHead && currentHead !== latestHead,
-  )
   const remoteRef = `origin/${branch || 'main'}`
+  const behindCount = remoteBehindCount(gitRepo, remoteRef)
+  const updateAvailable = Boolean(
+    supportedBranch &&
+      currentHead &&
+      latestHead &&
+      currentHead !== latestHead &&
+      behindCount !== 0 &&
+      !containsRemoteRef(gitRepo, remoteRef),
+  )
   const canSync = updateAvailable ? canResetToRemote(gitRepo, remoteRef) : true
   const ff = updateAvailable ? canFastForward(gitRepo, remoteRef) : true
   const canUpdate = Boolean(
@@ -443,8 +466,14 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
   const latestHead = repoMatches ? remoteHead(repoPath, 'origin') : null
   const remoteRef = repoMatches ? `origin/${branch || 'main'}` : null
   const dirty = isDirty(repoPath)
+  const behindCount = remoteRef ? remoteBehindCount(repoPath, remoteRef) : null
   const updateAvailable = Boolean(
-    currentHead && latestHead && currentHead !== latestHead && remoteRef,
+    currentHead &&
+      latestHead &&
+      currentHead !== latestHead &&
+      remoteRef &&
+      behindCount !== 0 &&
+      !containsRemoteRef(repoPath, remoteRef),
   )
   const canSync = remoteRef ? canResetToRemote(repoPath, remoteRef) : false
   const ff = remoteRef ? canFastForward(repoPath, remoteRef) : false
