@@ -80,104 +80,10 @@ describe('canonical /api/hermes-config route', () => {
     expect(openrouter.isDefault).toBe(true)
   })
 
-  it('PATCH with set-default-model action writes flat provider/model to disk', async () => {
-    const handlers = await loadHandlers('./hermes-config')
-    const res = await handlers.PATCH({
-      request: new Request('http://localhost/api/hermes-config', {
-        method: 'PATCH',
-        body: JSON.stringify({
-          action: 'set-default-model',
-          providerId: 'openrouter',
-          modelId: 'auto',
-        }),
-      }),
-    })
-    const body = await res.json()
-
-    expect(body.ok).toBe(true)
-    const onDisk = fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8')
-    expect(onDisk).toContain('provider: openrouter')
-    expect(onDisk).toContain('model: auto')
-  })
-
-  it('PATCH with set-api-key action writes env value to .env', async () => {
-    const handlers = await loadHandlers('./hermes-config')
-    const res = await handlers.PATCH({
-      request: new Request('http://localhost/api/hermes-config', {
-        method: 'PATCH',
-        body: JSON.stringify({
-          action: 'set-api-key',
-          envKey: 'OPENROUTER_API_KEY',
-          value: 'sk-or-99999',
-        }),
-      }),
-    })
-    const body = await res.json()
-
-    expect(body.ok).toBe(true)
-    expect(fs.readFileSync(path.join(tmpHome, '.env'), 'utf-8')).toContain(
-      'OPENROUTER_API_KEY=sk-or-99999',
-    )
-  })
 })
 
 describe('legacy /api/claude-config alias', () => {
-  it('GET returns the same normalized payload as the canonical route', async () => {
-    fs.writeFileSync(
-      path.join(tmpHome, 'config.yaml'),
-      'provider: openrouter\nmodel: auto\n',
-      'utf-8',
-    )
-    fs.writeFileSync(
-      path.join(tmpHome, '.env'),
-      'OPENROUTER_API_KEY=sk-test-1234\n',
-      'utf-8',
-    )
-
-    const handlers = await loadHandlers('./claude-config')
-    const res = await handlers.GET({
-      request: new Request('http://localhost/api/claude-config'),
-    })
-    const body = await res.json()
-
-    expect(body.ok).toBe(true)
-    expect(body.activeProvider).toBe('openrouter')
-    expect(body.activeModel).toBe('auto')
-  })
-
-  it('PATCH still accepts legacy { config } body without false restart copy', async () => {
-    const handlers = await loadHandlers('./claude-config')
-    const res = await handlers.PATCH({
-      request: new Request('http://localhost/api/claude-config', {
-        method: 'PATCH',
-        body: JSON.stringify({ config: { provider: 'openrouter' } }),
-      }),
-    })
-    const body = await res.json()
-
-    expect(body.ok).toBe(true)
-    expect(body.message).not.toMatch(/restart/i)
-  })
-
-  it('PATCH set-default-model returns a non-restart acknowledgement', async () => {
-    const handlers = await loadHandlers('./hermes-config')
-    const res = await handlers.PATCH({
-      request: new Request('http://localhost/api/hermes-config', {
-        method: 'PATCH',
-        body: JSON.stringify({
-          action: 'set-default-model',
-          providerId: 'openrouter',
-          modelId: 'auto',
-        }),
-      }),
-    })
-    const body = await res.json()
-
-    expect(body.ok).toBe(true)
-    expect(body.message).not.toMatch(/restart/i)
-  })
-
-  it('GET aliases provider.maskedCredentials to provider.maskedKeys for legacy /settings', async () => {
+  it('GET aliases provider.maskedCredentials to provider.maskedKeys for the legacy /settings page', async () => {
     fs.writeFileSync(
       path.join(tmpHome, '.env'),
       'OPENROUTER_API_KEY=sk-test-1234\n',

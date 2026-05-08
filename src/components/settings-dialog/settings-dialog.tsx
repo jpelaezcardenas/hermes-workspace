@@ -278,14 +278,6 @@ const LOCAL_PROVIDER_SETUP: Partial<Record<
   },
 }
 
-export type OAuthSetupMode = 'device-code' | 'tui-fallback'
-
-export function getOAuthSetupMode(providerId: string): OAuthSetupMode {
-  return providerId === 'nous' || providerId === 'openai-codex'
-    ? 'device-code'
-    : 'tui-fallback'
-}
-
 export type OAuthStatus = 'idle' | 'starting' | 'pending' | 'success' | 'error'
 
 export function getOAuthStartButtonLabel(status: OAuthStatus): string {
@@ -297,8 +289,6 @@ export function getOAuthStartButtonLabel(status: OAuthStatus): string {
 type OAuthDeviceCodeResponse = {
   device_code?: string
   user_code?: string
-  verification_uri?: string
-  verification_url?: string
   verification_uri_complete?: string
   interval?: number
   expires_in?: number
@@ -503,7 +493,7 @@ function HermesContent() {
 
   const startOAuthFlow = async () => {
     const provider = PROVIDER_CARDS.find((p) => p.id === oauthProviderId)
-    if (!provider || getOAuthSetupMode(provider.id) !== 'device-code') return
+    if (!provider) return
 
     setOauthStatus('starting')
     setOauthMessage(`Starting ${provider.name} OAuth...`)
@@ -521,11 +511,7 @@ function HermesContent() {
         throw new Error(codeData.error || 'Could not start OAuth device flow')
       }
 
-      const verificationUri =
-        codeData.verification_uri_complete ||
-        codeData.verification_uri ||
-        codeData.verification_url ||
-        ''
+      const verificationUri = codeData.verification_uri_complete || ''
       setOauthStatus('pending')
       setOauthUserCode(codeData.user_code || '')
       setOauthVerificationUri(verificationUri)
@@ -706,7 +692,6 @@ function HermesContent() {
           {(() => {
             const provider = PROVIDER_CARDS.find((p) => p.id === oauthProviderId)
             if (!provider) return null
-            const mode = getOAuthSetupMode(provider.id)
 
             return (
               <div className="space-y-3">
@@ -714,49 +699,38 @@ function HermesContent() {
                   <div className="min-w-0">
                     <p className="text-sm font-semibold">{provider.name} OAuth</p>
                   </div>
-                  {mode === 'device-code' ? (
-                    <Button
-                      size="sm"
-                      disabled={oauthStatus === 'starting' || oauthStatus === 'pending'}
-                      onClick={() => {
-                        void startOAuthFlow()
-                      }}
-                    >
-                      {getOAuthStartButtonLabel(oauthStatus)}
-                    </Button>
-                  ) : null}
+                  <Button
+                    size="sm"
+                    disabled={oauthStatus === 'starting' || oauthStatus === 'pending'}
+                    onClick={() => {
+                      void startOAuthFlow()
+                    }}
+                  >
+                    {getOAuthStartButtonLabel(oauthStatus)}
+                  </Button>
                 </div>
 
-                {mode === 'device-code' ? (
-                  <div className="rounded-lg border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs text-primary-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
-                    {oauthMessage || 'Start the browser-based OAuth flow.'}
-                    {oauthUserCode ? (
-                      <div className="mt-2">
-                        User code:{' '}
-                        <code className="rounded bg-black/10 px-1 py-0.5 font-mono dark:bg-white/10">
-                          {oauthUserCode}
-                        </code>
-                      </div>
-                    ) : null}
-                    {oauthVerificationUri ? (
-                      <a
-                        href={oauthVerificationUri}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-2 inline-block font-medium underline underline-offset-2"
-                      >
-                        Open authorization page
-                      </a>
-                    ) : null}
-                  </div>
-                ) : (
-                  <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-200">
-                    WebUI OAuth launch is not available for {provider.name} yet.
-                    To use the same Hermes credentials in TUI and WebUI, run{' '}
-                    <code className="rounded bg-black/30 px-1">hermes setup</code>{' '}
-                    and choose {provider.name}.
-                  </div>
-                )}
+                <div className="rounded-lg border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs text-primary-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
+                  {oauthMessage || 'Start the browser-based OAuth flow.'}
+                  {oauthUserCode ? (
+                    <div className="mt-2">
+                      User code:{' '}
+                      <code className="rounded bg-black/10 px-1 py-0.5 font-mono dark:bg-white/10">
+                        {oauthUserCode}
+                      </code>
+                    </div>
+                  ) : null}
+                  {oauthVerificationUri ? (
+                    <a
+                      href={oauthVerificationUri}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block font-medium underline underline-offset-2"
+                    >
+                      Open authorization page
+                    </a>
+                  ) : null}
+                </div>
               </div>
             )
           })()}

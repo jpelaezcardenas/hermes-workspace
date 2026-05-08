@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { mapDashboardOAuthStart } from './oauth.device-code'
 import { mapDashboardOAuthPoll } from './oauth.poll-token'
 
-describe('mapDashboardOAuthStart', () => {
-  it('maps Hermes dashboard device-code response to the WebUI contract', () => {
+describe('OAuth dashboard response mapping', () => {
+  it('maps device-code start response to the WebUI contract', () => {
     expect(
       mapDashboardOAuthStart({
         session_id: 'session-123',
@@ -24,30 +24,12 @@ describe('mapDashboardOAuthStart', () => {
       expires_in: 900,
     })
   })
-})
 
-describe('mapDashboardOAuthPoll', () => {
-  it('maps approved dashboard sessions to success', () => {
-    expect(mapDashboardOAuthPoll({ status: 'approved' })).toEqual({
-      status: 'success',
-    })
-  })
-
-  it('maps pending dashboard sessions to pending', () => {
-    expect(mapDashboardOAuthPoll({ status: 'pending' })).toEqual({
-      status: 'pending',
-    })
-  })
-
-  it('maps failed dashboard sessions to error with provider message', () => {
+  it('maps poll status approved/pending/error to the WebUI contract', () => {
+    expect(mapDashboardOAuthPoll({ status: 'approved' })).toEqual({ status: 'success' })
+    expect(mapDashboardOAuthPoll({ status: 'pending' })).toEqual({ status: 'pending' })
     expect(
-      mapDashboardOAuthPoll({
-        status: 'error',
-        error_message: 'token exchange returned 400',
-      }),
-    ).toEqual({
-      status: 'error',
-      message: 'token exchange returned 400',
-    })
+      mapDashboardOAuthPoll({ status: 'error', error_message: 'token exchange returned 400' }),
+    ).toEqual({ status: 'error', message: 'token exchange returned 400' })
   })
 })

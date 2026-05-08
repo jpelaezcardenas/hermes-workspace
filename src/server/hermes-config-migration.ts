@@ -84,96 +84,18 @@ export type NormalizeHermesConfigInput = {
 }
 
 export const HERMES_PROVIDER_CATALOG: Array<ProviderDef> = [
-  {
-    id: 'nous',
-    name: 'Nous Portal',
-    kind: 'oauth',
-    envKeys: [],
-    models: [
-      { id: 'xiaomi/mimo-v2-pro', name: 'xiaomi/mimo-v2-pro' },
-      { id: 'xiaomi/mimo-v2-omni', name: 'xiaomi/mimo-v2-omni' },
-    ],
-  },
-  {
-    id: 'openai-codex',
-    name: 'OpenAI Codex',
-    kind: 'oauth',
-    envKeys: [],
-    models: [
-      { id: 'gpt-5.4', name: 'gpt-5.4' },
-      { id: 'gpt-5.3-codex', name: 'gpt-5.3-codex' },
-    ],
-  },
-  {
-    id: 'anthropic',
-    name: 'Anthropic',
-    kind: 'api_key',
-    envKeys: ['ANTHROPIC_API_KEY'],
-    models: [
-      { id: 'claude-sonnet-4-6', name: 'claude-sonnet-4-6' },
-      { id: 'claude-opus-4-6', name: 'claude-opus-4-6' },
-    ],
-  },
-  {
-    id: 'openrouter',
-    name: 'OpenRouter',
-    kind: 'api_key',
-    envKeys: ['OPENROUTER_API_KEY'],
-    models: [
-      { id: 'auto', name: 'auto' },
-      { id: 'deepseek/deepseek-r1', name: 'deepseek/deepseek-r1' },
-      { id: 'google/gemini-2.5-pro', name: 'google/gemini-2.5-pro' },
-    ],
-  },
-  {
-    id: 'zai',
-    name: 'Z.AI / GLM',
-    kind: 'api_key',
-    envKeys: ['GLM_API_KEY'],
-    models: [{ id: 'glm-4-plus', name: 'glm-4-plus' }],
-  },
-  {
-    id: 'kimi-coding',
-    name: 'Kimi',
-    kind: 'api_key',
-    envKeys: ['KIMI_API_KEY'],
-    models: [{ id: 'kimi-latest', name: 'kimi-latest' }],
-  },
-  {
-    id: 'minimax',
-    name: 'MiniMax',
-    kind: 'api_key',
-    envKeys: ['MINIMAX_API_KEY'],
-    models: [{ id: 'MiniMax-M2.5', name: 'MiniMax-M2.5' }],
-  },
-  {
-    id: 'xiaomi',
-    name: 'Xiaomi MiMo',
-    kind: 'api_key',
-    envKeys: ['XIAOMI_API_KEY'],
-    models: [{ id: 'mimo-v2-pro', name: 'mimo-v2-pro' }],
-  },
-  {
-    id: 'ollama',
-    name: 'Ollama',
-    kind: 'local',
-    envKeys: [],
-    models: [],
-  },
-  {
-    id: 'atomic-chat',
-    name: 'Atomic Chat',
-    kind: 'local',
-    envKeys: [],
-    models: [],
-  },
-  {
-    id: 'custom',
-    name: 'Custom',
-    kind: 'custom',
-    envKeys: ['CUSTOM_API_KEY'],
-    models: [],
-  },
+  { id: 'nous', name: 'Nous Portal', kind: 'oauth', envKeys: [], models: [] },
+  { id: 'openai-codex', name: 'OpenAI Codex', kind: 'oauth', envKeys: [], models: [] },
+  { id: 'anthropic', name: 'Anthropic', kind: 'api_key', envKeys: ['ANTHROPIC_API_KEY'], models: [] },
+  { id: 'openrouter', name: 'OpenRouter', kind: 'api_key', envKeys: ['OPENROUTER_API_KEY'], models: [] },
+  { id: 'zai', name: 'Z.AI / GLM', kind: 'api_key', envKeys: ['GLM_API_KEY'], models: [] },
+  { id: 'kimi-coding', name: 'Kimi', kind: 'api_key', envKeys: ['KIMI_API_KEY'], models: [] },
+  { id: 'minimax', name: 'MiniMax', kind: 'api_key', envKeys: ['MINIMAX_API_KEY'], models: [] },
+  { id: 'minimax-cn', name: 'MiniMax (China)', kind: 'api_key', envKeys: ['MINIMAX_CN_API_KEY'], models: [] },
+  { id: 'xiaomi', name: 'Xiaomi MiMo', kind: 'api_key', envKeys: ['XIAOMI_API_KEY'], models: [] },
+  { id: 'ollama', name: 'Ollama', kind: 'local', envKeys: [], models: [] },
+  { id: 'atomic-chat', name: 'Atomic Chat', kind: 'local', envKeys: [], models: [] },
+  { id: 'custom', name: 'Custom', kind: 'custom', envKeys: ['CUSTOM_API_KEY'], models: [] },
 ]
 
 const KNOWN_PROVIDER_IDS = new Set(HERMES_PROVIDER_CATALOG.map((p) => p.id))
