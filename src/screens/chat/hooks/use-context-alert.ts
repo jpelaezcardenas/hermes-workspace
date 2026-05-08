@@ -64,13 +64,14 @@ function readPercent(value: unknown): number {
   return 0
 }
 
-export function useContextAlert(): {
+export function useContextAlert(sessionId?: string): {
   alertOpen: boolean
   alertThreshold: number
   alertPercent: number
   dismissAlert: () => void
 } {
   const storedRef = useRef<StoredState | null>(null)
+  const lastPercentRef = useRef<number | null>(null)
   const [alertOpen, setAlertOpen] = useState(false)
   const [alertThreshold, setAlertThreshold] = useState<number>(0)
   const [alertPercent, setAlertPercent] = useState<number>(0)
@@ -81,13 +82,16 @@ export function useContextAlert(): {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch('/api/context-usage')
+      const params = new URLSearchParams()
+      if (sessionId?.trim()) params.set('sessionId', sessionId.trim())
+      const query = params.toString()
+      const res = await fetch(`/api/context-usage${query ? `?${query}` : ''}`)
       if (!res.ok) return
       const data = (await res.json()) as {
         ok?: boolean
         contextPercent?: unknown
       }
-      if (!data?.ok) return
+      if (!data.ok) return
 
       const currentPercent = readPercent(data.contextPercent)
       setAlertPercent(currentPercent)
@@ -102,10 +106,18 @@ export function useContextAlert(): {
       }
       storedRef.current = stored
 
-      if (alertOpen) return
+      const previousPercent = lastPercentRef.current
+      lastPercentRef.current = currentPercent
+
+      // Do not pop a warning on first render/page load. A fresh/empty chat can
+      // briefly receive stale/global usage from the gateway before the session
+      // id resolves; warnings should only appear after this chat crosses a
+      // threshold while the user is actually in it.
+      if (previousPercent === null || alertOpen) return
 
       const candidate = THRESHOLDS.find((threshold) => {
-        if (currentPercent < threshold) return false
+        if (previousPercent >= threshold || currentPercent < threshold)
+          return false
         return !stored.sent[String(threshold) as keyof StoredState['sent']]
       })
       if (!candidate) return
@@ -118,17 +130,18 @@ export function useContextAlert(): {
     } catch {
       /* ignore */
     }
-  }, [alertOpen])
+  }, [alertOpen, sessionId])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
     storedRef.current = loadStoredState()
+    lastPercentRef.current = null
     void refresh()
     const id = window.setInterval(() => {
       void refresh()
     }, POLL_MS)
     return () => window.clearInterval(id)
-  }, [refresh])
+  }, [refresh, sessionId])
 
   return { alertOpen, alertThreshold, alertPercent, dismissAlert }
 }

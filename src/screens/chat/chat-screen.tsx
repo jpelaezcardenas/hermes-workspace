@@ -521,8 +521,9 @@ export function ChatScreen({
       return stored
     return 'low'
   })
+  const contextAlertSessionId = isNewChat ? 'new' : portableChatFriendlyId
   const { alertOpen, alertThreshold, alertPercent, dismissAlert } =
-    useContextAlert()
+    useContextAlert(contextAlertSessionId)
 
   const pendingStartRef = useRef(false)
   const composerHandleRef = useRef<ChatComposerHandle | null>(null)
