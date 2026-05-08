@@ -65,6 +65,7 @@ export function TasksScreen() {
   const queryClient = useQueryClient()
   const [showCreate, setShowCreate] = useState(false)
   const [createColumn, setCreateColumn] = useState<TaskColumn>('backlog')
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const [selectedTask, setSelectedTask] = useState<ClaudeTask | null>(null)
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [dragOverColumn, setDragOverColumn] = useState<TaskColumn | null>(null)
@@ -102,9 +103,8 @@ export function TasksScreen() {
   }, [assignees])
 
   const tasks = tasksQuery.data ?? []
-  const selectedTaskId = selectedTask?.id ?? null
-  const activeTask = selectedTaskId
-    ? (tasks.find((task) => task.id === selectedTaskId) ?? selectedTask)
+  const selectedListTask = selectedTaskId
+    ? (tasks.find((task) => task.id === selectedTaskId) ?? null)
     : null
 
   const taskDetailQuery = useQuery({
@@ -116,6 +116,11 @@ export function TasksScreen() {
 
   const taskDetailError =
     taskDetailQuery.error instanceof Error ? taskDetailQuery.error : null
+  const selectedSeedTask =
+    selectedTask?.id === selectedTaskId ? selectedTask : null
+  const activeTask = selectedTaskId
+    ? (selectedListTask ?? taskDetailQuery.data?.task ?? selectedSeedTask)
+    : null
 
   const tasksByColumn = useMemo(() => {
     const map: Record<TaskColumn, Array<ClaudeTask>> = {
@@ -153,6 +158,24 @@ export function TasksScreen() {
     void queryClient.invalidateQueries({ queryKey: QUERY_KEY })
   }, [queryClient])
 
+  const openTaskSheet = useCallback(
+    (taskOrId: ClaudeTask | string) => {
+      const taskId = typeof taskOrId === 'string' ? taskOrId : taskOrId.id
+      const knownTask =
+        typeof taskOrId === 'string'
+          ? (tasks.find((task) => task.id === taskId) ?? null)
+          : taskOrId
+      setSelectedTaskId(taskId)
+      setSelectedTask(knownTask)
+    },
+    [tasks],
+  )
+
+  const closeTaskSheet = useCallback(() => {
+    setSelectedTaskId(null)
+    setSelectedTask(null)
+  }, [])
+
   const createMutation = useMutation({
     mutationFn: createTask,
     onSuccess: () => {
@@ -170,6 +193,7 @@ export function TasksScreen() {
     mutationFn: ({ id, input }: { id: string; input: UpdateTaskInput }) =>
       updateTask(id, input),
     onSuccess: (task) => {
+      setSelectedTaskId(task.id)
       setSelectedTask(task)
       invalidate()
       void queryClient.invalidateQueries({
@@ -465,7 +489,7 @@ export function TasksScreen() {
                               assigneeLabels={assigneeLabels}
                               isDragging={draggingId === task.id}
                               onDragStart={(e) => handleDragStart(e, task.id)}
-                              onClick={() => setSelectedTask(task)}
+                              onClick={() => openTaskSheet(task)}
                             />
                           </motion.div>
                         ))
@@ -492,10 +516,11 @@ export function TasksScreen() {
 
         {/* Task detail sheet */}
         <TaskSheet
-          open={selectedTask !== null}
+          open={selectedTaskId !== null}
           onOpenChange={(open) => {
-            if (!open) setSelectedTask(null)
+            if (!open) closeTaskSheet()
           }}
+          taskId={selectedTaskId}
           task={activeTask}
           detail={taskDetailQuery.data ?? null}
           isLoadingDetail={
@@ -503,6 +528,8 @@ export function TasksScreen() {
           }
           detailError={taskDetailError}
           assignees={assignees}
+          allTasks={tasks}
+          onOpenTask={openTaskSheet}
           isSubmitting={updateMutation.isPending}
           onSubmit={async (input) => {
             if (!activeTask) return

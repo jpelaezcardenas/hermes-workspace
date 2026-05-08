@@ -8,6 +8,7 @@ afterEach(() => {
 async function loadBackend(options?: {
   cards?: Array<Record<string, unknown>>
   updatedCard?: Record<string, unknown> | null
+  detailLinks?: { parents: Array<string>; children: Array<string> }
 }) {
   const listKanbanCards = vi.fn(() => Promise.resolve(options?.cards ?? []))
   const createKanbanCard = vi.fn((input) =>
@@ -36,7 +37,7 @@ async function loadBackend(options?: {
           card,
           comments: [],
           events: [],
-          links: { parents: [], children: [] },
+          links: options?.detailLinks ?? { parents: [], children: [] },
           runs: [],
         }
       : null
@@ -150,5 +151,72 @@ describe('claude-tasks-backend', () => {
       expect.objectContaining({ status: 'blocked' }),
     )
     expect(task).toMatchObject({ id: 'card-2', column: 'blocked' })
+  })
+
+  it('hydrates parent and child links with related task labels for the sheet', async () => {
+    const baseCard = {
+      spec: '',
+      acceptanceCriteria: [],
+      assignedWorker: null,
+      reviewer: null,
+      missionId: null,
+      reportPath: null,
+      createdBy: 'aurora',
+      createdAt: 1_700_000_000_000,
+      updatedAt: 1_700_000_010_000,
+    }
+    const { mod } = await loadBackend({
+      detailLinks: {
+        parents: ['parent-1'],
+        children: ['child-1', 'missing-child'],
+      },
+      cards: [
+        {
+          ...baseCard,
+          id: 'task-1',
+          title: 'Main task',
+          status: 'ready',
+          priority: 0,
+        },
+        {
+          ...baseCard,
+          id: 'parent-1',
+          title: 'Parent task',
+          status: 'blocked',
+          priority: 1,
+          assignedWorker: 'swarm1',
+        },
+        {
+          ...baseCard,
+          id: 'child-1',
+          title: 'Child task',
+          status: 'done',
+          priority: -1,
+          assignedWorker: 'swarm2',
+        },
+      ],
+    })
+
+    const detail = await mod.getClaudeTaskDetail('task-1')
+
+    expect(detail?.links.parents).toEqual([
+      {
+        id: 'parent-1',
+        title: 'Parent task',
+        column: 'blocked',
+        priority: 'high',
+        assignee: 'swarm1',
+      },
+    ])
+    expect(detail?.links.children).toEqual([
+      {
+        id: 'child-1',
+        title: 'Child task',
+        column: 'done',
+        priority: 'low',
+        assignee: 'swarm2',
+      },
+      { id: 'missing-child' },
+    ])
   })
 })

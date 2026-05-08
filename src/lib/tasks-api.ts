@@ -149,11 +149,22 @@ export type TaskRun = {
   error?: string | null
 }
 
+export type TaskRelationLink = {
+  id: string
+  title?: string | null
+  column?: TaskColumn | null
+  priority?: TaskPriority | null
+  assignee?: string | null
+}
+
 export type TaskDetail = {
   task: ClaudeTask
   comments: Array<TaskComment>
   events: Array<TaskEvent>
-  links: { parents: Array<string>; children: Array<string> }
+  links: {
+    parents: Array<TaskRelationLink>
+    children: Array<TaskRelationLink>
+  }
   runs: Array<TaskRun>
 }
 
@@ -219,6 +230,52 @@ function emptyTaskDetail(task: ClaudeTask): TaskDetail {
   }
 }
 
+function normalizeTaskColumn(value: unknown): TaskColumn | null {
+  return value === 'backlog' ||
+    value === 'todo' ||
+    value === 'in_progress' ||
+    value === 'review' ||
+    value === 'blocked' ||
+    value === 'done' ||
+    value === 'deleted'
+    ? value
+    : null
+}
+
+function normalizeTaskPriority(value: unknown): TaskPriority | null {
+  return value === 'high' || value === 'medium' || value === 'low'
+    ? value
+    : null
+}
+
+function normalizeTaskRelationLink(value: unknown): TaskRelationLink | null {
+  if (typeof value === 'string') {
+    const id = value.trim()
+    return id ? { id } : null
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+
+  const record = value as Record<string, unknown>
+  const id = typeof record.id === 'string' ? record.id.trim() : ''
+  if (!id) return null
+
+  return {
+    id,
+    title: typeof record.title === 'string' ? record.title : null,
+    column: normalizeTaskColumn(record.column),
+    priority: normalizeTaskPriority(record.priority),
+    assignee: typeof record.assignee === 'string' ? record.assignee : null,
+  }
+}
+
+function normalizeTaskRelationLinks(value: unknown): Array<TaskRelationLink> {
+  if (!Array.isArray(value)) return []
+  return value.flatMap((entry) => {
+    const normalized = normalizeTaskRelationLink(entry)
+    return normalized ? [normalized] : []
+  })
+}
+
 export async function fetchTaskDetail(taskId: string): Promise<TaskDetail> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${encodeURIComponent(taskId)}`)
@@ -231,8 +288,8 @@ export async function fetchTaskDetail(taskId: string): Promise<TaskDetail> {
     comments: Array.isArray(data.comments) ? data.comments : [],
     events: Array.isArray(data.events) ? data.events : [],
     links: {
-      parents: Array.isArray(data.links?.parents) ? data.links.parents : [],
-      children: Array.isArray(data.links?.children) ? data.links.children : [],
+      parents: normalizeTaskRelationLinks(data.links?.parents),
+      children: normalizeTaskRelationLinks(data.links?.children),
     },
     runs: Array.isArray(data.runs) ? data.runs : [],
   }

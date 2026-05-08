@@ -37,11 +37,22 @@ export type ClaudeTaskRecord = {
   updated_at: string
 }
 
+export type ClaudeTaskRelationLink = {
+  id: string
+  title?: string | null
+  column?: TaskColumn | null
+  priority?: TaskPriority | null
+  assignee?: string | null
+}
+
 export type ClaudeTaskDetail = {
   task: ClaudeTaskRecord
   comments: Array<KanbanTaskComment>
   events: Array<KanbanTaskEvent>
-  links: { parents: Array<string>; children: Array<string> }
+  links: {
+    parents: Array<ClaudeTaskRelationLink>
+    children: Array<ClaudeTaskRelationLink>
+  }
   runs: Array<KanbanTaskRun>
 }
 
@@ -156,12 +167,47 @@ function mapCardToTask(card: {
   }
 }
 
-function mapCardDetailToTaskDetail(detail: KanbanCardDetail): ClaudeTaskDetail {
+function taskToRelationLink(task: ClaudeTaskRecord): ClaudeTaskRelationLink {
+  return {
+    id: task.id,
+    title: task.title,
+    column: task.column,
+    priority: task.priority,
+    assignee: task.assignee,
+  }
+}
+
+function fallbackRelationLink(taskId: string): ClaudeTaskRelationLink {
+  return { id: taskId }
+}
+
+async function mapCardDetailToTaskDetail(
+  detail: KanbanCardDetail,
+): Promise<ClaudeTaskDetail> {
+  const relationIds = new Set([
+    ...detail.links.parents,
+    ...detail.links.children,
+  ])
+  const relatedById = new Map<string, ClaudeTaskRelationLink>()
+  if (relationIds.size > 0) {
+    for (const card of await listKanbanCards()) {
+      if (!relationIds.has(card.id)) continue
+      relatedById.set(card.id, taskToRelationLink(mapCardToTask(card)))
+    }
+  }
+
   return {
     task: mapCardToTask(detail.card),
     comments: detail.comments,
     events: detail.events,
-    links: detail.links,
+    links: {
+      parents: detail.links.parents.map(
+        (taskId) => relatedById.get(taskId) ?? fallbackRelationLink(taskId),
+      ),
+      children: detail.links.children.map(
+        (taskId) => relatedById.get(taskId) ?? fallbackRelationLink(taskId),
+      ),
+    },
     runs: detail.runs,
   }
 }

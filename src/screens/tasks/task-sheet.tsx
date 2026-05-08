@@ -11,6 +11,7 @@ import type {
   TaskDetail,
   TaskEvent,
   TaskPriority,
+  TaskRelationLink,
   TaskRun,
   UpdateTaskInput,
 } from '@/lib/tasks-api'
@@ -21,11 +22,14 @@ import { COLUMN_LABELS, COLUMN_ORDER } from '@/lib/tasks-api'
 type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  taskId?: string | null
   task: ClaudeTask | null
   detail?: TaskDetail | null
   isLoadingDetail?: boolean
   detailError?: Error | null
   assignees: Array<TaskAssignee>
+  allTasks?: Array<ClaudeTask>
+  onOpenTask?: (taskId: string) => void
   onSubmit: (input: UpdateTaskInput) => Promise<void>
   isSubmitting: boolean
 }
@@ -341,14 +345,144 @@ function HistoryList({ entries }: { entries: Array<TaskHistoryEntry> }) {
   )
 }
 
+function resolveRelatedTask(
+  link: TaskRelationLink,
+  allTasks: Array<ClaudeTask>,
+): TaskRelationLink {
+  const knownTask = allTasks.find((task) => task.id === link.id)
+  if (!knownTask) return link
+  return {
+    id: link.id,
+    title: link.title ?? knownTask.title,
+    column: link.column ?? knownTask.column,
+    priority: link.priority ?? knownTask.priority,
+    assignee: link.assignee ?? knownTask.assignee,
+  }
+}
+
+function relatedTaskMeta(relation: TaskRelationLink): string {
+  const parts = [relation.id]
+  if (relation.column) parts.push(statusLabel(relation.column))
+  if (relation.assignee) parts.push(`Assigned to ${relation.assignee}`)
+  return parts.join(' · ')
+}
+
+function RelatedTaskGroup({
+  title,
+  links,
+  allTasks,
+  currentTaskId,
+  onOpenTask,
+}: {
+  title: string
+  links: Array<TaskRelationLink>
+  allTasks: Array<ClaudeTask>
+  currentTaskId: string
+  onOpenTask?: (taskId: string) => void
+}) {
+  return (
+    <div className="min-w-0 space-y-2">
+      <h4 className="text-xs font-medium text-[var(--theme-muted)]">{title}</h4>
+      {links.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-[var(--theme-border)] px-3 py-2 text-xs text-[var(--theme-muted)]">
+          None
+        </p>
+      ) : (
+        <div className="min-w-0 space-y-2">
+          {links.map((link) => {
+            const relation = resolveRelatedTask(link, allTasks)
+            const isCurrentTask = relation.id === currentTaskId
+            const canOpen = Boolean(onOpenTask) && !isCurrentTask
+            return (
+              <button
+                key={relation.id}
+                type="button"
+                disabled={!canOpen}
+                onClick={() => onOpenTask?.(relation.id)}
+                className={cn(
+                  'group flex min-w-0 w-full items-start justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors',
+                  'border-[var(--theme-border)] bg-[var(--theme-panel)] hover:border-[var(--theme-accent)] hover:bg-[var(--theme-hover)]',
+                  isCurrentTask && 'cursor-default opacity-70',
+                )}
+              >
+                <span className="min-w-0">
+                  <span className="block break-words text-sm font-medium text-[var(--theme-text)] [overflow-wrap:anywhere]">
+                    {relation.title || relation.id}
+                  </span>
+                  <span className="mt-0.5 block break-words text-[11px] text-[var(--theme-muted)] [overflow-wrap:anywhere]">
+                    {relatedTaskMeta(relation)}
+                  </span>
+                </span>
+                {canOpen && (
+                  <span className="shrink-0 text-xs text-[var(--theme-muted)] transition-colors group-hover:text-[var(--theme-accent)]">
+                    Open
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function RelatedTasksSection({
+  detail,
+  allTasks,
+  currentTaskId,
+  onOpenTask,
+}: {
+  detail: TaskDetail | null | undefined
+  allTasks: Array<ClaudeTask>
+  currentTaskId: string
+  onOpenTask?: (taskId: string) => void
+}) {
+  const parents = detail?.links.parents ?? []
+  const children = detail?.links.children ?? []
+  if (parents.length === 0 && children.length === 0) return null
+
+  return (
+    <section className="min-w-0 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4">
+      <div className="mb-4">
+        <h3 className="text-sm font-semibold text-[var(--theme-text)]">
+          Related tasks
+        </h3>
+        <p className="mt-1 text-xs text-[var(--theme-muted)]">
+          Parent and child tasks open in this sheet.
+        </p>
+      </div>
+      <div className="min-w-0 space-y-4">
+        <RelatedTaskGroup
+          title="Parent tasks"
+          links={parents}
+          allTasks={allTasks}
+          currentTaskId={currentTaskId}
+          onOpenTask={onOpenTask}
+        />
+        <RelatedTaskGroup
+          title="Child tasks"
+          links={children}
+          allTasks={allTasks}
+          currentTaskId={currentTaskId}
+          onOpenTask={onOpenTask}
+        />
+      </div>
+    </section>
+  )
+}
+
 export function TaskSheet({
   open,
   onOpenChange,
+  taskId = null,
   task,
   detail,
   isLoadingDetail = false,
   detailError = null,
   assignees,
+  allTasks = [],
+  onOpenTask,
   onSubmit,
   isSubmitting,
 }: Props) {
@@ -432,7 +566,9 @@ export function TaskSheet({
           <div className="min-h-0 flex-1 overflow-y-auto p-5">
             {!activeTask ? (
               <div className="rounded-xl border border-dashed border-[var(--theme-border)] p-6 text-sm text-[var(--theme-muted)]">
-                Select a task to open its detail view.
+                {taskId
+                  ? `Loading task ${taskId}...`
+                  : 'Select a task to open its detail view.'}
               </div>
             ) : (
               <div className="min-w-0 space-y-5">
@@ -574,6 +710,13 @@ export function TaskSheet({
                     </div>
                   </form>
                 </section>
+
+                <RelatedTasksSection
+                  detail={detail}
+                  allTasks={allTasks}
+                  currentTaskId={activeTask.id}
+                  onOpenTask={onOpenTask}
+                />
 
                 <section className="min-w-0 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4">
                   <div className="mb-4 flex items-start justify-between gap-3">
