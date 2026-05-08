@@ -458,6 +458,7 @@ export function UsageMeter() {
     threshold: number
   }>({ open: false, threshold: 0 })
   const alertStateRef = useRef(getAlertState())
+  const lastContextPercentRef = useRef<number | null>(null)
 
   const refresh = useCallback(async () => {
     try {
@@ -554,7 +555,15 @@ export function UsageMeter() {
       state.date = getTodayKey()
       state.sent = {}
     }
-    const eligible = THRESHOLDS.filter((threshold) => current >= threshold)
+    const previous = lastContextPercentRef.current
+    lastContextPercentRef.current = current
+    // Avoid a startup modal for existing usage from another/restored session.
+    // Only alert when this mounted app instance crosses a threshold.
+    if (previous === null) return
+
+    const eligible = THRESHOLDS.filter(
+      (threshold) => previous < threshold && current >= threshold,
+    )
     if (eligible.length === 0) return
     for (const threshold of eligible) {
       if (state.sent[threshold]) continue

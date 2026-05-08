@@ -161,8 +161,11 @@ export function UpdateCenterNotifier() {
 
   useEffect(() => {
     if (!data?.pendingReleaseNotes?.length) return
-    const stored = storeNotes(data.pendingReleaseNotes)
-    if (stored) setNotes((current) => current ?? stored)
+    // Do not interrupt startup with release notes from a previously detected
+    // update. Store them so they can still be shown after an explicit update
+    // flow, but avoid opening the modal just because the status poll returned
+    // historical pending notes.
+    storeNotes(data.pendingReleaseNotes)
   }, [data?.pendingReleaseNotes])
 
   const visibleProducts = useMemo(() => {
