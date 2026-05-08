@@ -319,6 +319,7 @@ export function AgentChatModal({
 
           <div className="min-h-0 flex-1 overflow-y-auto bg-linear-to-b from-primary-100/55 via-primary-100/45 to-primary-200/35">
             <AgentChatMessages
+              agentName={agentName}
               messages={messages}
               isLoading={isLoadingHistory}
               isTyping={isTyping}

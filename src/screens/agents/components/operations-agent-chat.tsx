@@ -1,11 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowUp01Icon, RefreshIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useAgentChat } from '../hooks/use-agent-chat'
 import { Button } from '@/components/ui/button'
 import { Markdown } from '@/components/prompt-kit/markdown'
 import { cn } from '@/lib/utils'
 import { formatRelativeTime } from '@/screens/dashboard/lib/formatters'
-import { useAgentChat } from '../hooks/use-agent-chat'
+
+function getChatSpeakerLabel(
+  role: 'user' | 'assistant' | 'system',
+  agentName: string,
+) {
+  if (role === 'user') return 'You'
+  if (role === 'system') return 'System'
+  return agentName.trim() || 'Agent'
+}
 
 export function OperationsAgentChat({
   agentId,
@@ -65,6 +74,7 @@ export function OperationsAgentChat({
           renderedMessages.map((message) => (
             <div
               key={message.id}
+              aria-label={`${getChatSpeakerLabel(message.role, agentName)} message`}
               className={cn(
                 'rounded-2xl border px-4 py-3 text-sm shadow-sm',
                 message.role === 'user'
@@ -73,7 +83,7 @@ export function OperationsAgentChat({
               )}
             >
               <div className="mb-2 flex items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
-                <span>{message.role}</span>
+                <span>{getChatSpeakerLabel(message.role, agentName)}</span>
                 {message.timestamp ? (
                   <span>{formatRelativeTime(message.timestamp)}</span>
                 ) : null}

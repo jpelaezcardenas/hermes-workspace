@@ -9,6 +9,9 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { AnimatePresence, motion } from 'motion/react'
+import { useAgentChat } from '../hooks/use-agent-chat'
+import type { OperationsChatMessage } from '../hooks/use-agent-chat'
+import type { OperationsAgent } from '../hooks/use-operations'
 import { Button } from '@/components/ui/button'
 import { AgentProgress } from '@/components/agent-view/agent-progress'
 import { PixelAvatar } from '@/components/agent-swarm/pixel-avatar'
@@ -16,8 +19,7 @@ import { Markdown } from '@/components/prompt-kit/markdown'
 import { toast } from '@/components/ui/toast'
 import { runCronJob, toggleCronJob } from '@/lib/cron-api'
 import { cn } from '@/lib/utils'
-import { useAgentChat, type OperationsChatMessage } from '../hooks/use-agent-chat'
-import type { OperationsAgent } from '../hooks/use-operations'
+import { formatRelativeTime } from '@/screens/dashboard/lib/formatters'
 
 function getStatusStyles(status: OperationsAgent['status']) {
   if (status === 'error') {
@@ -52,6 +54,18 @@ function stripEmojiPrefix(value: string) {
     .trim()
 }
 
+function formatAgentDisplayName(value: string) {
+  const displayName = stripEmojiPrefix(value)
+  if (!displayName) return 'Agent'
+  if (!/^[a-z0-9-]+$/.test(displayName)) return displayName
+
+  return displayName
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+}
+
 function displayJobName(jobName: string, agentId: string) {
   const prefix = `ops:${agentId}:`
   if (jobName.startsWith(prefix)) {
@@ -64,6 +78,15 @@ function describeJob(job: OperationsAgent['jobs'][number]) {
   return job.description?.trim() || job.schedule
 }
 
+function getChatSpeakerLabel(
+  role: OperationsChatMessage['role'],
+  agentName: string,
+) {
+  if (role === 'user') return 'You'
+  if (role === 'system') return 'System'
+  return formatAgentDisplayName(agentName)
+}
+
 export function OperationsInlineChat({
   agentName,
   messages,
@@ -72,7 +95,7 @@ export function OperationsInlineChat({
   error,
 }: {
   agentName: string
-  messages: OperationsChatMessage[]
+  messages: Array<OperationsChatMessage>
   sendMessage: (message: string) => Promise<unknown>
   isSending: boolean
   error: string | null
@@ -104,20 +127,36 @@ export function OperationsInlineChat({
           <div className="space-y-2">
             {renderedMessages.map((message) => {
               const isUser = message.role === 'user'
+              const speakerLabel = getChatSpeakerLabel(message.role, agentName)
+              const timestampLabel = message.timestamp
+                ? formatRelativeTime(message.timestamp)
+                : null
 
               return (
                 <div
                   key={message.id}
-                  className={cn('flex', isUser ? 'justify-end' : 'justify-start')}
+                  className={cn(
+                    'flex',
+                    isUser ? 'justify-end' : 'justify-start',
+                  )}
                 >
                   <div
+                    aria-label={`${speakerLabel} message`}
                     className={cn(
-                      'max-w-[92%] rounded-2xl px-3 py-2 text-xs leading-relaxed shadow-sm',
+                      'max-w-[92%] rounded-xl border px-3 py-2 text-xs leading-relaxed shadow-sm',
                       isUser
-                        ? 'bg-[var(--theme-accent-soft)] text-[var(--theme-text)]'
-                        : 'bg-[var(--theme-card2)] text-[var(--theme-text)]',
+                        ? 'border-[var(--theme-accent)] bg-[var(--theme-accent-soft)] text-[var(--theme-text)]'
+                        : 'border-[var(--theme-border)] bg-[var(--theme-card2)] text-[var(--theme-text)]',
                     )}
                   >
+                    <div className="mb-1 flex items-center justify-between gap-2 text-[10px] font-semibold uppercase text-[var(--theme-muted)]">
+                      <span className="min-w-0 truncate">{speakerLabel}</span>
+                      {timestampLabel ? (
+                        <span className="shrink-0 font-medium normal-case tabular-nums text-[var(--theme-muted-2)]">
+                          {timestampLabel}
+                        </span>
+                      ) : null}
+                    </div>
                     {message.role === 'assistant' ? (
                       <Markdown>{message.content}</Markdown>
                     ) : (
@@ -148,7 +187,7 @@ export function OperationsInlineChat({
                 void handleSend()
               }
             }}
-            placeholder={`Message ${stripEmojiPrefix(agentName)}...`}
+            placeholder={`Message ${formatAgentDisplayName(agentName)}...`}
             className="h-8 flex-1 bg-transparent px-1.5 text-xs text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-muted)]"
           />
           <Button
@@ -175,7 +214,7 @@ export function OperationsAgentCard({
 }) {
   const queryClient = useQueryClient()
   const status = getStatusStyles(agent.status)
-  const displayName = stripEmojiPrefix(agent.name)
+  const displayName = formatAgentDisplayName(agent.name)
   const [showCronPanel, setShowCronPanel] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const { messages, sendMessage, isSending, error } = useAgentChat(agent.sessionKey)

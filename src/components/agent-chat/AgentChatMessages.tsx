@@ -13,17 +13,20 @@ export type AgentChatMessage = {
 }
 
 type AgentChatMessagesProps = {
+  agentName: string
   messages: Array<AgentChatMessage>
   isLoading: boolean
   isTyping: boolean
 }
 
 export function AgentChatMessages({
+  agentName,
   messages,
   isLoading,
   isTyping,
 }: AgentChatMessagesProps) {
   const endRef = useRef<HTMLDivElement | null>(null)
+  const displayAgentName = agentName.trim() || 'Agent'
 
   useEffect(
     function scrollToLatest() {
@@ -57,10 +60,12 @@ export function AgentChatMessages({
       <AnimatePresence initial={false}>
         {messages.map(function renderMessage(message) {
           const isUser = message.role === 'user'
+          const speakerLabel = isUser ? 'You' : displayAgentName
 
           return (
             <motion.div
               key={message.id}
+              aria-label={`${speakerLabel} message`}
               layout="position"
               initial={{ opacity: 0, y: 8, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -71,7 +76,7 @@ export function AgentChatMessages({
               <div className="max-w-[84%] space-y-1">
                 <div
                   className={cn(
-                    'rounded-2xl border px-3 py-2 text-sm leading-relaxed text-pretty shadow-sm backdrop-blur-sm',
+                    'rounded-xl border px-3 py-2 text-sm leading-relaxed text-pretty shadow-sm backdrop-blur-sm',
                     isUser
                       ? 'border-primary-400/60 bg-primary-300/70 text-primary-900'
                       : 'border-primary-300/70 bg-primary-100/85 text-primary-900',
@@ -80,6 +85,17 @@ export function AgentChatMessages({
                       : '',
                   )}
                 >
+                  <div
+                    className={cn(
+                      'mb-1.5 flex items-center justify-between gap-3 text-[11px] font-semibold uppercase text-primary-700',
+                      isUser ? 'text-primary-800' : 'text-primary-700',
+                    )}
+                  >
+                    <span className="min-w-0 truncate">{speakerLabel}</span>
+                    <span className="shrink-0 text-[10px] font-medium normal-case text-primary-700/80 tabular-nums">
+                      <MessageTimestamp timestamp={message.timestamp} />
+                    </span>
+                  </div>
                   {isUser ? (
                     <span className="whitespace-pre-wrap">{message.text}</span>
                   ) : (
@@ -91,18 +107,21 @@ export function AgentChatMessages({
                     </MessageContent>
                   )}
                 </div>
-                <div
-                  className={cn(
-                    'flex items-center gap-1 text-xs tabular-nums',
-                    isUser
-                      ? 'justify-end text-primary-700'
-                      : 'justify-start text-primary-700',
-                  )}
-                >
-                  <MessageTimestamp timestamp={message.timestamp} />
-                  {message.status === 'sending' ? <span>sending…</span> : null}
-                  {message.status === 'error' ? <span>failed</span> : null}
-                </div>
+                {message.status ? (
+                  <div
+                    className={cn(
+                      'flex items-center gap-1 text-xs tabular-nums',
+                      isUser
+                        ? 'justify-end text-primary-700'
+                        : 'justify-start text-primary-700',
+                    )}
+                  >
+                    {message.status === 'sending' ? (
+                      <span>sending...</span>
+                    ) : null}
+                    {message.status === 'error' ? <span>failed</span> : null}
+                  </div>
+                ) : null}
               </div>
             </motion.div>
           )
@@ -119,7 +138,7 @@ export function AgentChatMessages({
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary-500/60" />
             <span className="relative inline-flex size-2 rounded-full bg-primary-600" />
           </span>
-          Agent is typing…
+          {displayAgentName} is typing...
         </motion.div>
       ) : null}
 

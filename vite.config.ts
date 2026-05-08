@@ -553,7 +553,7 @@ const config = defineConfig(({ mode, command }) => {
         projects: ['./tsconfig.json'],
       }),
       tailwindcss(),
-      tanstackStart(),
+      ...(mode === 'test' ? [] : [tanstackStart()]),
       viteReact(),
       {
         name: 'workspace-daemon',
