@@ -46,6 +46,50 @@ export type DashboardKanbanTask = {
   workspace_path?: string | null
 }
 
+export type DashboardKanbanComment = {
+  id: number
+  task_id: string
+  author: string
+  body: string
+  created_at: number
+}
+
+export type DashboardKanbanEvent = {
+  id: number
+  task_id: string
+  kind: string
+  payload?: unknown
+  created_at: number
+  run_id?: number | null
+}
+
+export type DashboardKanbanRun = {
+  id: number
+  task_id: string
+  profile?: string | null
+  step_key?: string | null
+  status: string
+  claim_lock?: string | null
+  claim_expires?: number | null
+  worker_pid?: number | null
+  max_runtime_seconds?: number | null
+  last_heartbeat_at?: number | null
+  started_at: number
+  ended_at?: number | null
+  outcome?: string | null
+  summary?: string | null
+  metadata?: Record<string, unknown> | null
+  error?: string | null
+}
+
+export type DashboardKanbanTaskDetailResponse = {
+  task?: DashboardKanbanTask | null
+  comments?: Array<DashboardKanbanComment>
+  events?: Array<DashboardKanbanEvent>
+  links?: { parents?: Array<string>; children?: Array<string> }
+  runs?: Array<DashboardKanbanRun>
+}
+
 export type DashboardKanbanBoardResponse = {
   columns: Array<{
     name: string
@@ -73,7 +117,10 @@ async function buildHeaders(): Promise<Record<string, string>> {
   return headers
 }
 
-function dashboardUrl(path: string, params: Record<string, string | undefined> = {}): string {
+function dashboardUrl(
+  path: string,
+  params: Record<string, string | undefined> = {},
+): string {
   const base = CLAUDE_DASHBOARD_URL.replace(/\/+$/, '')
   const url = new URL(`${base}${path}`)
   for (const [key, value] of Object.entries(params)) {
@@ -113,22 +160,30 @@ export function fetchDashboardKanbanBoard(
   )
 }
 
+/** Fetch one task and its full drawer detail by id. Returns null task on 404. */
+export async function fetchDashboardKanbanTaskDetail(
+  taskId: string,
+  board?: string,
+): Promise<DashboardKanbanTaskDetailResponse | null> {
+  try {
+    return await dashboardFetch<DashboardKanbanTaskDetailResponse>(
+      `/api/plugins/kanban/tasks/${encodeURIComponent(taskId)}`,
+      {},
+      board ? { board } : {},
+    )
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('→ 404')) return null
+    throw err
+  }
+}
+
 /** Fetch one task by id. Returns null on 404. */
 export async function fetchDashboardKanbanTask(
   taskId: string,
   board?: string,
 ): Promise<DashboardKanbanTask | null> {
-  try {
-    const wrapped = await dashboardFetch<{ task?: DashboardKanbanTask }>(
-      `/api/plugins/kanban/tasks/${encodeURIComponent(taskId)}`,
-      {},
-      board ? { board } : {},
-    )
-    return wrapped.task ?? null
-  } catch (err) {
-    if (err instanceof Error && err.message.includes('→ 404')) return null
-    throw err
-  }
+  const detail = await fetchDashboardKanbanTaskDetail(taskId, board)
+  return detail?.task ?? null
 }
 
 export type CreateDashboardKanbanTaskInput = {
