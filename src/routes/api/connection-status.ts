@@ -127,6 +127,7 @@ export const Route = createFileRoute('/api/connection-status')({
             config: caps.config,
             jobs: caps.jobs,
             mcp: caps.mcp,
+            mcpFallback: caps.mcpFallback,
             conductor: caps.conductor,
             kanban: caps.kanban,
             enhancedChat: caps.enhancedChat,
