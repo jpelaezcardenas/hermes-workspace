@@ -354,6 +354,16 @@ export const PLAYGROUND_ITEMS: PlaygroundItem[] = [
     rarity: 'legendary',
     description: 'Awarded for surviving the Duel of Models in the Benchmark Arena.',
   },
+  {
+    id: 'federation-sigil',
+    name: 'Federation Sigil',
+    icon: '🏛️',
+    rarity: 'legendary',
+    description: 'Proof of membership in the Zodiac Federation. Your house sigil glows with LUNAR light.',
+    slot: 'artifact',
+    accent: '#c4a35a',
+    stat: { label: 'Diplomacy', value: 12 },
+  },
 ]
 
 export const PLAYGROUND_QUESTS: PlaygroundQuest[] = [

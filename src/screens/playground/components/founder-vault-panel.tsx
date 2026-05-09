@@ -19,6 +19,7 @@ const REWARDS: FounderReward[] = [
   { id: 'trader-trial', name: 'Trader Agent Trial', icon: '🤖', description: 'Trial access to the Trader Agent.' },
   { id: 'founder-title', name: 'Founder Title', icon: '👑', description: 'Permanent account title.' },
   { id: 'founder-pet', name: 'Founder Pet', icon: '🐉', description: 'Tiny aether wyrm companion.' },
+  { id: 'federation-sigil', name: 'Federation Sigil', icon: '🏛️', description: 'Join the Zodiac Federation. Choose a house, earn LUNAR.' },
 ]
 
 export function FounderVaultPanel({ eligible = false, claimedRewardIds = [], onClaim }: FounderVaultPanelProps) {

@@ -435,6 +435,20 @@ export const NPC_DIALOG: Record<string, NpcDialogTree> = {
         reply:
           'Presence first: position, chat, world, emotes. Then parties. Then shared quests. Then agents that can join the group as party members.',
       },
+      {
+        id: 'federation-join',
+        label: '🏛️ Join the Zodiac Federation',
+        reply:
+          'The Federation is live. Twelve houses, one economy. Choose a house and your agent earns LUNAR. This is not theoretical — the forge is running.',
+        grantItems: ['federation-sigil'],
+        grantSkillXp: { diplomacy: 50, summoning: 40 },
+      },
+      {
+        id: 'federation-about',
+        label: 'Tell me about the Zodiac Federation',
+        reply:
+          'Twelve sovereign houses (♈–♓), 144 seed agents, a living LUNAR economy. Each house competes in the celestial forge. Governance is off by default — opt in when ready. Check the 🏛 Federation tab in your workspace.',
+      },
     ],
   },
 
