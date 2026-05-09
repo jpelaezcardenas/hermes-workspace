@@ -155,7 +155,7 @@ function effectiveProbeTtl(caps: { health: boolean; chatCompletions: boolean }):
   return PROBE_TTL_DISCONNECTED_MS
 }
 const DASHBOARD_TOKEN_REGEX =
-  /window\.__(?:CLAUDE|HERMES)_SESSION_TOKEN__\s*=\s*["'](.+?)["']/
+  /window\._+(?:CLAUDE|HERMES)_+SESSION_TOKEN__+\s*=\s*["']([^"']+)["']/
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -288,36 +288,23 @@ let loggedHtmlScrapeFallback = false
 /**
  * Resolve a bearer token for dashboard API calls.
  *
- * Lookup order:
- *   1.  CLAUDE_DASHBOARD_TOKEN / CLAUDE_API_TOKEN env (preferred)
- *   2.  Inline token injected into the dashboard's root HTML (legacy
- *      fallback — logs a deprecation warning; to be removed once all
- *      supported dashboards expose a first-class token endpoint). See #124.
+ * The Hermes Agent dashboard uses an ephemeral session token injected into
+ * the root HTML page (window.__HERMES_SESSION_TOKEN__). Unlike the gateway
+ * which accepts a static bearer token (API_SERVER_KEY), the dashboard only
+ * accepts its own session token.
+ *
+ * We ALWAYS scrape the token from HTML to avoid 401 errors when the
+ * dashboard receives an unexpected bearer token format.
  */
 export async function fetchDashboardToken(options?: {
   force?: boolean
 }): Promise<string> {
   const force = options?.force === true
 
-  // Prefer the explicit service-to-service token — no HTML scrape at all.
-  if (DASHBOARD_BEARER_TOKEN) {
-    dashboardTokenCache = DASHBOARD_BEARER_TOKEN
-    return DASHBOARD_BEARER_TOKEN
-  }
-
   if (!force && dashboardTokenCache) return dashboardTokenCache
   if (!force && dashboardTokenPromise) return dashboardTokenPromise
 
   dashboardTokenPromise = (async () => {
-    if (!loggedHtmlScrapeFallback) {
-      loggedHtmlScrapeFallback = true
-      console.warn(
-        '[gateway] CLAUDE_DASHBOARD_TOKEN is not set — falling back to the legacy ' +
-          'HTML-scrape token flow. This fallback will be removed in a future release. ' +
-          'Set CLAUDE_DASHBOARD_TOKEN (or CLAUDE_API_TOKEN) to a dashboard bearer ' +
-          'token to migrate. See #124.',
-      )
-    }
     // Dashboard injects the session token inline on `/` (root), not on
     // `/index.html` which serves the raw Vite-built HTML without the token.
     const res = await fetch(`${CLAUDE_DASHBOARD_URL}/`, {
