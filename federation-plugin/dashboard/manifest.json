@@ -1,0 +1,11 @@
+{
+  "name": "Zodiac Federation",
+  "tab": {
+    "id": "federation",
+    "label": "🏛 Federation",
+    "icon": "🏛️",
+    "order": 50
+  },
+  "permissions": ["network"],
+  "minVersion": "0.1.0"
+}
