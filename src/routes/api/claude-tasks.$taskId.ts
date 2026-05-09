@@ -27,14 +27,22 @@ function isTaskPriority(value: unknown): value is TaskPriority {
   return value === 'high' || value === 'medium' || value === 'low'
 }
 
-async function requestProjectId(request: Request, body?: Record<string, unknown>): Promise<string | null> {
+function explicitProjectId(request: Request, body?: Record<string, unknown>): string | null {
   const url = new URL(request.url)
-  const explicit = sanitizeProjectSlug(
+  return sanitizeProjectSlug(
     typeof body?.projectId === 'string' ? body.projectId : url.searchParams.get('projectId'),
   )
+}
+
+async function requestProjectId(request: Request, body?: Record<string, unknown>): Promise<string | null> {
+  const explicit = explicitProjectId(request, body)
   if (explicit) return explicit
   const catalog = await loadWorkspaceCatalog()
   return catalog.projectSlug ?? null
+}
+
+function projectIdRequiredResponse() {
+  return jsonResponse({ error: 'projectId is required for task writes' }, 400)
 }
 
 export const Route = createFileRoute('/api/claude-tasks/$taskId')({
@@ -57,7 +65,8 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
 
         try {
           const body = (await request.json()) as Record<string, unknown>
-          const projectId = await requestProjectId(request, body)
+          const projectId = explicitProjectId(request, body)
+          if (!projectId) return projectIdRequiredResponse()
           const task = await updateClaudeTask(params.taskId, {
             title: typeof body.title === 'string' ? body.title : undefined,
             description: typeof body.description === 'string' ? body.description : undefined,
@@ -100,7 +109,9 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
           if (!isTaskColumn(body.column)) {
             return jsonResponse({ error: 'column is required' }, 400)
           }
-          const task = await moveClaudeTask(params.taskId, body.column, await requestProjectId(request, body))
+          const projectId = explicitProjectId(request, body)
+          if (!projectId) return projectIdRequiredResponse()
+          const task = await moveClaudeTask(params.taskId, body.column, projectId)
           if (!task) return jsonResponse({ error: 'Task not found' }, 404)
           return jsonResponse({ task })
         } catch {
