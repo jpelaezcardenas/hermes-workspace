@@ -107,6 +107,20 @@ function ChatRoute() {
         friendlyId: payload.friendlyId,
         sessionKey: payload.sessionKey,
       })
+      // If this chat was launched from a task board card, link the real gateway
+      // session ID back to that task so future Resume/Launch has real history.
+      try {
+        const taskId = localStorage.getItem(`hermes-task-wsession:${sourceFriendlyId}`)
+        if (taskId && payload.friendlyId !== sourceFriendlyId) {
+          localStorage.removeItem(`hermes-task-wsession:${sourceFriendlyId}`)
+          // Fire-and-forget PATCH — link real session to task
+          fetch(`/api/hermes-tasks/${encodeURIComponent(taskId)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: payload.friendlyId }),
+          }).catch(() => {/* non-critical */})
+        }
+      } catch {/* non-critical */}
       // Persist last session for refresh recovery
       try {
         localStorage.setItem('claude-last-session', payload.friendlyId)

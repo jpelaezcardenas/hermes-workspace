@@ -22,6 +22,7 @@ import {
   getSessionMessages as getDashboardSessionMessages,
   listSessions as listDashboardSessions,
   searchSessions as searchDashboardSessions,
+  sendChat as sendDashboardChat,
   updateSession as updateDashboardSession,
 } from './claude-dashboard-api'
 
@@ -467,6 +468,9 @@ export async function sendChat(
   const msg =
     typeof messageOrOpts === 'string' ? messageOrOpts : messageOrOpts.message
   const mdl = typeof messageOrOpts === 'string' ? model : messageOrOpts.model
+  if (getCapabilities().dashboard.available) {
+    return sendDashboardChat(sessionId, msg, mdl)
+  }
   return claudePost(`/api/sessions/${sessionId}/chat`, {
     message: msg,
     model: mdl,

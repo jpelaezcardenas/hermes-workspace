@@ -135,6 +135,48 @@ export function TasksScreen() {
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to move task', { type: 'error' }),
   })
 
+  const launchMutation = useMutation({
+    mutationFn: async (taskId: string) => {
+      const result = await launchSession(taskId)
+      return result
+    },
+    onSuccess: ({ sessionId, briefing }, taskId) => {
+      invalidate()
+      setEditingTask(null)
+      // Store workspace-session-id -> task-id mapping so $sessionKey route can
+      // write the real gateway session ID back to the task once it resolves.
+      try { localStorage.setItem(`hermes-task-wsession:${sessionId}`, taskId) } catch {}
+      // Build an optimistic message object for the pending send
+      const optimisticMessage = {
+        id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `msg-${Date.now()}`,
+        role: 'user' as const,
+        content: briefing,
+        timestamp: Date.now(),
+        attachments: [],
+      }
+      stashPendingSend({
+        sessionKey: sessionId,
+        friendlyId: sessionId,
+        message: briefing,
+        attachments: [],
+        optimisticMessage,
+      })
+      void navigate({ to: '/chat/$sessionKey', params: { sessionKey: sessionId } })
+    },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to launch session', { type: 'error' }),
+  })
+
+  const linkMutation = useMutation({
+    mutationFn: ({ taskId, sessionId }: { taskId: string; sessionId: string }) => linkSession(taskId, sessionId),
+    onSuccess: () => { invalidate(); toast('Session linked') },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to link session', { type: 'error' }),
+  })
+
+  const unlinkMutation = useMutation({
+    mutationFn: (taskId: string) => linkSession(taskId, null),
+    onSuccess: () => { invalidate(); toast('Session unlinked') },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to unlink session', { type: 'error' }),
+  })
   function handleDragStart(e: React.DragEvent, taskId: string) {
     e.dataTransfer.setData('text/plain', taskId)
     setDraggingId(taskId)

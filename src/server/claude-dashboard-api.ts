@@ -177,6 +177,18 @@ export async function forkSession(
   })
 }
 
+export async function sendChat(
+  sessionId: string,
+  message: string,
+  model?: string,
+): Promise<Record<string, unknown>> {
+  return dashboardJson(`/api/sessions/${encodeURIComponent(sessionId)}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, model }),
+  })
+}
+
 export async function getSkills(): Promise<SkillInfo[]> {
   return dashboardJson('/api/skills')
 }
