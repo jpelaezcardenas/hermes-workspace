@@ -23,7 +23,9 @@ const ACTIVE_TAB_KEY = 'terminal.active'
 const DEFAULT_HEIGHT = 360
 const MIN_HEIGHT = 300
 const MAX_HEIGHT = 480
-const DEFAULT_CWD = '~/.hermes'
+// Use ~ (not ~/.hermes): in Docker, ~/.hermes under passwd HOME is often absent
+// and Hermes state may live under HERMES_HOME elsewhere; shell should start in a real dir.
+const DEFAULT_CWD = '~'
 
 type TerminalTabState = {
   id: string
