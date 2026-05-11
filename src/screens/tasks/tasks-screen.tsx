@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { useSearch } from '@tanstack/react-router'
+import { useSearch, useNavigate } from '@tanstack/react-router'
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -17,12 +17,15 @@ import {
   updateTask,
   deleteTask,
   moveTask,
+  launchSession,
+  linkSession,
   COLUMN_LABELS,
   COLUMN_ORDER,
   COLUMN_COLORS,
   isOverdue,
 } from '@/lib/tasks-api'
 import type { ClaudeTask, TaskColumn, CreateTaskInput, TaskAssignee } from '@/lib/tasks-api'
+import { stashPendingSend } from '@/screens/chat/pending-send'
 
 const QUERY_KEY = ['claude', 'tasks'] as const
 const ASSIGNEES_KEY = ['claude', 'tasks', 'assignees'] as const
@@ -46,6 +49,7 @@ function SkeletonCard() {
 
 export function TasksScreen() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const [showCreate, setShowCreate] = useState(false)
   const [createColumn, setCreateColumn] = useState<TaskColumn>('backlog')
   const [editingTask, setEditingTask] = useState<ClaudeTask | null>(null)
@@ -133,6 +137,46 @@ export function TasksScreen() {
     mutationFn: ({ id, column }: { id: string; column: TaskColumn }) => moveTask(id, column, 'user'),
     onSuccess: () => invalidate(),
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to move task', { type: 'error' }),
+  })
+
+  const launchMutation = useMutation({
+    mutationFn: async (taskId: string) => {
+      const result = await launchSession(taskId)
+      return result
+    },
+    onSuccess: ({ sessionId, briefing }) => {
+      invalidate()
+      setEditingTask(null)
+      // Build an optimistic message object for the pending send
+      const optimisticMessage = {
+        id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `msg-${Date.now()}`,
+        role: 'user' as const,
+        content: briefing,
+        timestamp: Date.now(),
+        attachments: [],
+      }
+      stashPendingSend({
+        sessionKey: sessionId,
+        friendlyId: sessionId,
+        message: briefing,
+        attachments: [],
+        optimisticMessage,
+      })
+      void navigate({ to: '/chat/$sessionKey', params: { sessionKey: sessionId } })
+    },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to launch session', { type: 'error' }),
+  })
+
+  const linkMutation = useMutation({
+    mutationFn: ({ taskId, sessionId }: { taskId: string; sessionId: string }) => linkSession(taskId, sessionId),
+    onSuccess: () => { invalidate(); toast('Session linked') },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to link session', { type: 'error' }),
+  })
+
+  const unlinkMutation = useMutation({
+    mutationFn: (taskId: string) => linkSession(taskId, null),
+    onSuccess: () => { invalidate(); toast('Session unlinked') },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to unlink session', { type: 'error' }),
   })
 
   function handleDragStart(e: React.DragEvent, taskId: string) {
@@ -380,9 +424,22 @@ export function TasksScreen() {
         task={editingTask}
         assignees={assignees}
         isSubmitting={updateMutation.isPending}
+        isLaunching={launchMutation.isPending}
         onSubmit={async (input) => {
           if (!editingTask) return
           await updateMutation.mutateAsync({ id: editingTask.id, input })
+        }}
+        onLaunch={async (taskId) => {
+          await launchMutation.mutateAsync(taskId)
+        }}
+        onLink={async (taskId, sessionId) => {
+          await linkMutation.mutateAsync({ taskId, sessionId })
+          // Update local editingTask state so dialog refreshes
+          invalidate()
+        }}
+        onUnlink={async (taskId) => {
+          await unlinkMutation.mutateAsync(taskId)
+          invalidate()
         }}
       />
     </div>

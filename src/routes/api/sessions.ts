@@ -34,15 +34,25 @@ export const Route = createFileRoute('/api/sessions')({
           })
         }
 
+        // Filter out cron/scheduler sessions — they pollute the sidebar and
+        // are not useful for manual browsing. Also filter api- prefixed
+        // internal API sessions.
+        const isCronSession = (id: string) =>
+          id.startsWith('cron_') ||
+          id.startsWith('cron:') ||
+          id.startsWith('api-')
+
         try {
-          const sessions = await listSessions(50, 0)
-          const gatewaySessions = sessions.map(toSessionSummary)
+          const sessions = await listSessions(200, 0)
+          const gatewaySessions = sessions
+            .filter((s: any) => !isCronSession(String(s.id ?? s.key ?? '')))
+            .map(toSessionSummary)
 
           // Merge local portable sessions (Ollama, Atomic Chat, etc.)
           const localSessions = listLocalSessions()
           const gatewayIds = new Set(gatewaySessions.map((s: any) => s.key || s.id))
           for (const ls of localSessions) {
-            if (!gatewayIds.has(ls.id)) {
+            if (!gatewayIds.has(ls.id) && !isCronSession(ls.id)) {
               gatewaySessions.push({
                 key: ls.id,
                 id: ls.id,

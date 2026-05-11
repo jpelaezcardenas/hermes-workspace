@@ -93,6 +93,18 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
           </div>
         )}
       </div>
+
+      {task.session_id && (
+        <div className="mt-1.5 flex items-center gap-1">
+          <a
+            href={`/chat/${task.session_id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--theme-accent)]/20 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/40 transition-colors"
+          >
+            ▶ Session
+          </a>
+        </div>
+      )}
     </div>
   )
 }

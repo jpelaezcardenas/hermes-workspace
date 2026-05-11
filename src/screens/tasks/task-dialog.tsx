@@ -18,9 +18,13 @@ type Props = {
   assignees: Array<TaskAssignee>
   onSubmit: (input: CreateTaskInput) => Promise<void>
   isSubmitting: boolean
+  onLaunch?: (taskId: string) => Promise<void>
+  onLink?: (taskId: string, sessionId: string) => Promise<void>
+  onUnlink?: (taskId: string) => Promise<void>
+  isLaunching?: boolean
 }
 
-export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting }: Props) {
+export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting, onLaunch, onLink, onUnlink, isLaunching }: Props) {
   const isEdit = Boolean(task)
 
   const [title, setTitle] = useState('')
@@ -30,6 +34,8 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
   const [assignee, setAssignee] = useState<string>('')
   const [tags, setTags] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [showPasteSession, setShowPasteSession] = useState(false)
+  const [pasteSessionInput, setPasteSessionInput] = useState('')
 
   useEffect(() => {
     if (task) {
@@ -49,6 +55,8 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
       setTags('')
       setDueDate('')
     }
+    setShowPasteSession(false)
+    setPasteSessionInput('')
   }, [task, open, defaultColumn])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -63,6 +71,22 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
       tags: tags.split(',').map(t => t.trim()).filter(Boolean),
       due_date: dueDate || null,
     })
+  }
+
+  function extractSessionId(raw: string): string {
+    const trimmed = raw.trim()
+    // Accept /chat/<id> URL or bare session ID
+    const match = trimmed.match(/\/chat\/([^\s/?]+)/)
+    return match ? match[1] : trimmed
+  }
+
+  async function handlePasteLink() {
+    if (!task || !onLink) return
+    const sessionId = extractSessionId(pasteSessionInput)
+    if (!sessionId) return
+    await onLink(task.id, sessionId)
+    setShowPasteSession(false)
+    setPasteSessionInput('')
   }
 
   const inputClass = cn(
@@ -180,6 +204,97 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                 placeholder="frontend, bug, research"
               />
             </div>
+
+            {/* Agent Session section — only in edit mode */}
+            {isEdit && task && (onLaunch || onLink || onUnlink) && (
+              <div className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-hover)] p-3 space-y-2">
+                <p className="text-xs font-medium text-[var(--theme-muted)]">Agent Session</p>
+                {task.session_id ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <a
+                        href={`/chat/${task.session_id}`}
+                        className="text-xs text-[var(--theme-accent)] hover:underline"
+                      >
+                        ▶ Resume Session
+                      </a>
+                      {onLaunch && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs h-6 px-2"
+                          onClick={() => onLaunch(task.id)}
+                          disabled={isLaunching}
+                        >
+                          + New Session
+                        </Button>
+                      )}
+                      {onUnlink && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs h-6 px-2 text-red-400 hover:text-red-300"
+                          onClick={() => onUnlink(task.id)}
+                        >
+                          Unlink
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-[var(--theme-muted)] font-mono truncate">
+                      {task.session_id}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {onLaunch && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs h-6 px-2"
+                          onClick={() => onLaunch(task.id)}
+                          disabled={isLaunching}
+                          style={{ background: 'var(--theme-accent)', color: 'white' }}
+                        >
+                          {isLaunching ? 'Launching...' : '▶ Launch New Session'}
+                        </Button>
+                      )}
+                      {onLink && (
+                        <button
+                          type="button"
+                          className="text-[10px] text-[var(--theme-muted)] hover:text-[var(--theme-text)] underline"
+                          onClick={() => setShowPasteSession(!showPasteSession)}
+                        >
+                          Paste existing
+                        </button>
+                      )}
+                    </div>
+                    {showPasteSession && onLink && (
+                      <div className="flex gap-2">
+                        <input
+                          className={cn(inputClass, 'text-xs py-1 h-7 flex-1')}
+                          placeholder="Session ID or /chat/<id> URL"
+                          value={pasteSessionInput}
+                          onChange={e => setPasteSessionInput(e.target.value)}
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="h-7 text-xs px-2"
+                          onClick={handlePasteLink}
+                          disabled={!pasteSessionInput.trim()}
+                        >
+                          Link
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center justify-between pt-2">
               <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>

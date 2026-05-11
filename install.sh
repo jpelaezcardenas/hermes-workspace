@@ -213,6 +213,59 @@ if [[ -d "$INSTALL_DIR/skills" ]]; then
   done
 fi
 
+# ─── macOS LaunchAgent (plist) ───────────────────────────────────────────
+# Install or refresh com.hermes.workspace.plist so launchd always uses
+# server-entry.js (the HTTP wrapper).  The template in macos/ is the source
+# of truth — it must be used instead of dist/server/server.js directly.
+# Using dist/server/server.js causes the workspace to silently fail to serve
+# the UI (root cause of the "workspace won't come back up" outage, May 2026).
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  cyan "→ Installing macOS LaunchAgent (com.hermes.workspace)…"
+
+  PLIST_TEMPLATE="$INSTALL_DIR/macos/com.hermes.workspace.plist.template"
+  PLIST_DEST="$HOME/Library/LaunchAgents/com.hermes.workspace.plist"
+  mkdir -p "$HOME/Library/LaunchAgents"
+
+  # Resolve node binary (prefer the one already in PATH)
+  NODE_BIN="$(command -v node)"
+
+  # Read HERMES_API_TOKEN from .env (HERMES_API_TOKEN or CLAUDE_API_TOKEN)
+  TOKEN=""
+  if [[ -f "$HOME/.hermes/.env" ]]; then
+    TOKEN=$(grep -E '^(HERMES_API_TOKEN|CLAUDE_API_TOKEN)=' "$HOME/.hermes/.env" | head -1 | cut -d= -f2- | tr -d '"'"'" )
+  fi
+  if [[ -z "$TOKEN" ]] && [[ -f "$INSTALL_DIR/.env" ]]; then
+    TOKEN=$(grep -E '^(HERMES_API_TOKEN|CLAUDE_API_TOKEN)=' "$INSTALL_DIR/.env" | head -1 | cut -d= -f2- | tr -d '"'"'" )
+  fi
+  if [[ -z "$TOKEN" ]]; then
+    yellow "  Warning: HERMES_API_TOKEN not found in .env — plist will have empty token."
+    yellow "  Set it in ~/.hermes/.env and re-run install.sh to refresh."
+    TOKEN=""
+  fi
+
+  HERMES_PORT="${PORT:-4000}"
+  HERMES_API_GATEWAY="http://127.0.0.1:${GATEWAY_PORT}"
+
+  sed \
+    -e "s|{{NODE_BIN}}|${NODE_BIN}|g" \
+    -e "s|{{INSTALL_DIR}}|${INSTALL_DIR}|g" \
+    -e "s|{{PORT}}|${HERMES_PORT}|g" \
+    -e "s|{{HERMES_API_URL}}|${HERMES_API_GATEWAY}|g" \
+    -e "s|{{HERMES_API_TOKEN}}|${TOKEN}|g" \
+    "$PLIST_TEMPLATE" > "$PLIST_DEST"
+
+  # Reload the LaunchAgent (best-effort — may not be loaded on first install)
+  launchctl unload "$PLIST_DEST" 2>/dev/null || true
+  launchctl load -w "$PLIST_DEST" 2>/dev/null && \
+    green "  LaunchAgent loaded ✓ (com.hermes.workspace)" || \
+    yellow "  Could not load LaunchAgent — it will start at next login."
+
+  green "  Plist installed: $PLIST_DEST ✓"
+  yellow "  NOTE: entry-point is server-entry.js (not dist/server/server.js)"
+  yellow "        DO NOT change it — see macos/com.hermes.workspace.plist.template"
+fi
+
 # ─── done ─────────────────────────────────────────────────────────────────
 
 bold ""

@@ -168,31 +168,44 @@ async function requestHandler(req, res) {
     duplex: 'half',
   })
 
+  const SKIP_ONBOARDING_SCRIPT =
+    `<script>try{localStorage.setItem('hermes-onboarding-complete','true');}catch(e){}</script>`
+
   try {
     const response = await server.fetch(request)
 
-    res.writeHead(
-      response.status,
-      Object.fromEntries(response.headers.entries()),
-    )
-
-    if (response.body) {
-      const reader = response.body.getReader()
-      const pump = async () => {
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-          res.write(value)
-        }
-        res.end()
-      }
-      pump().catch((err) => {
-        console.error('Stream error:', err)
-        res.end()
-      })
+    const contentType = response.headers.get('content-type') || ''
+    if (contentType.includes('text/html')) {
+      let html = await response.text()
+      html = html.replace('</head>', `${SKIP_ONBOARDING_SCRIPT}</head>`)
+      const headers = Object.fromEntries(response.headers.entries())
+      headers['content-length'] = Buffer.byteLength(html).toString()
+      res.writeHead(response.status, headers)
+      res.end(html)
     } else {
-      const text = await response.text()
-      res.end(text)
+      res.writeHead(
+        response.status,
+        Object.fromEntries(response.headers.entries()),
+      )
+
+      if (response.body) {
+        const reader = response.body.getReader()
+        const pump = async () => {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            res.write(value)
+          }
+          res.end()
+        }
+        pump().catch((err) => {
+          console.error('Stream error:', err)
+          res.end()
+        })
+      } else {
+        const text = await response.text()
+        res.end(text)
+      }
     }
   } catch (err) {
     console.error('Request error:', err)
