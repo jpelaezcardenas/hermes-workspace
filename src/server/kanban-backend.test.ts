@@ -77,6 +77,7 @@ async function loadKanbanBackend(options?: {
 
 describe('kanban-backend', () => {
   it('auto-detect prefers Hermes backend when Hermes CLI and canonical storage are present', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'sqlite')
     vi.stubEnv('CLAUDE_HOME', '/Users/aurora/.claude/profiles/swarm2')
     vi.stubEnv('HERMES_HOME', '/Users/aurora/.claude/profiles/swarm2')
     const sqliteCalls: Array<{ command: string; args?: string[] }> = []
@@ -138,6 +139,7 @@ describe('kanban-backend', () => {
   })
 
   it('auto-detect uses Hermes storage directly when the CLI is unavailable', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'sqlite')
     vi.stubEnv('CLAUDE_HOME', '/Users/aurora/.claude/profiles/swarm2')
     vi.stubEnv('HERMES_HOME', '/Users/aurora/.claude/profiles/swarm2')
     const mod = await loadKanbanBackend({
@@ -178,6 +180,7 @@ describe('kanban-backend', () => {
   })
 
   it('resolves canonical Kanban paths from legacy profile-home env fallback too', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'sqlite')
     vi.stubEnv('CLAUDE_HOME', '/Users/aurora/.claude/profiles/swarm5/home')
     vi.stubEnv('HERMES_HOME', '/Users/aurora/.claude/profiles/swarm5/home')
     const mod = await loadKanbanBackend({
@@ -198,6 +201,7 @@ describe('kanban-backend', () => {
   })
 
   it('auto-detect falls back to local when canonical Hermes storage is missing', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'sqlite')
     vi.stubEnv('CLAUDE_HOME', '/Users/aurora/.claude/profiles/swarm2')
     vi.stubEnv('HERMES_HOME', '/Users/aurora/.claude/profiles/swarm2')
     const mod = await loadKanbanBackend({
@@ -279,6 +283,88 @@ describe('kanban-backend', () => {
     })
   })
 
+  it('uses CrossCut Postgres visual-board projection as a read-only provider', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'crosscut-postgres')
+    const crosscutCalls: string[][] = []
+    const mod = await loadKanbanBackend({
+      execFileSync: (command, args = []) => {
+        if (command === 'crosscut') {
+          crosscutCalls.push(args)
+          if (args.includes('boards')) {
+            return JSON.stringify({
+              provider_id: 'crosscut-postgres',
+              read_only: true,
+              boards: [
+                {
+                  id: 'hermes-local:work-graph-execution',
+                  backend_id: 'hermes-local',
+                  external_board: 'work-graph-execution',
+                  task_count: 1,
+                },
+              ],
+            })
+          }
+          if (args.includes('tasks')) {
+            return JSON.stringify({
+              provider_id: 'crosscut-postgres',
+              read_only: true,
+              tasks: [
+                {
+                  id: 'map-1',
+                  title: 'CrossCut Work Item',
+                  body: 'Durable planning body',
+                  work_status: 'delegated',
+                  external_status: 'running',
+                  assignee_hint: 'crosscut-coder',
+                  priority: 7,
+                },
+              ],
+            })
+          }
+        }
+        throw new Error(`Unexpected command: ${command} ${args.join(' ')}`)
+      },
+    })
+
+    expect(mod.getKanbanBackendMeta()).toMatchObject({
+      id: 'crosscut-postgres',
+      detected: true,
+      writable: false,
+      path: 'crosscut work visual-board',
+    })
+    const cards = await mod.listKanbanCards()
+    expect(cards[0]).toMatchObject({
+      id: 'map-1',
+      title: 'CrossCut Work Item',
+      spec: expect.stringContaining('Durable planning body'),
+      assignedWorker: 'crosscut-coder',
+      status: 'ready',
+      createdBy: 'crosscut-postgres',
+    })
+    await expect(
+      mod.createKanbanCard({ title: 'nope', spec: '', status: 'ready' }),
+    ).rejects.toThrow(/read-only/)
+    expect(crosscutCalls.some((args) => args.includes('boards'))).toBe(true)
+    expect(crosscutCalls.some((args) => args.includes('tasks'))).toBe(true)
+  })
+
+  it('falls back when CrossCut Postgres provider is selected but unavailable', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'crosscut-postgres')
+    const mod = await loadKanbanBackend({
+      execFileSync: (command, args = []) => {
+        if (command === 'crosscut') throw new Error('database unavailable')
+        throw new Error(`Unexpected command: ${command} ${args.join(' ')}`)
+      },
+    })
+
+    expect(mod.getKanbanBackendMeta()).toMatchObject({
+      id: 'local',
+      detected: true,
+      writable: true,
+    })
+    expect((await mod.listKanbanCards())[0]?.id).toBe('local-1')
+  })
+
   it('fails loudly for unsupported env providers and API versions', async () => {
     vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'postgres')
     const unsupportedProvider = await loadKanbanBackend()
@@ -296,6 +382,7 @@ describe('kanban-backend', () => {
   })
 
   it('creates and updates Hermes tasks through canonical kanban.db path', async () => {
+    vi.stubEnv('HERMES_KANBAN_STORE_PROVIDER', 'sqlite')
     vi.stubEnv('CLAUDE_HOME', '/Users/aurora/.claude/profiles/swarm2')
     vi.stubEnv('HERMES_HOME', '/Users/aurora/.claude/profiles/swarm2')
     const sqliteCalls: string[] = []

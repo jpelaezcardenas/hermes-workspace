@@ -31,9 +31,9 @@ import {
   type KanbanTaskRecord,
 } from './kanban-store-contract'
 
-export type KanbanBackendId = 'local' | 'claude' | 'hermes-proxy'
+export type KanbanBackendId = 'local' | 'claude' | 'hermes-proxy' | 'crosscut-postgres'
 
-type KanbanProviderPreference = 'local' | 'sqlite' | 'hermes-proxy' | 'auto'
+type KanbanProviderPreference = 'local' | 'sqlite' | 'hermes-proxy' | 'crosscut-postgres' | 'auto'
 
 type KanbanProviderSelection = {
   provider: KanbanProviderPreference
@@ -176,6 +176,96 @@ function dashboardTaskToCard(task: DashboardKanbanTask): SwarmKanbanCard {
   }
 }
 
+type CrossCutVisualTask = {
+  id?: string
+  mapping_id?: string
+  title?: string
+  body?: string | null
+  body_preview?: string | null
+  work_status?: string | null
+  external_status?: string | null
+  assignee_hint?: string | null
+  priority?: number | null
+}
+
+type CrossCutVisualTaskList = {
+  tasks?: CrossCutVisualTask[]
+}
+
+type CrossCutVisualBoardList = {
+  boards?: unknown[]
+}
+
+function runCrossCutVisualBoard(command: 'boards' | 'tasks'): unknown {
+  const output = execFileSync(
+    'crosscut',
+    ['work', 'visual-board', command],
+    {
+      encoding: 'utf8',
+      timeout: 10_000,
+      env: process.env,
+    },
+  )
+  return JSON.parse(output)
+}
+
+function detectCrossCutPostgres(): { available: boolean; reason?: string } {
+  try {
+    const boardList = runCrossCutVisualBoard('boards') as CrossCutVisualBoardList
+    return { available: Array.isArray(boardList.boards) }
+  } catch (error) {
+    return {
+      available: false,
+      reason: error instanceof Error ? error.message : String(error),
+    }
+  }
+}
+
+function mapCrossCutStatusToLane(status: string | null | undefined): SwarmKanbanCard['status'] {
+  switch ((status ?? '').toLowerCase()) {
+    case 'running':
+      return 'running'
+    case 'blocked':
+      return 'blocked'
+    case 'done':
+      return 'done'
+    case 'delegated':
+    case 'ready':
+      return 'ready'
+    case 'planned':
+    case 'backlog':
+    case 'closed':
+    default:
+      return 'backlog'
+  }
+}
+
+function crossCutTaskToCard(task: CrossCutVisualTask): SwarmKanbanCard {
+  const body = task.body ?? task.body_preview ?? ''
+  const externalStatus = task.external_status ? `\n\nExternal status: ${task.external_status}` : ''
+  return {
+    id: task.id ?? task.mapping_id ?? '',
+    title: task.title ?? task.id ?? task.mapping_id ?? 'CrossCut Work Item',
+    spec: `${body}${externalStatus}`,
+    acceptanceCriteria: [],
+    assignedWorker: task.assignee_hint ?? null,
+    reviewer: null,
+    status: mapCrossCutStatusToLane(task.work_status),
+    missionId: null,
+    reportPath: null,
+    createdBy: 'crosscut-postgres',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  }
+}
+
+function listCrossCutVisualCards(): SwarmKanbanCard[] {
+  const taskList = runCrossCutVisualBoard('tasks') as CrossCutVisualTaskList
+  return (Array.isArray(taskList.tasks) ? taskList.tasks : [])
+    .map(crossCutTaskToCard)
+    .sort((a, b) => b.updatedAt - a.updatedAt || a.title.localeCompare(b.title))
+}
+
 type ClaudeDetection = {
   available: boolean
   cliPath?: string | null
@@ -242,11 +332,14 @@ function normalizeKanbanProviderPreference(
     case 'proxy':
     case 'dashboard-proxy':
       return 'hermes-proxy'
+    case 'crosscut-postgres':
+    case 'crosscut':
+      return 'crosscut-postgres'
     case 'auto':
       return 'auto'
     default:
       throw new Error(
-        `Unsupported Kanban provider ${JSON.stringify(value)}. Supported providers: sqlite, local, hermes-proxy, auto.`,
+        `Unsupported Kanban provider ${JSON.stringify(value)}. Supported providers: sqlite, local, hermes-proxy, crosscut-postgres, auto.`,
       )
   }
 }
@@ -545,6 +638,42 @@ const claudeBackend: KanbanBackend = {
   },
 }
 
+const crossCutPostgresBackend: KanbanBackend = {
+  meta() {
+    const detection = detectCrossCutPostgres()
+    return withKanbanStoreContract(
+      {
+        id: 'crosscut-postgres',
+        label: 'CrossCut PostgreSQL visual board',
+        detected: detection.available,
+        writable: false,
+        path: 'crosscut work visual-board',
+        details: detection.available
+          ? 'Read-only projection from CrossCut PostgreSQL work records; execution writes remain gated through CrossCut/Hermes paths.'
+          : `CrossCut visual-board projection not detected${detection.reason ? `: ${detection.reason}` : '.'}`,
+      },
+      kanbanStoreCapabilities({
+        boards: true,
+        tasks: true,
+        taskLinks: true,
+        comments: true,
+        events: true,
+        runs: true,
+        diagnostics: true,
+      }),
+    )
+  },
+  list() {
+    return listCrossCutVisualCards()
+  },
+  create() {
+    throw new Error('CrossCut PostgreSQL visual board provider is read-only')
+  },
+  update() {
+    throw new Error('CrossCut PostgreSQL visual board provider is read-only')
+  },
+}
+
 // Hermes Dashboard kanban plugin backend (HTTP proxy).
 //
 // Used when the upstream Hermes Agent dashboard exposes the kanban plugin
@@ -623,7 +752,7 @@ const dashboardProxyBackend: KanbanBackend = {
  *
  * Precedence (highest first):
  *   1. Env: HERMES_KANBAN_STORE_PROVIDER / KANBAN_STORE_PROVIDER / legacy
- *      CLAUDE_KANBAN_BACKEND (sqlite | local | hermes-proxy | auto)
+ *      CLAUDE_KANBAN_BACKEND (sqlite | local | hermes-proxy | crosscut-postgres | auto)
  *   2. Config: config.yaml kanban.provider or kanban_store.provider
  *   3. Default: sqlite (direct ~/.hermes/kanban.db when detected, local JSON
  *      fallback only when storage is absent)
@@ -638,6 +767,13 @@ export function resolveKanbanBackend(): KanbanBackend {
   if (selection.provider === 'local') return localBackend
   if (selection.provider === 'hermes-proxy') {
     return getCapabilities().kanban ? dashboardProxyBackend : localBackend
+  }
+  if (selection.provider === 'crosscut-postgres') {
+    const crossCutMeta = crossCutPostgresBackend.meta()
+    if (crossCutMeta.detected) return crossCutPostgresBackend
+    if (getCapabilities().kanban) return dashboardProxyBackend
+    const claudeMeta = claudeBackend.meta()
+    return claudeMeta.detected ? claudeBackend : localBackend
   }
   if (selection.provider === 'sqlite') {
     const claudeMeta = claudeBackend.meta()
