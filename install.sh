@@ -156,6 +156,14 @@ fi
 cd "$INSTALL_DIR"
 green "  Workspace ready at $INSTALL_DIR ✓"
 
+# ─── protect local-patch files from upstream overwrites ───────────────────
+# .gitattributes marks src/lib/tasks-api.ts with merge=ours, but git requires
+# the 'ours' merge driver to be registered in .git/config for it to take effect.
+# Without this line, upstream merges silently overwrite our backend-detection logic.
+cyan "→ Registering 'ours' merge driver (protects tasks-api.ts from upstream)…"
+git config merge.ours.driver true
+green "  merge driver registered ✓"
+
 # ─── env + install ────────────────────────────────────────────────────────
 
 cyan "→ Configuring .env…"
