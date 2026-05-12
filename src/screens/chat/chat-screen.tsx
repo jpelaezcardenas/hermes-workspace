@@ -1,8 +1,3 @@
-// Module-level local model override — set by composer when user picks a local model
-// Avoids prop threading. Reset when switching back to cloud models.
-export let _localModelOverride = ''
-export function setLocalModelOverride(model: string) { _localModelOverride = model }
-
 import {
   useCallback,
   useEffect,
@@ -102,6 +97,8 @@ import { useResearchCard } from '@/hooks/use-research-card'
 import { useTapDebug } from '@/hooks/use-tap-debug'
 import { useChatMode } from '@/hooks/use-chat-mode'
 import { useChatActivityStore, type AgentActivity } from '@/stores/chat-activity-store'
+import { useSessionModelStore } from '@/stores/session-model-store'
+import { _localModelOverride } from './local-model-override'
 
 type ChatScreenProps = {
   activeFriendlyId: string
@@ -976,7 +973,13 @@ export function ChatScreen({
   }, [modelsQuery.data])
 
   const gatewayModel = currentModelQuery.data || ''
-  const currentModel = _localModelOverride || gatewayModel
+  const modelSessionKey = isNewChat
+    ? 'main'
+    : forcedSessionKey || resolvedSessionKey || activeSessionKey || activeFriendlyId
+  const sessionModel = useSessionModelStore((state) =>
+    state.getModel(modelSessionKey),
+  )
+  const currentModel = sessionModel || _localModelOverride || gatewayModel
 
   // Ref so sendMessage can always read latest thinkingLevel without being in deps
   const thinkingLevelRef = useRef<ThinkingLevel>(thinkingLevel)
@@ -2761,7 +2764,7 @@ export function ChatScreen({
               disabled={sending || hideUi}
               sessionKey={
                 isNewChat
-                  ? undefined
+                  ? 'main'
                   : forcedSessionKey || resolvedSessionKey || activeSessionKey
               }
               wrapperRef={composerRef}

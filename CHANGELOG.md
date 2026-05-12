@@ -6,7 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Changed
-- **`docker compose up` now pulls pre-built images by default** (#82) — `nousresearch/hermes-agent:latest` for the gateway and `ghcr.io/outsourc-e/hermes-workspace:latest` for the UI. Agent state persists in the `claude-data` named volume. Adds `docker-compose.dev.yml` overlay for building from source.
+- **`docker compose up` now pulls pre-built images by default** (#82) — `nousresearch/hermes-agent:latest` for the gateway and `ghcr.io/outsourc-e/hermes-workspace:latest` for the UI. Adds `docker-compose.dev.yml` overlay for building from source.
+
+### Fixed
+- **Docker: dashboard API unreachable** — agent now starts the dashboard process (`HERMES_DASHBOARD=1`) on `:9119` alongside the gateway; workspace reads sessions, skills, config, jobs, and MCP over the Docker network instead of falling back to limited zero-fork mode.
+- **Docker: gateway bound to loopback inside container** — `API_SERVER_HOST` now defaults to `0.0.0.0` inside the container so workspace can reach it over Docker DNS; host publish remains loopback-only (`127.0.0.1:8642`).
+- **Docker: volume naming** — renamed `claude-data` to `hermes-agent-data`; added `hermes-workspace-files` volume for workspace file browser persistence.
+- **Docker: healthcheck** now verifies both gateway `:8642` and dashboard `:9119` are responding before marking the agent healthy.
+- **pnpm 11 build** — added `pnpm-workspace.yaml` with `allowBuilds` map (replaces deprecated `onlyBuiltDependencies` / `dangerouslyAllowAllBuilds`).
+- **Chat: per-session model selection** — model picker in the composer now persists the selected model per session and is sent with each message, instead of silently falling back to the backend default.
+- **Settings: default model path** — changed from `agents.defaults.model.primary` to `model.default` to match the actual backend config key.
+- **Config API: rename message** — "Restart Claude" → "Restart Hermes Agent".
 
 ## [2.0.0] — 2026-04-20
 

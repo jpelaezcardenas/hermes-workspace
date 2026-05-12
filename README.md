@@ -382,13 +382,13 @@ If you've already started the workspace, change either URL from **Settings → C
 
 [![Open in GitHub Codespaces](https://img.shields.io/badge/GitHub%20Codespaces-Open-181717?logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=outsourc-e/hermes-workspace)
 
-The Docker setup runs both the **Hermes Agent gateway** and **Hermes Workspace** together.
+The Docker setup runs **Hermes Agent** and **Hermes Workspace** together. Hermes Agent starts both required APIs inside its container: the gateway on `:8642` and the dashboard API on `:9119` for sessions, skills, config, jobs, and MCP.
 
 ### Prerequisites
 
 - **Docker**
 - **Docker Compose**
-- **Anthropic API Key** — [Get one here](https://console.anthropic.com/settings/keys) (required for the agent gateway)
+- At least one model provider key, or a reachable local model server
 
 ### Step 1: Configure Environment
 
@@ -418,20 +418,30 @@ Using **Ollama, LM Studio, or another local server**? No key needed — just poi
 docker compose up
 ```
 
-This pulls two pre-built images and starts them:
+This pulls two pre-built images and starts two containers:
 
-- **hermes-agent** → `nousresearch/hermes-agent:latest` on port **8642**
-- **hermes-workspace** → `ghcr.io/outsourc-e/hermes-workspace:latest` on port **3000**
+- **hermes-agent** → `nousresearch/hermes-agent:latest`; gateway on Docker/host-loopback `:8642`, dashboard API on Docker-only `:9119`
+- **hermes-workspace** → `ghcr.io/outsourc-e/hermes-workspace:latest`; web UI on host-loopback `:3000`
 
 No local build. First run takes a minute to pull; subsequent starts are instant.
-Agent state (config, sessions, skills, memory, credentials) persists in the
-legacy-named `claude-data` Docker volume, so containers can be recreated without data loss.
+Agent state (config, sessions, skills, memory, credentials) persists in the named `hermes-agent-data` Docker volume, and files created from the Workspace file browser persist in `hermes-workspace-files`. These volumes survive container recreation, Docker restarts, and `docker compose down`. Only `docker compose down -v` removes them.
+
+#### What Docker configures for Hermes Agent
+
+The Compose file is non-interactive, so it chooses safe defaults that the manual `hermes setup` wizard normally asks about:
+
+- `terminal.backend: local` in `/opt/data/config.yaml`, meaning agent terminal commands run inside the `hermes-agent` container, not on your host machine.
+- `/opt/data` is persisted by the `hermes-agent-data` Docker volume.
+- `/workspace` in the Workspace UI is persisted by the `hermes-workspace-files` Docker volume.
+- The dashboard API is not published to the host; Workspace reaches it over Docker DNS at `http://hermes-agent:9119`.
+
+To change the agent terminal backend later, open **Settings → Providers / Models** in Workspace or edit `config.yaml` in the persisted volume. For host filesystem access, prefer an explicit host bind mount that you control instead of broad-mounting your home directory.
 
 ### Step 3: Access the Workspace
 
 Open `http://localhost:3000` and complete the onboarding.
 
-> **Verify:** Check the Docker logs for `[gateway] Connected to Hermes Agent` — this confirms the workspace successfully connected to the agent.
+> **Verify:** Check the Workspace logs for `mode=zero-fork` and `enhanced=[sessions, skills, memory, config, jobs]` — this confirms Workspace reached both the gateway and dashboard APIs.
 
 ### Building from source
 
