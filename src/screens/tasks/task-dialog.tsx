@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
+import type { ClaudeTask, CreateTaskInput, TaskAssignee, TaskColumn, TaskPriority } from '@/lib/tasks-api'
 import {
   DialogContent,
+  DialogDescription,
   DialogRoot,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import type { ClaudeTask, CreateTaskInput, TaskColumn, TaskPriority, TaskAssignee } from '@/lib/tasks-api'
 import { COLUMN_LABELS, COLUMN_ORDER } from '@/lib/tasks-api'
 
 type Props = {
@@ -17,11 +17,19 @@ type Props = {
   defaultColumn?: TaskColumn
   assignees: Array<TaskAssignee>
   onSubmit: (input: CreateTaskInput) => Promise<void>
+  onArchive?: () => Promise<void>
+  onDelete?: () => Promise<void>
   isSubmitting: boolean
+  isArchiving?: boolean
+  isDeleting?: boolean
 }
 
-export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting }: Props) {
+export const ARCHIVE_TASK_BUTTON_LABEL = 'Archive'
+export const DELETE_TASK_BUTTON_LABEL = 'Delete'
+
+export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, onArchive, onDelete, isSubmitting, isArchiving = false, isDeleting = false }: Props) {
   const isEdit = Boolean(task)
+  const isBusy = isSubmitting || isArchiving || isDeleting
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -181,22 +189,46 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
               />
             </div>
 
-            <div className="flex items-center justify-between pt-2">
-              <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>
+            <div className="flex items-center justify-between gap-3 pt-2">
+              <div className="flex items-center gap-2">
+                {isEdit && onArchive && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => { void onArchive() }}
+                    disabled={isBusy}
+                  >
+                    {isArchiving ? 'Archiving...' : ARCHIVE_TASK_BUTTON_LABEL}
+                  </Button>
+                )}
+                {isEdit && onDelete && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => { void onDelete() }}
+                    disabled={isBusy}
+                    className="text-red-400 hover:text-red-300"
+                  >
+                    {isDeleting ? 'Deleting...' : DELETE_TASK_BUTTON_LABEL}
+                  </Button>
+                )}
+              </div>
               <div className="flex gap-2">
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   onClick={() => onOpenChange(false)}
-                  disabled={isSubmitting}
+                  disabled={isBusy}
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   size="sm"
-                  disabled={isSubmitting || !title.trim()}
+                  disabled={isBusy || !title.trim()}
                   style={{ background: 'var(--theme-accent)', color: 'white' }}
                 >
                   {isSubmitting ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Task'}

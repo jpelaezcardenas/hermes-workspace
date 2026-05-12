@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
-import { getClaudeTask, moveClaudeTask, updateClaudeTask } from '../../server/claude-tasks-backend'
+import { archiveClaudeTask, deleteClaudeTask, getClaudeTask, moveClaudeTask, updateClaudeTask } from '../../server/claude-tasks-backend'
 import type { TaskColumn, TaskPriority } from '../../server/claude-tasks-backend'
 
 function jsonResponse(data: unknown, status = 200) {
@@ -62,12 +62,14 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
         }
       },
 
-      DELETE: async ({ request }) => {
+      DELETE: async ({ request, params }) => {
         if (!isAuthenticated(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
-        return jsonResponse({ error: 'Delete is not supported by the shared Agent Kanban backend' }, 405)
+        const deleted = await deleteClaudeTask(params.taskId)
+        if (!deleted) return jsonResponse({ error: 'Task not found or delete unsupported' }, 404)
+        return jsonResponse({ ok: true })
       },
 
       POST: async ({ request, params }) => {
@@ -77,6 +79,11 @@ export const Route = createFileRoute('/api/claude-tasks/$taskId')({
 
         const url = new URL(request.url)
         const action = url.searchParams.get('action') || 'move'
+        if (action === 'archive') {
+          const task = await archiveClaudeTask(params.taskId)
+          if (!task) return jsonResponse({ error: 'Task not found' }, 404)
+          return jsonResponse({ task })
+        }
         if (action !== 'move') {
           return jsonResponse({ error: `Unsupported action: ${action}` }, 400)
         }

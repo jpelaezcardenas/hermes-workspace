@@ -10,6 +10,13 @@ describe('tasks UX copy', () => {
     )
   })
 
+  it('labels visible destructive task actions distinctly', async () => {
+    const dialog = await import('./task-dialog')
+
+    expect(dialog.ARCHIVE_TASK_BUTTON_LABEL).toBe('Archive')
+    expect(dialog.DELETE_TASK_BUTTON_LABEL).toBe('Delete')
+  })
+
   it('formats assignee labels explicitly for assigned and unassigned tasks', () => {
     expect(formatTaskAssigneeLabel('jarvis', { jarvis: 'Jarvis' })).toBe(
       'Assignee: Jarvis',

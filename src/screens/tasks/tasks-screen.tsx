@@ -8,21 +8,22 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Add01Icon, CheckListIcon, RefreshIcon } from '@hugeicons/core-free-icons'
 import { TaskCard } from './task-card'
 import { TaskDialog } from './task-dialog'
+import type { ClaudeTask, CreateTaskInput, TaskAssignee, TaskColumn } from '@/lib/tasks-api'
 import { toast } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
 import {
-  fetchTasks,
-  fetchAssignees,
-  createTask,
-  updateTask,
-  deleteTask,
-  moveTask,
+  COLUMN_COLORS,
   COLUMN_LABELS,
   COLUMN_ORDER,
-  COLUMN_COLORS,
+  archiveTask,
+  createTask,
+  deleteTask,
+  fetchAssignees,
+  fetchTasks,
   isOverdue,
+  moveTask,
+  updateTask,
 } from '@/lib/tasks-api'
-import type { ClaudeTask, TaskColumn, CreateTaskInput, TaskAssignee } from '@/lib/tasks-api'
 
 const QUERY_KEY = ['claude', 'tasks'] as const
 const ASSIGNEES_KEY = ['claude', 'tasks', 'assignees'] as const
@@ -89,7 +90,8 @@ export function TasksScreen() {
     }
     for (const t of tasks) {
       if (assigneeFilter && t.assignee !== assigneeFilter) continue
-      if (map[t.column]) map[t.column].push(t)
+      if (t.column === 'deleted') continue
+      map[t.column].push(t)
     }
     for (const col of COLUMN_ORDER) {
       map[col].sort((a, b) => a.position - b.position)
@@ -125,8 +127,14 @@ export function TasksScreen() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTask,
-    onSuccess: () => { invalidate(); toast('Task deleted') },
+    onSuccess: () => { invalidate(); toast('Task deleted'); setEditingTask(null) },
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to delete task', { type: 'error' }),
+  })
+
+  const archiveMutation = useMutation({
+    mutationFn: archiveTask,
+    onSuccess: () => { invalidate(); toast('Task archived'); setEditingTask(null) },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to archive task', { type: 'error' }),
   })
 
   const moveMutation = useMutation({
@@ -380,6 +388,17 @@ export function TasksScreen() {
         task={editingTask}
         assignees={assignees}
         isSubmitting={updateMutation.isPending}
+        isArchiving={archiveMutation.isPending}
+        isDeleting={deleteMutation.isPending}
+        onArchive={async () => {
+          if (!editingTask) return
+          await archiveMutation.mutateAsync(editingTask.id)
+        }}
+        onDelete={async () => {
+          if (!editingTask) return
+          if (!window.confirm(`Delete task "${editingTask.title}"?`)) return
+          await deleteMutation.mutateAsync(editingTask.id)
+        }}
         onSubmit={async (input) => {
           if (!editingTask) return
           await updateMutation.mutateAsync({ id: editingTask.id, input })

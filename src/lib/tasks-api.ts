@@ -179,6 +179,23 @@ export async function deleteTask(taskId: string): Promise<void> {
   if (!res.ok) throw new Error(`Failed to delete task: ${res.status}`)
 }
 
+export async function archiveTask(taskId: string): Promise<void> {
+  const { base } = await resolveBackend()
+  const res = await fetch(`${base}/${taskId}?action=archive`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error(
+      (body as { detail?: string; error?: string }).detail
+      || (body as { error?: string }).error
+      || `Failed to archive task: ${res.status}`,
+    )
+  }
+}
+
 export async function linkSession(taskId: string, sessionId: string | null): Promise<ClaudeTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}`, {
