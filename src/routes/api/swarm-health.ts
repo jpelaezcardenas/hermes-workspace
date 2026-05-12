@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import * as yaml from 'yaml'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { getLocalBinDir, getProfilesDir } from '../../server/claude-paths'
+import { isSwarmWorkerId } from '../../server/swarm-roster'
 
 type WorkerHealth = {
   workerId: string
@@ -23,7 +24,7 @@ function listSwarmIds(): string[] {
   return readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .filter((name) => /^swarm\d+$/i.test(name))
+    .filter((name) => isSwarmWorkerId(name))
     .sort()
 }
 

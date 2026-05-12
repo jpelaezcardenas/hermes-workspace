@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { isAuthenticated } from '../../server/auth-middleware'
-import { newestCheckpointFromMessages, type ParsedSwarmCheckpoint } from '../../server/swarm-checkpoints'
+import { newestCheckpointFromMessages, parseSwarmCheckpoint, type ParsedSwarmCheckpoint } from '../../server/swarm-checkpoints'
 import { readWorkerMessages } from '../../server/swarm-chat-reader'
 import { createOrUpdateMission, markMissionAssignmentDispatched, recordMissionCheckpoint } from '../../server/swarm-missions'
 import { appendSwarmMemoryEvent, buildSwarmStartupSnapshot } from '../../server/swarm-memory'
@@ -920,6 +920,48 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
           durationMs,
           exitCode: 0,
           delivery: 'oneshot',
+        }
+        if (options?.waitForCheckpoint) {
+          const checkpoint = parseSwarmCheckpoint(out)
+          if (checkpoint) {
+            markCheckpointResult(workerId, checkpoint, options?.notifySessionKey ?? 'main')
+            recordMissionCheckpoint({
+              missionId: options?.missionId,
+              assignmentId: assignment.assignmentId ?? null,
+              workerId,
+              checkpoint,
+              source: 'swarm-dispatch',
+            })
+            appendSwarmMemoryEvent({
+              workerId,
+              missionId: options?.missionId ?? null,
+              assignmentId: assignment.assignmentId ?? null,
+              type: 'checkpoint',
+              summary: checkpoint.result ?? `Checkpoint ${checkpoint.stateLabel}`,
+              checkpoint,
+              event: {
+                stateLabel: checkpoint.stateLabel,
+                filesChanged: checkpoint.filesChanged,
+                commandsRun: checkpoint.commandsRun,
+                blocker: checkpoint.blocker,
+                nextAction: checkpoint.nextAction,
+              },
+            })
+            publishSwarmCheckpointNotification({
+              workerId,
+              missionId: options?.missionId ?? null,
+              assignmentId: assignment.assignmentId ?? null,
+              checkpoint,
+              notifySessionKey: options?.notifySessionKey ?? 'main',
+            })
+            result.checkpoint = checkpoint
+            result.checkpointStatus = 'checkpointed'
+          } else {
+            result.checkpoint = null
+            result.checkpointStatus = 'timeout'
+          }
+        } else {
+          result.checkpointStatus = 'not-requested'
         }
         markDispatchResult(workerId, result)
         resolve(result)
