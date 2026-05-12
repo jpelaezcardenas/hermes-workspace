@@ -213,6 +213,18 @@ if [[ -d "$INSTALL_DIR/skills" ]]; then
   done
 fi
 
+# ─── register launchd service (macOS only) ───────────────────────────────
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  cyan "→ Registering com.hermes.workspace LaunchAgent…"
+  if bash "$INSTALL_DIR/scripts/register-launchd.sh"; then
+    green "  LaunchAgent registered ✓"
+  else
+    yellow "  LaunchAgent registration failed (non-fatal). Run manually:"
+    yellow "    bash $INSTALL_DIR/scripts/register-launchd.sh"
+  fi
+fi
+
 # ─── done ─────────────────────────────────────────────────────────────────
 
 bold ""
