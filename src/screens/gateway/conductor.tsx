@@ -98,6 +98,19 @@ const QUICK_ACTIONS: Array<{
 
 const AGENT_NAMES = ['Nova', 'Pixel', 'Blaze', 'Echo', 'Sage', 'Drift', 'Flux', 'Volt']
 const AGENT_EMOJIS = ['🤖', '⚡', '🔥', '🌊', '🌿', '💫', '🔮', '⭐']
+const SEMANTIC_AGENT_IDS = ['orchestrator', 'km-agent', 'builder', 'reviewer', 'qa', 'researcher', 'ops-watch', 'maintainer', 'strategist', 'inbox-triage']
+const SEMANTIC_AGENT_LABELS: Record<string, string> = {
+  'ops-watch': 'ops-watch',
+  qa: 'qa',
+  reviewer: 'reviewer',
+  builder: 'builder',
+  'km-agent': 'km-agent',
+  maintainer: 'maintainer',
+  orchestrator: 'orchestrator',
+  researcher: 'researcher',
+  strategist: 'strategist',
+  'inbox-triage': 'inbox-triage',
+}
 const BLENDED_COST_PER_MILLION_TOKENS = 5
 const CONDUCTOR_GOAL_DRAFT_STORAGE_KEY = 'conductor:goal-draft'
 
@@ -126,6 +139,23 @@ function getAgentPersona(index: number) {
     name: AGENT_NAMES[index % AGENT_NAMES.length],
     emoji: AGENT_EMOJIS[index % AGENT_EMOJIS.length],
   }
+}
+
+function extractSemanticAgentIds(text: string): Array<string> {
+  const lower = text.toLowerCase()
+  return SEMANTIC_AGENT_IDS.filter((id) => lower.includes(id))
+}
+
+function semanticResultLineStatus(text: string, agentId: string): 'complete' | 'failed' | 'running' {
+  const escaped = agentId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const line = text.match(new RegExp(`^${escaped}:\\s*(PASS|FAIL)\\b.*$`, 'im'))?.[0]
+  if (!line) return 'running'
+  return /:\s*FAIL\b/i.test(line) ? 'failed' : 'complete'
+}
+
+function semanticResultLine(text: string, agentId: string): string | null {
+  const escaped = agentId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return text.match(new RegExp(`^${escaped}:\\s*(?:PASS|FAIL)\\b.*$`, 'im'))?.[0] ?? null
 }
 
 function estimateTokenCost(totalTokens: number): number {
@@ -960,7 +990,31 @@ export function Conductor() {
     })
   }, [conductor.recentSessions])
 
+  const requestedSemanticAgentIds = useMemo(() => extractSemanticAgentIds(conductor.goal), [conductor.goal])
+
   const officeAgentRows = useMemo<AgentWorkingRow[]>(() => {
+    if (requestedSemanticAgentIds.length > 1) {
+      const streamText = conductor.streamText || ''
+      return requestedSemanticAgentIds.map((agentId) => {
+        const resultStatus = semanticResultLineStatus(streamText, agentId)
+        const resultLine = semanticResultLine(streamText, agentId)
+        const existingWorker = conductor.workers.find((worker) => worker.label.toLowerCase().includes(agentId) || worker.displayName.toLowerCase().includes(agentId))
+        const isPaused = conductor.isPaused && resultStatus === 'running'
+        return {
+          id: `semantic-${agentId}`,
+          name: SEMANTIC_AGENT_LABELS[agentId] ?? agentId,
+          modelId: existingWorker?.model || conductor.conductorSettings.workerModel || 'auto',
+          roleDescription: existingWorker?.displayName || 'Semantic worker',
+          status: isPaused ? 'paused' : resultStatus === 'complete' ? 'idle' : resultStatus === 'failed' ? 'error' : 'active',
+          lastLine: isPaused ? 'Paused' : resultLine || `Assigned ${agentId} QC lane`,
+          lastAt: existingWorker?.updatedAt ? new Date(existingWorker.updatedAt).getTime() : undefined,
+          taskCount: conductor.tasks.filter((task) => task.title.toLowerCase().includes(agentId) || task.workerKey === existingWorker?.key).length,
+          currentTask: resultLine ? undefined : `Running ${agentId}`,
+          sessionKey: existingWorker?.key ?? `semantic-${agentId}`,
+        }
+      })
+    }
+
     if (conductor.workers.length > 0) {
       return conductor.workers.map((worker, index) => {
         const persona = getAgentPersona(index)
@@ -996,7 +1050,7 @@ export function Conductor() {
         sessionKey: 'conductor-placeholder-agent',
       },
     ]
-  }, [conductor.conductorSettings.workerModel, conductor.goal, conductor.isPaused, conductor.tasks, conductor.workerOutputs, conductor.workers])
+  }, [conductor.conductorSettings.workerModel, conductor.goal, conductor.isPaused, conductor.streamText, conductor.tasks, conductor.workerOutputs, conductor.workers, requestedSemanticAgentIds])
 
   const completePhaseProjectPath = useMemo(() => {
     const workerOutputTexts = [...Object.values(conductor.workerOutputs), ...conductor.workers.map((worker) => getLastAssistantMessage(worker.raw.messages as HistoryMessage[] | undefined))].filter(

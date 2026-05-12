@@ -51,8 +51,15 @@ const DEFAULT_CONDUCTOR_SETTINGS: ConductorSettings = {
   orchestratorModel: '',
   workerModel: '',
   projectsDir: '',
-  maxParallel: 1,
+  maxParallel: 6,
   supervised: false,
+}
+
+const SEMANTIC_AGENT_IDS = ['orchestrator', 'km-agent', 'builder', 'reviewer', 'qa', 'researcher', 'ops-watch', 'maintainer', 'strategist', 'inbox-triage']
+
+function countNamedSemanticAgents(text: string): number {
+  const lower = text.toLowerCase()
+  return SEMANTIC_AGENT_IDS.filter((id) => lower.includes(id)).length
 }
 
 type PersistedMission = {
@@ -352,7 +359,7 @@ function loadConductorSettings(): ConductorSettings {
       orchestratorModel: typeof parsed.orchestratorModel === 'string' ? parsed.orchestratorModel : DEFAULT_CONDUCTOR_SETTINGS.orchestratorModel,
       workerModel: typeof parsed.workerModel === 'string' ? parsed.workerModel : DEFAULT_CONDUCTOR_SETTINGS.workerModel,
       projectsDir: typeof parsed.projectsDir === 'string' ? parsed.projectsDir : DEFAULT_CONDUCTOR_SETTINGS.projectsDir,
-      maxParallel: Math.min(5, Math.max(1, typeof parsed.maxParallel === 'number' && Number.isFinite(parsed.maxParallel) ? Math.round(parsed.maxParallel) : DEFAULT_CONDUCTOR_SETTINGS.maxParallel)),
+      maxParallel: Math.min(10, Math.max(1, typeof parsed.maxParallel === 'number' && Number.isFinite(parsed.maxParallel) ? Math.round(parsed.maxParallel) : DEFAULT_CONDUCTOR_SETTINGS.maxParallel)),
       supervised: typeof parsed.supervised === 'boolean' ? parsed.supervised : DEFAULT_CONDUCTOR_SETTINGS.supervised,
     }
   } catch {
@@ -1415,6 +1422,11 @@ export function useConductorGateway() {
       seenToolCallRef.current = false
       historySavedRef.current = false
       const startedAt = new Date().toISOString()
+      const namedSemanticAgentCount = countNamedSemanticAgents(trimmed)
+      const effectiveSettings: ConductorSettings = {
+        ...settings,
+        maxParallel: Math.max(settings.maxParallel, namedSemanticAgentCount, DEFAULT_CONDUCTOR_SETTINGS.maxParallel),
+      }
       setMissionStartedAt(startedAt)
       setPhase('decomposing')
       persistMission({
@@ -1440,7 +1452,7 @@ export function useConductorGateway() {
       const response = await fetch('/api/conductor-spawn', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ goal: trimmed, ...settings }),
+        body: JSON.stringify({ goal: trimmed, ...effectiveSettings }),
       })
 
       if (!response.ok) {

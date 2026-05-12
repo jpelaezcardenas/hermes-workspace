@@ -64,8 +64,8 @@ function readOptionalString(value: unknown): string {
 }
 
 function readMaxParallel(value: unknown): number {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return 1
-  return Math.min(5, Math.max(1, Math.round(value)))
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 6
+  return Math.min(10, Math.max(1, Math.round(value)))
 }
 
 function buildOrchestratorPrompt(
@@ -105,6 +105,7 @@ function buildOrchestratorPrompt(
       ? [
           '',
           `Run up to ${options.maxParallel} workers in parallel when tasks are independent`,
+          'If the goal names specific worker/agent roles, create one worker per named role and preserve those role names in the worker labels and result lines.',
         ]
       : [
           '',
@@ -117,7 +118,9 @@ function buildOrchestratorPrompt(
     '## Critical Rules',
     '- Use create_task / delegate_task to create worker agents for each task',
     '- Do NOT do the work yourself — spawn workers',
-    '- For simple tasks (single file, quick mockup), use ONLY 1 task with 1 worker — do not over-decompose',
+    ...(options.maxParallel > 1
+      ? ['- For multi-role missions, create distinct workers for the independent roles instead of collapsing them into one worker']
+      : ['- For simple tasks (single file, quick mockup), use ONLY 1 task with 1 worker — do not over-decompose']),
     '- Do NOT ask for confirmation — start immediately',
     '- Label workers as "worker-<task-slug>" so the UI can track them',
     '- Each worker gets a self-contained prompt with the task + exit criteria',
