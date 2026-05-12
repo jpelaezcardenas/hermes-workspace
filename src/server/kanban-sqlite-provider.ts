@@ -50,19 +50,8 @@ export type SqliteKanbanProviderOptions = {
 export const HERMES_SQLITE_KANBAN_CAPABILITIES = kanbanStoreCapabilities({
   boards: true,
   tasks: true,
-  taskLinks: true,
-  comments: true,
-  events: true,
-  runs: true,
-  claims: true,
-  dispatcher: true,
-  workspaces: true,
-  notifications: true,
   stats: true,
   diagnostics: true,
-  idempotentCreate: true,
-  skillValidation: true,
-  completionCreatedCardsGuard: true,
 })
 
 export function sqliteQuote(value: string): string {

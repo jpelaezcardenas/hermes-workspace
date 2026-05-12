@@ -655,10 +655,6 @@ const crossCutPostgresBackend: KanbanBackend = {
       kanbanStoreCapabilities({
         boards: true,
         tasks: true,
-        taskLinks: true,
-        comments: true,
-        events: true,
-        runs: true,
         diagnostics: true,
       }),
     )

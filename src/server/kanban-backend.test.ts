@@ -119,10 +119,10 @@ describe('kanban-backend', () => {
       apiVersion: KANBAN_STORE_API_VERSION,
       capabilities: {
         tasks: true,
-        runs: true,
-        claims: true,
-        dispatcher: true,
-        completionCreatedCardsGuard: true,
+        runs: false,
+        claims: false,
+        dispatcher: false,
+        completionCreatedCardsGuard: false,
       },
     })
 
@@ -331,6 +331,20 @@ describe('kanban-backend', () => {
       detected: true,
       writable: false,
       path: 'crosscut work visual-board',
+      capabilities: {
+        boards: true,
+        tasks: true,
+        taskLinks: false,
+        comments: false,
+        events: false,
+        runs: false,
+        claims: false,
+        dispatcher: false,
+        notifications: false,
+        idempotentCreate: false,
+        skillValidation: false,
+        completionCreatedCardsGuard: false,
+      },
     })
     const cards = await mod.listKanbanCards()
     expect(cards[0]).toMatchObject({

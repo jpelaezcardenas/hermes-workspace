@@ -40,8 +40,16 @@ describe('SqliteKanbanStoreProvider', () => {
       path: '/tmp/kanban.db',
       capabilities: {
         tasks: true,
-        runs: true,
-        dispatcher: true,
+        taskLinks: false,
+        comments: false,
+        events: false,
+        runs: false,
+        claims: false,
+        dispatcher: false,
+        notifications: false,
+        idempotentCreate: false,
+        skillValidation: false,
+        completionCreatedCardsGuard: false,
       },
     })
   })
