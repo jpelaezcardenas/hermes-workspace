@@ -273,8 +273,24 @@ export const Route = createFileRoute('/api/conductor-spawn')({
             name: missionName,
             prompt,
           })
-          if (result.error)
-            return json({ ok: false, error: result.error }, { status: 502 })
+          if (result.error) {
+            // Some Hermes dashboard builds advertise conductor endpoints but reject
+            // mission creation (for example HTTP 405 Method Not Allowed). Fall back
+            // to the portable Workspace conductor path instead of failing the smoke
+            // mission before the orchestrator can run.
+            return json({
+              ok: true,
+              mode: 'portable',
+              prompt,
+              missionId: null,
+              sessionKey: missionName,
+              sessionKeyPrefix: null,
+              jobId: null,
+              jobName: missionName,
+              runId: null,
+              warnings: [...goalSanitization.warnings, result.error],
+            })
+          }
           const missionId = result.id ?? missionName
           return json({
             ok: true,

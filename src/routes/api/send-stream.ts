@@ -1454,13 +1454,24 @@ export const Route = createFileRoute('/api/send-stream')({
                 }
               }
 
-              // Set a timeout to close the stream if no completion event
-              streamTimeoutTimer = setTimeout(() => {
-                if (!streamClosed) {
-                  sendEvent('error', { message: 'Stream timeout' })
-                  closeStream()
+              // Some Hermes Agent builds finish the upstream stream after
+              // `assistant.completed` without emitting a separate `run.completed`.
+              // In that case we have already sent the final assistant text above,
+              // so emit a terminal done event now instead of leaving the Workspace
+              // UI stuck in "Thinking…" until the send-stream timeout fires.
+              if (!streamClosed) {
+                const translated = {
+                  state: 'complete',
+                  sessionKey,
+                  runId: activeRunId ?? undefined,
                 }
-              }, SEND_STREAM_RUN_TIMEOUT_MS)
+                persistActiveRun((runSessionKey, activeId) =>
+                  markRunStatus(runSessionKey, activeId, 'complete'),
+                )
+                sendEvent('done', translated)
+                skipPublish || publishChatEvent('done', translated)
+                closeStream()
+              }
             } catch (err) {
               // Only send error if stream hasn't already completed successfully
               if (!streamClosed) {

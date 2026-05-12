@@ -69,13 +69,14 @@ const CHECK_INTERVAL_MS = 30 * 60 * 1000
 const DISMISS_PREFIX = 'hermes-update-v2-dismissed:'
 const NOTES_KEY = 'hermes-update-v2-release-notes'
 const NOTES_SEEN_KEY = 'hermes-update-v2-release-notes-seen'
+const NOTES_DISABLED_KEY = 'hermes-update-v2-release-notes-disabled'
 
 function shortSha(value: string | null | undefined): string {
   return value ? value.slice(0, 7) : 'unknown'
 }
 
 function productDismissKey(product: ProductUpdateStatus): string {
-  return `${product.id}:${product.latestHead ?? product.version ?? 'unknown'}`
+  return `${product.id}:${product.latestHead ?? product.version}`
 }
 
 function notesId(sections: Array<ReleaseNoteSection>): string {
@@ -99,7 +100,7 @@ function storeNotes(sections: Array<ReleaseNoteSection>): Notes | null {
     const raw = localStorage.getItem(NOTES_KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as Notes
-      existingId = parsed?.id ?? null
+      existingId = parsed.id
     }
   } catch {
     existingId = null
@@ -113,10 +114,11 @@ function storeNotes(sections: Array<ReleaseNoteSection>): Notes | null {
 
 function readNotes(): Notes | null {
   try {
+    if (localStorage.getItem(NOTES_DISABLED_KEY) === '1') return null
     const raw = localStorage.getItem(NOTES_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw) as Notes
-    if (!parsed?.id || !Array.isArray(parsed.sections)) return null
+    if (!parsed.id || !Array.isArray(parsed.sections)) return null
     if (localStorage.getItem(NOTES_SEEN_KEY) === parsed.id) return null
     return parsed
   } catch {
@@ -160,6 +162,7 @@ export function UpdateCenterNotifier() {
   })
 
   useEffect(() => {
+    if (localStorage.getItem(NOTES_DISABLED_KEY) === '1') return
     if (!data?.pendingReleaseNotes?.length) return
     const stored = storeNotes(data.pendingReleaseNotes)
     if (stored) setNotes((current) => current ?? stored)
