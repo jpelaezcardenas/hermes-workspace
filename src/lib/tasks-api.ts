@@ -2,11 +2,12 @@
  * Tasks API client with automatic backend detection.
  *
  * Two backend routes exist for task storage:
- *   /api/hermes-tasks  — flat-file store at ~/.hermes/tasks.json (used by agents/cron)
- *   /api/claude-tasks  — kanban-backend abstraction (local JSON, or Hermes Dashboard proxy)
+ *   /api/hermes-tasks  — flat-file store at ~/.hermes/tasks.json (legacy, being retired)
+ *   /api/claude-tasks  — kanban-backend abstraction (kanban.db via Hermes Dashboard proxy)
  *
  * On first fetch this module probes both in parallel and selects the backend that has
- * data. If both have data, hermes-tasks wins (it is the canonical agent task store).
+ * data. kanban (claude) is now the canonical store — hermes-tasks is only used as a
+ * fallback if kanban is empty and hermes-tasks has data (migration safety net).
  * The decision is cached for the page session so subsequent calls never re-probe.
  *
  * All mutations (create, update, move, delete, launch) route through the same resolved
@@ -50,9 +51,10 @@ async function resolveBackend(): Promise<BackendResolution> {
       probeBackend(CLAUDE_BASE),
     ])
 
-    // Prefer hermes if it has data; fall back to claude if only claude has data;
-    // default to hermes when both are empty (it is the canonical store agents write to).
-    const useHermes = hermesCount >= claudeCount
+    // Prefer kanban (claude) — it is now the canonical store.
+    // Fall back to hermes-tasks only if kanban is empty and hermes has data.
+    // Default to claude when both are empty (new installs use kanban).
+    const useHermes = hermesCount > 0 && claudeCount === 0
     _resolved = {
       base: useHermes ? HERMES_BASE : CLAUDE_BASE,
       assigneesBase: useHermes ? '/api/hermes-tasks-assignees' : '/api/claude-tasks-assignees',
