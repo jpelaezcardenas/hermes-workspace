@@ -18,9 +18,14 @@ type Props = {
   assignees: Array<TaskAssignee>
   onSubmit: (input: CreateTaskInput) => Promise<void>
   isSubmitting: boolean
+  onDelete?: () => void
+  onLaunch?: () => void
+  onUnlink?: () => void
+  onOpenSession?: (sessionId: string) => void
+  isLaunching?: boolean
 }
 
-export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting }: Props) {
+export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting, onDelete, onLaunch, onUnlink, onOpenSession, isLaunching }: Props) {
   const isEdit = Boolean(task)
 
   const [title, setTitle] = useState('')
@@ -73,6 +78,8 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
   )
 
   const labelClass = 'block text-xs font-medium text-[var(--theme-muted)] mb-1'
+
+  const sessionId = task?.session_id
 
   return (
     <DialogRoot open={open} onOpenChange={onOpenChange}>
@@ -180,6 +187,52 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                 placeholder="frontend, bug, research"
               />
             </div>
+
+            {/* Session link section — only for existing tasks */}
+            {isEdit && (
+              <div className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-hover)] p-3">
+                <p className="text-xs font-medium text-[var(--theme-muted)] mb-2">Session</p>
+                {sessionId ? (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => onOpenSession?.(sessionId)}
+                      className="text-xs text-[var(--theme-accent)] hover:underline truncate max-w-[200px]"
+                      title={sessionId}
+                    >
+                      ↗ {sessionId.length > 30 ? `…${sessionId.slice(-24)}` : sessionId}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onUnlink?.()}
+                      className="text-[10px] text-red-400 hover:text-red-300 ml-auto"
+                    >
+                      Unlink
+                    </button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => onLaunch?.()}
+                      disabled={isLaunching}
+                      className="text-xs"
+                      style={{ background: 'var(--theme-accent)', color: 'white' }}
+                    >
+                      {isLaunching ? 'Launching…' : 'Resume'}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => onLaunch?.()}
+                    disabled={isLaunching}
+                    style={{ background: 'var(--theme-accent)', color: 'white' }}
+                  >
+                    {isLaunching ? 'Launching…' : 'Launch Session'}
+                  </Button>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center justify-between pt-2">
               <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>

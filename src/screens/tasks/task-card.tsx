@@ -8,6 +8,11 @@ type Props = {
   onClick: () => void
   onDragStart: (e: React.DragEvent) => void
   isDragging?: boolean
+  onOpenSession?: (sessionId: string) => void
+  onLaunch?: () => void
+  isLaunching?: boolean
+  onMarkDone?: () => void
+  isMarkingDone?: boolean
 }
 
 export function formatTaskAssigneeLabel(
@@ -18,12 +23,14 @@ export function formatTaskAssigneeLabel(
   return `Assignee: ${resolvedLabel}`
 }
 
-export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDragging }: Props) {
+export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDragging, onOpenSession, onLaunch, isLaunching, onMarkDone, isMarkingDone }: Props) {
   const overdue = isOverdue(task)
   const priorityColor = PRIORITY_COLORS[task.priority]
   const visibleTags = task.tags.slice(0, 2)
   const extraTagCount = task.tags.length - 2
   const assigneeLabel = formatTaskAssigneeLabel(task.assignee, assigneeLabels)
+  const sessionId = task.session_id
+  const isDone = task.column === 'done'
 
   return (
     <div
@@ -38,14 +45,34 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
       )}
       style={{ borderLeftWidth: 3, borderLeftColor: priorityColor }}
     >
-      {/* Priority dot in top-right */}
-      <span
-        className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full shrink-0"
-        style={{ background: priorityColor }}
-        title={`Priority: ${task.priority}`}
-      />
+      {/* Priority dot + done check in top-right */}
+      <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+        {!isDone && onMarkDone && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onMarkDone() }}
+            disabled={isMarkingDone}
+            className={cn(
+              'w-4 h-4 rounded-full border flex items-center justify-center transition-colors',
+              'border-[var(--theme-border)] text-[var(--theme-muted)]',
+              'hover:border-green-400 hover:text-green-400',
+              isMarkingDone && 'opacity-50 cursor-not-allowed',
+            )}
+            title="Mark as done"
+          >
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+              <path d="M1.5 4L3 5.5L6.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+        <span
+          className="w-2 h-2 rounded-full shrink-0"
+          style={{ background: priorityColor }}
+          title={`Priority: ${task.priority}`}
+        />
+      </div>
 
-      <p className="text-sm font-medium text-[var(--theme-text)] leading-snug mb-1 line-clamp-2 pr-4">
+      <p className="text-sm font-medium text-[var(--theme-text)] leading-snug mb-1 line-clamp-2 pr-10">
         {task.title}
       </p>
 
@@ -91,6 +118,37 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
               })()}
             </span>
           </div>
+        )}
+      </div>
+
+      {/* Session row */}
+      <div className="mt-2 pt-2 border-t border-[var(--theme-border)] flex items-center gap-2">
+        {sessionId ? (
+          <>
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" title="Session linked" />
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onOpenSession?.(sessionId) }}
+              className="text-[10px] text-[var(--theme-accent)] hover:underline truncate max-w-[140px]"
+              title={`Open session: ${sessionId}`}
+            >
+              ↗ {sessionId.length > 22 ? `…${sessionId.slice(-18)}` : sessionId}
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onLaunch?.() }}
+            disabled={isLaunching}
+            className={cn(
+              'text-[10px] px-2 py-0.5 rounded border transition-colors',
+              'border-[var(--theme-border)] text-[var(--theme-muted)]',
+              'hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]',
+              isLaunching && 'opacity-50 cursor-not-allowed',
+            )}
+          >
+            {isLaunching ? 'Launching…' : '+ Launch session'}
+          </button>
         )}
       </div>
     </div>

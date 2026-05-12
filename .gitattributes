@@ -1,0 +1,9 @@
+# Keep local customizations during upstream merges.
+# Files listed here will never be overwritten by `git merge` or `git rebase`
+# when the upstream branch modifies them — our version always wins.
+# See: https://git-scm.com/docs/gitattributes#_merge
+
+# Tasks API: contains Hermes-specific backend auto-detection logic.
+# Upstream repeatedly resets this to a hardcoded /api/claude-tasks BASE,
+# silently breaking the task board. Always keep our version.
+src/lib/tasks-api.ts merge=ours
