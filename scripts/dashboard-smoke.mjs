@@ -49,22 +49,22 @@ await check('GET /api/sessions', `${BASE}/api/sessions`, (d) => {
 // 3. Session Status
 await check('GET /api/session-status', `${BASE}/api/session-status`, (d) => {
   if (!d.payload) return 'missing payload'
-  if (!d.payload.sessions) return 'missing payload.sessions'
-  if (typeof d.payload.sessions.count !== 'number')
-    return 'missing sessions.count'
+  if (!Array.isArray(d.payload.sessions))
+    return 'expected payload.sessions array'
   return true
 })
 
-// 4. Usage
-await check('GET /api/usage', `${BASE}/api/usage`, (d) => {
-  if (!d.ok && !d.payload && !d.usage) return 'unexpected shape'
+// 4. Provider Usage
+await check('GET /api/provider-usage', `${BASE}/api/provider-usage`, (d) => {
+  if (typeof d !== 'object' || d === null) return 'expected object payload'
+  if (!Array.isArray(d.providers)) return 'expected providers array'
   return true
 })
-
-// 5. Cost
-await check('GET /api/cost', `${BASE}/api/cost`, (d) => {
-  // Cost endpoint may return error if not available
-  if (d.error && !d.ok) return true // acceptable: "not available"
+// 5. Context Usage
+await check('GET /api/context-usage', `${BASE}/api/context-usage`, (d) => {
+  if (d.ok !== true) return 'missing ok:true'
+  if (typeof d.contextPercent !== 'number')
+    return 'missing numeric contextPercent'
   return true
 })
 
