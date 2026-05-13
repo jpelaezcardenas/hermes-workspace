@@ -88,7 +88,6 @@ tmp/
 
 # Task data (local persistence)
 data/
-dist/
 research/
 BROWSER-RESEARCH.md
 CHAT-TEST-REPORT.md
@@ -138,6 +137,9 @@ __pycache__/
 .env.bak
 .runtime/
 workspace-final-markdown-review.md
+
+# Electron build output
+electron/server-bundle.cjs
 
 # Local sibling projects (do not ship)
 skills-bundle/

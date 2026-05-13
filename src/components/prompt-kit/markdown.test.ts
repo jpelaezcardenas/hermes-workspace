@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { rewriteLocalMediaSources } from './markdown'
+import { Markdown, rewriteLocalMediaSources } from './markdown'
 
 describe('rewriteLocalMediaSources', () => {
   it('rewrites markdown image MEDIA tokens that point to local files', () => {
@@ -37,5 +37,12 @@ describe('rewriteLocalMediaSources', () => {
   it('passes through content without MEDIA tokens unchanged', () => {
     const plain = 'Hello world, no images here.'
     expect(rewriteLocalMediaSources(plain)).toBe(plain)
+  })
+})
+
+describe('Markdown component', () => {
+  it('exports the Markdown component', () => {
+    expect(Markdown).toBeDefined()
+    expect(Markdown.displayName).toBe('Markdown')
   })
 })
