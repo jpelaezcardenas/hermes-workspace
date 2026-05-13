@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Alert02Icon, WifiDisconnected01Icon } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
+import { looksLikeAuthFailure } from '@/lib/connection-errors'
 
 type ConnectionStatusMessageProps = {
   state: 'checking' | 'error'
@@ -30,16 +31,28 @@ function classifyConnectionError(
     }
   }
 
-  if (
+  // Match gateway-capabilities: gateway uses API_SERVER_KEY (HERMES_API_TOKEN); dashboard
+  // uses a separate bearer (HERMES_DASHBOARD_TOKEN or scraped session token). Do not treat
+  // every substring "token" as auth (e.g. "session token not found" is often URL/scrape).
+  const looksLikeGatewayOrDashboardAuth =
     status === 401 ||
-    lower.includes('auth') ||
-    lower.includes('token') ||
-    lower.includes('unauthorized')
-  ) {
+    lower.includes('unauthorized') ||
+    lower.includes('unauthenticated') ||
+    lower.includes('missing gateway auth') ||
+    lower.includes('gateway auth') ||
+    lower.includes('invalid api key') ||
+    lower.includes('wrong api key') ||
+    (lower.includes('bearer') &&
+      (lower.includes('invalid') || lower.includes('missing') || lower.includes('required'))) ||
+    (lower.includes('token') && looksLikeAuthFailure(lower))
+
+  if (looksLikeGatewayOrDashboardAuth) {
     return {
       title: 'Authentication required',
-      description: 'Hermes Agent rejected the connection token.',
-      action: 'Go to Settings -> Advanced -> Hermes Agent to update your token.',
+      description:
+        'Hermes Agent rejected the gateway or dashboard bearer. The workspace password (HERMES_PASSWORD) is separate.',
+      action:
+        'In Coolify/env: set HERMES_API_TOKEN to the same value as API_SERVER_KEY on hermes-agent. For sessions/skills on the FastAPI dashboard, set HERMES_DASHBOARD_TOKEN to the dashboard session token (or leave it unset so the workspace scrapes it from hermes-dashboard:9119). Then restart hermes-workspace.',
     }
   }
 
