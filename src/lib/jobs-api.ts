@@ -180,20 +180,32 @@ type JobMutationInput = {
   schedule: string
   prompt: string
   name?: string
-  deliver?: Array<string>
+  deliver?: string | Array<string>
   skills?: Array<string>
   repeat?: number
   profile?: string
 }
 
+function serializeDeliveryTargets(deliver?: string | Array<string>): string | undefined {
+  if (typeof deliver === 'string') {
+    const normalized = deliver.trim()
+    return normalized || undefined
+  }
+  if (!Array.isArray(deliver)) return undefined
+  const normalized = deliver.map((value) => value.trim()).filter(Boolean)
+  return normalized.length > 0 ? normalized.join(',') : undefined
+}
+
 export function buildJobMutationPayload(
   input: JobMutationInput,
-): JobMutationInput & { input: string } {
+): JobMutationInput & { input: string; deliver?: string } {
   const prompt = typeof input.prompt === 'string' ? input.prompt : ''
+  const deliver = serializeDeliveryTargets(input.deliver)
   return {
     ...input,
     prompt,
     input: prompt,
+    deliver,
   }
 }
 
@@ -216,10 +228,17 @@ export async function updateJob(
   jobId: string,
   updates: Record<string, unknown>,
 ): Promise<ClaudeJob> {
-  const payload =
-    typeof updates.prompt === 'string'
-      ? { ...updates, input: updates.prompt }
-      : updates
+  const payload = {
+    ...updates,
+    ...(typeof updates.prompt === 'string' ? { input: updates.prompt } : {}),
+    ...(Object.prototype.hasOwnProperty.call(updates, 'deliver')
+      ? {
+          deliver: serializeDeliveryTargets(
+            (updates as { deliver?: string | Array<string> }).deliver,
+          ),
+        }
+      : {}),
+  }
   const res = await fetch(`${CLAUDE_API}/${jobId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
