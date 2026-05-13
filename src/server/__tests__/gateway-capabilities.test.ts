@@ -20,6 +20,10 @@ const { homedir } = vi.hoisted(() => ({
   homedir: vi.fn().mockReturnValue('/home/testuser'),
 }))
 
+const { fetchMock } = vi.hoisted(() => ({
+  fetchMock: vi.fn(),
+}))
+
 vi.mock('node:os', () => ({
   default: { homedir },
   homedir,
@@ -28,14 +32,16 @@ vi.mock('node:os', () => ({
 beforeEach(() => {
   vi.clearAllMocks()
   vi.unstubAllGlobals()
+  fetchMock.mockReset()
+  vi.stubGlobal('fetch', fetchMock)
   delete process.env.CLAUDE_HOME
   delete process.env.HERMES_HOME
   delete process.env.CLAUDE_API_URL
   delete process.env.HERMES_API_URL
   delete process.env.CLAUDE_DASHBOARD_URL
   delete process.env.HERMES_DASHBOARD_URL
-  delete process.env.CLAUDE_DASHBOARD_TOKEN
   delete process.env.HERMES_DASHBOARD_TOKEN
+  delete process.env.CLAUDE_DASHBOARD_TOKEN
   delete process.env.HOST
 })
 
@@ -137,6 +143,36 @@ describe('gateway-capabilities', () => {
     const resolved = mod.getResolvedUrls()
     expect(resolved.gateway).toBe('http://127.0.0.1:8642')
     expect(resolved.source).toBe('default')
+  })
+
+  describe('dashboard session token scraping', () => {
+    it('scrapes the inline dashboard session token from root HTML', async () => {
+      fetchMock.mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: async () => '<html><head><script>window.__HERMES_SESSION_TOKEN__="fresh-token";</script></head></html>',
+      })
+
+      const mod = await loadMod()
+      await expect(mod.fetchDashboardToken()).resolves.toBe('fresh-token')
+      expect(fetchMock).toHaveBeenCalledWith(
+        'http://127.0.0.1:9119/',
+        expect.objectContaining({ signal: expect.anything() }),
+      )
+    })
+
+    it('ignores copied dashboard token env vars and scrapes the current token instead', async () => {
+      process.env.HERMES_DASHBOARD_TOKEN = 'stale-token'
+      fetchMock.mockResolvedValue({
+        ok: true,
+        status: 200,
+        text: async () => '<html><head><script>window.__HERMES_SESSION_TOKEN__="live-token";</script></head></html>',
+      })
+
+      const mod = await loadMod()
+      await expect(mod.fetchDashboardToken()).resolves.toBe('live-token')
+      expect(fetchMock.mock.calls.some(([url]) => url === 'http://127.0.0.1:9119/')).toBe(true)
+    })
   })
 
   it('does not mark Conductor available when dashboard returns SPA HTML fallback', async () => {
