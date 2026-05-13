@@ -8,6 +8,7 @@ import {
   CommandLineIcon,
   DashboardSquare01Icon,
   File01Icon,
+  Folder01Icon,
   McpServerIcon,
   PuzzleIcon,
   Rocket01Icon,
@@ -73,6 +74,13 @@ export const MOBILE_NAV_TABS: Array<TabItem> = [
     icon: File01Icon,
     to: '/files',
     match: (p) => p.startsWith('/files'),
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    icon: Folder01Icon,
+    to: '/projects',
+    match: (p) => p.startsWith('/projects'),
   },
   {
     id: 'terminal',

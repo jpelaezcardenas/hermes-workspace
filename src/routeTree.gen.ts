@@ -18,6 +18,7 @@ import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReserveRouteImport } from './routes/reserve'
+import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
@@ -73,6 +74,7 @@ import { Route as ApiSessionHistoryRouteImport } from './routes/api/session-hist
 import { Route as ApiSendStreamRouteImport } from './routes/api/send-stream'
 import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
+import { Route as ApiProjectsRouteImport } from './routes/api/projects'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
 import { Route as ApiPlaygroundNpcRouteImport } from './routes/api/playground-npc'
@@ -196,6 +198,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const ReserveRoute = ReserveRouteImport.update({
   id: '/reserve',
   path: '/reserve',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfilesRoute = ProfilesRouteImport.update({
@@ -472,6 +479,11 @@ const ApiSendRoute = ApiSendRouteImport.update({
 const ApiProviderUsageRoute = ApiProviderUsageRouteImport.update({
   id: '/api/provider-usage',
   path: '/api/provider-usage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiProjectsRoute = ApiProjectsRouteImport.update({
+  id: '/api/projects',
+  path: '/api/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPreviewFileRoute = ApiPreviewFileRouteImport.update({
@@ -889,6 +901,7 @@ export interface FileRoutesByFullPath {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/projects': typeof ProjectsRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
@@ -930,6 +943,7 @@ export interface FileRoutesByFullPath {
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/projects': typeof ApiProjectsRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1034,6 +1048,7 @@ export interface FileRoutesByTo {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/projects': typeof ProjectsRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -1074,6 +1089,7 @@ export interface FileRoutesByTo {
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/projects': typeof ApiProjectsRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1179,6 +1195,7 @@ export interface FileRoutesById {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/projects': typeof ProjectsRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
@@ -1220,6 +1237,7 @@ export interface FileRoutesById {
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/projects': typeof ApiProjectsRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1326,6 +1344,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/projects'
     | '/reserve'
     | '/settings'
     | '/skills'
@@ -1367,6 +1386,7 @@ export interface FileRouteTypes {
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/projects'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1471,6 +1491,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/projects'
     | '/reserve'
     | '/skills'
     | '/swarm'
@@ -1511,6 +1532,7 @@ export interface FileRouteTypes {
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/projects'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1615,6 +1637,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/projects'
     | '/reserve'
     | '/settings'
     | '/skills'
@@ -1656,6 +1679,7 @@ export interface FileRouteTypes {
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/projects'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1761,6 +1785,7 @@ export interface RootRouteChildren {
   OperationsRoute: typeof OperationsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
+  ProjectsRoute: typeof ProjectsRoute
   ReserveRoute: typeof ReserveRouteWithChildren
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
@@ -1802,6 +1827,7 @@ export interface RootRouteChildren {
   ApiPlaygroundNpcRoute: typeof ApiPlaygroundNpcRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
+  ApiProjectsRoute: typeof ApiProjectsRoute
   ApiProviderUsageRoute: typeof ApiProviderUsageRoute
   ApiSendRoute: typeof ApiSendRoute
   ApiSendStreamRoute: typeof ApiSendStreamRoute
@@ -1927,6 +1953,13 @@ declare module '@tanstack/react-router' {
       path: '/reserve'
       fullPath: '/reserve'
       preLoaderRoute: typeof ReserveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profiles': {
@@ -2312,6 +2345,13 @@ declare module '@tanstack/react-router' {
       path: '/api/provider-usage'
       fullPath: '/api/provider-usage'
       preLoaderRoute: typeof ApiProviderUsageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/projects': {
+      id: '/api/projects'
+      path: '/api/projects'
+      fullPath: '/api/projects'
+      preLoaderRoute: typeof ApiProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/preview-file': {
@@ -3071,6 +3111,7 @@ const rootRouteChildren: RootRouteChildren = {
   OperationsRoute: OperationsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
+  ProjectsRoute: ProjectsRoute,
   ReserveRoute: ReserveRouteWithChildren,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
@@ -3112,6 +3153,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPlaygroundNpcRoute: ApiPlaygroundNpcRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
+  ApiProjectsRoute: ApiProjectsRoute,
   ApiProviderUsageRoute: ApiProviderUsageRoute,
   ApiSendRoute: ApiSendRoute,
   ApiSendStreamRoute: ApiSendStreamRoute,

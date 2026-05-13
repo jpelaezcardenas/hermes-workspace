@@ -96,14 +96,15 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (path === '/dashboard') return 0
     if (path.startsWith('/chat') || path === '/new' || path === '/') return 1
     if (path.startsWith('/files')) return 2
-    if (path.startsWith('/terminal')) return 3
-    if (path.startsWith('/jobs')) return 4
-    if (path === '/swarm' || path.startsWith('/swarm2')) return 5
-    if (path.startsWith('/memory')) return 6
-    if (path.startsWith('/skills')) return 7
-    if (path.startsWith('/mcp')) return 8
-    if (path.startsWith('/profiles')) return 9
-    if (path.startsWith('/settings')) return 10
+    if (path.startsWith('/projects')) return 3
+    if (path.startsWith('/terminal')) return 4
+    if (path.startsWith('/jobs')) return 5
+    if (path === '/swarm' || path.startsWith('/swarm2')) return 6
+    if (path.startsWith('/memory')) return 7
+    if (path.startsWith('/skills')) return 8
+    if (path.startsWith('/mcp')) return 9
+    if (path.startsWith('/profiles')) return 10
+    if (path.startsWith('/settings')) return 11
     return -1
   }, [])
 
@@ -169,6 +170,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const mobilePageTitle = (() => {
     if (pathname.startsWith('/terminal')) return 'Terminal'
     if (pathname.startsWith('/files')) return 'Files'
+    if (pathname.startsWith('/projects')) return 'Projects'
     if (pathname.startsWith('/jobs')) return 'Jobs'
     if (pathname.startsWith('/conductor')) return 'Conductor'
     if (pathname.startsWith('/operations')) return 'Operations'
@@ -187,10 +189,17 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const activeFriendlyId = chatMatch ? chatMatch[1] : 'main'
   const isOnChatRoute = Boolean(chatMatch) || pathname === '/new'
   const isOnTerminalRoute = pathname.startsWith('/terminal')
-  const isOnPlaygroundRoute = pathname === '/playground' || pathname.startsWith('/playground/')
-  const isOnHermesWorldLandingRoute = pathname === '/hermes-world' || pathname.startsWith('/hermes-world/') || pathname === '/world' || pathname.startsWith('/world/')
+  const isOnPlaygroundRoute =
+    pathname === '/playground' || pathname.startsWith('/playground/')
+  const isOnHermesWorldLandingRoute =
+    pathname === '/hermes-world' ||
+    pathname.startsWith('/hermes-world/') ||
+    pathname === '/world' ||
+    pathname.startsWith('/world/')
   const isEmbeddedSurface =
-    search?.embed === '1' || search?.embed === 'true' || search?.mode === 'embed'
+    search?.embed === '1' ||
+    search?.embed === 'true' ||
+    search?.mode === 'embed'
   const isChromeFreeSurface = isEmbeddedSurface || isOnHermesWorldLandingRoute
   const hideChatSidebar = isOnChatRoute && chatFocusMode
   const showDesktopSidebarBackdrop =
@@ -342,7 +351,9 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         <div
           className={cn(
             'grid h-full grid-cols-1 grid-rows-[minmax(0,1fr)] overflow-hidden',
-            hideChatSidebar || isChromeFreeSurface ? 'md:grid-cols-1' : 'md:grid-cols-[auto_1fr]',
+            hideChatSidebar || isChromeFreeSurface
+              ? 'md:grid-cols-1'
+              : 'md:grid-cols-[auto_1fr]',
           )}
         >
           {/* Activity ticker bar */}
@@ -433,11 +444,17 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
           </main>
 
           {/* Chat panel — visible on non-chat routes (but not in HermesWorld, which has its own in-game chat) */}
-          {!isOnChatRoute && !isOnPlaygroundRoute && !isChromeFreeSurface && !isMobile && <ChatPanel />}
+          {!isOnChatRoute &&
+            !isOnPlaygroundRoute &&
+            !isChromeFreeSurface &&
+            !isMobile && <ChatPanel />}
         </div>
 
         {/* Floating chat toggle — visible on non-chat routes (but not in HermesWorld) */}
-        {!isChromeFreeSurface && !isOnChatRoute && !isOnPlaygroundRoute && !isMobile && <ChatPanelToggle />}
+        {!isChromeFreeSurface &&
+          !isOnChatRoute &&
+          !isOnPlaygroundRoute &&
+          !isMobile && <ChatPanelToggle />}
 
         {showDesktopSidebarBackdrop ? (
           <button
@@ -454,10 +471,15 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
       </div>
 
       {!isChromeFreeSurface ? <MobileHamburgerMenu /> : null}
-      {!isChromeFreeSurface && !isMobile && !isOnChatRoute && settings.showSystemMetricsFooter ? (
+      {!isChromeFreeSurface &&
+      !isMobile &&
+      !isOnChatRoute &&
+      settings.showSystemMetricsFooter ? (
         <SystemMetricsFooter leftOffsetPx={sidebarCollapsed ? 48 : 300} />
       ) : null}
-      {!isChromeFreeSurface ? <CommandPalette pathname={pathname} sessions={sessions} /> : null}
+      {!isChromeFreeSurface ? (
+        <CommandPalette pathname={pathname} sessions={sessions} />
+      ) : null}
     </>
   )
 }

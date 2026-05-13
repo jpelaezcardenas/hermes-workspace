@@ -10,6 +10,7 @@ import {
   ensureGatewayProbed,
 } from '../../server/gateway-capabilities'
 import { sanitizeConductorMissionGoal } from '../../server/conductor-mission-sanitize'
+import { getActiveProjectContext } from '../../server/project-registry'
 
 let cachedSkill: string | null = null
 
@@ -20,6 +21,7 @@ type ConductorSpawnBody = {
   projectsDir?: unknown
   maxParallel?: unknown
   supervised?: unknown
+  projectOverride?: unknown
 }
 
 function repoRoot(): string {
@@ -68,18 +70,91 @@ function readMaxParallel(value: unknown): number {
   return Math.min(5, Math.max(1, Math.round(value)))
 }
 
-function buildOrchestratorPrompt(
+function readMissionProjectOverride(
+  value: unknown,
+): Partial<MissionProjectMetadata> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  return {
+    activeProjectId: readOptionalString(record.activeProjectId) || null,
+    activeProjectName: readOptionalString(record.activeProjectName) || null,
+    activeProjectPath: readOptionalString(record.activeProjectPath) || null,
+    effectiveWorkingDirectory:
+      readOptionalString(record.effectiveWorkingDirectory) || null,
+  }
+}
+
+export function buildMissionProjectMetadata(params: {
+  activeProject?: { id: string; name: string; path: string } | null
+  projectsDir?: string
+  override?: Partial<MissionProjectMetadata> | null
+}): MissionProjectMetadata {
+  const override = params.override ?? null
+  const activeProjectPath =
+    override?.activeProjectPath ?? params.activeProject?.path ?? null
+  const effectiveWorkingDirectory =
+    override?.effectiveWorkingDirectory ??
+    params.projectsDir ??
+    activeProjectPath ??
+    null
+  return {
+    activeProjectId:
+      override?.activeProjectId ?? params.activeProject?.id ?? null,
+    activeProjectName:
+      override?.activeProjectName ?? params.activeProject?.name ?? null,
+    activeProjectPath,
+    effectiveWorkingDirectory,
+  }
+}
+
+export type MissionProjectMetadata = {
+  activeProjectId: string | null
+  activeProjectName: string | null
+  activeProjectPath: string | null
+  effectiveWorkingDirectory: string | null
+}
+
+export type ConductorPromptOptions = {
+  orchestratorModel: string
+  workerModel: string
+  projectsDir: string
+  maxParallel: number
+  supervised: boolean
+  projectContext: string
+  activeProjectPath?: string | null
+  explicitProjectsDir?: boolean
+}
+
+export function buildConductorWorkingDirectoryRules(
+  options: Pick<
+    ConductorPromptOptions,
+    'projectsDir' | 'activeProjectPath' | 'explicitProjectsDir'
+  >,
+): Array<string> {
+  const workingDirectory =
+    options.projectsDir || options.activeProjectPath || ''
+  if (!workingDirectory) {
+    return [
+      '- No active project directory was detected. Use /tmp/dispatch-<slug> for worker outputs unless the mission specifies a path.',
+    ]
+  }
+
+  return [
+    `- Primary working directory for every worker: ${workingDirectory}`,
+    `- Every worker prompt MUST include exactly this line: "Working directory: ${workingDirectory}"`,
+    '- Workers must inspect project instructions in that directory before editing, and must not modify files outside it unless the mission explicitly asks for an external output.',
+    options.explicitProjectsDir
+      ? `- The user configured Project Directory explicitly, so use ${workingDirectory} for worker cwd/output even if the active project metadata points somewhere else.`
+      : `- Project Directory was not configured explicitly, so the active project path ${workingDirectory} is the default worker cwd/output root.`,
+  ]
+}
+
+export function buildOrchestratorPrompt(
   goal: string,
   skill: string,
-  options: {
-    orchestratorModel: string
-    workerModel: string
-    projectsDir: string
-    maxParallel: number
-    supervised: boolean
-  },
+  options: ConductorPromptOptions,
 ): string {
-  const outputBase = options.projectsDir || '/tmp'
+  const outputBase = options.projectsDir || options.activeProjectPath || '/tmp'
   const outputPrefix =
     outputBase === '/tmp'
       ? '/tmp/dispatch-<slug>'
@@ -113,6 +188,10 @@ function buildOrchestratorPrompt(
     ...(options.supervised
       ? ['', 'Supervised mode is enabled. Require approval before each task.']
       : []),
+    ...(options.projectContext ? ['', options.projectContext] : []),
+    '',
+    '## Worker Working Directory',
+    ...buildConductorWorkingDirectoryRules(options),
     '',
     '## Critical Rules',
     '- Use create_task / delegate_task to create worker agents for each task',
@@ -244,12 +323,30 @@ export const Route = createFileRoute('/api/conductor-spawn')({
               { status: 400 },
             )
 
+          const activeProject = await getActiveProjectContext()
+          const projectOverride = readMissionProjectOverride(
+            body.projectOverride,
+          )
+          const projectMetadata = buildMissionProjectMetadata({
+            activeProject: activeProject.project,
+            projectsDir,
+            override: projectOverride,
+          })
+          const activeProjectPath = projectMetadata.activeProjectPath
+          const effectiveProjectsDir =
+            projectMetadata.effectiveWorkingDirectory || ''
+          const explicitProjectsDir = Boolean(
+            projectsDir || projectOverride?.effectiveWorkingDirectory,
+          )
           const prompt = buildOrchestratorPrompt(goal, loadDispatchSkill(), {
             orchestratorModel,
             workerModel,
-            projectsDir,
+            projectsDir: effectiveProjectsDir,
             maxParallel,
             supervised,
+            projectContext: activeProject.promptBlock,
+            activeProjectPath,
+            explicitProjectsDir,
           })
           const missionName = `conductor-${Date.now()}`
           const capabilities = await ensureGatewayProbed()
@@ -266,6 +363,7 @@ export const Route = createFileRoute('/api/conductor-spawn')({
               jobName: missionName,
               runId: null,
               warnings: goalSanitization.warnings,
+              project: projectMetadata,
             })
           }
 
@@ -287,6 +385,7 @@ export const Route = createFileRoute('/api/conductor-spawn')({
             jobName: result.name ?? missionName,
             runId: null,
             warnings: goalSanitization.warnings,
+            project: projectMetadata,
           })
         } catch (error) {
           return json(
