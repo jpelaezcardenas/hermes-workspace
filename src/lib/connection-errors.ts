@@ -26,7 +26,8 @@ const AUTH_FAILURE_MARKERS = [
   '403',
 ]
 
-function looksLikeAuthFailure(lower: string): boolean {
+/** Exported for UI layers that need the same “token” keyword guard as classifyConnectionError. */
+export function looksLikeAuthFailure(lower: string): boolean {
   return AUTH_FAILURE_MARKERS.some((marker) => lower.includes(marker))
 }
 

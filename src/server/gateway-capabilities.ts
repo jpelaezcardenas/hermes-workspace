@@ -284,8 +284,8 @@ export function getGatewayBearerToken(): string {
  * issues an ephemeral session token at boot (web_server.py:_SESSION_TOKEN).
  * Treating them as interchangeable wedges the workspace into 401 loops on
  * /api/sessions, /api/skills, etc. against the official dashboard. If
- * CLAUDE_DASHBOARD_TOKEN isn't set, leave this empty and let
- * fetchDashboardToken() fall through to the HTML-scrape legacy path.
+ * CLAUDE_DASHBOARD_TOKEN isn't set, fetchDashboardToken() uses the dashboard
+ * JSON endpoint, then legacy HTML scrape for older builds.
  */
 const DASHBOARD_BEARER_TOKEN = process.env.HERMES_DASHBOARD_TOKEN || process.env.CLAUDE_DASHBOARD_TOKEN || ''
 
@@ -297,20 +297,40 @@ function authHeaders(): Record<string, string> {
 let loggedHtmlScrapeFallback = false
 
 /**
+ * Hermes dashboard (web_server.py) exposes the ephemeral session token as JSON
+ * for the SPA. Server-side callers (workspace in Docker) use this instead of
+ * parsing HTML — reliable when dashboard runs in a separate container.
+ */
+async function fetchDashboardSessionTokenFromApi(): Promise<string | null> {
+  try {
+    const url = `${CLAUDE_DASHBOARD_URL}/api/auth/session-token`
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+      headers: { Accept: 'application/json' },
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { token?: unknown }
+    const t = typeof data.token === 'string' ? data.token.trim() : ''
+    return t || null
+  } catch {
+    return null
+  }
+}
+
+/**
  * Resolve a bearer token for dashboard API calls.
  *
  * Lookup order:
- *   1.  CLAUDE_DASHBOARD_TOKEN / CLAUDE_API_TOKEN env (preferred)
- *   2.  Inline token injected into the dashboard's root HTML (legacy
- *      fallback — logs a deprecation warning; to be removed once all
- *      supported dashboards expose a first-class token endpoint). See #124.
+ *   1. HERMES_DASHBOARD_TOKEN / CLAUDE_DASHBOARD_TOKEN (explicit pin)
+ *   2. GET /api/auth/session-token on the dashboard (Hermes Agent web UI)
+ *   3. Legacy: parse token from dashboard root HTML (older or minimal builds)
  */
 export async function fetchDashboardToken(options?: {
   force?: boolean
 }): Promise<string> {
   const force = options?.force === true
 
-  // Prefer the explicit service-to-service token — no HTML scrape at all.
+  // Prefer the explicit service-to-service token — no network discovery.
   if (DASHBOARD_BEARER_TOKEN) {
     dashboardTokenCache = DASHBOARD_BEARER_TOKEN
     return DASHBOARD_BEARER_TOKEN
@@ -320,13 +340,17 @@ export async function fetchDashboardToken(options?: {
   if (!force && dashboardTokenPromise) return dashboardTokenPromise
 
   dashboardTokenPromise = (async () => {
+    const fromApi = await fetchDashboardSessionTokenFromApi()
+    if (fromApi) {
+      dashboardTokenCache = fromApi
+      return fromApi
+    }
+
     if (!loggedHtmlScrapeFallback) {
       loggedHtmlScrapeFallback = true
       console.warn(
-        '[gateway] CLAUDE_DASHBOARD_TOKEN is not set — falling back to the legacy ' +
-          'HTML-scrape token flow. This fallback will be removed in a future release. ' +
-          'Set CLAUDE_DASHBOARD_TOKEN (or CLAUDE_API_TOKEN) to a dashboard bearer ' +
-          'token to migrate. See #124.',
+        '[gateway] Dashboard /api/auth/session-token unavailable — falling back to ' +
+          'HTML token scrape. Upgrade Hermes Agent dashboard or set HERMES_DASHBOARD_TOKEN.',
       )
     }
     // Dashboard injects the session token inline on `/` (root), not on

@@ -27,9 +27,12 @@ vi.mock('node:os', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks()
+  vi.unstubAllGlobals()
   delete process.env.CLAUDE_HOME
   delete process.env.CLAUDE_API_URL
   delete process.env.CLAUDE_DASHBOARD_URL
+  delete process.env.HERMES_DASHBOARD_TOKEN
+  delete process.env.CLAUDE_DASHBOARD_TOKEN
 })
 
 async function loadMod() {
@@ -100,5 +103,36 @@ describe('gateway-capabilities', () => {
         mod.setGatewayUrl(null as never)
       }
     })
+  })
+
+  it('fetchDashboardToken uses /api/auth/session-token before HTML scrape', async () => {
+    process.env.CLAUDE_DASHBOARD_URL = 'http://hermes-dashboard:9119'
+    const fetchMock = vi.fn((url: string | URL) => {
+      const s = String(url)
+      if (s.includes('/api/auth/session-token')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ token: 'from-json-api' }),
+        })
+      }
+      return Promise.resolve({
+        ok: false,
+        status: 404,
+        text: () => Promise.resolve(''),
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const mod = await loadMod()
+    const tok = await mod.fetchDashboardToken({ force: true })
+    expect(tok).toBe('from-json-api')
+    expect(
+      fetchMock.mock.calls.some((c) =>
+        String(c[0]).includes('/api/auth/session-token'),
+      ),
+    ).toBe(true)
+    expect(
+      fetchMock.mock.calls.some((c) => String(c[0]).endsWith(':9119/')),
+    ).toBe(false)
   })
 })
