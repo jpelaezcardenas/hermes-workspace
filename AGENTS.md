@@ -22,4 +22,7 @@ This workspace uses semantic Hermes swarm workers, not numbered-only lanes. The 
 - Keep `swarm.yaml`, profile `config.yaml`, profile core skills, and wrappers aligned when changing a worker.
 - Prefer GBrain-first lookup for context-sensitive RAZSOC/Hermes/workflow decisions.
 - Builder implements; Reviewer gates; QA verifies behavior; Orchestrator routes and enforces greenlight.
+- Durable named-role work should route through Kanban/profile dispatch when profile state, dependencies, retries, logs, or audit trail matter; use `delegate_task` only for short synchronous throwaway subtasks where named profile identity is irrelevant.
+- If a named worker stalls, reclaim, reassign, split, or block the card and report the status; do not silently finish that worker's role in the parent context.
+- Reuse stable boards and scope with tenants/workspaces/task titles; avoid timestamped or per-turn boards unless isolation truly requires a new board.
 - Do not enable optional Hermes plugins globally unless the task explicitly needs them; record plugin/toolset alignment in `swarm.yaml` first.
