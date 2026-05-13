@@ -10,6 +10,20 @@ export type ProjectRegistryInstructionFile = {
   excerpt: string
 }
 
+export type ProjectRegistryStatus = {
+  gitDirty: boolean | null
+  changedFiles: number | null
+  lastCommit: string | null
+  lastCommitAt: string | null
+  detectedStack: Array<string>
+  packageManager: string | null
+}
+
+export type ProjectRegistryContextPreview = {
+  summary: string
+  files: Array<{ name: string; path: string; chars: number }>
+}
+
 export type ProjectRegistryEntry = {
   id: string
   name: string
@@ -17,6 +31,8 @@ export type ProjectRegistryEntry = {
   active: boolean
   gitRemote: string | null
   gitBranch: string | null
+  status: ProjectRegistryStatus
+  contextPreview: ProjectRegistryContextPreview
   instructionFiles: Array<ProjectRegistryInstructionFile>
   readme: ProjectRegistryInstructionFile | null
 }
@@ -165,20 +181,134 @@ function gitRemote(projectPath: string): string | null {
   return gitOutput(projectPath, ['remote', 'get-url', 'origin'])
 }
 
+function gitChangedFiles(projectPath: string): number | null {
+  const status = gitOutput(projectPath, ['status', '--short'])
+  if (status === null) return null
+  if (!status) return 0
+  return status.split('\n').filter(Boolean).length
+}
+
+function gitLastCommit(
+  projectPath: string,
+): { hash: string; at: string | null } | null {
+  const output = gitOutput(projectPath, ['log', '-1', '--format=%h%x09%cI'])
+  if (!output) return null
+  const [hash, at] = output.split('\t')
+  return hash ? { hash, at: at || null } : null
+}
+
+function detectPackageManager(projectPath: string): string | null {
+  const candidates: Array<[string, string]> = [
+    ['pnpm-lock.yaml', 'pnpm'],
+    ['yarn.lock', 'yarn'],
+    ['package-lock.json', 'npm'],
+    ['bun.lockb', 'bun'],
+    ['uv.lock', 'uv'],
+    ['poetry.lock', 'poetry'],
+  ]
+  return (
+    candidates.find(([file]) =>
+      existsSync(path.join(projectPath, file)),
+    )?.[1] ?? null
+  )
+}
+
+function detectStack(projectPath: string): Array<string> {
+  const markers: Array<[string, string]> = [
+    ['package.json', 'Node/TypeScript'],
+    ['vite.config.ts', 'Vite'],
+    ['vite.config.js', 'Vite'],
+    ['next.config.js', 'Next.js'],
+    ['next.config.mjs', 'Next.js'],
+    ['pyproject.toml', 'Python'],
+    ['requirements.txt', 'Python'],
+    ['Cargo.toml', 'Rust'],
+    ['go.mod', 'Go'],
+    ['Dockerfile', 'Docker'],
+  ]
+  return [
+    ...new Set(
+      markers
+        .filter(([file]) => existsSync(path.join(projectPath, file)))
+        .map(([, label]) => label),
+    ),
+  ]
+}
+
+function buildProjectStatus(projectPath: string): ProjectRegistryStatus {
+  const changedFiles = gitChangedFiles(projectPath)
+  const lastCommit = gitLastCommit(projectPath)
+  return {
+    gitDirty: changedFiles === null ? null : changedFiles > 0,
+    changedFiles,
+    lastCommit: lastCommit?.hash ?? null,
+    lastCommitAt: lastCommit?.at ?? null,
+    detectedStack: detectStack(projectPath),
+    packageManager: detectPackageManager(projectPath),
+  }
+}
+
+function buildContextPreview(project: {
+  path: string
+  gitRemote: string | null
+  gitBranch: string | null
+  instructionFiles: Array<ProjectRegistryInstructionFile>
+  readme: ProjectRegistryInstructionFile | null
+  status: ProjectRegistryStatus
+}): ProjectRegistryContextPreview {
+  const files =
+    project.instructionFiles.length > 0
+      ? project.instructionFiles
+      : project.readme
+        ? [project.readme]
+        : []
+  const summaryParts = [
+    `Path: ${project.path}`,
+    `Git: ${project.gitBranch ?? 'unknown branch'} · ${project.gitRemote ?? 'no remote'}`,
+    project.status.detectedStack.length
+      ? `Stack: ${project.status.detectedStack.join(', ')}`
+      : 'Stack: not detected',
+    `Context files: ${files.length}`,
+  ]
+  return {
+    summary: summaryParts.join('\n'),
+    files: files.map((file) => ({
+      name: file.name,
+      path: file.path,
+      chars: file.excerpt.length,
+    })),
+  }
+}
+
 function toProjectEntry(
   projectPath: string,
   activePath: string,
 ): ProjectRegistryEntry {
   const normalizedPath = normalizePath(projectPath)
+  const gitRemoteValue = gitRemote(normalizedPath)
+  const gitBranchValue = gitBranch(normalizedPath)
+  const instructionFiles = readInstructionFiles(normalizedPath)
+  const readme = readReadme(normalizedPath)
+  const status = buildProjectStatus(normalizedPath)
+  const baseProject = {
+    path: normalizedPath,
+    gitRemote: gitRemoteValue,
+    gitBranch: gitBranchValue,
+    instructionFiles,
+    readme,
+    status,
+  }
   return {
     id: stableProjectId(normalizedPath),
     name: path.basename(normalizedPath),
     path: normalizedPath,
     active: normalizedPath === activePath,
-    gitRemote: gitRemote(normalizedPath),
-    gitBranch: gitBranch(normalizedPath),
-    instructionFiles: readInstructionFiles(normalizedPath),
-    readme: readReadme(normalizedPath),
+    gitRemote: gitRemoteValue,
+    gitBranch: gitBranchValue,
+    status,
+    contextPreview: buildContextPreview(baseProject),
+    instructionFiles,
+    readme,
   }
 }
 

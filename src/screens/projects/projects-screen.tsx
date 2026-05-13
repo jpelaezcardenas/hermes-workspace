@@ -11,6 +11,7 @@ import {
   Link01Icon,
   PlayIcon,
   TaskDone01Icon,
+  TimeQuarterPassIcon,
 } from '@hugeicons/core-free-icons'
 
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,20 @@ type ProjectFile = {
   excerpt: string
 }
 
+type ProjectStatus = {
+  gitDirty: boolean | null
+  changedFiles: number | null
+  lastCommit: string | null
+  lastCommitAt: string | null
+  detectedStack: Array<string>
+  packageManager: string | null
+}
+
+type ProjectContextPreview = {
+  summary: string
+  files: Array<{ name: string; path: string; chars: number }>
+}
+
 type ProjectEntry = {
   id: string
   name: string
@@ -29,6 +44,8 @@ type ProjectEntry = {
   active: boolean
   gitRemote: string | null
   gitBranch: string | null
+  status: ProjectStatus
+  contextPreview: ProjectContextPreview
   instructionFiles: Array<ProjectFile>
   readme: ProjectFile | null
 }
@@ -132,6 +149,18 @@ function formatMissionDate(value: string): string {
     hour: '2-digit',
     minute: '2-digit',
   }).format(date)
+}
+
+function formatProjectStatus(status: ProjectStatus): string {
+  if (status.gitDirty === null) return 'Git status unavailable'
+  if (!status.gitDirty) return 'Clean worktree'
+  return `${status.changedFiles ?? 0} changed file${status.changedFiles === 1 ? '' : 's'}`
+}
+
+function formatLastCommit(status: ProjectStatus): string {
+  if (!status.lastCommit) return 'No commits detected'
+  if (!status.lastCommitAt) return status.lastCommit
+  return `${status.lastCommit} · ${formatMissionDate(status.lastCommitAt)}`
 }
 
 function buildProjectMissionDraft(project: ProjectEntry): string {
@@ -257,6 +286,77 @@ function ProjectCard({
       {selected ? (
         <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
           <div className="grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-primary-200 bg-primary-50/80 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-500">
+                  Status
+                </p>
+                <p
+                  className={`mt-2 text-sm font-semibold ${project.status.gitDirty ? 'text-amber-700' : 'text-emerald-700'}`}
+                >
+                  {formatProjectStatus(project.status)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-primary-200 bg-primary-50/80 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-500">
+                  Last commit
+                </p>
+                <p className="mt-2 truncate text-sm font-semibold text-primary-900">
+                  {formatLastCommit(project.status)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-primary-200 bg-primary-50/80 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-500">
+                  Stack
+                </p>
+                <p className="mt-2 truncate text-sm font-semibold text-primary-900">
+                  {project.status.detectedStack.length
+                    ? project.status.detectedStack.join(', ')
+                    : 'Not detected'}
+                </p>
+                {project.status.packageManager ? (
+                  <p className="mt-1 text-xs text-primary-500">
+                    {project.status.packageManager}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-primary-200 bg-primary-50/70 p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-500">
+                    Auto-context preview
+                  </p>
+                  <p className="mt-1 text-sm text-primary-600">
+                    This is the bounded context Conductor will attach to
+                    project-aware launches.
+                  </p>
+                </div>
+                <HugeiconsIcon
+                  icon={TimeQuarterPassIcon}
+                  size={20}
+                  strokeWidth={1.7}
+                  className="text-accent-600"
+                />
+              </div>
+              <pre className="whitespace-pre-wrap rounded-xl bg-[var(--theme-card)] p-3 text-xs leading-relaxed text-primary-700">
+                {project.contextPreview.summary}
+              </pre>
+              {project.contextPreview.files.length > 0 ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {project.contextPreview.files.map((file) => (
+                    <span
+                      key={`${project.id}-${file.path}`}
+                      className="rounded-full border border-primary-200 bg-[var(--theme-card)] px-2.5 py-1 text-[11px] text-primary-600"
+                    >
+                      {file.name} · {file.chars.toLocaleString()} chars
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
             <div className="flex items-center justify-between gap-3">
               <h3 className="text-sm font-semibold text-primary-900">
                 Local context

@@ -41,6 +41,22 @@ describe('buildProjectRegistry', () => {
       '# Demo Project\nUseful docs.',
     )
     execFileSync('git', ['init'], { cwd: workspaceDir, stdio: 'ignore' })
+    execFileSync('git', ['config', 'user.name', 'Test User'], {
+      cwd: workspaceDir,
+      stdio: 'ignore',
+    })
+    execFileSync('git', ['config', 'user.email', 'test@example.com'], {
+      cwd: workspaceDir,
+      stdio: 'ignore',
+    })
+    execFileSync('git', ['add', 'AGENTS.md', 'README.md'], {
+      cwd: workspaceDir,
+      stdio: 'ignore',
+    })
+    execFileSync('git', ['commit', '-m', 'Initial commit'], {
+      cwd: workspaceDir,
+      stdio: 'ignore',
+    })
     execFileSync(
       'git',
       ['remote', 'add', 'origin', 'git@github.com:acme/demo.git'],
@@ -49,6 +65,7 @@ describe('buildProjectRegistry', () => {
         stdio: 'ignore',
       },
     )
+    writeFileSync(join(workspaceDir, 'scratch.txt'), 'dirty worktree')
 
     const { buildProjectRegistry } = await import('./project-registry')
     const registry = await buildProjectRegistry()
@@ -60,7 +77,22 @@ describe('buildProjectRegistry', () => {
       path: workspaceDir,
       active: true,
       gitRemote: 'git@github.com:acme/demo.git',
-      gitBranch: null,
+      gitBranch: 'master',
+    })
+    expect(registry.projects[0].status).toMatchObject({
+      gitDirty: true,
+      changedFiles: 1,
+      lastCommit: expect.any(String),
+      lastCommitAt: expect.any(String),
+    })
+    expect(registry.projects[0].contextPreview.summary).toContain(
+      `Path: ${workspaceDir}`,
+    )
+    expect(registry.projects[0].contextPreview.summary).toContain(
+      'Stack: not detected',
+    )
+    expect(registry.projects[0].contextPreview.files[0]).toMatchObject({
+      name: 'AGENTS.md',
     })
     expect(registry.projects[0].instructionFiles[0]).toMatchObject({
       name: 'AGENTS.md',
