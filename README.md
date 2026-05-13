@@ -331,6 +331,26 @@ cd ~/hermes-workspace && pnpm dev   # terminal 3 · :3000 · the UI
 
 > **Tip:** `pnpm start:all` starts gateway + dashboard + workspace in one shot if you've installed via the one-liner.
 
+### Windows (PowerShell + WSL) one-command startup
+
+If you use Hermes Workspace from Windows with the agent running in WSL, use the helper script in this repo:
+
+```powershell
+# from the repo root
+.\scripts\start-hermes-workspace.ps1
+```
+
+To force a clean relaunch of the tmux session:
+
+```powershell
+.\scripts\start-hermes-workspace.ps1 -Restart
+```
+
+Optional parameters:
+- `-Distro <name>` to target a non-default WSL distro
+- `-WorkspacePath </path/in/wsl>` if your clone is not at `~/hermes-workspace`
+- `-SessionName <name>` to use a custom tmux session name
+
 ### Verify the pairing
 
 ```bash
