@@ -216,6 +216,14 @@ export function ProfilesScreen() {
   }
 
   async function handleActivate(name: string) {
+    if (
+      typeof window !== 'undefined' &&
+      !window.confirm(
+        `Switch to ${name}? This restarts the Hermes gateway and can interrupt in-flight chats or tasks.`,
+      )
+    ) {
+      return
+    }
     setBusyName(name)
     try {
       await postJson('/api/profiles/activate', { name })
