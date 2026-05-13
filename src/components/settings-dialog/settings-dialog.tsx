@@ -13,7 +13,6 @@ import {
   Notification03Icon,
   PaintBoardIcon,
   Settings02Icon,
-  SparklesIcon,
   Sun01Icon,
   VolumeHighIcon,
 } from '@hugeicons/core-free-icons'
@@ -67,7 +66,6 @@ import { LOCALE_LABELS,  getLocale, setLocale } from '@/lib/i18n'
 type SectionId =
   | 'claude'
   | 'agent'
-  | 'routing'
   | 'voice'
   | 'display'
   | 'appearance'
@@ -78,7 +76,6 @@ type SectionId =
 const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
   { id: 'claude', label: 'Model & Provider', icon: CloudIcon },
   { id: 'agent', label: 'Agent', icon: Settings02Icon },
-  { id: 'routing', label: 'Smart Routing', icon: SparklesIcon },
   { id: 'voice', label: 'Voice', icon: VolumeHighIcon },
   { id: 'display', label: 'Display', icon: PaintBoardIcon },
   { id: 'appearance', label: 'Theme', icon: PaintBoardIcon },
@@ -2177,118 +2174,6 @@ function AgentBehaviorContent() {
   )
 }
 
-// ── Smart Routing ───────────────────────────────────────────────────────
-
-function SmartRoutingContent() {
-  const [config, setConfig] = useState<Record<string, unknown>>({})
-  const [models, setModels] = useState<Array<{ id: string; name?: string }>>([])
-  const [msg, setMsg] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/hermes-config')
-      .then((r) => r.json())
-      .then((d: any) => {
-        setConfig(
-          (d.config?.smart_model_routing as Record<string, unknown>) || {},
-        )
-      })
-      .catch(() => {})
-    fetch('/api/models')
-      .then((r) => r.json())
-      .then((d: any) => {
-        setModels(d.models || [])
-      })
-      .catch(() => {})
-  }, [])
-
-  const save = async (key: string, value: unknown) => {
-    setMsg(null)
-    try {
-      await fetch('/api/hermes-config', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          config: { smart_model_routing: { [key]: value } },
-        }),
-      })
-      setConfig((prev) => ({ ...prev, [key]: value }))
-      setMsg('Saved')
-      setTimeout(() => setMsg(null), 2000)
-    } catch {
-      setMsg('Failed')
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      <SectionHeader
-        title="Smart Routing"
-        description="Route simple queries to cheaper models."
-      />
-      {msg && (
-        <div
-          className={cn(
-            'rounded-lg px-3 py-1.5 text-xs font-medium',
-            msg === 'Saved'
-              ? 'bg-green-500/15 text-green-400'
-              : 'bg-red-500/15 text-red-400',
-          )}
-        >
-          {msg}
-        </div>
-      )}
-      <div className={SETTINGS_CARD_CLASS}>
-        <Row
-          label="Enable smart routing"
-          description="Auto-route simple queries"
-        >
-          <Switch
-            checked={config.enabled !== false}
-            onCheckedChange={(c) => save('enabled', c)}
-          />
-        </Row>
-        <Row label="Cheap model" description="Model for simple queries">
-          <select
-            value={String(config.cheap_model || '')}
-            onChange={(e) => save('cheap_model', e.target.value)}
-            className="h-8 max-w-[12rem] rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
-          >
-            <option value="">Auto</option>
-            {models.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name || m.id}
-              </option>
-            ))}
-          </select>
-        </Row>
-        <Row label="Max chars" description="Messages shorter use cheap model">
-          <input
-            type="number"
-            min={10}
-            max={2000}
-            value={Number(config.max_simple_chars) || 200}
-            onChange={(e) => save('max_simple_chars', Number(e.target.value))}
-            className="h-8 w-20 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-center text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
-          />
-        </Row>
-        <Row
-          label="Max words"
-          description="Messages with fewer words use cheap model"
-        >
-          <input
-            type="number"
-            min={1}
-            max={500}
-            value={Number(config.max_simple_words) || 30}
-            onChange={(e) => save('max_simple_words', Number(e.target.value))}
-            className="h-8 w-20 rounded-lg border border-primary-200 bg-primary-50 px-2 text-sm text-center text-primary-900 outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
-          />
-        </Row>
-      </div>
-    </div>
-  )
-}
-
 // ── Voice (TTS + STT) ──────────────────────────────────────────────────
 
 function VoiceContent() {
@@ -2591,7 +2476,6 @@ function LanguageContent() {
 const CONTENT_MAP: Record<SectionId, () => React.JSX.Element> = {
   claude: HermesContent,
   agent: AgentBehaviorContent,
-  routing: SmartRoutingContent,
   voice: VoiceContent,
   display: DisplayContent,
   appearance: AppearanceContent,

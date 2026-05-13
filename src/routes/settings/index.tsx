@@ -9,7 +9,6 @@ import {
   PaintBoardIcon,
   Settings02Icon,
   SourceCodeSquareIcon,
-  SparklesIcon,
   UserIcon,
   VolumeHighIcon,
 } from '@hugeicons/core-free-icons'
@@ -355,9 +354,6 @@ function SettingsRoute() {
           )}
           {activeSection === 'agent' && (
             <ClaudeConfigSection activeView="agent" />
-          )}
-          {activeSection === 'routing' && (
-            <ClaudeConfigSection activeView="routing" />
           )}
           {activeSection === 'voice' && (
             <ClaudeConfigSection activeView="voice" />
@@ -997,7 +993,7 @@ type AvailableModelsResponse = {
 function ClaudeConfigSection({
   activeView = 'claude',
 }: {
-  activeView?: 'claude' | 'agent' | 'routing' | 'voice' | 'display'
+  activeView?: 'claude' | 'agent' | 'voice' | 'display'
 }) {
   const [data, setData] = useState<ClaudeConfigData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1154,8 +1150,6 @@ function ClaudeConfigSection({
   const terminalConfig = (data.config.terminal as Record<string, unknown>) || {}
   const displayConfig = (data.config.display as Record<string, unknown>) || {}
   const agentConfig = (data.config.agent as Record<string, unknown>) || {}
-  const smartRouting =
-    (data.config.smart_model_routing as Record<string, unknown>) || {}
   const ttsConfig = (data.config.tts as Record<string, unknown>) || {}
   const sttConfig = (data.config.stt as Record<string, unknown>) || {}
   const customProviders = Array.isArray(data.config.custom_providers)
@@ -1648,87 +1642,6 @@ function ClaudeConfigSection({
     </SettingsSection>
   )
 
-  const renderSmartRouting = () => (
-    <SettingsSection
-      title="Smart Model Routing"
-      description="Automatically route simple queries to cheaper models."
-      icon={SparklesIcon}
-    >
-      <SettingsRow
-        label="Enable smart routing"
-        description="Route simple queries to a cheaper model automatically."
-      >
-        <Switch
-          checked={readBoolean(smartRouting.enabled, false)}
-          onCheckedChange={(checked) =>
-            void saveConfig({
-              config: { smart_model_routing: { enabled: checked } },
-            })
-          }
-        />
-      </SettingsRow>
-      <SettingsRow
-        label="Cheap model"
-        description="Model to use for simple queries."
-      >
-        <select
-          value={(smartRouting.cheap_model as string) || ''}
-          onChange={(e) =>
-            void saveConfig({
-              config: { smart_model_routing: { cheap_model: e.target.value } },
-            })
-          }
-          className={selectClassName}
-        >
-          <option value="">Select model</option>
-          {availableModels.map((model) => (
-            <option key={model.id} value={model.id}>
-              {model.id}
-            </option>
-          ))}
-        </select>
-      </SettingsRow>
-      <SettingsRow
-        label="Max simple chars"
-        description="Messages shorter than this use the cheap model."
-      >
-        <Input
-          type="number"
-          min={1}
-          value={readNumber(smartRouting.max_simple_chars, 500)}
-          onChange={(e) =>
-            saveNumberField(
-              'smart_model_routing',
-              'max_simple_chars',
-              e.target.value,
-              500,
-            )
-          }
-          className="md:w-32"
-        />
-      </SettingsRow>
-      <SettingsRow
-        label="Max simple words"
-        description="Messages with fewer words use the cheap model."
-      >
-        <Input
-          type="number"
-          min={1}
-          value={readNumber(smartRouting.max_simple_words, 80)}
-          onChange={(e) =>
-            saveNumberField(
-              'smart_model_routing',
-              'max_simple_words',
-              e.target.value,
-              80,
-            )
-          }
-          className="md:w-32"
-        />
-      </SettingsRow>
-    </SettingsSection>
-  )
-
   const renderVoice = () => (
     <div className="space-y-4">
       <SettingsSection
@@ -2008,10 +1921,9 @@ function ClaudeConfigSection({
     </SettingsSection>
   )
 
-  const sectionContent = {
+  const sectionsByView = {
     claude: renderClaudeOverview(),
     agent: renderAgentBehavior(),
-    routing: renderSmartRouting(),
     voice: renderVoice(),
     display: renderDisplay(),
   } as const
@@ -2031,7 +1943,7 @@ function ClaudeConfigSection({
           {saveMessage}
         </div>
       )}
-      {sectionContent[activeView]}
+      {sectionsByView[activeView]}
     </>
   )
 }
