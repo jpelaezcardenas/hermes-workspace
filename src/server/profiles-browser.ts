@@ -303,7 +303,11 @@ export function readProfile(name: string): ProfileDetail {
   }
 }
 
-export function setActiveProfile(name: string): void {
+export function setActiveProfile(
+  name: string,
+  options: { suppressRestartWarning?: boolean } = {},
+): void {
+
   const trimmed = name.trim()
   if (!trimmed) throw new Error('Profile name is required')
   // "default" means clear the active_profile file (revert to default)
@@ -317,9 +321,11 @@ export function setActiveProfile(name: string): void {
   if (!fs.existsSync(profilePath)) throw new Error('Profile not found')
   fs.mkdirSync(getClaudeRoot(), { recursive: true })
   fs.writeFileSync(getActiveProfilePath(), `${normalized}\n`, 'utf-8')
-  console.warn(
-    `[profiles] Active profile set to "${normalized}". Restart the Hermes Agent gateway for this profile switch to take effect.`,
-  )
+  if (!options.suppressRestartWarning) {
+    console.warn(
+      `[profiles] Active profile set to "${normalized}". Restart the Hermes Agent gateway for this profile switch to take effect.`,
+    )
+  }
 }
 
 export function createProfile(

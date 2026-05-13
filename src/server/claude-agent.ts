@@ -5,6 +5,12 @@ import { homedir } from 'node:os'
 
 const CLAUDE_HEALTH_TIMEOUT_MS = 2_000
 const CLAUDE_START_PORT = 8642
+const HERMES_BIN_CANDIDATES = [
+  process.env.HERMES_CLI_BIN,
+  join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
+  join(homedir(), '.local', 'bin', 'hermes'),
+  'hermes',
+].filter((value): value is string => Boolean(value))
 
 let startPromise: Promise<StartClaudeAgentResult> | null = null
 
@@ -87,6 +93,65 @@ export function resolveClaudeBinary(): string | null {
     if (existsSync(c)) return c
   }
   return null
+}
+
+function resolveHermesBin(): string {
+  for (const candidate of HERMES_BIN_CANDIDATES) {
+    if (candidate.includes('/')) {
+      if (existsSync(candidate)) return candidate
+      continue
+    }
+    return candidate
+  }
+  return 'hermes'
+}
+
+function execHermes(
+  args: Array<string>,
+  timeoutMs = 60_000,
+): Promise<{ code: number; stdout: string; stderr: string }> {
+  return new Promise((resolvePromise) => {
+    const child = spawn(resolveHermesBin(), args, {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: process.env,
+      detached: true,
+    })
+    let stdout = ''
+    let stderr = ''
+    let settled = false
+
+    const timer = setTimeout(() => {
+      if (settled) return
+      settled = true
+      try {
+        if (child.pid) process.kill(-child.pid, 'SIGKILL')
+      } catch {
+        try {
+          child.kill('SIGKILL')
+        } catch {}
+      }
+      resolvePromise({ code: -1, stdout, stderr: `${stderr}\n[timeout]` })
+    }, timeoutMs)
+
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString('utf8')
+    })
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString('utf8')
+    })
+    child.on('error', (err) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      resolvePromise({ code: -1, stdout, stderr: `${stderr}\n[spawn error] ${err.message}` })
+    })
+    child.on('close', (code) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      resolvePromise({ code: code ?? -1, stdout, stderr })
+    })
+  })
 }
 
 export function resolveClaudePython(agentDir: string): string {
@@ -210,5 +275,26 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
     return await startPromise
   } finally {
     startPromise = null
+  }
+}
+
+export async function restartClaudeGateway(): Promise<StartClaudeAgentResult> {
+  const result = await execHermes(['gateway', 'restart'])
+  if (result.code !== 0) {
+    const error = result.stderr.trim() || result.stdout.trim() || `exit code ${result.code}`
+    return { ok: false, error: `Failed to restart Hermes gateway: ${error}` }
+  }
+
+  for (let attempt = 0; attempt < 15; attempt += 1) {
+    await new Promise((resolveAttempt) => setTimeout(resolveAttempt, 1_000))
+    if (await isClaudeAgentHealthy()) {
+      return { ok: true, message: 'restarted' }
+    }
+  }
+
+  return {
+    ok: false,
+    error:
+      'Hermes gateway restart command finished, but the health check did not recover in time.',
   }
 }

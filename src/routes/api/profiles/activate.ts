@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../../server/auth-middleware'
+import { restartClaudeGateway } from '../../../server/claude-agent'
 import { setActiveProfile } from '../../../server/profiles-browser'
 import { requireJsonContentType } from '../../../server/rate-limit'
 
@@ -15,8 +16,12 @@ export const Route = createFileRoute('/api/profiles/activate')({
         if (csrfCheck) return csrfCheck
         try {
           const body = (await request.json()) as { name?: string }
-          setActiveProfile(body.name || '')
-          return json({ ok: true })
+          setActiveProfile(body.name || '', { suppressRestartWarning: true })
+          const restart = await restartClaudeGateway()
+          if (!restart.ok) {
+            throw new Error(restart.error)
+          }
+          return json({ ok: true, restarted: true, message: restart.message })
         } catch (error) {
           return json(
             {
