@@ -684,12 +684,15 @@ async function readResponseError(response: Response): Promise<string> {
   }
 }
 
-async function fetchCurrentModelFromStatus(): Promise<string> {
+async function fetchCurrentModelFromStatus(sessionKey?: string): Promise<string> {
   const controller = new AbortController()
   const timeout = globalThis.setTimeout(() => controller.abort(), 7000)
 
   try {
-    const response = await fetch('/api/session-status', {
+    const query = sessionKey?.trim()
+      ? `?sessionKey=${encodeURIComponent(sessionKey.trim())}`
+      : ''
+    const response = await fetch(`/api/session-status${query}`, {
       signal: controller.signal,
     })
     if (!response.ok) {
@@ -925,8 +928,8 @@ function ChatComposerComponent({
     },
   })
   const currentModelQuery = useQuery({
-    queryKey: ['claude', 'session-status-model'],
-    queryFn: fetchCurrentModelFromStatus,
+    queryKey: ['claude', 'session-status-model', sessionKey || 'main'],
+    queryFn: () => fetchCurrentModelFromStatus(sessionKey),
     refetchInterval: 30_000,
     retry: false,
   })

@@ -949,10 +949,18 @@ export function ChatScreen({
   })
 
   const currentModelQuery = useQuery({
-    queryKey: ['claude', 'session-status-model'],
+    queryKey: [
+      'claude',
+      'session-status-model',
+      resolvedSessionKey || activeFriendlyId || 'main',
+    ],
     queryFn: async () => {
       try {
-        const res = await fetch('/api/session-status')
+        const statusSessionKey = resolvedSessionKey || activeFriendlyId || 'main'
+        const query = statusSessionKey
+          ? `?sessionKey=${encodeURIComponent(statusSessionKey)}`
+          : ''
+        const res = await fetch(`/api/session-status${query}`)
         if (!res.ok) return ''
         const data = await res.json()
         const payload = data.payload ?? data
@@ -1037,6 +1045,9 @@ export function ChatScreen({
     startStreaming,
     cancelStreaming,
   } = useStreamingMessage({
+    pinMainSession:
+      activeFriendlyId === 'main' &&
+      (resolvedSessionKey || activeFriendlyId || 'main') === 'main',
     onSessionResolved: useCallback(
       ({
         sessionKey,
@@ -2678,7 +2689,10 @@ export function ChatScreen({
           {hideUi ? null : (
             <ContextBar
               sessionId={
-                activeSession?.key || activeSessionKey || resolvedSessionKey
+                resolvedSessionKey ||
+                activeCanonicalKey ||
+                activeSession?.key ||
+                activeSessionKey
               }
             />
           )}
@@ -2739,7 +2753,10 @@ export function ChatScreen({
               sessionKey={
                 isNewChat
                   ? undefined
-                  : forcedSessionKey || resolvedSessionKey || activeSessionKey
+                  : forcedSessionKey ||
+                    resolvedSessionKey ||
+                    activeCanonicalKey ||
+                    activeSessionKey
               }
               wrapperRef={composerRef}
               composerRef={composerHandleRef}
