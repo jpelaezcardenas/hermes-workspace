@@ -434,7 +434,7 @@ type AgentActivity = {
   totalAgentCost: number
 }
 
-export function UsageMeter() {
+export function UsageMeter({ visible = true }: { visible?: boolean }) {
   const [usage, setUsage] = useState<UsageSummary>(() =>
     parseSessionStatus(null),
   )
@@ -839,39 +839,41 @@ export function UsageMeter() {
 
   return (
     <>
-      <MenuRoot>
-        <MenuTrigger
-          className={cn(
-            "absolute bottom-2 right-2",
-            'ml-auto rounded-full border px-3 py-1 text-xs font-medium',
-            'flex items-center gap-3 transition hover:bg-primary-100 cursor-pointer',
-            alertTone,
-          )}
-          data-tour="usage-meter"
-        >
-          <span className="text-[9px] uppercase tracking-widest text-primary-500 opacity-75">
-            {STATS_VIEW_LABELS[statsView].split(' ')[0]}
-          </span>
-          <span className="text-primary-300">|</span>
-          {renderPillContent()}
-        </MenuTrigger>
-        <MenuContent align="end" className="min-w-[180px]">
-          {(['session', 'provider', 'cost', 'agents'] as const).map((view) => (
-            <MenuItem
-              key={view}
-              onClick={() => handleStatsViewChange(view)}
-              className={cn(
-                statsView === view && 'bg-amber-100 text-amber-800',
-              )}
-            >
-              <span className="flex-1">{STATS_VIEW_LABELS[view]}</span>
-              {statsView === view && <span className="text-amber-600">✓</span>}
-            </MenuItem>
-          ))}
-          <div className="my-1 h-px bg-primary-100" />
-          <MenuItem onClick={() => setOpen(true)}>View Details…</MenuItem>
-        </MenuContent>
-      </MenuRoot>
+      {visible ? (
+        <MenuRoot>
+          <MenuTrigger
+            className={cn(
+              "absolute bottom-2 right-2",
+              'ml-auto rounded-full border px-3 py-1 text-xs font-medium',
+              'flex items-center gap-3 transition hover:bg-primary-100 cursor-pointer',
+              alertTone,
+            )}
+            data-tour="usage-meter"
+          >
+            <span className="text-[9px] uppercase tracking-widest text-primary-500 opacity-75">
+              {STATS_VIEW_LABELS[statsView].split(' ')[0]}
+            </span>
+            <span className="text-primary-300">|</span>
+            {renderPillContent()}
+          </MenuTrigger>
+          <MenuContent align="end" className="min-w-[180px]">
+            {(['session', 'provider', 'cost', 'agents'] as const).map((view) => (
+              <MenuItem
+                key={view}
+                onClick={() => handleStatsViewChange(view)}
+                className={cn(
+                  statsView === view && 'bg-amber-100 text-amber-800',
+                )}
+              >
+                <span className="flex-1">{STATS_VIEW_LABELS[view]}</span>
+                {statsView === view && <span className="text-amber-600">✓</span>}
+              </MenuItem>
+            ))}
+            <div className="my-1 h-px bg-primary-100" />
+            <MenuItem onClick={() => setOpen(true)}>View Details…</MenuItem>
+          </MenuContent>
+        </MenuRoot>
+      ) : null}
 
       <DialogRoot open={open} onOpenChange={setOpen}>
         <DialogContent className="w-[min(720px,94vw)]">
