@@ -15,7 +15,7 @@
 # Images:
 #   This file pulls pre-built images by default — no local build required.
 #     - nousresearch/hermes-agent:latest  (Hermes Agent, Dockerfile upstream)
-#     - ghcr.io/outsourc-e/hermes-workspace:latest  (this workspace)
+#     - ghcr.io/mrcoferland/hermes-workspace:latest  (this workspace fork)
 #
 #   To build from source instead (e.g. for development), use:
 #     docker compose -f docker-compose.yml -f docker-compose.dev.yml up
@@ -83,7 +83,7 @@ services:
   # The Hermes Workspace Web UI
   # Connects to hermes-agent at http://hermes-agent:8642
   hermes-workspace:
-    image: ghcr.io/outsourc-e/hermes-workspace:latest
+    image: ghcr.io/mrcoferland/hermes-workspace:latest
     depends_on:
       hermes-agent:
         condition: service_healthy

@@ -421,7 +421,7 @@ docker compose up
 This pulls two pre-built images and starts them:
 
 - **hermes-agent** → `nousresearch/hermes-agent:latest` on port **8642**
-- **hermes-workspace** → `ghcr.io/outsourc-e/hermes-workspace:latest` on port **3000**
+- **hermes-workspace** → `ghcr.io/mrcoferland/hermes-workspace:latest` on port **3000**
 
 No local build. First run takes a minute to pull; subsequent starts are instant.
 Agent state (config, sessions, skills, memory, credentials) persists in the
@@ -455,7 +455,7 @@ Deploying Hermes Workspace to a PaaS or home-lab stack? Pull the image
 directly from GitHub Container Registry:
 
 ```
-ghcr.io/outsourc-e/hermes-workspace:latest
+ghcr.io/mrcoferland/hermes-workspace:latest
 ```
 
 Available tags:
@@ -470,7 +470,7 @@ Minimal Coolify / Easypanel config:
 
 ```yaml
 service: hermes-workspace
-image: ghcr.io/outsourc-e/hermes-workspace:latest
+image: ghcr.io/mrcoferland/hermes-workspace:latest
 port: 3000
 env:
   HERMES_API_URL: http://hermes-agent:8642   # point at your gateway
