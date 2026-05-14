@@ -530,13 +530,25 @@ async function waitForFreshCheckpoint(
     const runtimeSnapshot = readRuntimeCheckpointSnapshot(profilePath)
     if (runtimeSnapshotIsFresh(runtimeSnapshot, baselineRuntimeSignature, dispatchedAt)) {
       const runtimeCheckpoint = checkpointFromRuntimeSnapshot(runtimeSnapshot)
-      if (runtimeCheckpoint && runtimeCheckpoint.raw !== previousRaw) return runtimeCheckpoint
+      if (
+        runtimeCheckpoint &&
+        runtimeCheckpoint.raw !== previousRaw &&
+        runtimeCheckpoint.stateLabel !== 'IN_PROGRESS'
+      ) {
+        return runtimeCheckpoint
+      }
     }
 
     const chat = readWorkerMessages(profilePath, 50)
     if (chat.ok) {
       const checkpoint = newestCheckpointFromMessages(chat.messages)
-      if (checkpoint && checkpoint.raw !== previousRaw) return checkpoint
+      if (
+        checkpoint &&
+        checkpoint.raw !== previousRaw &&
+        checkpoint.stateLabel !== 'IN_PROGRESS'
+      ) {
+        return checkpoint
+      }
     }
     await sleep(2_000)
   }
@@ -922,6 +934,23 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
           delivery: 'oneshot',
         }
         markDispatchResult(workerId, result)
+        const parsedCheckpoint = newestCheckpointFromMessages([
+          { role: 'assistant', content: out },
+        ])
+        if (parsedCheckpoint) {
+          markCheckpointResult(
+            workerId,
+            parsedCheckpoint,
+            options?.notifySessionKey ?? 'main',
+          )
+          recordMissionCheckpoint({
+            missionId: options?.missionId ?? null,
+            assignmentId: assignment.assignmentId ?? null,
+            workerId,
+            checkpoint: parsedCheckpoint,
+            source: 'swarm-dispatch',
+          })
+        }
         resolve(result)
       },
     )

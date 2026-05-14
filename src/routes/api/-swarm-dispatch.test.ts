@@ -89,3 +89,21 @@ describe('runtimeSnapshotIsFresh', () => {
     expect(runtimeSnapshotIsFresh(updated, runtimeCheckpointSignature(baseline), dispatchedAt)).toBe(true)
   })
 })
+
+describe('checkpoint filtering', () => {
+  it('still parses IN_PROGRESS runtime snapshots but leaves terminal filtering to the poller', () => {
+    const checkpoint = checkpointFromRuntimeSnapshot({
+      checkpointStatus: 'in_progress',
+      state: 'executing',
+      lastSummary: 'Task is running',
+      lastResult: null,
+      nextAction: 'Wait for worker output',
+      blockedReason: null,
+      lastCheckIn: '2026-04-28T20:00:01.000Z',
+      lastOutputAt: 1_746_000_001_000,
+      checkpointRaw: null,
+    })
+
+    expect(checkpoint?.stateLabel).toBe('IN_PROGRESS')
+  })
+})
