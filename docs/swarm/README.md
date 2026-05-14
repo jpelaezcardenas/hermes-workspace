@@ -17,6 +17,7 @@ This is not a chat wrapper with tabs. It is the operating surface for a local ag
 - [QUICKSTART.md](./QUICKSTART.md) — clone, run, detect profiles, spawn workers, dispatch the first task.
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — loop, SwarmBrief shape, notification routing, lanes, review, repair.
 - [ALIGNMENT_HEALTH.md](./ALIGNMENT_HEALTH.md) — agent/profile/wrapper/tool/plugin invariants and smoke checks.
+- [AUTORESEARCH.md](./AUTORESEARCH.md) — bounded optimization-loop contract for `researcher:autoresearch`.
 - [SKILLS.md](./SKILLS.md) — bundled swarm skills, auto-loading, and custom skill conventions.
 - [ROLES.md](./ROLES.md) — role presets used by the Add Swarm dialog and the canonical project specs.
 
@@ -104,8 +105,9 @@ Read these in order if you are testing the v1 release:
 1. [QUICKSTART.md](./QUICKSTART.md)
 2. [ARCHITECTURE.md](./ARCHITECTURE.md)
 3. [ALIGNMENT_HEALTH.md](./ALIGNMENT_HEALTH.md)
-4. [ROLES.md](./ROLES.md)
-5. [SKILLS.md](./SKILLS.md)
+4. [AUTORESEARCH.md](./AUTORESEARCH.md)
+5. [ROLES.md](./ROLES.md)
+6. [SKILLS.md](./SKILLS.md)
 
 ## Canonical spec
 

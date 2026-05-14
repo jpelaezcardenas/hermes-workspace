@@ -77,6 +77,8 @@ QA should say exactly what was checked, exactly what failed, and exactly how to 
 
 Specialty: bounded research, discovery, citations, market/model scans, experiment notes.
 
+Use `researcher:quick` for normal evidence gathering and synthesis. Use `researcher:autoresearch` only for bounded optimization loops with an explicit Goal/Scope/Metric/Verify/Guard/Iterations contract; see [AUTORESEARCH.md](./AUTORESEARCH.md).
+
 Researcher drafts evidence and options; humans approve public posting or strategic commitments.
 
 ### `ops-watch`
