@@ -43,6 +43,68 @@ describe('gateway-capabilities', () => {
     expect(mod.CLAUDE_API).toBe('http://127.0.0.1:8642')
   })
 
+  describe('capability warnings', () => {
+    it('tells users to start the dashboard when only dashboard-backed APIs are missing', async () => {
+      const mod = await loadMod()
+      expect(
+        mod.getCapabilityWarningMessage(
+          {
+            health: true,
+            chatCompletions: true,
+            models: true,
+            streaming: true,
+            probed: true,
+            sessions: false,
+            enhancedChat: false,
+            skills: false,
+            memory: true,
+            config: false,
+            jobs: true,
+            mcp: false,
+            mcpFallback: false,
+            conductor: false,
+            kanban: false,
+            dashboard: {
+              available: false,
+              url: 'http://127.0.0.1:9119',
+            },
+          },
+          ['sessions', 'skills', 'config'],
+        ),
+      ).toBe(`[gateway] ${mod.DASHBOARD_REQUIRED_INSTRUCTIONS}`)
+    })
+
+    it('keeps the upgrade warning for broader capability gaps', async () => {
+      const mod = await loadMod()
+      expect(
+        mod.getCapabilityWarningMessage(
+          {
+            health: true,
+            chatCompletions: false,
+            models: true,
+            streaming: false,
+            probed: true,
+            sessions: false,
+            enhancedChat: false,
+            skills: false,
+            memory: true,
+            config: false,
+            jobs: false,
+            mcp: false,
+            mcpFallback: false,
+            conductor: false,
+            kanban: false,
+            dashboard: {
+              available: false,
+              url: 'http://127.0.0.1:9119',
+            },
+          },
+          ['health', 'sessions'],
+        ),
+      ).toBe(`[gateway] Missing Hermes APIs detected. ${mod.CLAUDE_UPGRADE_INSTRUCTIONS}`)
+    })
+  })
+
   it('setGatewayUrl fallback uses 8642 when env override is cleared', async () => {
     const mod = await loadMod()
     mod.setGatewayUrl('http://tailscale:9999')

@@ -139,6 +139,9 @@ export function getResolvedUrls(): {
 export const CLAUDE_UPGRADE_INSTRUCTIONS =
   'For full features, install Hermes Agent from source (`git clone https://github.com/NousResearch/hermes-agent && cd hermes-agent && pip install -e .`), then start the gateway on :8642 (`hermes gateway run`). For the extended APIs (Sessions, Skills, Config, Jobs) also start the dashboard on :9119 (`hermes dashboard`).'
 
+export const DASHBOARD_REQUIRED_INSTRUCTIONS =
+  'Hermes gateway core APIs are healthy, but dashboard-backed APIs are unavailable. Start the dashboard on :9119 (`hermes dashboard`) or point HERMES_DASHBOARD_URL at the running dashboard service.'
+
 export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your Hermes backend does not support the sessions API. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
 
 const PROBE_TIMEOUT_MS = 3_000
@@ -312,10 +315,10 @@ export async function fetchDashboardToken(options?: {
     if (!loggedHtmlScrapeFallback) {
       loggedHtmlScrapeFallback = true
       console.warn(
-        '[gateway] CLAUDE_DASHBOARD_TOKEN is not set — falling back to the legacy ' +
+        '[gateway] HERMES_DASHBOARD_TOKEN is not set — falling back to the legacy ' +
           'HTML-scrape token flow. This fallback will be removed in a future release. ' +
-          'Set CLAUDE_DASHBOARD_TOKEN (or CLAUDE_API_TOKEN) to a dashboard bearer ' +
-          'token to migrate. See #124.',
+          'Set HERMES_DASHBOARD_TOKEN (or CLAUDE_DASHBOARD_TOKEN) to a dashboard ' +
+          'bearer token to migrate. See #124.',
       )
     }
     // Dashboard injects the session token inline on `/` (root), not on
@@ -667,6 +670,39 @@ const OPTIONAL_APIS = new Set([
   'mcpFallback',
 ])
 
+const DASHBOARD_BACKED_APIS = new Set([
+  'sessions',
+  'skills',
+  'config',
+  'jobs',
+  'mcp',
+  'mcpFallback',
+  'conductor',
+  'kanban',
+])
+
+export function getCapabilityWarningMessage(
+  next: GatewayCapabilities,
+  criticalMissing: string[],
+): string | null {
+  if (criticalMissing.length === 0 || (!next.health && !next.dashboard.available)) {
+    return null
+  }
+
+  const dashboardBackedMissing = criticalMissing.filter((key) =>
+    DASHBOARD_BACKED_APIS.has(key),
+  )
+  if (
+    !next.dashboard.available &&
+    next.chatCompletions &&
+    dashboardBackedMissing.length === criticalMissing.length
+  ) {
+    return `[gateway] ${DASHBOARD_REQUIRED_INSTRUCTIONS}`
+  }
+
+  return `[gateway] Missing Hermes APIs detected. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
+}
+
 function logCapabilities(next: GatewayCapabilities): void {
   const core: Array<string> = []
   const enhanced: Array<string> = []
@@ -705,10 +741,9 @@ function logCapabilities(next: GatewayCapabilities): void {
   console.log(summary)
 
   const criticalMissing = missing.filter((key) => !OPTIONAL_APIS.has(key))
-  if (criticalMissing.length > 0 && (next.health || next.dashboard.available)) {
-    console.warn(
-      `[gateway] Missing Hermes APIs detected. ${CLAUDE_UPGRADE_INSTRUCTIONS}`,
-    )
+  const warning = getCapabilityWarningMessage(next, criticalMissing)
+  if (warning) {
+    console.warn(warning)
   }
 }
 
