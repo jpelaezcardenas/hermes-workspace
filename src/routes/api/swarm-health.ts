@@ -1,24 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { createFileRoute } from '@tanstack/react-router'
+import { json } from '@tanstack/react-start'
 import * as yaml from 'yaml'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { getLocalBinDir, getProfilesDir } from '../../server/claude-paths'
-import { isSwarmWorkerId } from '../../server/swarm-roster'
+import { buildWorkerHealth } from '../../server/swarm-health'
+import { isSwarmWorkerId, readSwarmRoster } from '../../server/swarm-roster'
 
-type WorkerHealth = {
-  workerId: string
-  profileFound: boolean
-  wrapperFound: boolean
-  model: string
-  provider: string
-  recentAuthErrors: number
-  lastErrorAt: string | null
-  lastErrorMessage: string | null
-}
-
-function listSwarmIds(): string[] {
+function listSwarmIds(): Array<string> {
   const dir = getProfilesDir()
   if (!existsSync(dir)) return []
   return readdirSync(dir, { withFileTypes: true })
@@ -110,7 +100,7 @@ function scanRecentAuthErrors(profilePath: string): {
 export const Route = createFileRoute('/api/swarm-health')({
   server: {
     handlers: {
-      GET: async ({ request }) => {
+      GET: ({ request }) => {
         if (!isAuthenticated(request)) {
           return json({ error: 'Unauthorized' }, { status: 401 })
         }
@@ -119,24 +109,15 @@ export const Route = createFileRoute('/api/swarm-health')({
         const apiUrl = process.env.HERMES_API_URL ?? process.env.CLAUDE_API_URL ?? null
         const profilesBase = getProfilesDir()
         const swarmIds = listSwarmIds()
+        const rosterWorkers = readSwarmRoster(swarmIds).workers
         const wrapperBase = getLocalBinDir()
 
-        const workers: WorkerHealth[] = swarmIds.map((id) => {
-          const profilePath = join(profilesBase, id)
-          const wrapperPath = join(wrapperBase, id)
-          const config = readWorkerConfig(profilePath)
-          const errs = scanRecentAuthErrors(profilePath)
-          return {
-            workerId: id,
-            profileFound: existsSync(profilePath),
-            wrapperFound: existsSync(wrapperPath),
-            model: config.model,
-            provider: config.provider,
-            recentAuthErrors: errs.count,
-            lastErrorAt: errs.lastAt,
-            lastErrorMessage: errs.lastMessage,
-          }
-        })
+        const workers = rosterWorkers.map((worker) => buildWorkerHealth(worker, {
+          profilesBase,
+          wrapperBase,
+          readWorkerConfig,
+          scanRecentAuthErrors,
+        }))
 
         const totalAuthErrors = workers.reduce((sum, worker) => sum + worker.recentAuthErrors, 0)
         const distinctModels = Array.from(new Set(workers.map((w) => formatModelDisplay(w.model, w.provider)))).filter((value) => value !== 'unknown')

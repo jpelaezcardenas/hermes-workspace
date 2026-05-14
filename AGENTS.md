@@ -22,7 +22,10 @@ This workspace uses semantic Hermes swarm workers, not numbered-only lanes. The 
 - Keep `swarm.yaml`, profile `config.yaml`, profile core skills, and wrappers aligned when changing a worker.
 - Prefer GBrain-first lookup for context-sensitive RAZSOC/Hermes/workflow decisions.
 - Builder implements; Reviewer gates; QA verifies behavior; Orchestrator routes and enforces greenlight.
-- Durable named-role work should route through Kanban/profile dispatch when profile state, dependencies, retries, logs, or audit trail matter; use `delegate_task` only for short synchronous throwaway subtasks where named profile identity is irrelevant.
-- If a named worker stalls, reclaim, reassign, split, or block the card and report the status; do not silently finish that worker's role in the parent context.
+- Runtime ownership: `ops-watch` owns local agent-stack health (gateway, MCP, cron, workspace services, process/port/log checks); `km-agent` owns RAZSOC/GBrain knowledge integrity and graph/drift audits; `maintainer` owns upstream dependency and local patch hygiene; `orchestrator` owns cross-role routing and greenlight gates.
+- Durable named-role work should route through Kanban/profile dispatch when profile state, dependencies, retries, logs, audit trail, or cross-turn execution matter; use `delegate_task` only for short synchronous throwaway subtasks where named profile identity is irrelevant; root/default Hermes may execute small verified work directly.
+- Before dispatch, split only genuinely independent lanes and link real dependencies. Avoid fake parallelism where workers have no fan-in contract.
+- During execution, avoid long silent polling; checkpoint after meaningful batches or blockers; use one deliberate expensive review gate by default unless the user explicitly approves deeper review.
+- If a named worker stalls, inspect logs/status, reclaim or retry, reassign if profile/tooling is broken, narrow scope, or block the card and report the status; do not silently finish that worker's role in the parent context.
 - Reuse stable boards and scope with tenants/workspaces/task titles; avoid timestamped or per-turn boards unless isolation truly requires a new board.
 - Do not enable optional Hermes plugins globally unless the task explicitly needs them; record plugin/toolset alignment in `swarm.yaml` first.

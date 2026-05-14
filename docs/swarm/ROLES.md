@@ -34,6 +34,12 @@ Use those specs as the source of truth for standing missions. The role preset is
 | Mirror Integrations | GPT-5.4 | You need upstream sync, integrations, or asset packs. |
 | Custom | user-selected | You are creating a lane that does not fit an existing preset. |
 
+## Role routing discipline
+
+Role presets are routing aids, not a reason to spawn every role. Use durable Swarm/Kanban/Profile dispatch only when named profile state, dependencies, retries, logs, audit trail, or cross-turn execution matter. Keep short generic checks on `delegate_task`/synchronous subagents and let the root operator handle small verified work directly.
+
+Split only genuinely independent lanes, link real dependencies, checkpoint after batches/blockers, and use one deliberate expensive review gate by default unless deeper review is explicitly approved. If a worker stalls, inspect, reclaim/retry, reassign, narrow, or block with evidence; do not silently absorb the role into the parent context.
+
 ## Orchestrator
 
 Specialty: control-plane state, dispatch, drift detection, escalation.

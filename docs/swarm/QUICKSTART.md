@@ -80,6 +80,12 @@ In the workspace:
 
 The role presets fill the important defaults: role, specialty, mission, system prompt, skills, and default model. You can edit them before saving.
 
+## 5.5 Durable dispatch discipline
+
+Use Swarm/Kanban/Profile dispatch for durable named-role work: profile state, dependencies, retries, logs, audit trail, or cross-turn execution. For short generic checks, use `delegate_task`/a synchronous subtask instead; for small obvious work, the root operator can execute and verify directly.
+
+Before dispatching multiple workers, split only independent lanes and link real dependencies. Avoid silent polling; checkpoint after meaningful batches or blockers. If a worker stalls, inspect logs/status, reclaim/retry, reassign, narrow, or block the work rather than silently taking over that role.
+
 ## 6. Dispatch the first task
 
 The dispatch API is:

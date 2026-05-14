@@ -29,6 +29,12 @@ Eric -> Aurora -> swarm3/orchestrator -> role workers -> checkpoints -> reports/
 
 The important move is that dispatch becomes a system, not a vibe. The worker is not just "another model call." It is a named lane with memory, runtime state, default skills, a profile, and a job.
 
+## Durable dispatch discipline
+
+Use Swarm/Kanban/Profile dispatch for durable named-role work: profile state, dependencies, retries, logs, audit trail, or work that may outlive one chat turn. Use `delegate_task`/synchronous subagents only for short generic subtasks, and let the root operator handle small verified work directly.
+
+Before dispatch, split only genuinely independent lanes and link real dependencies. During execution, avoid silent polling, checkpoint after meaningful batches or blockers, and use one deliberate expensive review gate by default. If a worker stalls, inspect, reclaim/retry, reassign, narrow, or block; do not silently absorb its role into the parent context.
+
 ## What ships in v1
 
 ### Orchestrator Chat

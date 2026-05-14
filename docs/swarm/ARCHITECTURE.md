@@ -53,6 +53,12 @@ The key rule: workers do not free-style message Eric. They checkpoint. The orche
 7. The orchestrator decides whether to continue, repair, hand off, review, or escalate.
 8. Reports and Inbox make the state inspectable.
 
+## Durable routing discipline
+
+Swarm/Kanban/Profile dispatch is for named persistent work, not for every tiny thought. Use durable dispatch when profile state, dependencies, retries, logs, audit trail, or cross-turn execution matter. Use `delegate_task`/short synchronous subagents for disposable checks, and let the root operator execute small verified work directly.
+
+The orchestrator must split only genuinely independent lanes, link real dependencies, checkpoint after meaningful batches or blockers, avoid silent polling, and use one deliberate expensive review gate by default. When a worker stalls, recover by inspecting logs/status, reclaiming or retrying, reassigning, narrowing scope, or blocking for a real decision; do not silently absorb the stalled role.
+
 ## SwarmBrief shape
 
 The canonical YAML lives in `SWARM_SPEC.md` section 3. This is the public shape:
@@ -261,7 +267,9 @@ Important endpoints:
 | `POST /api/swarm-tmux-start` | Start a tmux-backed worker session. |
 | `POST /api/swarm-tmux-stop` | Stop a worker tmux session. |
 | `POST /api/swarm-tmux-scroll` | Scroll a tmux session from the UI. |
-| `GET /api/swarm-health` | Summarize local swarm health. |
+| `GET /api/swarm-health` | Summarize local swarm health, including profile/wrapper/auth status. |
+
+Health must resolve profile and wrapper paths from the roster, not by assuming executable names equal worker IDs. Semantic workers commonly use `wrapper` values such as `builder:task`, `reviewer:gate`, `ops:health`, and `inbox:triage`; `/api/swarm-health` should derive `profilePath` from `worker.profile || worker.id` and `wrapperPath` from `worker.wrapper || worker.id`. Otherwise the UI reports false missing wrappers even when all wrappers are installed and executable.
 
 ## Failure philosophy
 
