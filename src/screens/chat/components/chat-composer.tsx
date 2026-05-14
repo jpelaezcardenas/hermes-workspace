@@ -967,7 +967,7 @@ function ChatComposerComponent({
         }),
       ])
       setIsProfileMenuOpen(false)
-      toast(`Activated profile ${profileName}`)
+      toast(`Activated profile ${profileName}. Gateway restarted.`, { type: 'warning' })
     },
     onError: (error) => {
       toast(
@@ -2678,6 +2678,14 @@ function ChatComposerComponent({
                                       onClick={() => {
                                         if (selected) {
                                           setIsProfileMenuOpen(false)
+                                          return
+                                        }
+                                        if (
+                                          typeof window !== 'undefined' &&
+                                          !window.confirm(
+                                            `Switch to ${profile.name}? This restarts the Hermes gateway and can interrupt in-flight chats or tasks. Continue?`,
+                                          )
+                                        ) {
                                           return
                                         }
                                         profileActivateMutation.mutate(profile.name)

@@ -105,6 +105,7 @@ export function ProfilesScreen() {
   const [createOpen, setCreateOpen] = useState(false)
   const [detailsName, setDetailsName] = useState<string | null>(null)
   const [renameTarget, setRenameTarget] = useState<ProfileSummary | null>(null)
+  const [activationTarget, setActivationTarget] = useState<ProfileSummary | null>(null)
   const [newProfileName, setNewProfileName] = useState('')
   const [wizardStep, setWizardStep] = useState(1)
   const [cloneFrom, setCloneFrom] = useState('')
@@ -216,18 +217,10 @@ export function ProfilesScreen() {
   }
 
   async function handleActivate(name: string) {
-    if (
-      typeof window !== 'undefined' &&
-      !window.confirm(
-        `Switch to ${name}? This restarts the Hermes gateway and can interrupt in-flight chats or tasks.`,
-      )
-    ) {
-      return
-    }
     setBusyName(name)
     try {
       await postJson('/api/profiles/activate', { name })
-      toast(`Activated profile ${name}`, { type: 'success' })
+      toast(`Activated profile ${name}. Gateway restarted.`, { type: 'warning' })
       await refreshProfiles()
     } catch (error) {
       toast(
@@ -392,7 +385,7 @@ export function ProfilesScreen() {
               <div className="mt-4 flex border-t border-primary-200 dark:border-neutral-800">
                 <button
                   type="button"
-                  onClick={() => void handleActivate(profile.name)}
+                  onClick={() => setActivationTarget(profile)}
                   disabled={profile.active || busy}
                   className={cn(
                     'flex flex-1 items-center justify-center gap-1.5 border-r border-primary-200 py-2.5 text-xs font-semibold transition-colors dark:border-neutral-800',
@@ -458,6 +451,58 @@ export function ProfilesScreen() {
           )
         })}
       </div>
+
+      <DialogRoot
+        open={Boolean(activationTarget)}
+        onOpenChange={(open) => {
+          if (!open) setActivationTarget(null)
+        }}
+      >
+        <DialogContent className="w-[min(480px,94vw)] max-w-none p-0">
+          <div className="border-b border-amber-200 bg-amber-50 px-6 pb-4 pt-5 dark:border-amber-900/40 dark:bg-amber-950/20">
+            <div className="flex items-start gap-3">
+              <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl border border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/30 dark:text-amber-200">
+                <HugeiconsIcon icon={SparklesIcon} size={20} strokeWidth={1.7} />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle className="text-base font-semibold text-amber-900 dark:text-amber-100">
+                  Confirm profile switch
+                </DialogTitle>
+                <p className="mt-1 text-sm text-amber-800 dark:text-amber-200">
+                  Switching to{' '}
+                  <span className="font-semibold">{activationTarget?.name}</span>{' '}
+                  restarts the Hermes gateway and can interrupt in-flight chats
+                  or tasks.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="px-6 py-5 text-sm text-primary-700 dark:text-neutral-300">
+            Do you want to continue?
+          </div>
+          <div className="flex justify-end gap-2 border-t border-primary-200 px-6 py-3 dark:border-neutral-800">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActivationTarget(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                const name = activationTarget?.name
+                setActivationTarget(null)
+                if (name) void handleActivate(name)
+              }}
+              disabled={!activationTarget || busyName === activationTarget.name}
+              className="gap-1.5 bg-amber-500 text-white hover:bg-amber-600"
+            >
+              Continue
+            </Button>
+          </div>
+        </DialogContent>
+      </DialogRoot>
 
       {sorted.length === 0 && !profilesQuery.isLoading ? (
         <div className="rounded-2xl border border-dashed border-primary-200 bg-primary-50/70 p-8 text-center text-sm text-primary-600">
