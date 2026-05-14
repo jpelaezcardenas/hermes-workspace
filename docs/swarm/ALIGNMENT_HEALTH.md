@@ -16,7 +16,7 @@ Examples where `worker.id` and `worker.wrapper` intentionally differ:
 
 - `builder` -> `builder:task`
 - `reviewer` -> `reviewer:gate`
-- `qa` -> `qa:verify`
+- `qa` -> `qa:smoke`
 - `ops-watch` -> `ops:health`
 - `inbox-triage` -> `inbox:triage`
 

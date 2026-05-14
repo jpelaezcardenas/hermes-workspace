@@ -17,16 +17,16 @@ Swarm Mode is built around a durable loop: intent enters through Aurora, dispatc
     │ translates intent into SwarmBrief
     ▼
 ┌────────────────────────────┐
-│ swarm3 / Orchestrator      │
+│ orchestrator               │
 │ routing, drift, escalation │
 └───┬────────────────────────┘
     │ dispatches by role + standing mission
     ▼
 ┌────────────────────────────────────────────────────┐
 │ Hermes Agents                                      │
-│ swarm4 research  swarm5 build  swarm6 review        │
-│ swarm7 docs      swarm8 ops    swarm9 lab           │
-│ swarm10 patches  swarm11 QA    swarm12 triage       │
+│ researcher     builder     reviewer                │
+│ km-agent       ops-watch   maintainer               │
+│ strategist     qa          inbox-triage             │
 └───┬────────────────────────────────────────────────┘
     │ proof-bearing checkpoint
     ▼
@@ -65,7 +65,7 @@ The canonical YAML lives in `SWARM_SPEC.md` section 3. This is the public shape:
 
 ```yaml
 brief_id: brief-<timestamp>-<slug>
-worker: swarm<N>
+worker: <semantic-worker-id>
 project: <project-name>
 goal: <one-sentence end state>
 why_now: <trigger>
@@ -115,8 +115,8 @@ The notification router lives in `src/server/swarm-notifications.ts`.
 Current behavior:
 
 - Checkpoints route to the orchestrator worker by default.
-- The default orchestrator worker is `swarm3`.
-- The tmux target is `swarm-swarm3`.
+- The default orchestrator worker is `orchestrator`.
+- The tmux target is `swarm-orchestrator`.
 - Duplicate raw checkpoints are suppressed via `runtime.json`.
 - `NEEDS_INPUT` escalates to the main session.
 - If the orchestrator tmux session is unreachable, the checkpoint escalates to the main session.
@@ -131,11 +131,11 @@ That split matters. Without it, the main chat becomes a trash fire of worker tri
 
 A standing mission is a worker's permanent responsibility. Examples:
 
-- Scribe maintains docs and handoffs.
-- Reviewer owns the byte-verified review gate.
-- Triage works the PR/issues lane.
-- Lab runs model/runtime experiments.
-- Foundation maintains health and repair infrastructure.
+- `km-agent` maintains RAZSOC/GBrain/docs/source-of-truth integrity.
+- `reviewer` owns the independent quality/security/regression gate.
+- `inbox-triage` works inbound classification and routing.
+- `researcher` handles bounded research and discovery lanes.
+- `ops-watch` maintains runtime health and repair infrastructure.
 
 Standing missions are how idle workers stay useful without waiting for Eric to invent busywork.
 
@@ -160,10 +160,10 @@ Purpose: ship coordinated launch artifacts, demos, media, and release-facing ass
 Typical owners:
 
 - Builder for implementation
-- Mirror Integrations for assets
-- Sage for narrative and research
-- QA for smoke checks
-- Scribe for README/showcase copy
+- `maintainer` for upstream/dependency hygiene
+- `researcher` for narrative/research inputs
+- `qa` for smoke checks
+- `km-agent` for README/showcase/source-of-truth copy
 
 ### Lane B — Issues + PR autopilot
 
@@ -171,10 +171,10 @@ Purpose: keep open GitHub issues and PRs moving.
 
 Typical owners:
 
-- Triage as primary processor
-- Overflow for backup
-- Reviewer for gatekeeping
-- QA for regression proof
+- `inbox-triage` as primary processor
+- `builder` or `maintainer` for implementation backup
+- `reviewer` for gatekeeping
+- `qa` for regression proof
 
 Core loop:
 
@@ -182,13 +182,13 @@ Core loop:
 scan -> score -> reproduce -> patch -> test -> PR -> review -> human approval
 ```
 
-### Lane C — Lab / experiments
+### Lane C — Research / experiments
 
-Purpose: run experiments without destabilizing the product lane.
+Purpose: run research or experiments without destabilizing the product lane.
 
 Typical owner:
 
-- Lab
+- `researcher`
 
 Examples:
 
@@ -197,7 +197,7 @@ Examples:
 - speculative performance experiments
 - prototype loops
 
-Lab gets autonomy because isolation lowers risk. The product lane gets evidence when Lab finds something real.
+Research lanes get autonomy because isolation lowers risk. The product lane gets evidence when research finds something real.
 
 ## Greenlight Gate
 

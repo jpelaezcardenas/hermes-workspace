@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
 import { execFile } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { createFileRoute } from '@tanstack/react-router'
+import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { getProfilesDir } from '../../server/claude-paths'
 import {
@@ -12,20 +12,22 @@ import {
   getSwarmWrapperPath,
   listSwarmWorkerIds,
   readSwarmRuntimeFile,
-  type SwarmArtifactMetadata,
-  type SwarmBoundary,
-  type SwarmCheckpointStatus,
-  type SwarmDispatchMetadata,
-  type SwarmLifecycleMetadata,
-  type SwarmPreviewMetadata,
-  type SwarmRuntimeSource,
-  type SwarmSessionMetadata,
-  type SwarmTaskMetadata,
-  type SwarmTerminalKind,
-  type SwarmWorkerState,
 } from '../../server/swarm-foundation'
-import { rosterByWorkerId } from '../../server/swarm-roster'
 import { readSwarmMode, writeSwarmMode } from '../../server/swarm-mode'
+import { rosterByWorkerId } from '../../server/swarm-roster'
+import type {
+  SwarmArtifactMetadata,
+  SwarmBoundary,
+  SwarmCheckpointStatus,
+  SwarmDispatchMetadata,
+  SwarmLifecycleMetadata,
+  SwarmPreviewMetadata,
+  SwarmRuntimeSource,
+  SwarmSessionMetadata,
+  SwarmTaskMetadata,
+  SwarmTerminalKind,
+  SwarmWorkerState,
+} from '../../server/swarm-foundation'
 
 type RuntimeEntry = {
   workerId: string
@@ -74,7 +76,7 @@ function titleCase(value: string): string {
     .join(' ')
 }
 
-function listWorkerIds(): string[] {
+function listWorkerIds(): Array<string> {
   return listSwarmWorkerIds()
 }
 
@@ -136,11 +138,11 @@ async function buildEntry(
   workerId: string,
   tmuxAvailable: boolean,
 ): Promise<RuntimeEntry> {
-  const profilePath = join(getProfilesDir(), workerId)
+  const roster = rosterByWorkerId([workerId]).get(workerId)
+  const profilePath = join(getProfilesDir(), roster?.profile || workerId)
   const { source, runtime } = readSwarmRuntimeFile(profilePath, workerId, {
     workspaceRoot: process.cwd(),
   })
-  const roster = rosterByWorkerId([workerId]).get(workerId)
   const { tail, lastSessionStartedAt, logPath } = lastLogTail(profilePath)
   const matched = tmuxAvailable
     ? await probeTmuxName(workerId, getSwarmTmuxSessionName(workerId))
@@ -151,7 +153,7 @@ async function buildEntry(
   else if (runtime.cwd) terminalKind = 'shell'
   else if (logPath) terminalKind = 'log-tail'
 
-  const wrapperPath = getSwarmWrapperPath(workerId)
+  const wrapperPath = getSwarmWrapperPath(workerId, roster)
   const resolvedWrapperPath = existsSync(wrapperPath) ? wrapperPath : null
   const session = buildSwarmSessionMetadata({
     workerId,

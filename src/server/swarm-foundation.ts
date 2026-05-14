@@ -461,12 +461,12 @@ export function listSwarmWorkerIds(options?: { swarmOnly?: boolean }): Array<str
     .sort()
 }
 
-export function getSwarmProfilePath(workerId: string): string {
-  return path.join(getProfilesDir(), workerId)
+export function getSwarmProfilePath(workerId: string, roster?: { profile?: string | null }): string {
+  return path.join(getProfilesDir(), roster?.profile || workerId)
 }
 
-export function getSwarmWrapperPath(workerId: string): string {
-  return path.join(getLocalBinDir(), workerId)
+export function getSwarmWrapperPath(workerId: string, roster?: { wrapper?: string | null }): string {
+  return path.join(getLocalBinDir(), roster?.wrapper || workerId)
 }
 
 export function getSwarmTmuxSessionName(workerId: string): string {

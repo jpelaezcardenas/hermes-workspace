@@ -1,15 +1,19 @@
+import * as fs from 'node:fs'
+import * as os from 'node:os'
+import * as path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   buildSwarmDispatchMetadata,
   buildSwarmSessionMetadata,
   classifySwarmPluginBoundary,
   deriveSwarmBoundary,
+  getSwarmProfilePath,
+  getSwarmWrapperPath,
   normalizeSwarmRuntime,
   parseSwarmPluginManifest,
+  patchSwarmRuntimeFile,
+  readSwarmRuntimeFile,
 } from './swarm-foundation'
-import * as fs from 'node:fs'
-import * as os from 'node:os'
-import * as path from 'node:path'
 
 describe('normalizeSwarmRuntime', () => {
   it('fills legacy or sparse runtime.json values with stable defaults', () => {
@@ -119,6 +123,13 @@ describe('buildSwarmDispatchMetadata', () => {
   })
 })
 
+describe('semantic swarm paths', () => {
+  it('resolves profile and wrapper paths from roster metadata when ids differ from executable names', () => {
+    expect(getSwarmProfilePath('builder', { profile: 'builder' })).toMatch(/profiles[/\\]builder$/)
+    expect(getSwarmWrapperPath('builder', { wrapper: 'builder:task' })).toMatch(/bin[/\\]builder:task$/)
+  })
+})
+
 describe('parseSwarmPluginManifest', () => {
   it('parses plugin boundary and scopes from manifest yaml', () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'swarm-plugin-'))
@@ -155,8 +166,6 @@ describe('parseSwarmPluginManifest', () => {
     }
   })
 })
-
-import { patchSwarmRuntimeFile, readSwarmRuntimeFile } from './swarm-foundation'
 
 describe('patchSwarmRuntimeFile', () => {
   it('returns ok=false when the profile path does not exist', () => {

@@ -98,7 +98,7 @@ Minimal single-worker example:
 
 ```bash
 curl -X POST http://localhost:3000/api/swarm-dispatch   -H 'Content-Type: application/json'   -d '{
-    "workerIds": ["swarm7"],
+    "workerIds": ["km-agent"],
     "prompt": "Write a short checkpoint explaining what you can see in your current workspace. Do not modify files.",
     "timeoutSeconds": 240,
     "waitForCheckpoint": true
@@ -112,9 +112,9 @@ curl -X POST http://localhost:3000/api/swarm-dispatch   -H 'Content-Type: applic
     "missionTitle": "Docs smoke test",
     "assignments": [
       {
-        "workerId": "swarm7",
+        "workerId": "km-agent",
         "task": "Review docs/swarm/README.md and return a checkpoint with one improvement suggestion.",
-        "rationale": "Scribe owns docs and handoff quality."
+        "rationale": "km-agent owns docs, RAZSOC, GBrain, and handoff quality."
       }
     ],
     "waitForCheckpoint": true,
@@ -128,11 +128,11 @@ Expected response shape:
 {
   "missionId": "mission-...",
   "assignments": [
-    { "workerId": "swarm7", "task": "..." }
+    { "workerId": "km-agent", "task": "..." }
   ],
   "results": [
     {
-      "workerId": "swarm7",
+      "workerId": "km-agent",
       "ok": true,
       "delivery": "tmux",
       "checkpointStatus": "checkpointed"
@@ -181,13 +181,13 @@ The Add Swarm dialog includes these presets:
 - Orchestrator
 - Builder
 - Reviewer
-- Triage
-- Lab
-- Sage
-- Scribe
-- Foundation
+- Inbox Triage
+- Researcher
+- KM Agent
+- Ops Watch
 - QA
-- Mirror Integrations
+- Maintainer
+- Strategist
 - Custom
 
 Pick the closest role first, then tune. Avoid starting from Custom unless you are intentionally creating a new lane. Presets encode the operating contract so the worker knows whether it is allowed to build, review, triage, research, or just report.

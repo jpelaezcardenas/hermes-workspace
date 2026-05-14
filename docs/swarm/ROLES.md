@@ -1,137 +1,65 @@
 # Swarm Role Presets
 
-The Add Swarm dialog ships with role presets so new Hermes Agents start with a real operating contract instead of a blank textarea and optimism. Pick the closest preset, tune the mission, then start the worker.
+The canonical Swarm roster uses semantic Hermes worker IDs from `swarm.yaml`. Role presets are routing aids, not a reason to spawn every role. Pick the closest semantic worker, tune the mission, then start durable work only when profile state, dependencies, retries, logs, audit trail, or cross-turn execution matter.
 
-Each role has:
-
-- specialty
-- default skills
-- default model
-- when to use it
-- canonical spec reference
-
-Canonical project specs live in the swarm specs directory at:
+Canonical project specs live at:
 
 ```text
-/swarm-specs/projects/<worker>.md
+/swarm-specs/projects/<semantic-worker-id>.md
 ```
-
-Use those specs as the source of truth for standing missions. The role preset is the fast-start shape; the project spec is the durable contract.
 
 ## Preset summary
 
-| Preset | Default model | Use when |
+| Worker ID | Role intent | Use when |
 | --- | --- | --- |
-| Orchestrator | GPT-5.4 | You need dispatch, routing, drift detection, and escalation. |
-| Builder | GPT-5.5 | You need product code shipped with tests/build proof. |
-| Reviewer | GPT-5.4 | You need byte-verified review and merge readiness. |
-| Triage | GPT-5.5 | You need issues/PRs scored, reproduced, patched, or prepared. |
-| Lab | GPT-5.4 | You need isolated experiments or local-model benchmarking. |
-| Sage | GPT-5.5 | You need research, synthesis, scripts, or launch copy. |
-| Scribe | GPT-5.5 | You need docs, specs, handoffs, skills hygiene, memory curation. |
-| Foundation | GPT-5.4 | You need runtime, repair, infra, health, or lifecycle work. |
-| QA | GPT-5.4 | You need regression, smoke, expected-vs-actual verification. |
-| Mirror Integrations | GPT-5.4 | You need upstream sync, integrations, or asset packs. |
-| Custom | user-selected | You are creating a lane that does not fit an existing preset. |
+| `orchestrator` | Mission decomposition, routing, greenlight gates | Work needs durable coordination, dependency management, or escalation. |
+| `km-agent` | RAZSOC/GBrain/source-of-truth stewardship | Docs, knowledge graph, Obsidian, drift, or handoff quality matter. |
+| `builder` | Scoped implementation with tests and small diffs | Product code or repo changes need to ship. |
+| `reviewer` | Independent quality/security/regression gate | Merge readiness, adversarial review, or risk assessment is needed. |
+| `qa` | Browser/manual/test/workflow verification | Smoke checks, expected-vs-actual validation, screenshots, or console checks matter. |
+| `researcher` | Bounded research and discovery | Web/source research, synthesis, or evidence gathering is needed. |
+| `ops-watch` | Local runtime health and reliability | Gateway, Workspace, cron, MCP, ports, logs, processes, or service health matter. |
+| `maintainer` | Upstream/dependency/release hygiene | Patches, releases, dependency drift, or workaround hygiene matter. |
+| `strategist` | Wedges, kill criteria, tradeoffs | Planning, bets, sequencing, or decision review is needed. |
+| `inbox-triage` | Inbound classification/capture/routing | Issues, PRs, messages, or incoming material need routing. |
 
 ## Role routing discipline
 
-Role presets are routing aids, not a reason to spawn every role. Use durable Swarm/Kanban/Profile dispatch only when named profile state, dependencies, retries, logs, audit trail, or cross-turn execution matter. Keep short generic checks on `delegate_task`/synchronous subagents and let the root operator handle small verified work directly.
+Use durable Swarm/Kanban/Profile dispatch only when named profile state, dependencies, retries, logs, audit trail, or cross-turn execution matter. Keep short generic checks on `delegate_task`/synchronous subagents and let the root operator handle small verified work directly.
 
 Split only genuinely independent lanes, link real dependencies, checkpoint after batches/blockers, and use one deliberate expensive review gate by default unless deeper review is explicitly approved. If a worker stalls, inspect, reclaim/retry, reassign, narrow, or block with evidence; do not silently absorb the role into the parent context.
 
-## Orchestrator
+## Worker contracts
+
+### `orchestrator`
 
 Specialty: control-plane state, dispatch, drift detection, escalation.
 
-Default skills:
-
-- `swarm-orchestrator`
-- `swarm-worker-core`
-- `swarm-review-learning-loop`
-- `self-improvement`
-
-Default model: GPT-5.4
-
-When to use:
-
-- routing multi-worker missions
-- translating intent into SwarmBriefs
-- interpreting checkpoints
-- detecting drift
-- re-prompting workers
-- escalating blockers
-- managing standing missions
-
-Canonical spec:
-
-```text
-/swarm-specs/projects/swarm3.md
-```
+Use for multi-worker missions, SwarmBrief framing, checkpoint interpretation, dependency routing, greenlight gates, and stalled-worker recovery.
 
 Good checkpoint:
 
 ```text
 STATE: HANDOFF
-RESULT: Routed docs release to swarm7 and review gate to swarm6 after docs checkpoint.
-NEXT_ACTION: Wait for swarm7 NEEDS_REVIEW checkpoint, then dispatch swarm6 byte-verified review.
+RESULT: Routed docs release to km-agent and review gate to reviewer after docs checkpoint.
+NEXT_ACTION: Wait for km-agent NEEDS_REVIEW checkpoint, then dispatch reviewer merge-readiness review.
 ```
 
-## Builder
+### `km-agent`
 
-Specialty: full-stack implementation, fast ship cycles.
+Specialty: RAZSOC, GBrain, Obsidian/source-of-truth, docs, skills hygiene, memory curation.
 
-Default skills:
+Use for README/docs trees, runbooks, handoffs, skill documentation, graph/source drift checks, and knowledge integrity.
 
-- `swarm-worker-core`
-- `byte-verified-code-review`
+### `builder`
 
-Default model: GPT-5.5
+Specialty: implementation, bug fixes, integrations, focused refactors.
 
-When to use:
+Use for narrow code diffs with tests/build proof. Builder should ship small slices, not opportunistic rewrites.
 
-- product UI
-- backend endpoints
-- integrations
-- bug fixes
-- feature slices
-- focused refactors
+### `reviewer`
 
-Canonical spec examples:
-
-```text
-/swarm-specs/projects/swarm5.md
-/swarm-specs/projects/swarm10.md
-```
-
-Builder should ship narrow diffs, not renovate the cathedral because a button looked lonely.
-
-## Reviewer
-
-Specialty: byte-verified code review, naming, tests, build gate.
-
-Default skills:
-
-- `swarm-worker-core`
-- `byte-verified-code-review`
-- `swarm-review-learning-loop`
-
-Default model: GPT-5.4
-
-When to use:
-
-- PR readiness
-- release branch gates
-- generated-file sanity checks
-- fragile naming changes
-- regression review
-- build/test verification
-
-Canonical spec:
-
-```text
-/swarm-specs/projects/swarm6.md
-```
+Specialty: independent code/security/regression review and merge readiness.
 
 Reviewer verdicts should be one of:
 
@@ -139,268 +67,51 @@ Reviewer verdicts should be one of:
 - CHANGES_REQUESTED
 - BLOCKED
 
-## Triage
+### `qa`
 
-Specialty: autonomous PR/issues processor.
-
-Default skills:
-
-- `swarm-worker-core`
-- `byte-verified-code-review`
-- `swarm-review-learning-loop`
-
-Default model: GPT-5.5
-
-When to use:
-
-- issue backlog scan
-- PR feedback triage
-- reproduction notes
-- minimal failing tests
-- small fix branches
-- issue ranking
-
-Canonical spec examples:
-
-```text
-/swarm-specs/projects/swarm12.md
-/swarm-specs/projects/swarm1.md
-```
-
-Triage should never silently merge or close. It prepares the work and asks for the gate.
-
-## Lab
-
-Specialty: local-model R&D, spec-dec, benchmarking.
-
-Default skills:
-
-- `swarm-worker-core`
-- `pc1-ollama-gguf-bench`
-- `swarm-bench-worker`
-
-Default model: GPT-5.4
-
-When to use:
-
-- local model testing
-- throughput comparisons
-- speculative runtime improvements
-- isolated prototypes
-- experiment logs
-
-Canonical spec:
-
-```text
-/swarm-specs/projects/swarm9.md
-```
-
-Lab is allowed to be weird because it is isolated. Product lanes are not.
-
-## Sage
-
-Specialty: research, scripts, X content, creative briefs.
-
-Default skills:
-
-- `swarm-worker-core`
-- `last30days`
-- `pdf-and-paper-deep-reading`
-
-Default model: GPT-5.5
-
-When to use:
-
-- technical research
-- market/model scan
-- launch angles
-- thread drafts
-- creative briefs
-- citations
-
-Canonical spec:
-
-```text
-/swarm-specs/projects/swarm4.md
-```
-
-Sage drafts; humans approve public posting.
-
-## Scribe
-
-Specialty: docs, skills hygiene, memory curation.
-
-Default skills:
-
-- `swarm-worker-core`
-- `last30days`
-- `creative-writing`
-
-Default model: GPT-5.5
-
-When to use:
-
-- README updates
-- docs trees
-- release notes
-- handoffs
-- specs
-- runbooks
-- skill documentation
-- memory hygiene reports
-
-Canonical spec:
-
-```text
-/swarm-specs/projects/swarm7.md
-```
-
-Scribe makes the system legible. This is less glamorous than building the system and usually more responsible for whether anyone can use it.
-
-## Foundation
-
-Specialty: infra, repair playbook, autopilot wiring.
-
-Default skills:
-
-- `swarm-worker-core`
-
-Default model: GPT-5.4
-
-When to use:
-
-- runtime APIs
-- health checks
-- tmux lifecycle
-- profile detection
-- repair playbook updates
-- orchestrator loop wiring
-- backend contracts
-
-Canonical spec examples:
-
-```text
-/swarm-specs/projects/swarm8.md
-/swarm-specs/projects/swarm2.md
-```
-
-Foundation keeps the floor from turning into soup.
-
-## QA
-
-Specialty: regression QA, render verification, expected-vs-actual checks.
-
-Default skills:
-
-- `swarm-worker-core`
-- `byte-verified-code-review`
-
-Default model: GPT-5.4
-
-When to use:
-
-- smoke tests
-- regression checks
-- UI expected-vs-actual passes
-- artifact verification
-- post-build confidence
-- release sanity
-
-Canonical spec:
-
-```text
-/swarm-specs/projects/swarm11.md
-```
+Specialty: regression QA, render verification, browser/manual/test workflow checks.
 
 QA should say exactly what was checked, exactly what failed, and exactly how to reproduce it.
 
-## Mirror Integrations
+### `researcher`
 
-Specialty: asset packs, upstream sync, integrations.
+Specialty: bounded research, discovery, citations, market/model scans, experiment notes.
 
-Default skills:
+Researcher drafts evidence and options; humans approve public posting or strategic commitments.
 
-- `swarm-worker-core`
-- `claude-promo`
-- `songwriting-and-ai-music`
+### `ops-watch`
 
-Default model: GPT-5.4
+Specialty: local runtime health, gateway/MCP/cron/process/log checks, repair playbook updates.
 
-When to use:
+Ops-watch keeps the runtime floor stable and boring.
 
-- upstream diff watching
-- integration packaging
-- asset collection
-- creative asset generation
-- cross-lane support
+### `maintainer`
 
-Canonical spec:
+Specialty: upstream sync, dependency hygiene, releases, local patches, workaround cleanup.
 
-```text
-/swarm-specs/projects/swarm10.md
-```
+Use when the main risk is drift against external sources or package/release health.
 
-Mirror Integrations is the lane for portable useful things, not random shiny distractions. There will be random shiny distractions. They are sneaky.
+### `strategist`
 
-## Custom
+Specialty: operating plans, wedges, bets, kill criteria, tradeoff reviews.
 
-Specialty: user-defined.
+Use when sequencing and decision quality matter more than immediate execution.
 
-Default skills: none.
+### `inbox-triage`
 
-Default model: user-selected.
+Specialty: issues/PRs/messages classification, capture, discard, research, or route.
 
-When to use:
+Inbox-triage should never silently merge, close, or publish. It prepares the work and asks for the gate.
 
-- the worker does not fit an existing role
-- you are testing a new lane
-- you need temporary specialization
-- a future preset is being prototyped
+## Custom workers
 
-Canonical spec:
+Use a custom worker only when none of the semantic workers fit. Document:
 
-```text
-/swarm-specs/projects/<new-worker>.md
-```
+- standing mission
+- profile name
+- wrapper name
+- toolsets/plugin toolsets
+- greenlight boundaries
+- checkpoint contract
 
-Custom workers should still get:
-
-- `swarm-worker-core`
-- a role description
-- a specialty
-- a mission
-- a checkpoint contract
-- a clear approval boundary
-
-Blank custom workers become expensive autocomplete. Add structure first.
-
-## Choosing the right role
-
-Use this routing rule:
-
-| If the work is mostly... | Send it to... |
-| --- | --- |
-| deciding who should do what | Orchestrator |
-| changing product code | Builder |
-| proving a branch is safe | Reviewer |
-| chewing through issues/PRs | Triage |
-| experimenting away from release | Lab |
-| researching or drafting narrative | Sage |
-| explaining, documenting, preserving context | Scribe |
-| runtime/health/repair infrastructure | Foundation |
-| checking behavior and regressions | QA |
-| upstream/integration/assets | Mirror Integrations |
-| none of the above | Custom |
-
-## Adding a new role preset
-
-1. Define the role in the UI preset list.
-2. Give it a one-line specialty.
-3. Give it a standing mission.
-4. Choose default skills.
-5. Choose default model.
-6. Create a canonical project spec.
-7. Add it to this document.
-8. Dispatch a tiny smoke task and verify a checkpoint.
-
-If step 6 feels like too much work, the role probably is not real yet.
+If the custom role becomes durable, add it to `swarm.yaml`, profile config, wrapper, and `docs/swarm/ALIGNMENT_HEALTH.md` invariants together.

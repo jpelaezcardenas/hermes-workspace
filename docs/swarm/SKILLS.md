@@ -40,18 +40,18 @@ The important rule is that the worker's runtime must be able to resolve the skil
 
 ## Role-to-skill defaults
 
-| Role | Default skills |
+| Worker | Default skills |
 | --- | --- |
-| Orchestrator | `swarm-orchestrator`, `swarm-worker-core`, `swarm-review-learning-loop`, `self-improvement` |
-| Builder | `swarm-worker-core`, `byte-verified-code-review` |
-| Reviewer | `swarm-worker-core`, `byte-verified-code-review`, `swarm-review-learning-loop` |
-| Triage | `swarm-worker-core`, `byte-verified-code-review`, `swarm-review-learning-loop` |
-| Lab | `swarm-worker-core`, `pc1-ollama-gguf-bench`, `swarm-bench-worker` |
-| Sage | `swarm-worker-core`, `last30days`, `pdf-and-paper-deep-reading` |
-| Scribe | `swarm-worker-core`, `last30days`, `creative-writing` |
-| Foundation | `swarm-worker-core` |
-| QA | `swarm-worker-core`, `byte-verified-code-review` |
-| Mirror Integrations | `swarm-worker-core`, `claude-promo`, `songwriting-and-ai-music` |
+| `orchestrator` | `orchestrator-core`, `swarm-orchestrator`, `swarm-worker-core` |
+| `km-agent` | `km-agent-core`, `swarm-worker-core` |
+| `builder` | `builder-core`, `swarm-worker-core`, `byte-verified-code-review` |
+| `reviewer` | `reviewer-core`, `swarm-worker-core`, `byte-verified-code-review`, `swarm-review-learning-loop` |
+| `qa` | `qa-core`, `swarm-worker-core`, `byte-verified-code-review` |
+| `researcher` | `researcher-core`, `swarm-worker-core`, `last30days`, `pdf-and-paper-deep-reading` |
+| `ops-watch` | `ops-watch-core`, `swarm-worker-core`, `swarm-dev-runtime` |
+| `maintainer` | `maintainer-core`, `swarm-worker-core`, `swarm-pr-worker` |
+| `strategist` | `strategist-core`, `swarm-worker-core` |
+| `inbox-triage` | `inbox-triage-core`, `swarm-worker-core`, `swarm-pr-worker` |
 | Custom | no default skills |
 
 ## What each core skill contributes
@@ -100,7 +100,7 @@ Used for review gates. It forces proof instead of "looks fine":
 
 ### swarm-bench-worker
 
-Used by Lab for local-model and runtime experiments:
+Used by researcher/experiments lanes for local-model and runtime experiments:
 
 - benchmark plan
 - controlled run
@@ -131,7 +131,7 @@ Used by UI builders:
 
 ### swarm-dev-runtime
 
-Used by Foundation/runtime lanes:
+Used by ops-watch/runtime lanes:
 
 - API contracts
 - profile/runtime state
