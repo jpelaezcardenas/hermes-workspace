@@ -9,6 +9,7 @@ import {
   Chat01Icon,
   CheckListIcon,
   Clock01Icon,
+  CloudIcon,
   ComputerTerminal01Icon,
   DashboardSquare01Icon,
   File01Icon,
@@ -779,6 +780,7 @@ function ChatSidebarComponent({
   }
 
   const isDashboardActive = pathname === '/dashboard'
+  const isWeatherbotActive = pathname.startsWith('/weatherbot')
 
   const mainItems: Array<NavItemDef> = [
     {
@@ -787,6 +789,13 @@ function ChatSidebarComponent({
       icon: DashboardSquare01Icon,
       label: t('nav.dashboard'),
       active: isDashboardActive,
+    },
+    {
+      kind: 'link',
+      to: '/weatherbot',
+      icon: CloudIcon,
+      label: 'Weatherbot',
+      active: isWeatherbotActive,
     },
     {
       kind: 'link',

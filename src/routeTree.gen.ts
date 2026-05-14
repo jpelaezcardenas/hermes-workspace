@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorldRouteImport } from './routes/world'
+import { Route as WeatherbotRouteImport } from './routes/weatherbot'
 import { Route as VtCapitalRouteImport } from './routes/vt-capital'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
@@ -38,6 +39,7 @@ import { Route as SettingsProvidersRouteImport } from './routes/settings/provide
 import { Route as ReserveConfirmRouteImport } from './routes/reserve/confirm'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
+import { Route as ApiWeatherbotRouteImport } from './routes/api/weatherbot'
 import { Route as ApiVtCapitalRouteImport } from './routes/api/vt-capital'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
@@ -156,6 +158,11 @@ import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
   path: '/world',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WeatherbotRoute = WeatherbotRouteImport.update({
+  id: '/weatherbot',
+  path: '/weatherbot',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VtCapitalRoute = VtCapitalRouteImport.update({
@@ -296,6 +303,11 @@ const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   id: '/api/workspace',
   path: '/api/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWeatherbotRoute = ApiWeatherbotRouteImport.update({
+  id: '/api/weatherbot',
+  path: '/api/weatherbot',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiVtCapitalRoute = ApiVtCapitalRouteImport.update({
@@ -897,6 +909,7 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/vt-capital': typeof VtCapitalRoute
+  '/weatherbot': typeof WeatherbotRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -965,6 +978,7 @@ export interface FileRoutesByFullPath {
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
+  '/api/weatherbot': typeof ApiWeatherbotRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1041,6 +1055,7 @@ export interface FileRoutesByTo {
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/vt-capital': typeof VtCapitalRoute
+  '/weatherbot': typeof WeatherbotRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1109,6 +1124,7 @@ export interface FileRoutesByTo {
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
+  '/api/weatherbot': typeof ApiWeatherbotRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1187,6 +1203,7 @@ export interface FileRoutesById {
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/vt-capital': typeof VtCapitalRoute
+  '/weatherbot': typeof WeatherbotRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1255,6 +1272,7 @@ export interface FileRoutesById {
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
+  '/api/weatherbot': typeof ApiWeatherbotRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1334,6 +1352,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/terminal'
     | '/vt-capital'
+    | '/weatherbot'
     | '/world'
     | '/api/artifacts'
     | '/api/auth'
@@ -1402,6 +1421,7 @@ export interface FileRouteTypes {
     | '/api/terminal-resize'
     | '/api/terminal-stream'
     | '/api/vt-capital'
+    | '/api/weatherbot'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1478,6 +1498,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/terminal'
     | '/vt-capital'
+    | '/weatherbot'
     | '/world'
     | '/api/artifacts'
     | '/api/auth'
@@ -1546,6 +1567,7 @@ export interface FileRouteTypes {
     | '/api/terminal-resize'
     | '/api/terminal-stream'
     | '/api/vt-capital'
+    | '/api/weatherbot'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1623,6 +1645,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/terminal'
     | '/vt-capital'
+    | '/weatherbot'
     | '/world'
     | '/api/artifacts'
     | '/api/auth'
@@ -1691,6 +1714,7 @@ export interface FileRouteTypes {
     | '/api/terminal-resize'
     | '/api/terminal-stream'
     | '/api/vt-capital'
+    | '/api/weatherbot'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1769,6 +1793,7 @@ export interface RootRouteChildren {
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
   VtCapitalRoute: typeof VtCapitalRoute
+  WeatherbotRoute: typeof WeatherbotRoute
   WorldRoute: typeof WorldRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
@@ -1837,6 +1862,7 @@ export interface RootRouteChildren {
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
   ApiVtCapitalRoute: typeof ApiVtCapitalRoute
+  ApiWeatherbotRoute: typeof ApiWeatherbotRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
@@ -1871,6 +1897,13 @@ declare module '@tanstack/react-router' {
       path: '/world'
       fullPath: '/world'
       preLoaderRoute: typeof WorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/weatherbot': {
+      id: '/weatherbot'
+      path: '/weatherbot'
+      fullPath: '/weatherbot'
+      preLoaderRoute: typeof WeatherbotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vt-capital': {
@@ -2067,6 +2100,13 @@ declare module '@tanstack/react-router' {
       path: '/api/workspace'
       fullPath: '/api/workspace'
       preLoaderRoute: typeof ApiWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/weatherbot': {
+      id: '/api/weatherbot'
+      path: '/api/weatherbot'
+      fullPath: '/api/weatherbot'
+      preLoaderRoute: typeof ApiWeatherbotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/vt-capital': {
@@ -3079,6 +3119,7 @@ const rootRouteChildren: RootRouteChildren = {
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
   VtCapitalRoute: VtCapitalRoute,
+  WeatherbotRoute: WeatherbotRoute,
   WorldRoute: WorldRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
@@ -3147,6 +3188,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
   ApiVtCapitalRoute: ApiVtCapitalRoute,
+  ApiWeatherbotRoute: ApiWeatherbotRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,

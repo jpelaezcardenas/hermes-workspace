@@ -7,6 +7,7 @@ import {
   Castle02Icon,
   Chat01Icon,
   Clock01Icon,
+  CloudIcon,
   CommandLineIcon,
   DashboardSquare01Icon,
   File01Icon,
@@ -41,6 +42,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: DashboardSquare01Icon,
     to: '/dashboard',
     match: (p: string) => p.startsWith('/dashboard'),
+  },
+  {
+    id: 'weatherbot',
+    label: 'Weatherbot',
+    icon: CloudIcon,
+    to: '/weatherbot',
+    match: (p: string) => p.startsWith('/weatherbot'),
   },
   {
     id: 'playground',
