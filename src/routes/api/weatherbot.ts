@@ -1,42 +1,48 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 
 type JsonRecord = Record<string, unknown>
 
-const REPOS_ROOT = '/root/hermes-data/repos'
-const LAB_PREFIX = 'weatherbot-lab-'
-const FALLBACK_ROOTS = ['/root/hermes-data/repos/weatherbot-lab-20260513-214224']
+const WEATHERBOT_REPO_NAME = 'weatherbot-lab-20260513-214224'
+const CANONICAL_WEATHERBOT_ROOT = '/home/ubuntu/coferlandia-vm/hermes/data/hermes-data/repos/weatherbot-lab-20260513-214224'
 const TRACE_DIR = 'data/trace'
+const MARKETS_DIR = 'data/markets'
 const STATE_FILE = 'data/state.json'
 const METRICS_FILE = `${TRACE_DIR}/metrics.json`
 const DASHBOARD_FILE = `${TRACE_DIR}/dashboard.txt`
 const EVENTS_FILE = `${TRACE_DIR}/events.jsonl`
+const CAPITAL_HISTORY_FILE = `${TRACE_DIR}/capital_history.jsonl`
 
-function pickLatestWeatherbotRoot(): string | null {
-  const candidates: Array<{ path: string; mtimeMs: number }> = []
+type WeatherbotRootResolution = {
+  path: string
+  source: string
+}
 
-  if (existsSync(REPOS_ROOT)) {
-    for (const entry of readdirSync(REPOS_ROOT, { withFileTypes: true })) {
-      if (!entry.isDirectory() || !entry.name.startsWith(LAB_PREFIX)) continue
-      const candidate = join(REPOS_ROOT, entry.name)
-      try {
-        candidates.push({ path: candidate, mtimeMs: statSync(candidate).mtimeMs })
-      } catch {
-        // Ignore unreadable repos and continue scanning.
-      }
+function hasWeatherbotState(repoPath: string): boolean {
+  return existsSync(join(repoPath, STATE_FILE)) && existsSync(join(repoPath, METRICS_FILE)) && existsSync(join(repoPath, DASHBOARD_FILE))
+}
+
+function resolveWeatherbotRoot(): WeatherbotRootResolution {
+  const envCandidates: Array<[string, string | undefined]> = [
+    ['env:WEATHERBOT_ROOT', process.env.WEATHERBOT_ROOT?.trim()],
+    ['env:HERMES_WEATHERBOT_ROOT', process.env.HERMES_WEATHERBOT_ROOT?.trim()],
+    ['env:WEATHERBOT_REPO_PATH', process.env.WEATHERBOT_REPO_PATH?.trim()],
+  ]
+
+  for (const [source, candidate] of envCandidates) {
+    if (candidate && hasWeatherbotState(candidate)) {
+      return { path: candidate, source }
     }
   }
 
-  candidates.sort((a, b) => b.mtimeMs - a.mtimeMs)
-  if (candidates[0]) return candidates[0].path
-
-  for (const fallback of FALLBACK_ROOTS) {
-    if (existsSync(fallback)) return fallback
+  if (hasWeatherbotState(CANONICAL_WEATHERBOT_ROOT)) {
+    return { path: CANONICAL_WEATHERBOT_ROOT, source: 'canonical-root' }
   }
 
-  return null
+  return { path: CANONICAL_WEATHERBOT_ROOT, source: 'canonical-root-default' }
 }
 
 function readJson<T>(path: string, fallback: T): T {
@@ -78,97 +84,231 @@ function numberOrNull(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null
 }
 
+function mtimeMs(path: string): number | null {
+  try {
+    return statSync(path).mtimeMs
+  } catch {
+    return null
+  }
+}
+
+function loadMarketFiles(repoPath: string): Array<JsonRecord> {
+  const marketsPath = join(repoPath, MARKETS_DIR)
+  if (!existsSync(marketsPath)) return []
+
+  const markets: Array<JsonRecord> = []
+  for (const fileName of readdirSync(marketsPath)) {
+    if (!fileName.endsWith('.json')) continue
+    const fullPath = join(marketsPath, fileName)
+    try {
+      markets.push(JSON.parse(readFileSync(fullPath, 'utf8')) as JsonRecord)
+    } catch {
+      // Ignore malformed market files; the dashboard should keep working.
+    }
+  }
+  return markets
+}
+
+function parseCapitalSample(record: JsonRecord) {
+  return {
+    ts: typeof record.ts === 'string' ? record.ts : null,
+    cashBalance: numberOrNull(record.cash_balance),
+    reservedCapital: numberOrNull(record.reserved_capital),
+    equityEstimate: numberOrNull(record.equity_estimate),
+  }
+}
+
+function normalizeClosedPosition(market: JsonRecord, index: number) {
+  const position = (market.position as JsonRecord | undefined) ?? {}
+  const closeReason = typeof position.close_reason === 'string' ? position.close_reason : null
+  return {
+    id: `${String(market.city ?? 'unknown')}-${String(market.date ?? 'unknown')}-${index}`,
+    city: market.city ?? null,
+    cityName: market.city_name ?? null,
+    date: market.date ?? null,
+    bucket:
+      position.bucket_low != null && position.bucket_high != null
+        ? `${position.bucket_low}-${position.bucket_high}${market.unit === 'F' ? 'F' : 'C'}`
+        : null,
+    entryPrice: numberOrNull(position.entry_price),
+    exitPrice: numberOrNull(position.exit_price),
+    pnl: numberOrNull(position.pnl),
+    cost: numberOrNull(position.cost),
+    shares: numberOrNull(position.shares),
+    closeReason,
+    openedAt: typeof position.opened_at === 'string' ? position.opened_at : null,
+    closedAt: typeof position.closed_at === 'string' ? position.closed_at : null,
+    forecastSrc: typeof position.forecast_src === 'string' ? position.forecast_src : null,
+    forecastTemp: numberOrNull(position.forecast_temp),
+    question: typeof position.question === 'string' ? position.question : null,
+    marketStatus: typeof market.status === 'string' ? market.status : null,
+    resolvedOutcome: typeof market.resolved_outcome === 'string' ? market.resolved_outcome : null,
+    outcomeLabel: closeReason ? closeReason.replace(/_/g, ' ') : 'unknown',
+  }
+}
+
 export const Route = createFileRoute('/api/weatherbot')({
   server: {
     handlers: {
-      GET: async () => {
-        const repoPath = pickLatestWeatherbotRoot()
-        if (!repoPath) {
-          return json(
-            {
-              ok: false,
-              error: 'weatherbot_root_not_found',
-            },
-            { status: 404 },
-          )
+      GET: ({ request }) => {
+        if (!requireLocalOrAuth(request)) {
+          return json({ ok: false, error: 'Unauthorized' }, { status: 401, headers: { 'Cache-Control': 'no-store, max-age=0' } })
         }
 
+        const { path: repoPath, source: repoSource } = resolveWeatherbotRoot()
         const statePath = join(repoPath, STATE_FILE)
         const metricsPath = join(repoPath, METRICS_FILE)
         const dashboardPath = join(repoPath, DASHBOARD_FILE)
         const eventsPath = join(repoPath, EVENTS_FILE)
+        const capitalHistoryPath = join(repoPath, CAPITAL_HISTORY_FILE)
 
-        const state = readJson<Record<string, unknown>>(statePath, {})
-        const metrics = readJson<Record<string, unknown>>(metricsPath, {})
-        const dashboardText = readText(dashboardPath)
-        const recentEvents = tailJsonLines(eventsPath, 20)
-
-        let metricsUpdatedAtMs: number | null = null
-        const metricsTs = typeof metrics.ts === 'string' ? metrics.ts : null
-        if (metricsTs) {
-          const parsed = Date.parse(metricsTs)
-          metricsUpdatedAtMs = Number.isFinite(parsed) ? parsed : null
+        if (
+          !existsSync(repoPath) ||
+          !existsSync(statePath) ||
+          !existsSync(metricsPath) ||
+          !existsSync(dashboardPath)
+        ) {
+          return json(
+            {
+              ok: false,
+              error: 'weatherbot_root_not_found',
+              message: `No se encontró el repo canónico de Weatherbot en ${repoPath}.`,
+              source: {
+                repoPath,
+                statePath,
+                metricsPath,
+                dashboardPath,
+                eventsPath,
+                capitalHistoryPath,
+                repoName: WEATHERBOT_REPO_NAME,
+                repoSource,
+              },
+            },
+            { status: 404, headers: { 'Cache-Control': 'no-store, max-age=0' } },
+          )
         }
 
-        const statTargets = [statePath, metricsPath, dashboardPath, eventsPath]
-          .filter((path) => existsSync(path))
-          .map((path) => {
-            try {
-              return statSync(path).mtimeMs
-            } catch {
-              return 0
-            }
+        const state = readJson<JsonRecord>(statePath, {})
+        const metrics = readJson<JsonRecord>(metricsPath, {})
+        const events = tailJsonLines(eventsPath, 30)
+        const capitalHistory = tailJsonLines(capitalHistoryPath, 120).map(parseCapitalSample)
+        const closedPositions = loadMarketFiles(repoPath)
+          .filter((market) => (market.position as JsonRecord | undefined)?.status === 'closed')
+          .map((market, index) => normalizeClosedPosition(market, index))
+          .sort((a, b) => {
+            const aTs = a.closedAt ? Date.parse(a.closedAt) : 0
+            const bTs = b.closedAt ? Date.parse(b.closedAt) : 0
+            return bTs - aTs
           })
-        const fileMtimeMs = statTargets.length > 0 ? Math.max(...statTargets) : null
-        const updatedAtMs = metricsUpdatedAtMs ?? fileMtimeMs
-        const ageMs = updatedAtMs ? Math.max(0, Date.now() - updatedAtMs) : null
+        const dashboardText = readText(dashboardPath)
 
-        const capital = (metrics.capital ?? {}) as Record<string, unknown>
-        const marketCounts = (metrics.market_counts ?? {}) as Record<string, unknown>
-        const resolvedOutcomes = (metrics.resolved_outcomes ?? {}) as Record<string, unknown>
+        const updatedAtRaw =
+          (metrics.updatedAt as string | undefined) ??
+          (state.updatedAt as string | undefined) ??
+          (state.updated_at as string | undefined) ??
+          null
+        const updatedAt = updatedAtRaw && !Number.isNaN(Date.parse(updatedAtRaw))
+          ? new Date(updatedAtRaw).toISOString()
+          : new Date(mtimeMs(dashboardPath) ?? Date.now()).toISOString()
+        const updatedAtMs = Date.parse(updatedAt)
+        const nowMs = Date.now()
+        const ageMs = Number.isFinite(updatedAtMs) ? nowMs - updatedAtMs : null
 
-        const payload = {
-          ok: true,
-          checkedAt: Date.now(),
-          source: {
-            repoPath,
-            statePath,
-            metricsPath,
-            dashboardPath,
-            eventsPath,
-          },
-          freshness: {
-            updatedAt: metricsTs,
-            updatedAtMs,
-            ageMs,
-            stale: ageMs === null ? true : ageMs > 60 * 60 * 1000,
-          },
-          stats: {
-            cashBalance: numberOrNull(capital.cash_balance),
-            equityEstimate: numberOrNull(capital.equity_estimate),
-            reservedCapital: numberOrNull(capital.reserved_in_open_positions),
-            unrealizedPnl: numberOrNull(capital.unrealized_pnl),
-            totalTradesOpened: numberOrNull(state.total_trades),
-            wins: numberOrNull(state.wins ?? resolvedOutcomes.wins),
-            losses: numberOrNull(state.losses ?? resolvedOutcomes.losses),
-            openPositions: numberOrNull(marketCounts.open_positions),
-            closedPositions: numberOrNull(marketCounts.closed_positions),
-            resolvedMarkets: numberOrNull(marketCounts.resolved_markets),
-            totalMarkets: numberOrNull(marketCounts.total),
-          },
-          breakdowns: (metrics.breakdowns ?? {}) as JsonRecord,
-          openPositions: Array.isArray(metrics.open_positions) ? (metrics.open_positions as Array<JsonRecord>) : [],
-          recentEvents,
-          dashboardText,
-          files: {
-            metricsMtimeMs: existsSync(metricsPath) ? statSync(metricsPath).mtimeMs : null,
-            dashboardMtimeMs: existsSync(dashboardPath) ? statSync(dashboardPath).mtimeMs : null,
-            eventsMtimeMs: existsSync(eventsPath) ? statSync(eventsPath).mtimeMs : null,
-            eventsCountApprox: readText(eventsPath)?.split(/\r?\n/).filter(Boolean).length ?? 0,
-          },
+        const freshness = {
+          updatedAt,
+          updatedAtMs,
+          ageMs,
+          stale: ageMs === null ? true : ageMs > 15 * 60 * 1000,
         }
 
-        return json(payload)
+        const stateRecord = state as JsonRecord
+        const metricsState = (metrics.state as JsonRecord | undefined) ?? {}
+        const stats = {
+          startingBalance:
+            numberOrNull(stateRecord.starting_balance) ??
+            numberOrNull(metricsState.starting_balance) ??
+            numberOrNull(stateRecord.balance) ??
+            null,
+          peakBalance:
+            numberOrNull(stateRecord.peak_balance) ??
+            numberOrNull(metricsState.peak_balance) ??
+            null,
+          cashBalance:
+            numberOrNull(metrics.cash_balance) ??
+            numberOrNull(state.balance) ??
+            numberOrNull(state.cash_balance) ??
+            null,
+          equityEstimate:
+            numberOrNull(metrics.equity_estimate) ??
+            numberOrNull(state.equity_estimate) ??
+            null,
+          reservedCapital:
+            numberOrNull(metrics.reserved_capital) ??
+            numberOrNull(state.reserved_capital) ??
+            null,
+          unrealizedPnl:
+            numberOrNull(metrics.unrealized_pnl) ??
+            numberOrNull(state.unrealized_pnl) ??
+            null,
+          totalTradesOpened:
+            numberOrNull(metrics.total_trades_opened) ??
+            numberOrNull(state.total_trades_opened) ??
+            null,
+          wins: numberOrNull(metrics.wins) ?? numberOrNull(state.wins) ?? null,
+          losses: numberOrNull(metrics.losses) ?? numberOrNull(state.losses) ?? null,
+          openPositions:
+            numberOrNull(metrics.open_positions) ??
+            numberOrNull(state.open_positions) ??
+            null,
+          closedPositions:
+            numberOrNull(metrics.closed_positions) ??
+            numberOrNull(state.closed_positions) ??
+            null,
+          resolvedMarkets:
+            numberOrNull(metrics.resolved_markets) ??
+            numberOrNull(state.resolved_markets) ??
+            null,
+          totalMarkets:
+            numberOrNull(metrics.total_markets) ??
+            numberOrNull(state.total_markets) ??
+            null,
+        }
+
+        const breakdowns = (metrics.breakdowns as JsonRecord | undefined) ?? {}
+        const openPositions = (metrics.open_positions_list as Array<JsonRecord> | undefined) ?? []
+
+        return json(
+          {
+            ok: true,
+            checkedAt: nowMs,
+            source: {
+              repoPath,
+              statePath,
+              metricsPath,
+              dashboardPath,
+              eventsPath,
+              capitalHistoryPath,
+              repoName: WEATHERBOT_REPO_NAME,
+              repoSource,
+            },
+            freshness,
+            stats,
+            breakdowns,
+            openPositions,
+            closedPositions,
+            capitalHistory,
+            recentEvents: events,
+            dashboardText,
+            files: {
+              stateMtimeMs: mtimeMs(statePath),
+              metricsMtimeMs: mtimeMs(metricsPath),
+              dashboardMtimeMs: mtimeMs(dashboardPath),
+              eventsMtimeMs: mtimeMs(eventsPath),
+              eventsCountApprox: events.length,
+            },
+          },
+          { headers: { 'Cache-Control': 'no-store, max-age=0' } },
+        )
       },
     },
   },
