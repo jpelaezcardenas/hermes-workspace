@@ -11,7 +11,7 @@
 #
 # ─── build stage ─────────────────────────────────────────────────────────
 FROM node:22-slim AS build
-RUN corepack enable && apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN corepack enable && corepack prepare pnpm@10.24.0 --activate && apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Install deps (cache-friendly: copy only manifests first)
