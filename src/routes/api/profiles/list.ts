@@ -6,7 +6,7 @@ import {
   listProfiles,
 } from '../../../server/profiles-browser'
 
-export const Route = createFileRoute('/api/profiles/list')({
+export const Route = createFileRoute('/api/profiles/list' as never)({
   server: {
     handlers: {
       GET: async ({ request }) => {

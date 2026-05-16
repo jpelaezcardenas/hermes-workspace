@@ -18,6 +18,9 @@ afterEach(() => {
   delete process.env.NODE_ENV
   delete process.env.TRUST_PROXY
   delete process.env.CLAUDE_PASSWORD
+  delete process.env.HERMES_PASSWORD
+  delete process.env.CLAUDE_API_TOKEN
+  delete process.env.HERMES_API_TOKEN
 })
 
 describe('createSessionCookie (#123)', () => {
@@ -55,6 +58,50 @@ describe('createSessionCookie (#123)', () => {
     const { createSessionCookie } = await import('./auth-middleware')
     const cookie = createSessionCookie('tok123')
     expect(cookie).not.toContain('Secure')
+  })
+})
+
+describe('bearer token auth', () => {
+  function makeRequest(headers: Record<string, string>): Request {
+    return new Request('http://localhost/api/any', { headers })
+  }
+
+  it('authenticates when the bearer token matches HERMES_API_TOKEN', async () => {
+    process.env.HERMES_API_TOKEN = 'bearer-secret'
+    const { isAuthenticated, isApiTokenProtectionEnabled } = await import(
+      './auth-middleware'
+    )
+
+    expect(isApiTokenProtectionEnabled()).toBe(true)
+    expect(
+      isAuthenticated(
+        makeRequest({ authorization: 'Bearer bearer-secret' }),
+      ),
+    ).toBe(true)
+  })
+
+  it('rejects a wrong bearer token', async () => {
+    process.env.HERMES_API_TOKEN = 'bearer-secret'
+    const { isAuthenticated } = await import('./auth-middleware')
+
+    expect(
+      isAuthenticated(makeRequest({ authorization: 'Bearer nope' })),
+    ).toBe(false)
+  })
+
+  it('falls back to the session cookie path when no bearer token is present', async () => {
+    process.env.CLAUDE_PASSWORD = 'browser-secret'
+    const { generateSessionToken, isAuthenticated, storeSessionToken } = await import(
+      './auth-middleware'
+    )
+
+    const token = generateSessionToken()
+    storeSessionToken(token)
+
+    expect(isAuthenticated(makeRequest({ cookie: `claude-auth=${token}` }))).toBe(
+      true,
+    )
+    expect(isAuthenticated(makeRequest({}))).toBe(false)
   })
 })
 

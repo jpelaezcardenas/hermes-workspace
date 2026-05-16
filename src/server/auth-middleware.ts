@@ -152,10 +152,38 @@ function getConfiguredPassword(): string {
 }
 
 /**
+ * Resolve the configured workspace API bearer token.
+ *
+ * Supports the current env name (`HERMES_API_TOKEN`) and the historical
+ * back-compat alias (`CLAUDE_API_TOKEN`).
+ */
+function getConfiguredApiToken(): string {
+  const fromHermes = process.env.HERMES_API_TOKEN
+  if (fromHermes && fromHermes.length > 0) return fromHermes
+  const fromClaude = process.env.CLAUDE_API_TOKEN
+  if (fromClaude && fromClaude.length > 0) return fromClaude
+  return ''
+}
+
+/**
  * Check if password protection is enabled.
  */
 export function isPasswordProtectionEnabled(): boolean {
   return getConfiguredPassword().length > 0
+}
+
+/**
+ * Check if bearer-token protection is enabled.
+ */
+export function isApiTokenProtectionEnabled(): boolean {
+  return getConfiguredApiToken().length > 0
+}
+
+/**
+ * Check if any authentication mechanism is configured.
+ */
+export function isAuthProtectionEnabled(): boolean {
+  return isPasswordProtectionEnabled() || isApiTokenProtectionEnabled()
 }
 
 /**
@@ -248,28 +276,54 @@ function isLocalRequest(request: Request): boolean {
 /**
  * Check if the request is authenticated.
  * Returns true if:
- * - Password protection is disabled, OR
- * - Request has a valid session token
+ * - No auth mechanism is configured, OR
+ * - Request has a valid session token, OR
+ * - Request presents the configured API bearer token
  */
 export function isAuthenticated(request: Request): boolean {
-  // No password configured? No auth needed
-  if (!isPasswordProtectionEnabled()) {
+  // No auth configured? No auth needed.
+  if (!isAuthProtectionEnabled()) {
     return true
   }
 
-  // Check for valid session token
+  // Session-cookie auth remains the browser path.
   const cookieHeader = request.headers.get('cookie')
   const token = getSessionTokenFromCookie(cookieHeader)
+  if (token && isValidSessionToken(token)) {
+    return true
+  }
 
-  if (!token) {
+  // Bearer-token auth is for internal/service-to-service callers.
+  const configuredToken = getConfiguredApiToken()
+  if (!configuredToken) {
     return false
   }
 
-  return isValidSessionToken(token)
+  const authorization = request.headers.get('authorization')?.trim() ?? ''
+  if (!authorization.toLowerCase().startsWith('bearer ')) {
+    return false
+  }
+
+  const presented = authorization.slice('bearer '.length).trim()
+  if (!presented) {
+    return false
+  }
+
+  const presentedBuf = Buffer.from(presented, 'utf8')
+  const configuredBuf = Buffer.from(configuredToken, 'utf8')
+  if (presentedBuf.length !== configuredBuf.length) {
+    return false
+  }
+
+  try {
+    return timingSafeEqual(presentedBuf, configuredBuf)
+  } catch {
+    return false
+  }
 }
 
 export function requireLocalOrAuth(request: Request): boolean {
-  if (!isPasswordProtectionEnabled()) {
+  if (!isAuthProtectionEnabled()) {
     return isLocalRequest(request)
   }
 
