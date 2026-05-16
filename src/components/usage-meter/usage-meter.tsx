@@ -495,7 +495,12 @@ export function UsageMeter({ visible = true }: { visible?: boolean }) {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err)
       setError(errorMessage)
-      toast('Failed to fetch usage data', { type: 'error' })
+      // Avoid spamming toasts for auth gaps or benign stale session keys.
+      const silent =
+        /unauthorized/i.test(errorMessage) || /not found/i.test(errorMessage)
+      if (!silent) {
+        toast('Failed to fetch usage data', { type: 'error' })
+      }
     }
   }, [statusSessionKey])
 
