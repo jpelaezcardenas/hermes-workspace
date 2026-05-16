@@ -28,8 +28,57 @@ export type WikiLink = {
   target: string
 }
 
+export type KnowledgeIssue = {
+  path: string
+  title: string
+  message: string
+  severity: 'critical' | 'warning' | 'info'
+}
+
+export type KnowledgeHealthReport = {
+  root: string
+  source: KnowledgeBaseSource
+  generatedAt: string
+  totals: {
+    pages: number
+    formalPages: number
+    wikilinks: number
+    brokenLinks: number
+    orphanPages: number
+    missingFrontmatter: number
+    stalePages: number
+    oversizedPages: number
+    indexMissing: number
+  }
+  counts: {
+    byType: Record<string, number>
+    byStatus: Record<string, number>
+    byDomain: Record<string, number>
+    byTag: Record<string, number>
+  }
+  issues: {
+    brokenLinks: Array<KnowledgeIssue>
+    orphans: Array<KnowledgeIssue>
+    missingFrontmatter: Array<KnowledgeIssue>
+    stale: Array<KnowledgeIssue>
+    oversized: Array<KnowledgeIssue>
+    indexMissing: Array<KnowledgeIssue>
+  }
+  files: {
+    schema: boolean
+    index: boolean
+    log: boolean
+  }
+  recentLog: Array<string>
+}
+
 export type KnowledgeGraph = {
-  nodes: Array<{ id: string; title: string; type?: string; tags: Array<string> }>
+  nodes: Array<{
+    id: string
+    title: string
+    type?: string
+    tags: Array<string>
+  }>
   edges: Array<{ source: string; target: string }>
 }
 
@@ -37,8 +86,10 @@ type FrontmatterData = {
   title?: string
   type?: string
   domain?: string
+  layer?: unknown
   status?: string
   tags?: unknown
+  sources?: unknown
   summary?: string
   created?: string
   updated?: string
@@ -147,12 +198,27 @@ class GitHubKnowledgeProvider {
     const safeRepo = repo.replace('/', '_')
     const safePath = repoPath.replace(/^\//, '').replace(/\//g, '_')
     this.branch = branch
-    const base = path.join(os.homedir(), '.hermes', 'knowledge-cache', 'github', safeRepo, branch, safePath)
+    const base = path.join(
+      os.homedir(),
+      '.hermes',
+      'knowledge-cache',
+      'github',
+      safeRepo,
+      branch,
+      safePath,
+    )
     this.cacheDir = base
   }
 
   private get cacheRoot(): string {
-    return path.join(os.homedir(), '.hermes', 'knowledge-cache', 'github', this.repo.replace('/', '_'), this.branch)
+    return path.join(
+      os.homedir(),
+      '.hermes',
+      'knowledge-cache',
+      'github',
+      this.repo.replace('/', '_'),
+      this.branch,
+    )
   }
 
   /** Fetch + decode the GitHub repo into the local cache directory. */
@@ -169,7 +235,9 @@ class GitHubKnowledgeProvider {
   /** Check whether the local cache is present and non-empty. */
   isCached(): boolean {
     try {
-      return fs.existsSync(this.cacheDir) && fs.readdirSync(this.cacheDir).length > 0
+      return (
+        fs.existsSync(this.cacheDir) && fs.readdirSync(this.cacheDir).length > 0
+      )
     } catch {
       return false
     }
@@ -182,7 +250,10 @@ class GitHubKnowledgeProvider {
   private async fetchDir(dirPath: string): Promise<void> {
     const url = `https://api.github.com/repos/${this.repo}/contents/${dirPath}?ref=${this.branch}`
     const res = await fetch(url, {
-      headers: { Accept: 'application/vnd.github.v3+json', 'User-Agent': 'hermes-workspace' },
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        'User-Agent': 'hermes-workspace',
+      },
     })
     if (!res.ok) {
       const body = await res.text().catch(() => '')
@@ -209,18 +280,27 @@ class GitHubKnowledgeProvider {
     }
   }
 
-  private async fetchFile(entry: { path: string; sha: string }): Promise<string> {
+  private async fetchFile(entry: {
+    path: string
+    sha: string
+  }): Promise<string> {
     const url = `https://api.github.com/repos/${this.repo}/contents/${entry.path}?ref=${this.branch}`
     const res = await fetch(url, {
-      headers: { Accept: 'application/vnd.github.v3+json', 'User-Agent': 'hermes-workspace' },
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        'User-Agent': 'hermes-workspace',
+      },
     })
     if (!res.ok) {
       throw new Error(`GitHub API ${res.status} for ${entry.path}`)
     }
     const data = (await res.json()) as { content?: string; encoding?: string }
-    if (!data.content) throw new Error(`No content in GitHub response for ${entry.path}`)
+    if (!data.content)
+      throw new Error(`No content in GitHub response for ${entry.path}`)
     if (data.encoding === 'base64') {
-      return Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf-8')
+      return Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString(
+        'utf-8',
+      )
     }
     return data.content.replace(/\n/g, '')
   }
@@ -233,7 +313,11 @@ function getKnowledgeRoot(): string {
   const source = config.source
 
   if (source.type === 'github') {
-    const provider = new GitHubKnowledgeProvider(source.repo, source.branch, source.path)
+    const provider = new GitHubKnowledgeProvider(
+      source.repo,
+      source.branch,
+      source.path,
+    )
     return provider.root
   }
 
@@ -243,6 +327,17 @@ function getKnowledgeRoot(): string {
     return path.resolve(p.replace(/^~\//, `${os.homedir()}/`))
   }
   return getLegacyKnowledgeRoot()
+}
+
+export function getKnowledgeRootPath(): string {
+  return getKnowledgeRoot()
+}
+
+function ensureLocalKnowledgeSource() {
+  const config = readKnowledgeBaseConfig()
+  if (config.source.type !== 'local') {
+    throw new Error('Editing is only available for local knowledge bases')
+  }
 }
 
 export function knowledgeRootExists(): boolean {
@@ -279,7 +374,11 @@ export async function syncKnowledgeSource(): Promise<{
     return { source, success: true }
   }
   try {
-    const provider = new GitHubKnowledgeProvider(source.repo, source.branch, source.path)
+    const provider = new GitHubKnowledgeProvider(
+      source.repo,
+      source.branch,
+      source.path,
+    )
     await provider.sync()
     return { source, success: true }
   } catch (err) {
@@ -463,6 +562,37 @@ export function listKnowledgePages(): Array<WikiPageMeta> {
   return getParsedKnowledgePages().map((page) => page.meta)
 }
 
+export function writeKnowledgePage(
+  relativePath: string,
+  content: string,
+): {
+  meta: WikiPageMeta
+  content: string
+  backlinks: Array<string>
+} {
+  ensureLocalKnowledgeSource()
+  const { fullPath, relativePath: safeRelativePath } =
+    resolveKnowledgeFilePath(relativePath)
+  const parent = path.dirname(fullPath)
+  if (!fs.existsSync(parent)) fs.mkdirSync(parent, { recursive: true })
+  fs.writeFileSync(fullPath, content, 'utf-8')
+  return readKnowledgePage(safeRelativePath)
+}
+
+export function deleteKnowledgePage(relativePath: string): {
+  deleted: boolean
+  path: string
+} {
+  ensureLocalKnowledgeSource()
+  const { fullPath, relativePath: safeRelativePath } =
+    resolveKnowledgeFilePath(relativePath)
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`ENOENT: Knowledge page not found: ${safeRelativePath}`)
+  }
+  fs.unlinkSync(fullPath)
+  return { deleted: true, path: safeRelativePath }
+}
+
 export function resolveWikilink(linkText: string): string | null {
   return createWikilinkResolver(getParsedKnowledgePages())(linkText)
 }
@@ -558,5 +688,185 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
       tags: page.meta.tags,
     })),
     edges: Array.from(edges.values()),
+  }
+}
+
+function incrementCount(map: Record<string, number>, value?: string | null) {
+  const key = value?.trim() || 'unspecified'
+  map[key] = (map[key] ?? 0) + 1
+}
+
+function isFormalKnowledgePath(relativePath: string): boolean {
+  return (
+    relativePath.startsWith('02_Notes/') ||
+    relativePath.startsWith('03_MOCs/') ||
+    relativePath.startsWith('entities/') ||
+    relativePath.startsWith('concepts/') ||
+    relativePath.startsWith('comparisons/') ||
+    relativePath.startsWith('queries/')
+  )
+}
+
+function readKnowledgeTextFile(name: string): string {
+  const file = path.join(getKnowledgeRoot(), name)
+  try {
+    return fs.readFileSync(file, 'utf-8')
+  } catch {
+    return ''
+  }
+}
+
+function issueFor(
+  page: ParsedKnowledgePage,
+  message: string,
+  severity: KnowledgeIssue['severity'],
+): KnowledgeIssue {
+  return {
+    path: page.meta.path,
+    title: page.meta.title,
+    message,
+    severity,
+  }
+}
+
+export function buildKnowledgeHealthReport(): KnowledgeHealthReport {
+  const root = getKnowledgeRoot()
+  const source = getKnowledgeSource()
+  const pages = getParsedKnowledgePages()
+  const resolveLink = createWikilinkResolver(pages)
+  const indexText = readKnowledgeTextFile('index.md')
+  const logText = readKnowledgeTextFile('log.md')
+  const now = Date.now()
+  const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000
+
+  const counts = {
+    byType: {} as Record<string, number>,
+    byStatus: {} as Record<string, number>,
+    byDomain: {} as Record<string, number>,
+    byTag: {} as Record<string, number>,
+  }
+  const issues: KnowledgeHealthReport['issues'] = {
+    brokenLinks: [],
+    orphans: [],
+    missingFrontmatter: [],
+    stale: [],
+    oversized: [],
+    indexMissing: [],
+  }
+
+  const inbound = new Map<string, number>()
+  const formalPages = pages.filter((page) =>
+    isFormalKnowledgePath(page.meta.path),
+  )
+
+  for (const page of pages) {
+    inbound.set(page.meta.path, 0)
+    incrementCount(counts.byType, page.meta.type)
+    incrementCount(counts.byStatus, page.meta.status)
+    incrementCount(counts.byDomain, page.meta.domain)
+    for (const tag of page.meta.tags) incrementCount(counts.byTag, tag)
+  }
+
+  for (const page of pages) {
+    for (const link of page.meta.wikilinks) {
+      const target = resolveLink(link)
+      if (target) {
+        inbound.set(target, (inbound.get(target) ?? 0) + 1)
+      } else if (isFormalKnowledgePath(page.meta.path)) {
+        issues.brokenLinks.push(
+          issueFor(page, `Broken wikilink: [[${link}]]`, 'critical'),
+        )
+      }
+    }
+  }
+
+  for (const page of formalPages) {
+    const { data } = parseFrontmatter(page.raw)
+    const lineCount = page.raw.split(/\r?\n/).length
+    const updatedMs = Date.parse(page.meta.updated || page.meta.modified)
+    const basename = path.basename(page.meta.path, '.md')
+    const requiredFields = page.meta.path.startsWith('02_Notes/')
+      ? ['type', 'status', 'domain', 'layer', 'tags', 'updated', 'sources']
+      : ['type', 'updated']
+    const missing = requiredFields.filter((field) => {
+      const value = (data as Record<string, unknown>)[field]
+      return (
+        value == null ||
+        value === '' ||
+        (Array.isArray(value) && value.length === 0)
+      )
+    })
+
+    if (missing.length > 0 || !page.raw.startsWith('---')) {
+      issues.missingFrontmatter.push(
+        issueFor(
+          page,
+          `Missing frontmatter fields: ${missing.join(', ') || 'frontmatter block'}`,
+          'warning',
+        ),
+      )
+    }
+
+    if (
+      (inbound.get(page.meta.path) ?? 0) === 0 &&
+      page.meta.wikilinks.length === 0
+    ) {
+      issues.orphans.push(
+        issueFor(page, 'No inbound or outbound wikilinks', 'warning'),
+      )
+    }
+
+    if (!Number.isNaN(updatedMs) && now - updatedMs > ninetyDaysMs) {
+      issues.stale.push(issueFor(page, 'Updated more than 90 days ago', 'info'))
+    }
+
+    if (lineCount > 200) {
+      issues.oversized.push(
+        issueFor(page, `${lineCount} lines; consider splitting`, 'info'),
+      )
+    }
+
+    if (
+      indexText &&
+      !indexText.includes(`[[${basename}]]`) &&
+      !indexText.includes(page.meta.path)
+    ) {
+      issues.indexMissing.push(
+        issueFor(page, 'Formal page is not listed in index.md', 'warning'),
+      )
+    }
+  }
+
+  const wikilinks = pages.reduce(
+    (total, page) => total + page.meta.wikilinks.length,
+    0,
+  )
+
+  return {
+    root,
+    source,
+    generatedAt: new Date().toISOString(),
+    totals: {
+      pages: pages.length,
+      formalPages: formalPages.length,
+      wikilinks,
+      brokenLinks: issues.brokenLinks.length,
+      orphanPages: issues.orphans.length,
+      missingFrontmatter: issues.missingFrontmatter.length,
+      stalePages: issues.stale.length,
+      oversizedPages: issues.oversized.length,
+      indexMissing: issues.indexMissing.length,
+    },
+    counts,
+    issues,
+    files: {
+      schema: fs.existsSync(path.join(root, 'SCHEMA.md')),
+      index: fs.existsSync(path.join(root, 'index.md')),
+      log: fs.existsSync(path.join(root, 'log.md')),
+    },
+    recentLog: logText
+      .split(/\r?\n/)
+      .filter((line) => line.trim())
+      .slice(-18),
   }
 }
