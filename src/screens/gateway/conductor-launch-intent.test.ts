@@ -34,6 +34,24 @@ describe('conductor launch intent', () => {
           activeProjectName: 'demo-app',
           activeProjectPath: '/workspace/demo-app',
           effectiveWorkingDirectory: '/workspace/demo-app',
+          contextPreview: {
+            summary: 'Path: /workspace/demo-app\nContext files: 1',
+            files: [
+              {
+                name: 'AGENTS.md',
+                path: '/workspace/demo-app/AGENTS.md',
+                chars: 640,
+              },
+            ],
+          },
+          status: {
+            gitDirty: true,
+            changedFiles: 2,
+            lastCommit: 'abc1234',
+            lastCommitAt: '2026-01-01T00:00:00Z',
+            detectedStack: ['Node/TypeScript'],
+            packageManager: 'pnpm',
+          },
         },
       },
       now,
@@ -48,6 +66,24 @@ describe('conductor launch intent', () => {
         activeProjectName: 'demo-app',
         activeProjectPath: '/workspace/demo-app',
         effectiveWorkingDirectory: '/workspace/demo-app',
+        contextPreview: {
+          summary: 'Path: /workspace/demo-app\nContext files: 1',
+          files: [
+            {
+              name: 'AGENTS.md',
+              path: '/workspace/demo-app/AGENTS.md',
+              chars: 640,
+            },
+          ],
+        },
+        status: {
+          gitDirty: true,
+          changedFiles: 2,
+          lastCommit: 'abc1234',
+          lastCommitAt: '2026-01-01T00:00:00Z',
+          detectedStack: ['Node/TypeScript'],
+          packageManager: 'pnpm',
+        },
       },
     })
   })

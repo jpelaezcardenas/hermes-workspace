@@ -23,6 +23,8 @@ describe('buildMissionProjectMetadata', () => {
       activeProjectName: 'demo-app',
       activeProjectPath: '/workspace/demo-app',
       effectiveWorkingDirectory: '/workspace/demo-app',
+      contextPreview: null,
+      status: null,
     })
   })
 
@@ -41,6 +43,8 @@ describe('buildMissionProjectMetadata', () => {
       activeProjectName: 'demo-app',
       activeProjectPath: '/workspace/demo-app',
       effectiveWorkingDirectory: '/custom/workdir',
+      contextPreview: null,
+      status: null,
     })
   })
 })

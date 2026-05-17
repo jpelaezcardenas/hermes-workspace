@@ -5,6 +5,18 @@ export type ConductorProjectOverride = {
   activeProjectName: string | null
   activeProjectPath: string | null
   effectiveWorkingDirectory: string | null
+  contextPreview?: {
+    summary: string
+    files: Array<{ name: string; path: string; chars: number }>
+  } | null
+  status?: {
+    gitDirty: boolean | null
+    changedFiles: number | null
+    lastCommit: string | null
+    lastCommitAt: string | null
+    detectedStack: Array<string>
+    packageManager: string | null
+  } | null
 }
 
 export type ConductorLaunchIntent = {
@@ -22,6 +34,61 @@ function readString(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
+function readNullableBoolean(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null
+}
+
+function readNullableNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+function readStringArray(value: unknown, maxItems: number): Array<string> {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => readString(item))
+    .filter((item): item is string => Boolean(item))
+    .slice(0, maxItems)
+}
+
+function readContextPreview(
+  value: unknown,
+): ConductorProjectOverride['contextPreview'] {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  const summary = readString(record.summary) ?? ''
+  const rawFiles = Array.isArray(record.files) ? record.files : []
+  const files = rawFiles
+    .slice(0, 8)
+    .map((file) => {
+      if (!file || typeof file !== 'object' || Array.isArray(file)) return null
+      const fileRecord = file as Record<string, unknown>
+      const name = readString(fileRecord.name)
+      const filePath = readString(fileRecord.path)
+      const chars = readNullableNumber(fileRecord.chars)
+      if (!name || !filePath || chars === null) return null
+      return { name, path: filePath, chars }
+    })
+    .filter(
+      (file): file is { name: string; path: string; chars: number } =>
+        file !== null,
+    )
+  if (!summary && files.length === 0) return null
+  return { summary: summary.slice(0, 1200), files }
+}
+
+function readProjectStatus(value: unknown): ConductorProjectOverride['status'] {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  return {
+    gitDirty: readNullableBoolean(record.gitDirty),
+    changedFiles: readNullableNumber(record.changedFiles),
+    lastCommit: readString(record.lastCommit),
+    lastCommitAt: readString(record.lastCommitAt),
+    detectedStack: readStringArray(record.detectedStack, 12),
+    packageManager: readString(record.packageManager),
+  }
+}
+
 function readProjectOverride(value: unknown): ConductorProjectOverride | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const record = value as Record<string, unknown>
@@ -37,6 +104,8 @@ function readProjectOverride(value: unknown): ConductorProjectOverride | null {
     activeProjectName,
     activeProjectPath,
     effectiveWorkingDirectory: effectiveWorkingDirectory ?? activeProjectPath,
+    contextPreview: readContextPreview(record.contextPreview),
+    status: readProjectStatus(record.status),
   }
 }
 
@@ -118,7 +187,10 @@ export function persistConductorLaunchIntent(
       JSON.stringify(completeIntent),
     )
     if (completeIntent.draft.trim()) {
-      targetStorage.setItem(CONDUCTOR_GOAL_DRAFT_STORAGE_KEY, completeIntent.draft)
+      targetStorage.setItem(
+        CONDUCTOR_GOAL_DRAFT_STORAGE_KEY,
+        completeIntent.draft,
+      )
     } else {
       targetStorage.removeItem(CONDUCTOR_GOAL_DRAFT_STORAGE_KEY)
     }

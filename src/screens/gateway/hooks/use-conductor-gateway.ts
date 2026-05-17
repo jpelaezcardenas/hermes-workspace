@@ -4,6 +4,16 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { MissionProjectMetadata } from '@/routes/api/conductor-spawn'
 import type { GatewaySession } from '@/lib/gateway-api'
 import { fetchSessions } from '@/lib/gateway-api'
+import {
+  appendMissionHistory,
+  buildFallbackMissionProjectMetadata,
+  buildMissionHistoryEntryProjectFields,
+  loadMissionHistory,
+  HISTORY_STORAGE_KEY,
+  MAX_HISTORY_ENTRIES,
+  type MissionHistoryEntry,
+  type MissionHistoryWorkerDetail,
+} from './mission-history'
 
 type HistoryMessagePart = {
   type?: string
@@ -132,39 +142,6 @@ export type ConductorTask = {
   workerKey: string | null
   output: string | null
 }
-
-export type MissionHistoryWorkerDetail = {
-  label: string
-  model: string
-  totalTokens: number
-  personaEmoji: string
-  personaName: string
-}
-
-export type MissionHistoryEntry = {
-  id: string
-  goal: string
-  startedAt: string
-  completedAt: string
-  workerCount: number
-  totalTokens: number
-  status: 'completed' | 'failed'
-  projectPath: string | null
-  activeProjectId?: string | null
-  activeProjectName?: string | null
-  activeProjectPath?: string | null
-  effectiveWorkingDirectory?: string | null
-  outputPath?: string | null
-  workerSummary?: string[]
-  outputText?: string
-  streamText?: string
-  completeSummary?: string
-  workerDetails?: MissionHistoryWorkerDetail[]
-  error?: string | null
-}
-
-const HISTORY_STORAGE_KEY = 'conductor:history'
-const MAX_HISTORY_ENTRIES = 50
 
 const AGENT_NAMES = [
   'Nova',
@@ -477,87 +454,6 @@ function persistConductorSettings(settings: ConductorSettings): void {
     globalThis.localStorage?.setItem(
       CONDUCTOR_SETTINGS_STORAGE_KEY,
       JSON.stringify(settings),
-    )
-  } catch {
-    // Ignore persistence failures.
-  }
-}
-
-function normalizeOptionalString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim() ? value.trim() : null
-}
-
-function loadMissionHistory(): MissionHistoryEntry[] {
-  try {
-    const raw = globalThis.localStorage?.getItem(HISTORY_STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    const seen = new Set<string>()
-    return parsed
-      .filter((entry: unknown): entry is MissionHistoryEntry => {
-        if (!entry || typeof entry !== 'object') return false
-        const e = entry as Record<string, unknown>
-        if (
-          typeof e.id !== 'string' ||
-          typeof e.goal !== 'string' ||
-          typeof e.startedAt !== 'string'
-        )
-          return false
-        if (seen.has(e.id)) return false
-        seen.add(e.id)
-        return true
-      })
-      .map((entry) => {
-        const projectPath =
-          (typeof entry.projectPath === 'string' && entry.projectPath.trim()) ||
-          extractProjectPath(
-            typeof entry.projectPath === 'string' ? entry.projectPath : '',
-          ) ||
-          null
-        const outputText =
-          typeof entry.outputText === 'string' ? entry.outputText : undefined
-        const streamText =
-          typeof entry.streamText === 'string' ? entry.streamText : undefined
-        const outputPath =
-          (typeof entry.outputPath === 'string' && entry.outputPath.trim()) ||
-          extractProjectPath(
-            typeof entry.outputPath === 'string' ? entry.outputPath : '',
-          ) ||
-          projectPath ||
-          extractProjectPath(outputText ?? '') ||
-          extractProjectPath(streamText ?? '') ||
-          null
-        return {
-          ...entry,
-          projectPath,
-          activeProjectId: normalizeOptionalString(entry.activeProjectId),
-          activeProjectName: normalizeOptionalString(entry.activeProjectName),
-          activeProjectPath: normalizeOptionalString(entry.activeProjectPath),
-          effectiveWorkingDirectory:
-            normalizeOptionalString(entry.effectiveWorkingDirectory) ??
-            normalizeOptionalString(entry.activeProjectPath) ??
-            projectPath,
-          outputPath,
-          outputText,
-          streamText,
-        }
-      })
-      .slice(0, MAX_HISTORY_ENTRIES)
-  } catch {
-    return []
-  }
-}
-
-function appendMissionHistory(entry: MissionHistoryEntry): void {
-  try {
-    const current = loadMissionHistory()
-    // Deduplicate by id before appending
-    const filtered = current.filter((e) => e.id !== entry.id)
-    const updated = [entry, ...filtered].slice(0, MAX_HISTORY_ENTRIES)
-    globalThis.localStorage?.setItem(
-      HISTORY_STORAGE_KEY,
-      JSON.stringify(updated),
     )
   } catch {
     // Ignore persistence failures.
@@ -1669,13 +1565,11 @@ export function useConductorGateway() {
         personaName: persona.name,
       }
     })
-    const projectMetadata = missionProjectMetadata ?? {
-      activeProjectId: null,
-      activeProjectName: null,
-      activeProjectPath: null,
-      effectiveWorkingDirectory:
-        normalizeOptionalString(conductorSettings.projectsDir) ?? outputPath,
-    }
+    const projectMetadata = buildFallbackMissionProjectMetadata({
+      configuredProjectsDir: conductorSettings.projectsDir,
+      outputPath,
+      previousMetadata: missionProjectMetadata,
+    })
     const entry: MissionHistoryEntry = {
       id: missionHistoryId,
       goal,
@@ -1684,12 +1578,11 @@ export function useConductorGateway() {
       workerCount: workers.length,
       totalTokens,
       status: streamError ? 'failed' : 'completed',
-      projectPath: projectMetadata.activeProjectPath ?? outputPath,
-      activeProjectId: projectMetadata.activeProjectId,
-      activeProjectName: projectMetadata.activeProjectName,
-      activeProjectPath: projectMetadata.activeProjectPath,
-      effectiveWorkingDirectory: projectMetadata.effectiveWorkingDirectory,
-      outputPath,
+      ...buildMissionHistoryEntryProjectFields({
+        projectMetadata,
+        outputPath,
+        sessionKey: orchestratorSessionKey,
+      }),
       workerSummary: workerSummary.length > 0 ? workerSummary : undefined,
       outputText: outputText || undefined,
       streamText: streamText ? streamText.slice(0, 5000) : undefined,
@@ -1726,6 +1619,7 @@ export function useConductorGateway() {
     streamText,
     missionProjectMetadata,
     conductorSettings.projectsDir,
+    orchestratorSessionKey,
   ])
 
   useEffect(() => {

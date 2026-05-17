@@ -26,10 +26,31 @@ import {
   type ConductorProjectOverride,
 } from './conductor-launch-intent'
 import {
-  type MissionHistoryEntry,
-  type MissionHistoryWorkerDetail,
-  useConductorGateway,
-} from './hooks/use-conductor-gateway'
+  buildConductorPreflightSummary,
+  shouldWarnProjectMismatch,
+} from './conductor-preflight-summary'
+import {
+  buildFallbackMissionHistoryEntryForTrace,
+  buildMissionHistoryTraceActionViewModel,
+  buildMissionHistoryTraceButtonElementViewModel,
+  buildMissionHistoryTraceInspectActionViewModel,
+  buildMissionHistoryTraceLookupRefreshControl,
+  buildMissionHistoryTraceLookupViewModel,
+  buildMissionHistoryTraceRecoveryActionsViewModel,
+  buildMissionHistoryTraceRecoveryFeedbackViewModel,
+  buildMissionHistoryTraceRecoveryViewModel,
+  buildMissionHistoryTraceViewModel,
+  findMissionHistoryEntryByTraceSessionKey,
+  type MissionHistoryTraceButtonControl,
+  type MissionHistoryTraceCopyStatus,
+  type MissionHistoryTraceLookupStatus,
+  type MissionHistoryTraceRecoveryLastAction,
+} from './conductor-trace-hydration'
+import { useConductorGateway } from './hooks/use-conductor-gateway'
+import type {
+  MissionHistoryEntry,
+  MissionHistoryWorkerDetail,
+} from './hooks/mission-history'
 
 type ConductorPhase = 'home' | 'preview' | 'active' | 'complete'
 type QuickActionId = 'research' | 'build' | 'review' | 'deploy'
@@ -987,7 +1008,11 @@ function deriveSessionStatus(
   return 'running'
 }
 
-export function Conductor() {
+export function Conductor({
+  traceSessionKey = null,
+}: {
+  traceSessionKey?: string | null
+}) {
   const navigate = useNavigate()
   const conductor = useConductorGateway()
   const [goalDraft, setGoalDraft] = useState(() => loadConductorGoalDraft())
@@ -1007,6 +1032,11 @@ export function Conductor() {
   const [activityPage, setActivityPage] = useState(0)
   const [completeCostExpanded, setCompleteCostExpanded] = useState(true)
   const [historyCostExpanded, setHistoryCostExpanded] = useState(false)
+  const [historyTraceCopyStatus, setHistoryTraceCopyStatus] =
+    useState<MissionHistoryTraceCopyStatus>('idle')
+  const [historyTraceRecoveryLastAction, setHistoryTraceRecoveryLastAction] =
+    useState<MissionHistoryTraceRecoveryLastAction | null>(null)
+  const historyTraceCopyTimerRef = useRef<number | null>(null)
   const [now, setNow] = useState(() => Date.now())
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [directoryBrowserOpen, setDirectoryBrowserOpen] = useState(false)
@@ -1055,10 +1085,12 @@ export function Conductor() {
     pendingProjectOverride?.effectiveWorkingDirectory ||
     activeProject?.path ||
     ''
-  const pendingLaunchDiffersFromActiveProject = Boolean(
-    pendingProjectOverride?.activeProjectPath &&
-    activeProject?.path &&
-    pendingProjectOverride.activeProjectPath !== activeProject.path,
+  const preflightSummary = pendingProjectOverride
+    ? buildConductorPreflightSummary(pendingProjectOverride)
+    : null
+  const pendingLaunchDiffersFromActiveProject = shouldWarnProjectMismatch(
+    pendingProjectOverride,
+    activeProject,
   )
 
   useEffect(() => {
@@ -1308,6 +1340,42 @@ export function Conductor() {
     0,
   )
   const selectedHistoryEntry = conductor.selectedHistoryEntry
+  const selectedHistoryTrace = buildMissionHistoryTraceViewModel(selectedHistoryEntry)
+  const selectedHistoryTraceSessionKey = selectedHistoryTrace?.sessionKey ?? null
+  const traceSessionStatusQuery = useQuery({
+    queryKey: ['conductor', 'trace-session-status', selectedHistoryTraceSessionKey],
+    queryFn: async () => {
+      if (!selectedHistoryTraceSessionKey) return null
+      const res = await fetch(
+        `/api/sessions/${encodeURIComponent(selectedHistoryTraceSessionKey)}/status`,
+      )
+      if (res.status === 404) return { ok: false, missing: true }
+      const data = (await res.json()) as { ok?: boolean; error?: string }
+      if (!res.ok || data.ok === false) {
+        throw new Error(data.error ?? 'Session lookup failed')
+      }
+      return data
+    },
+    enabled: Boolean(selectedHistoryTraceSessionKey),
+    retry: false,
+    staleTime: 30_000,
+  })
+
+  useEffect(() => {
+    if (!traceSessionKey) return
+    const entry =
+      findMissionHistoryEntryByTraceSessionKey(
+        conductor.missionHistory,
+        traceSessionKey,
+      ) ?? buildFallbackMissionHistoryEntryForTrace(traceSessionKey)
+    if (!entry || conductor.selectedHistoryEntry?.id === entry.id) return
+    conductor.setSelectedHistoryEntry(entry)
+  }, [
+    traceSessionKey,
+    conductor.missionHistory,
+    conductor.selectedHistoryEntry,
+  ])
+
   const completeMissionCostWorkers = useMemo<MissionCostWorker[]>(
     () =>
       conductor.workers.map((worker, index) => {
@@ -1651,7 +1719,40 @@ export function Conductor() {
   useEffect(() => {
     if (!selectedHistoryEntry) return
     setHistoryCostExpanded(false)
+    setHistoryTraceCopyStatus('idle')
+    setHistoryTraceRecoveryLastAction(null)
   }, [selectedHistoryEntry])
+
+  useEffect(
+    () => () => {
+      if (historyTraceCopyTimerRef.current !== null) {
+        window.clearTimeout(historyTraceCopyTimerRef.current)
+      }
+    },
+    [],
+  )
+
+  async function handleCopyHistoryTraceSessionKey(copyValue: string) {
+    if (historyTraceCopyTimerRef.current !== null) {
+      window.clearTimeout(historyTraceCopyTimerRef.current)
+      historyTraceCopyTimerRef.current = null
+    }
+
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error('Clipboard API unavailable')
+      }
+      await navigator.clipboard.writeText(copyValue)
+      setHistoryTraceCopyStatus('copied')
+    } catch {
+      setHistoryTraceCopyStatus('failed')
+    }
+
+    historyTraceCopyTimerRef.current = window.setTimeout(() => {
+      setHistoryTraceCopyStatus('idle')
+      historyTraceCopyTimerRef.current = null
+    }, 1800)
+  }
 
   if (phase === 'home') {
     if (selectedHistoryEntry) {
@@ -1682,6 +1783,106 @@ export function Conductor() {
         historicalProjectPath &&
         historicalProjectPath !== activeProject.path,
       )
+      const historyTrace = selectedHistoryTrace
+      const historyTraceAction = buildMissionHistoryTraceActionViewModel(
+        historyTraceCopyStatus,
+      )
+      const historyTraceInspectAction =
+        buildMissionHistoryTraceInspectActionViewModel(historyTrace?.sessionKey)
+      const historyTraceLookupStatus: MissionHistoryTraceLookupStatus =
+        !historyTrace
+          ? 'idle'
+          : traceSessionStatusQuery.isFetching
+            ? 'checking'
+            : traceSessionStatusQuery.isError
+              ? 'error'
+              : traceSessionStatusQuery.data && 'missing' in traceSessionStatusQuery.data
+                ? 'missing'
+                : traceSessionStatusQuery.isSuccess
+                  ? 'found'
+                  : 'idle'
+      const historyTraceLookup = buildMissionHistoryTraceLookupViewModel(
+        historyTraceLookupStatus,
+      )
+      const historyTraceLookupRefresh =
+        buildMissionHistoryTraceLookupRefreshControl({
+          status: historyTraceLookupStatus,
+          hasSessionKey: Boolean(historyTrace?.sessionKey),
+          isRefreshing: traceSessionStatusQuery.isRefetching,
+        })
+      const historyTraceRecovery = buildMissionHistoryTraceRecoveryViewModel(
+        Boolean(historyTrace?.isFallback),
+        historyTraceLookupStatus,
+      )
+      const historyTraceRecoveryActions =
+        buildMissionHistoryTraceRecoveryActionsViewModel({
+          isFallback: Boolean(historyTrace?.isFallback),
+          lookupStatus: historyTraceLookupStatus,
+          copyStatus: historyTraceCopyStatus,
+          sessionKey: historyTrace?.sessionKey,
+        })
+      const historyTraceRecoveryFeedback =
+        buildMissionHistoryTraceRecoveryFeedbackViewModel({
+          isFallback: Boolean(historyTrace?.isFallback),
+          lastAction: historyTraceRecoveryLastAction,
+          copyStatus: historyTraceCopyStatus,
+        })
+      const handleHistoryTraceButtonAction = (
+        action: MissionHistoryTraceButtonControl,
+      ) => {
+        if (action.kind === 'inspect') {
+          if (
+            historyTraceInspectAction.disabled ||
+            !historyTraceInspectAction.to ||
+            !historyTraceInspectAction.params
+          ) {
+            return
+          }
+          if (historyTrace?.isFallback) {
+            setHistoryTraceRecoveryLastAction('inspect')
+          }
+          void navigate({
+            to: historyTraceInspectAction.to,
+            params: historyTraceInspectAction.params,
+          })
+          return
+        }
+
+        if (action.kind === 'copy') {
+          if (!historyTrace?.copyValue) return
+          if (historyTrace.isFallback) {
+            setHistoryTraceRecoveryLastAction('copy')
+          }
+          void handleCopyHistoryTraceSessionKey(historyTrace.copyValue)
+          return
+        }
+
+        setHistoryTraceRecoveryLastAction('newMission')
+        conductor.setSelectedHistoryEntry(null)
+        handleNewMission()
+      }
+      const renderHistoryTraceButton = (
+        action: MissionHistoryTraceButtonControl,
+        options: { extraClassName?: string } = {},
+      ) => {
+        const button = buildMissionHistoryTraceButtonElementViewModel(
+          action,
+          options,
+        )
+        return (
+          <Button
+            key={button.key}
+            type={button.type}
+            title={button.title}
+            aria-label={button.ariaLabel}
+            disabled={button.disabled}
+            onClick={() => handleHistoryTraceButtonAction(action)}
+            className={button.className}
+          >
+            {button.label}
+          </Button>
+        )
+      }
 
       return (
         <div
@@ -1777,6 +1978,168 @@ export function Conductor() {
                   </div>
                 </div>
               </div>
+
+              {historyTraceRecovery ? (
+                <section
+                  className={cn(
+                    'overflow-hidden rounded-3xl border p-5 shadow-[0_24px_80px_var(--theme-shadow)]',
+                    historyTraceRecovery.tone === 'success'
+                      ? 'border-emerald-400/35 bg-emerald-500/10'
+                      : 'border-[var(--theme-warning-border)] bg-[var(--theme-warning-soft)]',
+                  )}
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                    Trace Recovery
+                  </p>
+                  <h2 className="mt-2 text-base font-semibold text-[var(--theme-text)]">
+                    {historyTraceRecovery.title}
+                  </h2>
+                  <p className="mt-2 text-sm text-[var(--theme-muted-2)]">
+                    {historyTraceRecovery.description}
+                  </p>
+                  <p className="mt-3 text-sm font-medium text-[var(--theme-text)]">
+                    {historyTraceRecovery.recommendation}
+                  </p>
+                  <ul className="mt-3 space-y-1 text-xs text-[var(--theme-muted)]">
+                    {historyTraceRecovery.actions.map((action) => (
+                      <li key={action} className="flex gap-2">
+                        <span aria-hidden="true">•</span>
+                        <span>{action}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {historyTraceRecoveryActions ? (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {[
+                        historyTraceRecoveryActions.primary,
+                        historyTraceRecoveryActions.secondary,
+                        historyTraceRecoveryActions.tertiary,
+                      ].map((action) =>
+                        action
+                          ? renderHistoryTraceButton(action, {
+                              extraClassName: 'text-xs',
+                            })
+                          : null,
+                      )}
+                    </div>
+                  ) : null}
+                  {historyTraceRecoveryFeedback ? (
+                    <p
+                      className={cn(
+                        'mt-3 text-xs font-medium',
+                        historyTraceRecoveryFeedback.tone === 'success'
+                          ? 'text-emerald-600'
+                          : historyTraceRecoveryFeedback.tone === 'danger'
+                            ? 'text-[var(--theme-danger)]'
+                            : 'text-[var(--theme-muted-2)]',
+                      )}
+                      role="status"
+                    >
+                      {historyTraceRecoveryFeedback.message}
+                    </p>
+                  ) : null}
+                </section>
+              ) : null}
+
+              {historyTrace ? (
+                <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 shadow-[0_24px_80px_var(--theme-shadow)]">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+                        Session Trace
+                      </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <span
+                          className={cn(
+                            'rounded-full border px-3 py-1 text-xs font-medium',
+                            historyTrace.isFallback
+                              ? 'border-amber-400/35 bg-amber-500/10 text-amber-600'
+                              : 'border-emerald-400/35 bg-emerald-500/10 text-emerald-500',
+                          )}
+                        >
+                          {historyTrace.sourceLabel}
+                        </span>
+                        <code className="max-w-full truncate rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-1.5 text-xs text-[var(--theme-text)]">
+                          {historyTrace.sessionKey}
+                        </code>
+                      </div>
+                      <p className="mt-3 text-xs text-[var(--theme-muted-2)]">
+                        {historyTrace.helperText}
+                      </p>
+                      <div
+                        className={cn(
+                          'mt-3 rounded-xl border px-3 py-2 text-xs',
+                          historyTraceLookup.tone === 'success'
+                            ? 'border-emerald-400/35 bg-emerald-500/10 text-emerald-700'
+                            : historyTraceLookup.tone === 'warning'
+                              ? 'border-[var(--theme-warning-border)] bg-[var(--theme-warning-soft)] text-[var(--theme-warning)]'
+                              : 'border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-muted-2)]',
+                        )}
+                      >
+                        <div className="flex items-center gap-2 font-medium">
+                          {historyTraceLookup.isChecking ? (
+                            <span className="size-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          ) : null}
+                          {historyTraceLookup.label}
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center justify-between gap-2 opacity-85">
+                          <p>{historyTraceLookup.helperText}</p>
+                          {historyTraceLookupRefresh.visible ? (
+                            <Button
+                              type="button"
+                              title={historyTraceLookupRefresh.title}
+                              aria-label={historyTraceLookupRefresh.ariaLabel}
+                              disabled={historyTraceLookupRefresh.disabled}
+                              onClick={() => {
+                                void traceSessionStatusQuery.refetch()
+                              }}
+                              className="rounded-lg border border-current/25 bg-transparent px-2 py-1 text-[11px] hover:bg-current/10"
+                            >
+                              {historyTraceLookupRefresh.isLoading ? (
+                                <span
+                                  className="mr-1 inline-block size-2.5 animate-spin rounded-full border-2 border-current border-t-transparent"
+                                  aria-hidden="true"
+                                />
+                              ) : null}
+                              {historyTraceLookupRefresh.label}
+                            </Button>
+                          ) : null}
+                        </div>
+                      </div>
+                      {historyTraceAction.helperText ? (
+                        <p
+                          className={cn(
+                            'mt-2 text-xs font-medium',
+                            historyTraceAction.tone === 'success'
+                              ? 'text-emerald-600'
+                              : historyTraceAction.tone === 'danger'
+                                ? 'text-[var(--theme-danger)]'
+                                : 'text-[var(--theme-muted-2)]',
+                          )}
+                          role="status"
+                        >
+                          {historyTraceAction.helperText}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {renderHistoryTraceButton({
+                        kind: 'inspect',
+                        label: historyTraceInspectAction.label,
+                        helperText: historyTraceInspectAction.helperText,
+                        disabled: historyTraceInspectAction.disabled,
+                      })}
+                      {renderHistoryTraceButton({
+                        kind: 'copy',
+                        label: historyTraceAction.label,
+                        helperText: historyTraceAction.helperText,
+                        disabled: historyTraceAction.disabled,
+                        tone: historyTraceAction.tone,
+                      })}
+                    </div>
+                  </div>
+                </section>
+              ) : null}
 
               {selectedHistoryOutputPath && selectedHistoryPreview.ready ? (
                 <section className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 shadow-[0_24px_80px_var(--theme-shadow)]">
@@ -2378,13 +2741,11 @@ export function Conductor() {
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
                       Project context
                     </p>
-                    {pendingProjectOverride ? (
-                      <div className="mt-2 space-y-2 text-sm">
+                    {pendingProjectOverride && preflightSummary ? (
+                      <div className="mt-2 space-y-3 text-sm">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-[var(--theme-text)]">
-                            {pendingProjectOverride.activeProjectName ??
-                              pendingProjectOverride.activeProjectPath ??
-                              'Selected project'}
+                            {preflightSummary.projectLabel}
                           </span>
                           {launchIntentSource === 'projects' ? (
                             <span className="rounded-full border border-[var(--theme-accent)] bg-[var(--theme-accent-soft)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--theme-accent-strong)]">
@@ -2393,13 +2754,70 @@ export function Conductor() {
                           ) : null}
                         </div>
                         <span className="block truncate text-xs text-[var(--theme-muted-2)]">
-                          {pendingProjectOverride.effectiveWorkingDirectory ??
-                            pendingProjectOverride.activeProjectPath}
+                          {preflightSummary.workingDirectory}
                         </span>
                         {pendingLaunchDiffersFromActiveProject ? (
                           <p className="rounded-xl border border-[var(--theme-warning-border)] bg-[var(--theme-warning-soft)] px-3 py-2 text-xs text-[var(--theme-warning)]">
                             This mission will run in the project selected from
                             Projects, not the current active project.
+                          </p>
+                        ) : null}
+                        <div className="grid gap-2 text-xs sm:grid-cols-2">
+                          <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2">
+                            <p className="font-semibold text-[var(--theme-muted)]">
+                              Git status
+                            </p>
+                            <p
+                              className={cn(
+                                'mt-1 font-medium',
+                                preflightSummary.gitStatusTone === 'warning'
+                                  ? 'text-[var(--theme-warning)]'
+                                  : preflightSummary.gitStatusTone === 'success'
+                                    ? 'text-emerald-700'
+                                    : 'text-[var(--theme-muted-2)]',
+                              )}
+                            >
+                              {preflightSummary.gitStatusLabel}
+                            </p>
+                          </div>
+                          <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2">
+                            <p className="font-semibold text-[var(--theme-muted)]">
+                              Stack
+                            </p>
+                            <p className="mt-1 font-medium text-[var(--theme-text)]">
+                              {preflightSummary.stackLabel}
+                            </p>
+                          </div>
+                          <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2">
+                            <p className="font-semibold text-[var(--theme-muted)]">
+                              Package manager
+                            </p>
+                            <p className="mt-1 font-medium text-[var(--theme-text)]">
+                              {preflightSummary.packageManagerLabel}
+                            </p>
+                          </div>
+                          <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2">
+                            <p className="font-semibold text-[var(--theme-muted)]">
+                              Context files
+                            </p>
+                            <p className="mt-1 truncate font-medium text-[var(--theme-text)]">
+                              {preflightSummary.contextFilesLabel}
+                            </p>
+                          </div>
+                        </div>
+                        {preflightSummary.contextSummary ? (
+                          <details className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-xs">
+                            <summary className="cursor-pointer font-semibold text-[var(--theme-muted)]">
+                              Auto-context preview
+                            </summary>
+                            <pre className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed text-[var(--theme-muted-2)]">
+                              {preflightSummary.contextSummary}
+                            </pre>
+                          </details>
+                        ) : null}
+                        {preflightSummary.lastCommitLabel ? (
+                          <p className="text-xs text-[var(--theme-muted-2)]">
+                            Last commit: {preflightSummary.lastCommitLabel}
                           </p>
                         ) : null}
                       </div>
