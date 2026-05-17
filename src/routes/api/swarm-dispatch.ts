@@ -491,15 +491,19 @@ function markDispatchStarted(workerId: string, task: string, missionId?: string 
 }
 
 function markDispatchResult(workerId: string, result: WorkerResult): void {
-  writeRuntimePatch(workerId, {
+  const patch: Record<string, unknown> = {
     lastDispatchAt: Date.now(),
     lastDispatchMode: result.delivery ?? 'none',
     lastDispatchResult: result.ok ? result.output.slice(0, 500) : (result.error ?? 'dispatch failed').slice(0, 500),
-    state: result.ok ? 'executing' : 'blocked',
-    checkpointStatus: result.ok ? 'in_progress' : 'blocked',
     blockedReason: result.ok ? null : result.error,
     lastCheckIn: new Date().toISOString(),
-  })
+  }
+  // Do not clobber checkpoint fields set by markCheckpointResult (oneshot DONE still returned ok: true).
+  if (!result.checkpoint) {
+    patch.state = result.ok ? 'executing' : 'blocked'
+    patch.checkpointStatus = result.ok ? 'in_progress' : 'blocked'
+  }
+  writeRuntimePatch(workerId, patch)
 }
 
 function markCheckpointResult(workerId: string, checkpoint: ParsedSwarmCheckpoint, notifySessionKey?: string | null): void {
@@ -760,6 +764,21 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
       taskTitle: assignment.task.slice(0, 120),
     })
     const profilePath = getProfilePath(workerId)
+    const bootstrap = ensureSwarmProfileConfig(profilePath)
+    if (!bootstrap.ok) {
+      const result: WorkerResult = {
+        workerId,
+        ok: false,
+        output: '',
+        error: `Profile bootstrap failed: ${bootstrap.error}`,
+        durationMs: 0,
+        exitCode: null,
+        delivery: 'oneshot',
+      }
+      markDispatchResult(workerId, result)
+      resolve(result)
+      return
+    }
     const runtimeBeforeDispatch = readRuntimeCheckpointSnapshot(profilePath)
     const previousRaw = runtimeBeforeDispatch.checkpointRaw
     const baselineRuntimeSignature = runtimeCheckpointSignature(runtimeBeforeDispatch)
