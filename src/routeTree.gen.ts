@@ -137,6 +137,9 @@ import { Route as ApiMcpHubSearchRouteImport } from './routes/api/mcp/hub-search
 import { Route as ApiMcpDiscoverRouteImport } from './routes/api/mcp/discover'
 import { Route as ApiMcpConfigureRouteImport } from './routes/api/mcp/configure'
 import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
+import { Route as ApiMaTasksRouteImport } from './routes/api/ma/tasks'
+import { Route as ApiMaProjectsRouteImport } from './routes/api/ma/projects'
+import { Route as ApiMaProfilesRouteImport } from './routes/api/ma/profiles'
 import { Route as ApiKnowledgeSyncRouteImport } from './routes/api/knowledge/sync'
 import { Route as ApiKnowledgeSearchRouteImport } from './routes/api/knowledge/search'
 import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/read'
@@ -154,6 +157,7 @@ import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
+import { Route as ApiMaTasksTaskIdStartRouteImport } from './routes/api/ma/tasks.$taskId.start'
 
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
@@ -796,6 +800,21 @@ const ApiMcpNameRoute = ApiMcpNameRouteImport.update({
   path: '/$name',
   getParentRoute: () => ApiMcpRoute,
 } as any)
+const ApiMaTasksRoute = ApiMaTasksRouteImport.update({
+  id: '/api/ma/tasks',
+  path: '/api/ma/tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMaProjectsRoute = ApiMaProjectsRouteImport.update({
+  id: '/api/ma/projects',
+  path: '/api/ma/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMaProfilesRoute = ApiMaProfilesRouteImport.update({
+  id: '/api/ma/profiles',
+  path: '/api/ma/profiles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiKnowledgeSyncRoute = ApiKnowledgeSyncRouteImport.update({
   id: '/api/knowledge/sync',
   path: '/api/knowledge/sync',
@@ -885,6 +904,11 @@ const ApiHermesworldReservationsConfirmRoute =
     path: '/confirm',
     getParentRoute: () => ApiHermesworldReservationsRoute,
   } as any)
+const ApiMaTasksTaskIdStartRoute = ApiMaTasksTaskIdStartRouteImport.update({
+  id: '/$taskId/start',
+  path: '/$taskId/start',
+  getParentRoute: () => ApiMaTasksRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -997,6 +1021,9 @@ export interface FileRoutesByFullPath {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/ma/profiles': typeof ApiMaProfilesRoute
+  '/api/ma/projects': typeof ApiMaProjectsRoute
+  '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
@@ -1032,6 +1059,7 @@ export interface FileRoutesByFullPath {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1143,6 +1171,9 @@ export interface FileRoutesByTo {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/ma/profiles': typeof ApiMaProfilesRoute
+  '/api/ma/projects': typeof ApiMaProjectsRoute
+  '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
@@ -1178,6 +1209,7 @@ export interface FileRoutesByTo {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1291,6 +1323,9 @@ export interface FileRoutesById {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/ma/profiles': typeof ApiMaProfilesRoute
+  '/api/ma/projects': typeof ApiMaProjectsRoute
+  '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
@@ -1326,6 +1361,7 @@ export interface FileRoutesById {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1440,6 +1476,9 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/ma/profiles'
+    | '/api/ma/projects'
+    | '/api/ma/tasks'
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
@@ -1475,6 +1514,7 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/tasks/$taskId/start'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1586,6 +1626,9 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/ma/profiles'
+    | '/api/ma/projects'
+    | '/api/ma/tasks'
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
@@ -1621,6 +1664,7 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/tasks/$taskId/start'
   id:
     | '__root__'
     | '/'
@@ -1733,6 +1777,9 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/ma/profiles'
+    | '/api/ma/projects'
+    | '/api/ma/tasks'
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
@@ -1768,6 +1815,7 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/tasks/$taskId/start'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1875,6 +1923,9 @@ export interface RootRouteChildren {
   ApiKnowledgeReadRoute: typeof ApiKnowledgeReadRoute
   ApiKnowledgeSearchRoute: typeof ApiKnowledgeSearchRoute
   ApiKnowledgeSyncRoute: typeof ApiKnowledgeSyncRoute
+  ApiMaProfilesRoute: typeof ApiMaProfilesRoute
+  ApiMaProjectsRoute: typeof ApiMaProjectsRoute
+  ApiMaTasksRoute: typeof ApiMaTasksRouteWithChildren
   ApiModelInfoRoute: typeof ApiModelInfoRoute
   ApiOauthDeviceCodeRoute: typeof ApiOauthDeviceCodeRoute
   ApiOauthPollTokenRoute: typeof ApiOauthPollTokenRoute
@@ -2788,6 +2839,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMcpNameRouteImport
       parentRoute: typeof ApiMcpRoute
     }
+    '/api/ma/tasks': {
+      id: '/api/ma/tasks'
+      path: '/api/ma/tasks'
+      fullPath: '/api/ma/tasks'
+      preLoaderRoute: typeof ApiMaTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ma/projects': {
+      id: '/api/ma/projects'
+      path: '/api/ma/projects'
+      fullPath: '/api/ma/projects'
+      preLoaderRoute: typeof ApiMaProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ma/profiles': {
+      id: '/api/ma/profiles'
+      path: '/api/ma/profiles'
+      fullPath: '/api/ma/profiles'
+      preLoaderRoute: typeof ApiMaProfilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/knowledge/sync': {
       id: '/api/knowledge/sync'
       path: '/api/knowledge/sync'
@@ -2906,6 +2978,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/hermesworld/reservations/confirm'
       preLoaderRoute: typeof ApiHermesworldReservationsConfirmRouteImport
       parentRoute: typeof ApiHermesworldReservationsRoute
+    }
+    '/api/ma/tasks/$taskId/start': {
+      id: '/api/ma/tasks/$taskId/start'
+      path: '/$taskId/start'
+      fullPath: '/api/ma/tasks/$taskId/start'
+      preLoaderRoute: typeof ApiMaTasksTaskIdStartRouteImport
+      parentRoute: typeof ApiMaTasksRoute
     }
   }
 }
@@ -3096,6 +3175,18 @@ const ApiHermesworldReservationsRouteWithChildren =
     ApiHermesworldReservationsRouteChildren,
   )
 
+interface ApiMaTasksRouteChildren {
+  ApiMaTasksTaskIdStartRoute: typeof ApiMaTasksTaskIdStartRoute
+}
+
+const ApiMaTasksRouteChildren: ApiMaTasksRouteChildren = {
+  ApiMaTasksTaskIdStartRoute: ApiMaTasksTaskIdStartRoute,
+}
+
+const ApiMaTasksRouteWithChildren = ApiMaTasksRoute._addFileChildren(
+  ApiMaTasksRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
@@ -3201,6 +3292,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiKnowledgeReadRoute: ApiKnowledgeReadRoute,
   ApiKnowledgeSearchRoute: ApiKnowledgeSearchRoute,
   ApiKnowledgeSyncRoute: ApiKnowledgeSyncRoute,
+  ApiMaProfilesRoute: ApiMaProfilesRoute,
+  ApiMaProjectsRoute: ApiMaProjectsRoute,
+  ApiMaTasksRoute: ApiMaTasksRouteWithChildren,
   ApiModelInfoRoute: ApiModelInfoRoute,
   ApiOauthDeviceCodeRoute: ApiOauthDeviceCodeRoute,
   ApiOauthPollTokenRoute: ApiOauthPollTokenRoute,
