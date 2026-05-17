@@ -10,9 +10,19 @@ import {
   ensureGatewayProbed,
 } from '../../server/gateway-capabilities'
 import { sanitizeConductorMissionGoal } from '../../server/conductor-mission-sanitize'
-import { getActiveProjectContext } from '../../server/project-registry'
+import {
+  buildProjectContextPromptBlock,
+  getActiveProjectContext,
+} from '../../server/project-registry'
+import type {
+  ProjectRegistryContextPreview,
+  ProjectRegistryStatus,
+} from '../../server/project-registry'
 
 let cachedSkill: string | null = null
+
+const MAX_CONTEXT_PREVIEW_SUMMARY_CHARS = 1200
+const MAX_CONTEXT_PREVIEW_FILES = 8
 
 type ConductorSpawnBody = {
   goal?: unknown
@@ -65,6 +75,69 @@ function readOptionalString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+function truncateText(value: string, maxChars: number): string {
+  if (value.length <= maxChars) return value
+  return `${value.slice(0, maxChars).trimEnd()}…`
+}
+
+function readNullableBoolean(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null
+}
+
+function readNullableNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+function readOptionalStringArray(value: unknown): Array<string> {
+  if (!Array.isArray(value)) return []
+  return value
+    .map((item) => readOptionalString(item))
+    .filter((item) => item.length > 0)
+    .slice(0, 12)
+}
+
+function readProjectContextPreview(
+  value: unknown,
+): ProjectRegistryContextPreview | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  const summary = truncateText(
+    readOptionalString(record.summary),
+    MAX_CONTEXT_PREVIEW_SUMMARY_CHARS,
+  )
+  const rawFiles = Array.isArray(record.files) ? record.files : []
+  const files = rawFiles
+    .slice(0, MAX_CONTEXT_PREVIEW_FILES)
+    .map((file) => {
+      if (!file || typeof file !== 'object' || Array.isArray(file)) return null
+      const fileRecord = file as Record<string, unknown>
+      const name = readOptionalString(fileRecord.name)
+      const filePath = readOptionalString(fileRecord.path)
+      const chars = readNullableNumber(fileRecord.chars)
+      if (!name || !filePath || chars === null) return null
+      return { name, path: filePath, chars }
+    })
+    .filter(
+      (file): file is { name: string; path: string; chars: number } =>
+        file !== null,
+    )
+  if (!summary && files.length === 0) return null
+  return { summary, files }
+}
+
+function readProjectStatus(value: unknown): ProjectRegistryStatus | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  return {
+    gitDirty: readNullableBoolean(record.gitDirty),
+    changedFiles: readNullableNumber(record.changedFiles),
+    lastCommit: readOptionalString(record.lastCommit) || null,
+    lastCommitAt: readOptionalString(record.lastCommitAt) || null,
+    detectedStack: readOptionalStringArray(record.detectedStack),
+    packageManager: readOptionalString(record.packageManager) || null,
+  }
+}
+
 function readMaxParallel(value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 1
   return Math.min(5, Math.max(1, Math.round(value)))
@@ -81,7 +154,18 @@ function readMissionProjectOverride(
     activeProjectPath: readOptionalString(record.activeProjectPath) || null,
     effectiveWorkingDirectory:
       readOptionalString(record.effectiveWorkingDirectory) || null,
+    contextPreview: readProjectContextPreview(record.contextPreview),
+    status: readProjectStatus(record.status),
   }
+}
+
+export type MissionProjectMetadata = {
+  activeProjectId: string | null
+  activeProjectName: string | null
+  activeProjectPath: string | null
+  effectiveWorkingDirectory: string | null
+  contextPreview?: ProjectRegistryContextPreview | null
+  status?: ProjectRegistryStatus | null
 }
 
 export function buildMissionProjectMetadata(params: {
@@ -104,14 +188,58 @@ export function buildMissionProjectMetadata(params: {
       override?.activeProjectName ?? params.activeProject?.name ?? null,
     activeProjectPath,
     effectiveWorkingDirectory,
+    contextPreview: override?.contextPreview ?? null,
+    status: override?.status ?? null,
   }
 }
 
-export type MissionProjectMetadata = {
-  activeProjectId: string | null
-  activeProjectName: string | null
-  activeProjectPath: string | null
-  effectiveWorkingDirectory: string | null
+export function buildProjectOverridePromptBlock(
+  project: MissionProjectMetadata | null,
+): string {
+  if (!project || !project.activeProjectPath) return ''
+  const summary = project.contextPreview?.summary.trim()
+  const files = project.contextPreview?.files ?? []
+  const status = project.status ?? null
+  return [
+    '## Active Project Context',
+    '',
+    `Project: ${project.activeProjectName ?? 'unknown'}`,
+    `Path: ${project.activeProjectPath}`,
+    project.effectiveWorkingDirectory
+      ? `Effective working directory: ${project.effectiveWorkingDirectory}`
+      : null,
+    status
+      ? `Git status: ${
+          status.gitDirty === null
+            ? 'unavailable'
+            : status.gitDirty
+              ? `${status.changedFiles ?? 0} changed file(s)`
+              : 'clean worktree'
+        }`
+      : null,
+    status?.lastCommit
+      ? `Last commit: ${status.lastCommit}${status.lastCommitAt ? ` (${status.lastCommitAt})` : ''}`
+      : null,
+    status && status.detectedStack.length > 0
+      ? `Stack: ${status.detectedStack.join(', ')}`
+      : null,
+    status?.packageManager ? `Package manager: ${status.packageManager}` : null,
+    summary ? ['', '### Auto-context preview', summary].join('\n') : null,
+    files.length > 0
+      ? [
+          '',
+          '### Context files available at project root',
+          ...files.map(
+            (file) => `- ${file.name} (${file.chars} chars): ${file.path}`,
+          ),
+        ].join('\n')
+      : null,
+    '',
+    'Use this project path as the primary working directory for spawned workers unless the user explicitly asks otherwise.',
+    'Workers must inspect the listed project instruction/readme files before editing.',
+  ]
+    .filter((line): line is string => line !== null)
+    .join('\n')
 }
 
 export type ConductorPromptOptions = {
@@ -338,13 +466,16 @@ export const Route = createFileRoute('/api/conductor-spawn')({
           const explicitProjectsDir = Boolean(
             projectsDir || projectOverride?.effectiveWorkingDirectory,
           )
+          const projectContext = projectOverride
+            ? buildProjectOverridePromptBlock(projectMetadata)
+            : buildProjectContextPromptBlock(activeProject.project)
           const prompt = buildOrchestratorPrompt(goal, loadDispatchSkill(), {
             orchestratorModel,
             workerModel,
             projectsDir: effectiveProjectsDir,
             maxParallel,
             supervised,
-            projectContext: activeProject.promptBlock,
+            projectContext,
             activeProjectPath,
             explicitProjectsDir,
           })

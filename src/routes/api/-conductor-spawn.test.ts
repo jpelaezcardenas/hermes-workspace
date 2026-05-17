@@ -3,6 +3,7 @@ import {
   buildConductorWorkingDirectoryRules,
   buildMissionProjectMetadata,
   buildOrchestratorPrompt,
+  buildProjectOverridePromptBlock,
 } from './conductor-spawn'
 
 describe('buildConductorWorkingDirectoryRules', () => {
@@ -88,6 +89,54 @@ describe('buildMissionProjectMetadata', () => {
       activeProjectName: 'historical-app',
       activeProjectPath: '/workspace/historical-app',
       effectiveWorkingDirectory: '/workspace/historical-app',
+      contextPreview: null,
+      status: null,
     })
+  })
+
+  it('preserves bounded context preview and status from project override', () => {
+    const metadata = buildMissionProjectMetadata({
+      activeProject: {
+        id: 'current',
+        name: 'current-app',
+        path: '/workspace/current-app',
+      },
+      projectsDir: '',
+      override: {
+        activeProjectId: 'project-1',
+        activeProjectName: 'demo-app',
+        activeProjectPath: '/workspace/demo-app',
+        effectiveWorkingDirectory: '/workspace/demo-app',
+        contextPreview: {
+          summary: 'Project summary',
+          files: [
+            {
+              name: 'README.md',
+              path: '/workspace/demo-app/README.md',
+              chars: 900,
+            },
+          ],
+        },
+        status: {
+          gitDirty: true,
+          changedFiles: 3,
+          lastCommit: 'abc1234',
+          lastCommitAt: '2026-01-01T00:00:00Z',
+          detectedStack: ['React', 'TypeScript'],
+          packageManager: 'pnpm',
+        },
+      },
+    })
+
+    const promptBlock = buildProjectOverridePromptBlock(metadata)
+
+    expect(promptBlock).toContain('Project: demo-app')
+    expect(promptBlock).toContain('Git status: 3 changed file(s)')
+    expect(promptBlock).toContain('Stack: React, TypeScript')
+    expect(promptBlock).toContain('Package manager: pnpm')
+    expect(promptBlock).toContain('Project summary')
+    expect(promptBlock).toContain(
+      '- README.md (900 chars): /workspace/demo-app/README.md',
+    )
   })
 })

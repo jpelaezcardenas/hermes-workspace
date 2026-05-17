@@ -1,5 +1,13 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  renameSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { loadWorkspaceCatalog } from '../routes/api/workspace'
@@ -28,6 +36,7 @@ export type ProjectRegistryEntry = {
   id: string
   name: string
   path: string
+  source: 'shared' | 'discovered'
   active: boolean
   gitRemote: string | null
   gitBranch: string | null
@@ -76,6 +85,17 @@ const IGNORED_DIRS = new Set([
   '.venv',
 ])
 
+const SHARED_PROJECTS: Array<{ name: string; path: string }> = [
+  { name: 'pilulus', path: '~/pilulus' },
+  { name: 'eycharochka', path: '~/eycharochka' },
+  {
+    name: 'hermes-workspace',
+    path: '~/ai-workspace/apps/hermes-workspace',
+  },
+]
+
+const ACTIVE_PROJECT_STATE_FILE = 'active-project.json'
+
 function expandHome(input: string): string {
   if (input === '~') return os.homedir()
   if (input.startsWith('~/')) return path.join(os.homedir(), input.slice(2))
@@ -88,6 +108,46 @@ function normalizePath(input: string): string {
 
 function stableProjectId(projectPath: string): string {
   return Buffer.from(projectPath).toString('base64url')
+}
+
+function hermesStateDir(): string {
+  const configured =
+    process.env.HERMES_HOME ||
+    process.env.CLAUDE_HOME ||
+    path.join(os.homedir(), '.hermes')
+  return normalizePath(configured)
+}
+
+function activeProjectStatePath(): string {
+  return path.join(hermesStateDir(), 'workspace', ACTIVE_PROJECT_STATE_FILE)
+}
+
+function readPersistedActiveProjectId(): string | null {
+  try {
+    const raw = readFileSync(activeProjectStatePath(), 'utf-8')
+    const parsed = JSON.parse(raw) as { activeProjectId?: unknown }
+    return typeof parsed.activeProjectId === 'string' && parsed.activeProjectId
+      ? parsed.activeProjectId
+      : null
+  } catch {
+    return null
+  }
+}
+
+function writePersistedActiveProjectId(activeProjectId: string): void {
+  const statePath = activeProjectStatePath()
+  mkdirSync(path.dirname(statePath), { recursive: true })
+  const tmpPath = `${statePath}.${process.pid}.${Date.now()}.tmp`
+  writeFileSync(
+    tmpPath,
+    `${JSON.stringify(
+      { activeProjectId, updatedAt: new Date().toISOString() },
+      null,
+      2,
+    )}\n`,
+    { encoding: 'utf-8', mode: 0o600 },
+  )
+  renameSync(tmpPath, statePath)
 }
 
 function isDirectory(candidate: string): boolean {
@@ -283,8 +343,12 @@ function buildContextPreview(project: {
 function toProjectEntry(
   projectPath: string,
   activePath: string,
+  activeProjectId: string | null,
+  source: ProjectRegistryEntry['source'],
+  displayName?: string,
 ): ProjectRegistryEntry {
   const normalizedPath = normalizePath(projectPath)
+  const id = stableProjectId(normalizedPath)
   const gitRemoteValue = gitRemote(normalizedPath)
   const gitBranchValue = gitBranch(normalizedPath)
   const instructionFiles = readInstructionFiles(normalizedPath)
@@ -299,10 +363,13 @@ function toProjectEntry(
     status,
   }
   return {
-    id: stableProjectId(normalizedPath),
-    name: path.basename(normalizedPath),
+    id,
+    name: displayName || path.basename(normalizedPath),
     path: normalizedPath,
-    active: normalizedPath === activePath,
+    source,
+    active: activeProjectId
+      ? id === activeProjectId
+      : normalizedPath === activePath,
     gitRemote: gitRemoteValue,
     gitBranch: gitBranchValue,
     status,
@@ -316,35 +383,91 @@ export async function buildProjectRegistry(): Promise<ProjectRegistryResponse> {
   const catalog = await loadWorkspaceCatalog()
   const activePath =
     catalog.isValid && catalog.path ? normalizePath(catalog.path) : ''
+  const persistedActiveProjectId = readPersistedActiveProjectId()
   const roots =
     catalog.workspaces.length > 0
       ? catalog.workspaces.map((workspace) => workspace.path)
       : activePath
         ? [activePath]
         : []
-  const candidates = new Set<string>()
+  const candidates = new Map<
+    string,
+    { source: ProjectRegistryEntry['source']; name?: string }
+  >()
+
+  for (const shared of SHARED_PROJECTS) {
+    const normalizedSharedPath = normalizePath(shared.path)
+    if (!isDirectory(normalizedSharedPath)) continue
+    candidates.set(normalizedSharedPath, {
+      source: 'shared',
+      name: shared.name,
+    })
+  }
 
   for (const root of roots) {
     const normalizedRoot = normalizePath(root)
     if (!isDirectory(normalizedRoot)) continue
-    if (hasProjectMarker(normalizedRoot)) candidates.add(normalizedRoot)
+    if (hasProjectMarker(normalizedRoot)) {
+      const existing = candidates.get(normalizedRoot)
+      candidates.set(normalizedRoot, {
+        source: existing?.source ?? 'discovered',
+        name: existing?.name,
+      })
+    }
     for (const child of listDirectChildProjects(normalizedRoot)) {
-      candidates.add(normalizePath(child))
+      const normalizedChild = normalizePath(child)
+      const existing = candidates.get(normalizedChild)
+      candidates.set(normalizedChild, {
+        source: existing?.source ?? 'discovered',
+        name: existing?.name,
+      })
     }
   }
 
-  if (activePath && isDirectory(activePath)) candidates.add(activePath)
+  if (activePath && isDirectory(activePath)) {
+    const existing = candidates.get(activePath)
+    candidates.set(activePath, {
+      source: existing?.source ?? 'discovered',
+      name: existing?.name,
+    })
+  }
 
-  const projects = [...candidates]
-    .sort((a, b) => path.basename(a).localeCompare(path.basename(b)))
+  const projects = [...candidates.entries()]
+    .sort(([aPath, aMeta], [bPath, bMeta]) => {
+      const sourceOrder = aMeta.source.localeCompare(bMeta.source)
+      if (sourceOrder !== 0) return sourceOrder
+      return (aMeta.name || path.basename(aPath)).localeCompare(
+        bMeta.name || path.basename(bPath),
+      )
+    })
     .slice(0, MAX_PROJECTS)
-    .map((projectPath) => toProjectEntry(projectPath, activePath))
+    .map(([projectPath, meta]) =>
+      toProjectEntry(
+        projectPath,
+        activePath,
+        persistedActiveProjectId,
+        meta.source,
+        meta.name,
+      ),
+    )
 
   return {
     activeProjectId: projects.find((project) => project.active)?.id ?? null,
     projects,
     fetchedAt: Date.now(),
   }
+}
+
+export async function setActiveProjectById(
+  projectId: string,
+): Promise<ProjectRegistryResponse> {
+  const registry = await buildProjectRegistry()
+  const selected = registry.projects.find((project) => project.id === projectId)
+  if (!selected) {
+    throw new Error('Project not found')
+  }
+  writePersistedActiveProjectId(selected.id)
+  return buildProjectRegistry()
 }
 
 function formatProjectFileForPrompt(

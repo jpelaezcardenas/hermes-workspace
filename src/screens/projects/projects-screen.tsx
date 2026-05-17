@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
@@ -14,8 +14,18 @@ import {
   TimeQuarterPassIcon,
 } from '@hugeicons/core-free-icons'
 
+import {
+  buildProjectMissionTraceIntent,
+  getMissionTraceSessionKey,
+} from './project-mission-trace'
+import type { MissionHistoryEntry } from '@/screens/gateway/hooks/mission-history'
 import { Button } from '@/components/ui/button'
 import { persistConductorLaunchIntent } from '@/screens/gateway/conductor-launch-intent'
+import {
+  filterMissionHistoryByProject,
+  loadMissionHistory,
+  summarizeProjectMissionHistory,
+} from '@/screens/gateway/hooks/mission-history'
 
 type ProjectFile = {
   name: string
@@ -41,6 +51,7 @@ type ProjectEntry = {
   id: string
   name: string
   path: string
+  source: 'shared' | 'discovered'
   active: boolean
   gitRemote: string | null
   gitBranch: string | null
@@ -57,23 +68,11 @@ type ProjectsResponse = {
   error?: string
 }
 
-type MissionHistoryEntry = {
-  id: string
-  goal: string
-  startedAt: string
-  completedAt: string
-  workerCount: number
-  totalTokens: number
-  status: 'completed' | 'failed'
-  projectPath: string | null
-  activeProjectId?: string | null
-  activeProjectName?: string | null
-  activeProjectPath?: string | null
-  effectiveWorkingDirectory?: string | null
-}
-
-const CONDUCTOR_HISTORY_STORAGE_KEY = 'conductor:history'
 const PROJECT_HISTORY_LIMIT = 4
+
+function getFirstProject(projects: Array<ProjectEntry>): ProjectEntry | null {
+  return projects.length > 0 ? projects[0] : null
+}
 
 async function fetchProjects(): Promise<ProjectsResponse> {
   const response = await fetch('/api/projects', { cache: 'no-store' })
@@ -84,60 +83,27 @@ async function fetchProjects(): Promise<ProjectsResponse> {
   return data
 }
 
+async function selectActiveProject(
+  projectId: string,
+): Promise<ProjectsResponse> {
+  const response = await fetch('/api/projects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ activeProjectId: projectId }),
+  })
+  const data = (await response.json().catch(() => ({}))) as ProjectsResponse
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to select project')
+  }
+  return data
+}
+
 function shortenRemote(remote: string | null): string {
   if (!remote) return 'No git remote'
   return remote
     .replace(/^git@github.com:/, 'github.com/')
     .replace(/^https:\/\/github.com\//, 'github.com/')
     .replace(/\.git$/, '')
-}
-
-function normalizeOptionalString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim() ? value.trim() : null
-}
-
-function loadMissionHistory(): Array<MissionHistoryEntry> {
-  try {
-    const raw = globalThis.localStorage?.getItem(CONDUCTOR_HISTORY_STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as unknown
-    if (!Array.isArray(parsed)) return []
-    return parsed
-      .filter((entry): entry is MissionHistoryEntry => {
-        if (!entry || typeof entry !== 'object') return false
-        const e = entry as Record<string, unknown>
-        return (
-          typeof e.id === 'string' &&
-          typeof e.goal === 'string' &&
-          typeof e.startedAt === 'string' &&
-          typeof e.completedAt === 'string'
-        )
-      })
-      .map((entry) => ({
-        ...entry,
-        activeProjectId: normalizeOptionalString(entry.activeProjectId),
-        activeProjectName: normalizeOptionalString(entry.activeProjectName),
-        activeProjectPath: normalizeOptionalString(entry.activeProjectPath),
-        effectiveWorkingDirectory:
-          normalizeOptionalString(entry.effectiveWorkingDirectory) ??
-          normalizeOptionalString(entry.activeProjectPath) ??
-          normalizeOptionalString(entry.projectPath),
-      }))
-  } catch {
-    return []
-  }
-}
-
-function missionMatchesProject(
-  entry: MissionHistoryEntry,
-  project: ProjectEntry,
-): boolean {
-  return (
-    entry.activeProjectId === project.id ||
-    entry.activeProjectPath === project.path ||
-    entry.effectiveWorkingDirectory === project.path ||
-    entry.projectPath === project.path
-  )
 }
 
 function formatMissionDate(value: string): string {
@@ -209,12 +175,16 @@ function ProjectCard({
   selected,
   onSelect,
   onStartMission,
+  onMakeActive,
+  onOpenTrace,
 }: {
   project: ProjectEntry
   history: Array<MissionHistoryEntry>
   selected: boolean
   onSelect: () => void
   onStartMission: () => void
+  onMakeActive: () => void
+  onOpenTrace: (entry: MissionHistoryEntry) => void
 }) {
   const files =
     project.instructionFiles.length > 0
@@ -222,9 +192,10 @@ function ProjectCard({
       : project.readme
         ? [project.readme]
         : []
-  const recentHistory = history
-    .filter((entry) => missionMatchesProject(entry, project))
-    .slice(0, PROJECT_HISTORY_LIMIT)
+  const recentHistory = filterMissionHistoryByProject(history, {
+    id: project.id,
+    path: project.path,
+  }).slice(0, PROJECT_HISTORY_LIMIT)
 
   return (
     <article
@@ -243,6 +214,11 @@ function ProjectCard({
             {project.active ? (
               <span className="rounded-full bg-accent-500/15 px-2.5 py-1 text-xs font-semibold text-accent-700">
                 Active
+              </span>
+            ) : null}
+            {project.source === 'shared' ? (
+              <span className="rounded-full bg-primary-100 px-2.5 py-1 text-xs font-semibold text-primary-700">
+                Shared
               </span>
             ) : null}
             {selected && !project.active ? (
@@ -273,14 +249,21 @@ function ProjectCard({
             </span>
           </div>
         </button>
-        <Button
-          type="button"
-          onClick={onStartMission}
-          className="shrink-0 bg-accent-500 text-primary-950 hover:bg-accent-400"
-        >
-          <HugeiconsIcon icon={PlayIcon} size={16} strokeWidth={1.7} />
-          Start mission
-        </Button>
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row lg:flex-col">
+          {!project.active ? (
+            <Button type="button" variant="outline" onClick={onMakeActive}>
+              Make active
+            </Button>
+          ) : null}
+          <Button
+            type="button"
+            onClick={onStartMission}
+            className="bg-accent-500 text-primary-950 hover:bg-accent-400"
+          >
+            <HugeiconsIcon icon={PlayIcon} size={16} strokeWidth={1.7} />
+            Open in Conductor
+          </Button>
+        </div>
       </div>
 
       {selected ? (
@@ -416,11 +399,22 @@ function ProjectCard({
                         {entry.status === 'completed' ? 'Done' : 'Failed'}
                       </span>
                     </div>
-                    <p className="mt-2 text-xs text-primary-500">
-                      {formatMissionDate(entry.completedAt)} ·{' '}
-                      {entry.workerCount} workers ·{' '}
-                      {entry.totalTokens.toLocaleString()} tok
-                    </p>
+                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-primary-500">
+                      <span>
+                        {formatMissionDate(entry.completedAt)} ·{' '}
+                        {entry.workerCount} workers ·{' '}
+                        {entry.totalTokens.toLocaleString()} tok
+                      </span>
+                      {getMissionTraceSessionKey(entry) ? (
+                        <button
+                          type="button"
+                          onClick={() => onOpenTrace(entry)}
+                          className="font-semibold text-accent-700 hover:text-accent-600"
+                        >
+                          Open trace
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 ))
               ) : (
@@ -439,10 +433,19 @@ function ProjectCard({
 
 export function ProjectsScreen() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const projectsQuery = useQuery({
     queryKey: ['projects', 'registry'],
     queryFn: fetchProjects,
     staleTime: 30_000,
+  })
+
+  const selectProjectMutation = useMutation({
+    mutationFn: selectActiveProject,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['projects', 'registry'], data)
+      setSelectedProjectId(data.activeProjectId)
+    },
   })
 
   const projects = projectsQuery.data?.projects ?? []
@@ -462,13 +465,17 @@ export function ProjectsScreen() {
   const selectedProject =
     projects.find((project) => project.id === selectedProjectId) ??
     activeProject ??
-    projects[0] ??
-    null
-  const totalProjectMissions = selectedProject
-    ? missionHistory.filter((entry) =>
-        missionMatchesProject(entry, selectedProject),
-      ).length
-    : 0
+    getFirstProject(projects)
+  const selectedProjectMissionSummary = selectedProject
+    ? summarizeProjectMissionHistory(missionHistory, {
+        id: selectedProject.id,
+        path: selectedProject.path,
+      })
+    : null
+  const totalProjectMissions = selectedProjectMissionSummary?.total ?? 0
+  const selectedProjectName = selectedProject?.name ?? 'Not detected'
+  const selectedProjectPath =
+    selectedProject?.path ?? 'Choose workspace in Files/Workspace first.'
 
   useEffect(() => {
     setMissionHistory(loadMissionHistory())
@@ -482,7 +489,7 @@ export function ProjectsScreen() {
     setSelectedProjectId((current) =>
       current && projects.some((project) => project.id === current)
         ? current
-        : (activeProject?.id ?? projects[0]?.id ?? null),
+        : (activeProject?.id ?? getFirstProject(projects)?.id ?? null),
     )
   }, [activeProject?.id, projects])
 
@@ -496,9 +503,20 @@ export function ProjectsScreen() {
         activeProjectName: project.name,
         activeProjectPath: project.path,
         effectiveWorkingDirectory: project.path,
+        contextPreview: project.contextPreview,
+        status: project.status,
       },
     })
     void navigate({ to: '/conductor' })
+  }
+
+  const openMissionTrace = (entry: MissionHistoryEntry) => {
+    const traceIntent = buildProjectMissionTraceIntent(entry)
+    if (!traceIntent) return
+    void navigate({
+      to: '/conductor',
+      search: { traceSessionKey: traceIntent.sessionKey },
+    })
   }
 
   return (
@@ -544,18 +562,21 @@ export function ProjectsScreen() {
               <p className="mt-2 text-2xl font-semibold text-primary-950">
                 {totalProjectMissions}
               </p>
+              <p className="mt-1 text-xs text-primary-600">
+                {selectedProjectMissionSummary
+                  ? `${selectedProjectMissionSummary.completed} done · ${selectedProjectMissionSummary.failed} failed`
+                  : 'No project selected'}
+              </p>
             </div>
             <div className="rounded-2xl border border-primary-200 bg-primary-50 p-4 sm:col-span-2">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-500">
                 Selected project
               </p>
               <p className="mt-2 truncate text-lg font-semibold text-primary-950">
-                {selectedProject?.name ?? activeProject?.name ?? 'Not detected'}
+                {selectedProjectName}
               </p>
               <p className="mt-1 truncate text-xs text-primary-600">
-                {selectedProject?.path ??
-                  activeProject?.path ??
-                  'Choose workspace in Files/Workspace first.'}
+                {selectedProjectPath}
               </p>
             </div>
           </div>
@@ -566,8 +587,8 @@ export function ProjectsScreen() {
                   Project dashboard ready
                 </p>
                 <p className="mt-1 text-xs text-primary-600">
-                  Review local context and launch Conductor with a prefilled
-                  mission draft for {selectedProject.name}.
+                  Review local context and open Conductor with a prefilled
+                  mission draft for {selectedProjectName}.
                 </p>
               </div>
               <Button
@@ -575,7 +596,7 @@ export function ProjectsScreen() {
                 onClick={() => startProjectMission(selectedProject)}
                 className="shrink-0 bg-accent-500 text-primary-950 hover:bg-accent-400"
               >
-                Start mission
+                Open in Conductor
                 <HugeiconsIcon
                   icon={ArrowRight01Icon}
                   size={16}
@@ -622,6 +643,8 @@ export function ProjectsScreen() {
                 selected={selectedProject?.id === project.id}
                 onSelect={() => setSelectedProjectId(project.id)}
                 onStartMission={() => startProjectMission(project)}
+                onMakeActive={() => selectProjectMutation.mutate(project.id)}
+                onOpenTrace={openMissionTrace}
               />
             ))}
           </div>

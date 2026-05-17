@@ -70,42 +70,46 @@ describe('buildProjectRegistry', () => {
     const { buildProjectRegistry } = await import('./project-registry')
     const registry = await buildProjectRegistry()
 
-    expect(registry.projects).toHaveLength(1)
-    expect(registry.activeProjectId).toBe(registry.projects[0].id)
-    expect(registry.projects[0]).toMatchObject({
+    const activeProject = registry.projects.find(
+      (project) => project.path === workspaceDir,
+    )
+    expect(activeProject).toBeDefined()
+    expect(registry.activeProjectId).toBe(activeProject?.id)
+    expect(activeProject).toMatchObject({
       name: workspaceDir.split('/').at(-1),
       path: workspaceDir,
+      source: 'discovered',
       active: true,
       gitRemote: 'git@github.com:acme/demo.git',
       gitBranch: 'master',
     })
-    expect(registry.projects[0].status).toMatchObject({
+    expect(activeProject?.status).toMatchObject({
       gitDirty: true,
       changedFiles: 1,
       lastCommit: expect.any(String),
       lastCommitAt: expect.any(String),
     })
-    expect(registry.projects[0].contextPreview.summary).toContain(
+    expect(activeProject?.contextPreview.summary).toContain(
       `Path: ${workspaceDir}`,
     )
-    expect(registry.projects[0].contextPreview.summary).toContain(
+    expect(activeProject?.contextPreview.summary).toContain(
       'Stack: not detected',
     )
-    expect(registry.projects[0].contextPreview.files[0]).toMatchObject({
+    expect(activeProject?.contextPreview.files[0]).toMatchObject({
       name: 'AGENTS.md',
     })
-    expect(registry.projects[0].instructionFiles[0]).toMatchObject({
+    expect(activeProject?.instructionFiles[0]).toMatchObject({
       name: 'AGENTS.md',
       path: join(workspaceDir, 'AGENTS.md'),
     })
-    expect(registry.projects[0].instructionFiles[0].excerpt).toContain(
+    expect(activeProject?.instructionFiles[0].excerpt).toContain(
       'Follow project instructions',
     )
-    expect(registry.projects[0].readme?.excerpt).toContain('Demo Project')
+    expect(activeProject?.readme?.excerpt).toContain('Demo Project')
 
     const { buildProjectContextPromptBlock } =
       await import('./project-registry')
-    const promptBlock = buildProjectContextPromptBlock(registry.projects[0])
+    const promptBlock = buildProjectContextPromptBlock(activeProject!)
     expect(promptBlock).toContain('## Active Project Context')
     expect(promptBlock).toContain(`Path: ${workspaceDir}`)
     expect(promptBlock).toContain('git@github.com:acme/demo.git')
