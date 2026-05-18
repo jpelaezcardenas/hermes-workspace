@@ -72,6 +72,7 @@ export type MultiAgentTask = {
   branchName?: string | null
   worktreePath?: string | null
   latestRunId?: string | null
+  finalSummary?: string | null
   createdAt: string
   updatedAt: string
 }

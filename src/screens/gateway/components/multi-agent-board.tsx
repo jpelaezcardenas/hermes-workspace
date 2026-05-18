@@ -15,12 +15,13 @@ import type {
   MultiAgentProfile,
   MultiAgentProject,
   MultiAgentTask,
-  type MultiAgentEvent,
-  type MultiAgentValidation,
-  type MultiAgentApproval,
-  type MultiAgentApprovalStatus,
-  type MultiAgentArtifact,
-  type MultiAgentValidationType,
+  MultiAgentRun,
+  MultiAgentEvent,
+  MultiAgentValidation,
+  MultiAgentApproval,
+  MultiAgentApprovalStatus,
+  MultiAgentArtifact,
+  MultiAgentValidationType,
 } from '../../../server/multi-agent/types'
 import {
   buildMultiAgentBoardColumns,
@@ -42,6 +43,7 @@ type TaskValidationResponse = { ok?: boolean; validation?: MultiAgentValidation;
 type ApprovalsResponse = { ok?: boolean; approvals?: MultiAgentApproval[]; error?: string }
 type ApprovalResponse = { ok?: boolean; approval?: MultiAgentApproval; error?: string }
 type TaskPrResponse = { ok?: boolean; pr?: { url: string; artifactId: string }; approval?: MultiAgentApproval; artifact?: MultiAgentArtifact; error?: string }
+type SaveSummaryResponse = { ok?: boolean; task?: MultiAgentTask; run?: MultiAgentRun; obsidian?: { path: string }; error?: string }
 
 type CreateTaskDraft = {
   projectId: string
@@ -174,6 +176,16 @@ async function createMultiAgentTaskPr(input: { taskId: string; title: string; bo
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ title: input.title, body: input.body }),
+    }),
+  )
+}
+
+async function saveMultiAgentTaskSummary(input: { taskId: string; summary: string; saveToObsidian: boolean }): Promise<SaveSummaryResponse> {
+  return readJson<SaveSummaryResponse>(
+    await fetch(`/api/ma/tasks/${encodeURIComponent(input.taskId)}/save-summary`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ summary: input.summary, saveToObsidian: input.saveToObsidian }),
     }),
   )
 }
@@ -336,6 +348,10 @@ export function MultiAgentBoard() {
   const [creatingPr, setCreatingPr] = useState(false)
   const [prError, setPrError] = useState<string | null>(null)
   const [prArtifactsByTaskId, setPrArtifactsByTaskId] = useState<Record<string, MultiAgentArtifact[]>>({})
+  const [summarySaving, setSummarySaving] = useState(false)
+  const [summarySaveError, setSummarySaveError] = useState<string | null>(null)
+  const [summarySavedPathByTaskId, setSummarySavedPathByTaskId] = useState<Record<string, string>>({})
+  const [runSummariesByTaskId, setRunSummariesByTaskId] = useState<Record<string, string>>({})
   const [mutationError, setMutationError] = useState<string | null>(null)
 
   const projectsQuery = useQuery({ queryKey: ['ma', 'projects'], queryFn: fetchMultiAgentProjects, staleTime: 30_000 })
@@ -374,6 +390,10 @@ export function MultiAgentBoard() {
   const selectedTaskEvents = selectedTaskEventsQuery.data ?? []
   const selectedTaskValidations = selectedTaskValidationsQuery.data ?? []
   const selectedTaskPrArtifacts = selectedTask ? (prArtifactsByTaskId[selectedTask.id] ?? []) : []
+  const selectedTaskFinalSummary = selectedTask
+    ? (runSummariesByTaskId[selectedTask.id] ?? selectedTask.finalSummary ?? null)
+    : null
+  const selectedTaskSummarySavedPath = selectedTask ? (summarySavedPathByTaskId[selectedTask.id] ?? null) : null
 
   const createMutation = useMutation({
     mutationFn: createMultiAgentTask,
@@ -450,6 +470,27 @@ export function MultiAgentBoard() {
     },
     onError: (error) => setPrError(error instanceof Error ? error.message : 'Failed to create PR'),
     onSettled: () => setCreatingPr(false),
+  })
+
+  const summaryMutation = useMutation({
+    mutationFn: saveMultiAgentTaskSummary,
+    onMutate: () => {
+      setSummarySaving(true)
+      setSummarySaveError(null)
+    },
+    onSuccess: (response, input) => {
+      if (response.error) setSummarySaveError(response.error)
+      if (response.run?.summary) {
+        setRunSummariesByTaskId((prev) => ({ ...prev, [input.taskId]: response.run!.summary ?? input.summary }))
+      }
+      if (response.obsidian?.path) {
+        setSummarySavedPathByTaskId((prev) => ({ ...prev, [input.taskId]: response.obsidian!.path }))
+      }
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks', input.taskId, 'events'] })
+    },
+    onError: (error) => setSummarySaveError(error instanceof Error ? error.message : 'Failed to save summary'),
+    onSettled: () => setSummarySaving(false),
   })
 
   const loading = projectsQuery.isLoading || profilesQuery.isLoading || tasksQuery.isLoading
@@ -539,6 +580,11 @@ export function MultiAgentBoard() {
           validationRunningType={validationRunningType}
           validationError={validationError ?? (selectedTaskValidationsQuery.error instanceof Error ? selectedTaskValidationsQuery.error.message : null)}
           onValidate={(type) => selectedTask ? validationMutation.mutate({ taskId: selectedTask.id, type }) : undefined}
+          finalSummary={selectedTaskFinalSummary}
+          summarySaving={summarySaving}
+          summarySaveError={summarySaveError}
+          summarySavedPath={selectedTaskSummarySavedPath}
+          onSaveSummary={() => selectedTask && selectedTaskFinalSummary ? summaryMutation.mutate({ taskId: selectedTask.id, summary: selectedTaskFinalSummary, saveToObsidian: true }) : undefined}
         />
       </div>
 

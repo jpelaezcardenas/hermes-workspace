@@ -100,6 +100,21 @@ function validation(overrides: Partial<MultiAgentValidation> = {}): MultiAgentVa
   }
 }
 
+function summaryProps(overrides: Partial<React.ComponentProps<typeof MultiAgentTaskDetail>> = {}) {
+  return {
+    task: task(),
+    projects: [project],
+    profiles: [profile],
+    events: [event()],
+    finalSummary: 'Implemented memory hooks and saved context.',
+    summarySaving: false,
+    summarySaveError: null,
+    summarySavedPath: null,
+    onSaveSummary: () => undefined,
+    ...overrides,
+  }
+}
+
 describe('MultiAgentValidationPanel', () => {
   it('renders validation commands and latest validation results', () => {
     const html = renderToStaticMarkup(
@@ -184,5 +199,23 @@ describe('MultiAgentTaskDetail', () => {
     )
 
     expect(html).toContain('Select a task to inspect')
+  })
+
+  it('renders final summary and optional Obsidian save controls', () => {
+    const html = renderToStaticMarkup(<MultiAgentTaskDetail {...summaryProps()} />)
+
+    expect(html).toContain('Final Summary')
+    expect(html).toContain('Implemented memory hooks and saved context.')
+    expect(html).toContain('Save summary to Obsidian')
+  })
+
+  it('renders summary save states and saved path', () => {
+    const saving = renderToStaticMarkup(<MultiAgentTaskDetail {...summaryProps({ summarySaving: true })} />)
+    const saved = renderToStaticMarkup(<MultiAgentTaskDetail {...summaryProps({ summarySavedPath: '/vault/Hermes/Multi-Agent Runs/task-1.md' })} />)
+    const error = renderToStaticMarkup(<MultiAgentTaskDetail {...summaryProps({ summarySaveError: 'Cannot write note' })} />)
+
+    expect(saving).toContain('Saving summary…')
+    expect(saved).toContain('/vault/Hermes/Multi-Agent Runs/task-1.md')
+    expect(error).toContain('Cannot write note')
   })
 })

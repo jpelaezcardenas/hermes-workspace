@@ -66,6 +66,7 @@ type CreateRunInput = {
   status?: MultiAgentRunStatus
   pid?: number | null
   sessionId?: string | null
+  summary?: string | null
 }
 
 type CreateApprovalInput = {
@@ -260,6 +261,7 @@ export function createRun(store: MultiAgentStore, input: CreateRunInput): MultiA
       status: input.status ?? 'queued',
       pid: input.pid,
       sessionId: input.sessionId,
+      summary: input.summary,
       startedAt: null,
       finishedAt: null,
     }

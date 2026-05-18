@@ -22,6 +22,11 @@ type MultiAgentTaskDetailProps = {
   validationRunningType?: MultiAgentValidationType | null
   validationError?: string | null
   onValidate?: (type: MultiAgentValidationType) => void
+  finalSummary?: string | null
+  summarySaving?: boolean
+  summarySaveError?: string | null
+  summarySavedPath?: string | null
+  onSaveSummary?: () => void
 }
 
 function projectLabel(projects: MultiAgentProject[], id: string): string {
@@ -83,6 +88,11 @@ export function MultiAgentTaskDetail({
   validationRunningType = null,
   validationError = null,
   onValidate = () => undefined,
+  finalSummary = null,
+  summarySaving = false,
+  summarySaveError = null,
+  summarySavedPath = null,
+  onSaveSummary = () => undefined,
 }: MultiAgentTaskDetailProps) {
   if (!task) {
     return (
@@ -139,6 +149,24 @@ export function MultiAgentTaskDetail({
             onValidate={onValidate}
           />
         </section>
+        {finalSummary ? (
+          <section>
+            <div className="flex items-center justify-between gap-3">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Final Summary</h4>
+              <button
+                type="button"
+                disabled={summarySaving}
+                onClick={onSaveSummary}
+                className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card2)] px-2.5 py-1 text-[11px] font-semibold text-[var(--theme-text)] hover:border-[var(--theme-accent)] disabled:opacity-50"
+              >
+                {summarySaving ? 'Saving summary…' : 'Save summary to Obsidian'}
+              </button>
+            </div>
+            <p className="mt-2 whitespace-pre-wrap rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-sm text-[var(--theme-text)]">{finalSummary}</p>
+            {summarySavedPath ? <p className="mt-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">Saved to {summarySavedPath}</p> : null}
+            {summarySaveError ? <p className="mt-2 rounded-xl border border-red-400/35 bg-red-500/10 px-3 py-2 text-xs text-red-300">{summarySaveError}</p> : null}
+          </section>
+        ) : null}
         <section>
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Events / Live Log</h4>
           {events.length ? (
