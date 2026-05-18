@@ -7,6 +7,7 @@ import { createMultiAgentStore, createRun, createTask, getTask, updateTask } fro
 import type { MultiAgentProfile, MultiAgentProject } from './types'
 import {
   buildHermesWorkerPrompt,
+  buildHermesWorkerArgs,
   launchHermesWorker,
   waitForHermesWorkerRun,
 } from './hermes-worker-runtime'
@@ -41,6 +42,42 @@ function project(repoPath: string): MultiAgentProject {
 }
 
 describe('hermes worker runtime', () => {
+  it('builds Hermes oneshot defaults with prompt, skills, toolsets, model, and no yolo bypass', () => {
+    const tempRoot = mkdtempSync(join(tmpdir(), 'hermes-runtime-defaults-'))
+    try {
+      const store = createMultiAgentStore({ stateFile: join(tempRoot, 'state.json'), now: () => now, id: () => 'defaults' })
+      const task = updateTask(
+        store,
+        createTask(store, {
+          projectId: 'workspace',
+          title: 'Check defaults',
+          description: 'Launch with default Hermes args',
+          assigneeProfileId: 'backend-engineer',
+          workPacket: 'Print argv',
+          acceptanceCriteria: ['no yolo bypass'],
+        }).id,
+        { worktreePath: tempRoot, branchName: 'hermes/task-defaults', status: 'ready' },
+      )
+      const workerProfile = { ...profile(), model: 'test/model' }
+      const prompt = buildHermesWorkerPrompt({ task, project: project(tempRoot), profile: workerProfile })
+
+      const args = buildHermesWorkerArgs(prompt, workerProfile)
+
+      expect(args[0]).toBe('--oneshot')
+      expect(args[1]).toContain('Task: Check defaults')
+      expect(args).toContain('--accept-hooks')
+      expect(args).toContain('--skills')
+      expect(args).toContain('test-driven-development')
+      expect(args).toContain('--toolsets')
+      expect(args).toContain('terminal,file')
+      expect(args).toContain('--model')
+      expect(args).toContain('test/model')
+      expect(args).not.toContain('--yolo')
+    } finally {
+      rmSync(tempRoot, { recursive: true, force: true })
+    }
+  })
+
   it('builds a constrained work packet prompt', () => {
     const tempRoot = mkdtempSync(join(tmpdir(), 'hermes-runtime-prompt-'))
     try {

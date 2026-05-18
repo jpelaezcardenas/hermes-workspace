@@ -90,7 +90,7 @@ Rules:
 `
 }
 
-function defaultHermesArgs(prompt: string, profile: MultiAgentProfile): string[] {
+export function buildHermesWorkerArgs(prompt: string, profile: MultiAgentProfile): string[] {
   const args = ['--oneshot', prompt, '--accept-hooks']
   if (profile.skills.length) {
     args.push('--skills', profile.skills.join(','))
@@ -107,7 +107,7 @@ function defaultHermesArgs(prompt: string, profile: MultiAgentProfile): string[]
 export function launchHermesWorker(input: LaunchHermesWorkerInput): HermesWorkerRunHandle {
   const prompt = buildHermesWorkerPrompt(input)
   const command = input.command ?? 'hermes'
-  const args = input.args ?? defaultHermesArgs(prompt, input.profile)
+  const args = input.args ?? buildHermesWorkerArgs(prompt, input.profile)
   const worktreePath = input.task.worktreePath ?? input.project.repoPath
 
   updateRun(input.store, input.run.id, {
