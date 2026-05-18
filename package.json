@@ -17,6 +17,7 @@
     "test": "vitest run",
     "smoke:managed": "node scripts/managed-companion-smoke.mjs",
     "smoke:electron": "HERMES_ELECTRON_SMOKE=1 NODE_ENV=production electron .",
+    "smoke:multi-agent": "node scripts/multi-agent-mvp-smoke.mjs",
     "playground:ws": "node scripts/playground-ws.mjs",
     "lint": "eslint",
     "format": "prettier",
