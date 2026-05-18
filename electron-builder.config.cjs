@@ -11,6 +11,7 @@ module.exports = {
     'dist/client/**/*',
     'dist/server/**/*',
     'electron/main.cjs',
+    'electron/shell-config.cjs',
     'electron/preload.cjs',
     'electron/prod-server.cjs',
     'electron/server-bundle.cjs',

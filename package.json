@@ -16,6 +16,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "smoke:managed": "node scripts/managed-companion-smoke.mjs",
+    "smoke:electron": "HERMES_ELECTRON_SMOKE=1 NODE_ENV=production electron .",
     "playground:ws": "node scripts/playground-ws.mjs",
     "lint": "eslint",
     "format": "prettier",

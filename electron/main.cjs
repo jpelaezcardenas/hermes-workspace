@@ -3,6 +3,7 @@ const { join } = require('path')
 const { existsSync } = require('fs')
 const { spawn, execSync } = require('child_process')
 const http = require('http')
+const { DEFAULT_APP_PORT, getAppUrl, getSmokeMode } = require('./shell-config.cjs')
 let autoUpdater = null
 try {
   ;({ autoUpdater } = require('electron-updater'))
@@ -13,7 +14,7 @@ try {
   )
 }
 
-const APP_PORT = 3847
+const APP_PORT = DEFAULT_APP_PORT
 const HERMES_GATEWAY_URL = 'http://127.0.0.1:8642/health'
 const HERMES_DASHBOARD_URL = 'http://127.0.0.1:9119/api/status'
 const HERMES_INSTALL_SCRIPT =
@@ -239,13 +240,6 @@ async function ensureHermesBackend() {
   }
 }
 
-function getAppUrl() {
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://127.0.0.1:3002/?desktop=1'
-  }
-  return `http://127.0.0.1:${localServerPort}/?desktop=1`
-}
-
 function startLocalServer() {
   return new Promise((resolve, reject) => {
     let resolved = false
@@ -342,7 +336,14 @@ async function createWindow() {
     return { action: 'deny' }
   })
 
-  await mainWindow.loadURL(getAppUrl())
+  await mainWindow.loadURL(getAppUrl(process.env, localServerPort))
+
+  if (getSmokeMode(process.env)) {
+    console.log('[hermes-workspace] Electron smoke mode loaded app shell')
+    app.quit()
+    return
+  }
+
   void ensureHermesBackend()
   setTimeout(() => {
     void checkForAppUpdates()
