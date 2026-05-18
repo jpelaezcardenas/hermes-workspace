@@ -160,6 +160,7 @@ import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 import { Route as ApiMaTasksTaskIdValidateRouteImport } from './routes/api/ma/tasks.$taskId.validate'
 import { Route as ApiMaTasksTaskIdStartRouteImport } from './routes/api/ma/tasks.$taskId.start'
+import { Route as ApiMaTasksTaskIdPrRouteImport } from './routes/api/ma/tasks.$taskId.pr'
 import { Route as ApiMaTasksTaskIdEventsRouteImport } from './routes/api/ma/tasks.$taskId.events'
 import { Route as ApiMaTasksTaskIdDiffRouteImport } from './routes/api/ma/tasks.$taskId.diff'
 import { Route as ApiMaApprovalsApprovalIdResolveRouteImport } from './routes/api/ma/approvals.$approvalId.resolve'
@@ -925,6 +926,11 @@ const ApiMaTasksTaskIdStartRoute = ApiMaTasksTaskIdStartRouteImport.update({
   path: '/$taskId/start',
   getParentRoute: () => ApiMaTasksRoute,
 } as any)
+const ApiMaTasksTaskIdPrRoute = ApiMaTasksTaskIdPrRouteImport.update({
+  id: '/$taskId/pr',
+  path: '/$taskId/pr',
+  getParentRoute: () => ApiMaTasksRoute,
+} as any)
 const ApiMaTasksTaskIdEventsRoute = ApiMaTasksTaskIdEventsRouteImport.update({
   id: '/$taskId/events',
   path: '/$taskId/events',
@@ -1095,6 +1101,7 @@ export interface FileRoutesByFullPath {
   '/api/ma/approvals/$approvalId/resolve': typeof ApiMaApprovalsApprovalIdResolveRoute
   '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
+  '/api/ma/tasks/$taskId/pr': typeof ApiMaTasksTaskIdPrRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
   '/api/ma/tasks/$taskId/validate': typeof ApiMaTasksTaskIdValidateRoute
 }
@@ -1250,6 +1257,7 @@ export interface FileRoutesByTo {
   '/api/ma/approvals/$approvalId/resolve': typeof ApiMaApprovalsApprovalIdResolveRoute
   '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
+  '/api/ma/tasks/$taskId/pr': typeof ApiMaTasksTaskIdPrRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
   '/api/ma/tasks/$taskId/validate': typeof ApiMaTasksTaskIdValidateRoute
 }
@@ -1407,6 +1415,7 @@ export interface FileRoutesById {
   '/api/ma/approvals/$approvalId/resolve': typeof ApiMaApprovalsApprovalIdResolveRoute
   '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
+  '/api/ma/tasks/$taskId/pr': typeof ApiMaTasksTaskIdPrRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
   '/api/ma/tasks/$taskId/validate': typeof ApiMaTasksTaskIdValidateRoute
 }
@@ -1565,6 +1574,7 @@ export interface FileRouteTypes {
     | '/api/ma/approvals/$approvalId/resolve'
     | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
+    | '/api/ma/tasks/$taskId/pr'
     | '/api/ma/tasks/$taskId/start'
     | '/api/ma/tasks/$taskId/validate'
   fileRoutesByTo: FileRoutesByTo
@@ -1720,6 +1730,7 @@ export interface FileRouteTypes {
     | '/api/ma/approvals/$approvalId/resolve'
     | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
+    | '/api/ma/tasks/$taskId/pr'
     | '/api/ma/tasks/$taskId/start'
     | '/api/ma/tasks/$taskId/validate'
   id:
@@ -1876,6 +1887,7 @@ export interface FileRouteTypes {
     | '/api/ma/approvals/$approvalId/resolve'
     | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
+    | '/api/ma/tasks/$taskId/pr'
     | '/api/ma/tasks/$taskId/start'
     | '/api/ma/tasks/$taskId/validate'
   fileRoutesById: FileRoutesById
@@ -3063,6 +3075,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMaTasksTaskIdStartRouteImport
       parentRoute: typeof ApiMaTasksRoute
     }
+    '/api/ma/tasks/$taskId/pr': {
+      id: '/api/ma/tasks/$taskId/pr'
+      path: '/$taskId/pr'
+      fullPath: '/api/ma/tasks/$taskId/pr'
+      preLoaderRoute: typeof ApiMaTasksTaskIdPrRouteImport
+      parentRoute: typeof ApiMaTasksRoute
+    }
     '/api/ma/tasks/$taskId/events': {
       id: '/api/ma/tasks/$taskId/events'
       path: '/$taskId/events'
@@ -3288,6 +3307,7 @@ const ApiMaApprovalsRouteWithChildren = ApiMaApprovalsRoute._addFileChildren(
 interface ApiMaTasksRouteChildren {
   ApiMaTasksTaskIdDiffRoute: typeof ApiMaTasksTaskIdDiffRoute
   ApiMaTasksTaskIdEventsRoute: typeof ApiMaTasksTaskIdEventsRoute
+  ApiMaTasksTaskIdPrRoute: typeof ApiMaTasksTaskIdPrRoute
   ApiMaTasksTaskIdStartRoute: typeof ApiMaTasksTaskIdStartRoute
   ApiMaTasksTaskIdValidateRoute: typeof ApiMaTasksTaskIdValidateRoute
 }
@@ -3295,6 +3315,7 @@ interface ApiMaTasksRouteChildren {
 const ApiMaTasksRouteChildren: ApiMaTasksRouteChildren = {
   ApiMaTasksTaskIdDiffRoute: ApiMaTasksTaskIdDiffRoute,
   ApiMaTasksTaskIdEventsRoute: ApiMaTasksTaskIdEventsRoute,
+  ApiMaTasksTaskIdPrRoute: ApiMaTasksTaskIdPrRoute,
   ApiMaTasksTaskIdStartRoute: ApiMaTasksTaskIdStartRoute,
   ApiMaTasksTaskIdValidateRoute: ApiMaTasksTaskIdValidateRoute,
 }

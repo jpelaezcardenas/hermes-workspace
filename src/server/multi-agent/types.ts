@@ -170,7 +170,7 @@ export type MultiAgentValidation = {
   finishedAt?: string | null
 }
 
-export type MultiAgentArtifactType = 'diff' | 'log' | 'pr' | 'screenshot' | 'report' | 'validation-output'
+export type MultiAgentArtifactType = 'diff' | 'log' | 'pr' | 'screenshot' | 'report' | 'validation-output' | 'github-pr'
 
 export type MultiAgentArtifact = {
   id: string

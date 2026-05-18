@@ -19,6 +19,7 @@ import type {
   type MultiAgentValidation,
   type MultiAgentApproval,
   type MultiAgentApprovalStatus,
+  type MultiAgentArtifact,
   type MultiAgentValidationType,
 } from '../../../server/multi-agent/types'
 import {
@@ -27,6 +28,7 @@ import {
   parseAcceptanceCriteriaDraft,
 } from './multi-agent-board-model'
 import { MultiAgentApprovalsPanel } from './multi-agent-approvals-panel'
+import { MultiAgentPrPanel } from './multi-agent-pr-panel'
 import { MultiAgentTaskDetail } from './multi-agent-task-detail'
 
 type ProjectsResponse = { ok?: boolean; projects?: MultiAgentProject[]; error?: string }
@@ -39,6 +41,7 @@ type TaskValidationsResponse = { ok?: boolean; validations?: MultiAgentValidatio
 type TaskValidationResponse = { ok?: boolean; validation?: MultiAgentValidation; error?: string }
 type ApprovalsResponse = { ok?: boolean; approvals?: MultiAgentApproval[]; error?: string }
 type ApprovalResponse = { ok?: boolean; approval?: MultiAgentApproval; error?: string }
+type TaskPrResponse = { ok?: boolean; pr?: { url: string; artifactId: string }; approval?: MultiAgentApproval; artifact?: MultiAgentArtifact; error?: string }
 
 type CreateTaskDraft = {
   projectId: string
@@ -163,6 +166,16 @@ async function resolveMultiAgentApproval(input: {
   )
   if (!data.approval) throw new Error('Approval was not returned')
   return data.approval
+}
+
+async function createMultiAgentTaskPr(input: { taskId: string; title: string; body: string }): Promise<TaskPrResponse> {
+  return readJson<TaskPrResponse>(
+    await fetch(`/api/ma/tasks/${encodeURIComponent(input.taskId)}/pr`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: input.title, body: input.body }),
+    }),
+  )
 }
 
 function priorityClass(priority: MultiAgentPriority): string {
@@ -320,6 +333,9 @@ export function MultiAgentBoard() {
   const [validationError, setValidationError] = useState<string | null>(null)
   const [resolvingApprovalId, setResolvingApprovalId] = useState<string | null>(null)
   const [approvalError, setApprovalError] = useState<string | null>(null)
+  const [creatingPr, setCreatingPr] = useState(false)
+  const [prError, setPrError] = useState<string | null>(null)
+  const [prArtifactsByTaskId, setPrArtifactsByTaskId] = useState<Record<string, MultiAgentArtifact[]>>({})
   const [mutationError, setMutationError] = useState<string | null>(null)
 
   const projectsQuery = useQuery({ queryKey: ['ma', 'projects'], queryFn: fetchMultiAgentProjects, staleTime: 30_000 })
@@ -356,6 +372,8 @@ export function MultiAgentBoard() {
     retry: false,
   })
   const selectedTaskEvents = selectedTaskEventsQuery.data ?? []
+  const selectedTaskValidations = selectedTaskValidationsQuery.data ?? []
+  const selectedTaskPrArtifacts = selectedTask ? (prArtifactsByTaskId[selectedTask.id] ?? []) : []
 
   const createMutation = useMutation({
     mutationFn: createMultiAgentTask,
@@ -409,6 +427,31 @@ export function MultiAgentBoard() {
     onSettled: () => setResolvingApprovalId(null),
   })
 
+
+  const prMutation = useMutation({
+    mutationFn: createMultiAgentTaskPr,
+    onMutate: () => {
+      setCreatingPr(true)
+      setPrError(null)
+    },
+    onSuccess: (response, input) => {
+      if (response.error) setPrError(response.error)
+      if (response.approval) setPrError('Approval required before push/PR. Review it in the approvals queue.')
+      if (response.artifact) {
+        setPrError(null)
+        setPrArtifactsByTaskId((prev) => ({
+          ...prev,
+          [input.taskId]: [response.artifact!, ...(prev[input.taskId] ?? [])],
+        }))
+      }
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'approvals'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks', input.taskId, 'validations'] })
+    },
+    onError: (error) => setPrError(error instanceof Error ? error.message : 'Failed to create PR'),
+    onSettled: () => setCreatingPr(false),
+  })
+
   const loading = projectsQuery.isLoading || profilesQuery.isLoading || tasksQuery.isLoading
   const loadError = projectsQuery.error ?? profilesQuery.error ?? tasksQuery.error
 
@@ -442,6 +485,16 @@ export function MultiAgentBoard() {
             error={approvalError ?? (approvalsQuery.error instanceof Error ? approvalsQuery.error.message : null)}
             onResolve={(approvalId, decision) => approvalMutation.mutate({ approvalId, decision })}
           />
+          {selectedTask ? (
+            <MultiAgentPrPanel
+              task={selectedTask}
+              validations={selectedTaskValidations}
+              prArtifacts={selectedTaskPrArtifacts}
+              creating={creatingPr}
+              error={prError}
+              onCreatePr={() => prMutation.mutate({ taskId: selectedTask.id, title: selectedTask.title, body: selectedTask.workPacket || selectedTask.description })}
+            />
+          ) : null}
           <div className="overflow-x-auto pb-2">
             <div className="grid min-w-[1120px] grid-cols-8 gap-3">
             {columns.map((column) => (
@@ -482,7 +535,7 @@ export function MultiAgentBoard() {
           diff={selectedTaskDiffQuery.data ?? null}
           diffLoading={selectedTaskDiffQuery.isLoading || selectedTaskDiffQuery.isFetching}
           diffError={selectedTaskDiffQuery.error instanceof Error ? selectedTaskDiffQuery.error.message : null}
-          validations={selectedTaskValidationsQuery.data ?? []}
+          validations={selectedTaskValidations}
           validationRunningType={validationRunningType}
           validationError={validationError ?? (selectedTaskValidationsQuery.error instanceof Error ? selectedTaskValidationsQuery.error.message : null)}
           onValidate={(type) => selectedTask ? validationMutation.mutate({ taskId: selectedTask.id, type }) : undefined}
