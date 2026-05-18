@@ -873,56 +873,15 @@ export function DashboardScreen() {
         </button>
       </div>
       <div className="px-4 pt-14 md:pt-4 py-4 md:px-8 md:py-6 lg:px-10 space-y-5 pb-28">
-      {/* ── Header: brand lockup left, action cluster right.
-           Iteration 010: dropped redundant "Dashboard" eyebrow (the
-           page IS the dashboard); promoted "Hermes Workspace" to
-           the primary heading at a larger weight. Logo bumped from
-           36px → 44px and gets a soft accent glow + ring so the
-           lockup commands the left side instead of feeling like
-           filler before the action cluster. Kept anchored left
-           (not centered) on purpose: ops dashboards put brand left
-           + actions right because that's the spatial hierarchy
-           operators expect (Linear, Vercel, Datadog all do this). */}
+      {/* ── Header: CHNLSYNC brand lockup left, action cluster right. */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-3">
-          <span
-            className="relative inline-flex shrink-0 items-center justify-center rounded-xl border"
-            style={{
-              width: 44,
-              height: 44,
-              borderColor:
-                'color-mix(in srgb, var(--theme-accent) 35%, var(--theme-border))',
-              background:
-                'linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 14%, var(--theme-card)), var(--theme-card))',
-              boxShadow:
-                '0 0 0 4px color-mix(in srgb, var(--theme-accent) 6%, transparent)',
-            }}
-          >
-            <img
-              src="/claude-avatar.webp"
-              alt="Hermes Workspace logo"
-              className="size-8 rounded-md"
-              style={{ background: 'transparent' }}
-            />
-          </span>
-          {/* Iter 011: dropped the 'Operator console · vX.Y.Z'
-              eyebrow. The gateway version is already on the OpsStrip
-              (♦ GATEWAY V0.12.0), so the eyebrow was duplicating it.
-              Single bold lockup feels cleaner; vertical centering on
-              the lockup matches the height of the action cluster on
-              the right so they don't visually drift. */}
-          <div className="flex flex-col justify-center">
-            <h1
-              className="text-2xl font-bold tracking-tight"
-              style={{
-                color: 'var(--theme-text)',
-                letterSpacing: '-0.015em',
-                lineHeight: 1.1,
-              }}
-            >
-              Hermes Workspace
-            </h1>
-          </div>
+          <img
+            src="/chnlsync-logo.svg"
+            alt="CHNLSYNC"
+            className="h-12 w-auto md:h-14"
+            style={{ imageRendering: 'auto' }}
+          />
         </div>
         {/* Action row: hierarchy per Hermes Agent review.
            New Chat is primary (full button + accent), Terminal +
