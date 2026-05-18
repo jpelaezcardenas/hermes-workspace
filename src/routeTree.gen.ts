@@ -140,6 +140,7 @@ import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
 import { Route as ApiMaTasksRouteImport } from './routes/api/ma/tasks'
 import { Route as ApiMaProjectsRouteImport } from './routes/api/ma/projects'
 import { Route as ApiMaProfilesRouteImport } from './routes/api/ma/profiles'
+import { Route as ApiMaApprovalsRouteImport } from './routes/api/ma/approvals'
 import { Route as ApiKnowledgeSyncRouteImport } from './routes/api/knowledge/sync'
 import { Route as ApiKnowledgeSearchRouteImport } from './routes/api/knowledge/search'
 import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/read'
@@ -157,9 +158,11 @@ import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
+import { Route as ApiMaTasksTaskIdValidateRouteImport } from './routes/api/ma/tasks.$taskId.validate'
 import { Route as ApiMaTasksTaskIdStartRouteImport } from './routes/api/ma/tasks.$taskId.start'
 import { Route as ApiMaTasksTaskIdEventsRouteImport } from './routes/api/ma/tasks.$taskId.events'
 import { Route as ApiMaTasksTaskIdDiffRouteImport } from './routes/api/ma/tasks.$taskId.diff'
+import { Route as ApiMaApprovalsApprovalIdResolveRouteImport } from './routes/api/ma/approvals.$approvalId.resolve'
 
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
@@ -817,6 +820,11 @@ const ApiMaProfilesRoute = ApiMaProfilesRouteImport.update({
   path: '/api/ma/profiles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMaApprovalsRoute = ApiMaApprovalsRouteImport.update({
+  id: '/api/ma/approvals',
+  path: '/api/ma/approvals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiKnowledgeSyncRoute = ApiKnowledgeSyncRouteImport.update({
   id: '/api/knowledge/sync',
   path: '/api/knowledge/sync',
@@ -906,6 +914,12 @@ const ApiHermesworldReservationsConfirmRoute =
     path: '/confirm',
     getParentRoute: () => ApiHermesworldReservationsRoute,
   } as any)
+const ApiMaTasksTaskIdValidateRoute =
+  ApiMaTasksTaskIdValidateRouteImport.update({
+    id: '/$taskId/validate',
+    path: '/$taskId/validate',
+    getParentRoute: () => ApiMaTasksRoute,
+  } as any)
 const ApiMaTasksTaskIdStartRoute = ApiMaTasksTaskIdStartRouteImport.update({
   id: '/$taskId/start',
   path: '/$taskId/start',
@@ -921,6 +935,12 @@ const ApiMaTasksTaskIdDiffRoute = ApiMaTasksTaskIdDiffRouteImport.update({
   path: '/$taskId/diff',
   getParentRoute: () => ApiMaTasksRoute,
 } as any)
+const ApiMaApprovalsApprovalIdResolveRoute =
+  ApiMaApprovalsApprovalIdResolveRouteImport.update({
+    id: '/$approvalId/resolve',
+    path: '/$approvalId/resolve',
+    getParentRoute: () => ApiMaApprovalsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1033,6 +1053,7 @@ export interface FileRoutesByFullPath {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/ma/approvals': typeof ApiMaApprovalsRouteWithChildren
   '/api/ma/profiles': typeof ApiMaProfilesRoute
   '/api/ma/projects': typeof ApiMaProjectsRoute
   '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
@@ -1071,9 +1092,11 @@ export interface FileRoutesByFullPath {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/approvals/$approvalId/resolve': typeof ApiMaApprovalsApprovalIdResolveRoute
   '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
+  '/api/ma/tasks/$taskId/validate': typeof ApiMaTasksTaskIdValidateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1185,6 +1208,7 @@ export interface FileRoutesByTo {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/ma/approvals': typeof ApiMaApprovalsRouteWithChildren
   '/api/ma/profiles': typeof ApiMaProfilesRoute
   '/api/ma/projects': typeof ApiMaProjectsRoute
   '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
@@ -1223,9 +1247,11 @@ export interface FileRoutesByTo {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/approvals/$approvalId/resolve': typeof ApiMaApprovalsApprovalIdResolveRoute
   '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
+  '/api/ma/tasks/$taskId/validate': typeof ApiMaTasksTaskIdValidateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1339,6 +1365,7 @@ export interface FileRoutesById {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/ma/approvals': typeof ApiMaApprovalsRouteWithChildren
   '/api/ma/profiles': typeof ApiMaProfilesRoute
   '/api/ma/projects': typeof ApiMaProjectsRoute
   '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
@@ -1377,9 +1404,11 @@ export interface FileRoutesById {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/approvals/$approvalId/resolve': typeof ApiMaApprovalsApprovalIdResolveRoute
   '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
+  '/api/ma/tasks/$taskId/validate': typeof ApiMaTasksTaskIdValidateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1494,6 +1523,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/ma/approvals'
     | '/api/ma/profiles'
     | '/api/ma/projects'
     | '/api/ma/tasks'
@@ -1532,9 +1562,11 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/approvals/$approvalId/resolve'
     | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
     | '/api/ma/tasks/$taskId/start'
+    | '/api/ma/tasks/$taskId/validate'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1646,6 +1678,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/ma/approvals'
     | '/api/ma/profiles'
     | '/api/ma/projects'
     | '/api/ma/tasks'
@@ -1684,9 +1717,11 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/approvals/$approvalId/resolve'
     | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
     | '/api/ma/tasks/$taskId/start'
+    | '/api/ma/tasks/$taskId/validate'
   id:
     | '__root__'
     | '/'
@@ -1799,6 +1834,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/ma/approvals'
     | '/api/ma/profiles'
     | '/api/ma/projects'
     | '/api/ma/tasks'
@@ -1837,9 +1873,11 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/approvals/$approvalId/resolve'
     | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
     | '/api/ma/tasks/$taskId/start'
+    | '/api/ma/tasks/$taskId/validate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1947,6 +1985,7 @@ export interface RootRouteChildren {
   ApiKnowledgeReadRoute: typeof ApiKnowledgeReadRoute
   ApiKnowledgeSearchRoute: typeof ApiKnowledgeSearchRoute
   ApiKnowledgeSyncRoute: typeof ApiKnowledgeSyncRoute
+  ApiMaApprovalsRoute: typeof ApiMaApprovalsRouteWithChildren
   ApiMaProfilesRoute: typeof ApiMaProfilesRoute
   ApiMaProjectsRoute: typeof ApiMaProjectsRoute
   ApiMaTasksRoute: typeof ApiMaTasksRouteWithChildren
@@ -2884,6 +2923,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMaProfilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ma/approvals': {
+      id: '/api/ma/approvals'
+      path: '/api/ma/approvals'
+      fullPath: '/api/ma/approvals'
+      preLoaderRoute: typeof ApiMaApprovalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/knowledge/sync': {
       id: '/api/knowledge/sync'
       path: '/api/knowledge/sync'
@@ -3003,6 +3049,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesworldReservationsConfirmRouteImport
       parentRoute: typeof ApiHermesworldReservationsRoute
     }
+    '/api/ma/tasks/$taskId/validate': {
+      id: '/api/ma/tasks/$taskId/validate'
+      path: '/$taskId/validate'
+      fullPath: '/api/ma/tasks/$taskId/validate'
+      preLoaderRoute: typeof ApiMaTasksTaskIdValidateRouteImport
+      parentRoute: typeof ApiMaTasksRoute
+    }
     '/api/ma/tasks/$taskId/start': {
       id: '/api/ma/tasks/$taskId/start'
       path: '/$taskId/start'
@@ -3023,6 +3076,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/ma/tasks/$taskId/diff'
       preLoaderRoute: typeof ApiMaTasksTaskIdDiffRouteImport
       parentRoute: typeof ApiMaTasksRoute
+    }
+    '/api/ma/approvals/$approvalId/resolve': {
+      id: '/api/ma/approvals/$approvalId/resolve'
+      path: '/$approvalId/resolve'
+      fullPath: '/api/ma/approvals/$approvalId/resolve'
+      preLoaderRoute: typeof ApiMaApprovalsApprovalIdResolveRouteImport
+      parentRoute: typeof ApiMaApprovalsRoute
     }
   }
 }
@@ -3213,16 +3273,30 @@ const ApiHermesworldReservationsRouteWithChildren =
     ApiHermesworldReservationsRouteChildren,
   )
 
+interface ApiMaApprovalsRouteChildren {
+  ApiMaApprovalsApprovalIdResolveRoute: typeof ApiMaApprovalsApprovalIdResolveRoute
+}
+
+const ApiMaApprovalsRouteChildren: ApiMaApprovalsRouteChildren = {
+  ApiMaApprovalsApprovalIdResolveRoute: ApiMaApprovalsApprovalIdResolveRoute,
+}
+
+const ApiMaApprovalsRouteWithChildren = ApiMaApprovalsRoute._addFileChildren(
+  ApiMaApprovalsRouteChildren,
+)
+
 interface ApiMaTasksRouteChildren {
   ApiMaTasksTaskIdDiffRoute: typeof ApiMaTasksTaskIdDiffRoute
   ApiMaTasksTaskIdEventsRoute: typeof ApiMaTasksTaskIdEventsRoute
   ApiMaTasksTaskIdStartRoute: typeof ApiMaTasksTaskIdStartRoute
+  ApiMaTasksTaskIdValidateRoute: typeof ApiMaTasksTaskIdValidateRoute
 }
 
 const ApiMaTasksRouteChildren: ApiMaTasksRouteChildren = {
   ApiMaTasksTaskIdDiffRoute: ApiMaTasksTaskIdDiffRoute,
   ApiMaTasksTaskIdEventsRoute: ApiMaTasksTaskIdEventsRoute,
   ApiMaTasksTaskIdStartRoute: ApiMaTasksTaskIdStartRoute,
+  ApiMaTasksTaskIdValidateRoute: ApiMaTasksTaskIdValidateRoute,
 }
 
 const ApiMaTasksRouteWithChildren = ApiMaTasksRoute._addFileChildren(
@@ -3334,6 +3408,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiKnowledgeReadRoute: ApiKnowledgeReadRoute,
   ApiKnowledgeSearchRoute: ApiKnowledgeSearchRoute,
   ApiKnowledgeSyncRoute: ApiKnowledgeSyncRoute,
+  ApiMaApprovalsRoute: ApiMaApprovalsRouteWithChildren,
   ApiMaProfilesRoute: ApiMaProfilesRoute,
   ApiMaProjectsRoute: ApiMaProjectsRoute,
   ApiMaTasksRoute: ApiMaTasksRouteWithChildren,

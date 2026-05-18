@@ -1,8 +1,15 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import type { TaskDiffResult } from '../../../server/multi-agent/diff-manager'
-import type { MultiAgentEvent, MultiAgentProfile, MultiAgentProject, MultiAgentTask } from '../../../server/multi-agent/types'
+import type {
+  MultiAgentEvent,
+  MultiAgentProfile,
+  MultiAgentProject,
+  MultiAgentTask,
+  MultiAgentValidation,
+} from '../../../server/multi-agent/types'
 import { MultiAgentDiffPanel, MultiAgentTaskDetail } from './multi-agent-task-detail'
+import { MultiAgentValidationPanel } from './multi-agent-validation-panel'
 
 const now = '2026-05-18T00:00:00.000Z'
 
@@ -76,6 +83,59 @@ const changedDiff: TaskDiffResult = {
   stat: 'README.md | 2 +-\nnew-file.txt | untracked',
   diff: 'diff --git a/README.md b/README.md\n+# changed repo\ndiff --git a/new-file.txt b/new-file.txt\n+new file',
 }
+
+function validation(overrides: Partial<MultiAgentValidation> = {}): MultiAgentValidation {
+  return {
+    id: 'validation-1',
+    taskId: 'task-1',
+    type: 'test',
+    command: 'pnpm test',
+    status: 'passed',
+    exitCode: 0,
+    outputSummary: 'all tests passed',
+    outputArtifactId: 'artifact-1',
+    startedAt: now,
+    finishedAt: now,
+    ...overrides,
+  }
+}
+
+describe('MultiAgentValidationPanel', () => {
+  it('renders validation commands and latest validation results', () => {
+    const html = renderToStaticMarkup(
+      <MultiAgentValidationPanel
+        task={task()}
+        validations={[validation(), validation({ id: 'validation-2', type: 'build', command: 'pnpm build', status: 'failed', exitCode: 1, outputSummary: 'build failed' })]}
+        runningType={null}
+        error={null}
+        onValidate={() => undefined}
+      />,
+    )
+
+    expect(html).toContain('Run test')
+    expect(html).toContain('Run build')
+    expect(html).toContain('test')
+    expect(html).toContain('passed')
+    expect(html).toContain('all tests passed')
+    expect(html).toContain('build')
+    expect(html).toContain('failed')
+    expect(html).toContain('build failed')
+  })
+
+  it('disables validation controls until a worktree exists and shows running state', () => {
+    const noWorktree = renderToStaticMarkup(
+      <MultiAgentValidationPanel task={task({ worktreePath: null })} validations={[]} runningType={null} error={null} onValidate={() => undefined} />,
+    )
+    const running = renderToStaticMarkup(
+      <MultiAgentValidationPanel task={task()} validations={[]} runningType="test" error="validation unavailable" onValidate={() => undefined} />,
+    )
+
+    expect(noWorktree).toContain('Create or start a worktree before validation')
+    expect(noWorktree).toContain('disabled')
+    expect(running).toContain('Running test')
+    expect(running).toContain('validation unavailable')
+  })
+})
 
 describe('MultiAgentDiffPanel', () => {
   it('renders changed files, stat, and unified diff content', () => {

@@ -11,6 +11,7 @@ import type {
   MultiAgentRun,
   MultiAgentRunStatus,
   MultiAgentState,
+  MultiAgentValidation,
   MultiAgentTask,
   MultiAgentTaskStatus,
 } from './types'
@@ -82,6 +83,11 @@ type CreateArtifactInput = Omit<MultiAgentArtifact, 'id' | 'createdAt'>
 type TaskFilter = {
   projectId?: string
   status?: MultiAgentTaskStatus
+}
+
+type ApprovalFilter = {
+  taskId?: string
+  status?: MultiAgentApprovalStatus
 }
 
 function defaultNow(): string {
@@ -314,6 +320,28 @@ export function resolveApproval(
     state.approvals[approvalId] = resolved
     return resolved
   })
+}
+
+export function listApprovals(store: MultiAgentStore, filter: ApprovalFilter = {}): MultiAgentApproval[] {
+  const state = loadState(store.stateFile, { now: store.now })
+  return Object.values(state.approvals)
+    .filter((approval) => !filter.taskId || approval.taskId === filter.taskId)
+    .filter((approval) => !filter.status || approval.status === filter.status)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+}
+
+export function saveValidation(store: MultiAgentStore, validation: MultiAgentValidation): MultiAgentValidation {
+  return mutateState(store, (state) => {
+    state.validations[validation.id] = validation
+    return validation
+  })
+}
+
+export function listTaskValidations(store: MultiAgentStore, taskId: string): MultiAgentValidation[] {
+  const state = loadState(store.stateFile, { now: store.now })
+  return Object.values(state.validations)
+    .filter((validation) => validation.taskId === taskId)
+    .sort((a, b) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''))
 }
 
 export function createArtifact(store: MultiAgentStore, input: CreateArtifactInput): MultiAgentArtifact {

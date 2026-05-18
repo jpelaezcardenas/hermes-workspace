@@ -16,12 +16,17 @@ import type {
   MultiAgentProject,
   MultiAgentTask,
   type MultiAgentEvent,
+  type MultiAgentValidation,
+  type MultiAgentApproval,
+  type MultiAgentApprovalStatus,
+  type MultiAgentValidationType,
 } from '../../../server/multi-agent/types'
 import {
   buildMultiAgentBoardColumns,
   buildMultiAgentTaskMeta,
   parseAcceptanceCriteriaDraft,
 } from './multi-agent-board-model'
+import { MultiAgentApprovalsPanel } from './multi-agent-approvals-panel'
 import { MultiAgentTaskDetail } from './multi-agent-task-detail'
 
 type ProjectsResponse = { ok?: boolean; projects?: MultiAgentProject[]; error?: string }
@@ -30,6 +35,10 @@ type TasksResponse = { ok?: boolean; tasks?: MultiAgentTask[]; error?: string }
 type TaskResponse = { ok?: boolean; task?: MultiAgentTask; error?: string }
 type TaskEventsResponse = { ok?: boolean; events?: MultiAgentEvent[]; error?: string }
 type TaskDiffResponse = { ok?: boolean; diff?: TaskDiffResult; error?: string }
+type TaskValidationsResponse = { ok?: boolean; validations?: MultiAgentValidation[]; error?: string }
+type TaskValidationResponse = { ok?: boolean; validation?: MultiAgentValidation; error?: string }
+type ApprovalsResponse = { ok?: boolean; approvals?: MultiAgentApproval[]; error?: string }
+type ApprovalResponse = { ok?: boolean; approval?: MultiAgentApproval; error?: string }
 
 type CreateTaskDraft = {
   projectId: string
@@ -115,6 +124,45 @@ async function fetchMultiAgentTaskDiff(taskId: string): Promise<TaskDiffResult> 
   )
   if (!data.diff) throw new Error('Task diff was not returned')
   return data.diff
+}
+
+async function fetchMultiAgentTaskValidations(taskId: string): Promise<MultiAgentValidation[]> {
+  const data = await readJson<TaskValidationsResponse>(
+    await fetch(`/api/ma/tasks/${encodeURIComponent(taskId)}/validate`, { cache: 'no-store' }),
+  )
+  return data.validations ?? []
+}
+
+async function runMultiAgentTaskValidation(input: { taskId: string; type: MultiAgentValidationType }): Promise<MultiAgentValidation> {
+  const data = await readJson<TaskValidationResponse>(
+    await fetch(`/api/ma/tasks/${encodeURIComponent(input.taskId)}/validate`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ type: input.type }),
+    }),
+  )
+  if (!data.validation) throw new Error('Task validation was not returned')
+  return data.validation
+}
+
+async function fetchMultiAgentApprovals(): Promise<MultiAgentApproval[]> {
+  const data = await readJson<ApprovalsResponse>(await fetch('/api/ma/approvals', { cache: 'no-store' }))
+  return data.approvals ?? []
+}
+
+async function resolveMultiAgentApproval(input: {
+  approvalId: string
+  decision: Extract<MultiAgentApprovalStatus, 'approved' | 'denied'>
+}): Promise<MultiAgentApproval> {
+  const data = await readJson<ApprovalResponse>(
+    await fetch(`/api/ma/approvals/${encodeURIComponent(input.approvalId)}/resolve`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ decision: input.decision }),
+    }),
+  )
+  if (!data.approval) throw new Error('Approval was not returned')
+  return data.approval
 }
 
 function priorityClass(priority: MultiAgentPriority): string {
@@ -268,15 +316,21 @@ export function MultiAgentBoard() {
   const [createOpen, setCreateOpen] = useState(false)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const [startingTaskId, setStartingTaskId] = useState<string | null>(null)
+  const [validationRunningType, setValidationRunningType] = useState<MultiAgentValidationType | null>(null)
+  const [validationError, setValidationError] = useState<string | null>(null)
+  const [resolvingApprovalId, setResolvingApprovalId] = useState<string | null>(null)
+  const [approvalError, setApprovalError] = useState<string | null>(null)
   const [mutationError, setMutationError] = useState<string | null>(null)
 
   const projectsQuery = useQuery({ queryKey: ['ma', 'projects'], queryFn: fetchMultiAgentProjects, staleTime: 30_000 })
   const profilesQuery = useQuery({ queryKey: ['ma', 'profiles'], queryFn: fetchMultiAgentProfiles, staleTime: 60_000 })
   const tasksQuery = useQuery({ queryKey: ['ma', 'tasks'], queryFn: fetchMultiAgentTasks, staleTime: 5_000 })
+  const approvalsQuery = useQuery({ queryKey: ['ma', 'approvals'], queryFn: fetchMultiAgentApprovals, staleTime: 2_000, refetchInterval: 5_000 })
 
   const projects = projectsQuery.data ?? []
   const profiles = profilesQuery.data ?? []
   const tasks = tasksQuery.data ?? []
+  const approvals = approvalsQuery.data ?? []
   const columns = useMemo(() => buildMultiAgentBoardColumns(tasks), [tasks])
   const selectedTask = tasks.find((task) => task.id === selectedTaskId) ?? tasks[0] ?? null
   const selectedTaskEventsQuery = useQuery({
@@ -291,6 +345,13 @@ export function MultiAgentBoard() {
     queryFn: () => fetchMultiAgentTaskDiff(selectedTask?.id ?? ''),
     enabled: Boolean(selectedTask?.id && selectedTask?.worktreePath),
     refetchInterval: selectedTask?.status === 'running' ? 3_000 : false,
+    staleTime: 1_000,
+    retry: false,
+  })
+  const selectedTaskValidationsQuery = useQuery({
+    queryKey: ['ma', 'tasks', selectedTask?.id, 'validations'],
+    queryFn: () => fetchMultiAgentTaskValidations(selectedTask?.id ?? ''),
+    enabled: Boolean(selectedTask?.id),
     staleTime: 1_000,
     retry: false,
   })
@@ -321,6 +382,33 @@ export function MultiAgentBoard() {
     onSettled: () => setStartingTaskId(null),
   })
 
+  const validationMutation = useMutation({
+    mutationFn: runMultiAgentTaskValidation,
+    onMutate: ({ type }) => {
+      setValidationRunningType(type)
+      setValidationError(null)
+    },
+    onSuccess: (validation) => {
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks', validation.taskId, 'validations'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks', validation.taskId, 'events'] })
+    },
+    onError: (error) => setValidationError(error instanceof Error ? error.message : 'Failed to run validation'),
+    onSettled: () => setValidationRunningType(null),
+  })
+
+  const approvalMutation = useMutation({
+    mutationFn: resolveMultiAgentApproval,
+    onMutate: ({ approvalId }) => {
+      setResolvingApprovalId(approvalId)
+      setApprovalError(null)
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'approvals'] })
+    },
+    onError: (error) => setApprovalError(error instanceof Error ? error.message : 'Failed to resolve approval'),
+    onSettled: () => setResolvingApprovalId(null),
+  })
+
   const loading = projectsQuery.isLoading || profilesQuery.isLoading || tasksQuery.isLoading
   const loadError = projectsQuery.error ?? profilesQuery.error ?? tasksQuery.error
 
@@ -347,8 +435,15 @@ export function MultiAgentBoard() {
       {loading ? <p className="mt-6 text-sm text-[var(--theme-muted)]">Loading Agent Board…</p> : null}
 
       <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="overflow-x-auto pb-2">
-          <div className="grid min-w-[1120px] grid-cols-8 gap-3">
+        <div className="space-y-4">
+          <MultiAgentApprovalsPanel
+            approvals={approvals}
+            resolvingApprovalId={resolvingApprovalId}
+            error={approvalError ?? (approvalsQuery.error instanceof Error ? approvalsQuery.error.message : null)}
+            onResolve={(approvalId, decision) => approvalMutation.mutate({ approvalId, decision })}
+          />
+          <div className="overflow-x-auto pb-2">
+            <div className="grid min-w-[1120px] grid-cols-8 gap-3">
             {columns.map((column) => (
               <div key={column.status} className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-2">
                 <div className="mb-2 px-1">
@@ -376,6 +471,7 @@ export function MultiAgentBoard() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </div>
         <MultiAgentTaskDetail
@@ -386,12 +482,16 @@ export function MultiAgentBoard() {
           diff={selectedTaskDiffQuery.data ?? null}
           diffLoading={selectedTaskDiffQuery.isLoading || selectedTaskDiffQuery.isFetching}
           diffError={selectedTaskDiffQuery.error instanceof Error ? selectedTaskDiffQuery.error.message : null}
+          validations={selectedTaskValidationsQuery.data ?? []}
+          validationRunningType={validationRunningType}
+          validationError={validationError ?? (selectedTaskValidationsQuery.error instanceof Error ? selectedTaskValidationsQuery.error.message : null)}
+          onValidate={(type) => selectedTask ? validationMutation.mutate({ taskId: selectedTask.id, type }) : undefined}
         />
       </div>
 
       <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-2 text-xs text-[var(--theme-muted-2)]">
         <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={1.7} />
-        Task 11 scope: inspect worktree diffs alongside worker events before validation/PR slices.
+        Task 13 scope: review and resolve risky workspace approvals before push/PR/custom shell slices.
       </div>
 
       {createOpen ? (

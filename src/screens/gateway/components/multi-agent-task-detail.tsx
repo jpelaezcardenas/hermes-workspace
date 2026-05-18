@@ -1,6 +1,14 @@
 import type { TaskDiffResult } from '../../../server/multi-agent/diff-manager'
-import type { MultiAgentEvent, MultiAgentProfile, MultiAgentProject, MultiAgentTask } from '../../../server/multi-agent/types'
+import type {
+  MultiAgentEvent,
+  MultiAgentProfile,
+  MultiAgentProject,
+  MultiAgentTask,
+  MultiAgentValidation,
+  MultiAgentValidationType,
+} from '../../../server/multi-agent/types'
 import { buildMultiAgentTaskMeta } from './multi-agent-board-model'
+import { MultiAgentValidationPanel } from './multi-agent-validation-panel'
 
 type MultiAgentTaskDetailProps = {
   task: MultiAgentTask | null
@@ -10,6 +18,10 @@ type MultiAgentTaskDetailProps = {
   diff?: TaskDiffResult | null
   diffLoading?: boolean
   diffError?: string | null
+  validations?: MultiAgentValidation[]
+  validationRunningType?: MultiAgentValidationType | null
+  validationError?: string | null
+  onValidate?: (type: MultiAgentValidationType) => void
 }
 
 function projectLabel(projects: MultiAgentProject[], id: string): string {
@@ -67,6 +79,10 @@ export function MultiAgentTaskDetail({
   diff = null,
   diffLoading = false,
   diffError = null,
+  validations = [],
+  validationRunningType = null,
+  validationError = null,
+  onValidate = () => undefined,
 }: MultiAgentTaskDetailProps) {
   if (!task) {
     return (
@@ -112,6 +128,16 @@ export function MultiAgentTaskDetail({
         <section>
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Diff</h4>
           <MultiAgentDiffPanel diff={diff} loading={diffLoading} error={diffError} />
+        </section>
+        <section>
+          <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Validation</h4>
+          <MultiAgentValidationPanel
+            task={task}
+            validations={validations}
+            runningType={validationRunningType}
+            error={validationError}
+            onValidate={onValidate}
+          />
         </section>
         <section>
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Events / Live Log</h4>

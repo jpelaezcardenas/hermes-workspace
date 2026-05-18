@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import {
   createApproval,
   createMultiAgentStore,
+  listApprovals,
   createTask,
   emptyMultiAgentState,
   listTasks,
@@ -71,7 +72,7 @@ describe('multi-agent file-backed store', () => {
     expect(loadState(stateFile).tasks[task.id]?.branchName).toBe('hermes/task-task-123-create-worktree')
   })
 
-  it('resolves approvals', () => {
+  it('lists and resolves approvals', () => {
     const stateFile = tempStateFile()
     const store = createMultiAgentStore({ stateFile, now: () => '2026-05-16T18:23:00.000Z' })
     const approval = createApproval(store, {
@@ -83,12 +84,16 @@ describe('multi-agent file-backed store', () => {
       payload: { branch: 'hermes/task-123' },
     })
 
+    expect(listApprovals(store, { status: 'pending' })).toEqual([approval])
+
     store.now = () => '2026-05-16T18:24:00.000Z'
     const resolved = resolveApproval(store, approval.id, 'approved')
 
     expect(resolved.status).toBe('approved')
     expect(resolved.resolvedAt).toBe('2026-05-16T18:24:00.000Z')
     expect(loadState(stateFile).approvals[approval.id]?.status).toBe('approved')
+    expect(listApprovals(store, { status: 'pending' })).toEqual([])
+    expect(listApprovals(store, { taskId: 'task-123' })).toEqual([resolved])
   })
 
   it('preserves malformed state before returning empty state', () => {
