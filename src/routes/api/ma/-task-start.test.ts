@@ -61,6 +61,8 @@ beforeEach(() => {
   process.env.HERMES_MA_STATE_FILE = stateFile
   process.env.HERMES_MA_EVENTS_DIR = eventsDir
   process.env.HERMES_MA_PROJECTS_JSON = JSON.stringify([{ id: 'workspace', name: 'Workspace', repoPath }])
+  process.env.HERMES_MA_WORKER_COMMAND = process.execPath
+  process.env.HERMES_MA_WORKER_ARGS_JSON = JSON.stringify(['-e', "console.log('route worker done')"])
   delete process.env.CLAUDE_PASSWORD
 })
 
@@ -71,7 +73,7 @@ afterEach(() => {
 })
 
 describe('POST /api/ma/tasks/:taskId/start', () => {
-  it('creates a task worktree, stores branch metadata, and emits an event', async () => {
+  it('creates a task worktree, starts a worker run, stores branch metadata, and emits events', async () => {
     const store = createMultiAgentStore({ stateFile, id: () => '123' })
     const task = createTask(store, {
       projectId: 'workspace',
@@ -89,21 +91,21 @@ describe('POST /api/ma/tasks/:taskId/start', () => {
     expect(res.status).toBe(200)
     const body = await jsonBody<{
       ok: boolean
-      task: { id: string; status: string; branchName: string; worktreePath: string }
-      event: { type: string; message: string }
+      task: { id: string; status: string; branchName: string; worktreePath: string; latestRunId: string }
+      run: { id: string; status: string; profileId: string }
     }>(res)
     expect(body.ok).toBe(true)
     expect(body.task).toMatchObject({
       id: task.id,
-      status: 'ready',
+      status: 'running',
       branchName: 'hermes/task-task-123-build-start-route',
     })
+    expect(body.task.latestRunId).toMatch(/^run-/)
+    expect(body.run).toMatchObject({ id: body.task.latestRunId, status: 'starting', profileId: 'backend-engineer' })
     expect(body.task.worktreePath).toContain('.hermes-worktrees/task-task-123-build-start-route')
     expect(git(body.task.worktreePath, ['rev-parse', '--abbrev-ref', 'HEAD'])).toBe(
       'hermes/task-task-123-build-start-route',
     )
-    expect(body.event).toMatchObject({ type: 'worktree.created' })
-
     const eventFile = await readFile(join(eventsDir, `${task.id}.jsonl`), 'utf-8')
     expect(eventFile).toContain('worktree.created')
     expect(eventFile).toContain(body.task.worktreePath)

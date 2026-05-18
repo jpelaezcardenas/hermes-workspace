@@ -14,6 +14,7 @@ import type {
   MultiAgentProfile,
   MultiAgentProject,
   MultiAgentTask,
+  type MultiAgentEvent,
 } from '../../../server/multi-agent/types'
 import {
   buildMultiAgentBoardColumns,
@@ -25,6 +26,7 @@ type ProjectsResponse = { ok?: boolean; projects?: MultiAgentProject[]; error?: 
 type ProfilesResponse = { ok?: boolean; profiles?: MultiAgentProfile[]; error?: string }
 type TasksResponse = { ok?: boolean; tasks?: MultiAgentTask[]; error?: string }
 type TaskResponse = { ok?: boolean; task?: MultiAgentTask; error?: string }
+type TaskEventsResponse = { ok?: boolean; events?: MultiAgentEvent[]; error?: string }
 
 type CreateTaskDraft = {
   projectId: string
@@ -95,6 +97,13 @@ async function startMultiAgentTask(taskId: string): Promise<MultiAgentTask> {
   )
   if (!data.task) throw new Error('Updated task was not returned')
   return data.task
+}
+
+async function fetchMultiAgentTaskEvents(taskId: string): Promise<MultiAgentEvent[]> {
+  const data = await readJson<TaskEventsResponse>(
+    await fetch(`/api/ma/tasks/${encodeURIComponent(taskId)}/events`, { cache: 'no-store' }),
+  )
+  return data.events ?? []
 }
 
 function projectLabel(projects: MultiAgentProject[], id: string): string {
@@ -174,10 +183,12 @@ function MultiAgentTaskDetail({
   task,
   projects,
   profiles,
+  events,
 }: {
   task: MultiAgentTask | null
   projects: MultiAgentProject[]
   profiles: MultiAgentProfile[]
+  events: MultiAgentEvent[]
 }) {
   if (!task) {
     return (
@@ -218,6 +229,24 @@ function MultiAgentTaskDetail({
             </ul>
           ) : (
             <p className="mt-2 text-sm text-[var(--theme-muted-2)]">No criteria captured.</p>
+          )}
+        </section>
+        <section>
+          <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Events / Live Log</h4>
+          {events.length ? (
+            <ol className="mt-2 max-h-72 space-y-2 overflow-auto pr-1">
+              {events.slice(-12).map((event) => (
+                <li key={event.id} className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-2">
+                  <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-[0.12em] text-[var(--theme-muted)]">
+                    <span>{event.type}</span>
+                    <span>{new Date(event.createdAt).toLocaleTimeString()}</span>
+                  </div>
+                  <p className="mt-1 whitespace-pre-wrap text-xs text-[var(--theme-text)]">{event.message}</p>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="mt-2 rounded-xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3 text-sm text-[var(--theme-muted-2)]">No events captured yet.</p>
           )}
         </section>
       </div>
@@ -322,6 +351,14 @@ export function MultiAgentBoard() {
   const tasks = tasksQuery.data ?? []
   const columns = useMemo(() => buildMultiAgentBoardColumns(tasks), [tasks])
   const selectedTask = tasks.find((task) => task.id === selectedTaskId) ?? tasks[0] ?? null
+  const selectedTaskEventsQuery = useQuery({
+    queryKey: ['ma', 'tasks', selectedTask?.id, 'events'],
+    queryFn: () => fetchMultiAgentTaskEvents(selectedTask?.id ?? ''),
+    enabled: Boolean(selectedTask?.id),
+    refetchInterval: selectedTask?.status === 'running' ? 2_000 : false,
+    staleTime: 1_000,
+  })
+  const selectedTaskEvents = selectedTaskEventsQuery.data ?? []
 
   const createMutation = useMutation({
     mutationFn: createMultiAgentTask,
@@ -330,6 +367,7 @@ export function MultiAgentBoard() {
       setSelectedTaskId(task.id)
       setMutationError(null)
       void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks', task.id, 'events'] })
     },
     onError: (error) => setMutationError(error instanceof Error ? error.message : 'Failed to create task'),
   })
@@ -341,6 +379,7 @@ export function MultiAgentBoard() {
       setSelectedTaskId(task.id)
       setMutationError(null)
       void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks', task.id, 'events'] })
     },
     onError: (error) => setMutationError(error instanceof Error ? error.message : 'Failed to start task'),
     onSettled: () => setStartingTaskId(null),
@@ -403,7 +442,7 @@ export function MultiAgentBoard() {
             ))}
           </div>
         </div>
-        <MultiAgentTaskDetail task={selectedTask} projects={projects} profiles={profiles} />
+        <MultiAgentTaskDetail task={selectedTask} projects={projects} profiles={profiles} events={selectedTaskEvents} />
       </div>
 
       <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-2 text-xs text-[var(--theme-muted-2)]">
