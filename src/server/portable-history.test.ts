@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import {
   selectPortableConversationHistory,
@@ -6,6 +6,20 @@ import {
 } from './portable-history'
 
 describe('portable history replay', () => {
+  const originalForceFlag = process.env.HERMES_WORKSPACE_FORCE_HISTORY
+
+  beforeEach(() => {
+    delete process.env.HERMES_WORKSPACE_FORCE_HISTORY
+  })
+
+  afterEach(() => {
+    if (originalForceFlag === undefined) {
+      delete process.env.HERMES_WORKSPACE_FORCE_HISTORY
+    } else {
+      process.env.HERMES_WORKSPACE_FORCE_HISTORY = originalForceFlag
+    }
+  })
+
   it('skips replay when the gateway can bind portable chat to a server session', () => {
     expect(
       shouldReplayPortableHistory({
@@ -40,5 +54,31 @@ describe('portable history replay', () => {
         { bearerToken: '' },
       ),
     ).toEqual([{ role: 'user', content: 'fallback' }])
+  })
+
+  it('replays persisted history when HERMES_WORKSPACE_FORCE_HISTORY=1 even with a bearer token', () => {
+    process.env.HERMES_WORKSPACE_FORCE_HISTORY = '1'
+
+    expect(
+      shouldReplayPortableHistory({
+        bearerToken: 'token',
+      }),
+    ).toBe(true)
+
+    expect(
+      selectPortableConversationHistory(
+        [{ role: 'assistant', content: 'old reply' }],
+        [{ role: 'user', content: 'fallback' }],
+        { bearerToken: 'token' },
+      ),
+    ).toEqual([{ role: 'assistant', content: 'old reply' }])
+  })
+
+  it('preserves default skip-replay behavior when the force flag is unset', () => {
+    expect(
+      shouldReplayPortableHistory({
+        bearerToken: 'token',
+      }),
+    ).toBe(false)
   })
 })
