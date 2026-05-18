@@ -68,8 +68,8 @@
 
           packages = with pkgs; [
             # Node / JS toolchain
-            nodejs_22
-            pnpm_9
+            nodejs
+            pnpm
             typescript
 
             # Python for pty-helper and build scripts

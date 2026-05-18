@@ -1,8 +1,10 @@
 {
   lib,
   stdenv,
-  nodejs_22,
-  pnpm_9,
+  nodejs,
+  pnpm,
+  fetchPnpmDeps,
+  pnpmConfigHook,
   python3,
   makeWrapper,
 }:
@@ -33,16 +35,17 @@ stdenv.mkDerivation (finalAttrs: {
       && baseName != ".env.local";
   };
 
-  pnpmDeps = pnpm_9.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    # Run `nix build .#hermes-workspace` once with this set to lib.fakeHash
-    # then replace with the hash reported in the error.
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    pnpm = pnpm;  # Ensure fetcher uses the same pnpm binary as the build
+    fetcherVersion = 3;
+    hash = "sha256-cgK1/KQkA9zOb1Zn5/OjV9qTXQEIVBaTWldbCbdRULs=";
   };
 
   nativeBuildInputs = [
-    nodejs_22
-    pnpm_9.configHook
+    nodejs
+    pnpm      # provides the pnpm binary used by pnpmConfigHook
+    pnpmConfigHook
     makeWrapper
   ];
 
@@ -83,7 +86,7 @@ stdenv.mkDerivation (finalAttrs: {
 
     # Create a wrapper script so the binary lands in $out/bin
     mkdir -p "$out/bin"
-    makeWrapper "${nodejs_22}/bin/node" "$out/bin/hermes-workspace" \
+    makeWrapper "${nodejs}/bin/node" "$out/bin/hermes-workspace" \
       --add-flags "--max-old-space-size=2048" \
       --add-flags "$appDir/server-entry.js" \
       --set NODE_ENV "production" \
