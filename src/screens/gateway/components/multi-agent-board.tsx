@@ -278,9 +278,9 @@ function MultiAgentCreateTaskDialog({
   const canSubmit = draft.projectId && draft.assigneeProfileId && draft.title.trim()
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[color-mix(in_srgb,var(--theme-bg)_48%,transparent)] px-4 py-6 backdrop-blur-md" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[color-mix(in_srgb,var(--theme-bg)_48%,transparent)] px-4 py-6 backdrop-blur-md sm:items-center" onClick={onCancel}>
       <form
-        className="w-full max-w-2xl rounded-3xl border border-[var(--theme-border2)] bg-[var(--theme-card)] p-5 shadow-[0_24px_80px_var(--theme-shadow)]"
+        className="my-auto max-h-[calc(100dvh-3rem)] w-full max-w-2xl overflow-y-auto rounded-3xl border border-[var(--theme-border2)] bg-[var(--theme-card)] p-5 shadow-[0_24px_80px_var(--theme-shadow)]"
         onClick={(event) => event.stopPropagation()}
         onSubmit={(event) => {
           event.preventDefault()
