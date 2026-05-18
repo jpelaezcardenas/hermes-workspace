@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import { WorkflowHelpModal } from '@/components/workflow-help-modal'
 import { Markdown } from '@/components/prompt-kit/markdown'
 import { OfficeView } from './components/office-view'
+import { MultiAgentBoard } from './components/multi-agent-board'
 import type { AgentWorkingRow } from './components/agents-working-panel'
 import { type GatewaySession } from '@/lib/gateway-api'
 import { cn } from '@/lib/utils'
@@ -2502,6 +2503,8 @@ export function Conductor({
                 hideHeader
               />
             </section>
+
+            <MultiAgentBoard />
 
             {hasMissionHistory || conductor.recentSessions.length > 0 ? (
               <section className="mt-6 w-full space-y-3">
