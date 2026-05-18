@@ -117,6 +117,46 @@ This means the Vite SSR server tried `GET /api/gateway-status` which internally 
 
 ---
 
+## 7. Agent Board shows no projects
+
+**Symptom:** The Multi-Agent Agent Board loads, but project selection is empty or `GET /api/ma/projects` returns an empty list.
+
+**Cause:** No multi-agent project was configured for the local session.
+
+**Fix:** Export one of the project configuration variables before starting Workspace:
+
+```bash
+# Single project
+export HERMES_MA_PROJECT_PATH=/absolute/path/to/git/repo
+
+# Or multiple projects with validation commands
+export HERMES_MA_PROJECTS_JSON='[{"id":"workspace","repoPath":"/absolute/path/to/git/repo","validation":{"test":"pnpm test","build":"pnpm build"}}]'
+
+pnpm dev
+```
+
+The configured path must exist and must be a git repository. See [Multi-Agent MVP](./multi-agent-mvp.md) for the full workflow.
+
+---
+
+## 8. Electron smoke fails before opening a window
+
+**Symptom:** `pnpm smoke:electron` or `pnpm exec electron --version` fails with `Electron failed to install correctly`.
+
+**Cause:** The local Electron package is present, but its downloaded binary/path metadata is missing.
+
+**Fix:** Re-run Electron's install script and verify the binary:
+
+```bash
+node node_modules/.pnpm/electron@40.9.3/node_modules/electron/install.js
+pnpm exec electron --version
+pnpm smoke:electron
+```
+
+The smoke command should start the local production server and log `Electron smoke mode loaded app shell` before exiting.
+
+---
+
 ## Diagnostic bundle
 
 If nothing above helps, run this and share the output:
