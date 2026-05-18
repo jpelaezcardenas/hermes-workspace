@@ -1,3 +1,4 @@
+import type { TaskDiffResult } from '../../../server/multi-agent/diff-manager'
 import type { MultiAgentEvent, MultiAgentProfile, MultiAgentProject, MultiAgentTask } from '../../../server/multi-agent/types'
 import { buildMultiAgentTaskMeta } from './multi-agent-board-model'
 
@@ -6,6 +7,9 @@ type MultiAgentTaskDetailProps = {
   projects: MultiAgentProject[]
   profiles: MultiAgentProfile[]
   events: MultiAgentEvent[]
+  diff?: TaskDiffResult | null
+  diffLoading?: boolean
+  diffError?: string | null
 }
 
 function projectLabel(projects: MultiAgentProject[], id: string): string {
@@ -16,7 +20,54 @@ function profileLabel(profiles: MultiAgentProfile[], id: string): string {
   return profiles.find((profile) => profile.id === id)?.name ?? id
 }
 
-export function MultiAgentTaskDetail({ task, projects, profiles, events }: MultiAgentTaskDetailProps) {
+export function MultiAgentDiffPanel({
+  diff,
+  loading,
+  error,
+}: {
+  diff: TaskDiffResult | null
+  loading: boolean
+  error: string | null
+}) {
+  if (loading) {
+    return <p className="mt-2 rounded-xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3 text-sm text-[var(--theme-muted-2)]">Loading diff…</p>
+  }
+  if (error) {
+    return <p className="mt-2 rounded-xl border border-red-400/35 bg-red-500/10 px-3 py-3 text-sm text-red-300">{error}</p>
+  }
+  if (!diff || diff.clean) {
+    return <p className="mt-2 rounded-xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-3 text-sm text-[var(--theme-muted-2)]">No changes in worktree.</p>
+  }
+
+  return (
+    <div className="mt-2 space-y-3">
+      <div>
+        <p className="text-xs font-medium text-[var(--theme-muted)]">Changed files</p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {diff.changedFiles.map((file) => (
+            <span key={file} className="rounded-full border border-[var(--theme-border)] bg-[var(--theme-bg)] px-2 py-0.5 font-mono text-[10px] text-[var(--theme-text)]">{file}</span>
+          ))}
+        </div>
+      </div>
+      {diff.stat ? (
+        <pre className="max-h-32 overflow-auto rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-xs text-[var(--theme-muted-2)]">{diff.stat}</pre>
+      ) : null}
+      {diff.diff ? (
+        <pre className="max-h-80 overflow-auto rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-xs text-[var(--theme-text)]">{diff.diff}</pre>
+      ) : null}
+    </div>
+  )
+}
+
+export function MultiAgentTaskDetail({
+  task,
+  projects,
+  profiles,
+  events,
+  diff = null,
+  diffLoading = false,
+  diffError = null,
+}: MultiAgentTaskDetailProps) {
   if (!task) {
     return (
       <aside className="rounded-3xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-card)] p-5 text-sm text-[var(--theme-muted)]">
@@ -57,6 +108,10 @@ export function MultiAgentTaskDetail({ task, projects, profiles, events }: Multi
           ) : (
             <p className="mt-2 text-sm text-[var(--theme-muted-2)]">No criteria captured.</p>
           )}
+        </section>
+        <section>
+          <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Diff</h4>
+          <MultiAgentDiffPanel diff={diff} loading={diffLoading} error={diffError} />
         </section>
         <section>
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Events / Live Log</h4>

@@ -9,6 +9,7 @@ import {
   RefreshIcon,
 } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
+import type { TaskDiffResult } from '../../../server/multi-agent/diff-manager'
 import type {
   MultiAgentPriority,
   MultiAgentProfile,
@@ -28,6 +29,7 @@ type ProfilesResponse = { ok?: boolean; profiles?: MultiAgentProfile[]; error?: 
 type TasksResponse = { ok?: boolean; tasks?: MultiAgentTask[]; error?: string }
 type TaskResponse = { ok?: boolean; task?: MultiAgentTask; error?: string }
 type TaskEventsResponse = { ok?: boolean; events?: MultiAgentEvent[]; error?: string }
+type TaskDiffResponse = { ok?: boolean; diff?: TaskDiffResult; error?: string }
 
 type CreateTaskDraft = {
   projectId: string
@@ -105,6 +107,14 @@ async function fetchMultiAgentTaskEvents(taskId: string): Promise<MultiAgentEven
     await fetch(`/api/ma/tasks/${encodeURIComponent(taskId)}/events`, { cache: 'no-store' }),
   )
   return data.events ?? []
+}
+
+async function fetchMultiAgentTaskDiff(taskId: string): Promise<TaskDiffResult> {
+  const data = await readJson<TaskDiffResponse>(
+    await fetch(`/api/ma/tasks/${encodeURIComponent(taskId)}/diff`, { cache: 'no-store' }),
+  )
+  if (!data.diff) throw new Error('Task diff was not returned')
+  return data.diff
 }
 
 function priorityClass(priority: MultiAgentPriority): string {
@@ -276,6 +286,14 @@ export function MultiAgentBoard() {
     refetchInterval: selectedTask?.status === 'running' ? 2_000 : false,
     staleTime: 1_000,
   })
+  const selectedTaskDiffQuery = useQuery({
+    queryKey: ['ma', 'tasks', selectedTask?.id, 'diff'],
+    queryFn: () => fetchMultiAgentTaskDiff(selectedTask?.id ?? ''),
+    enabled: Boolean(selectedTask?.id && selectedTask?.worktreePath),
+    refetchInterval: selectedTask?.status === 'running' ? 3_000 : false,
+    staleTime: 1_000,
+    retry: false,
+  })
   const selectedTaskEvents = selectedTaskEventsQuery.data ?? []
 
   const createMutation = useMutation({
@@ -360,12 +378,20 @@ export function MultiAgentBoard() {
             ))}
           </div>
         </div>
-        <MultiAgentTaskDetail task={selectedTask} projects={projects} profiles={profiles} events={selectedTaskEvents} />
+        <MultiAgentTaskDetail
+          task={selectedTask}
+          projects={projects}
+          profiles={profiles}
+          events={selectedTaskEvents}
+          diff={selectedTaskDiffQuery.data ?? null}
+          diffLoading={selectedTaskDiffQuery.isLoading || selectedTaskDiffQuery.isFetching}
+          diffError={selectedTaskDiffQuery.error instanceof Error ? selectedTaskDiffQuery.error.message : null}
+        />
       </div>
 
       <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-2 text-xs text-[var(--theme-muted-2)]">
         <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={1.7} />
-        Task 8 scope: create tasks, start worktrees, and refresh board state. Worker streaming comes next.
+        Task 11 scope: inspect worktree diffs alongside worker events before validation/PR slices.
       </div>
 
       {createOpen ? (

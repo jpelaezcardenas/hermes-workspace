@@ -159,6 +159,7 @@ import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 import { Route as ApiMaTasksTaskIdStartRouteImport } from './routes/api/ma/tasks.$taskId.start'
 import { Route as ApiMaTasksTaskIdEventsRouteImport } from './routes/api/ma/tasks.$taskId.events'
+import { Route as ApiMaTasksTaskIdDiffRouteImport } from './routes/api/ma/tasks.$taskId.diff'
 
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
@@ -915,6 +916,11 @@ const ApiMaTasksTaskIdEventsRoute = ApiMaTasksTaskIdEventsRouteImport.update({
   path: '/$taskId/events',
   getParentRoute: () => ApiMaTasksRoute,
 } as any)
+const ApiMaTasksTaskIdDiffRoute = ApiMaTasksTaskIdDiffRouteImport.update({
+  id: '/$taskId/diff',
+  path: '/$taskId/diff',
+  getParentRoute: () => ApiMaTasksRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1065,6 +1071,7 @@ export interface FileRoutesByFullPath {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
 }
@@ -1216,6 +1223,7 @@ export interface FileRoutesByTo {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
 }
@@ -1369,6 +1377,7 @@ export interface FileRoutesById {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/ma/tasks/$taskId/diff': typeof ApiMaTasksTaskIdDiffRoute
   '/api/ma/tasks/$taskId/events': typeof ApiMaTasksTaskIdEventsRoute
   '/api/ma/tasks/$taskId/start': typeof ApiMaTasksTaskIdStartRoute
 }
@@ -1523,6 +1532,7 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
     | '/api/ma/tasks/$taskId/start'
   fileRoutesByTo: FileRoutesByTo
@@ -1674,6 +1684,7 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
     | '/api/ma/tasks/$taskId/start'
   id:
@@ -1826,6 +1837,7 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/ma/tasks/$taskId/diff'
     | '/api/ma/tasks/$taskId/events'
     | '/api/ma/tasks/$taskId/start'
   fileRoutesById: FileRoutesById
@@ -3005,6 +3017,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMaTasksTaskIdEventsRouteImport
       parentRoute: typeof ApiMaTasksRoute
     }
+    '/api/ma/tasks/$taskId/diff': {
+      id: '/api/ma/tasks/$taskId/diff'
+      path: '/$taskId/diff'
+      fullPath: '/api/ma/tasks/$taskId/diff'
+      preLoaderRoute: typeof ApiMaTasksTaskIdDiffRouteImport
+      parentRoute: typeof ApiMaTasksRoute
+    }
   }
 }
 
@@ -3195,11 +3214,13 @@ const ApiHermesworldReservationsRouteWithChildren =
   )
 
 interface ApiMaTasksRouteChildren {
+  ApiMaTasksTaskIdDiffRoute: typeof ApiMaTasksTaskIdDiffRoute
   ApiMaTasksTaskIdEventsRoute: typeof ApiMaTasksTaskIdEventsRoute
   ApiMaTasksTaskIdStartRoute: typeof ApiMaTasksTaskIdStartRoute
 }
 
 const ApiMaTasksRouteChildren: ApiMaTasksRouteChildren = {
+  ApiMaTasksTaskIdDiffRoute: ApiMaTasksTaskIdDiffRoute,
   ApiMaTasksTaskIdEventsRoute: ApiMaTasksTaskIdEventsRoute,
   ApiMaTasksTaskIdStartRoute: ApiMaTasksTaskIdStartRoute,
 }

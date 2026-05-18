@@ -1,7 +1,8 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
+import type { TaskDiffResult } from '../../../server/multi-agent/diff-manager'
 import type { MultiAgentEvent, MultiAgentProfile, MultiAgentProject, MultiAgentTask } from '../../../server/multi-agent/types'
-import { MultiAgentTaskDetail } from './multi-agent-task-detail'
+import { MultiAgentDiffPanel, MultiAgentTaskDetail } from './multi-agent-task-detail'
 
 const now = '2026-05-18T00:00:00.000Z'
 
@@ -63,6 +64,38 @@ function event(overrides: Partial<MultiAgentEvent> = {}): MultiAgentEvent {
     ...overrides,
   }
 }
+
+const changedDiff: TaskDiffResult = {
+  clean: false,
+  changedFiles: ['README.md', 'new-file.txt'],
+  files: [
+    { path: 'README.md', status: 'M' },
+    { path: 'new-file.txt', status: '??' },
+  ],
+  porcelain: ' M README.md\n?? new-file.txt',
+  stat: 'README.md | 2 +-\nnew-file.txt | untracked',
+  diff: 'diff --git a/README.md b/README.md\n+# changed repo\ndiff --git a/new-file.txt b/new-file.txt\n+new file',
+}
+
+describe('MultiAgentDiffPanel', () => {
+  it('renders changed files, stat, and unified diff content', () => {
+    const html = renderToStaticMarkup(<MultiAgentDiffPanel diff={changedDiff} loading={false} error={null} />)
+
+    expect(html).toContain('README.md')
+    expect(html).toContain('new-file.txt')
+    expect(html).toContain('README.md | 2 +-')
+    expect(html).toContain('diff --git a/README.md b/README.md')
+    expect(html).toContain('+new file')
+  })
+
+  it('renders clean and loading states', () => {
+    const cleanHtml = renderToStaticMarkup(<MultiAgentDiffPanel diff={{ ...changedDiff, clean: true, changedFiles: [], files: [], stat: '', diff: '', porcelain: '' }} loading={false} error={null} />)
+    const loadingHtml = renderToStaticMarkup(<MultiAgentDiffPanel diff={null} loading error={null} />)
+
+    expect(cleanHtml).toContain('No changes in worktree')
+    expect(loadingHtml).toContain('Loading diff')
+  })
+})
 
 describe('MultiAgentTaskDetail', () => {
   it('renders the selected task work packet, worktree, and live events from an extracted component', () => {
