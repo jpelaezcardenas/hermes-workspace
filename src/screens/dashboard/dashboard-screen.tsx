@@ -20,6 +20,7 @@ import { openHamburgerMenu } from '@/components/mobile-hamburger-menu'
 import { applyTheme, useSettingsStore } from '@/hooks/use-settings'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon02Icon, Sun02Icon } from '@hugeicons/core-free-icons'
+import ChnlsyncAgentStatusPanel from '@/components/chnlsync-agent-status-panel'
 
 // ── Helpers ──────────────────────────────────────────────────────
 
@@ -789,17 +790,14 @@ export function DashboardScreen() {
         </button>
       </div>
       <div className="px-4 pt-14 md:pt-4 py-4 md:px-8 md:py-6 lg:px-10 space-y-5 pb-28">
-      {/* ── Header: Hermes Logo + Quick Actions ── */}
+      {/* ── Header: CHNLSYNC Logo ── */}
       <div className="flex flex-col items-center gap-3 py-3">
         <img
-          src="/hermes-avatar.webp"
-          alt="Hermes"
-          className="size-12 md:size-14 rounded-md border border-[var(--theme-border)]"
-          style={{ padding: '3px', background: 'var(--theme-card)' }}
+          src="/chnlsync-logo.svg"
+          alt="CHNLSYNC"
+          className="h-14 md:h-[60px] w-auto"
+          style={{ imageRendering: 'pixelated' }}
         />
-        <p className="micro-label" style={{ color: 'var(--theme-muted)' }}>
-          Hermes Workspace
-        </p>
         <div className="mt-1 grid w-full max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
           <QuickAction
             label="New Chat"
