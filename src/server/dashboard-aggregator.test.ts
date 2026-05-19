@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import {
-  buildDashboardOverview,
-  type DashboardFetcher,
-} from './dashboard-aggregator'
+import { buildDashboardOverview } from './dashboard-aggregator'
+import type { DashboardFetcher } from './dashboard-aggregator'
 
 function jsonResponse(payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {
@@ -85,6 +83,58 @@ describe('buildDashboardOverview', () => {
     ])
   })
 
+  it('adds PatchAid Faire orders to the dashboard overview when configured', async () => {
+    const fetcher = makeFetcher({})
+    const overview = await buildDashboardOverview({
+      fetcher,
+      patchAidFaireOrdersFetcher: async () => ({
+        source: 'corpus-gmail-faire-order-emails',
+        sourceLabel: 'Faire / PatchAid',
+        corpusDbPath: '/tmp/corpus.db',
+        orders: [
+          {
+            orderId: 'VZ3VM8JP9Q',
+            gmailId: '49a4cf3463681d93',
+            threadId: '49a4cf3463681d93',
+            source: 'faire',
+            sourceLabel: 'Faire / PatchAid',
+            brand: 'PatchAid',
+            fulfillmentSource: 'Faire',
+            customerName: 'K9 Korral',
+            orderDate: '2022-01-05',
+            totalAmount: 224.78,
+            unitCount: 10,
+            commissionLabel: '25% Commission (Opening Order)',
+            orderUrl:
+              'https://www.faire.com/maker-portal/orders/bo_vz3vm8jp9q/order-fulfilment',
+            items: [],
+          },
+        ],
+        summary: {
+          sourceLabel: 'Faire / PatchAid',
+          orderCount: 1,
+          revenue: 224.78,
+          units: 10,
+          latestOrderDate: '2022-01-05',
+        },
+        generatedAt: '2026-05-19T14:00:00.000Z',
+        warning: null,
+      }),
+    })
+
+    expect(overview.patchAidFaireOrders?.sourceLabel).toBe('Faire / PatchAid')
+    expect(overview.patchAidFaireOrders?.summary).toMatchObject({
+      orderCount: 1,
+      revenue: 224.78,
+      units: 10,
+    })
+    expect(overview.patchAidFaireOrders?.orders[0]).toMatchObject({
+      orderId: 'VZ3VM8JP9Q',
+      fulfillmentSource: 'Faire',
+      sourceLabel: 'Faire / PatchAid',
+    })
+  })
+
   it('summarises cron jobs and finds the earliest next-run', async () => {
     const fetcher = makeFetcher({
       '/api/cron/jobs': {
@@ -131,9 +181,7 @@ describe('buildDashboardOverview', () => {
       name: 'Daily roll-up',
       lastError: 'connection refused',
     })
-    const cronIncident = overview.incidents.find(
-      (i) => i.id === 'cron-fail-a',
-    )
+    const cronIncident = overview.incidents.find((i) => i.id === 'cron-fail-a')
     expect(cronIncident?.severity).toBe('error')
     expect(cronIncident?.detail).toBe('connection refused')
   })

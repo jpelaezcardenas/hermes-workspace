@@ -67,9 +67,7 @@ export function formatModelName(raw: string): string {
   if (lower.includes('kimi')) return 'Kimi K2.5'
 
   // Fallback: clean up dashes/underscores and title-case
-  return stripped
-    .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  return stripped.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 /**
@@ -96,7 +94,7 @@ export function formatSkillName(raw: string): string {
   if (!raw) return '—'
   const trimmed = raw.trim()
   if (!trimmed.includes(':') && !trimmed.includes('/')) return trimmed
-  const segments = trimmed.split(/[:\/]/)
+  const segments = trimmed.split(/[:/]/)
   return segments[segments.length - 1] || trimmed
 }
 
@@ -126,6 +124,25 @@ export function formatMoney(amount: number): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount)
+}
+
+export function formatCount(value: number): string {
+  if (!Number.isFinite(value)) return '0'
+  return new Intl.NumberFormat().format(Math.max(0, Math.round(value)))
+}
+
+export function formatIsoDate(
+  value: string | null | undefined,
+  fallback = 'No dated orders',
+): string {
+  if (!value) return fallback
+  const parsed = new Date(`${value}T00:00:00`)
+  if (Number.isNaN(parsed.getTime())) return value
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(parsed)
 }
 
 /**

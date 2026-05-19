@@ -21,16 +21,16 @@ import {
   dashboardFetch,
   gatewayFetch,
 } from '../../../server/gateway-capabilities'
-import {
-  buildDashboardOverview,
-  type DashboardFetcher,
-} from '../../../server/dashboard-aggregator'
+import { buildDashboardOverview } from '../../../server/dashboard-aggregator'
+import { createCachedPatchAidFaireOrdersFetcher } from '../../../server/business/faire-orders'
+import type { DashboardFetcher } from '../../../server/dashboard-aggregator'
 
 const overviewFetcher: DashboardFetcher = (path) => dashboardFetch(path)
 // Gateway fetcher hits the gateway URL (8645/8642), which is where
 // `/health/detailed` lives. The Hermes Agent confirmed `active_agents`
 // from this endpoint is the canonical “currently running” count.
 const overviewGatewayFetcher: DashboardFetcher = (path) => gatewayFetch(path)
+const patchAidFaireOrdersFetcher = createCachedPatchAidFaireOrdersFetcher()
 
 export const Route = createFileRoute('/api/dashboard/overview')({
   server: {
@@ -47,6 +47,7 @@ export const Route = createFileRoute('/api/dashboard/overview')({
           const overview = await buildDashboardOverview({
             fetcher: overviewFetcher,
             gatewayFetcher: overviewGatewayFetcher,
+            patchAidFaireOrdersFetcher,
             analyticsWindowDays: Number.isFinite(days) && days > 0 ? days : 30,
             achievementsLimit:
               Number.isFinite(limit) && limit > 0 ? Math.min(limit, 12) : 3,
@@ -61,8 +62,7 @@ export const Route = createFileRoute('/api/dashboard/overview')({
               // upstream), but cache for a few seconds so a noisy client
               // doesn't hammer the dashboard. Stale-while-revalidate keeps
               // the UI snappy while fresh data lands.
-              'Cache-Control':
-                'private, max-age=5, stale-while-revalidate=20',
+              'Cache-Control': 'private, max-age=5, stale-while-revalidate=20',
             },
           })
         } catch (err) {
