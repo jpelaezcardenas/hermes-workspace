@@ -59,7 +59,7 @@ const HUD = {
   obsidian: '#0A0D12',
 }
 
-const HUD_SIGIL_SRC = '/assets/hermesworld/art/hermesworld-sigil.png'
+const HUD_SIGIL_SRC = '/agentone-logo.png'
 const MOCKUP_LEFT = 'clamp(18px, 4.7vw, 56px)'
 const MOCKUP_TOP = 'clamp(12px, 1.55vw, 18px)'
 

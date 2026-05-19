@@ -92,7 +92,7 @@ export const THEMES: Array<{
   },
 ]
 
-const STORAGE_KEY = 'claude-theme'
+const STORAGE_KEY = 'agentone-theme'
 const DEFAULT_THEME: ThemeId = 'claude-nous'
 const THEME_SET = new Set<ThemeId>(THEMES.map((theme) => theme.id))
 const LIGHT_THEME_MAP: Record<

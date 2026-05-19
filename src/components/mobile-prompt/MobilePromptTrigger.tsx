@@ -29,8 +29,8 @@ export function MobilePromptTrigger() {
     }
 
     const isDismissed =
-      localStorage.getItem('claude-mobile-access-dismissed') === 'true' ||
-      localStorage.getItem('claude-mobile-prompt-dismissed') === 'true'
+      localStorage.getItem('agentone-mobile-access-dismissed') === 'true' ||
+      localStorage.getItem('agentone-mobile-prompt-dismissed') === 'true'
     const isSetup = localStorage.getItem('claude-mobile-setup-seen') === 'true'
 
     if (isDismissed || isSetup) {
@@ -58,7 +58,7 @@ export function MobilePromptTrigger() {
 
   const persistDismissalPreference = () => {
     if (dontShowAgain) {
-      localStorage.setItem('claude-mobile-access-dismissed', 'true')
+      localStorage.setItem('agentone-mobile-access-dismissed', 'true')
     }
   }
 
@@ -101,8 +101,8 @@ export function MobilePromptTrigger() {
               <div className="flex items-center gap-3">
                 <div className="flex shrink-0 items-center gap-1.5">
                   <img
-                    src="/claude-avatar.webp"
-                    alt="Hermes Agent"
+                    src="/agentone-avatar.png"
+                    alt="AgentOne"
                     className="size-8 rounded-lg"
                   />
                   <span className="text-xs text-primary-600">+</span>

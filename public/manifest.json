@@ -1,25 +1,25 @@
 {
-  "name": "Hermes Workspace",
-  "short_name": "Hermes",
-  "description": "Installable control surface for Hermes Agent chat, tools, files, memory, jobs, and agent workflows.",
-  "id": "/?app=hermes-workspace",
+  "name": "AgentOne",
+  "short_name": "AgentOne",
+  "description": "AI bot hosting platform — chat, tools, files, memory, jobs, and agent workflows.",
+  "id": "/?app=agentone",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "browser"],
   "orientation": "any",
   "background_color": "#0A0E1A",
-  "theme_color": "#031A1A",
+  "theme_color": "#2563EB",
   "categories": ["productivity", "utilities", "developer"],
   "icons": [
     {
-      "src": "/claude-icon-192.png",
+      "src": "/agentone-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/claude-icon-512.png",
+      "src": "/agentone-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

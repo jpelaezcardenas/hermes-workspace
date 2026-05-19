@@ -154,7 +154,7 @@ function Header() {
   return (
     <header className="relative z-30 mx-auto mt-4 flex max-w-[1560px] items-center justify-between border-b border-[#d9b35f]/20 px-4 pb-4 sm:px-6 lg:px-8">
       <a href="/hermes-world" className="flex items-center gap-3">
-        <img src="/hermesworld-logo.svg" alt="HermesWorld" className="h-10 w-10 rounded-2xl shadow-[0_0_34px_rgba(34,211,238,.18)]" />
+        <img src="/agentone-logo.png" alt="HermesWorld" className="h-10 w-10 rounded-2xl shadow-[0_0_34px_rgba(34,211,238,.18)]" />
         <div>
           <div className="font-serif text-lg font-bold tracking-[-0.03em] text-[#f8e4ac]">Hermes<span className="text-cyan-200">World</span></div>
           <div className="text-[9px] font-black uppercase tracking-[0.22em] text-[#bfb49a]/46">Persistent Agent RPG</div>
@@ -353,7 +353,7 @@ function SigilsSection() {
         <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-[1.35rem] border border-[#d9b35f]/18 bg-[#04070c]">
           <div className="absolute h-64 w-64 rounded-full bg-[#d9b35f]/20 blur-3xl" />
           <div className="relative flex h-56 w-56 items-center justify-center rounded-full border border-[#d9b35f]/42 bg-[radial-gradient(circle,#f8e4ac_0%,#d9b35f_22%,#4b3516_68%,#120d08_100%)] shadow-[0_0_90px_rgba(217,179,95,.32)]">
-            <img src="/hermesworld-logo.svg" alt="Hermes Sigil" className="h-36 w-36 rounded-[2rem] shadow-[0_0_40px_rgba(34,211,238,.18)]" />
+            <img src="/agentone-logo.png" alt="Hermes Sigil" className="h-36 w-36 rounded-[2rem] shadow-[0_0_40px_rgba(34,211,238,.18)]" />
           </div>
         </div>
 
@@ -378,7 +378,7 @@ function SigilsSection() {
 function FinalCta() {
   return (
     <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(3,6,10,.18),#03060a),url('/hermesworld-world.png')] bg-cover bg-center opacity-45" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(3,6,10,.18),#03060a),url('/agentone-cover.png')] bg-cover bg-center opacity-45" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(217,179,95,.2),transparent_42%),linear-gradient(90deg,#03060a_0%,rgba(3,6,10,.58)_50%,#03060a_100%)]" />
       <div className="mx-auto max-w-[880px] rounded-[2rem] border border-[#d9b35f]/24 bg-[#05080e]/78 p-8 text-center shadow-[0_40px_140px_rgba(0,0,0,.52)] backdrop-blur-xl sm:p-12">
         <div className="text-[11px] font-black uppercase tracking-[0.24em] text-cyan-100/62">Enter the world</div>
@@ -399,7 +399,7 @@ function Footer() {
   return (
     <footer className="mx-auto flex max-w-[1560px] flex-col gap-4 border-t border-[#d9b35f]/14 px-4 py-8 text-xs text-[#d7d0bd]/42 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
       <div className="flex items-center gap-3">
-        <img src="/hermesworld-logo.svg" alt="HermesWorld" className="h-8 w-8 rounded-xl" />
+        <img src="/agentone-logo.png" alt="HermesWorld" className="h-8 w-8 rounded-xl" />
         <span className="font-serif text-base text-[#f8e4ac]">Hermes<span className="text-cyan-200">World</span></span>
       </div>
       <div className="flex flex-wrap gap-4 uppercase tracking-[0.16em]">
