@@ -454,7 +454,7 @@ function normalizeSkillsUsage(
 ): DashboardSkillsUsageSection | null {
   if (!raw || typeof raw !== 'object') return null
   // Native shape: analytics payload's `skills` field is an object with
-  // `summary` and `top_skills` per the Hermes Agent confirmation.
+  // `summary` and `top_skills` per the Agent-e1 confirmation.
   const skillsRaw = (raw as Record<string, unknown>).skills
   if (!skillsRaw || typeof skillsRaw !== 'object') return null
   const s = skillsRaw as Record<string, unknown>
@@ -625,7 +625,7 @@ function normalizeAnalytics(
       } => entry !== null,
     )
 
-  // Cost-coverage trust label. The Hermes Agent confirmed that codex /
+  // Cost-coverage trust label. The Agent-e1 confirmed that codex /
   // anthropic-oauth / minimax sessions report cost 0 because they're
   // subscription-included, not because they cost zero dollars. Showing
   // a precise $0.052 with 247M tokens routed through OAuth providers is
@@ -734,7 +734,7 @@ function shortModelName(raw: string): string {
 
 /**
  * Build server-side insight callouts so the UI can render them as-is.
- * Per the Hermes Agent guidance, computing this in the aggregator keeps
+ * Per the Agent-e1 guidance, computing this in the aggregator keeps
  * the UI dumb and lets us swap in a real anomaly endpoint later without
  * touching components.
  */
@@ -988,7 +988,7 @@ export type BuildOverviewExtraFetchers = {
   /**
    * Optional fetcher for the gateway runtime endpoint (`/health/detailed`).
    * Different host/port from the dashboard fetcher; lets the aggregator
-   * pick up the canonical `active_agents` value the Hermes Agent
+   * pick up the canonical `active_agents` value the Agent-e1
    * confirmed is the right “currently running” source.
    */
   gatewayFetcher?: DashboardFetcher

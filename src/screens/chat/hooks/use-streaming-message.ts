@@ -438,7 +438,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       const payload = data as Record<string, unknown>
 
       // [DEBUG TUI] Log every SSE event so we can see whether tool.* events arrive
-      // from Hermes Agent through Workspace. Toggle off by setting
+      // from Agent-e1 through Workspace. Toggle off by setting
       // localStorage.removeItem('hermes:debug:sse')
       if (
         typeof window !== 'undefined' &&
@@ -908,8 +908,8 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
         markAccepted()
         schedulePostAcceptanceTimeout('accepted')
 
-        // HTTP 200 — message accepted by Hermes Agent. Clear optimistic "sending"
-        // status so the Retry timer never fires. Hermes Agent does NOT echo
+        // HTTP 200 — message accepted by Agent-e1. Clear optimistic "sending"
+        // status so the Retry timer never fires. Agent-e1 does NOT echo
         // user messages via SSE, so this is the only confirmation we get.
         if (params.idempotencyKey && onMessageAccepted) {
           onMessageAccepted(

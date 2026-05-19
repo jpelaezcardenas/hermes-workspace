@@ -32,7 +32,7 @@ console.log(`[agentone-api] Configured API: ${CLAUDE_API}`)
 
 // ── Types ─────────────────────────────────────────────────────────
 
-export type ClaudeSession = {
+export type AgentSession = {
   id: string
   source?: string
   user_id?: string | null
@@ -50,7 +50,7 @@ export type ClaudeSession = {
   preview?: string | null
 }
 
-export type ClaudeMessage = {
+export type AgentMessage = {
   id: number
   session_id: string
   role: string
@@ -63,7 +63,7 @@ export type ClaudeMessage = {
   finish_reason?: string | null
 }
 
-export type ClaudeConfig = {
+export type AgentConfig = {
   model?: string
   provider?: string
   [key: string]: unknown
@@ -71,7 +71,7 @@ export type ClaudeConfig = {
 
 // ── Helpers ───────────────────────────────────────────────────────
 
-async function claudeGet<T>(path: string): Promise<T> {
+async function agentGet<T>(path: string): Promise<T> {
   const res = await fetch(`${CLAUDE_API}${path}`, { headers: _authHeaders() })
   if (!res.ok) {
     const body = await res.text().catch(() => '')
@@ -80,7 +80,7 @@ async function claudeGet<T>(path: string): Promise<T> {
   return res.json() as Promise<T>
 }
 
-async function claudePost<T>(path: string, body?: unknown): Promise<T> {
+async function agentPost<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${CLAUDE_API}${path}`, {
     method: 'POST',
     headers: { ..._authHeaders(), 'Content-Type': 'application/json' },
@@ -93,7 +93,7 @@ async function claudePost<T>(path: string, body?: unknown): Promise<T> {
   return res.json() as Promise<T>
 }
 
-async function claudePatch<T>(path: string, body: unknown): Promise<T> {
+async function agentPatch<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${CLAUDE_API}${path}`, {
     method: 'PATCH',
     headers: { ..._authHeaders(), 'Content-Type': 'application/json' },
@@ -106,7 +106,7 @@ async function claudePatch<T>(path: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>
 }
 
-async function claudeDeleteReq(path: string): Promise<void> {
+async function agentDeleteReq(path: string): Promise<void> {
   const res = await fetch(`${CLAUDE_API}${path}`, {
     method: 'DELETE',
     headers: _authHeaders(),
@@ -120,7 +120,7 @@ async function claudeDeleteReq(path: string): Promise<void> {
 // ── Health ────────────────────────────────────────────────────────
 
 export async function checkHealth(): Promise<{ status: string }> {
-  return claudeGet('/health')
+  return agentGet('/health')
 }
 
 // ── Sessions ─────────────────────────────────────────────────────
@@ -128,22 +128,22 @@ export async function checkHealth(): Promise<{ status: string }> {
 export async function listSessions(
   limit = 50,
   offset = 0,
-): Promise<Array<ClaudeSession>> {
+): Promise<Array<AgentSession>> {
   if (getCapabilities().dashboard.available) {
     const resp = await listDashboardSessions(limit, offset)
-    return resp.sessions as Array<ClaudeSession>
+    return resp.sessions as Array<AgentSession>
   }
-  const resp = await claudeGet<{ items: Array<ClaudeSession>; total: number }>(
+  const resp = await agentGet<{ items: Array<AgentSession>; total: number }>(
     `/api/sessions?limit=${limit}&offset=${offset}`,
   )
   return resp.items
 }
 
-export async function getSession(sessionId: string): Promise<ClaudeSession> {
+export async function getSession(sessionId: string): Promise<AgentSession> {
   if (getCapabilities().dashboard.available) {
-    return getDashboardSession(sessionId) as Promise<ClaudeSession>
+    return getDashboardSession(sessionId) as Promise<AgentSession>
   }
-  const resp = await claudeGet<{ session: ClaudeSession }>(
+  const resp = await agentGet<{ session: AgentSession }>(
     `/api/sessions/${sessionId}`,
   )
   return resp.session
@@ -153,12 +153,12 @@ export async function createSession(opts?: {
   id?: string
   title?: string
   model?: string
-}): Promise<ClaudeSession> {
+}): Promise<AgentSession> {
   if (getCapabilities().dashboard.available) {
     const resp = await createDashboardSession(opts || {})
-    return resp.session as ClaudeSession
+    return resp.session as AgentSession
   }
-  const resp = await claudePost<{ session: ClaudeSession }>(
+  const resp = await agentPost<{ session: AgentSession }>(
     '/api/sessions',
     opts || {},
   )
@@ -168,12 +168,12 @@ export async function createSession(opts?: {
 export async function updateSession(
   sessionId: string,
   updates: { title?: string },
-): Promise<ClaudeSession> {
+): Promise<AgentSession> {
   if (getCapabilities().dashboard.available) {
     const resp = await updateDashboardSession(sessionId, updates)
-    return resp.session as ClaudeSession
+    return resp.session as AgentSession
   }
-  const resp = await claudePatch<{ session: ClaudeSession }>(
+  const resp = await agentPatch<{ session: AgentSession }>(
     `/api/sessions/${sessionId}`,
     updates,
   )
@@ -185,17 +185,17 @@ export async function deleteSession(sessionId: string): Promise<void> {
     await deleteDashboardSession(sessionId)
     return
   }
-  return claudeDeleteReq(`/api/sessions/${sessionId}`)
+  return agentDeleteReq(`/api/sessions/${sessionId}`)
 }
 
 export async function getMessages(
   sessionId: string,
-): Promise<Array<ClaudeMessage>> {
+): Promise<Array<AgentMessage>> {
   if (getCapabilities().dashboard.available) {
     const resp = await getDashboardSessionMessages(sessionId)
-    return resp.messages as Array<ClaudeMessage>
+    return resp.messages as Array<AgentMessage>
   }
-  const resp = await claudeGet<{ items: Array<ClaudeMessage>; total: number }>(
+  const resp = await agentGet<{ items: Array<AgentMessage>; total: number }>(
     `/api/sessions/${sessionId}/messages`,
   )
   return resp.items
@@ -208,28 +208,28 @@ export async function searchSessions(
   if (getCapabilities().dashboard.available) {
     return searchDashboardSessions(query)
   }
-  return claudeGet(
+  return agentGet(
     `/api/sessions/search?q=${encodeURIComponent(query)}&limit=${limit}`,
   )
 }
 
 export async function forkSession(
   sessionId: string,
-): Promise<{ session: ClaudeSession; forked_from: string }> {
+): Promise<{ session: AgentSession; forked_from: string }> {
   if (getCapabilities().dashboard.available) {
     return forkDashboardSession(sessionId) as Promise<{
-      session: ClaudeSession
+      session: AgentSession
       forked_from: string
     }>
   }
-  return claudePost(`/api/sessions/${sessionId}/fork`)
+  return agentPost(`/api/sessions/${sessionId}/fork`)
 }
 
 // ── Conversion helpers (Claude → Chat format) ─────────────────
 
-/** Convert a ClaudeMessage to the ChatMessage format the frontend expects */
+/** Convert a AgentMessage to the ChatMessage format the frontend expects */
 export function toChatMessage(
-  msg: ClaudeMessage,
+  msg: AgentMessage,
   options?: { historyIndex?: number },
 ): Record<string, unknown> {
   // Accept either parsed arrays from FastAPI or legacy JSON strings.
@@ -308,9 +308,9 @@ export function toChatMessage(
   }
 }
 
-/** Convert a ClaudeSession to the session summary format the frontend expects */
+/** Convert a AgentSession to the session summary format the frontend expects */
 export function toSessionSummary(
-  session: ClaudeSession,
+  session: AgentSession,
 ): Record<string, unknown> {
   return {
     key: session.id,
@@ -382,7 +382,7 @@ export async function streamChat(
 
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`AgentOne chat stream: ${res.status} ${text}`)
+    throw new Error(`Agent-e1 chat stream: ${res.status} ${text}`)
   }
 
   const reader = res.body?.getReader()
@@ -467,7 +467,7 @@ export async function sendChat(
   const msg =
     typeof messageOrOpts === 'string' ? messageOrOpts : messageOrOpts.message
   const mdl = typeof messageOrOpts === 'string' ? model : messageOrOpts.model
-  return claudePost(`/api/sessions/${sessionId}/chat`, {
+  return agentPost(`/api/sessions/${sessionId}/chat`, {
     message: msg,
     model: mdl,
   })
@@ -476,35 +476,35 @@ export async function sendChat(
 // ── Memory ───────────────────────────────────────────────────────
 
 export async function getMemory(): Promise<unknown> {
-  return claudeGet('/api/memory')
+  return agentGet('/api/memory')
 }
 
 // ── Skills ───────────────────────────────────────────────────────
 
 export async function listSkills(): Promise<unknown> {
-  return claudeGet('/api/skills')
+  return agentGet('/api/skills')
 }
 
 export async function getSkill(name: string): Promise<unknown> {
-  return claudeGet(`/api/skills/${encodeURIComponent(name)}`)
+  return agentGet(`/api/skills/${encodeURIComponent(name)}`)
 }
 
 export async function getSkillCategories(): Promise<unknown> {
-  return claudeGet('/api/skills/categories')
+  return agentGet('/api/skills/categories')
 }
 
 // ── Config ───────────────────────────────────────────────────────
 
-export async function getConfig(): Promise<ClaudeConfig> {
+export async function getConfig(): Promise<AgentConfig> {
   if (getCapabilities().dashboard.available) {
     const res = await dashboardFetch('/api/config')
     if (!res.ok) {
       const body = await res.text().catch(() => '')
       throw new Error(`Agent-e1 dashboard /api/config: ${res.status} ${body}`)
     }
-    return res.json() as Promise<ClaudeConfig>
+    return res.json() as Promise<AgentConfig>
   }
-  return claudeGet<ClaudeConfig>('/api/config')
+  return agentGet<AgentConfig>('/api/config')
 }
 
 export async function patchConfig(
@@ -522,7 +522,7 @@ export async function patchConfig(
     }
     return res.json() as Promise<Record<string, unknown>>
   }
-  return claudePatch<Record<string, unknown>>('/api/config', patch)
+  return agentPatch<Record<string, unknown>>('/api/config', patch)
 }
 
 // ── Models ───────────────────────────────────────────────────────
@@ -531,12 +531,12 @@ export async function listModels(): Promise<{
   object: string
   data: Array<{ id: string; object: string }>
 }> {
-  return claudeGet('/v1/models')
+  return agentGet('/v1/models')
 }
 
 // ── Connection check ─────────────────────────────────────────────
 
-export async function isClaudeAvailable(): Promise<boolean> {
+export async function isAgentAvailable(): Promise<boolean> {
   try {
     const res = await fetch(`${CLAUDE_API}/health`, {
       signal: AbortSignal.timeout(3000),

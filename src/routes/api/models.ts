@@ -170,7 +170,7 @@ function readClaudeDefaultModel(): ModelEntry | null {
 }
 
 /**
- * Fallback: fetch models from the hermes-agent /v1/models endpoint.
+ * Fallback: fetch models from the agentone /v1/models endpoint.
  */
 async function fetchClaudeModels(): Promise<Array<ModelEntry>> {
   const headers: Record<string, string> = {}
@@ -217,7 +217,7 @@ export const Route = createFileRoute('/api/models')({
           if (getGatewayCapabilities().models) {
             const hermesModels = await fetchClaudeModels()
             models = mergeModelEntries(models, hermesModels)
-            source = source === 'models.json' ? 'models.json+hermes-agent' : 'hermes-agent'
+            source = source === 'models.json' ? 'models.json+agentone' : 'agentone'
           }
 
           // Merge auto-discovered local models (Ollama, Atomic Chat, etc.)

@@ -71,7 +71,7 @@ export type OperationsAgent = GatewayConfigAgent & {
   /**
    * True when the agent's profile has no model configured (blank model in
    * config.yaml). Dispatching into an unconfigured agent hangs because
-   * hermes-agent has nothing to call. Show 'Needs setup' state instead.
+   * agentone has nothing to call. Show 'Needs setup' state instead.
    * See #270.
    */
   needsSetup: boolean

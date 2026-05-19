@@ -3,7 +3,7 @@ import { BEARER_TOKEN, CLAUDE_API } from '../../../server/gateway-capabilities'
 import { isAuthenticated } from '../../../server/auth-middleware'
 
 /**
- * Vanilla hermes-agent (any version through 2026-05) does not expose
+ * Vanilla agentone (any version through 2026-05) does not expose
  * `/api/available-models` — that's a legacy fork-only endpoint. When the
  * proxy gets a 404, synthesize a compatible response from `/v1/models`
  * filtered by provider so the chat composer / settings dialog don't

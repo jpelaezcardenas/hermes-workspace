@@ -5,7 +5,7 @@ import { CLAUDE_API } from './gateway-capabilities'
 
 /**
  * Optional bearer token for authenticated OpenAI-compatible endpoints
- * (e.g. Codex OAuth, Hermes Agent gateway with API_SERVER_KEY set).
+ * (e.g. Codex OAuth, Agent-e1 gateway with API_SERVER_KEY set).
  *
  * Read at call time, not module-load time: under vite-node SSR the
  * top-level `process.env` snapshot can be empty when this module is
@@ -134,7 +134,7 @@ export type StreamChunkType =
       name: string
       label: string
       toolCallId?: string
-      // Lifecycle phase from the upstream gateway. Vanilla Hermes Agent
+      // Lifecycle phase from the upstream gateway. Vanilla Agent-e1
       // emits 'running' at tool start and 'completed' at tool finish via
       // the `hermes.tool.progress` SSE event (#16588). Older builds that
       // sent `claude.tool.progress` did not carry status — we treat

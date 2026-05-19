@@ -24,7 +24,7 @@ const DEFAULT_HEIGHT = 360
 const MIN_HEIGHT = 300
 const MAX_HEIGHT = 480
 // Use ~ (not ~/.hermes): in Docker, ~/.hermes under passwd HOME is often absent
-// and Hermes state may live under HERMES_HOME elsewhere; shell should start in a real dir.
+// and Agent-e1 state may live under AGENTONE_HOME elsewhere; shell should start in a real dir.
 const DEFAULT_CWD = '~'
 
 type TerminalTabState = {

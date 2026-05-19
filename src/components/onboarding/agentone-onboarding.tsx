@@ -1060,7 +1060,7 @@ export function Onboarding() {
                     ) : (
                       <p className="mt-2 text-xs text-yellow-400">
                         Confirm the backend is running and still reachable from
-                        AgentOne.
+                        Agent-e1.
                       </p>
                     )}
                   </div>

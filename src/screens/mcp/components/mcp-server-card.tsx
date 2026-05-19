@@ -53,7 +53,7 @@ export function McpServerCard({ server, onEdit }: Props) {
   // (workspace shells out to `hermes mcp test <name>`). Logs and Reauth
   // still require the live runtime /api/mcp endpoints.
   const liveOnlyTitle = fallbackMode
-    ? 'Requires hermes-agent /api/mcp runtime endpoint (not available in local fallback mode).'
+    ? 'Requires agentone /api/mcp runtime endpoint (not available in local fallback mode).'
     : ''
   const qc = useQueryClient()
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -131,7 +131,7 @@ export function McpServerCard({ server, onEdit }: Props) {
             {oauth.isPending ? 'Reauth…' : 'Reauth'}
           </Button>
         ) : null}
-        {/* Logs button hidden until hermes-agent dashboard exposes the
+        {/* Logs button hidden until agentone dashboard exposes the
             /api/mcp/{name}/logs SSE endpoint. Re-enable when the runtime
             endpoint is available; the McpLogsDrawer component is still
             available at ./mcp-logs-drawer. */}

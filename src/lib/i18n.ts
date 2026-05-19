@@ -1,5 +1,5 @@
 /**
- * Lightweight i18n — UI string translations for Hermes Workspace.
+ * Lightweight i18n — UI string translations for Agent-e1.
  * Add new languages by adding a locale map below.
  */
 

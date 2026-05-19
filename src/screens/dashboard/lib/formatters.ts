@@ -85,7 +85,7 @@ export function formatModelName(raw: string): string {
  * Strip namespace prefixes from a skill identifier.
  *
  * Hermes' analytics returns ids like:
- *   `autonomous-ai-agents:hermes-agent`
+ *   `autonomous-ai-agents:agentone`
  *   `software-development:systematic-debugging`
  *   `creative:hermes-promo-scene-collage`
  *

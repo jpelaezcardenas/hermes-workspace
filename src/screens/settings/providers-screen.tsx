@@ -135,7 +135,7 @@ type SaveSettingPayload = {
 }
 
 // Models are fetched through the workspace API proxy to support Docker and
-// reverse-proxy deployments where the browser cannot reach Hermes Agent directly.
+// reverse-proxy deployments where the browser cannot reach Agent-e1 directly.
 
 type ClaudeCatalogEntry =
   | string
@@ -291,7 +291,7 @@ const SETTINGS: Array<SettingDefinition> = [
     min: 1,
     step: 1000,
   },
-  // Thinking/reasoning settings removed — not supported by Hermes Agent
+  // Thinking/reasoning settings removed — not supported by Agent-e1
   // Legacy settings removed: bootstrap, block streaming,
   // compaction, thinking, verbose, and fast mode do not apply here.
   {

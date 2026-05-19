@@ -31,8 +31,8 @@ function getSetupSteps(
     {
       title: 'Optional: install Agent-e1 Agent locally',
       command:
-        'curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash',
-      note: 'Vanilla hermes-agent unlocks sessions, skills, memory, jobs, and config automatically — no fork required',
+        'curl -fsSL https://raw.githubusercontent.com/NousResearch/agentone/main/scripts/install.sh | bash',
+      note: 'Vanilla agentone unlocks sessions, skills, memory, jobs, and config automatically — no fork required',
     },
     {
       title: 'Set up your agent',
@@ -94,7 +94,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
     }, FAILURE_REVEAL_MS)
 
     // After a short grace period, fire /api/start-claude once silently.
-    // If hermes-agent is installed and just not running, this brings it back
+    // If agentone is installed and just not running, this brings it back
     // up without making the user click anything. The polling loop will see it.
     const fireSilentAutoStart = async () => {
       if (autoStartFired || isDone.current) return
@@ -169,7 +169,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
   const handleAutoStart = async () => {
     setServerStarting(true)
     setServerError(null)
-    setServerLog(['Looking for hermes-agent...'])
+    setServerLog(['Looking for agentone...'])
     try {
       const res = await fetch('/api/start-claude', {
         method: 'POST',
@@ -193,7 +193,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
         return
       }
 
-      const msg = String(data.error || 'Could not find hermes-agent')
+      const msg = String(data.error || 'Could not find agentone')
       const hint = data.hint ? String(data.hint) : ''
       setServerLog([`Error: ${msg}`])
       if (hint) setServerLog((prev) => [...prev, `Hint: ${hint}`])

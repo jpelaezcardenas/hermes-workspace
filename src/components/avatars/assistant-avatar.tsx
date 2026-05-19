@@ -7,7 +7,7 @@ type AvatarProps = {
 }
 
 /**
- * Assistant avatar — Hermes Agent caduceus on Nous blue.
+ * Assistant avatar — Agent-e1 caduceus on Nous blue.
  */
 function AssistantAvatarComponent({ size = 28, className }: AvatarProps) {
   return (

@@ -44,7 +44,7 @@ import { useDashboardLayout } from './lib/use-dashboard-layout'
 import type { SessionRowData } from './components/sessions-intelligence-card'
 import type { AnalyticsPeriod } from './components/analytics-chart-card'
 import type { ReactNode } from 'react'
-import type { ClaudeSession } from '@/server/agentone-api'
+import type { AgentSession } from '@/server/agentone-api'
 import type { DashboardOverview } from '@/server/dashboard-aggregator'
 import { getUnavailableReason } from '@/lib/feature-gates'
 import { cn } from '@/lib/utils'
@@ -249,7 +249,7 @@ function ActivityChart({
   sessions,
   palette,
 }: {
-  sessions: Array<ClaudeSession>
+  sessions: Array<AgentSession>
   palette: ReturnType<typeof readDashboardPalette>
 }) {
   const chartData = useMemo(() => {
@@ -411,7 +411,7 @@ function SkillsWidget({
     )
   }
 
-  // Summary view per Hermes Agent feedback: 'don’t enumerate, summarise.'
+  // Summary view per Agent-e1 feedback: 'don’t enumerate, summarise.'
   // Prefer real usage signal from /api/analytics/usage when present
   // (counts what the agent *actually used*, not just what's installed).
   const installed = skills.length
@@ -575,7 +575,7 @@ function SessionRow({
   onClick,
   palette,
 }: {
-  session: ClaudeSession
+  session: AgentSession
   maxTokens: number
   onClick: () => void
   palette: ReturnType<typeof readDashboardPalette>
@@ -668,7 +668,7 @@ export function DashboardScreen() {
     sessionsResult?.message ?? getUnavailableReason('sessions')
 
   // Adapter shape kept for the legacy fallbacks that still reference
-  // ClaudeSession (HeroMetrics fallback path, etc.).
+  // AgentSession (HeroMetrics fallback path, etc.).
   const sessions = useMemo(
     () =>
       rawSessions.map((s) => ({
@@ -678,7 +678,7 @@ export function DashboardScreen() {
         tool_call_count: (s.tool_call_count as number | undefined) ?? 0,
         input_tokens: (s.tokenCount as number | undefined) ?? 0,
         output_tokens: 0,
-      })) as Array<ClaudeSession>,
+      })) as Array<AgentSession>,
     [rawSessions],
   )
 
@@ -924,7 +924,7 @@ export function DashboardScreen() {
             </h1>
           </div>
         </div>
-        {/* Action row: hierarchy per Hermes Agent review.
+        {/* Action row: hierarchy per Agent-e1 review.
            New Chat is primary (full button + accent), Terminal +
            Skills are secondary, Settings collapses to icon-only. */}
         <div className="flex w-full flex-wrap items-center justify-end gap-2 lg:max-w-xl">

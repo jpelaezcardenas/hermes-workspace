@@ -20,7 +20,7 @@ type AuthCheckResponse = {
   error?: string
 }
 
-type ClaudeConfigResponse = {
+type AgentConfigResponse = {
   activeProvider?: string
   activeModel?: string
 }
@@ -127,12 +127,12 @@ export function ConnectionCheckStep({
                 2. Restart the gateway:
               </p>
               <code className="block overflow-x-auto rounded-lg bg-red-100 px-3 py-2 text-xs text-red-900">
-                cd hermes-agent && hermes --gateway
+                cd agentone && hermes --gateway
               </code>
             </div>
           </div>
           <p className="mt-3 text-xs text-red-700">
-            Or point <code>HERMES_API_URL</code> at any OpenAI-compatible
+            Or point <code>AGENTONE_API_URL</code> at any OpenAI-compatible
             backend (Ollama, LiteLLM, vLLM, etc.).
           </p>
           {lastError && (
@@ -157,7 +157,7 @@ export function ModelConfigurationStep({
   setCanProceed,
 }: OnboardingStepComponentProps) {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
-  const [config, setConfig] = useState<ClaudeConfigResponse | null>(null)
+  const [config, setConfig] = useState<AgentConfigResponse | null>(null)
 
   useEffect(() => {
     setCanProceed(true)
@@ -175,7 +175,7 @@ export function ModelConfigurationStep({
           throw new Error(`HTTP ${response.status}`)
         }
 
-        const data = (await response.json()) as ClaudeConfigResponse
+        const data = (await response.json()) as AgentConfigResponse
         if (!cancelled) {
           setConfig(data)
           setStatus('ready')

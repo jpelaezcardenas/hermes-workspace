@@ -350,21 +350,21 @@ function SettingsRoute() {
           {/* -- Connection ------------------ */}
           {activeSection === 'connection' && <ConnectionSection />}
 
-          {/* ── Hermes Agent ──────────────────────────────────── */}
+          {/* ── Agent-e1 ──────────────────────────────────── */}
           {activeSection === 'claude' && (
-            <ClaudeConfigSection activeView="claude" />
+            <AgentConfigSection activeView="claude" />
           )}
           {activeSection === 'agent' && (
-            <ClaudeConfigSection activeView="agent" />
+            <AgentConfigSection activeView="agent" />
           )}
           {activeSection === 'routing' && (
-            <ClaudeConfigSection activeView="routing" />
+            <AgentConfigSection activeView="routing" />
           )}
           {activeSection === 'voice' && (
-            <ClaudeConfigSection activeView="voice" />
+            <AgentConfigSection activeView="voice" />
           )}
           {activeSection === 'display' && (
-            <ClaudeConfigSection activeView="display" />
+            <AgentConfigSection activeView="display" />
           )}
 
           {/* ── Appearance ──────────────────────────────────────── */}
@@ -876,7 +876,7 @@ function ChatDisplaySection() {
           />
         </SettingsRow>
       </SettingsSection>
-      {/* Mobile Navigation removed — not relevant for Hermes Workspace */}
+      {/* Mobile Navigation removed — not relevant for Agent-e1 */}
     </>
   )
 }
@@ -887,7 +887,7 @@ type LoaderStyleOption = { value: LoaderStyle; label: string }
 
 const LOADER_STYLES: Array<LoaderStyleOption> = [
   { value: 'dots', label: 'Dots' },
-  { value: 'braille-claude', label: 'Claude' },
+  { value: 'braille-agentone', label: 'Agent-e1' },
   { value: 'braille-orbit', label: 'Orbit' },
   { value: 'braille-breathe', label: 'Breathe' },
   { value: 'braille-pulse', label: 'Pulse' },
@@ -898,7 +898,7 @@ const LOADER_STYLES: Array<LoaderStyleOption> = [
 
 function getPreset(style: LoaderStyle): BrailleSpinnerPreset | null {
   const map: Record<string, BrailleSpinnerPreset> = {
-    'braille-claude': 'claude',
+    'braille-agentone': 'agentone',
     'braille-orbit': 'orbit',
     'braille-breathe': 'breathe',
     'braille-pulse': 'pulse',
@@ -965,7 +965,7 @@ function _LoaderStyleSection() {
   )
 }
 
-// ── Hermes Agent Configuration ──────────────────────────────────────
+// ── Agent-e1 Configuration ──────────────────────────────────────
 
 type ClaudeProvider = {
   id: string
@@ -976,7 +976,7 @@ type ClaudeProvider = {
   maskedKeys: Record<string, string>
 }
 
-type ClaudeConfigData = {
+type AgentConfigData = {
   config: Record<string, unknown>
   providers: Array<ClaudeProvider>
   activeProvider: string
@@ -984,7 +984,8 @@ type ClaudeConfigData = {
   claudeHome: string
 }
 
-const CLAUDE_API =
+const AGENTONE_API =
+  process.env.AGENTONE_API_URL ||
   process.env.HERMES_API_URL ||
   process.env.CLAUDE_API_URL ||
   'http://127.0.0.1:8642'
@@ -1166,12 +1167,12 @@ function mergeModelForManifestSave(
   return { provider: 'manifest' }
 }
 
-function ClaudeConfigSection({
+function AgentConfigSection({
   activeView = 'claude',
 }: {
   activeView?: 'claude' | 'agent' | 'routing' | 'voice' | 'display'
 }) {
-  const [data, setData] = useState<ClaudeConfigData | null>(null)
+  const [data, setData] = useState<AgentConfigData | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState<string | null>(null)
@@ -1201,7 +1202,7 @@ function ClaudeConfigSection({
   >([])
   const [loadingModels, setLoadingModels] = useState(false)
 
-  const syncInputsFromData = useCallback((configData: ClaudeConfigData) => {
+  const syncInputsFromData = useCallback((configData: AgentConfigData) => {
     const cfg = configData.config
     setModelInput(configData.activeModel || '')
     setProviderInput(configData.activeProvider || '')
@@ -1217,7 +1218,7 @@ function ClaudeConfigSection({
 
   const fetchConfig = useCallback(async () => {
     const res = await fetch('/api/agentone-config')
-    const configData = (await res.json()) as ClaudeConfigData
+    const configData = (await res.json()) as AgentConfigData
     setData(configData)
     syncInputsFromData(configData)
     return configData
@@ -2845,7 +2846,7 @@ function ConnectionSection() {
 
   const sourceLabel: Record<ConnectionSettings['source'], string> = {
     override: 'Runtime override (saved in workspace-overrides.json)',
-    env: 'From HERMES_API_URL / HERMES_DASHBOARD_URL env vars',
+    env: 'From AGENTONE_API_URL / AGENTONE_DASHBOARD_URL env vars',
     default: 'Defaults — no override set',
   }
 

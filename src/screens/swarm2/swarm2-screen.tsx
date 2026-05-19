@@ -316,7 +316,7 @@ const ROLE_PRESETS: ReadonlyArray<RolePreset> = [
     role: 'Mirror Integrations',
     specialty: 'asset packs, upstream sync',
     mission: 'Generate assets. Watch upstream. Pack integrations.',
-    systemPrompt: 'You produce assets and watch upstream. Generate art/audio per Lane A. Every 12h diff upstream Hermes Agent main, surface portable items. Never cross-org PR without ack.',
+    systemPrompt: 'You produce assets and watch upstream. Generate art/audio per Lane A. Every 12h diff upstream Agent-e1 main, surface portable items. Never cross-org PR without ack.',
     skills: ['swarm-worker-core', 'claude-promo', 'songwriting-and-ai-music'],
     defaultModel: 'GPT-5.4',
   },

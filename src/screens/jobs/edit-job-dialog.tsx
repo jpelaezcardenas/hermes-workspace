@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Cancel01Icon } from '@hugeicons/core-free-icons'
-import type { ClaudeJob, JobProfileOption } from '@/lib/jobs-api'
+import type { AgentJob, JobProfileOption } from '@/lib/jobs-api'
 
 const SCHEDULE_PRESETS = [
   { label: 'Every 15m', value: 'every 15m' },
@@ -18,7 +18,7 @@ const SCHEDULE_PRESETS = [
 const DELIVERY_OPTIONS = ['local', 'telegram', 'discord'] as const
 
 type EditJobDialogProps = {
-  job: ClaudeJob | null
+  job: AgentJob | null
   open: boolean
   isSubmitting?: boolean
   profiles: Array<JobProfileOption>
@@ -34,7 +34,7 @@ type EditJobDialogProps = {
   }) => void | Promise<void>
 }
 
-function readScheduleValue(job: ClaudeJob): string {
+function readScheduleValue(job: AgentJob): string {
   if (typeof job.schedule_display === 'string' && job.schedule_display.trim()) {
     return job.schedule_display.trim()
   }
@@ -57,7 +57,7 @@ function readScheduleValue(job: ClaudeJob): string {
   return ''
 }
 
-function getInitialState(job: ClaudeJob | null) {
+function getInitialState(job: AgentJob | null) {
   const repeatTimes = job?.repeat?.times
   const repeatCompleted = job?.repeat?.completed ?? 0
   const remainingRepeats =

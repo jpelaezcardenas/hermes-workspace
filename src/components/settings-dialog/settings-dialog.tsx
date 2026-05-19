@@ -1974,7 +1974,7 @@ function _AdvancedContent() {
     }
   }
 
-  const urlErrorId = 'claude-url-error'
+  const urlErrorId = 'agentone-url-error'
 
   return (
     <div className="space-y-4">

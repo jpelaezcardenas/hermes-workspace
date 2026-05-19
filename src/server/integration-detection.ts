@@ -247,7 +247,7 @@ export function detectHonchoIntegration(
         : 'No Honcho env var in current .env.',
     ),
     fileSource(
-      'claude-config',
+      'agentone-config',
       'Current config.yaml compatibility',
       claudeConfigPath,
       claudeConfigConfigured,
@@ -420,7 +420,7 @@ export function detectByteroverIntegration(
         : 'No Byterover env var in current .env.',
     ),
     fileSource(
-      'claude-config',
+      'agentone-config',
       'Current config.yaml compatibility',
       claudeConfigPath,
       claudeConfigConfigured,
