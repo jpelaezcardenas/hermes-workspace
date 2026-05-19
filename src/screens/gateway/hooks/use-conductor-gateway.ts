@@ -771,7 +771,7 @@ async function streamPortableConductorMission(params: {
       history: [],
       idempotencyKey: crypto.randomUUID(),
       model: params.model || undefined,
-      locale: typeof window !== 'undefined' ? localStorage.getItem('agentone-locale') || 'en' : 'en',
+      locale: typeof window !== 'undefined' ? localStorage.getItem('agentone-locale') || 'es' : 'es',
     }),
     signal: params.signal,
   })

@@ -324,15 +324,17 @@ export const LOCALE_LABELS: Record<LocaleId, string> = {
 
 const STORAGE_KEY = 'agentone-locale'
 
+const DEFAULT_LOCALE: LocaleId = 'es'
+
 export function getLocale(): LocaleId {
-  if (typeof window === 'undefined') return 'en'
+  if (typeof window === 'undefined') return DEFAULT_LOCALE
   const stored = localStorage.getItem(STORAGE_KEY)
   if (stored && stored in LOCALES) return stored as LocaleId
   const full = navigator.language
   if (full in LOCALES) return full as LocaleId
   const lang = full.split('-')[0]
   if (lang in LOCALES) return lang as LocaleId
-  return 'en'
+  return DEFAULT_LOCALE
 }
 
 export function setLocale(id: LocaleId): void {
@@ -342,5 +344,5 @@ export function setLocale(id: LocaleId): void {
 
 export function t(key: TranslationKey): string {
   const locale = getLocale()
-  return LOCALES[locale]?.[key] ?? LOCALES.en[key] ?? key
+  return LOCALES[locale]?.[key] ?? LOCALES.es[key] ?? LOCALES.en[key] ?? key
 }
