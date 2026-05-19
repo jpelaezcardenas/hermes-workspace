@@ -9,7 +9,9 @@ const tempRoot = mkdtempSync(join(tmpdir(), 'hermes-ma-mvp-smoke-'))
 const repoPath = join(tempRoot, 'repo')
 const stateRoot = join(tempRoot, 'state')
 const obsidianRoot = join(tempRoot, 'obsidian')
-const port = Number(process.env.HERMES_MA_SMOKE_PORT || 3187)
+const port = process.env.HERMES_MA_SMOKE_PORT
+  ? Number(process.env.HERMES_MA_SMOKE_PORT)
+  : 3187 + Math.floor(Math.random() * 1000)
 const baseUrl = `http://127.0.0.1:${port}`
 const serverReadyPattern = /Local:\s+http:\/\/localhost:|Network:/
 let server
@@ -169,6 +171,12 @@ async function main() {
       assigneeProfileId: profileId,
       priority: 'medium',
       workPacket: 'Create worker-output.txt and finish successfully.',
+      productBrief: {
+        goal: 'Verify the local multi-agent product loop works end to end.',
+        userStory: 'As an operator, I can trust the Agent Board before using it for real implementation work.',
+        successMetrics: ['smoke flow exits with PASS', 'summary note includes product context'],
+        nonGoals: ['real GitHub network calls'],
+      },
       acceptanceCriteria: ['worker-output.txt exists', 'validation passes', 'PR artifact is created'],
     }),
   })
@@ -186,7 +194,15 @@ async function main() {
 
   const events = await api(`/api/ma/tasks/${encodeURIComponent(taskId)}/events`)
   if (!events.events?.some((event) => event.type === 'task.completed')) throw new Error('task.completed event missing')
-  log(`✓ events captured: ${events.events.length}`)
+  const runStarted = events.events?.find((event) => event.type === 'run.started')
+  const loadedSkills = runStarted?.payload?.loadedSkills
+  if (!Array.isArray(loadedSkills) || !loadedSkills.includes('protocol-driven-orchestrator')) {
+    throw new Error(`run.started missing contextual loadedSkills: ${JSON.stringify(runStarted)}`)
+  }
+  if (!loadedSkills.includes('review-gate')) {
+    throw new Error(`Expected contextual review-gate skill for smoke task: ${JSON.stringify(loadedSkills)}`)
+  }
+  log(`✓ events captured with loaded skills: ${loadedSkills.join(', ')}`)
 
   const diff = await api(`/api/ma/tasks/${encodeURIComponent(taskId)}/diff`)
   if (!diff.diff?.changedFiles?.includes('worker-output.txt')) throw new Error(`Diff missing worker-output.txt: ${JSON.stringify(diff.diff)}`)
@@ -226,7 +242,9 @@ async function main() {
   })
   if (!summary.task?.finalSummary || !summary.run?.summary || !summary.obsidian?.path) throw new Error(`Summary save incomplete: ${JSON.stringify(summary)}`)
   if (!existsSync(summary.obsidian.path)) throw new Error(`Obsidian note missing: ${summary.obsidian.path}`)
-  if (!readFileSync(summary.obsidian.path, 'utf-8').includes('Smoke summary')) throw new Error('Obsidian note content missing summary')
+  const note = readFileSync(summary.obsidian.path, 'utf-8')
+  if (!note.includes('Smoke summary')) throw new Error('Obsidian note content missing summary')
+  if (!note.includes('Verify the local multi-agent product loop works end to end.')) throw new Error('Obsidian note content missing product brief')
   log(`✓ summary saved to ${summary.obsidian.path}`)
 
   log('\nPASS: Hermes Multi-Agent MVP API smoke completed successfully')

@@ -88,6 +88,8 @@ Out of scope for this MVP: team accounts, multi-tenant auth, remote worker fleet
    - title;
    - priority;
    - description;
+   - product goal and user story;
+   - success metrics and non-goals, one per line;
    - work packet;
    - acceptance criteria, one per line.
 4. Submit the form.
@@ -98,10 +100,28 @@ Task fields that matter operationally:
 
 - `projectId` — must match a configured project;
 - `assigneeProfileId` — selects the worker profile;
-- `workPacket` — primary instructions passed to the worker;
+- `productBrief` — product goal, user story, success metrics, and non-goals shown in task detail and passed to the worker;
+- `workPacket` — implementation instructions passed to the worker;
 - `acceptanceCriteria` — checklist used for review/validation;
 - `branchName` and `worktreePath` — filled after start;
 - `latestRunId` and `finalSummary` — filled by worker/memory hooks.
+
+## Contextual skill autoloading
+
+When a worker run starts, Hermes builds the worker skill list from three sources, in stable order with duplicates removed:
+
+1. explicit skills already configured on the selected profile;
+2. role defaults from the multi-agent role map;
+3. contextual matches from the task title, description, product brief, work packet, and acceptance criteria.
+
+Examples:
+
+- backend work loads `test-driven-development` and `systematic-debugging` by default;
+- frontend/UI task text can add `frontend-design`;
+- review/validation task text can add `review-gate`;
+- docs task text can add `document-release`.
+
+The selected skills are passed to Hermes Agent with `--skills`, embedded in the worker prompt under **Skills loaded for this run**, and stored in the `run.started` event payload as `loadedSkills` for UI debugging. The worker prompt also includes the task **Product brief** so implementation decisions stay tied to the product goal, user story, success metrics, and explicit non-goals.
 
 ## Start a task and worktree layout
 
@@ -151,7 +171,10 @@ Safety behavior:
 
 The task detail panel shows:
 
+- product brief: goal, user story, success metrics, and non-goals;
+
 - **Events / Live Log** from `GET /api/ma/tasks/:taskId/events`;
+- **Skills loaded for this run** from the latest `run.started` event payload;
 - **Diff** from `GET /api/ma/tasks/:taskId/diff`;
 - **Validation** history from `GET /api/ma/tasks/:taskId/validate`.
 
@@ -325,6 +348,7 @@ pnpm exec electron --version
 - Validation command safety depends on project configuration; avoid placing destructive commands in configured validation slots.
 - PR creation depends on local `git`, `gh`, remotes, and authentication.
 - Final summaries are manually saved; the MVP does not auto-write every run to Obsidian.
+- Contextual skill matching is keyword-based; profile configuration remains the source of explicit project-specific skills.
 - Browser web UI is the primary supported surface; Electron is smoke-tested but not the primary implementation surface.
 
 ## Quick verification checklist

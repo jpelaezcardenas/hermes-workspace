@@ -6,7 +6,10 @@ import type {
   MultiAgentApprovalActionType,
   MultiAgentApprovalStatus,
   MultiAgentArtifact,
+  MultiAgentMission,
+  MultiAgentMissionStatus,
   MultiAgentPriority,
+  MultiAgentProductBrief,
   MultiAgentRiskLevel,
   MultiAgentRun,
   MultiAgentRunStatus,
@@ -47,8 +50,18 @@ type LoadStateOptions = {
   now?: Clock
 }
 
+type CreateMissionInput = {
+  projectId: string
+  title: string
+  productBrief: MultiAgentProductBrief
+  constraints?: string[]
+  desiredOutput?: string
+  status?: MultiAgentMissionStatus
+}
+
 type CreateTaskInput = {
   projectId: string
+  missionId?: string | null
   title: string
   description: string
   assigneeProfileId: string
@@ -56,6 +69,7 @@ type CreateTaskInput = {
   parentIds?: string[]
   childIds?: string[]
   workPacket?: string
+  productBrief?: MultiAgentProductBrief | null
   acceptanceCriteria?: string[]
   status?: MultiAgentTaskStatus
 }
@@ -80,6 +94,11 @@ type CreateApprovalInput = {
 }
 
 type CreateArtifactInput = Omit<MultiAgentArtifact, 'id' | 'createdAt'>
+
+type MissionFilter = {
+  projectId?: string
+  status?: MultiAgentMissionStatus
+}
 
 type TaskFilter = {
   projectId?: string
@@ -111,6 +130,7 @@ export function emptyMultiAgentState(now = defaultNow()): MultiAgentState {
   return {
     projects: {},
     profiles: {},
+    missions: {},
     tasks: {},
     runs: {},
     approvals: {},
@@ -131,6 +151,7 @@ function normalizeState(value: unknown, now: string): MultiAgentState {
   return {
     projects: isRecord(value.projects) ? (value.projects as MultiAgentState['projects']) : {},
     profiles: isRecord(value.profiles) ? (value.profiles as MultiAgentState['profiles']) : {},
+    missions: isRecord(value.missions) ? (value.missions as MultiAgentState['missions']) : {},
     tasks: isRecord(value.tasks) ? (value.tasks as MultiAgentState['tasks']) : {},
     runs: isRecord(value.runs) ? (value.runs as MultiAgentState['runs']) : {},
     approvals: isRecord(value.approvals) ? (value.approvals as MultiAgentState['approvals']) : {},
@@ -191,11 +212,39 @@ function mutateState<T>(store: MultiAgentStore, mutator: (state: MultiAgentState
   return result
 }
 
+export function createMission(store: MultiAgentStore, input: CreateMissionInput): MultiAgentMission {
+  return mutateState(store, (state, now) => {
+    const mission: MultiAgentMission = {
+      id: `mission-${store.id()}`,
+      projectId: input.projectId,
+      title: input.title,
+      status: input.status ?? 'draft',
+      productBrief: input.productBrief,
+      constraints: input.constraints ?? [],
+      desiredOutput: input.desiredOutput ?? '',
+      taskIds: [],
+      createdAt: now,
+      updatedAt: now,
+    }
+    state.missions[mission.id] = mission
+    return mission
+  })
+}
+
+export function listMissions(store: MultiAgentStore, filter: MissionFilter = {}): MultiAgentMission[] {
+  const state = loadState(store.stateFile, { now: store.now })
+  return Object.values(state.missions)
+    .filter((mission) => !filter.projectId || mission.projectId === filter.projectId)
+    .filter((mission) => !filter.status || mission.status === filter.status)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+}
+
 export function createTask(store: MultiAgentStore, input: CreateTaskInput): MultiAgentTask {
   return mutateState(store, (state, now) => {
     const task: MultiAgentTask = {
       id: `task-${store.id()}`,
       projectId: input.projectId,
+      missionId: input.missionId ?? null,
       title: input.title,
       description: input.description,
       status: input.status ?? 'backlog',
@@ -204,11 +253,20 @@ export function createTask(store: MultiAgentStore, input: CreateTaskInput): Mult
       parentIds: input.parentIds ?? [],
       childIds: input.childIds ?? [],
       workPacket: input.workPacket ?? '',
+      productBrief: input.productBrief ?? null,
       acceptanceCriteria: input.acceptanceCriteria ?? [],
       createdAt: now,
       updatedAt: now,
     }
     state.tasks[task.id] = task
+    if (task.missionId && state.missions[task.missionId]) {
+      const mission = state.missions[task.missionId]
+      state.missions[task.missionId] = {
+        ...mission,
+        taskIds: Array.from(new Set([...mission.taskIds, task.id])),
+        updatedAt: now,
+      }
+    }
     return task
   })
 }

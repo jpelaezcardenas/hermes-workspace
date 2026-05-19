@@ -99,6 +99,39 @@ describe('multi-agent API routes', () => {
     expect(body.projects[0]).toMatchObject({ id: 'workspace', repoPath, defaultBranch: 'main' })
   })
 
+  it('POST and GET /api/ma/missions persists top-level product missions', async () => {
+    const mod = await loadRoute('./missions')
+    const created = await mod.Route.server.handlers.POST({
+      request: new Request('http://localhost/api/ma/missions', {
+        method: 'POST',
+        body: JSON.stringify({
+          projectId: 'workspace',
+          title: 'Autonomous Hermes team',
+          productBrief: {
+            goal: 'Let one mission coordinate multiple Hermes workers.',
+            userStory: 'As an operator, I can create a mission before decomposing it into tasks.',
+            successMetrics: ['mission appears in board'],
+            nonGoals: ['remote worker fleet'],
+          },
+          constraints: ['local single-user only'],
+          desiredOutput: 'Mission ready for planning.',
+        }),
+      }),
+    })
+
+    expect(created.status).toBe(201)
+    const createdBody = await jsonBody<{ ok: boolean; mission: { id: string; title: string; status: string; taskIds: string[] } }>(created)
+    expect(createdBody.ok).toBe(true)
+    expect(createdBody.mission).toMatchObject({ title: 'Autonomous Hermes team', status: 'draft', taskIds: [] })
+
+    const listed = await mod.Route.server.handlers.GET({
+      request: new Request('http://localhost/api/ma/missions?project_id=workspace'),
+    })
+    expect(listed.status).toBe(200)
+    const listedBody = await jsonBody<{ ok: boolean; missions: Array<{ id: string; title: string }> }>(listed)
+    expect(listedBody.missions.map((mission) => mission.title)).toEqual(['Autonomous Hermes team'])
+  })
+
   it('GET /api/ma/tasks returns persisted tasks and supports project/status filters', async () => {
     const tasksMod = await loadRoute('./tasks')
     await tasksMod.Route.server.handlers.POST({
@@ -106,6 +139,7 @@ describe('multi-agent API routes', () => {
         method: 'POST',
         body: JSON.stringify({
           projectId: 'workspace',
+          missionId: 'mission-api',
           title: 'Build API',
           description: 'Expose routes',
           assigneeProfileId: 'backend-engineer',
@@ -122,10 +156,10 @@ describe('multi-agent API routes', () => {
     })
 
     expect(res.status).toBe(200)
-    const body = await jsonBody<{ ok: boolean; tasks: Array<{ title: string; status: string }> }>(res)
+    const body = await jsonBody<{ ok: boolean; tasks: Array<{ title: string; status: string; missionId?: string | null }> }>(res)
     expect(body.ok).toBe(true)
     expect(body.tasks).toHaveLength(1)
-    expect(body.tasks[0]).toMatchObject({ title: 'Build API', status: 'ready' })
+    expect(body.tasks[0]).toMatchObject({ title: 'Build API', status: 'ready', missionId: 'mission-api' })
   })
 
   it('POST /api/ma/tasks validates input and creates a task', async () => {
@@ -140,16 +174,31 @@ describe('multi-agent API routes', () => {
           assigneeProfileId: 'backend-engineer',
           priority: 'medium',
           workPacket: 'Add POST route',
+          productBrief: {
+            goal: 'Reduce task creation ambiguity for product work.',
+            userStory: 'As a PM, I can capture the product why before implementation starts.',
+            successMetrics: ['PM can review goal in task detail'],
+            nonGoals: ['full roadmap planner'],
+          },
           acceptanceCriteria: ['Task persisted'],
         }),
       }),
     })
 
     expect(res.status).toBe(201)
-    const body = await jsonBody<{ ok: boolean; task: { id: string; status: string; title: string } }>(res)
+    const body = await jsonBody<{ ok: boolean; task: { id: string; status: string; title: string; productBrief?: { goal: string; userStory: string; successMetrics: string[]; nonGoals: string[] } } }>(res)
     expect(body.ok).toBe(true)
     expect(body.task.id).toMatch(/^task-/)
-    expect(body.task).toMatchObject({ title: 'Create task route', status: 'backlog' })
+    expect(body.task).toMatchObject({
+      title: 'Create task route',
+      status: 'backlog',
+      productBrief: {
+        goal: 'Reduce task creation ambiguity for product work.',
+        userStory: 'As a PM, I can capture the product why before implementation starts.',
+        successMetrics: ['PM can review goal in task detail'],
+        nonGoals: ['full roadmap planner'],
+      },
+    })
   })
 
   it('POST /api/ma/tasks returns 400 for missing title', async () => {

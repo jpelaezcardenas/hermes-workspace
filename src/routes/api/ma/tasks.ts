@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { createTask, listTasks } from '../../../server/multi-agent/store'
-import type { MultiAgentPriority, MultiAgentTaskStatus } from '../../../server/multi-agent/types'
+import type { MultiAgentPriority, MultiAgentProductBrief, MultiAgentTaskStatus } from '../../../server/multi-agent/types'
 import { getRouteStore, requireAuthenticated, safeError } from './-helpers'
 
 const TASK_STATUSES = new Set<MultiAgentTaskStatus>([
@@ -22,10 +22,22 @@ function trimmedString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function optionalStringArray(value: unknown): string[] | undefined {
+function optionalStringArray(value: unknown, fieldName = 'acceptanceCriteria'): string[] | undefined {
   if (value === undefined) return undefined
-  if (!Array.isArray(value)) throw new Error('acceptanceCriteria must be an array')
+  if (!Array.isArray(value)) throw new Error(`${fieldName} must be an array`)
   return value.map((item) => trimmedString(item)).filter(Boolean)
+}
+
+function optionalProductBrief(value: unknown): MultiAgentProductBrief | undefined {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'object' || Array.isArray(value)) throw new Error('productBrief must be an object')
+  const brief = value as Record<string, unknown>
+  const goal = trimmedString(brief.goal)
+  const userStory = trimmedString(brief.userStory ?? brief.user_story)
+  const successMetrics = optionalStringArray(brief.successMetrics ?? brief.success_metrics, 'successMetrics') ?? []
+  const nonGoals = optionalStringArray(brief.nonGoals ?? brief.non_goals, 'nonGoals') ?? []
+  if (!goal && !userStory && !successMetrics.length && !nonGoals.length) return undefined
+  return { goal, userStory, successMetrics, nonGoals }
 }
 
 function parseStatus(value: unknown): MultiAgentTaskStatus | undefined {
@@ -78,14 +90,17 @@ export const Route = createFileRoute('/api/ma/tasks')({
           if (!title) throw new Error('title is required')
           if (!assigneeProfileId) throw new Error('assigneeProfileId is required')
 
+          const missionId = trimmedString(body.missionId ?? body.mission_id)
           const task = createTask(getRouteStore(), {
             projectId,
+            missionId: missionId || undefined,
             title,
             description,
             assigneeProfileId,
             priority: parsePriority(body.priority),
             status: parseStatus(body.status),
             workPacket: trimmedString(body.workPacket ?? body.work_packet),
+            productBrief: optionalProductBrief(body.productBrief ?? body.product_brief),
             acceptanceCriteria: optionalStringArray(
               body.acceptanceCriteria ?? body.acceptance_criteria,
             ),

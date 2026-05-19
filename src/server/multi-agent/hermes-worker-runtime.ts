@@ -1,5 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { appendTaskEvent, type MultiAgentEventLog } from './events'
+import { selectSkillsForTask } from './skill-autoload'
 import {
   updateRun,
   updateTask,
@@ -17,6 +18,7 @@ export type HermesWorkerPromptInput = {
   task: MultiAgentTask
   project: MultiAgentProject
   profile: MultiAgentProfile
+  loadedSkills?: string[]
 }
 
 export type LaunchHermesWorkerInput = HermesWorkerPromptInput & {
@@ -40,6 +42,24 @@ function eventId(store: MultiAgentStore): string {
   return `event-${store.id()}`
 }
 
+function listBlock(values: string[], fallback: string): string {
+  return values.length ? values.map((value) => `- ${value}`).join('\n') : `- ${fallback}`
+}
+
+function productBriefBlock(task: MultiAgentTask): string {
+  const brief = task.productBrief
+  if (!brief) return 'Product brief:\n- No product brief captured.'
+  return [
+    'Product brief:',
+    `Goal: ${brief.goal || 'Not captured.'}`,
+    `User story: ${brief.userStory || 'Not captured.'}`,
+    'Success metrics:',
+    listBlock(brief.successMetrics, 'No success metrics captured.'),
+    'Non-goals:',
+    listBlock(brief.nonGoals, 'No non-goals captured.'),
+  ].join('\n')
+}
+
 function appendEvent(
   store: MultiAgentStore,
   eventLog: MultiAgentEventLog,
@@ -58,10 +78,15 @@ export function buildHermesWorkerPrompt({
   task,
   project,
   profile,
+  loadedSkills,
 }: HermesWorkerPromptInput): string {
   const criteria = task.acceptanceCriteria.length
     ? task.acceptanceCriteria.map((criterion) => `- ${criterion}`).join('\n')
     : '- No explicit acceptance criteria were provided.'
+  const skills = loadedSkills ?? selectSkillsForTask({ profile, task })
+  const skillsBlock = skills.length
+    ? skills.map((skill) => `- ${skill}`).join('\n')
+    : '- No skills selected.'
 
   return `You are a Hermes Agent worker running under Hermes Workspace Multi-Agent Control Plane.
 
@@ -72,8 +97,13 @@ Repo: ${project.repoPath}
 Worktree: ${task.worktreePath ?? '(not assigned)'}
 Branch: ${task.branchName ?? '(not assigned)'}
 
+Skills loaded for this run:
+${skillsBlock}
+
 Context:
 ${task.description || '(no description)'}
+
+${productBriefBlock(task)}
 
 Work packet:
 ${task.workPacket || task.description || task.title}
@@ -90,10 +120,11 @@ Rules:
 `
 }
 
-export function buildHermesWorkerArgs(prompt: string, profile: MultiAgentProfile): string[] {
+export function buildHermesWorkerArgs(prompt: string, profile: MultiAgentProfile, task?: MultiAgentTask): string[] {
+  const loadedSkills = task ? selectSkillsForTask({ profile, task }) : profile.skills
   const args = ['--oneshot', prompt, '--accept-hooks']
-  if (profile.skills.length) {
-    args.push('--skills', profile.skills.join(','))
+  if (loadedSkills.length) {
+    args.push('--skills', loadedSkills.join(','))
   }
   if (profile.enabledToolsets?.length) {
     args.push('--toolsets', profile.enabledToolsets.join(','))
@@ -105,9 +136,10 @@ export function buildHermesWorkerArgs(prompt: string, profile: MultiAgentProfile
 }
 
 export function launchHermesWorker(input: LaunchHermesWorkerInput): HermesWorkerRunHandle {
-  const prompt = buildHermesWorkerPrompt(input)
+  const loadedSkills = input.loadedSkills ?? selectSkillsForTask({ profile: input.profile, task: input.task })
+  const prompt = buildHermesWorkerPrompt({ ...input, loadedSkills })
   const command = input.command ?? 'hermes'
-  const args = input.args ?? buildHermesWorkerArgs(prompt, input.profile)
+  const args = input.args ?? buildHermesWorkerArgs(prompt, input.profile, input.task)
   const worktreePath = input.task.worktreePath ?? input.project.repoPath
 
   updateRun(input.store, input.run.id, {
@@ -142,6 +174,7 @@ export function launchHermesWorker(input: LaunchHermesWorkerInput): HermesWorker
       command,
       worktreePath,
       profileId: input.profile.id,
+      loadedSkills,
     },
   })
 

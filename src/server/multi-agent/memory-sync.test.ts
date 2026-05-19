@@ -19,6 +19,12 @@ function task(overrides: Partial<MultiAgentTask> = {}): MultiAgentTask {
     parentIds: [],
     childIds: [],
     workPacket: 'Store final summary and optionally sync to Obsidian.',
+    productBrief: {
+      goal: 'Preserve useful task outcomes for future planning.',
+      userStory: 'As an operator, I can reopen a run note and understand why the task mattered.',
+      successMetrics: ['summary reused in next planning session'],
+      nonGoals: ['global knowledge graph sync'],
+    },
     acceptanceCriteria: ['summary is stored', 'obsidian note can be written'],
     branchName: 'hermes/task-1-memory-hooks',
     worktreePath: '/repo/.hermes-worktrees/task-1-memory-hooks',
@@ -62,6 +68,10 @@ describe('multi-agent memory sync', () => {
     expect(note).toContain('Status: `done`')
     expect(note).toContain('Branch: `hermes/task-1-memory-hooks`')
     expect(note).toContain('Implemented memory hooks and tests.')
+    expect(note).toContain('## Product Brief')
+    expect(note).toContain('Goal: Preserve useful task outcomes for future planning.')
+    expect(note).toContain('- summary reused in next planning session')
+    expect(note).toContain('- global knowledge graph sync')
     expect(note).toContain('- summary is stored')
     expect(note).not.toContain('undefined')
   })

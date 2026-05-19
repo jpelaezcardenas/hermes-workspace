@@ -142,6 +142,7 @@ import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
 import { Route as ApiMaTasksRouteImport } from './routes/api/ma/tasks'
 import { Route as ApiMaProjectsRouteImport } from './routes/api/ma/projects'
 import { Route as ApiMaProfilesRouteImport } from './routes/api/ma/profiles'
+import { Route as ApiMaMissionsRouteImport } from './routes/api/ma/missions'
 import { Route as ApiMaApprovalsRouteImport } from './routes/api/ma/approvals'
 import { Route as ApiKnowledgeSyncRouteImport } from './routes/api/knowledge/sync'
 import { Route as ApiKnowledgeSearchRouteImport } from './routes/api/knowledge/search'
@@ -834,6 +835,11 @@ const ApiMaProfilesRoute = ApiMaProfilesRouteImport.update({
   path: '/api/ma/profiles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMaMissionsRoute = ApiMaMissionsRouteImport.update({
+  id: '/api/ma/missions',
+  path: '/api/ma/missions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMaApprovalsRoute = ApiMaApprovalsRouteImport.update({
   id: '/api/ma/approvals',
   path: '/api/ma/approvals',
@@ -1081,6 +1087,7 @@ export interface FileRoutesByFullPath {
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
   '/api/ma/approvals': typeof ApiMaApprovalsRouteWithChildren
+  '/api/ma/missions': typeof ApiMaMissionsRoute
   '/api/ma/profiles': typeof ApiMaProfilesRoute
   '/api/ma/projects': typeof ApiMaProjectsRoute
   '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
@@ -1240,6 +1247,7 @@ export interface FileRoutesByTo {
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
   '/api/ma/approvals': typeof ApiMaApprovalsRouteWithChildren
+  '/api/ma/missions': typeof ApiMaMissionsRoute
   '/api/ma/profiles': typeof ApiMaProfilesRoute
   '/api/ma/projects': typeof ApiMaProjectsRoute
   '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
@@ -1401,6 +1409,7 @@ export interface FileRoutesById {
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
   '/api/ma/approvals': typeof ApiMaApprovalsRouteWithChildren
+  '/api/ma/missions': typeof ApiMaMissionsRoute
   '/api/ma/profiles': typeof ApiMaProfilesRoute
   '/api/ma/projects': typeof ApiMaProjectsRoute
   '/api/ma/tasks': typeof ApiMaTasksRouteWithChildren
@@ -1563,6 +1572,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
     | '/api/ma/approvals'
+    | '/api/ma/missions'
     | '/api/ma/profiles'
     | '/api/ma/projects'
     | '/api/ma/tasks'
@@ -1722,6 +1732,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
     | '/api/ma/approvals'
+    | '/api/ma/missions'
     | '/api/ma/profiles'
     | '/api/ma/projects'
     | '/api/ma/tasks'
@@ -1882,6 +1893,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
     | '/api/ma/approvals'
+    | '/api/ma/missions'
     | '/api/ma/profiles'
     | '/api/ma/projects'
     | '/api/ma/tasks'
@@ -2037,6 +2049,7 @@ export interface RootRouteChildren {
   ApiKnowledgeSearchRoute: typeof ApiKnowledgeSearchRoute
   ApiKnowledgeSyncRoute: typeof ApiKnowledgeSyncRoute
   ApiMaApprovalsRoute: typeof ApiMaApprovalsRouteWithChildren
+  ApiMaMissionsRoute: typeof ApiMaMissionsRoute
   ApiMaProfilesRoute: typeof ApiMaProfilesRoute
   ApiMaProjectsRoute: typeof ApiMaProjectsRoute
   ApiMaTasksRoute: typeof ApiMaTasksRouteWithChildren
@@ -2988,6 +3001,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMaProfilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ma/missions': {
+      id: '/api/ma/missions'
+      path: '/api/ma/missions'
+      fullPath: '/api/ma/missions'
+      preLoaderRoute: typeof ApiMaMissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ma/approvals': {
       id: '/api/ma/approvals'
       path: '/api/ma/approvals'
@@ -3494,6 +3514,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiKnowledgeSearchRoute: ApiKnowledgeSearchRoute,
   ApiKnowledgeSyncRoute: ApiKnowledgeSyncRoute,
   ApiMaApprovalsRoute: ApiMaApprovalsRouteWithChildren,
+  ApiMaMissionsRoute: ApiMaMissionsRoute,
   ApiMaProfilesRoute: ApiMaProfilesRoute,
   ApiMaProjectsRoute: ApiMaProjectsRoute,
   ApiMaTasksRoute: ApiMaTasksRouteWithChildren,

@@ -9,6 +9,17 @@ export type MultiAgentTaskStatus =
   | 'failed'
   | 'cancelled'
 
+export type MultiAgentMissionStatus =
+  | 'draft'
+  | 'planned'
+  | 'running'
+  | 'waiting_approval'
+  | 'reviewing'
+  | 'blocked'
+  | 'completed'
+  | 'failed'
+  | 'cancelled'
+
 export type MultiAgentPriority = 'low' | 'medium' | 'high' | 'urgent'
 
 export type MultiAgentProfileRole =
@@ -57,9 +68,30 @@ export type MultiAgentProfile = {
   updatedAt: string
 }
 
+export type MultiAgentProductBrief = {
+  goal: string
+  userStory: string
+  successMetrics: string[]
+  nonGoals: string[]
+}
+
+export type MultiAgentMission = {
+  id: string
+  projectId: string
+  title: string
+  status: MultiAgentMissionStatus
+  productBrief: MultiAgentProductBrief
+  constraints: string[]
+  desiredOutput: string
+  taskIds: string[]
+  createdAt: string
+  updatedAt: string
+}
+
 export type MultiAgentTask = {
   id: string
   projectId: string
+  missionId?: string | null
   title: string
   description: string
   status: MultiAgentTaskStatus
@@ -68,6 +100,7 @@ export type MultiAgentTask = {
   parentIds: string[]
   childIds: string[]
   workPacket: string
+  productBrief?: MultiAgentProductBrief | null
   acceptanceCriteria: string[]
   branchName?: string | null
   worktreePath?: string | null
@@ -186,6 +219,7 @@ export type MultiAgentArtifact = {
 export type MultiAgentState = {
   projects: Record<string, MultiAgentProject>
   profiles: Record<string, MultiAgentProfile>
+  missions: Record<string, MultiAgentMission>
   tasks: Record<string, MultiAgentTask>
   runs: Record<string, MultiAgentRun>
   approvals: Record<string, MultiAgentApproval>

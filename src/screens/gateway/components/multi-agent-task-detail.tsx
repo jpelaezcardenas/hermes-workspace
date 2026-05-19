@@ -27,6 +27,7 @@ type MultiAgentTaskDetailProps = {
   summarySaveError?: string | null
   summarySavedPath?: string | null
   onSaveSummary?: () => void
+  loadedSkills?: string[]
 }
 
 function projectLabel(projects: MultiAgentProject[], id: string): string {
@@ -93,6 +94,7 @@ export function MultiAgentTaskDetail({
   summarySaveError = null,
   summarySavedPath = null,
   onSaveSummary = () => undefined,
+  loadedSkills = [],
 }: MultiAgentTaskDetailProps) {
   if (!task) {
     return (
@@ -125,6 +127,17 @@ export function MultiAgentTaskDetail({
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Work Packet</h4>
           <p className="mt-2 whitespace-pre-wrap rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-sm text-[var(--theme-text)]">{task.workPacket || task.description || 'No work packet provided.'}</p>
         </section>
+        {task.productBrief ? (
+          <section>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Product Brief</h4>
+            <div className="mt-2 space-y-2 rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-sm text-[var(--theme-text)]">
+              {task.productBrief.goal ? <p><span className="font-semibold">Goal:</span> {task.productBrief.goal}</p> : null}
+              {task.productBrief.userStory ? <p><span className="font-semibold">User story:</span> {task.productBrief.userStory}</p> : null}
+              {task.productBrief.successMetrics.length ? <p><span className="font-semibold">Success metrics:</span> {task.productBrief.successMetrics.join('; ')}</p> : null}
+              {task.productBrief.nonGoals.length ? <p><span className="font-semibold">Non-goals:</span> {task.productBrief.nonGoals.join('; ')}</p> : null}
+            </div>
+          </section>
+        ) : null}
         <section>
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Acceptance Criteria</h4>
           {task.acceptanceCriteria.length ? (
@@ -135,6 +148,16 @@ export function MultiAgentTaskDetail({
             <p className="mt-2 text-sm text-[var(--theme-muted-2)]">No criteria captured.</p>
           )}
         </section>
+        {loadedSkills.length ? (
+          <section>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Skills loaded for this run</h4>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {loadedSkills.map((skill) => (
+                <span key={skill} className="rounded-full border border-[var(--theme-border)] bg-[var(--theme-bg)] px-2 py-0.5 font-mono text-[10px] text-[var(--theme-text)]">{skill}</span>
+              ))}
+            </div>
+          </section>
+        ) : null}
         <section>
           <h4 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">Diff</h4>
           <MultiAgentDiffPanel diff={diff} loading={diffLoading} error={diffError} />

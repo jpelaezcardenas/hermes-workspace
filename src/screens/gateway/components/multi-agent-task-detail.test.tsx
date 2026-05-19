@@ -49,6 +49,12 @@ function task(overrides: Partial<MultiAgentTask> = {}): MultiAgentTask {
     parentIds: [],
     childIds: [],
     workPacket: 'Execute the work packet',
+    productBrief: {
+      goal: 'Ship a clearer operator experience',
+      userStory: 'As an operator, I understand why this task matters.',
+      successMetrics: ['activation: task accepted by PM'],
+      nonGoals: ['billing changes'],
+    },
     acceptanceCriteria: ['streams logs'],
     branchName: 'hermes/task-1-run-worker',
     worktreePath: '/repo/.hermes-worktrees/task-1-run-worker',
@@ -111,6 +117,26 @@ function summaryProps(overrides: Partial<React.ComponentProps<typeof MultiAgentT
     summarySaveError: null,
     summarySavedPath: null,
     onSaveSummary: () => undefined,
+    ...overrides,
+  }
+}
+
+function skillDebugProps(overrides: Partial<React.ComponentProps<typeof MultiAgentTaskDetail>> = {}) {
+  return {
+    task: task(),
+    projects: [project],
+    profiles: [profile],
+    events: [
+      event({
+        id: 'event-skills',
+        type: 'run.started',
+        message: 'Started Hermes worker with contextual skills',
+        payload: {
+          loadedSkills: ['test-driven-development', 'systematic-debugging', 'frontend-design'],
+        },
+      }),
+    ],
+    loadedSkills: ['test-driven-development', 'systematic-debugging', 'frontend-design'],
     ...overrides,
   }
 }
@@ -188,6 +214,11 @@ describe('MultiAgentTaskDetail', () => {
     expect(html).toContain('Backend Engineer')
     expect(html).toContain('task-1-run-worker')
     expect(html).toContain('Execute the work packet')
+    expect(html).toContain('Product Brief')
+    expect(html).toContain('Ship a clearer operator experience')
+    expect(html).toContain('As an operator, I understand why this task matters.')
+    expect(html).toContain('activation: task accepted by PM')
+    expect(html).toContain('billing changes')
     expect(html).toContain('streams logs')
     expect(html).toContain('Events / Live Log')
     expect(html).toContain('worker says hi')
@@ -217,5 +248,14 @@ describe('MultiAgentTaskDetail', () => {
     expect(saving).toContain('Saving summary…')
     expect(saved).toContain('/vault/Hermes/Multi-Agent Runs/task-1.md')
     expect(error).toContain('Cannot write note')
+  })
+
+  it('renders a debug panel for skills loaded for this run', () => {
+    const html = renderToStaticMarkup(<MultiAgentTaskDetail {...skillDebugProps()} />)
+
+    expect(html).toContain('Skills loaded for this run')
+    expect(html).toContain('test-driven-development')
+    expect(html).toContain('systematic-debugging')
+    expect(html).toContain('frontend-design')
   })
 })

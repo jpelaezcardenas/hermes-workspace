@@ -4,10 +4,12 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   createApproval,
+  createMission,
   createMultiAgentStore,
   listApprovals,
   createTask,
   emptyMultiAgentState,
+  listMissions,
   listTasks,
   loadState,
   resolveApproval,
@@ -20,6 +22,31 @@ function tempStateFile(): string {
 }
 
 describe('multi-agent file-backed store', () => {
+  it('writes and lists missions as the top-level multi-agent product unit', () => {
+    const stateFile = tempStateFile()
+    const store = createMultiAgentStore({ stateFile, now: () => '2026-05-19T09:00:00.000Z', id: () => 'mission-1' })
+
+    const mission = createMission(store, {
+      projectId: 'workspace',
+      title: 'Ship real multi-agent team',
+      productBrief: {
+        goal: 'Turn manual worker runs into an autonomous Hermes team.',
+        userStory: 'As an operator, I can define one mission and let Hermes plan coordinated agent work.',
+        successMetrics: ['mission creates a task graph'],
+        nonGoals: ['remote worker fleet'],
+      },
+      constraints: ['single-user local runtime', 'hermes-agent workers only'],
+      desiredOutput: 'Planned task graph ready for execution.',
+    })
+
+    const loaded = loadState(stateFile)
+    expect(loaded.missions[mission.id]?.title).toBe('Ship real multi-agent team')
+    expect(loaded.missions[mission.id]?.status).toBe('draft')
+    expect(loaded.missions[mission.id]?.taskIds).toEqual([])
+    expect(loaded.missions[mission.id]?.productBrief.goal).toContain('autonomous Hermes team')
+    expect(listMissions(store, { projectId: 'workspace' })).toEqual([mission])
+  })
+
   it('creates an empty state when the state file is missing', () => {
     const stateFile = tempStateFile()
     const state = loadState(stateFile)
@@ -40,11 +67,23 @@ describe('multi-agent file-backed store', () => {
       assigneeProfileId: 'backend-engineer',
       priority: 'high',
       workPacket: 'Implement store module',
+      productBrief: {
+        goal: 'Help operators trust stored task state.',
+        userStory: 'As an operator, I can reopen the board and see task context.',
+        successMetrics: ['task reload success rate'],
+        nonGoals: ['cloud sync'],
+      },
       acceptanceCriteria: ['Task can be listed'],
     })
 
     const loaded = loadState(stateFile)
     expect(loaded.tasks[task.id]?.title).toBe('Build store')
+    expect(loaded.tasks[task.id]?.productBrief).toEqual({
+      goal: 'Help operators trust stored task state.',
+      userStory: 'As an operator, I can reopen the board and see task context.',
+      successMetrics: ['task reload success rate'],
+      nonGoals: ['cloud sync'],
+    })
     expect(listTasks(store, { projectId: 'workspace' })).toHaveLength(1)
   })
 

@@ -42,7 +42,7 @@ function project(repoPath: string): MultiAgentProject {
 }
 
 describe('hermes worker runtime', () => {
-  it('builds Hermes oneshot defaults with prompt, skills, toolsets, model, and no yolo bypass', () => {
+  it('builds Hermes oneshot defaults with prompt, contextual skills, toolsets, model, and no yolo bypass', () => {
     const tempRoot = mkdtempSync(join(tmpdir(), 'hermes-runtime-defaults-'))
     try {
       const store = createMultiAgentStore({ stateFile: join(tempRoot, 'state.json'), now: () => now, id: () => 'defaults' })
@@ -51,9 +51,9 @@ describe('hermes worker runtime', () => {
         createTask(store, {
           projectId: 'workspace',
           title: 'Check defaults',
-          description: 'Launch with default Hermes args',
+          description: 'Launch with default Hermes args and review the implementation',
           assigneeProfileId: 'backend-engineer',
-          workPacket: 'Print argv',
+          workPacket: 'Print argv and update the frontend UI',
           acceptanceCriteria: ['no yolo bypass'],
         }).id,
         { worktreePath: tempRoot, branchName: 'hermes/task-defaults', status: 'ready' },
@@ -61,13 +61,16 @@ describe('hermes worker runtime', () => {
       const workerProfile = { ...profile(), model: 'test/model' }
       const prompt = buildHermesWorkerPrompt({ task, project: project(tempRoot), profile: workerProfile })
 
-      const args = buildHermesWorkerArgs(prompt, workerProfile)
+      const args = buildHermesWorkerArgs(prompt, workerProfile, task)
 
       expect(args[0]).toBe('--oneshot')
       expect(args[1]).toContain('Task: Check defaults')
+      expect(args[1]).toContain('Skills loaded for this run:')
+      expect(args[1]).toContain('- test-driven-development')
+      expect(args[1]).toContain('- frontend-design')
       expect(args).toContain('--accept-hooks')
       expect(args).toContain('--skills')
-      expect(args).toContain('test-driven-development')
+      expect(args).toContain('test-driven-development,systematic-debugging,frontend-design,review-gate')
       expect(args).toContain('--toolsets')
       expect(args).toContain('terminal,file')
       expect(args).toContain('--model')
@@ -88,6 +91,12 @@ describe('hermes worker runtime', () => {
         description: 'Expose task event stream',
         assigneeProfileId: 'backend-engineer',
         workPacket: 'Create GET /api/ma/tasks/:taskId/events',
+        productBrief: {
+          goal: 'Improve operator confidence in task event visibility',
+          userStory: 'As an operator, I can inspect live task events without leaving the board.',
+          successMetrics: ['adoption: event panel used in review'],
+          nonGoals: ['streaming transport rewrite'],
+        },
         acceptanceCriteria: ['returns events', 'stays inside worktree'],
       })
       const prompt = buildHermesWorkerPrompt({
@@ -100,6 +109,11 @@ describe('hermes worker runtime', () => {
       expect(prompt).toContain('Role: backend-engineer')
       expect(prompt).toContain('Task: Add events route')
       expect(prompt).toContain('Worktree:')
+      expect(prompt).toContain('Product brief:')
+      expect(prompt).toContain('Goal: Improve operator confidence in task event visibility')
+      expect(prompt).toContain('User story: As an operator, I can inspect live task events without leaving the board.')
+      expect(prompt).toContain('- adoption: event panel used in review')
+      expect(prompt).toContain('- streaming transport rewrite')
       expect(prompt).toContain('Create GET /api/ma/tasks/:taskId/events')
       expect(prompt).toContain('- returns events')
       expect(prompt).toContain('Do not push, deploy, send external messages, or edit secrets without approval.')

@@ -1,3 +1,4 @@
+import { defaultSkillsForRole } from './skill-autoload'
 import type { MultiAgentProfile, MultiAgentProfileRole } from './types'
 
 const DEFAULT_PROFILE_IDS: MultiAgentProfileRole[] = [
@@ -16,23 +17,6 @@ function titleizeProfileId(id: string): string {
     .join(' ')
 }
 
-function defaultSkillsFor(role: MultiAgentProfileRole): string[] {
-  switch (role) {
-    case 'orchestrator':
-      return ['protocol-driven-orchestrator', 'best-of-n-planning']
-    case 'frontend-engineer':
-      return ['test-driven-development', 'frontend-design']
-    case 'backend-engineer':
-      return ['test-driven-development', 'systematic-debugging']
-    case 'qa-validator':
-      return ['qa', 'superpowers-verification-before-completion']
-    case 'reviewer':
-      return ['review-gate', 'requesting-code-review']
-    case 'docs-writer':
-      return ['document-release', 'doc-coauthoring']
-  }
-}
-
 export function defaultMultiAgentProfiles(now = new Date().toISOString()): MultiAgentProfile[] {
   return DEFAULT_PROFILE_IDS.map((role) => ({
     id: role,
@@ -40,7 +24,7 @@ export function defaultMultiAgentProfiles(now = new Date().toISOString()): Multi
     role,
     runtime: 'hermes-agent',
     model: null,
-    skills: defaultSkillsFor(role),
+    skills: defaultSkillsForRole(role),
     enabledToolsets: ['terminal', 'file'],
     permissionPolicy: role === 'reviewer' || role === 'qa-validator' ? 'read-only' : 'ask-risky',
     createdAt: now,

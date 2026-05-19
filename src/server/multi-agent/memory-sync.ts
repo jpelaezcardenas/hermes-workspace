@@ -51,6 +51,19 @@ function buildSummaryNote(input: Required<Pick<SaveTaskSummaryToObsidianInput, '
   const acceptance = task.acceptanceCriteria.length
     ? task.acceptanceCriteria.map((criterion) => `- ${criterion}`).join('\n')
     : '- No acceptance criteria captured.'
+  const brief = task.productBrief
+  const productBrief = brief
+    ? [
+      `Goal: ${brief.goal || 'Not captured.'}`,
+      `User story: ${brief.userStory || 'Not captured.'}`,
+      '',
+      'Success metrics:',
+      brief.successMetrics.length ? brief.successMetrics.map((metric) => `- ${metric}`).join('\n') : '- No success metrics captured.',
+      '',
+      'Non-goals:',
+      brief.nonGoals.length ? brief.nonGoals.map((nonGoal) => `- ${nonGoal}`).join('\n') : '- No non-goals captured.',
+    ].join('\n')
+    : 'No product brief captured.'
 
   return [
     `# ${task.title}`,
@@ -60,6 +73,10 @@ function buildSummaryNote(input: Required<Pick<SaveTaskSummaryToObsidianInput, '
     '## Summary',
     '',
     summary,
+    '',
+    '## Product Brief',
+    '',
+    productBrief,
     '',
     '## Work Packet',
     '',
