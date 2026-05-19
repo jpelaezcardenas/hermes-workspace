@@ -45,6 +45,8 @@ describe('MultiAgent mission UI', () => {
         error={null}
         onSelect={() => undefined}
         onCreateMission={() => undefined}
+        onPlanMission={() => undefined}
+        planningMissionId={null}
       />,
     )
 
@@ -53,6 +55,25 @@ describe('MultiAgent mission UI', () => {
     expect(html).toContain('Coordinate several Hermes workers from one mission.')
     expect(html).toContain('2 tasks')
     expect(html).toContain('Workspace')
+    expect(html).toContain('Plan mission')
+  })
+
+  it('renders mission planning state', () => {
+    const html = renderToStaticMarkup(
+      <MultiAgentMissionPanel
+        missions={[mission]}
+        projects={[project]}
+        selectedMissionId="mission-1"
+        loading={false}
+        error={null}
+        onSelect={() => undefined}
+        onCreateMission={() => undefined}
+        onPlanMission={() => undefined}
+        planningMissionId="mission-1"
+      />,
+    )
+
+    expect(html).toContain('Planning…')
   })
 
   it('renders create mission dialog fields', () => {

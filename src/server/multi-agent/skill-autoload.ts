@@ -11,7 +11,7 @@ export const MULTI_AGENT_SKILL_METADATA_INDEX: Record<string, MultiAgentSkillMet
   'protocol-driven-orchestrator': {
     name: 'protocol-driven-orchestrator',
     description: 'Structured orchestration for multi-step implementation tasks.',
-    roles: ['orchestrator'],
+    roles: ['orchestrator', 'architect'],
     keywords: ['orchestrate', 'orchestration', 'plan', 'architecture', 'multi-agent', 'control plane'],
   },
   'best-of-n-planning': {
@@ -66,6 +66,7 @@ export const MULTI_AGENT_SKILL_METADATA_INDEX: Record<string, MultiAgentSkillMet
 
 const ROLE_DEFAULT_SKILLS: Record<MultiAgentProfileRole, string[]> = {
   orchestrator: ['protocol-driven-orchestrator', 'best-of-n-planning'],
+  architect: ['protocol-driven-orchestrator', 'best-of-n-planning'],
   'frontend-engineer': ['test-driven-development', 'frontend-design'],
   'backend-engineer': ['test-driven-development', 'systematic-debugging'],
   'qa-validator': ['test-driven-development', 'review-gate'],

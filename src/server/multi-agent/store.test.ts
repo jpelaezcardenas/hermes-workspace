@@ -12,6 +12,7 @@ import {
   listMissions,
   listTasks,
   loadState,
+  planMissionTasks,
   resolveApproval,
   saveState,
   updateTask,
@@ -45,6 +46,55 @@ describe('multi-agent file-backed store', () => {
     expect(loaded.missions[mission.id]?.taskIds).toEqual([])
     expect(loaded.missions[mission.id]?.productBrief.goal).toContain('autonomous Hermes team')
     expect(listMissions(store, { projectId: 'workspace' })).toEqual([mission])
+  })
+
+  it('plans a mission into linked backlog tasks and marks the mission planned', () => {
+    const stateFile = tempStateFile()
+    const ids = ['mission-1', 'task-1', 'task-2']
+    const store = createMultiAgentStore({
+      stateFile,
+      now: () => '2026-05-19T09:10:00.000Z',
+      id: () => ids.shift() ?? 'fallback',
+    })
+    const mission = createMission(store, {
+      projectId: 'workspace',
+      title: 'Ship autonomous planning loop',
+      productBrief: {
+        goal: 'Let Hermes plan and run coordinated worker tasks.',
+        userStory: 'As an operator, I can turn one mission into a reviewed task graph.',
+        successMetrics: ['task graph is created'],
+        nonGoals: ['remote worker fleet'],
+      },
+      constraints: ['local single-user runtime'],
+      desiredOutput: 'A ready execution graph.',
+    })
+
+    const plannedTasks = planMissionTasks(store, mission.id, [
+      {
+        title: 'Design task graph contract',
+        description: 'Define the mission task graph data contract.',
+        assigneeProfileId: 'architect',
+        priority: 'high',
+        workPacket: 'Specify task dependencies and outputs.',
+        acceptanceCriteria: ['Contract is documented'],
+      },
+      {
+        title: 'Implement task graph runner',
+        description: 'Persist planned tasks for execution.',
+        assigneeProfileId: 'backend-engineer',
+        priority: 'medium',
+        parentIds: ['task-task-1'],
+        workPacket: 'Create linked tasks from mission plan.',
+        acceptanceCriteria: ['Tasks are linked to mission'],
+      },
+    ])
+
+    const loaded = loadState(stateFile)
+    expect(plannedTasks.map((task) => task.missionId)).toEqual([mission.id, mission.id])
+    expect(plannedTasks.map((task) => task.status)).toEqual(['backlog', 'backlog'])
+    expect(loaded.missions[mission.id]?.status).toBe('planned')
+    expect(loaded.missions[mission.id]?.taskIds).toEqual(plannedTasks.map((task) => task.id))
+    expect(loaded.tasks[plannedTasks[1].id]?.parentIds).toEqual(['task-task-1'])
   })
 
   it('creates an empty state when the state file is missing', () => {

@@ -5,6 +5,7 @@ const DEFAULT_PROFILE_IDS: MultiAgentProfileRole[] = [
   'orchestrator',
   'frontend-engineer',
   'backend-engineer',
+  'architect',
   'qa-validator',
   'reviewer',
   'docs-writer',

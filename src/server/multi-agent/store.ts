@@ -59,7 +59,7 @@ type CreateMissionInput = {
   status?: MultiAgentMissionStatus
 }
 
-type CreateTaskInput = {
+export type CreateTaskInput = {
   projectId: string
   missionId?: string | null
   title: string
@@ -239,35 +239,70 @@ export function listMissions(store: MultiAgentStore, filter: MissionFilter = {})
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
 }
 
+function buildTask(store: MultiAgentStore, input: CreateTaskInput, now: string): MultiAgentTask {
+  return {
+    id: `task-${store.id()}`,
+    projectId: input.projectId,
+    missionId: input.missionId ?? null,
+    title: input.title,
+    description: input.description,
+    status: input.status ?? 'backlog',
+    priority: input.priority ?? 'medium',
+    assigneeProfileId: input.assigneeProfileId,
+    parentIds: input.parentIds ?? [],
+    childIds: input.childIds ?? [],
+    workPacket: input.workPacket ?? '',
+    productBrief: input.productBrief ?? null,
+    acceptanceCriteria: input.acceptanceCriteria ?? [],
+    createdAt: now,
+    updatedAt: now,
+  }
+}
+
+function attachTaskToMission(state: MultiAgentState, missionId: string | null | undefined, taskId: string, now: string): void {
+  if (!missionId || !state.missions[missionId]) return
+  const mission = state.missions[missionId]
+  state.missions[missionId] = {
+    ...mission,
+    taskIds: Array.from(new Set([...mission.taskIds, taskId])),
+    updatedAt: now,
+  }
+}
+
 export function createTask(store: MultiAgentStore, input: CreateTaskInput): MultiAgentTask {
   return mutateState(store, (state, now) => {
-    const task: MultiAgentTask = {
-      id: `task-${store.id()}`,
-      projectId: input.projectId,
-      missionId: input.missionId ?? null,
-      title: input.title,
-      description: input.description,
-      status: input.status ?? 'backlog',
-      priority: input.priority ?? 'medium',
-      assigneeProfileId: input.assigneeProfileId,
-      parentIds: input.parentIds ?? [],
-      childIds: input.childIds ?? [],
-      workPacket: input.workPacket ?? '',
-      productBrief: input.productBrief ?? null,
-      acceptanceCriteria: input.acceptanceCriteria ?? [],
-      createdAt: now,
+    const task = buildTask(store, input, now)
+    state.tasks[task.id] = task
+    attachTaskToMission(state, task.missionId, task.id, now)
+    return task
+  })
+}
+
+export function planMissionTasks(
+  store: MultiAgentStore,
+  missionId: string,
+  taskDrafts: Array<Omit<CreateTaskInput, 'projectId' | 'missionId' | 'status'>>,
+): MultiAgentTask[] {
+  return mutateState(store, (state, now) => {
+    const mission = state.missions[missionId]
+    if (!mission) throw new Error(`Mission not found: ${missionId}`)
+    const tasks = taskDrafts.map((draft) => buildTask(store, {
+      ...draft,
+      projectId: mission.projectId,
+      missionId,
+      status: 'backlog',
+      productBrief: draft.productBrief ?? mission.productBrief,
+    }, now))
+    for (const task of tasks) {
+      state.tasks[task.id] = task
+      attachTaskToMission(state, missionId, task.id, now)
+    }
+    state.missions[missionId] = {
+      ...state.missions[missionId],
+      status: 'planned',
       updatedAt: now,
     }
-    state.tasks[task.id] = task
-    if (task.missionId && state.missions[task.missionId]) {
-      const mission = state.missions[task.missionId]
-      state.missions[task.missionId] = {
-        ...mission,
-        taskIds: Array.from(new Set([...mission.taskIds, task.id])),
-        updatedAt: now,
-      }
-    }
-    return task
+    return tasks
   })
 }
 

@@ -29,6 +29,7 @@ export type MultiAgentProfileRole =
   | 'qa-validator'
   | 'reviewer'
   | 'docs-writer'
+  | 'architect'
 
 export type MultiAgentRuntime = 'hermes-agent'
 

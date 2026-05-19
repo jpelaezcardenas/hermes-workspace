@@ -79,6 +79,7 @@ describe('multi-agent API routes', () => {
       'orchestrator',
       'frontend-engineer',
       'backend-engineer',
+      'architect',
       'qa-validator',
       'reviewer',
       'docs-writer',
@@ -130,6 +131,45 @@ describe('multi-agent API routes', () => {
     expect(listed.status).toBe(200)
     const listedBody = await jsonBody<{ ok: boolean; missions: Array<{ id: string; title: string }> }>(listed)
     expect(listedBody.missions.map((mission) => mission.title)).toEqual(['Autonomous Hermes team'])
+  })
+
+  it('POST /api/ma/missions/$missionId/plan creates a deterministic linked task graph', async () => {
+    const missionsMod = await loadRoute('./missions')
+    const planMod = await loadRoute('./missions.$missionId.plan') as unknown as {
+      Route: { server: { handlers: Record<string, (ctx: { request: Request; params: { missionId: string } }) => Promise<Response>> } }
+    }
+    const created = await missionsMod.Route.server.handlers.POST({
+      request: new Request('http://localhost/api/ma/missions', {
+        method: 'POST',
+        body: JSON.stringify({
+          projectId: 'workspace',
+          title: 'Autonomous Hermes team',
+          productBrief: {
+            goal: 'Let one mission coordinate multiple Hermes workers.',
+            userStory: 'As an operator, I can generate a task graph from the mission.',
+            successMetrics: ['planner creates tasks'],
+            nonGoals: ['remote worker fleet'],
+          },
+          constraints: ['local single-user only'],
+          desiredOutput: 'Planned task graph ready for execution.',
+        }),
+      }),
+    })
+    const createdBody = await jsonBody<{ mission: { id: string } }>(created)
+
+    const planned = await planMod.Route.server.handlers.POST({
+      request: new Request(`http://localhost/api/ma/missions/${createdBody.mission.id}/plan`, { method: 'POST' }),
+      params: { missionId: createdBody.mission.id },
+    })
+
+    expect(planned.status).toBe(200)
+    const body = await jsonBody<{ ok: boolean; mission: { status: string; taskIds: string[] }; tasks: Array<{ missionId: string; title: string; assigneeProfileId: string }> }>(planned)
+    expect(body.ok).toBe(true)
+    expect(body.mission.status).toBe('planned')
+    expect(body.tasks).toHaveLength(3)
+    expect(body.tasks.map((task) => task.missionId)).toEqual([createdBody.mission.id, createdBody.mission.id, createdBody.mission.id])
+    expect(body.tasks.map((task) => task.assigneeProfileId)).toEqual(['architect', 'backend-engineer', 'qa-validator'])
+    expect(body.mission.taskIds).toEqual(body.tasks.map((task) => expect.stringMatching(/^task-/)))
   })
 
   it('GET /api/ma/tasks returns persisted tasks and supports project/status filters', async () => {

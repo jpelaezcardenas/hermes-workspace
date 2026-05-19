@@ -37,6 +37,7 @@ type ProjectsResponse = { ok?: boolean; projects?: MultiAgentProject[]; error?: 
 type ProfilesResponse = { ok?: boolean; profiles?: MultiAgentProfile[]; error?: string }
 type MissionsResponse = { ok?: boolean; missions?: MultiAgentMission[]; error?: string }
 type MissionResponse = { ok?: boolean; mission?: MultiAgentMission; error?: string }
+type MissionPlanResponse = { ok?: boolean; mission?: MultiAgentMission; tasks?: MultiAgentTask[]; error?: string }
 type TasksResponse = { ok?: boolean; tasks?: MultiAgentTask[]; error?: string }
 type TaskResponse = { ok?: boolean; task?: MultiAgentTask; error?: string }
 type TaskEventsResponse = { ok?: boolean; events?: MultiAgentEvent[]; error?: string }
@@ -144,6 +145,12 @@ async function createMultiAgentMission(draft: CreateMissionDraft): Promise<Multi
   )
   if (!data.mission) throw new Error('Mission was not returned')
   return data.mission
+}
+
+async function planMultiAgentMission(missionId: string): Promise<MissionPlanResponse> {
+  return readJson<MissionPlanResponse>(
+    await fetch(`/api/ma/missions/${encodeURIComponent(missionId)}/plan`, { method: 'POST' }),
+  )
 }
 
 async function fetchMultiAgentTasks(): Promise<MultiAgentTask[]> {
@@ -283,6 +290,8 @@ export function MultiAgentMissionPanel({
   error,
   onSelect,
   onCreateMission,
+  onPlanMission,
+  planningMissionId,
 }: {
   missions: MultiAgentMission[]
   projects: MultiAgentProject[]
@@ -291,6 +300,8 @@ export function MultiAgentMissionPanel({
   error: string | null
   onSelect: (missionId: string | null) => void
   onCreateMission: () => void
+  onPlanMission: (missionId: string) => void
+  planningMissionId: string | null
 }) {
   return (
     <aside className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3">
@@ -342,6 +353,21 @@ export function MultiAgentMissionPanel({
                 <span className="rounded-full border border-[var(--theme-border)] px-2 py-0.5">{projectName}</span>
                 <span className="rounded-full border border-[var(--theme-border)] px-2 py-0.5">{mission.taskIds.length} tasks</span>
               </div>
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(event) => { event.stopPropagation(); onPlanMission(mission.id) }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    onPlanMission(mission.id)
+                  }
+                }}
+                className="mt-3 inline-flex rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card2)] px-2.5 py-1.5 text-[10px] font-semibold text-[var(--theme-text)] hover:border-[var(--theme-accent)]"
+              >
+                {planningMissionId === mission.id ? 'Planning…' : 'Plan mission'}
+              </span>
             </button>
           )
         }) : (
@@ -604,6 +630,7 @@ export function MultiAgentBoard() {
   const [createOpen, setCreateOpen] = useState(false)
   const [createMissionOpen, setCreateMissionOpen] = useState(false)
   const [selectedMissionId, setSelectedMissionId] = useState<string | null>(null)
+  const [planningMissionId, setPlanningMissionId] = useState<string | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const [startingTaskId, setStartingTaskId] = useState<string | null>(null)
   const [validationRunningType, setValidationRunningType] = useState<MultiAgentValidationType | null>(null)
@@ -675,6 +702,22 @@ export function MultiAgentBoard() {
       void queryClient.invalidateQueries({ queryKey: ['ma', 'missions'] })
     },
     onError: (error) => setMutationError(error instanceof Error ? error.message : 'Failed to create mission'),
+  })
+
+  const planMissionMutation = useMutation({
+    mutationFn: planMultiAgentMission,
+    onMutate: (missionId) => {
+      setPlanningMissionId(missionId)
+      setMutationError(null)
+    },
+    onSuccess: (response, missionId) => {
+      setSelectedMissionId(missionId)
+      setSelectedTaskId(response.tasks?.[0]?.id ?? null)
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'missions'] })
+      void queryClient.invalidateQueries({ queryKey: ['ma', 'tasks'] })
+    },
+    onError: (error) => setMutationError(error instanceof Error ? error.message : 'Failed to plan mission'),
+    onSettled: () => setPlanningMissionId(null),
   })
 
   const createMutation = useMutation({
@@ -811,6 +854,8 @@ export function MultiAgentBoard() {
           error={missionsQuery.error instanceof Error ? missionsQuery.error.message : null}
           onSelect={(missionId) => { setSelectedMissionId(missionId); setSelectedTaskId(null) }}
           onCreateMission={() => { setMutationError(null); setCreateMissionOpen(true) }}
+          onPlanMission={(missionId) => planMissionMutation.mutate(missionId)}
+          planningMissionId={planningMissionId}
         />
       </div>
 
