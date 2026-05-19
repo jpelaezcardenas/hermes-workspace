@@ -363,6 +363,20 @@ function compareOrdersDesc(
 }
 
 function extractOrderId(subject: string, body: string): string | null {
+  const subjectFaireOrderMatch = subject.match(
+    /New wholesale order from .+?\s*\(#([A-Z0-9]+)\)/i,
+  )
+  if (subjectFaireOrderMatch?.[1]) {
+    return subjectFaireOrderMatch[1].toUpperCase()
+  }
+
+  const bodyFaireSubjectMatch = body.match(
+    /Subject:\s*(?:Fwd:\s*|Re:\s*)*New wholesale order from .+?\s*\(#([A-Z0-9]+)\)/i,
+  )
+  if (bodyFaireSubjectMatch?.[1]) {
+    return bodyFaireSubjectMatch[1].toUpperCase()
+  }
+
   const combined = `${subject}\n${body}`
   const match =
     combined.match(/Order\s*#([A-Z0-9]+)/i) ?? combined.match(/#([A-Z0-9]{6,})/)

@@ -142,6 +142,39 @@ describe('PatchAid Faire order ingestion', () => {
     expect(parseFaireOrderEmail(alacMessage)).toBeNull()
   })
 
+  it('prefers the Faire wholesale order id over internal fulfillment order references', () => {
+    const replyWithInternalOrderReference: FaireCorpusMessage = {
+      ...patchAidMessage,
+      gmailId: '3746a1f0123fd239',
+      subject: 'Re: New wholesale order from Food Healing (#VJGETHKFD8)',
+      bodyText: `
+Hi Alex,
+
+This is noted. A manual order has been created and is being assigned to Rick.
+Order #PA33252
+
+---------- Forwarded message ---------
+From: Faire <wholesale@info.faire.com>
+Subject: New wholesale order from Food Healing (#VJGETHKFD8)
+To: PatchAid <alex@patchaid.com>
+
+You just received a $149.85 order.
+Order #VJGETHKFD8
+Order Summary
+Total: $149.85
+Order Date
+May 30, 2021
+Item Subtotal (20 Items)
+`,
+    }
+
+    const order = parseFaireOrderEmail(replyWithInternalOrderReference)
+
+    expect(order?.orderId).toBe('VJGETHKFD8')
+    expect(order?.customerName).toBe('Food Healing')
+    expect(order?.unitCount).toBe(20)
+  })
+
   it('summarizes only PatchAid Faire orders for dashboard cards', () => {
     const summary = summarizeFaireOrders([
       parseFaireOrderEmail(patchAidMessage),
@@ -172,9 +205,9 @@ describe('PatchAid Faire order ingestion', () => {
     const cachedFetcher = createCachedPatchAidFaireOrdersFetcher({
       ttlMs: 5_000,
       now: () => now,
-      fetcher: async () => {
+      fetcher: () => {
         calls += 1
-        return makeResponse(`call-${calls}`)
+        return Promise.resolve(makeResponse(`call-${calls}`))
       },
     })
 
