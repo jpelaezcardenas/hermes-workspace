@@ -4,6 +4,20 @@ Standalone SwiftUI macOS app for developing short-form video scripts from resear
 
 ## Run
 
+From the Hermes Workspace repo root:
+
+```sh
+pnpm script-editor:mac
+```
+
+Or launch the script directly:
+
+```sh
+./scripts/start-script-editor-mac.sh
+```
+
+From the app package directory:
+
 ```sh
 cd macos/ScriptEditor
 swift run ScriptEditorApp
