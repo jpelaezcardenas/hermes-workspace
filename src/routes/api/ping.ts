@@ -45,7 +45,7 @@ export const Route = createFileRoute('/api/ping')({
           {
             ok: true,
             status: 200,
-            claudeUrl: CLAUDE_API,
+            agentUrl: CLAUDE_API,
           } satisfies PingResponse,
           { status: 200 },
         )

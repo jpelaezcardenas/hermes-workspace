@@ -988,7 +988,7 @@ export function Onboarding() {
               >
                 <p style={mutedStyle}>Backend</p>
                 <p className="mt-1 font-mono">
-                  {backendInfo?.claudeUrl || 'Configured automatically'}
+                  {backendInfo?.agentUrl || 'Configured automatically'}
                 </p>
                 {selectedModel || configuredModel ? (
                   <p className="mt-2" style={mutedStyle}>

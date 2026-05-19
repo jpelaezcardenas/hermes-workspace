@@ -30,7 +30,7 @@ async function fetchConnectionStatus(): Promise<ConnectionStatus> {
       activeModel: '',
       chatMode: 'disconnected',
       capabilities: {},
-      claudeUrl: '',
+      agentUrl: '',
     }
   }
   return response.json() as Promise<ConnectionStatus>
