@@ -507,7 +507,7 @@ function ChatHeaderComponent({
                 }
               />
               <TooltipContent side="bottom">
-                Thinking: Adaptive — AgentOne reasons before responding
+                Thinking: Adaptive — Agent-e1 reasons before responding
               </TooltipContent>
             </TooltipRoot>
           </TooltipProvider>

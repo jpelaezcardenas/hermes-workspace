@@ -12,7 +12,7 @@
  *   1. Runtime override saved via setGatewayUrl() / setDashboardUrl()
  *      (persisted to ~/.hermes/workspace-overrides.json) — set from the UI
  *      so remote / Tailscale users can relocate without a restart (#101).
- *   2. process.env.HERMES_API_URL / HERMES_DASHBOARD_URL at process start.
+ *   2. process.env.AGENTONE_API_URL / AGENTONE_DASHBOARD_URL at process start.
  *   3. Default localhost (8642 / 9119).
  */
 
@@ -21,12 +21,12 @@ import path from 'node:path'
 import os from 'node:os'
 
 type WorkspaceOverrides = {
-  claudeApiUrl?: string
-  claudeDashboardUrl?: string
+  agentoneApiUrl?: string
+  agentoneDashboardUrl?: string
 }
 
 function hermesHome(): string {
-  return process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
+  return process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
 }
 
 function overridesPath(): string {
@@ -63,13 +63,15 @@ function normalizeUrl(u: string): string {
 const _initialOverrides = readOverrides()
 
 export let CLAUDE_API = normalizeUrl(
-  _initialOverrides.claudeApiUrl ||
+  _initialOverrides.agentoneApiUrl ||
+    process.env.AGENTONE_API_URL ||
     process.env.HERMES_API_URL ||
     process.env.CLAUDE_API_URL ||
     'http://127.0.0.1:8642',
 )
 export let CLAUDE_DASHBOARD_URL = normalizeUrl(
-  _initialOverrides.claudeDashboardUrl ||
+  _initialOverrides.agentoneDashboardUrl ||
+    process.env.AGENTONE_DASHBOARD_URL ||
     process.env.HERMES_DASHBOARD_URL ||
     process.env.CLAUDE_DASHBOARD_URL ||
     'http://127.0.0.1:9119',
@@ -85,12 +87,12 @@ export function setGatewayUrl(input: string | null | undefined): string {
   const normalized = input ? normalizeUrl(input) : ''
   const overrides = readOverrides()
   if (normalized) {
-    overrides.claudeApiUrl = normalized
+    overrides.agentoneApiUrl = normalized
     CLAUDE_API = normalized
   } else {
-    delete overrides.claudeApiUrl
+    delete overrides.agentoneApiUrl
     CLAUDE_API = normalizeUrl(
-      process.env.HERMES_API_URL || process.env.CLAUDE_API_URL || 'http://127.0.0.1:8642',
+      process.env.AGENTONE_API_URL || process.env.HERMES_API_URL || process.env.CLAUDE_API_URL || 'http://127.0.0.1:8642',
     )
   }
   writeOverrides(overrides)
@@ -107,12 +109,12 @@ export function setDashboardUrl(input: string | null | undefined): string {
   const normalized = input ? normalizeUrl(input) : ''
   const overrides = readOverrides()
   if (normalized) {
-    overrides.claudeDashboardUrl = normalized
+    overrides.agentoneDashboardUrl = normalized
     CLAUDE_DASHBOARD_URL = normalized
   } else {
-    delete overrides.claudeDashboardUrl
+    delete overrides.agentoneDashboardUrl
     CLAUDE_DASHBOARD_URL = normalizeUrl(
-      process.env.HERMES_DASHBOARD_URL || process.env.CLAUDE_DASHBOARD_URL || 'http://127.0.0.1:9119',
+      process.env.AGENTONE_DASHBOARD_URL || process.env.HERMES_DASHBOARD_URL || process.env.CLAUDE_DASHBOARD_URL || 'http://127.0.0.1:9119',
     )
   }
   writeOverrides(overrides)
@@ -128,21 +130,21 @@ export function getResolvedUrls(): {
   source: 'override' | 'env' | 'default'
 } {
   const overrides = readOverrides()
-  const source = overrides.claudeApiUrl
+  const source = overrides.agentoneApiUrl
     ? 'override'
-    : (process.env.HERMES_API_URL || process.env.CLAUDE_API_URL)
+    : (process.env.AGENTONE_API_URL || process.env.HERMES_API_URL || process.env.CLAUDE_API_URL)
       ? 'env'
       : 'default'
   return { gateway: CLAUDE_API, dashboard: CLAUDE_DASHBOARD_URL, source }
 }
 
 export const CLAUDE_UPGRADE_INSTRUCTIONS =
-  'For full features, install Hermes Agent from source (`git clone https://github.com/NousResearch/hermes-agent && cd hermes-agent && pip install -e .`), then start the gateway on :8642 (`hermes gateway run`). For the extended APIs (Sessions, Skills, Config, Jobs) also start the dashboard on :9119 (`hermes dashboard`).'
+  'For full features, install Agent-e1 from source (`git clone https://github.com/NousResearch/hermes-agent && cd hermes-agent && pip install -e .`), then start the gateway on :8642 (`agentone gateway run`). For the extended APIs (Sessions, Skills, Config, Jobs) also start the dashboard on :9119 (`agentone dashboard`).'
 
 export const DASHBOARD_REQUIRED_INSTRUCTIONS =
-  'AgentOne gateway core APIs are healthy, but dashboard-backed APIs are unavailable. Start the dashboard on :9119 (`agentone dashboard`) or point HERMES_DASHBOARD_URL at the running dashboard service.'
+  'Agent-e1 gateway core APIs are healthy, but dashboard-backed APIs are unavailable. Start the dashboard on :9119 (`agentone dashboard`) or point AGENTONE_DASHBOARD_URL at the running dashboard service.'
 
-export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your AgentOne backend does not support the sessions API. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
+export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your Agent-e1 backend does not support the sessions API. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
 
 const PROBE_TIMEOUT_MS = 3_000
 // Probe TTL: 120s when the gateway is healthy, 15s when it isn't. The
@@ -158,7 +160,7 @@ function effectiveProbeTtl(caps: { health: boolean; chatCompletions: boolean }):
   return PROBE_TTL_DISCONNECTED_MS
 }
 const DASHBOARD_TOKEN_REGEX =
-  /window\._+(?:CLAUDE|HERMES)_+SESSION_+TOKEN__+\s*=\s*["']([^"']+)["']/
+  /window\._+(?:AGENTONE|CLAUDE|HERMES)_+SESSION_+TOKEN__+\s*=\s*["']([^"']+)["']/
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -223,7 +225,7 @@ export type GatewayMode =
   | 'portable'
   | 'disconnected'
 
-export type ChatMode = 'enhanced-claude' | 'portable' | 'disconnected'
+export type ChatMode = 'enhanced-agent' | 'portable' | 'disconnected'
 
 export type ConnectionStatus =
   | 'connected'
@@ -262,7 +264,7 @@ let dashboardTokenPromise: Promise<string> | null = null
 let dashboardTokenCache = ''
 
 /** Optional bearer token for authenticated gateway endpoints. */
-export const BEARER_TOKEN = process.env.HERMES_API_TOKEN || process.env.CLAUDE_API_TOKEN || ''
+export const BEARER_TOKEN = process.env.AGENTONE_API_TOKEN || process.env.HERMES_API_TOKEN || process.env.CLAUDE_API_TOKEN || ''
 
 /**
  * Dashboard API auth uses the ephemeral session token injected into the
@@ -372,7 +374,7 @@ export async function dashboardFetch(
 
 /**
  * Lightweight fetch helper that targets the gateway base URL
- * (`CLAUDE_API`, e.g. http://127.0.0.1:8645). Used for endpoints that
+ * (`AGENTONE_API`, e.g. http://127.0.0.1:8645). Used for endpoints that
  * live on the gateway runtime rather than the dashboard, like
  * `/health/detailed`.
  */
@@ -639,7 +641,7 @@ async function probeKanban(dashboardAvailable: boolean): Promise<boolean> {
 // Vanilla hermes-agent 0.10.0 satisfies: health, chatCompletions, models, streaming,
 // sessions, skills, config, jobs. Dashboard-only endpoints (themes/plugins) and the
 // legacy enhanced-fork chat stream are optional — their absence should not emit the
-// "Missing Hermes APIs detected" warning, which only applies to critical gaps.
+// "Missing Agent-e1 APIs detected" warning, which only applies to critical gaps.
 const OPTIONAL_APIS = new Set([
   'jobs',
   'chatCompletions',
@@ -681,7 +683,7 @@ export function getCapabilityWarningMessage(
     return `[gateway] ${DASHBOARD_REQUIRED_INSTRUCTIONS}`
   }
 
-  return `[gateway] Missing AgentOne APIs detected. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
+  return `[gateway] Missing Agent-e1 APIs detected. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
 }
 
 function logCapabilities(next: GatewayCapabilities): void {
@@ -729,7 +731,7 @@ function logCapabilities(next: GatewayCapabilities): void {
 }
 
 async function autoDetectGatewayUrl(): Promise<void> {
-  if (process.env.HERMES_API_URL || process.env.CLAUDE_API_URL) return
+  if (process.env.AGENTONE_API_URL || process.env.HERMES_API_URL || process.env.CLAUDE_API_URL) return
 
   const candidates = [
     'http://127.0.0.1:8642',
@@ -744,7 +746,7 @@ async function autoDetectGatewayUrl(): Promise<void> {
       })
       if (res.ok) {
         CLAUDE_API = candidate
-        console.log(`[gateway] Connected to AgentOne gateway at ${CLAUDE_API}`)
+        console.log(`[gateway] Connected to Agent-e1 gateway at ${CLAUDE_API}`)
         return
       }
     } catch {
@@ -753,15 +755,15 @@ async function autoDetectGatewayUrl(): Promise<void> {
   }
 
   console.warn(
-    '[gateway] Could not reach Hermes gateway on 8645, 8642, or 8643. ' +
+    '[gateway] Could not reach Agent-e1 gateway on 8645, 8642, or 8643. ' +
       'If you run the workspace on a different machine (Tailscale / VPN / LAN), ' +
-      'set HERMES_API_URL=http://<reachable-host>:8642 in .env and restart. ' +
+      'set AGENTONE_API_URL=http://<reachable-host>:8642 in .env and restart. ' +
       'Also set API_SERVER_HOST=0.0.0.0 on the gateway so remote peers can connect.',
   )
 }
 
 async function autoDetectDashboardUrl(): Promise<void> {
-  if (process.env.CLAUDE_DASHBOARD_URL) return
+  if (process.env.AGENTONE_DASHBOARD_URL || process.env.CLAUDE_DASHBOARD_URL) return
 
   const candidates = ['http://127.0.0.1:9119']
   for (const candidate of candidates) {
@@ -844,7 +846,7 @@ export async function probeGateway(options?: {
       sessions: dashboard.available || legacySessions,
       enhancedChat,
       skills: dashboard.available || legacySkills,
-      // Memory is always available: workspace reads $HERMES_HOME/MEMORY.md +
+      // Memory is always available: workspace reads $AGENTONE_HOME/MEMORY.md +
       // memory/*.md + memories/*.md directly from the local filesystem.
       // No remote gateway endpoint is required.
       memory: true,
@@ -935,12 +937,12 @@ export function getGatewayMode(): GatewayMode {
 
 /**
  * UI-facing chat transport mode:
- * - enhanced-claude: legacy fork session streaming API available
+ * - enhanced-agent: legacy fork session streaming API available
  * - portable: OpenAI-compatible /v1/chat/completions transport
  * - disconnected: no usable chat backend
  */
 export function getChatMode(): ChatMode {
-  if (capabilities.enhancedChat) return 'enhanced-claude'
+  if (capabilities.enhancedChat) return 'enhanced-agent'
   if (capabilities.chatCompletions || capabilities.health) return 'portable'
   return 'disconnected'
 }
@@ -958,7 +960,7 @@ export function getConnectionStatus(): ConnectionStatus {
   return 'connected'
 }
 
-export function isClaudeConnected(): boolean {
+export function isAgentConnected(): boolean {
   return capabilities.health || capabilities.dashboard.available
 }
 

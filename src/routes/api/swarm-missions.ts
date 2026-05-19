@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { SWARM_MISSIONS_PATH, cancelSwarmAssignment, cancelSwarmMission, getSwarmMission, listSwarmMissions, listSwarmReports } from '../../server/swarm-missions'
-import { getProfilesDir } from '../../server/claude-paths'
+import { getProfilesDir } from '../../server/agentone-paths'
 
 type CancelPostBody = {
   action?: unknown

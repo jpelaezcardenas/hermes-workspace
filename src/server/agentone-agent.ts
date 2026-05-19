@@ -6,9 +6,9 @@ import { homedir } from 'node:os'
 const CLAUDE_HEALTH_TIMEOUT_MS = 2_000
 const CLAUDE_START_PORT = 8642
 
-let startPromise: Promise<StartClaudeAgentResult> | null = null
+let startPromise: Promise<StartAgentResult> | null = null
 
-export type StartClaudeAgentResult =
+export type StartAgentResult =
   | {
       ok: true
       message: string
@@ -25,7 +25,7 @@ export type StartClaudeAgentResult =
  */
 function readClaudeEnv(): Record<string, string> {
   const envPath = join(
-    process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? join(homedir(), '.hermes'),
+    process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? join(homedir(), '.hermes'),
     '.env',
   )
   try {
@@ -53,13 +53,13 @@ function readClaudeEnv(): Record<string, string> {
 }
 
 /** Same directory resolution logic as vite.config.ts. Kept in sync. */
-export function resolveClaudeAgentDir(
+export function resolveAgentDir(
   env: Record<string, string | undefined> = process.env,
 ): string | null {
   const candidates: Array<string> = []
 
-  if (env.CLAUDE_AGENT_PATH?.trim()) {
-    candidates.push(env.CLAUDE_AGENT_PATH.trim())
+  if (env.AGENTONE_AGENT_PATH?.trim()) {
+    candidates.push(env.AGENTONE_AGENT_PATH.trim())
   }
 
   const workspaceRoot = dirname(resolve('.'))
@@ -77,11 +77,11 @@ export function resolveClaudeAgentDir(
   return null
 }
 
-/** Find the `claude` CLI binary installed by Nous's installer (or on PATH). */
-export function resolveClaudeBinary(): string | null {
+/** Find the `agentone` CLI binary installed by Nous's installer (or on PATH). */
+export function resolveAgentBinary(): string | null {
   const candidates = [
-    resolve(homedir(), '.claude', 'bin', 'claude'),
-    resolve(homedir(), '.local', 'bin', 'claude'),
+    resolve(homedir(), '.agentone', 'bin', 'agentone'),
+    resolve(homedir(), '.local', 'bin', 'agentone'),
   ]
   for (const c of candidates) {
     if (existsSync(c)) return c
@@ -89,18 +89,18 @@ export function resolveClaudeBinary(): string | null {
   return null
 }
 
-export function resolveClaudePython(agentDir: string): string {
+export function resolveAgentPython(agentDir: string): string {
   const venvPython = resolve(agentDir, '.venv', 'bin', 'python')
   if (existsSync(venvPython)) return venvPython
   const uvVenv = resolve(agentDir, 'venv', 'bin', 'python')
   if (existsSync(uvVenv)) return uvVenv
   // Nous installer ships its own uv-managed python alongside the binary
-  const nousPython = resolve(homedir(), '.claude', 'venv', 'bin', 'python')
+  const nousPython = resolve(homedir(), '.agentone', 'venv', 'bin', 'python')
   if (existsSync(nousPython)) return nousPython
   return 'python3'
 }
 
-export async function isClaudeAgentHealthy(
+export async function isAgentHealthy(
   port = CLAUDE_START_PORT,
 ): Promise<boolean> {
   try {
@@ -113,8 +113,8 @@ export async function isClaudeAgentHealthy(
   }
 }
 
-export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
-  if (await isClaudeAgentHealthy()) {
+export async function startAgent(): Promise<StartAgentResult> {
+  if (await isAgentHealthy()) {
     return { ok: true, message: 'already running' }
   }
 
@@ -124,23 +124,23 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
 
   startPromise = (async () => {
     try {
-      const claudeEnv = readClaudeEnv()
-      const claudeBin = resolveClaudeBinary()
-      const agentDir = resolveClaudeAgentDir()
+      const agentEnv = readClaudeEnv()
+      const agentBin = resolveAgentBinary()
+      const agentDir = resolveAgentDir()
 
-      // Prefer the `hermes gateway run` binary path (the Nous installer's
+      // Prefer the `agentone gateway run` binary path (the Nous installer's
       // canonical entrypoint). Fall back to launching uvicorn against the
       // source tree if we only have a directory.
       let command: string
       let commandArgs: Array<string>
       let cwd: string | undefined
 
-      if (claudeBin) {
-        command = claudeBin
+      if (agentBin) {
+        command = agentBin
         commandArgs = ['gateway', 'run']
         cwd = agentDir ?? undefined
       } else if (agentDir) {
-        command = resolveClaudePython(agentDir)
+        command = resolveAgentPython(agentDir)
         commandArgs = [
           '-m',
           'uvicorn',
@@ -155,7 +155,7 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
         return {
           ok: false,
           error:
-            "hermes-agent not found. Run the installer: curl -fsSL https://hermes-workspace.com/install.sh | bash",
+            "agentone not found. Run the installer: curl -fsSL https://agent-e1.com/install.sh | bash",
         }
       }
 
@@ -168,9 +168,9 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
           stdio: 'ignore',
           env: {
             ...process.env,
-            ...claudeEnv,
+            ...agentEnv,
             PATH: [
-              resolve(homedir(), '.claude', 'bin'),
+              resolve(homedir(), '.agentone', 'bin'),
               resolve(homedir(), '.local', 'bin'),
               agentDir ? resolve(agentDir, '.venv', 'bin') : '',
               agentDir ? resolve(agentDir, 'venv', 'bin') : '',
@@ -184,7 +184,7 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
 
       for (let attempt = 0; attempt < 10; attempt += 1) {
         await new Promise((resolveAttempt) => setTimeout(resolveAttempt, 1_000))
-        if (await isClaudeAgentHealthy()) {
+        if (await isAgentHealthy()) {
           return {
             ok: true,
             pid: child.pid,

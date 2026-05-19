@@ -6,7 +6,7 @@ import {
   getGatewayCapabilities,
   getSession,
   listSessions,
-} from '../../server/claude-api'
+} from '../../server/agentone-api'
 import {
   isSyntheticSessionKey,
   resolveMainChatSessionId,

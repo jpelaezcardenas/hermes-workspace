@@ -107,7 +107,7 @@ function deriveOrigin(
   bundled: Set<string>,
 ): SkillSummary['origin'] {
   if (bundled.has(skill.id) || bundled.has(skill.slug)) return 'builtin'
-  if (skill.author === 'AgentOne Agent' && skill.sourcePath) return 'agent-created'
+  if (skill.author === 'Agent-e1 Agent' && skill.sourcePath) return 'agent-created'
   return 'marketplace'
 }
 

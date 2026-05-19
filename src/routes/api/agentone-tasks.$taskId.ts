@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { deleteTask, getTask, moveTask, updateTask } from '../../server/tasks-store'
 import { ensureLocalSession, appendLocalMessage, getLocalMessages } from '../../server/local-session-store'
-import { getSessionMessages } from '../../server/claude-dashboard-api'
+import { getSessionMessages } from '../../server/agentone-dashboard-api'
 import type { TaskColumn, TaskPriority } from '../../server/tasks-store'
 
 function jsonResponse(data: unknown, status = 200) {
@@ -29,7 +29,7 @@ function isTaskPriority(value: unknown): value is TaskPriority {
   return value === 'high' || value === 'medium' || value === 'low'
 }
 
-export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
+export const Route = createFileRoute('/api/agentone-tasks/$taskId')({
   server: {
     handlers: {
       GET: async ({ request, params }) => {

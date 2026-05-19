@@ -32,8 +32,8 @@ export type OnboardingStep = {
 export const ONBOARDING_STEPS: Array<OnboardingStep> = [
   {
     id: 'welcome',
-    title: 'Welcome to AgentOne',
-    description: 'Your AI workspace powered by AgentOne Agent',
+    title: 'Welcome to Agent-e1',
+    description: 'Your AI workspace powered by Agent-e1 Agent',
     icon: Home01Icon,
     iconBg: 'bg-orange-500',
     nextLabel: 'Get Started',
@@ -41,7 +41,7 @@ export const ONBOARDING_STEPS: Array<OnboardingStep> = [
   {
     id: 'connection-check',
     title: 'Connection Check',
-    description: 'Verify that AgentOne Agent is running before you begin.',
+    description: 'Verify that Agent-e1 Agent is running before you begin.',
     icon: Plug01Icon,
     iconBg: 'bg-emerald-500',
     component: ConnectionCheckStep,
@@ -66,4 +66,4 @@ export const ONBOARDING_STEPS: Array<OnboardingStep> = [
   },
 ]
 
-export const STORAGE_KEY = 'claude-onboarding-complete'
+export const STORAGE_KEY = 'agentone-onboarding-complete'

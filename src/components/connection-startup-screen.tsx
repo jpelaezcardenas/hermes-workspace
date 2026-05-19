@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import type { AuthStatus } from '@/lib/claude-auth'
+import type { AuthStatus } from '@/lib/agentone-auth'
 import { writeTextToClipboard } from '@/lib/clipboard'
-import { fetchClaudeAuthStatus } from '@/lib/claude-auth'
+import { fetchAuthStatus } from '@/lib/agentone-auth'
 
 const POLL_INTERVAL_MS = 2_000
 const FAILURE_REVEAL_MS = 5_000
@@ -29,7 +29,7 @@ function getSetupSteps(
       note: 'Portable chat works with any backend that exposes /v1/chat/completions (Ollama, LiteLLM, vLLM, etc.)',
     },
     {
-      title: 'Optional: install AgentOne Agent locally',
+      title: 'Optional: install Agent-e1 Agent locally',
       command:
         'curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash',
       note: 'Vanilla hermes-agent unlocks sessions, skills, memory, jobs, and config automatically — no fork required',
@@ -113,7 +113,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
           setServerLog([
             String(
               data.message ||
-                'Auto-started AgentOne Agent gateway — reconnecting…',
+                'Auto-started Agent-e1 Agent gateway — reconnecting…',
             ),
           ])
         }
@@ -127,7 +127,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
 
     const tryConnect = async () => {
       try {
-        const status = await fetchClaudeAuthStatus()
+        const status = await fetchAuthStatus()
         if (isDone.current) return
         isDone.current = true
         clearTimeout(failureTimer)
@@ -221,12 +221,12 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
       <div className="flex w-full max-w-lg flex-col items-center text-center">
         <img
           src="/agentone-avatar.png"
-          alt="AgentOne"
+          alt="Agent-e1"
           className="mb-5 h-20 w-20 rounded-2xl object-cover shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
         />
 
         <h1 className="text-[2rem] font-semibold tracking-tight text-white">
-          AgentOne
+          Agent-e1
         </h1>
 
         {/* Connecting spinner */}
@@ -255,7 +255,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
               Welcome! Let&apos;s connect your backend
             </p>
             <p className="mt-2 text-sm leading-6 text-white/60">
-              AgentOne works with any OpenAI-compatible backend. AgentOne Agent
+              Agent-e1 works with any OpenAI-compatible backend. Agent-e1 Agent
               gateway APIs unlock enhanced features automatically when they are
               available.
             </p>
@@ -279,7 +279,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
                     Detecting...
                   </span>
                 ) : (
-                  'Auto-Start AgentOne Agent Gateway'
+                  'Auto-Start Agent-e1 Agent Gateway'
                 )}
               </button>
 

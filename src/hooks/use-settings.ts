@@ -7,8 +7,8 @@ export type SettingsThemeMode = 'system' | 'light' | 'dark'
 export type AccentColor = 'orange' | 'purple' | 'blue' | 'green'
 
 export type StudioSettings = {
-  claudeUrl: string
-  claudeToken: string
+  agentUrl: string
+  agentToken: string
   theme: SettingsThemeMode
   accentColor: AccentColor
   editorFontSize: number
@@ -31,8 +31,8 @@ type SettingsState = {
 }
 
 export const defaultStudioSettings: StudioSettings = {
-  claudeUrl: '',
-  claudeToken: '',
+  agentUrl: '',
+  agentToken: '',
   theme: 'system',
   accentColor: 'blue',
   editorFontSize: 13,
@@ -66,7 +66,7 @@ export const useSettingsStore = create<SettingsState>()(
       }
     },
     {
-      name: 'claude-settings',
+      name: 'agentone-settings',
       skipHydration: true,
     },
   ),

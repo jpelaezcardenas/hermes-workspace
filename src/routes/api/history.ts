@@ -7,7 +7,7 @@ import {
   getMessages,
   listSessions,
   toChatMessage,
-} from '../../server/claude-api'
+} from '../../server/agentone-api'
 import {
   resolveMainChatSessionId,
   resolveSessionKey,

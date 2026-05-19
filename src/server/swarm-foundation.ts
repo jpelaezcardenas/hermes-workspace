@@ -3,7 +3,7 @@ import * as os from 'node:os'
 import * as path from 'node:path'
 import * as YAML from 'yaml'
 import { z } from 'zod'
-import { getLocalBinDir, getProfilesDir } from './claude-paths'
+import { getLocalBinDir, getProfilesDir } from './agentone-paths'
 import { isSwarmWorkerId, rosterByWorkerId } from './swarm-roster'
 
 export const SwarmWorkerStateSchema = z.enum([
@@ -495,7 +495,7 @@ export function buildSwarmSessionMetadata(input: {
     sessionId: input.runtime.sessionId ?? input.tmuxSession ?? input.workerId,
     sessionTitle:
       input.runtime.sessionTitle ??
-      (input.tmuxSession ? `AgentOne worker ${input.workerId}` : null),
+      (input.tmuxSession ? `Agent-e1 worker ${input.workerId}` : null),
     historySource:
       input.runtime.historySource === 'unavailable'
         ? inferSwarmHistorySource(input.profilePath)

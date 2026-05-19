@@ -282,7 +282,7 @@ export async function readError(res: Response): Promise<string> {
 }
 
 export const missingAuthMessage =
-  'AgentOne Agent connection failed. Make sure AgentOne Agent is running and HERMES_API_URL is set correctly.'
+  'Agent-e1 Agent connection failed. Make sure Agent-e1 Agent is running and HERMES_API_URL is set correctly.'
 
 export function isMissingAuth(message: string): boolean {
   return message.includes(missingAuthMessage)

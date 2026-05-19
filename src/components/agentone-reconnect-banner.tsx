@@ -3,15 +3,15 @@ import { useEffect, useRef, useState } from 'react'
 const POLL_INTERVAL_MS = 10_000
 const FLASH_DURATION_MS = 1_800
 
-type ClaudeReconnectBannerProps = {
+type ReconnectBannerProps = {
   enabled?: boolean
 }
 
 type BannerState = 'hidden' | 'disconnected' | 'connected'
 
-async function probeClaudeHealth(): Promise<boolean> {
+async function probeAgentHealth(): Promise<boolean> {
   // Use the portable-aware connection status endpoint first,
-  // which works with both Hermes Agent and OpenAI-compatible backends.
+  // which works with both Agent-e1 and OpenAI-compatible backends.
   try {
     const response = await fetch('/api/connection-status', {
       cache: 'no-store',
@@ -31,9 +31,9 @@ async function probeClaudeHealth(): Promise<boolean> {
   }
 }
 
-export function ClaudeReconnectBanner({
+export function ReconnectBanner({
   enabled = true,
-}: ClaudeReconnectBannerProps) {
+}: ReconnectBannerProps) {
   const [bannerState, setBannerState] = useState<BannerState>('hidden')
   const [isChecking, setIsChecking] = useState(false)
   const [isStarting, setIsStarting] = useState(false)
@@ -88,7 +88,7 @@ export function ClaudeReconnectBanner({
         setIsChecking(true)
       }
 
-      const pendingProbe = probeClaudeHealth()
+      const pendingProbe = probeAgentHealth()
         .then((connected) => {
           if (cancelled || !mountedRef.current) return connected
 
@@ -132,7 +132,7 @@ export function ClaudeReconnectBanner({
                   if (res.ok && data.ok) {
                     setMessage(
                       data.message ||
-                        'Auto-restarting AgentOne Agent gateway…',
+                        'Auto-restarting Agent-e1 Agent gateway…',
                     )
                     // Probe again shortly so the banner clears as soon as
                     // the gateway answers /health.
@@ -210,17 +210,17 @@ export function ClaudeReconnectBanner({
       }
 
       if (!response.ok || !payload.ok) {
-        throw new Error(payload.error || 'Failed to start AgentOne Agent')
+        throw new Error(payload.error || 'Failed to start Agent-e1 Agent')
       }
 
       setMessage(
         payload.message === 'already running'
-          ? 'AgentOne Agent is already running'
-          : 'Starting AgentOne Agent…',
+          ? 'Agent-e1 Agent is already running'
+          : 'Starting Agent-e1 Agent…',
       )
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : 'Failed to start AgentOne Agent',
+        error instanceof Error ? error.message : 'Failed to start Agent-e1 Agent',
       )
     } finally {
       setIsStarting(false)
@@ -260,7 +260,7 @@ export function ClaudeReconnectBanner({
           />
           <div className="min-w-0">
             <p className="text-sm font-semibold">
-              {isDisconnected ? 'AgentOne Agent not connected' : 'Connected'}
+              {isDisconnected ? 'Agent-e1 Agent not connected' : 'Connected'}
             </p>
             {message ? (
               <p className="truncate text-xs opacity-80">{message}</p>

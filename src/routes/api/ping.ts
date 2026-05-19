@@ -33,7 +33,7 @@ export const Route = createFileRoute('/api/ping')({
           return Response.json(
             {
               ok: false,
-              error: 'AgentOne Agent unavailable',
+              error: 'Agent-e1 Agent unavailable',
               status: 503,
               claudeUrl: CLAUDE_API,
             } satisfies PingResponse,

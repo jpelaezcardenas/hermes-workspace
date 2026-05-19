@@ -766,7 +766,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           ) {
             transitionToHandoff()
           } else {
-            markFailed('AgentOne Agent connection closed')
+            markFailed('Agent-e1 Agent connection closed')
           }
           break
         }

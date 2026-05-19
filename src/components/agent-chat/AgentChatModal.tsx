@@ -67,7 +67,7 @@ function toChatMessages(messages: Array<ChatMessage>): Array<AgentChatMessage> {
 }
 
 function buildDemoReply(agentName: string, text: string): string {
-  return `${agentName} (demo): Received "${text}". AgentOne Agent is unavailable, so this is a simulated response.`
+  return `${agentName} (demo): Received "${text}". Agent-e1 Agent is unavailable, so this is a simulated response.`
 }
 
 export function AgentChatModal({
@@ -143,7 +143,7 @@ export function AgentChatModal({
             {
               id: `demo-intro-${sessionKey}`,
               role: 'agent',
-              text: 'AgentOne Agent is unavailable. Running in demo mode with simulated responses.',
+              text: 'Agent-e1 Agent is unavailable. Running in demo mode with simulated responses.',
               timestamp: Date.now(),
             },
           ])

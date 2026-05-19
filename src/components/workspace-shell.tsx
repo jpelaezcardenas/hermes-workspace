@@ -21,7 +21,7 @@ import {
   useState,
 } from 'react'
 import { useNavigate, useRouterState } from '@tanstack/react-router'
-import { fetchClaudeAuthStatus, type AuthStatus } from '@/lib/claude-auth'
+import { fetchAuthStatus, type AuthStatus } from '@/lib/agentone-auth'
 import { cn } from '@/lib/utils'
 import { ConnectionStartupScreen } from '@/components/connection-startup-screen'
 import { ChatSidebar } from '@/screens/chat/components/chat-sidebar'
@@ -37,7 +37,7 @@ import { MobileHamburgerMenu } from '@/components/mobile-hamburger-menu'
 import { MobilePageHeader } from '@/components/mobile-page-header'
 
 import { MobileTerminalInput } from '@/components/terminal/mobile-terminal-input'
-import { ClaudeReconnectBanner } from '@/components/claude-reconnect-banner'
+import { ReconnectBanner } from '@/components/agentone-reconnect-banner'
 import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard'
 import { SystemMetricsFooter } from '@/components/system-metrics-footer'
 import { CommandPalette } from '@/components/command-palette'
@@ -133,7 +133,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
 
     const verify = async () => {
       try {
-        const status = await fetchClaudeAuthStatus(3000)
+        const status = await fetchAuthStatus(3000)
         if (cancelled) return
         setAuthStatus(status)
         setConnectionVerified(true)
@@ -312,7 +312,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         className="relative overflow-hidden theme-bg theme-text"
         style={shellStyle}
       >
-        <ClaudeReconnectBanner enabled={authState.checked} />
+        <ReconnectBanner enabled={authState.checked} />
         {/* Electron: native-style title bar (absolute over the padding) */}
         {isElectron && (
           <div
@@ -332,7 +332,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
                 className="text-[13px] font-medium select-none"
                 style={{ color: 'var(--theme-accent, #B98A44)' }}
               >
-                AgentOne
+                Agent-e1
               </span>
             </div>
             {/* Right spacer to balance */}

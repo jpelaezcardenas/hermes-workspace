@@ -5,7 +5,7 @@ import {
   ensureGatewayProbed,
   getCapabilities,
 } from '@/server/gateway-capabilities'
-import { listSessions } from '@/server/claude-api'
+import { listSessions } from '@/server/agentone-api'
 import { getLocalMessages, getLocalSession } from './local-session-store'
 import { getActiveRunForSession } from './run-store'
 import {

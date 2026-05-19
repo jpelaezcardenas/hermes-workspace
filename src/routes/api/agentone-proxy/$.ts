@@ -94,7 +94,7 @@ async function proxyRequest(request: Request, splat: string) {
   })
 }
 
-export const Route = createFileRoute('/api/claude-proxy/$')({
+export const Route = createFileRoute('/api/agentone-proxy/$')({
   server: {
     handlers: {
       GET: async ({ request, params }) => {

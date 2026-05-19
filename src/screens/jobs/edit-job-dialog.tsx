@@ -193,7 +193,7 @@ export function EditJobDialog({
                   className="mt-1 text-sm"
                   style={{ color: 'var(--theme-muted)' }}
                 >
-                  Update the schedule, prompt, and routing for this AgentOne task.
+                  Update the schedule, prompt, and routing for this Agent-e1 task.
                 </p>
               </div>
               <button
@@ -246,7 +246,7 @@ export function EditJobDialog({
                     className="text-xs"
                     style={{ color: 'var(--theme-muted)' }}
                   >
-                    Cron jobs are stored under the selected AgentOne profile.
+                    Cron jobs are stored under the selected Agent-e1 profile.
                   </p>
                 )}
               </section>
@@ -344,7 +344,7 @@ export function EditJobDialog({
                       prompt: event.target.value,
                     }))
                   }
-                  placeholder="What should AgentOne Agent do?"
+                  placeholder="What should Agent-e1 Agent do?"
                   required
                   rows={5}
                   className="w-full resize-none rounded-xl border px-3 py-2.5 text-sm focus:outline-none focus:ring-1"
@@ -401,7 +401,7 @@ export function EditJobDialog({
                           onClick={() => toggleDelivery(option)}
                           title={
                             needsGateway
-                              ? `Requires AgentOne Agent gateway with ${option} configured`
+                              ? `Requires Agent-e1 Agent gateway with ${option} configured`
                               : undefined
                           }
                           className="rounded-full border px-3 py-1.5 text-xs font-medium capitalize transition-colors"

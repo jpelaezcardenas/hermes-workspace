@@ -270,7 +270,7 @@ export function readWorkspaceUpdateStatus(
   if (installKind === 'desktop') {
     return {
       id: 'workspace',
-      label: 'AgentOne',
+      label: 'Agent-e1',
       installKind,
       version,
       path: repoPath,
@@ -290,7 +290,7 @@ export function readWorkspaceUpdateStatus(
   if (installKind === 'docker') {
     return {
       id: 'workspace',
-      label: 'AgentOne',
+      label: 'Agent-e1',
       installKind,
       version,
       path: repoPath,
@@ -310,7 +310,7 @@ export function readWorkspaceUpdateStatus(
   if (!gitRepo) {
     return {
       id: 'workspace',
-      label: 'AgentOne',
+      label: 'Agent-e1',
       version,
       path: repoPath,
       repoPath: null,
@@ -349,7 +349,7 @@ export function readWorkspaceUpdateStatus(
 
   return {
     id: 'workspace',
-    label: 'AgentOne',
+    label: 'Agent-e1',
     installKind: 'git',
     version,
     path: repoPath,
@@ -413,7 +413,7 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
   if (!repoPath) {
     return {
       id: 'agent',
-      label: 'AgentOne Agent',
+      label: 'Agent-e1 Agent',
       installKind: 'unknown',
       version,
       path,
@@ -425,7 +425,7 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
       canUpdate: false,
       state: 'unsupported',
       reason:
-        'AgentOne Agent git checkout was not found. Bundled desktop installs will update through the app updater.',
+        'Agent-e1 Agent git checkout was not found. Bundled desktop installs will update through the app updater.',
       updateMode: 'manual',
     }
   }
@@ -451,7 +451,7 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
 
   return {
     id: 'agent',
-    label: 'AgentOne Agent',
+    label: 'Agent-e1 Agent',
     installKind: 'git',
     version,
     path,
@@ -471,13 +471,13 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
             ? 'blocked'
             : 'current',
     reason: !repoMatches
-      ? 'AgentOne Agent origin remote does not look like hermes-agent.'
+      ? 'Agent-e1 Agent origin remote does not look like hermes-agent.'
       : dirty
-        ? 'AgentOne Agent checkout has local changes. Commit, stash, or remove the listed files before updating.'
+        ? 'Agent-e1 Agent checkout has local changes. Commit, stash, or remove the listed files before updating.'
         : updateAvailable && !canSync
-          ? 'AgentOne Agent update could not verify the remote branch ref.'
+          ? 'Agent-e1 Agent update could not verify the remote branch ref.'
           : updateAvailable && !ff
-            ? 'AgentOne Agent branch diverged from origin. One-click update will realign to the remote branch.'
+            ? 'Agent-e1 Agent branch diverged from origin. One-click update will realign to the remote branch.'
             : null,
     blockingFiles: dirty ? listDirtyFiles(repoPath) : undefined,
     updateMode: 'hermes-update',
@@ -573,7 +573,7 @@ export function applyWorkspaceUpdate(): ApplyUpdateResult {
   const releaseNotes = [
     {
       product: 'workspace' as const,
-      label: 'AgentOne',
+      label: 'Agent-e1',
       to: after.currentHead,
       commits: readCommits(
         before.repoPath,
@@ -603,7 +603,7 @@ export function applyAgentUpdate(): ApplyUpdateResult {
       restartRequired: false,
       status: before,
       releaseNotes: [],
-      error: before.reason || 'AgentOne Agent update is not available.',
+      error: before.reason || 'Agent-e1 Agent update is not available.',
     }
   }
 
@@ -633,7 +633,7 @@ export function applyAgentUpdate(): ApplyUpdateResult {
   const releaseNotes = [
     {
       product: 'agent' as const,
-      label: 'AgentOne Agent',
+      label: 'Agent-e1 Agent',
       to: after.currentHead,
       commits: readCommits(
         before.repoPath,

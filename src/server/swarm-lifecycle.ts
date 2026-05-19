@@ -2,7 +2,7 @@ import { execFile, execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { getProfilesDir } from './claude-paths'
+import { getProfilesDir } from './agentone-paths'
 import { SWARM_MEMORY_ROOT } from './swarm-environment'
 import { appendSwarmMemoryEvent } from './swarm-memory'
 

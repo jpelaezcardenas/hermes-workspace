@@ -10,9 +10,9 @@ type ConnectionStatus = {
   chatReady: boolean
   modelConfigured: boolean
   activeModel: string
-  chatMode: 'enhanced-claude' | 'portable' | 'disconnected'
+  chatMode: 'enhanced-agent' | 'portable' | 'disconnected'
   capabilities: Record<string, boolean>
-  claudeUrl: string
+  agentUrl: string
 }
 
 async function fetchConnectionStatus(): Promise<ConnectionStatus> {
@@ -84,7 +84,7 @@ function buildTooltip(
     if (!data.modelConfigured) parts.push('No model selected')
   }
   if (data.status === 'enhanced') {
-    parts.push('AgentOne gateway enhancements detected')
+    parts.push('Agent-e1 gateway enhancements detected')
   }
   if (data.activeModel) parts.push(`Model: ${data.activeModel}`)
   return parts.join(' · ')
@@ -96,7 +96,7 @@ function buildTooltip(
  */
 export function StatusDot() {
   const { data, isLoading } = useQuery({
-    queryKey: ['claude', 'connection-status'],
+    queryKey: ['agentone', 'connection-status'],
     queryFn: fetchConnectionStatus,
     refetchInterval: 15_000,
     retry: false,
@@ -127,7 +127,7 @@ export function StatusIndicator({
   inline?: boolean
 }) {
   const { data, isLoading } = useQuery({
-    queryKey: ['claude', 'connection-status'],
+    queryKey: ['agentone', 'connection-status'],
     queryFn: fetchConnectionStatus,
     refetchInterval: 15_000,
     retry: false,

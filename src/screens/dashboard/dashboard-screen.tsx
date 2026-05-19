@@ -44,7 +44,7 @@ import { useDashboardLayout } from './lib/use-dashboard-layout'
 import type { SessionRowData } from './components/sessions-intelligence-card'
 import type { AnalyticsPeriod } from './components/analytics-chart-card'
 import type { ReactNode } from 'react'
-import type { ClaudeSession } from '@/server/claude-api'
+import type { ClaudeSession } from '@/server/agentone-api'
 import type { DashboardOverview } from '@/server/dashboard-aggregator'
 import { getUnavailableReason } from '@/lib/feature-gates'
 import { cn } from '@/lib/utils'
@@ -389,7 +389,7 @@ function SkillsWidget({
 }) {
   const skillsAvailable = useFeatureAvailable('skills')
   const skillsQuery = useQuery({
-    queryKey: ['claude-skills'],
+    queryKey: ['agentone-skills'],
     queryFn: async () => {
       const res = await fetch('/api/skills?tab=installed&limit=200&summary=search')
       if (!res.ok) return []
@@ -900,7 +900,7 @@ export function DashboardScreen() {
           >
             <img
               src="/agentone-avatar.png"
-              alt="AgentOne logo"
+              alt="Agent-e1 logo"
               className="size-8 rounded-md"
               style={{ background: 'transparent' }}
             />
@@ -920,7 +920,7 @@ export function DashboardScreen() {
                 lineHeight: 1.1,
               }}
             >
-              AgentOne
+              Agent-e1
             </h1>
           </div>
         </div>

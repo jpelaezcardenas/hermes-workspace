@@ -1216,7 +1216,7 @@ function ClaudeConfigSection({
   }, [])
 
   const fetchConfig = useCallback(async () => {
-    const res = await fetch('/api/claude-config')
+    const res = await fetch('/api/agentone-config')
     const configData = (await res.json()) as ClaudeConfigData
     setData(configData)
     syncInputsFromData(configData)
@@ -1262,7 +1262,7 @@ function ClaudeConfigSection({
     setSaving(true)
     setSaveMessage(null)
     try {
-      const res = await fetch('/api/claude-config', {
+      const res = await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -1309,7 +1309,7 @@ function ClaudeConfigSection({
   if (loading) {
     return (
       <SettingsSection
-        title="AgentOne Agent"
+        title="Agent-e1 Agent"
         description="Loading configuration..."
         icon={Settings02Icon}
       >
@@ -1324,12 +1324,12 @@ function ClaudeConfigSection({
   if (!data) {
     return (
       <SettingsSection
-        title="AgentOne Agent"
-        description="Could not load AgentOne configuration."
+        title="Agent-e1 Agent"
+        description="Could not load Agent-e1 configuration."
         icon={Settings02Icon}
       >
         <p className="text-sm" style={{ color: 'var(--theme-muted)' }}>
-          Make sure AgentOne Agent is running on localhost:8642
+          Make sure Agent-e1 Agent is running on localhost:8642
         </p>
       </SettingsSection>
     )
@@ -1490,7 +1490,7 @@ function ClaudeConfigSection({
     <>
       <SettingsSection
         title="Model & Provider"
-        description="Configure the default AI model for AgentOne Agent."
+        description="Configure the default AI model for Agent-e1 Agent."
         icon={SourceCodeSquareIcon}
       >
         <SettingsRow
@@ -1530,7 +1530,7 @@ function ClaudeConfigSection({
         </SettingsRow>
         <SettingsRow
           label="Model"
-          description="The model AgentOne uses for conversations."
+          description="The model Agent-e1 uses for conversations."
         >
           <div className="flex w-full max-w-sm gap-2">
             {availableModels.length > 0 ? (
@@ -1752,7 +1752,7 @@ function ClaudeConfigSection({
 
       <SettingsSection
         title="Memory"
-        description="Configure AgentOne Agent memory and user profiles."
+        description="Configure Agent-e1 Agent memory and user profiles."
         icon={UserIcon}
       >
         <SettingsRow
@@ -1823,7 +1823,7 @@ function ClaudeConfigSection({
             <p className="mt-1 text-xs text-primary-600">
               <span className="font-medium">Title</span> is for your list only (e.g.{' '}
               <span className="font-mono">Qwen3.6.Eclipse</span> = model + host).{' '}
-              <span className="font-medium">Provider id</span> is the config name AgentOne uses — leave
+              <span className="font-medium">Provider id</span> is the config name Agent-e1 uses — leave
               blank to derive a safe id from the title. Optional row API key is stored on this
               provider entry, not in .env.
             </p>
@@ -2282,12 +2282,12 @@ function ClaudeConfigSection({
 
       <SettingsSection
         title="About"
-        description="AgentOne Agent runtime information."
+        description="Agent-e1 Agent runtime information."
         icon={Notification03Icon}
       >
         <SettingsRow
           label="Config location"
-          description="Where AgentOne stores its configuration."
+          description="Where Agent-e1 stores its configuration."
         >
           <span
             className="text-xs font-mono"
@@ -2852,7 +2852,7 @@ function ConnectionSection() {
   return (
     <SettingsSection
       title="Connection"
-      description="Point the workspace at your AgentOne Agent services. Useful for Tailscale, LAN, or remote-server setups (#101)."
+      description="Point the workspace at your Agent-e1 Agent services. Useful for Tailscale, LAN, or remote-server setups (#101)."
       icon={Link01Icon}
     >
       <div className="text-xs text-primary-600">

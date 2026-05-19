@@ -44,7 +44,7 @@ type ConnectionStatus = {
   chatReady: boolean
   modelConfigured: boolean
   activeModel: string
-  chatMode: 'enhanced-claude' | 'portable' | 'disconnected'
+  chatMode: 'enhanced-agent' | 'portable' | 'disconnected'
   capabilities: Record<string, boolean>
   claudeUrl: string
 }
@@ -84,11 +84,11 @@ export const Route = createFileRoute('/api/connection-status')({
           label = 'Enhanced'
           detail = modelConfigured
             ? caps.dashboard.available
-              ? 'Core chat works and the AgentOne dashboard APIs are available.'
-              : 'Core chat works and AgentOne gateway APIs are available.'
+              ? 'Core chat works and the Agent-e1 dashboard APIs are available.'
+              : 'Core chat works and Agent-e1 gateway APIs are available.'
             : caps.dashboard.available
-              ? 'AgentOne dashboard APIs are available. Choose a model to start chatting.'
-              : 'AgentOne gateway APIs are available. Choose a model to start chatting.'
+              ? 'Agent-e1 dashboard APIs are available. Choose a model to start chatting.'
+              : 'Agent-e1 gateway APIs are available. Choose a model to start chatting.'
         } else if (chatReady && modelConfigured) {
           status = 'connected'
           label = 'Connected'
@@ -105,7 +105,7 @@ export const Route = createFileRoute('/api/connection-status')({
               'Backend connected. Choose a provider and model to test chat.'
           } else {
             detail =
-              'Core chat works. Enhanced AgentOne gateway APIs are optional and unlock automatically when available.'
+              'Core chat works. Enhanced Agent-e1 gateway APIs are optional and unlock automatically when available.'
           }
         }
 

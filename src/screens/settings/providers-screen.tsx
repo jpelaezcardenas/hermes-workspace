@@ -30,14 +30,14 @@ import { cn } from '@/lib/utils'
 // FIX: replaced direct server module imports with workspace API calls to avoid
 // bundling Node.js-only modules (node:sqlite, node:fs) into the client bundle.
 async function getConfig(): Promise<Record<string, unknown>> {
-  const res = await fetch('/api/claude-config')
+  const res = await fetch('/api/agentone-config')
   if (!res.ok) throw new Error(`Failed to load config: HTTP ${res.status}`)
   const data = await res.json() as { config?: Record<string, unknown> }
   return data.config ?? {}
 }
 
 async function patchConfig(patch: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const res = await fetch('/api/claude-config', {
+  const res = await fetch('/api/agentone-config', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ config: patch }),
@@ -409,7 +409,7 @@ function buildProviderSummaries(payload: {
       name: getProviderDisplayName(providerId),
       description:
         metadata?.description ||
-        'Configured provider in your local AgentOne setup.',
+        'Configured provider in your local Agent-e1 setup.',
       modelCount,
       status: modelCount > 0 ? 'active' : 'configured',
     })
@@ -1073,7 +1073,7 @@ function ActiveModelCard({
           queryKey: ['claude', 'active-config'],
         }),
         queryClient.invalidateQueries({ queryKey: ['claude', 'config'] }),
-        queryClient.invalidateQueries({ queryKey: ['claude-config'] }),
+        queryClient.invalidateQueries({ queryKey: ['agentone-config'] }),
       ])
       toast('Model config saved — takes effect on next message', {
         type: 'success',
@@ -1121,13 +1121,13 @@ function ActiveModelCard({
         </p>
       ) : configQuery.error ? (
         <p className="mt-4 text-sm text-red-500">
-          Could not load config — is AgentOne Agent running?
+          Could not load config — is Agent-e1 Agent running?
         </p>
       ) : (
         <div className="mt-5 space-y-4">
           <ModelConfigSection
             title="Primary Model"
-            description="Default provider, model, and base URL used for new AgentOne Agent requests."
+            description="Default provider, model, and base URL used for new Agent-e1 Agent requests."
             value={primaryConfig}
             onChange={setPrimaryConfig}
             modelOptions={modelOptions}
@@ -1142,7 +1142,7 @@ function ActiveModelCard({
                   Fallback Model
                 </h3>
                 <p className="text-sm text-primary-600">
-                  Optional secondary model AgentOne Agent can use if the primary path
+                  Optional secondary model Agent-e1 Agent can use if the primary path
                   fails.
                 </p>
               </div>
@@ -1226,7 +1226,7 @@ function ActiveModelCard({
 
             <p className="mt-4 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] px-3 py-2 text-sm text-primary-600">
               Slow local runners such as Ollama and `llama-server` often need
-              more headroom before AgentOne Agent decides a stream has stalled.
+              more headroom before Agent-e1 Agent decides a stream has stalled.
             </p>
           </section>
         </div>
@@ -1285,7 +1285,7 @@ function ProviderManagementSection(props: {
               Configured Providers
             </h3>
             <p className="mt-1 text-xs text-primary-600">
-              API keys stay in your local AgentOne config and are never sent to
+              API keys stay in your local Agent-e1 config and are never sent to
               Studio.
             </p>
           </div>
@@ -1297,14 +1297,14 @@ function ProviderManagementSection(props: {
 
         {modelsQuery.isPending ? (
           <p className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm text-primary-600">
-            Loading providers from AgentOne Agent...
+            Loading providers from Agent-e1 Agent...
           </p>
         ) : null}
 
         {modelsQuery.error ? (
           <div className="rounded-xl border border-primary-200 bg-white px-4 py-3">
             <p className="mb-2 text-sm text-primary-700">
-              Unable to load providers right now. Check your AgentOne Agent connection.
+              Unable to load providers right now. Check your Agent-e1 Agent connection.
             </p>
             <Button
               variant="outline"
@@ -1540,7 +1540,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
 
     setDeletingId(provider.id)
     try {
-      const res = await fetch('/api/claude-config', {
+      const res = await fetch('/api/agentone-config', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -1613,7 +1613,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
                 Settings
               </h1>
               <p className="text-sm text-primary-600">
-                Configure providers plus AgentOne Agent defaults in one place.
+                Configure providers plus Agent-e1 Agent defaults in one place.
               </p>
             </div>
 

@@ -7,7 +7,7 @@ import {
   rateLimitResponse,
   safeErrorMessage,
 } from '../../server/rate-limit'
-import { getConfig } from '../../server/claude-api'
+import { getConfig } from '../../server/agentone-api'
 import {
   extractTranscriptionText,
   resolveTranscriptionTarget,

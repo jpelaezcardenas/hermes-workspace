@@ -153,7 +153,7 @@ function checkAuthStore(providerId: string): {
         const p = value as Record<string, unknown>
         const token = String(p.token || p.key || p.access || '').trim()
         if (token) {
-          return { hasToken: true, source: 'claude-auth-store', maskedKey: maskKey(token) }
+          return { hasToken: true, source: 'agentone-auth-store', maskedKey: maskKey(token) }
         }
       }
     }
@@ -161,7 +161,7 @@ function checkAuthStore(providerId: string): {
   return { hasToken: false, source: '' }
 }
 
-export const Route = createFileRoute('/api/claude-config')({
+export const Route = createFileRoute('/api/agentone-config')({
   server: {
     handlers: {
       GET: async ({ request }) => {
@@ -305,7 +305,7 @@ export const Route = createFileRoute('/api/claude-config')({
 
         return Response.json({
           ok: true,
-          message: 'Config updated. Restart AgentOne Agent to apply changes.',
+          message: 'Config updated. Restart Agent-e1 Agent to apply changes.',
         })
       },
     },

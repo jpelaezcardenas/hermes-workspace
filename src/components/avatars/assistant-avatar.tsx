@@ -13,7 +13,7 @@ function AssistantAvatarComponent({ size = 28, className }: AvatarProps) {
   return (
     <img
       src="/agentone-avatar.png"
-      alt="AgentOne"
+      alt="Agent-e1"
       className={cn('shrink-0', className)}
       style={{
         width: size,

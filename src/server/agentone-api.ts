@@ -1,8 +1,8 @@
 /**
- * Hermes Agent FastAPI Client
+ * Agent-e1 FastAPI Client
  *
- * HTTP client for the Hermes Agent FastAPI backend (default: http://127.0.0.1:8642).
- * Replaces legacy WebSocket connection for the Hermes Workspace fork.
+ * HTTP client for the Agent-e1 FastAPI backend (default: http://127.0.0.1:8642).
+ * Replaces legacy WebSocket connection for the Agent-e1 fork.
  */
 
 import {
@@ -23,12 +23,12 @@ import {
   listSessions as listDashboardSessions,
   searchSessions as searchDashboardSessions,
   updateSession as updateDashboardSession,
-} from './claude-dashboard-api'
+} from './agentone-dashboard-api'
 
 const _authHeaders = (): Record<string, string> =>
   BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
 
-console.log(`[claude-api] Configured API: ${CLAUDE_API}`)
+console.log(`[agentone-api] Configured API: ${CLAUDE_API}`)
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -75,7 +75,7 @@ async function claudeGet<T>(path: string): Promise<T> {
   const res = await fetch(`${CLAUDE_API}${path}`, { headers: _authHeaders() })
   if (!res.ok) {
     const body = await res.text().catch(() => '')
-    throw new Error(`AgentOne Agent API ${path}: ${res.status} ${body}`)
+    throw new Error(`Agent-e1 Agent API ${path}: ${res.status} ${body}`)
   }
   return res.json() as Promise<T>
 }
@@ -88,7 +88,7 @@ async function claudePost<T>(path: string, body?: unknown): Promise<T> {
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`AgentOne Agent API POST ${path}: ${res.status} ${text}`)
+    throw new Error(`Agent-e1 Agent API POST ${path}: ${res.status} ${text}`)
   }
   return res.json() as Promise<T>
 }
@@ -101,7 +101,7 @@ async function claudePatch<T>(path: string, body: unknown): Promise<T> {
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`AgentOne Agent API PATCH ${path}: ${res.status} ${text}`)
+    throw new Error(`Agent-e1 Agent API PATCH ${path}: ${res.status} ${text}`)
   }
   return res.json() as Promise<T>
 }
@@ -113,7 +113,7 @@ async function claudeDeleteReq(path: string): Promise<void> {
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`AgentOne Agent API DELETE ${path}: ${res.status} ${text}`)
+    throw new Error(`Agent-e1 Agent API DELETE ${path}: ${res.status} ${text}`)
   }
 }
 
@@ -357,7 +357,7 @@ type StreamChatOptions = {
 }
 
 /**
- * Send a chat message and stream SSE events from Hermes Agent FastAPI.
+ * Send a chat message and stream SSE events from Agent-e1 FastAPI.
  * Returns a promise that resolves when the stream ends.
  */
 export async function streamChat(
@@ -392,27 +392,27 @@ export async function streamChat(
   let buffer = ''
   let currentEvent = ''
 
-  // Debug tap: when HERMES_TOOL_DEBUG=1, dump every raw SSE event to a file so
-  // we can inspect what vanilla Hermes Agent actually emits during tool calls
+  // Debug tap: when AGENTONE_TOOL_DEBUG=1, dump every raw SSE event to a file so
+  // we can inspect what vanilla Agent-e1 actually emits during tool calls
   // (event names + data shapes) without changing any agent code.
-  const toolDebug = process.env.HERMES_TOOL_DEBUG === '1'
+  const toolDebug = process.env.AGENTONE_TOOL_DEBUG === '1' || process.env.HERMES_TOOL_DEBUG === '1'
   let toolDebugStream: NodeJS.WritableStream | null = null
   if (toolDebug) {
     try {
       const fs = await import('node:fs')
       const path = await import('node:path')
       const os = await import('node:os')
-      const dir = path.join(os.tmpdir(), 'hermes-tool-debug')
+      const dir = path.join(os.tmpdir(), 'agentone-tool-debug')
       fs.mkdirSync(dir, { recursive: true })
       const file = path.join(
         dir,
         `sse-${sessionId}-${Date.now()}.log`,
       )
       toolDebugStream = fs.createWriteStream(file, { flags: 'a' })
-      console.log(`[claude-api][tool-debug] writing SSE dump to ${file}`)
+      console.log(`[agentone-api][tool-debug] writing SSE dump to ${file}`)
       toolDebugStream.write(`# session=${sessionId} ts=${new Date().toISOString()}\n`)
     } catch (err) {
-      console.warn('[claude-api][tool-debug] failed to open dump file:', err)
+      console.warn('[agentone-api][tool-debug] failed to open dump file:', err)
     }
   }
 
@@ -500,7 +500,7 @@ export async function getConfig(): Promise<ClaudeConfig> {
     const res = await dashboardFetch('/api/config')
     if (!res.ok) {
       const body = await res.text().catch(() => '')
-      throw new Error(`Hermes dashboard /api/config: ${res.status} ${body}`)
+      throw new Error(`Agent-e1 dashboard /api/config: ${res.status} ${body}`)
     }
     return res.json() as Promise<ClaudeConfig>
   }
@@ -518,7 +518,7 @@ export async function patchConfig(
     })
     if (!res.ok) {
       const body = await res.text().catch(() => '')
-      throw new Error(`Hermes dashboard PATCH /api/config: ${res.status} ${body}`)
+      throw new Error(`Agent-e1 dashboard PATCH /api/config: ${res.status} ${body}`)
     }
     return res.json() as Promise<Record<string, unknown>>
   }

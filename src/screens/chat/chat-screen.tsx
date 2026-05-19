@@ -243,7 +243,7 @@ function exportConversationTranscript(payload: {
     .join('\n\n')
     .trim()
 
-  const content = `# AgentOne Conversation Export\n\nSession: ${payload.sessionLabel}\nExported: ${new Date().toISOString()}\n\n${body || '_No messages in this conversation._'}\n`
+  const content = `# Agent-e1 Conversation Export\n\nSession: ${payload.sessionLabel}\nExported: ${new Date().toISOString()}\n\n${body || '_No messages in this conversation._'}\n`
   const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -540,7 +540,7 @@ export function ChatScreen({
   } | null>(null)
   const [fileExplorerCollapsed, setFileExplorerCollapsed] = useState(() => {
     if (typeof window === 'undefined') return true
-    const stored = localStorage.getItem('claude-file-explorer-collapsed')
+    const stored = localStorage.getItem('agentone-file-explorer-collapsed')
     return stored === null ? true : stored === 'true'
   })
   const { isMobile } = useChatMobile(queryClient)
@@ -1526,7 +1526,7 @@ export function ChatScreen({
           }
         : statusQuery.data && !statusQuery.data.ok
           ? {
-              message: statusQuery.data.error || 'AgentOne Agent unavailable',
+              message: statusQuery.data.error || 'Agent-e1 Agent unavailable',
               status: statusQuery.data.status,
             }
           : null
@@ -1653,7 +1653,7 @@ export function ChatScreen({
       : historyError
         ? `Failed to load history. ${historyError}`
         : statusError
-          ? `AgentOne Agent unavailable. ${statusError.message}`
+          ? `Agent-e1 Agent unavailable. ${statusError.message}`
           : null
     if (message) setError(message)
   }, [
@@ -2455,7 +2455,7 @@ export function ChatScreen({
     setFileExplorerCollapsed((prev) => {
       const next = !prev
       if (typeof window !== 'undefined') {
-        localStorage.setItem('claude-file-explorer-collapsed', String(next))
+        localStorage.setItem('agentone-file-explorer-collapsed', String(next))
       }
       return next
     })

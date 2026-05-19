@@ -462,7 +462,7 @@ export function SkillsScreen() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1.5">
               <p className="text-xs font-medium uppercase text-primary-500 tabular-nums">
-                AgentOne Marketplace
+                Agent-e1 Marketplace
               </p>
               <h1 className="text-2xl font-medium text-ink text-balance sm:text-3xl">
                 Skills Browser
@@ -591,7 +591,7 @@ export function SkillsScreen() {
                   hubQuery.data.source === 'error') ? (
                 <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-200">
                   Skills Hub search unavailable — showing installed skills
-                  instead. Ensure the AgentOne Agent gateway is running.
+                  instead. Ensure the Agent-e1 Agent gateway is running.
                 </div>
               ) : null}
 
@@ -917,7 +917,7 @@ function SecurityScanCard({ security }: { security: SecurityRisk }) {
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="text-primary-500 font-medium w-16 shrink-0">
-              AgentOne
+              Agent-e1
             </span>
             <span
               className={cn(

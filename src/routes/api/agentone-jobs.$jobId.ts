@@ -1,5 +1,5 @@
 /**
- * Jobs API proxy — forwards individual job operations to Hermes Agent FastAPI
+ * Jobs API proxy — forwards individual job operations to Agent-e1 FastAPI
  * or the upstream dashboard cron API.
  */
 import { createFileRoute } from '@tanstack/react-router'
@@ -17,7 +17,7 @@ import {
   readProfileCronOutputs,
   runProfileCronAction,
   updateProfileCronJob,
-} from '../../server/hermes-cron-profiles'
+} from '../../server/agentone-cron-profiles'
 
 function authHeaders(): Record<string, string> {
   return BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
@@ -32,7 +32,7 @@ function notSupported(): Response {
   )
 }
 
-export const Route = createFileRoute('/api/claude-jobs/$jobId')({
+export const Route = createFileRoute('/api/agentone-jobs/$jobId')({
   server: {
     handlers: {
       GET: async ({ request, params }) => {

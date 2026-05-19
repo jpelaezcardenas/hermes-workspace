@@ -31,7 +31,7 @@ export function MobilePromptTrigger() {
     const isDismissed =
       localStorage.getItem('agentone-mobile-access-dismissed') === 'true' ||
       localStorage.getItem('agentone-mobile-prompt-dismissed') === 'true'
-    const isSetup = localStorage.getItem('claude-mobile-setup-seen') === 'true'
+    const isSetup = localStorage.getItem('agentone-mobile-setup-seen') === 'true'
 
     if (isDismissed || isSetup) {
       return
@@ -102,7 +102,7 @@ export function MobilePromptTrigger() {
                 <div className="flex shrink-0 items-center gap-1.5">
                   <img
                     src="/agentone-avatar.png"
-                    alt="AgentOne"
+                    alt="Agent-e1"
                     className="size-8 rounded-lg"
                   />
                   <span className="text-xs text-primary-600">+</span>
@@ -180,7 +180,7 @@ export function MobilePromptTrigger() {
                     className="text-xs"
                     style={{ color: 'var(--theme-muted)' }}
                   >
-                    Connect your phone to this AgentOne instance in a
+                    Connect your phone to this Agent-e1 instance in a
                     few steps.
                   </p>
                 </div>

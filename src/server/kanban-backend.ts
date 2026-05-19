@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { randomUUID } from 'node:crypto'
-import { getClaudeRoot, getWorkspaceClaudeHome } from './claude-paths'
+import { getClaudeRoot, getWorkspaceClaudeHome } from './agentone-paths'
 import {
   SWARM_KANBAN_FILE,
   type CreateSwarmKanbanCardInput,
@@ -193,7 +193,7 @@ function detectClaudeKanban(): ClaudeDetection {
       cliPath: null,
       dbPath,
       workspacePath,
-      reason: 'AgentOne Kanban storage not found; using the local Swarm Board fallback.',
+      reason: 'Agent-e1 Kanban storage not found; using the local Swarm Board fallback.',
     }
   }
 
@@ -419,13 +419,13 @@ const claudeBackend: KanbanBackend = {
     const detection = detectClaudeKanban()
     return {
       id: 'claude',
-      label: 'AgentOne Kanban',
+      label: 'Agent-e1 Kanban',
       detected: detection.available,
       writable: detection.available,
       path: fs.existsSync(detection.dbPath) ? detection.dbPath : null,
       details: detection.available
-        ? detection.reason ?? `AgentOne Kanban storage detected (${detection.cliPath ?? 'direct sqlite'}, ${detection.dbPath})`
-        : detection.reason ?? 'AgentOne Kanban not detected.',
+        ? detection.reason ?? `Agent-e1 Kanban storage detected (${detection.cliPath ?? 'direct sqlite'}, ${detection.dbPath})`
+        : detection.reason ?? 'Agent-e1 Kanban not detected.',
     }
   },
   list() {
@@ -433,7 +433,7 @@ const claudeBackend: KanbanBackend = {
   },
   create(input) {
     const detection = detectClaudeKanban()
-    if (!detection.available) throw new Error(detection.reason ?? 'AgentOne Kanban not detected')
+    if (!detection.available) throw new Error(detection.reason ?? 'Agent-e1 Kanban not detected')
     const nowSeconds = Math.floor(Date.now() / 1000)
     const parentIds = Array.isArray(input.parents)
       ? input.parents.filter((parentId): parentId is string => typeof parentId === 'string' && parentId.trim().length > 0)
@@ -517,13 +517,13 @@ const dashboardProxyBackend: KanbanBackend = {
     const caps = getCapabilities()
     return {
       id: 'hermes-proxy',
-      label: 'AgentOne Dashboard kanban',
+      label: 'Agent-e1 Dashboard kanban',
       detected: caps.kanban,
       writable: caps.kanban,
       path: caps.dashboard.url || CLAUDE_DASHBOARD_URL,
       details: caps.kanban
-        ? `Synced with the AgentOne Dashboard kanban plugin at ${caps.dashboard.url}/kanban (single SQLite source of truth, dispatcher-aware).`
-        : 'AgentOne Dashboard kanban plugin not detected.',
+        ? `Synced with the Agent-e1 Dashboard kanban plugin at ${caps.dashboard.url}/kanban (single SQLite source of truth, dispatcher-aware).`
+        : 'Agent-e1 Dashboard kanban plugin not detected.',
     }
   },
   async list() {

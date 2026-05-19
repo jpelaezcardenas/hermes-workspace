@@ -155,7 +155,7 @@ export function DashboardOverflowPanel({ open, onClose }: Props) {
             onSelect={handleSelect}
           />
           <OverflowGrid
-            title="AgentOne Agent"
+            title="Agent-e1 Agent"
             items={CLAUDE_ITEMS}
             onSelect={handleSelect}
           />

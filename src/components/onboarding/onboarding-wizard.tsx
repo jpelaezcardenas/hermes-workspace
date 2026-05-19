@@ -147,7 +147,7 @@ export function OnboardingWizard() {
                         {step.id === 'welcome' ? (
                           <img
                             src="/agentone-avatar.png"
-                            alt="AgentOne"
+                            alt="Agent-e1"
                             className="size-16 rounded-2xl"
                           />
                         ) : (

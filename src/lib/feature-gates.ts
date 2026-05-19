@@ -20,14 +20,14 @@ const FEATURE_LABELS: Record<EnhancedFeature, string> = {
   jobs: 'Jobs',
   mcp: 'MCP Servers',
   mcpFallback: 'MCP Servers (config fallback)',
-  kanban: 'Kanban (AgentOne plugin)',
+  kanban: 'Kanban (Agent-e1 plugin)',
 }
 
 const FEATURE_PROBES: Record<EnhancedFeature, Array<string>> = {
   sessions: ['/api/sessions'],
   skills: ['/api/gateway-status', '/api/skills'],
   memory: ['/api/gateway-status', '/api/memory/list'],
-  config: ['/api/gateway-status', '/api/claude-config'],
+  config: ['/api/gateway-status', '/api/agentone-config'],
   jobs: ['/api/gateway-status', '/api/claude-jobs'],
   mcp: ['/api/gateway-status', '/api/mcp'],
   mcpFallback: ['/api/gateway-status', '/api/mcp'],
@@ -67,7 +67,7 @@ export function getUnavailableReason(
   const probes = normalized
     ? FEATURE_PROBES[normalized].join(' or ')
     : '/api/gateway-status'
-  return `${getFeatureLabel(feature)} is not reachable through the local AgentOne probes yet. Verify ${probes} before starting another gateway; if those endpoints pass, refresh or reprobe the Workspace UI.`
+  return `${getFeatureLabel(feature)} is not reachable through the local Agent-e1 probes yet. Verify ${probes} before starting another gateway; if those endpoints pass, refresh or reprobe the Workspace UI.`
 }
 
 export function createCapabilityUnavailablePayload(

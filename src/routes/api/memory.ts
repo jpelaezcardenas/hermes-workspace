@@ -6,7 +6,7 @@ import {
   ensureGatewayProbed,
   getCapabilities,
 } from '../../server/gateway-capabilities'
-import { getMemory } from '../../server/claude-api'
+import { getMemory } from '../../server/agentone-api'
 
 export const Route = createFileRoute('/api/memory')({
   server: {

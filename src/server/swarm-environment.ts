@@ -1,7 +1,7 @@
 import { join, resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { getHermesRoot, getProfilesDir, getLocalBinDir } from './claude-paths'
+import { getHermesRoot, getProfilesDir, getLocalBinDir } from './agentone-paths'
 
 export const SWARM_CANONICAL_REPO = resolve(process.cwd())
 export const SWARM_MEMORY_ROOT = process.env.HERMES_SWARM_MEMORY_ROOT || join(homedir(), 'hermes-workspace')
@@ -78,7 +78,7 @@ export function getSwarmEnvironment(): SwarmEnvironment {
       'Swarm code, git, build, and tests run only in the canonical repo.',
       'Do not use the legacy hermes-workspace alias for Swarm work.',
       'Worker profiles live under ~/.hermes/profiles/<workerId> and wrappers under ~/.local/bin/swarmN.',
-      'Prefer live tmux-backed AgentOne sessions over one-shot subprocesses.',
+      'Prefer live tmux-backed Agent-e1 sessions over one-shot subprocesses.',
       'Use the swarm APIs as the machine-readable source of worker/runtime truth.',
     ],
   }

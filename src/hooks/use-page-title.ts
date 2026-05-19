@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-const BASE_TITLE = 'AgentOne'
+const BASE_TITLE = 'Agent-e1'
 
 /**
  * Sets document.title for the current page.
- * Usage: usePageTitle('Sessions') → "Sessions — AgentOne"
+ * Usage: usePageTitle('Sessions') → "Sessions — Agent-e1"
  */
 export function usePageTitle(page: string) {
   useEffect(() => {

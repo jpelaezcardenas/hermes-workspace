@@ -4,7 +4,7 @@ export interface AuthStatus {
   error?: string
 }
 
-export async function fetchClaudeAuthStatus(
+export async function fetchAuthStatus(
   timeoutMs = 5_000,
 ): Promise<AuthStatus> {
   const controller = new AbortController()
@@ -20,7 +20,7 @@ export async function fetchClaudeAuthStatus(
 
     throw error instanceof Error
       ? error
-      : new Error('Failed to connect to AgentOne Agent')
+      : new Error('Failed to connect to Agent-e1 Agent')
   } finally {
     globalThis.clearTimeout(timeout)
   }

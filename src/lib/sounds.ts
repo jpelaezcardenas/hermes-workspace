@@ -30,7 +30,7 @@ interface SoundPrefs {
   enabled: boolean
 }
 
-const STORAGE_KEY = 'claude-sound-prefs'
+const STORAGE_KEY = 'agentone-sound-prefs'
 const DEFAULT_VOLUME = 0.3
 
 // Shared state

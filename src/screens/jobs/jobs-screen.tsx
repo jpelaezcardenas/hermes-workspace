@@ -513,7 +513,7 @@ export function JobsScreen() {
               />
               <p className="text-sm font-medium">No scheduled jobs</p>
               <p className="mt-1 text-xs">
-                No cron jobs found across AgentOne profiles
+                No cron jobs found across Agent-e1 profiles
               </p>
             </div>
           ) : (

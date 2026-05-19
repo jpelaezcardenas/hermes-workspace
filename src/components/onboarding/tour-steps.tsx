@@ -5,7 +5,7 @@ export const tourSteps: Array<Step> = [
   {
     target: 'body',
     placement: 'center',
-    title: 'Welcome to AgentOne!',
+    title: 'Welcome to Agent-e1!',
     content: (
       <div
         style={{
@@ -17,7 +17,7 @@ export const tourSteps: Array<Step> = [
       >
         <img
           src="/agentone-avatar.png"
-          alt="AgentOne"
+          alt="Agent-e1"
           style={{ width: 48, height: 48, borderRadius: 12 }}
         />
         <p style={{ textAlign: 'center', margin: 0 }}>
@@ -74,7 +74,7 @@ export const tourSteps: Array<Step> = [
     placement: 'right',
     title: 'Built-in Terminal',
     content:
-      'Built-in terminal for quick commands. Execute shell commands without leaving AgentOne.',
+      'Built-in terminal for quick commands. Execute shell commands without leaving Agent-e1.',
   },
   // Step 9: Usage Meter (in header)
   {
@@ -90,7 +90,7 @@ export const tourSteps: Array<Step> = [
     placement: 'right',
     title: 'Settings & Customization',
     content:
-      'Configure providers, themes, accent colors, and more. Make AgentOne yours.',
+      'Configure providers, themes, accent colors, and more. Make Agent-e1 yours.',
   },
   // Step 11: Finish
   {
@@ -98,6 +98,6 @@ export const tourSteps: Array<Step> = [
     placement: 'center',
     title: "You're all set! 🎉",
     content:
-      'Start chatting with your AI, explore the tools, and customize AgentOne to fit your workflow. Need help? Press ? to see all keyboard shortcuts.',
+      'Start chatting with your AI, explore the tools, and customize Agent-e1 to fit your workflow. Need help? Press ? to see all keyboard shortcuts.',
   },
 ]

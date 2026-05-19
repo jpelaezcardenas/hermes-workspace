@@ -30,8 +30,8 @@ function stripProviderPrefix(model: string): string {
   return model
 }
 
-export const ONBOARDING_KEY = 'claude-onboarding-complete'
-export const ONBOARDING_COMPLETE_EVENT = 'claude:onboarding-complete'
+export const ONBOARDING_KEY = 'agentone-onboarding-complete'
+export const ONBOARDING_COMPLETE_EVENT = 'agentone:onboarding-complete'
 
 function dispatchOnboardingCompletionChanged(completed: boolean) {
   if (typeof window === 'undefined') return
@@ -130,7 +130,7 @@ function getEnhancedFeatureNames(
     .map((feature) => feature.label)
 }
 
-export function ClaudeOnboarding() {
+export function Onboarding() {
   const [show, setShow] = useState(false)
   const [step, setStep] = useState<Step>('welcome')
   const [backendStatus, setBackendStatus] = useState<
@@ -178,7 +178,7 @@ export function ClaudeOnboarding() {
 
   const loadCurrentConfig = useCallback(async () => {
     try {
-      const res = await fetch('/api/claude-config')
+      const res = await fetch('/api/agentone-config')
       if (!res.ok) return
       const data = (await res.json()) as {
         activeModel?: string
@@ -240,7 +240,7 @@ export function ClaudeOnboarding() {
         setBackendStatus('ready')
         setBackendMessage(
           data.capabilities.sessions
-            ? 'Backend connected. Core chat works, and AgentOne gateway enhancements are available.'
+            ? 'Backend connected. Core chat works, and Agent-e1 gateway enhancements are available.'
             : 'Backend connected. Core chat is ready.',
         )
         return
@@ -287,7 +287,7 @@ export function ClaudeOnboarding() {
         }
       }
 
-      const res = await fetch('/api/claude-config', {
+      const res = await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -321,7 +321,7 @@ export function ClaudeOnboarding() {
     if (!canEditConfig || !selectedProvider) return true
 
     try {
-      const res = await fetch('/api/claude-config', {
+      const res = await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -522,15 +522,15 @@ export function ClaudeOnboarding() {
             <div className="space-y-4 text-center">
               <img
                 src="/agentone-avatar.png"
-                alt="AgentOne"
+                alt="Agent-e1"
                 className="mx-auto size-20 rounded-2xl"
                 style={{
                   filter: 'drop-shadow(0 8px 24px rgba(99,102,241,0.3))',
                 }}
               />
-              <h2 className="text-xl font-bold">Welcome to AgentOne</h2>
+              <h2 className="text-xl font-bold">Welcome to Agent-e1</h2>
               <p className="text-sm" style={mutedStyle}>
-                Works with any OpenAI-compatible backend. AgentOne gateway APIs
+                Works with any OpenAI-compatible backend. Agent-e1 gateway APIs
                 unlock sessions, memory, skills, and other extras automatically.
               </p>
               <button
@@ -553,7 +553,7 @@ export function ClaudeOnboarding() {
               <div className="text-4xl">🔌</div>
               <h2 className="text-lg font-bold">Connect Your Backend</h2>
               <p className="text-sm" style={mutedStyle}>
-                Start by verifying that AgentOne can reach your
+                Start by verifying that Agent-e1 can reach your
                 OpenAI-compatible backend.
               </p>
 
@@ -600,8 +600,8 @@ export function ClaudeOnboarding() {
                     </p>
                     <p className="mt-2" style={mutedStyle}>
                       Use any backend that exposes{' '}
-                      <code>/v1/chat/completions</code>. If you point AgentOne
-                      Workspace at a AgentOne Agent gateway, enhanced features unlock
+                      <code>/v1/chat/completions</code>. If you point Agent-e1
+                      Workspace at a Agent-e1 Agent gateway, enhanced features unlock
                       automatically.
                     </p>
                     <div
@@ -650,14 +650,14 @@ export function ClaudeOnboarding() {
               <p className="text-center text-xs" style={mutedStyle}>
                 {canEditConfig
                   ? 'Save provider settings here, then choose a model before testing chat.'
-                  : 'This backend manages provider settings outside AgentOne. Confirm the model you expect to use, then test chat.'}
+                  : 'This backend manages provider settings outside Agent-e1. Confirm the model you expect to use, then test chat.'}
               </p>
 
               <div className="rounded-xl p-3 text-xs" style={cardStyle}>
                 <p style={mutedStyle}>Backend mode</p>
                 <p className="mt-1">
                   {backendInfo?.capabilities?.sessions
-                    ? 'AgentOne gateway detected'
+                    ? 'Agent-e1 gateway detected'
                     : 'Portable OpenAI-compatible backend'}
                 </p>
                 {configuredModel ? (
@@ -978,7 +978,7 @@ export function ClaudeOnboarding() {
               <div className="text-4xl">🧪</div>
               <h2 className="text-lg font-bold">Test Chat</h2>
               <p className="text-sm" style={mutedStyle}>
-                Verify that core chat works first. Enhanced AgentOne features are
+                Verify that core chat works first. Enhanced Agent-e1 features are
                 optional and appear automatically when supported.
               </p>
 
@@ -1098,8 +1098,8 @@ export function ClaudeOnboarding() {
               <p className="text-sm" style={mutedStyle}>
                 Core chat is set up.{' '}
                 {enhancedFeatures.length > 0
-                  ? 'This backend also exposes AgentOne gateway enhancements.'
-                  : 'If you later connect an AgentOne gateway, enhanced features unlock automatically.'}
+                  ? 'This backend also exposes Agent-e1 gateway enhancements.'
+                  : 'If you later connect an Agent-e1 gateway, enhanced features unlock automatically.'}
               </p>
               <div
                 className="grid grid-cols-3 gap-2 text-xs"

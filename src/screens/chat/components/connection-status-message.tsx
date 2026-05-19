@@ -25,8 +25,8 @@ function classifyConnectionError(
   if (!normalizedError && !status) {
     return {
       title: 'Not connected',
-      description: "AgentOne can't reach the AgentOne Agent.",
-      action: 'Check that AgentOne Agent is running, then try again.',
+      description: "Agent-e1 can't reach the Agent-e1 Agent.",
+      action: 'Check that Agent-e1 Agent is running, then try again.',
     }
   }
 
@@ -38,8 +38,8 @@ function classifyConnectionError(
   ) {
     return {
       title: 'Authentication required',
-      description: 'AgentOne Agent rejected the connection token.',
-      action: 'Go to Settings -> Advanced -> AgentOne Agent to update your token.',
+      description: 'Agent-e1 Agent rejected the connection token.',
+      action: 'Go to Settings -> Advanced -> Agent-e1 Agent to update your token.',
     }
   }
 
@@ -50,15 +50,15 @@ function classifyConnectionError(
   ) {
     return {
       title: 'Pairing required',
-      description: "This device isn't paired with AgentOne Agent yet.",
-      action: 'Check AgentOne Agent connection.',
+      description: "This device isn't paired with Agent-e1 Agent yet.",
+      action: 'Check Agent-e1 Agent connection.',
     }
   }
 
   if (lower.includes('econnrefused') && lower.includes('8642')) {
     return {
-      title: 'AgentOne gateway not running',
-      description: 'The AgentOne gateway is not running on port 8642.',
+      title: 'Agent-e1 gateway not running',
+      description: 'The Agent-e1 gateway is not running on port 8642.',
       action: 'Run the official Hermes installer, then start the gateway with: hermes gateway run',
     }
   }
@@ -71,16 +71,16 @@ function classifyConnectionError(
     lower.includes('timeout')
   ) {
     return {
-      title: 'AgentOne Agent unreachable',
-      description: "Can't connect to AgentOne Agent at the configured URL.",
-      action: 'Make sure AgentOne Agent is running and the URL is correct.',
+      title: 'Agent-e1 Agent unreachable',
+      description: "Can't connect to Agent-e1 Agent at the configured URL.",
+      action: 'Make sure Agent-e1 Agent is running and the URL is correct.',
     }
   }
 
   return {
     title: 'Connection error',
     description: normalizedError || 'Something went wrong.',
-    action: 'Try refreshing or check Settings -> Advanced -> AgentOne.',
+    action: 'Try refreshing or check Settings -> Advanced -> Agent-e1.',
   }
 }
 
@@ -133,7 +133,7 @@ export function ConnectionStatusMessage({
         />
         <div className="flex-1 text-xs">
           <p className="font-medium">
-            {isChecking ? 'Connecting to AgentOne Agent...' : errorInfo.title}
+            {isChecking ? 'Connecting to Agent-e1 Agent...' : errorInfo.title}
           </p>
           {!isChecking ? (
             <>

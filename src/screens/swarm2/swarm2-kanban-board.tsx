@@ -94,13 +94,13 @@ export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null |
     return {
       badgeLabel: 'Synced • Hermes',
       badgeTone: 'hermes-proxy',
-      toastTitle: 'Synced with AgentOne Dashboard',
+      toastTitle: 'Synced with Agent-e1 Dashboard',
       toastBody:
-        'Cards and status changes round-trip through the AgentOne Dashboard kanban plugin. Single source of truth, dispatcher-aware.',
+        'Cards and status changes round-trip through the Agent-e1 Dashboard kanban plugin. Single source of truth, dispatcher-aware.',
       title:
         backend.details ??
         backend.path ??
-        'AgentOne Dashboard kanban plugin detected',
+        'Agent-e1 Dashboard kanban plugin detected',
       dashboardUrl,
     }
   }
@@ -117,7 +117,7 @@ export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null |
     badgeLabel: 'Local fallback',
     badgeTone: 'local',
     toastTitle: 'Using local Swarm Board',
-    toastBody: backend.details || 'AgentOne Kanban is not available yet. Cards stay local and the board will switch automatically when AgentOne storage is detected.',
+    toastBody: backend.details || 'Agent-e1 Kanban is not available yet. Cards stay local and the board will switch automatically when Agent-e1 storage is detected.',
     title: backend.details ?? backend.path ?? 'Local Swarm Board fallback',
   }
 }

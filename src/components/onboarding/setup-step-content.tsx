@@ -51,8 +51,8 @@ export function ConnectionCheckStep({
       if (!connected) {
         setLastError(
           data.error === 'server_timeout'
-            ? 'AgentOne Agent did not respond in time.'
-            : 'AgentOne Agent is not reachable yet.',
+            ? 'Agent-e1 Agent did not respond in time.'
+            : 'Agent-e1 Agent is not reachable yet.',
         )
       }
     } catch (error) {
@@ -111,7 +111,7 @@ export function ConnectionCheckStep({
       {status === 'disconnected' && (
         <div className="mb-6 w-full rounded-2xl border border-red-200 bg-red-50 p-4 text-left">
           <p className="mb-3 text-sm font-medium text-red-700">
-            Make sure the AgentOne Agent HTTP API server is enabled:
+            Make sure the Agent-e1 Agent HTTP API server is enabled:
           </p>
           <div className="space-y-2">
             <div>
@@ -168,7 +168,7 @@ export function ModelConfigurationStep({
 
     async function loadConfig() {
       try {
-        const response = await fetch('/api/claude-config', {
+        const response = await fetch('/api/agentone-config', {
           signal: AbortSignal.timeout(5000),
         })
         if (!response.ok) {
@@ -213,7 +213,7 @@ export function ModelConfigurationStep({
       </h2>
 
       <p className="mb-6 max-w-md text-base leading-relaxed text-primary-600">
-        Core chat works with any OpenAI-compatible backend. AgentOne gateway APIs
+        Core chat works with any OpenAI-compatible backend. Agent-e1 gateway APIs
         make provider and model setup editable from the workspace.
       </p>
 

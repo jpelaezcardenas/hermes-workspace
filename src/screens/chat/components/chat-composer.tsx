@@ -298,7 +298,7 @@ async function fetchModelsForProvider(
     `/api/claude-proxy/api/available-models?provider=${encodeURIComponent(normalizedProvider)}`,
   )
   if (!response.ok) {
-    throw new Error(`AgentOne models request failed (${response.status})`)
+    throw new Error(`Agent-e1 models request failed (${response.status})`)
   }
 
   const payload = (await response.json()) as ClaudeAvailableModelsResponse
@@ -936,7 +936,7 @@ function ChatComposerComponent({
   const sttConfigQuery = useQuery({
     queryKey: ['claude', 'config', 'stt'],
     queryFn: async () => {
-      const response = await fetch('/api/claude-config')
+      const response = await fetch('/api/agentone-config')
       if (!response.ok) {
         throw new Error(`Config request failed (${response.status})`)
       }
@@ -1145,7 +1145,7 @@ function ChatComposerComponent({
   // Derive the label directly from the store so navigation between sessions
   // updates without a render-window flash from a stale React-state mirror.
   const modelButtonLabel =
-    persistedSessionModel || currentModel || configuredModel || '⚕ AgentOne Agent'
+    persistedSessionModel || currentModel || configuredModel || '⚕ Agent-e1 Agent'
 
   // Measure composer height and set CSS variable for scroll padding
   useLayoutEffect(() => {
@@ -2437,7 +2437,7 @@ function ChatComposerComponent({
                                   No models available
                                 </p>
                                 <p className="text-xs">
-                                  Check your AgentOne provider configuration.
+                                  Check your Agent-e1 provider configuration.
                                 </p>
                               </div>
                             )

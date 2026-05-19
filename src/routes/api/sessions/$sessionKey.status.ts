@@ -7,7 +7,7 @@ import {
   getGatewayCapabilities,
   getSession,
   toSessionSummary,
-} from '../../../server/claude-api'
+} from '../../../server/agentone-api'
 
 export const Route = createFileRoute('/api/sessions/$sessionKey/status')({
   server: {

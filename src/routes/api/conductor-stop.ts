@@ -4,10 +4,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
-import { deleteSession } from '../../server/claude-api'
+import { deleteSession } from '../../server/agentone-api'
 import { dashboardFetch, ensureGatewayProbed } from '../../server/gateway-capabilities'
 import { cancelSwarmMission } from '../../server/swarm-missions'
-import { getProfilesDir } from '../../server/claude-paths'
+import { getProfilesDir } from '../../server/agentone-paths'
 
 function resetNativeWorkerRuntime(workerId: string, missionId: string): boolean {
   const runtimePath = join(getProfilesDir(), workerId, 'runtime.json')

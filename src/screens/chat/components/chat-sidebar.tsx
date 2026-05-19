@@ -331,7 +331,7 @@ function NavItem({
 
 // ── Last-visited route tracking ─────────────────────────────────────────
 
-const LAST_ROUTE_KEY = 'claude-sidebar-last-route'
+const LAST_ROUTE_KEY = 'agentone-sidebar-last-route'
 
 function getLastRoute(section: string): string | null {
   try {
@@ -608,15 +608,15 @@ function ChatSidebarComponent({
 
   // Collapsible section states
   const [mainExpanded, toggleMain] = usePersistedBool(
-    'claude-sidebar-main-expanded',
+    'agentone-sidebar-main-expanded',
     true,
   )
   const [knowledgeExpanded, toggleKnowledge] = usePersistedBool(
-    'claude-sidebar-knowledge-expanded',
+    'agentone-sidebar-knowledge-expanded',
     true,
   )
   const [_systemExpanded, _toggleSystem] = usePersistedBool(
-    'claude-sidebar-system-expanded',
+    'agentone-sidebar-system-expanded',
     false,
   )
 
@@ -938,14 +938,14 @@ function ChatSidebarComponent({
               >
                 <img
                   src="/agentone-avatar.png"
-                  alt="AgentOne"
+                  alt="Agent-e1"
                   className="size-6 rounded-lg"
                 />
                 <span
                   className="text-sm font-semibold tracking-tight"
                   style={{ color: 'var(--theme-text)' }}
                 >
-                  AgentOne
+                  Agent-e1
                 </span>
               </Link>
             </motion.div>

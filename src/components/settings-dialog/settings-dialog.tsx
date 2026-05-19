@@ -586,7 +586,7 @@ function HermesContent() {
         if (pollData.status === 'success') {
           setOauthStatus('success')
           setOauthMessage(
-            `${provider.name} OAuth is connected. TUI and WebUI will use the shared AgentOne credentials.`,
+            `${provider.name} OAuth is connected. TUI and WebUI will use the shared Agent-e1 credentials.`,
           )
           await refreshConfig()
           return
@@ -611,7 +611,7 @@ function HermesContent() {
   if (!configAvailable) {
     return (
       <BackendUnavailableState
-        feature="AgentOne Settings"
+        feature="Agent-e1 Settings"
         description={getUnavailableReason('config')}
       />
     )
@@ -1440,7 +1440,7 @@ function AppearanceContent() {
   }
 
   function _handleAccentColorChange(selectedAccent: AccentColor) {
-    localStorage.setItem('claude-accent', selectedAccent)
+    localStorage.setItem('agentone-accent', selectedAccent)
     document.documentElement.setAttribute('data-accent', selectedAccent)
     applyAccentColor(selectedAccent)
     updateSettings({ accentColor: selectedAccent })
@@ -1489,7 +1489,7 @@ function AppearanceContent() {
       <div className={SETTINGS_CARD_CLASS}>
         <Row
           label="System metrics footer"
-          description="Show a persistent footer with CPU, RAM, disk, and AgentOne Agent status."
+          description="Show a persistent footer with CPU, RAM, disk, and Agent-e1 Agent status."
         >
           <Switch
             checked={settings.showSystemMetricsFooter}
@@ -1740,7 +1740,7 @@ function _LoaderContent() {
   const { settings: cs, updateSettings: updateCS } = useChatSettingsStore()
   const styles: Array<{ value: LoaderStyle; label: string }> = [
     { value: 'dots', label: 'Dots' },
-    { value: 'braille-claude', label: 'AgentOne' },
+    { value: 'braille-agentone', label: 'Agent-e1' },
     { value: 'braille-orbit', label: 'Orbit' },
     { value: 'braille-breathe', label: 'Breathe' },
     { value: 'braille-pulse', label: 'Pulse' },
@@ -1750,7 +1750,7 @@ function _LoaderContent() {
   ]
   function getPreset(s: LoaderStyle): BrailleSpinnerPreset | null {
     const m: Record<string, BrailleSpinnerPreset> = {
-      'braille-claude': 'claude',
+      'braille-agentone': 'claude',
       'braille-orbit': 'orbit',
       'braille-breathe': 'breathe',
       'braille-pulse': 'pulse',
@@ -1980,11 +1980,11 @@ function _AdvancedContent() {
     <div className="space-y-4">
       <SectionHeader
         title="Advanced"
-        description="AgentOne endpoint and connectivity."
+        description="Agent-e1 endpoint and connectivity."
       />
       <div className={SETTINGS_CARD_CLASS}>
         <Row
-          label="AgentOne URL"
+          label="Agent-e1 URL"
           description="Used for API requests from Studio"
         >
           <div className="w-full max-w-sm">
@@ -1994,7 +1994,7 @@ function _AdvancedContent() {
               value={settings.claudeUrl}
               onChange={(e) => validateAndUpdateUrl(e.target.value)}
               className="h-8 w-full rounded-lg border-primary-200 text-sm"
-              aria-label="AgentOne URL"
+              aria-label="Agent-e1 URL"
               aria-invalid={!!urlError}
               aria-describedby={urlError ? urlErrorId : undefined}
             />
@@ -2521,7 +2521,7 @@ export function SettingsDialog({
                 Settings
               </DialogTitle>
               <DialogDescription className="sr-only">
-                Configure AgentOne
+                Configure Agent-e1
               </DialogDescription>
             </div>
             <DialogClose

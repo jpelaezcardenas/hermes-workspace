@@ -1,16 +1,18 @@
 {
-  "name": "AgentOne",
-  "short_name": "AgentOne",
-  "description": "AI bot hosting platform — chat, tools, files, memory, jobs, and agent workflows.",
+  "name": "Agent-e1",
+  "short_name": "Agent-e1",
+  "description": "Full AI OS Platform — chat, tools, files, memory, jobs, and agent workflows.",
   "id": "/?app=agentone",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "browser"],
   "orientation": "any",
-  "background_color": "#0A0E1A",
+  "background_color": "#0F172A",
   "theme_color": "#2563EB",
-  "categories": ["productivity", "utilities", "developer"],
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "AI", "technology"],
   "icons": [
     {
       "src": "/agentone-icon-192.png",

@@ -12,7 +12,7 @@ import {
   getGatewayCapabilities,
   getMessages,
   toChatMessage,
-} from '../../server/claude-api'
+} from '../../server/agentone-api'
 import { resolveSessionKey } from '../../server/session-utils'
 import { isAuthenticated } from '@/server/auth-middleware'
 import {

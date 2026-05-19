@@ -1,9 +1,9 @@
 import { json } from '@tanstack/react-start'
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
-import { startClaudeAgent } from '../../server/claude-agent'
+import { startAgent } from '../../server/agentone-agent'
 
-export const Route = createFileRoute('/api/start-claude')({
+export const Route = createFileRoute('/api/start-agentone')({
   server: {
     handlers: {
       POST: async ({ request }) => {
@@ -12,7 +12,7 @@ export const Route = createFileRoute('/api/start-claude')({
             return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
           }
 
-          const result = await startClaudeAgent()
+          const result = await startAgent()
           return json(result, { status: result.ok ? 200 : 500 })
         } catch (err) {
           return json(

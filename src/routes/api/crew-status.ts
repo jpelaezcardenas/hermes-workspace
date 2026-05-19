@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process'
 import { join } from 'node:path'
 import * as yaml from 'yaml'
 import { BEARER_TOKEN, CLAUDE_API, ensureGatewayProbed } from '../../server/gateway-capabilities'
-import { getClaudeRoot, getProfileClaudeHome, getWorkspaceClaudeHome } from '../../server/claude-paths'
+import { getClaudeRoot, getProfileClaudeHome, getWorkspaceClaudeHome } from '../../server/agentone-paths'
 import { formatSwarmWorkerLabel, rosterByWorkerId, type SwarmRosterWorker } from '../../server/swarm-roster'
 
 type CrewDefinition = {

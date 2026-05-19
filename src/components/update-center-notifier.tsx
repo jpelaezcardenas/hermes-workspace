@@ -456,7 +456,7 @@ function ReleaseNotes({
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-base font-semibold">AgentOne updated</p>
+              <p className="text-base font-semibold">Agent-e1 updated</p>
               <p className="text-sm" style={{ color: 'var(--theme-muted)' }}>
                 What changed in this update.
               </p>

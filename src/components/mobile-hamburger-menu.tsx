@@ -44,7 +44,7 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
   },
   {
     id: 'playground',
-    label: 'AgentOne',
+    label: 'Agent-e1',
     icon: Castle02Icon,
     to: '/playground',
     match: (p: string) => p.startsWith('/playground'),
@@ -215,7 +215,7 @@ export function MobileHamburgerMenu() {
           <div className="flex items-center gap-2.5">
             <img
               src="/agentone-avatar.png"
-              alt="AgentOne"
+              alt="Agent-e1"
               className="size-8 rounded-xl shrink-0"
             />
             <div className="flex flex-col leading-tight">
@@ -223,7 +223,7 @@ export function MobileHamburgerMenu() {
                 className="font-bold text-[15px] tracking-tight"
                 style={{ color: 'var(--color-ink, #111)' }}
               >
-                AgentOne Agent
+                Agent-e1 Agent
               </span>
               <span
                 className="text-[11px]"

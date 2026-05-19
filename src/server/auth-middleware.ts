@@ -193,8 +193,9 @@ export function getSessionTokenFromCookie(
 
   const cookies = cookieHeader.split(';').map((c) => c.trim())
   for (const cookie of cookies) {
-    if (cookie.startsWith('claude-auth=')) {
-      return cookie.substring('claude-auth='.length)
+    if (cookie.startsWith('agentone-auth=') || cookie.startsWith('claude-auth=')) {
+      const prefix = cookie.startsWith('agentone-auth=') ? 'agentone-auth=' : 'claude-auth='
+      return cookie.substring(prefix.length)
     }
   }
   return null
@@ -304,5 +305,5 @@ export function createSessionCookie(token: string): string {
   const attrs = ['HttpOnly']
   if (shouldSetSecureCookie()) attrs.push('Secure')
   attrs.push('SameSite=Lax', 'Path=/', `Max-Age=${30 * 24 * 60 * 60}`)
-  return `claude-auth=${token}; ${attrs.join('; ')}`
+  return `agentone-auth=${token}; ${attrs.join('; ')}`
 }

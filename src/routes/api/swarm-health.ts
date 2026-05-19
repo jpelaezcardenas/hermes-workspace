@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import * as yaml from 'yaml'
 import { isAuthenticated } from '../../server/auth-middleware'
-import { getLocalBinDir, getProfilesDir } from '../../server/claude-paths'
+import { getLocalBinDir, getProfilesDir } from '../../server/agentone-paths'
 import { formatSwarmWorkerLabel, isSwarmWorkerId, resolveSwarmWorkerDisplayName, rosterByWorkerId } from '../../server/swarm-roster'
 import type { SwarmRosterWorker } from '../../server/swarm-roster'
 

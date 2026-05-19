@@ -21,13 +21,13 @@ import { UpdateCenterNotifier } from '@/components/update-center-notifier'
 import { initializeSettingsAppearance } from '@/hooks/use-settings'
 import { useApplyChatWidth } from '@/hooks/use-chat-settings'
 import {
-  ClaudeOnboarding,
+  Onboarding,
   ONBOARDING_COMPLETE_EVENT,
   ONBOARDING_KEY,
-} from '@/components/onboarding/claude-onboarding'
+} from '@/components/onboarding/agentone-onboarding'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { LoginScreen } from '@/components/auth/login-screen'
-import { fetchClaudeAuthStatus, type AuthStatus } from '@/lib/claude-auth'
+import { fetchAuthStatus, type AuthStatus } from '@/lib/agentone-auth'
 import { getRootSurfaceState } from './-root-layout-state'
 
 const APP_CSP = [
@@ -131,12 +131,12 @@ export const Route = createRootRoute({
           'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual',
       },
       {
-        title: 'AgentOne',
+        title: 'Agent-e1',
       },
       {
         name: 'description',
         content:
-          'AgentOne workspace for chat, tools, files, memory, and jobs.',
+          'Agent-e1 workspace for chat, tools, files, memory, and jobs.',
       },
       {
         property: 'og:image',
@@ -339,7 +339,7 @@ function RootLayout() {
   useEffect(() => {
     if (typeof window === 'undefined') return undefined
     let cancelled = false
-    fetchClaudeAuthStatus()
+    fetchAuthStatus()
       .then((status) => {
         if (!cancelled) setAuthStatus(status)
       })
@@ -359,7 +359,7 @@ function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <Toaster />
       {mounted && rootSurfaceState.showLogin ? <LoginScreen /> : null}
-      {mounted && rootSurfaceState.showOnboarding ? <ClaudeOnboarding /> : null}
+      {mounted && rootSurfaceState.showOnboarding ? <Onboarding /> : null}
       {rootSurfaceState.showWorkspaceShell ? (
         <>
           <GlobalShortcutListener />
@@ -477,8 +477,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             var d = document.createElement('div');
             d.id = 'splash-screen';
             d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';transition:opacity 0.5s ease;';
-            d.innerHTML = '<img src="/agentone-avatar.png" alt="AgentOne" style="width:80px;height:80px;margin-bottom:20px;border-radius:16px;filter:drop-shadow(0 8px 32px color-mix(in srgb,'+accent+' 45%, transparent))" />'
-              + '<img src="'+(isDark ? '/agentone-banner.png' : '/agentone-banner-light.png')+'" alt="AgentOne" style="width:280px;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
+            d.innerHTML = '<img src="/agentone-avatar.png" alt="Agent-e1" style="width:80px;height:80px;margin-bottom:20px;border-radius:16px;filter:drop-shadow(0 8px 32px color-mix(in srgb,'+accent+' 45%, transparent))" />'
+              + '<img src="'+(isDark ? '/agentone-banner.png' : '/agentone-banner-light.png')+'" alt="Agent-e1" style="width:280px;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
               + '<div style="font:400 14px/1 system-ui,-apple-system,sans-serif;letter-spacing:0.04em;color:'+muted+'">Workspace</div>'
               + '<div style="margin-top:28px;width:140px;height:3px;background:'+(isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')+';border-radius:3px;overflow:hidden;position:relative"><div id=splash-bar style="width:0%;height:100%;background:'+accent+';border-radius:3px;transition:width 0.4s ease"></div></div>';
             document.body.prepend(d);

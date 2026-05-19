@@ -25,7 +25,7 @@ import { RouterChat } from '@/components/swarm/router-chat'
 import { SwarmTerminal } from '@/components/swarm/swarm-terminal'
 import { useQuery } from '@tanstack/react-query'
 
-const SWARM_ROOM_STORAGE_KEY = 'claude-swarm-room-v1'
+const SWARM_ROOM_STORAGE_KEY = 'agentone-swarm-room-v1'
 const WORKER_ID_PATTERN = /^(swarm\d+|[a-z][a-z0-9]*(?:-[a-z0-9]+)*)$/i
 const isWorkerId = (id: string) => WORKER_ID_PATTERN.test(id)
 

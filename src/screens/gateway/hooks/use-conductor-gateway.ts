@@ -1038,7 +1038,7 @@ export function useConductorGateway() {
       lastActivityAtRef.current = Date.now()
       setTimeoutWarning(false)
     } else if (phase === 'decomposing' || phase === 'running') {
-      setPlanText((current) => current || `Conductor mission ${status ?? 'running'}. Waiting for AgentOne to report the session...`)
+      setPlanText((current) => current || `Conductor mission ${status ?? 'running'}. Waiting for Agent-e1 to report the session...`)
     }
 
     if (missionLog) {
@@ -1587,7 +1587,7 @@ export function useConductorGateway() {
       // Transition to running — the orchestrator is alive, workers will appear via polling
       setPlanText(
         nextMissionId
-          ? 'Conductor mission launched. Waiting for AgentOne session and worker activity...'
+          ? 'Conductor mission launched. Waiting for Agent-e1 session and worker activity...'
           : 'Orchestrator spawned. Decomposing mission and spawning workers...',
       )
       setPhase('running')

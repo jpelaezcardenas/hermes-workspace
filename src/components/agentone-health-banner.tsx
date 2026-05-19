@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { fetchClaudeAuthStatus } from '@/lib/claude-auth'
+import { fetchAuthStatus } from '@/lib/agentone-auth'
 
 const POLL_INTERVAL = 30_000
 
-type ClaudeHealthBannerProps = {
+type HealthBannerProps = {
   enabled?: boolean
 }
 
-export function ClaudeHealthBanner({
+export function HealthBanner({
   enabled = false,
-}: ClaudeHealthBannerProps) {
+}: HealthBannerProps) {
   const [status, setStatus] = useState<'ok' | 'error' | 'checking'>('checking')
   const [lastError, setLastError] = useState<string | null>(null)
 
@@ -24,7 +24,7 @@ export function ClaudeHealthBanner({
 
     async function check() {
       try {
-        await fetchClaudeAuthStatus()
+        await fetchAuthStatus()
         if (!cancelled) {
           setStatus('ok')
           setLastError(null)
@@ -56,12 +56,12 @@ export function ClaudeHealthBanner({
       }}
     >
       <span className="inline-block h-2 w-2 rounded-full bg-white/60 animate-pulse" />
-      <span>AgentOne Agent unreachable{lastError ? ` — ${lastError}` : ''}</span>
+      <span>Agent-e1 Agent unreachable{lastError ? ` — ${lastError}` : ''}</span>
       <button
         type="button"
         onClick={() => {
           setStatus('checking')
-          fetchClaudeAuthStatus()
+          fetchAuthStatus()
             .then(() => {
               setStatus('ok')
               setLastError(null)

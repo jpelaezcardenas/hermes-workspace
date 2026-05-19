@@ -22,7 +22,7 @@ function hermesRootFromProfile(pathValue: string): string | null {
 }
 
 export function getHermesRoot(): string {
-  const envHome = process.env.HERMES_HOME || process.env.CLAUDE_HOME
+  const envHome = process.env.AGENTONE_HOME || process.env.HERMES_HOME || process.env.CLAUDE_HOME
   if (envHome) {
     const profileRoot = hermesRootFromProfile(envHome)
     if (profileRoot) return profileRoot

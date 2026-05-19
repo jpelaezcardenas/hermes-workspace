@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { json } from '@tanstack/react-start'
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
-import { getProfilesDir } from '../../server/claude-paths'
+import { getProfilesDir } from '../../server/agentone-paths'
 import {
 
 

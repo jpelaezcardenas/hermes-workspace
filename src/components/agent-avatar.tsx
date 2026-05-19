@@ -143,7 +143,7 @@ function AgentAvatar({
           ) : (
             <img
               src="/agentone-avatar.png"
-              alt="AgentOne"
+              alt="Agent-e1"
               className={cn(
                 getLogoSizeClassName(size),
                 iconClassName,

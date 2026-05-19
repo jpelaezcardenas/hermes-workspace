@@ -1,6 +1,6 @@
 /**
  * Proxy endpoint — returns available task assignees.
- * Reads agent profiles from the Hermes Agent gateway and combines with the
+ * Reads agent profiles from the Agent-e1 gateway and combines with the
  * configured human reviewer name (tasks.human_reviewer in config.yaml).
  * Falls back to profile directory listing if the gateway doesn't have
  * a /api/tasks/assignees endpoint.
@@ -117,7 +117,7 @@ async function fetchJson(url: string): Promise<unknown | null> {
   }
 }
 
-export const Route = createFileRoute('/api/claude-tasks-assignees')({
+export const Route = createFileRoute('/api/agentone-tasks-assignees')({
   server: {
     handlers: {
       GET: async ({ request }) => {

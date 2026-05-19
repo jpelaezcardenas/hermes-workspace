@@ -42,7 +42,7 @@ type AvatarOption = {
 
 const AVATAR_OPTIONS: Array<AvatarOption> = [
   // Greek god PNG portraits (premium tier)
-  { id: 'hermes', label: 'AgentOne', emoji: '🩽', tier: 'greek' },
+  { id: 'hermes', label: 'Agent-e1', emoji: '🩽', tier: 'greek' },
   { id: 'athena', label: 'Athena', emoji: '🦉', tier: 'greek' },
   { id: 'apollo', label: 'Apollo', emoji: '☀️', tier: 'greek' },
   { id: 'artemis', label: 'Artemis', emoji: '🌙', tier: 'greek' },
@@ -141,7 +141,7 @@ function makeGreekPNG(name: string, label: string) {
   }
 }
 
-const HermesPNG = makeGreekPNG('hermes', 'AgentOne')
+const HermesPNG = makeGreekPNG('hermes', 'Agent-e1')
 const AthenaPNG = makeGreekPNG('athena', 'Athena')
 const ApolloPNG = makeGreekPNG('apollo', 'Apollo')
 const ArtemisPNG = makeGreekPNG('artemis', 'Artemis')

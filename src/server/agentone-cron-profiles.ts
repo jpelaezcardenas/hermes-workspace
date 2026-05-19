@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, join } from 'node:path'
-import { getHermesRoot, getProfilesDir } from './claude-paths'
+import { getHermesRoot, getProfilesDir } from './agentone-paths'
 
 const PROFILE_NAME_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/
 const JOB_ID_RE = /^[A-Fa-f0-9]{8,64}$/
@@ -180,7 +180,7 @@ function validateProfileAndMaybeJob(profile: string, jobId?: string): void {
     throw new Error('Invalid profile or job id')
   }
   if (!listCronProfiles().some((entry) => entry.profile === profile)) {
-    throw new Error(`Unknown AgentOne profile: ${profile}`)
+    throw new Error(`Unknown Agent-e1 profile: ${profile}`)
   }
 }
 
