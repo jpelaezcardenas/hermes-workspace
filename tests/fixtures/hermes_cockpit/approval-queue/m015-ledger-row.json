@@ -1,0 +1,40 @@
+{
+  "approval_id": "approval-m015-s01-001",
+  "approval_status": "granted",
+  "contract_id": "m015.s01.approval-queue.v1",
+  "direct_db_edit": false,
+  "dry_run_evidence_hash": "sha256:227cf780f6077ae83997d21323fc519da5c21a05d4cd6202db0f9efbeb6ab59f",
+  "event_type": "approval_granted",
+  "ledger_id": "ledger-m015-s01-001",
+  "no_go": {},
+  "non_claims": {
+    "artifact_only": true,
+    "no_cron_schedule": true,
+    "no_direct_db_edit": true,
+    "no_discord_call": true,
+    "no_gsd_kanban_hermes_mutation": true,
+    "no_watcher_install": true,
+    "no_worker_dispatch": true
+  },
+  "operation_id": "op_m015_s01_audit_note_append_001",
+  "operation_type": "cockpit.audit_note_append",
+  "payload_hash": "sha256:3a048866b0a3794cc4c30827081ebaabc96d3af8851f467af9d502d65a1a92a9",
+  "queue_id": "queue-m015-s01-001",
+  "recorded_at": "2026-05-18T00:11:00Z",
+  "row_hash": "sha256:921576e9433318c6a5f43092b23b5a999e51ba62a22fafbdd781b3287e6e062b",
+  "schema_version": "hermes-cockpit.approval-queue.v1",
+  "source_mutated": false,
+  "target": {
+    "id": "m015-pilot-audit-log",
+    "path": "target/hermes-cockpit-m015/pilot-audit-log.jsonl",
+    "root": "target/hermes-cockpit-m015",
+    "scope": "m015_sandbox",
+    "system": "artifact"
+  },
+  "target_mutated": false,
+  "target_signature_before": {
+    "exists": true,
+    "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size": 18
+  }
+}

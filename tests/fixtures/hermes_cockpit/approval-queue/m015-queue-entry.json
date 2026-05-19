@@ -1,0 +1,71 @@
+{
+  "actor": {
+    "approval_authority": false,
+    "id": "migi",
+    "kind": "agent"
+  },
+  "apply_guard": {
+    "dry_run_evidence_hash": "sha256:227cf780f6077ae83997d21323fc519da5c21a05d4cd6202db0f9efbeb6ab59f",
+    "payload_hash": "sha256:3a048866b0a3794cc4c30827081ebaabc96d3af8851f467af9d502d65a1a92a9",
+    "target_signature_before": {
+      "exists": true,
+      "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size": 18
+    }
+  },
+  "approval": {
+    "required": true,
+    "status": "pending"
+  },
+  "audit": {
+    "ledger_path": "target/hermes-cockpit-m015/approval-ledger.jsonl",
+    "non_claims": {
+      "artifact_only": true,
+      "no_cron_schedule": true,
+      "no_direct_db_edit": true,
+      "no_discord_call": true,
+      "no_gsd_kanban_hermes_mutation": true,
+      "no_watcher_install": true,
+      "no_worker_dispatch": true
+    },
+    "rollback_or_compensation": "append a correction artifact only; no source-of-truth mutation"
+  },
+  "bounds": {
+    "append_only": true,
+    "artifact_only": true,
+    "max_bytes": 4096,
+    "max_chars": 240,
+    "max_operation_count": 1,
+    "target_root": "target/hermes-cockpit-m015"
+  },
+  "contract_id": "m015.s01.approval-queue.v1",
+  "dry_run": {
+    "evidence_expires_at": "2026-05-18T01:00:00Z",
+    "evidence_hash": "sha256:227cf780f6077ae83997d21323fc519da5c21a05d4cd6202db0f9efbeb6ab59f",
+    "evidence_path": "target/hermes-cockpit-m015/evidence/op_m015_s01_audit_note_append_001-dry-run.json",
+    "required": true,
+    "status": "passed"
+  },
+  "no_go": {},
+  "operation_id": "op_m015_s01_audit_note_append_001",
+  "operation_type": "cockpit.audit_note_append",
+  "payload": {
+    "max_chars": 240,
+    "note_kind": "m015_s01_queue_contract",
+    "summary": "bounded M015 approval queue audit note",
+    "target_path": "target/hermes-cockpit-m015/pilot-audit-log.jsonl"
+  },
+  "payload_hash": "sha256:3a048866b0a3794cc4c30827081ebaabc96d3af8851f467af9d502d65a1a92a9",
+  "queue_id": "queue-m015-s01-001",
+  "requested_at": "2026-05-18T00:00:00Z",
+  "schema_version": "hermes-cockpit.approval-queue.v1",
+  "source": "cockpit",
+  "state": "approval_pending",
+  "target": {
+    "id": "m015-pilot-audit-log",
+    "path": "target/hermes-cockpit-m015/pilot-audit-log.jsonl",
+    "root": "target/hermes-cockpit-m015",
+    "scope": "m015_sandbox",
+    "system": "artifact"
+  }
+}

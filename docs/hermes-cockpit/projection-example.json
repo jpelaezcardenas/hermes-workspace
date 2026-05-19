@@ -1,0 +1,266 @@
+{
+  "active_runs": [
+    {
+      "actor": "migi-orchestrator",
+      "agent_id": "agent_reference_verifier_01",
+      "completed_at": null,
+      "events": [
+        "evt_google_pitch_009"
+      ],
+      "goal": "Inspect or remove unsupported GitHub reference claims before downstream demos cite them.",
+      "last_event_ts": "2026-05-17T01:37:20Z",
+      "outcome": null,
+      "run_id": "run_reference_check_002",
+      "started_at": "2026-05-17T01:37:20Z",
+      "status": "active",
+      "task_id": "t_98e01599"
+    }
+  ],
+  "approvals": {
+    "pending": [],
+    "recorded": [
+      {
+        "approval_id": "approval_google_pitch_direction_001",
+        "approved_by": "Pi",
+        "artifact_uri": "file://docs/hermes-cockpit/brainstorm-brief.md",
+        "conditions": [
+          "Keep GSD/Hermes Kanban as source of truth.",
+          "Represent approval as explicit event state.",
+          "Do not build write-back automation in M006."
+        ],
+        "decision": "approve_with_conditions",
+        "event_id": "evt_google_pitch_007",
+        "run_id": "run_google_pitch_eval_001",
+        "task_id": "t_5e3f0adf",
+        "ts": "2026-05-17T01:35:12Z"
+      }
+    ],
+    "required": [
+      {
+        "approval_id": "approval_google_pitch_direction_001",
+        "approver": "Pi or Migi",
+        "artifact_uri": "file://docs/hermes-cockpit/brainstorm-brief.md",
+        "decision_options": [
+          "approve",
+          "approve_with_conditions",
+          "reject"
+        ],
+        "event_id": "evt_google_pitch_006",
+        "reason": "Proceed from pitch evaluation to read-only event spine and static cockpit only if explicit approval is recorded.",
+        "run_id": "run_google_pitch_eval_001",
+        "task_id": "t_5e3f0adf",
+        "ts": "2026-05-17T01:34:00Z"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "approval_id": "approval_google_pitch_direction_001",
+      "approval_state": "approve_with_conditions",
+      "artifact_uri": "file://docs/hermes-cockpit/brainstorm-brief.md",
+      "created_at": "2026-05-17T01:32:40Z",
+      "evidence_state": "human_approved",
+      "evidence_uri": "file://docs/hermes-cockpit/brainstorm-brief.md#L93-L105",
+      "kind": "brief",
+      "last_event_ts": "2026-05-17T01:36:00Z",
+      "name": "brainstorm-brief.md",
+      "run_id": "run_google_pitch_eval_001",
+      "summary": "MoA/brainstorm brief reframing the Ratatui pitch as a Kanban-native observability layer.",
+      "task_id": "t_5e3f0adf",
+      "trust_status": "verified"
+    }
+  ],
+  "cards": [
+    {
+      "approval_recorded_count": 1,
+      "approval_required_count": 1,
+      "artifacts": [
+        "file://docs/hermes-cockpit/brainstorm-brief.md"
+      ],
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T01:30:00Z",
+      "last_event_ts": "2026-05-17T01:36:00Z",
+      "runs": [
+        "run_google_pitch_eval_001"
+      ],
+      "task_id": "t_5e3f0adf",
+      "title": "Dogfood one Kanban-backed pitch evaluation run",
+      "trust_counts": {
+        "unknown": 1,
+        "unverified": 4,
+        "verified": 3
+      },
+      "warning_count": 1
+    },
+    {
+      "approval_recorded_count": 0,
+      "approval_required_count": 0,
+      "artifacts": [],
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T01:37:20Z",
+      "last_event_ts": "2026-05-17T01:37:20Z",
+      "runs": [
+        "run_reference_check_002"
+      ],
+      "task_id": "t_98e01599",
+      "title": "Verify or remove untrusted repo/reference claims",
+      "trust_counts": {
+        "unknown": 1
+      },
+      "warning_count": 0
+    }
+  ],
+  "completed_runs": [
+    {
+      "actor": "migi-orchestrator",
+      "agent_id": "agent_researcher_01",
+      "completed_at": "2026-05-17T01:36:00Z",
+      "events": [
+        "evt_google_pitch_001",
+        "evt_google_pitch_002",
+        "evt_google_pitch_003",
+        "evt_google_pitch_004",
+        "evt_google_pitch_005",
+        "evt_google_pitch_006",
+        "evt_google_pitch_007",
+        "evt_google_pitch_008"
+      ],
+      "goal": "Evaluate the Google pitch and expose claims, artifacts, trust gaps, and approvals.",
+      "last_event_ts": "2026-05-17T01:36:00Z",
+      "outcome": "Proceed with read-only event spine and projection; keep reference verification as a warning until Lane A finishes.",
+      "run_id": "run_google_pitch_eval_001",
+      "started_at": "2026-05-17T01:30:00Z",
+      "status": "completed",
+      "task_id": "t_5e3f0adf"
+    }
+  ],
+  "event_count": 9,
+  "projection_version": "hermes-cockpit.projection.v1",
+  "replay": [
+    {
+      "actor": "migi-orchestrator",
+      "caused_by": null,
+      "checkpoint": true,
+      "event_id": "evt_google_pitch_001",
+      "event_type": "run_started",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 1,
+      "summary": "Started Google pitch evaluation run.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:30:00Z"
+    },
+    {
+      "actor": "migi-reviewer",
+      "caused_by": "evt_google_pitch_001",
+      "checkpoint": false,
+      "event_id": "evt_google_pitch_002",
+      "event_type": "claim_observed",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 2,
+      "summary": "Observed unverified hermes-hud reference claim.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:31:05Z"
+    },
+    {
+      "actor": "migi-reviewer",
+      "caused_by": "evt_google_pitch_001",
+      "checkpoint": false,
+      "event_id": "evt_google_pitch_003",
+      "event_type": "claim_observed",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 3,
+      "summary": "Observed unverified hermes-lite reference claim.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:31:22Z"
+    },
+    {
+      "actor": "migi-orchestrator",
+      "caused_by": "evt_google_pitch_001",
+      "checkpoint": true,
+      "event_id": "evt_google_pitch_004",
+      "event_type": "artifact_created",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 4,
+      "summary": "Created/observed brainstorm brief artifact.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:32:40Z"
+    },
+    {
+      "actor": "Migi",
+      "caused_by": "evt_google_pitch_002",
+      "checkpoint": true,
+      "event_id": "evt_google_pitch_005",
+      "event_type": "trust_flagged",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 5,
+      "summary": "Flagged unsupported repository relevance claim.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:33:10Z"
+    },
+    {
+      "actor": "migi-orchestrator",
+      "caused_by": "evt_google_pitch_004",
+      "checkpoint": true,
+      "event_id": "evt_google_pitch_006",
+      "event_type": "approval_required",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 6,
+      "summary": "Requested explicit approval for the Google pitch direction.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:34:00Z"
+    },
+    {
+      "actor": "Pi",
+      "caused_by": "evt_google_pitch_006",
+      "checkpoint": true,
+      "event_id": "evt_google_pitch_007",
+      "event_type": "approval_recorded",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 7,
+      "summary": "Recorded Pi approval with read-only conditions.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:35:12Z"
+    },
+    {
+      "actor": "migi-orchestrator",
+      "caused_by": "evt_google_pitch_007",
+      "checkpoint": true,
+      "event_id": "evt_google_pitch_008",
+      "event_type": "run_completed",
+      "run_id": "run_google_pitch_eval_001",
+      "sequence": 8,
+      "summary": "Completed Google pitch evaluation run.",
+      "task_id": "t_5e3f0adf",
+      "ts": "2026-05-17T01:36:00Z"
+    },
+    {
+      "actor": "migi-orchestrator",
+      "caused_by": "evt_google_pitch_005",
+      "checkpoint": false,
+      "event_id": "evt_google_pitch_009",
+      "event_type": "run_started",
+      "run_id": "run_reference_check_002",
+      "sequence": 9,
+      "summary": "Started follow-up reference verification run; still active.",
+      "task_id": "t_98e01599",
+      "ts": "2026-05-17T01:37:20Z"
+    }
+  ],
+  "schema_version": "hermes-cockpit.event.v1",
+  "source_file": "docs/hermes-cockpit/sample-google-pitch-run.ndjson",
+  "warnings": [
+    {
+      "action": "Inspect or remove unsupported reference claim before final recommendation.",
+      "claim_id": "claim_joeynyc_hermes_hud_reference",
+      "event_id": "evt_google_pitch_005",
+      "evidence_state": "existence_checked",
+      "evidence_uri": "file://docs/hermes-cockpit/brainstorm-brief.md#L26-L34",
+      "message": "Do not cite hermes-hud as definitive until Lane A verifies relevance and quality.",
+      "run_id": "run_google_pitch_eval_001",
+      "severity": "warning",
+      "task_id": "t_5e3f0adf",
+      "trust_status": "unverified",
+      "ts": "2026-05-17T01:33:10Z"
+    }
+  ]
+}

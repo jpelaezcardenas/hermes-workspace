@@ -1,0 +1,32 @@
+{
+  "approval_id": "approval-m015-s01-001",
+  "contract_id": "m015.s01.approval-queue.v1",
+  "decided_at": "2026-05-18T00:10:00Z",
+  "decider": {
+    "approval_authority": true,
+    "id": "joe",
+    "kind": "operator"
+  },
+  "dry_run_evidence_hash": "sha256:227cf780f6077ae83997d21323fc519da5c21a05d4cd6202db0f9efbeb6ab59f",
+  "expires_at": "2026-05-18T01:00:00Z",
+  "operation_id": "op_m015_s01_audit_note_append_001",
+  "operation_type": "cockpit.audit_note_append",
+  "payload_hash": "sha256:3a048866b0a3794cc4c30827081ebaabc96d3af8851f467af9d502d65a1a92a9",
+  "queue_id": "queue-m015-s01-001",
+  "reason": "manual S01 contract fixture grant",
+  "revoked_at": null,
+  "schema_version": "hermes-cockpit.approval-queue.v1",
+  "status": "granted",
+  "target": {
+    "id": "m015-pilot-audit-log",
+    "path": "target/hermes-cockpit-m015/pilot-audit-log.jsonl",
+    "root": "target/hermes-cockpit-m015",
+    "scope": "m015_sandbox",
+    "system": "artifact"
+  },
+  "target_signature_before": {
+    "exists": true,
+    "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size": 18
+  }
+}

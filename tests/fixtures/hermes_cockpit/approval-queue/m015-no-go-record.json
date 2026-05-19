@@ -1,0 +1,38 @@
+{
+  "contract_id": "m015.s01.approval-queue.v1",
+  "direct_db_edit": false,
+  "no_go": {
+    "direct_hermes_target": true,
+    "unsupported_operation": true
+  },
+  "no_go_id": "no-go-m015-s01-unsupported-dispatch",
+  "non_claims": {
+    "artifact_only": true,
+    "no_cron_schedule": true,
+    "no_direct_db_edit": true,
+    "no_discord_call": true,
+    "no_gsd_kanban_hermes_mutation": true,
+    "no_watcher_install": true,
+    "no_worker_dispatch": true
+  },
+  "operation_id": "op_m015_s01_audit_note_append_001",
+  "operation_type": "dispatch.worker_start",
+  "queue_id": "queue-m015-s01-001",
+  "record_hash": "sha256:29941b2f1795195670438bba8ae2369b68afd3cd084fe29b2a8b5b66b29cd9ae",
+  "recorded_at": "2026-05-18T00:12:00Z",
+  "rejection_reasons": [
+    "unsupported operation",
+    "direct Hermes runtime target is prohibited"
+  ],
+  "schema_version": "hermes-cockpit.approval-queue.v1",
+  "source_mutated": false,
+  "status": "rejected",
+  "target": {
+    "id": "m015-pilot-audit-log",
+    "path": ".hermes/workers/start.json",
+    "root": "target/hermes-cockpit-m015",
+    "scope": "m015_sandbox",
+    "system": "hermes"
+  },
+  "target_mutated": false
+}

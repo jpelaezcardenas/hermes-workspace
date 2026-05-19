@@ -1,0 +1,53 @@
+{
+  "schema_version": "hermes-cockpit.projection-sources.v1",
+  "read_only": true,
+  "non_claims": {
+    "no_mutation_actions": true,
+    "no_durable_watcher_install": true,
+    "no_live_dispatch": true
+  },
+  "sources": [
+    {
+      "key": "1",
+      "name": "cards",
+      "description": "Live read-only GSD/Kanban card projection",
+      "path": "docs/hermes-cockpit/live-kanban-projection.json"
+    },
+    {
+      "key": "2",
+      "name": "events",
+      "description": "Hermes event replay projection",
+      "path": "target/hermes-cockpit-m010/hermes-projection.json"
+    },
+    {
+      "key": "3",
+      "name": "control",
+      "description": "M012 control-plane projection",
+      "path": "target/hermes-cockpit-m012/control-plane-projection.json"
+    },
+    {
+      "key": "4",
+      "name": "watchers",
+      "description": "Watcher-control projection fixture",
+      "path": "target/hermes-cockpit-m013/watcher-projection.json"
+    },
+    {
+      "key": "5",
+      "name": "approval-queue",
+      "description": "M015 approval queue review-only projection",
+      "path": "target/hermes-cockpit-m015/approval-queue-surface-projection.json"
+    },
+    {
+      "key": "6",
+      "name": "claude-sessions",
+      "description": "M018 Claude Code background sessions projection",
+      "path": "target/hermes-cockpit-m018/claude-sessions-projection.json"
+    },
+    {
+      "key": "7",
+      "name": "claude-lifecycle",
+      "description": "M021 Claude BG lifecycle parallel draft request-only projection",
+      "path": "target/hermes-cockpit-m021/claude-lifecycle-projection.json"
+    }
+  ]
+}

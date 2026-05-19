@@ -1,0 +1,31 @@
+{
+  "schema_version": "hermes-cockpit.claude-session-registry.v1",
+  "generated_at": "2026-05-18T18:00:00Z",
+  "sessions": [
+    {
+      "id": "bg_fake_001",
+      "display_name": "Docs scout",
+      "kind": "ClaudeBackground",
+      "status": "running",
+      "host": "gpc",
+      "repo_path": "/home/joe/hermes-workspace",
+      "worktree_path": "/home/joe/hermes-workspace/.worktrees/bg_fake_001",
+      "permission_mode": "read_only",
+      "command": "claude --bg \"Summarize docs\"",
+      "started_at": "2026-05-18T18:00:00Z",
+      "log_path": "target/hermes-cockpit-m018/bg_fake_001.log"
+    },
+    {
+      "id": "bg_fake_002",
+      "display_name": "Implementation reviewer",
+      "kind": "ClaudeBackground",
+      "status": "waiting",
+      "host": "gpc",
+      "repo_path": "/home/joe/hermes-workspace",
+      "worktree_path": null,
+      "permission_mode": "accept_edits",
+      "command": "claude --bg \"Review implementation\"",
+      "started_at": "2026-05-18T18:01:00Z"
+    }
+  ]
+}

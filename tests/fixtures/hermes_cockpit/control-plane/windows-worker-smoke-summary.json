@@ -1,0 +1,22 @@
+{
+  "dry_run_before_apply": true,
+  "helper_status": "completed",
+  "host_labels": {
+    "migi_pi": "orchestrator",
+    "tux_wsl": "context_only",
+    "windows_gpc": "bounded_worker"
+  },
+  "non_claims": {
+    "no_broad_windows_authority": true,
+    "no_gsd_writeback_from_worker_output": true,
+    "no_production_readiness": true,
+    "no_public_agent_loop": true,
+    "no_task_completion_claim": true
+  },
+  "output_path": "target/hermes-cockpit-m012/windows-worker-output.json",
+  "registry_row_count": 2,
+  "schema_version": "hermes-cockpit.windows-worker-smoke.v1",
+  "verdict": "pass",
+  "windows_output_observed": true,
+  "windows_worker_exit_code": 0
+}

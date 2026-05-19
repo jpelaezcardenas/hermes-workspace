@@ -1,0 +1,373 @@
+{
+  "active_runs": [
+    {
+      "actor": "Migi",
+      "agent_id": "kanban-board",
+      "completed_at": null,
+      "events": [
+        "evt-kanban-t_0bae8655"
+      ],
+      "goal": "ADR: define Hermes Cockpit MVP and source of truth",
+      "last_event_ts": "2026-05-17T06:08:47Z",
+      "outcome": null,
+      "run_id": "kanban-hermes-cockpit-trial-t_0bae8655",
+      "started_at": "2026-05-17T06:08:47Z",
+      "status": "triage",
+      "task_id": "t_0bae8655"
+    },
+    {
+      "actor": "Migi",
+      "agent_id": "kanban-board",
+      "completed_at": null,
+      "events": [
+        "evt-kanban-t_98e01599"
+      ],
+      "goal": "Verify or remove untrusted repo/reference claims",
+      "last_event_ts": "2026-05-17T06:08:47Z",
+      "outcome": null,
+      "run_id": "kanban-hermes-cockpit-trial-t_98e01599",
+      "started_at": "2026-05-17T06:08:47Z",
+      "status": "triage",
+      "task_id": "t_98e01599"
+    },
+    {
+      "actor": "Migi",
+      "agent_id": "kanban-board",
+      "completed_at": null,
+      "events": [
+        "evt-kanban-t_ab5b3c2f"
+      ],
+      "goal": "Define event schema plus sample Google-pitch run",
+      "last_event_ts": "2026-05-17T06:08:48Z",
+      "outcome": null,
+      "run_id": "kanban-hermes-cockpit-trial-t_ab5b3c2f",
+      "started_at": "2026-05-17T06:08:48Z",
+      "status": "triage",
+      "task_id": "t_ab5b3c2f"
+    },
+    {
+      "actor": "Migi",
+      "agent_id": "kanban-board",
+      "completed_at": null,
+      "events": [
+        "evt-kanban-t_9f7b47b1"
+      ],
+      "goal": "Build static Ratatui cockpit from sample events",
+      "last_event_ts": "2026-05-17T06:08:48Z",
+      "outcome": null,
+      "run_id": "kanban-hermes-cockpit-trial-t_9f7b47b1",
+      "started_at": "2026-05-17T06:08:48Z",
+      "status": "triage",
+      "task_id": "t_9f7b47b1"
+    },
+    {
+      "actor": "Migi",
+      "agent_id": "kanban-board",
+      "completed_at": null,
+      "events": [
+        "evt-kanban-t_5e3f0adf"
+      ],
+      "goal": "Dogfood one Kanban-backed pitch evaluation run",
+      "last_event_ts": "2026-05-17T06:08:49Z",
+      "outcome": null,
+      "run_id": "kanban-hermes-cockpit-trial-t_5e3f0adf",
+      "started_at": "2026-05-17T06:08:49Z",
+      "status": "triage",
+      "task_id": "t_5e3f0adf"
+    }
+  ],
+  "approvals": {
+    "pending": [],
+    "recorded": [],
+    "required": []
+  },
+  "artifacts": [],
+  "cards": [
+    {
+      "approval_recorded_count": 0,
+      "approval_required_count": 0,
+      "artifacts": [],
+      "assignee": null,
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T06:08:47Z",
+      "last_event_ts": "2026-05-17T06:08:47Z",
+      "priority": 0,
+      "runs": [
+        "kanban-hermes-cockpit-trial-t_0bae8655"
+      ],
+      "status": "triage",
+      "task_id": "t_0bae8655",
+      "title": "ADR: define Hermes Cockpit MVP and source of truth",
+      "trust_counts": {
+        "verified": 1
+      },
+      "warning_count": 0
+    },
+    {
+      "approval_recorded_count": 0,
+      "approval_required_count": 0,
+      "artifacts": [],
+      "assignee": null,
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T06:08:47Z",
+      "last_event_ts": "2026-05-17T06:08:47Z",
+      "priority": 0,
+      "runs": [
+        "kanban-hermes-cockpit-trial-t_98e01599"
+      ],
+      "status": "triage",
+      "task_id": "t_98e01599",
+      "title": "Verify or remove untrusted repo/reference claims",
+      "trust_counts": {
+        "verified": 1
+      },
+      "warning_count": 0
+    },
+    {
+      "approval_recorded_count": 0,
+      "approval_required_count": 0,
+      "artifacts": [],
+      "assignee": null,
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T06:08:48Z",
+      "last_event_ts": "2026-05-17T06:08:48Z",
+      "priority": 0,
+      "runs": [
+        "kanban-hermes-cockpit-trial-t_ab5b3c2f"
+      ],
+      "status": "triage",
+      "task_id": "t_ab5b3c2f",
+      "title": "Define event schema plus sample Google-pitch run",
+      "trust_counts": {
+        "verified": 1
+      },
+      "warning_count": 0
+    },
+    {
+      "approval_recorded_count": 0,
+      "approval_required_count": 0,
+      "artifacts": [],
+      "assignee": null,
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T06:08:48Z",
+      "last_event_ts": "2026-05-17T06:08:48Z",
+      "priority": 0,
+      "runs": [
+        "kanban-hermes-cockpit-trial-t_9f7b47b1"
+      ],
+      "status": "triage",
+      "task_id": "t_9f7b47b1",
+      "title": "Build static Ratatui cockpit from sample events",
+      "trust_counts": {
+        "verified": 1
+      },
+      "warning_count": 0
+    },
+    {
+      "approval_recorded_count": 0,
+      "approval_required_count": 0,
+      "artifacts": [],
+      "assignee": null,
+      "board": "hermes-cockpit-trial",
+      "first_event_ts": "2026-05-17T06:08:49Z",
+      "last_event_ts": "2026-05-17T06:08:49Z",
+      "priority": 0,
+      "runs": [
+        "kanban-hermes-cockpit-trial-t_5e3f0adf"
+      ],
+      "status": "triage",
+      "task_id": "t_5e3f0adf",
+      "title": "Dogfood one Kanban-backed pitch evaluation run",
+      "trust_counts": {
+        "verified": 1
+      },
+      "warning_count": 0
+    }
+  ],
+  "completed_runs": [],
+  "event_count": 5,
+  "generated_at": "2026-05-17T07:04:57Z",
+  "projection_version": "hermes-cockpit.kanban-projection.v1",
+  "replay": [
+    {
+      "actor": "kanban-board",
+      "agent_id": "kanban-board",
+      "artifact_uri": null,
+      "event_id": "evt-kanban-t_0bae8655",
+      "event_type": "kanban_card_observed",
+      "evidence_uri": "kanban://hermes-cockpit-trial/t_0bae8655",
+      "payload": {
+        "assignee": null,
+        "board": "hermes-cockpit-trial",
+        "card_title": "ADR: define Hermes Cockpit MVP and source of truth",
+        "status": "triage"
+      },
+      "replay": {
+        "caused_by": null,
+        "checkpoint": true,
+        "sequence": 1,
+        "stream": "kanban-hermes-cockpit-trial",
+        "summary": "Observed triage Kanban card: ADR: define Hermes Cockpit MVP and source of truth",
+        "visible": true
+      },
+      "run_id": "kanban-hermes-cockpit-trial-t_0bae8655",
+      "schema_version": "hermes-cockpit.event.v1",
+      "source": "kanban",
+      "summary": "Observed triage Kanban card: ADR: define Hermes Cockpit MVP and source of truth",
+      "task_id": "t_0bae8655",
+      "trust": {
+        "confidence": 1.0,
+        "evidence_state": "board_readback",
+        "reason": "Observed through read-only hermes kanban list --json output.",
+        "status": "verified"
+      },
+      "ts": "2026-05-17T06:08:47Z"
+    },
+    {
+      "actor": "kanban-board",
+      "agent_id": "kanban-board",
+      "artifact_uri": null,
+      "event_id": "evt-kanban-t_98e01599",
+      "event_type": "kanban_card_observed",
+      "evidence_uri": "kanban://hermes-cockpit-trial/t_98e01599",
+      "payload": {
+        "assignee": null,
+        "board": "hermes-cockpit-trial",
+        "card_title": "Verify or remove untrusted repo/reference claims",
+        "status": "triage"
+      },
+      "replay": {
+        "caused_by": null,
+        "checkpoint": true,
+        "sequence": 2,
+        "stream": "kanban-hermes-cockpit-trial",
+        "summary": "Observed triage Kanban card: Verify or remove untrusted repo/reference claims",
+        "visible": true
+      },
+      "run_id": "kanban-hermes-cockpit-trial-t_98e01599",
+      "schema_version": "hermes-cockpit.event.v1",
+      "source": "kanban",
+      "summary": "Observed triage Kanban card: Verify or remove untrusted repo/reference claims",
+      "task_id": "t_98e01599",
+      "trust": {
+        "confidence": 1.0,
+        "evidence_state": "board_readback",
+        "reason": "Observed through read-only hermes kanban list --json output.",
+        "status": "verified"
+      },
+      "ts": "2026-05-17T06:08:47Z"
+    },
+    {
+      "actor": "kanban-board",
+      "agent_id": "kanban-board",
+      "artifact_uri": null,
+      "event_id": "evt-kanban-t_ab5b3c2f",
+      "event_type": "kanban_card_observed",
+      "evidence_uri": "kanban://hermes-cockpit-trial/t_ab5b3c2f",
+      "payload": {
+        "assignee": null,
+        "board": "hermes-cockpit-trial",
+        "card_title": "Define event schema plus sample Google-pitch run",
+        "status": "triage"
+      },
+      "replay": {
+        "caused_by": null,
+        "checkpoint": true,
+        "sequence": 3,
+        "stream": "kanban-hermes-cockpit-trial",
+        "summary": "Observed triage Kanban card: Define event schema plus sample Google-pitch run",
+        "visible": true
+      },
+      "run_id": "kanban-hermes-cockpit-trial-t_ab5b3c2f",
+      "schema_version": "hermes-cockpit.event.v1",
+      "source": "kanban",
+      "summary": "Observed triage Kanban card: Define event schema plus sample Google-pitch run",
+      "task_id": "t_ab5b3c2f",
+      "trust": {
+        "confidence": 1.0,
+        "evidence_state": "board_readback",
+        "reason": "Observed through read-only hermes kanban list --json output.",
+        "status": "verified"
+      },
+      "ts": "2026-05-17T06:08:48Z"
+    },
+    {
+      "actor": "kanban-board",
+      "agent_id": "kanban-board",
+      "artifact_uri": null,
+      "event_id": "evt-kanban-t_9f7b47b1",
+      "event_type": "kanban_card_observed",
+      "evidence_uri": "kanban://hermes-cockpit-trial/t_9f7b47b1",
+      "payload": {
+        "assignee": null,
+        "board": "hermes-cockpit-trial",
+        "card_title": "Build static Ratatui cockpit from sample events",
+        "status": "triage"
+      },
+      "replay": {
+        "caused_by": null,
+        "checkpoint": true,
+        "sequence": 4,
+        "stream": "kanban-hermes-cockpit-trial",
+        "summary": "Observed triage Kanban card: Build static Ratatui cockpit from sample events",
+        "visible": true
+      },
+      "run_id": "kanban-hermes-cockpit-trial-t_9f7b47b1",
+      "schema_version": "hermes-cockpit.event.v1",
+      "source": "kanban",
+      "summary": "Observed triage Kanban card: Build static Ratatui cockpit from sample events",
+      "task_id": "t_9f7b47b1",
+      "trust": {
+        "confidence": 1.0,
+        "evidence_state": "board_readback",
+        "reason": "Observed through read-only hermes kanban list --json output.",
+        "status": "verified"
+      },
+      "ts": "2026-05-17T06:08:48Z"
+    },
+    {
+      "actor": "kanban-board",
+      "agent_id": "kanban-board",
+      "artifact_uri": null,
+      "event_id": "evt-kanban-t_5e3f0adf",
+      "event_type": "kanban_card_observed",
+      "evidence_uri": "kanban://hermes-cockpit-trial/t_5e3f0adf",
+      "payload": {
+        "assignee": null,
+        "board": "hermes-cockpit-trial",
+        "card_title": "Dogfood one Kanban-backed pitch evaluation run",
+        "status": "triage"
+      },
+      "replay": {
+        "caused_by": null,
+        "checkpoint": true,
+        "sequence": 5,
+        "stream": "kanban-hermes-cockpit-trial",
+        "summary": "Observed triage Kanban card: Dogfood one Kanban-backed pitch evaluation run",
+        "visible": true
+      },
+      "run_id": "kanban-hermes-cockpit-trial-t_5e3f0adf",
+      "schema_version": "hermes-cockpit.event.v1",
+      "source": "kanban",
+      "summary": "Observed triage Kanban card: Dogfood one Kanban-backed pitch evaluation run",
+      "task_id": "t_5e3f0adf",
+      "trust": {
+        "confidence": 1.0,
+        "evidence_state": "board_readback",
+        "reason": "Observed through read-only hermes kanban list --json output.",
+        "status": "verified"
+      },
+      "ts": "2026-05-17T06:08:49Z"
+    }
+  ],
+  "schema_version": "hermes-cockpit.event.v1",
+  "source": {
+    "board": "hermes-cockpit-trial",
+    "card_count": 5,
+    "command": "hermes kanban --board hermes-cockpit-trial list --json",
+    "kind": "hermes-kanban",
+    "mode": "read-only"
+  },
+  "source_file": null,
+  "warnings": []
+}
