@@ -196,11 +196,11 @@ function normalizePortableHistory(
   return normalized
 }
 
-function normalizeClaudeErrorMessage(error: unknown): string {
+function normalizeAgentErrorMessage(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error)
   const message = raw.trim()
-  if (!message) return 'Claude request failed'
-  return message.replace(/\bserver\b/gi, 'Claude')
+  if (!message) return 'Agent request failed'
+  return message.replace(/\bserver\b/gi, 'Agent-e1')
 }
 
 function readRecord(value: unknown): Record<string, unknown> | undefined {
@@ -333,7 +333,7 @@ export const Route = createFileRoute('/api/send-stream')({
           sessionKey = resolved.sessionKey
           resolvedFriendlyId = resolved.sessionKey
         } catch (err) {
-          const errorMsg = normalizeClaudeErrorMessage(err)
+          const errorMsg = normalizeAgentErrorMessage(err)
           if (errorMsg === 'session not found') {
             return new Response(
               JSON.stringify({ ok: false, error: 'session not found' }),
@@ -821,7 +821,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   closeStream()
                 } catch (err) {
                   if (!streamClosed) {
-                    const errorMessage = normalizeClaudeErrorMessage(err)
+                    const errorMessage = normalizeAgentErrorMessage(err)
                     persistActiveRun((runSessionKey, activeId) =>
                       markRunStatus(runSessionKey, activeId, 'error', errorMessage),
                     )
@@ -1468,7 +1468,7 @@ export const Route = createFileRoute('/api/send-stream')({
             } catch (err) {
               // Only send error if stream hasn't already completed successfully
               if (!streamClosed) {
-                const errorMsg = normalizeClaudeErrorMessage(err)
+                const errorMsg = normalizeAgentErrorMessage(err)
                 sendEvent('error', {
                   message: errorMsg,
                   sessionKey,

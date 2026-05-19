@@ -25,7 +25,7 @@ function getSetupSteps(
   return [
     {
       title: 'Use any OpenAI-compatible backend',
-      command: 'Set HERMES_API_URL to your backend base URL',
+      command: 'Set AGENTONE_API_URL to your backend base URL',
       note: 'Portable chat works with any backend that exposes /v1/chat/completions (Ollama, LiteLLM, vLLM, etc.)',
     },
     {
@@ -37,7 +37,7 @@ function getSetupSteps(
     {
       title: 'Set up your agent',
       command: 'hermes setup',
-      note: 'Pick your providers once; Hermes Agent stores them under ~/.hermes',
+      note: 'Pick your providers once; Agent-e1 Agent stores them under ~/.hermes',
     },
     {
       title: 'Start the gateway',
@@ -358,7 +358,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
                 <p className="text-xs font-medium text-white/50">
                   Point{' '}
                   <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-white/70">
-                    HERMES_API_URL
+                    AGENTONE_API_URL
                   </code>{' '}
                   at any OpenAI-compatible backend:
                 </p>

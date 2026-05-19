@@ -203,7 +203,7 @@ function detectClaudeKanban(): ClaudeDetection {
     cliPath: cli.ok ? cli.path ?? null : null,
     dbPath,
     workspacePath,
-    reason: cli.ok ? undefined : 'Hermes Kanban storage detected; CLI unavailable, using direct local storage access.',
+    reason: cli.ok ? undefined : 'Agent-e1 Kanban storage detected; CLI unavailable, using direct local storage access.',
   }
 }
 

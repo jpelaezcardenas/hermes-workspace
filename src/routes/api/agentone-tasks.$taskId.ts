@@ -129,7 +129,7 @@ export const Route = createFileRoute('/api/agentone-tasks/$taskId')({
 
           const hasPrior = Boolean(task.session_id && priorContext)
           const briefing = [
-            'You are picking up a task from the Hermes Workspace task board. Here is the full context:',
+            'You are picking up a task from the Agent-e1 Workspace task board. Here is the full context:',
             '',
             `**Task:** ${task.title}`,
             `**Status:** ${task.column}  |  **Priority:** ${task.priority}  |  **Assignee:** ${task.assignee ?? 'Unassigned'}`,

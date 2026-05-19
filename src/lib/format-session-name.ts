@@ -14,7 +14,7 @@ const PLATFORM_NAMES: Record<string, string> = {
   whatsapp: 'WhatsApp',
   signal: 'Signal',
   imessage: 'iMessage',
-  webchat: 'Claude',
+  webchat: 'Agent-e1',
   'hermes-workspace': 'Agent-e1',
   slack: 'Slack',
   irc: 'IRC',

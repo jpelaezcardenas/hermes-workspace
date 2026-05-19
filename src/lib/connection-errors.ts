@@ -115,7 +115,7 @@ export function getConnectionErrorMessage(
     case 'gateway_unreachable':
       return {
         title: 'Gateway unreachable',
-        description: 'Claude cannot reach the configured gateway.',
+        description: 'Agent-e1 cannot reach the configured gateway.',
         action: 'Check that the gateway is running and the URL is correct.',
       }
     case 'handshake_failed':
