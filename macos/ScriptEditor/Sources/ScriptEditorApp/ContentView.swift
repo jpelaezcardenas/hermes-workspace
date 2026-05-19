@@ -19,7 +19,7 @@ struct ContentView: View {
         .onAppear { model.load() }
         .toolbar {
             ToolbarItemGroup {
-                Label(model.configuration.model, systemImage: "cpu")
+                Label(model.backendHealthStatus?.reachable == false ? "Backend offline" : model.configuration.model, systemImage: "cpu")
                     .labelStyle(.titleAndIcon)
                 if model.isBusy {
                     ProgressView()
@@ -190,6 +190,9 @@ private struct ResearchWorkspace: View {
                 Button { model.fetchURLSource() } label: {
                     Label("Fetch URL", systemImage: "link")
                 }
+                Button { model.importFileSource() } label: {
+                    Label("Import File", systemImage: "doc.badge.plus")
+                }
                 Spacer()
             }
             HStack {
@@ -254,6 +257,22 @@ private struct GenerationWorkspace: View {
                             .foregroundStyle(.secondary)
                         Text(model.configuration.model)
                             .foregroundStyle(.secondary)
+                    }
+                    HStack(alignment: .firstTextBaseline) {
+                        Button {
+                            model.checkBackendHealth()
+                        } label: {
+                            Label("Check Backend", systemImage: "waveform.path.ecg")
+                        }
+                        if let backend = model.backendHealthStatus {
+                            Text(backend.message)
+                                .font(.callout)
+                                .foregroundStyle(backend.reachable ? .green : .red)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("\(backend.latency, specifier: "%.2f")s")
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     Button {
                         model.generateAndScore()
@@ -416,9 +435,22 @@ private struct ExportPanel: View {
                 Button {
                     model.renderExportMarkdown()
                 } label: {
-                    Label("Render Markdown", systemImage: "doc.text")
+                    Label("Approve and Render", systemImage: "checkmark.seal")
                 }
                 .disabled(model.selectedCandidate == nil)
+            }
+            TextField("Reviewer note", text: $model.reviewerNote, axis: .vertical)
+                .lineLimit(1...3)
+                .textFieldStyle(.roundedBorder)
+            if let approved = model.approvedScript {
+                HStack {
+                    Label("Approved", systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(.green)
+                    Text(approved.approvedAt, style: .time)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                }
+                .font(.caption)
             }
             if model.exportedMarkdown.isEmpty {
                 EmptyState(text: "Render a local Markdown artifact when the script is human-approved.")
@@ -506,6 +538,12 @@ private struct SourceRow: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(3)
+            if !source.extractedFacts.isEmpty {
+                Text(source.extractedFacts.prefix(2).joined(separator: " "))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
         }
         .padding(10)
         .background(.thinMaterial)

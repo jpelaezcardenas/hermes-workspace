@@ -4,6 +4,23 @@ public struct ExportService {
     public init() {}
 
     public func renderApprovedScriptMarkdown(
+        approvedScript: ApprovedScript,
+        sources: [ResearchSource] = [],
+        exportedAt: Date? = nil
+    ) -> String {
+        var candidate = approvedScript.candidate
+        candidate.humanEditedText = approvedScript.scriptText
+
+        renderApprovedScriptMarkdown(
+            project: approvedScript.project,
+            candidate: candidate,
+            brief: approvedScript.brief,
+            sources: sources,
+            exportedAt: exportedAt ?? approvedScript.approvedAt
+        )
+    }
+
+    public func renderApprovedScriptMarkdown(
         project: Project,
         candidate: ScriptCandidate,
         brief: ResearchBrief? = nil,

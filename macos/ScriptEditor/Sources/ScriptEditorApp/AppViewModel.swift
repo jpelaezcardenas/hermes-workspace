@@ -15,14 +15,19 @@ final class AppViewModel: ObservableObject {
     @Published var candidateCount = 24.0
     @Published var editorText = ""
     @Published var chatInput = ""
+    @Published var reviewerNote = ""
     @Published var exportedMarkdown = ""
+    @Published var approvedScript: ApprovedScript?
+    @Published var backendHealthStatus: BackendHealthStatus?
     @Published var isBusy = false
     @Published var status = "Ready"
     @Published var lastError: String?
 
     let configuration = AIBackendConfiguration()
     private var database: LocalScriptDatabase?
+    private let sourceIngestion = SourceIngestionService()
     private let webResearch = WebResearchService()
+    private lazy var backendHealth = BackendHealthService(configuration: configuration)
     private lazy var workflow = WorkflowEngine(ai: OpenAICompatibleClient(configuration: configuration))
 
     var selectedProject: Project? {
@@ -90,6 +95,8 @@ final class AppViewModel: ObservableObject {
         projectDraft = project
         selectedCandidateId = topCandidates.first?.id
         editorText = selectedCandidate?.displayText ?? ""
+        approvedScript = nil
+        exportedMarkdown = ""
         lastError = nil
     }
 
@@ -100,17 +107,37 @@ final class AppViewModel: ObservableObject {
     func addSource() {
         guard let selectedProjectId, !sourceBody.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         setBusy("Saving source...")
-        let source = ResearchSource(
-            projectId: selectedProjectId,
-            kind: sourceKind,
-            title: sourceTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Untitled source" : sourceTitle,
-            locator: sourceLocator,
-            rawText: sourceBody
-        )
         Task {
             do {
+                let source = try sourceIngestion.ingestNote(
+                    projectId: selectedProjectId,
+                    title: sourceTitle,
+                    text: sourceBody,
+                    locator: sourceLocator
+                )
                 try await database?.addSource(source)
                 await refresh(status: "Source saved")
+                sourceTitle = ""
+                sourceLocator = ""
+                sourceBody = ""
+            } catch {
+                show(error)
+            }
+        }
+    }
+
+    func importFileSource() {
+        guard let selectedProjectId, !sourceLocator.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        setBusy("Importing file source...")
+        Task {
+            do {
+                let source = try sourceIngestion.ingestFile(
+                    projectId: selectedProjectId,
+                    locator: sourceLocator,
+                    title: sourceTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : sourceTitle
+                )
+                try await database?.addSource(source)
+                await refresh(status: "File source imported")
                 sourceTitle = ""
                 sourceLocator = ""
                 sourceBody = ""
@@ -132,6 +159,7 @@ final class AppViewModel: ObservableObject {
                     title: sourceTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? url.host ?? url.absoluteString : sourceTitle,
                     locator: url.absoluteString,
                     rawText: text,
+                    extractedFacts: SourceIngestionService.extractFacts(from: text),
                     credibilityNote: "Fetched directly from URL"
                 )
                 try await database?.addSource(source)
@@ -158,6 +186,7 @@ final class AppViewModel: ObservableObject {
                         title: result.title,
                         locator: result.url,
                         rawText: result.snippet,
+                        extractedFacts: SourceIngestionService.extractFacts(from: result.snippet),
                         credibilityNote: "Search result snippet"
                     )
                     try await database?.addSource(source)
@@ -207,9 +236,22 @@ final class AppViewModel: ObservableObject {
         }
     }
 
+    func checkBackendHealth() {
+        setBusy("Checking backend...")
+        Task {
+            let health = await backendHealth.check()
+            backendHealthStatus = health
+            status = health.reachable ? "Backend reachable" : "Backend unavailable"
+            lastError = health.reachable ? nil : health.message
+            isBusy = false
+        }
+    }
+
     func selectCandidate(_ candidate: ScriptCandidate) {
         selectedCandidateId = candidate.id
         editorText = candidate.displayText
+        approvedScript = nil
+        exportedMarkdown = ""
         lastError = nil
     }
 
@@ -249,14 +291,26 @@ final class AppViewModel: ObservableObject {
 
     func renderExportMarkdown() {
         guard let project = selectedProject, let candidate = selectedCandidate else { return }
-        exportedMarkdown = ExportService().renderApprovedScriptMarkdown(
+        let candidateForApproval = candidateWithCurrentEditorText(candidate)
+        let approved = ApprovalService().approve(
             project: project,
-            candidate: candidate,
+            candidate: candidateForApproval,
             brief: selectedBrief,
-            sources: projectSources,
-            exportedAt: Date()
+            reviewerNote: reviewerNote,
+            approvedAt: Date()
         )
+        approvedScript = approved
+        exportedMarkdown = ExportService().renderApprovedScriptMarkdown(approvedScript: approved, sources: projectSources)
         status = "Approved script export rendered"
+    }
+
+    private func candidateWithCurrentEditorText(_ candidate: ScriptCandidate) -> ScriptCandidate {
+        var next = candidate
+        let trimmedEditorText = editorText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedEditorText.isEmpty {
+            next.humanEditedText = editorText
+        }
+        return next
     }
 
     private func saveProject(_ project: Project, selectAfterSave: Bool) async {
