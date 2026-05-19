@@ -64,7 +64,7 @@ import { Route as ApiSwarmDirectChatRouteImport } from './routes/api/swarm-direc
 import { Route as ApiSwarmDecomposeRouteImport } from './routes/api/swarm-decompose'
 import { Route as ApiSwarmCheckpointRouteImport } from './routes/api/swarm-checkpoint'
 import { Route as ApiSwarmChatRouteImport } from './routes/api/swarm-chat'
-import { Route as ApiStartClaudeRouteImport } from './routes/api/start-claude'
+import { Route as ApiStartAgentoneRouteImport } from './routes/api/start-agentone'
 import { Route as ApiStartAgentRouteImport } from './routes/api/start-agent'
 import { Route as ApiSkillsRouteImport } from './routes/api/skills'
 import { Route as ApiSessionsRouteImport } from './routes/api/sessions'
@@ -87,7 +87,6 @@ import { Route as ApiMcpRouteImport } from './routes/api/mcp'
 import { Route as ApiLocalProvidersRouteImport } from './routes/api/local-providers'
 import { Route as ApiIntegrationsRouteImport } from './routes/api/integrations'
 import { Route as ApiHistoryRouteImport } from './routes/api/history'
-import { Route as ApiHermesTasksRouteImport } from './routes/api/hermes-tasks'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
@@ -98,15 +97,15 @@ import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection
 import { Route as ApiConnectionSettingsRouteImport } from './routes/api/connection-settings'
 import { Route as ApiConductorStopRouteImport } from './routes/api/conductor-stop'
 import { Route as ApiConductorSpawnRouteImport } from './routes/api/conductor-spawn'
-import { Route as ApiClaudeUpdateRouteImport } from './routes/api/claude-update'
-import { Route as ApiClaudeTasksAssigneesRouteImport } from './routes/api/claude-tasks-assignees'
-import { Route as ApiClaudeTasksRouteImport } from './routes/api/claude-tasks'
-import { Route as ApiClaudeJobsRouteImport } from './routes/api/claude-jobs'
-import { Route as ApiClaudeConfigRouteImport } from './routes/api/claude-config'
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
+import { Route as ApiAgentoneUpdateRouteImport } from './routes/api/agentone-update'
+import { Route as ApiAgentoneTasksAssigneesRouteImport } from './routes/api/agentone-tasks-assignees'
+import { Route as ApiAgentoneTasksRouteImport } from './routes/api/agentone-tasks'
+import { Route as ApiAgentoneJobsRouteImport } from './routes/api/agentone-jobs'
+import { Route as ApiAgentoneConfigRouteImport } from './routes/api/agentone-config'
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
 import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
@@ -144,12 +143,11 @@ import { Route as ApiKnowledgeListRouteImport } from './routes/api/knowledge/lis
 import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/graph'
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
-import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
-import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
-import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
-import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
+import { Route as ApiAgentoneTasksTaskIdRouteImport } from './routes/api/agentone-tasks.$taskId'
+import { Route as ApiAgentoneProxySplatRouteImport } from './routes/api/agentone-proxy/$'
+import { Route as ApiAgentoneJobsJobIdRouteImport } from './routes/api/agentone-jobs.$jobId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
@@ -432,9 +430,9 @@ const ApiSwarmChatRoute = ApiSwarmChatRouteImport.update({
   path: '/api/swarm-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiStartClaudeRoute = ApiStartClaudeRouteImport.update({
-  id: '/api/start-claude',
-  path: '/api/start-claude',
+const ApiStartAgentoneRoute = ApiStartAgentoneRouteImport.update({
+  id: '/api/start-agentone',
+  path: '/api/start-agentone',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiStartAgentRoute = ApiStartAgentRouteImport.update({
@@ -547,11 +545,6 @@ const ApiHistoryRoute = ApiHistoryRouteImport.update({
   path: '/api/history',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiHermesTasksRoute = ApiHermesTasksRouteImport.update({
-  id: '/api/hermes-tasks',
-  path: '/api/hermes-tasks',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiGatewayStatusRoute = ApiGatewayStatusRouteImport.update({
   id: '/api/gateway-status',
   path: '/api/gateway-status',
@@ -602,31 +595,6 @@ const ApiConductorSpawnRoute = ApiConductorSpawnRouteImport.update({
   path: '/api/conductor-spawn',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiClaudeUpdateRoute = ApiClaudeUpdateRouteImport.update({
-  id: '/api/claude-update',
-  path: '/api/claude-update',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiClaudeTasksAssigneesRoute = ApiClaudeTasksAssigneesRouteImport.update({
-  id: '/api/claude-tasks-assignees',
-  path: '/api/claude-tasks-assignees',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiClaudeTasksRoute = ApiClaudeTasksRouteImport.update({
-  id: '/api/claude-tasks',
-  path: '/api/claude-tasks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiClaudeJobsRoute = ApiClaudeJobsRouteImport.update({
-  id: '/api/claude-jobs',
-  path: '/api/claude-jobs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiClaudeConfigRoute = ApiClaudeConfigRouteImport.update({
-  id: '/api/claude-config',
-  path: '/api/claude-config',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiChatEventsRoute = ApiChatEventsRouteImport.update({
   id: '/api/chat-events',
   path: '/api/chat-events',
@@ -645,6 +613,32 @@ const ApiAuthRoute = ApiAuthRouteImport.update({
 const ApiArtifactsRoute = ApiArtifactsRouteImport.update({
   id: '/api/artifacts',
   path: '/api/artifacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAgentoneUpdateRoute = ApiAgentoneUpdateRouteImport.update({
+  id: '/api/agentone-update',
+  path: '/api/agentone-update',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAgentoneTasksAssigneesRoute =
+  ApiAgentoneTasksAssigneesRouteImport.update({
+    id: '/api/agentone-tasks-assignees',
+    path: '/api/agentone-tasks-assignees',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAgentoneTasksRoute = ApiAgentoneTasksRouteImport.update({
+  id: '/api/agentone-tasks',
+  path: '/api/agentone-tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAgentoneJobsRoute = ApiAgentoneJobsRouteImport.update({
+  id: '/api/agentone-jobs',
+  path: '/api/agentone-jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAgentoneConfigRoute = ApiAgentoneConfigRouteImport.update({
+  id: '/api/agentone-config',
+  path: '/api/agentone-config',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiUpdateWorkspaceRoute = ApiUpdateWorkspaceRouteImport.update({
@@ -833,35 +827,30 @@ const ApiHermesworldReservationsRoute =
     path: '/api/hermesworld/reservations',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiHermesTasksTaskIdRoute = ApiHermesTasksTaskIdRouteImport.update({
-  id: '/$taskId',
-  path: '/$taskId',
-  getParentRoute: () => ApiHermesTasksRoute,
-} as any)
 const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   id: '/api/dashboard/overview',
   path: '/api/dashboard/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiClaudeTasksTaskIdRoute = ApiClaudeTasksTaskIdRouteImport.update({
-  id: '/$taskId',
-  path: '/$taskId',
-  getParentRoute: () => ApiClaudeTasksRoute,
-} as any)
-const ApiClaudeProxySplatRoute = ApiClaudeProxySplatRouteImport.update({
-  id: '/api/claude-proxy/$',
-  path: '/api/claude-proxy/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiClaudeJobsJobIdRoute = ApiClaudeJobsJobIdRouteImport.update({
-  id: '/$jobId',
-  path: '/$jobId',
-  getParentRoute: () => ApiClaudeJobsRoute,
-} as any)
 const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   id: '/$artifactId',
   path: '/$artifactId',
   getParentRoute: () => ApiArtifactsRoute,
+} as any)
+const ApiAgentoneTasksTaskIdRoute = ApiAgentoneTasksTaskIdRouteImport.update({
+  id: '/$taskId',
+  path: '/$taskId',
+  getParentRoute: () => ApiAgentoneTasksRoute,
+} as any)
+const ApiAgentoneProxySplatRoute = ApiAgentoneProxySplatRouteImport.update({
+  id: '/api/agentone-proxy/$',
+  path: '/api/agentone-proxy/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAgentoneJobsJobIdRoute = ApiAgentoneJobsJobIdRouteImport.update({
+  id: '/$jobId',
+  path: '/$jobId',
+  getParentRoute: () => ApiAgentoneJobsRoute,
 } as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
@@ -916,15 +905,15 @@ export interface FileRoutesByFullPath {
   '/terminal': typeof TerminalRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
+  '/api/agentone-config': typeof ApiAgentoneConfigRoute
+  '/api/agentone-jobs': typeof ApiAgentoneJobsRouteWithChildren
+  '/api/agentone-tasks': typeof ApiAgentoneTasksRouteWithChildren
+  '/api/agentone-tasks-assignees': typeof ApiAgentoneTasksAssigneesRoute
+  '/api/agentone-update': typeof ApiAgentoneUpdateRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
-  '/api/claude-config': typeof ApiClaudeConfigRoute
-  '/api/claude-jobs': typeof ApiClaudeJobsRouteWithChildren
-  '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
-  '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
-  '/api/claude-update': typeof ApiClaudeUpdateRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -935,7 +924,6 @@ export interface FileRoutesByFullPath {
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
-  '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
@@ -958,7 +946,7 @@ export interface FileRoutesByFullPath {
   '/api/sessions': typeof ApiSessionsRouteWithChildren
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
-  '/api/start-claude': typeof ApiStartClaudeRoute
+  '/api/start-agentone': typeof ApiStartAgentoneRoute
   '/api/swarm-chat': typeof ApiSwarmChatRoute
   '/api/swarm-checkpoint': typeof ApiSwarmCheckpointRoute
   '/api/swarm-decompose': typeof ApiSwarmDecomposeRoute
@@ -991,12 +979,11 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/agentone-jobs/$jobId': typeof ApiAgentoneJobsJobIdRoute
+  '/api/agentone-proxy/$': typeof ApiAgentoneProxySplatRoute
+  '/api/agentone-tasks/$taskId': typeof ApiAgentoneTasksTaskIdRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
-  '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
-  '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
-  '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
-  '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
@@ -1063,15 +1050,15 @@ export interface FileRoutesByTo {
   '/terminal': typeof TerminalRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
+  '/api/agentone-config': typeof ApiAgentoneConfigRoute
+  '/api/agentone-jobs': typeof ApiAgentoneJobsRouteWithChildren
+  '/api/agentone-tasks': typeof ApiAgentoneTasksRouteWithChildren
+  '/api/agentone-tasks-assignees': typeof ApiAgentoneTasksAssigneesRoute
+  '/api/agentone-update': typeof ApiAgentoneUpdateRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
-  '/api/claude-config': typeof ApiClaudeConfigRoute
-  '/api/claude-jobs': typeof ApiClaudeJobsRouteWithChildren
-  '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
-  '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
-  '/api/claude-update': typeof ApiClaudeUpdateRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -1082,7 +1069,6 @@ export interface FileRoutesByTo {
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
-  '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
@@ -1105,7 +1091,7 @@ export interface FileRoutesByTo {
   '/api/sessions': typeof ApiSessionsRouteWithChildren
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
-  '/api/start-claude': typeof ApiStartClaudeRoute
+  '/api/start-agentone': typeof ApiStartAgentoneRoute
   '/api/swarm-chat': typeof ApiSwarmChatRoute
   '/api/swarm-checkpoint': typeof ApiSwarmCheckpointRoute
   '/api/swarm-decompose': typeof ApiSwarmDecomposeRoute
@@ -1138,12 +1124,11 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/api/agentone-jobs/$jobId': typeof ApiAgentoneJobsJobIdRoute
+  '/api/agentone-proxy/$': typeof ApiAgentoneProxySplatRoute
+  '/api/agentone-tasks/$taskId': typeof ApiAgentoneTasksTaskIdRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
-  '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
-  '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
-  '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
-  '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
@@ -1212,15 +1197,15 @@ export interface FileRoutesById {
   '/terminal': typeof TerminalRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
+  '/api/agentone-config': typeof ApiAgentoneConfigRoute
+  '/api/agentone-jobs': typeof ApiAgentoneJobsRouteWithChildren
+  '/api/agentone-tasks': typeof ApiAgentoneTasksRouteWithChildren
+  '/api/agentone-tasks-assignees': typeof ApiAgentoneTasksAssigneesRoute
+  '/api/agentone-update': typeof ApiAgentoneUpdateRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
-  '/api/claude-config': typeof ApiClaudeConfigRoute
-  '/api/claude-jobs': typeof ApiClaudeJobsRouteWithChildren
-  '/api/claude-tasks': typeof ApiClaudeTasksRouteWithChildren
-  '/api/claude-tasks-assignees': typeof ApiClaudeTasksAssigneesRoute
-  '/api/claude-update': typeof ApiClaudeUpdateRoute
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -1231,7 +1216,6 @@ export interface FileRoutesById {
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
-  '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
   '/api/integrations': typeof ApiIntegrationsRoute
   '/api/local-providers': typeof ApiLocalProvidersRoute
@@ -1254,7 +1238,7 @@ export interface FileRoutesById {
   '/api/sessions': typeof ApiSessionsRouteWithChildren
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
-  '/api/start-claude': typeof ApiStartClaudeRoute
+  '/api/start-agentone': typeof ApiStartAgentoneRoute
   '/api/swarm-chat': typeof ApiSwarmChatRoute
   '/api/swarm-checkpoint': typeof ApiSwarmCheckpointRoute
   '/api/swarm-decompose': typeof ApiSwarmDecomposeRoute
@@ -1287,12 +1271,11 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/agentone-jobs/$jobId': typeof ApiAgentoneJobsJobIdRoute
+  '/api/agentone-proxy/$': typeof ApiAgentoneProxySplatRoute
+  '/api/agentone-tasks/$taskId': typeof ApiAgentoneTasksTaskIdRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
-  '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
-  '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
-  '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
-  '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
@@ -1362,15 +1345,15 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/vt-capital'
     | '/world'
+    | '/api/agentone-config'
+    | '/api/agentone-jobs'
+    | '/api/agentone-tasks'
+    | '/api/agentone-tasks-assignees'
+    | '/api/agentone-update'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
-    | '/api/claude-config'
-    | '/api/claude-jobs'
-    | '/api/claude-tasks'
-    | '/api/claude-tasks-assignees'
-    | '/api/claude-update'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1381,7 +1364,6 @@ export interface FileRouteTypes {
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
-    | '/api/hermes-tasks'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
@@ -1404,7 +1386,7 @@ export interface FileRouteTypes {
     | '/api/sessions'
     | '/api/skills'
     | '/api/start-agent'
-    | '/api/start-claude'
+    | '/api/start-agentone'
     | '/api/swarm-chat'
     | '/api/swarm-checkpoint'
     | '/api/swarm-decompose'
@@ -1437,12 +1419,11 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/agentone-jobs/$jobId'
+    | '/api/agentone-proxy/$'
+    | '/api/agentone-tasks/$taskId'
     | '/api/artifacts/$artifactId'
-    | '/api/claude-jobs/$jobId'
-    | '/api/claude-proxy/$'
-    | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
-    | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
@@ -1509,15 +1490,15 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/vt-capital'
     | '/world'
+    | '/api/agentone-config'
+    | '/api/agentone-jobs'
+    | '/api/agentone-tasks'
+    | '/api/agentone-tasks-assignees'
+    | '/api/agentone-update'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
-    | '/api/claude-config'
-    | '/api/claude-jobs'
-    | '/api/claude-tasks'
-    | '/api/claude-tasks-assignees'
-    | '/api/claude-update'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1528,7 +1509,6 @@ export interface FileRouteTypes {
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
-    | '/api/hermes-tasks'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
@@ -1551,7 +1531,7 @@ export interface FileRouteTypes {
     | '/api/sessions'
     | '/api/skills'
     | '/api/start-agent'
-    | '/api/start-claude'
+    | '/api/start-agentone'
     | '/api/swarm-chat'
     | '/api/swarm-checkpoint'
     | '/api/swarm-decompose'
@@ -1584,12 +1564,11 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/api/agentone-jobs/$jobId'
+    | '/api/agentone-proxy/$'
+    | '/api/agentone-tasks/$taskId'
     | '/api/artifacts/$artifactId'
-    | '/api/claude-jobs/$jobId'
-    | '/api/claude-proxy/$'
-    | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
-    | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
@@ -1657,15 +1636,15 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/vt-capital'
     | '/world'
+    | '/api/agentone-config'
+    | '/api/agentone-jobs'
+    | '/api/agentone-tasks'
+    | '/api/agentone-tasks-assignees'
+    | '/api/agentone-update'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
-    | '/api/claude-config'
-    | '/api/claude-jobs'
-    | '/api/claude-tasks'
-    | '/api/claude-tasks-assignees'
-    | '/api/claude-update'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1676,7 +1655,6 @@ export interface FileRouteTypes {
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
-    | '/api/hermes-tasks'
     | '/api/history'
     | '/api/integrations'
     | '/api/local-providers'
@@ -1699,7 +1677,7 @@ export interface FileRouteTypes {
     | '/api/sessions'
     | '/api/skills'
     | '/api/start-agent'
-    | '/api/start-claude'
+    | '/api/start-agentone'
     | '/api/swarm-chat'
     | '/api/swarm-checkpoint'
     | '/api/swarm-decompose'
@@ -1732,12 +1710,11 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/agentone-jobs/$jobId'
+    | '/api/agentone-proxy/$'
+    | '/api/agentone-tasks/$taskId'
     | '/api/artifacts/$artifactId'
-    | '/api/claude-jobs/$jobId'
-    | '/api/claude-proxy/$'
-    | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
-    | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
@@ -1806,15 +1783,15 @@ export interface RootRouteChildren {
   TerminalRoute: typeof TerminalRoute
   VtCapitalRoute: typeof VtCapitalRoute
   WorldRoute: typeof WorldRoute
+  ApiAgentoneConfigRoute: typeof ApiAgentoneConfigRoute
+  ApiAgentoneJobsRoute: typeof ApiAgentoneJobsRouteWithChildren
+  ApiAgentoneTasksRoute: typeof ApiAgentoneTasksRouteWithChildren
+  ApiAgentoneTasksAssigneesRoute: typeof ApiAgentoneTasksAssigneesRoute
+  ApiAgentoneUpdateRoute: typeof ApiAgentoneUpdateRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
   ApiChatEventsRoute: typeof ApiChatEventsRoute
-  ApiClaudeConfigRoute: typeof ApiClaudeConfigRoute
-  ApiClaudeJobsRoute: typeof ApiClaudeJobsRouteWithChildren
-  ApiClaudeTasksRoute: typeof ApiClaudeTasksRouteWithChildren
-  ApiClaudeTasksAssigneesRoute: typeof ApiClaudeTasksAssigneesRoute
-  ApiClaudeUpdateRoute: typeof ApiClaudeUpdateRoute
   ApiConductorSpawnRoute: typeof ApiConductorSpawnRoute
   ApiConductorStopRoute: typeof ApiConductorStopRoute
   ApiConnectionSettingsRoute: typeof ApiConnectionSettingsRoute
@@ -1825,7 +1802,6 @@ export interface RootRouteChildren {
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
-  ApiHermesTasksRoute: typeof ApiHermesTasksRouteWithChildren
   ApiHistoryRoute: typeof ApiHistoryRoute
   ApiIntegrationsRoute: typeof ApiIntegrationsRoute
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
@@ -1848,7 +1824,7 @@ export interface RootRouteChildren {
   ApiSessionsRoute: typeof ApiSessionsRouteWithChildren
   ApiSkillsRoute: typeof ApiSkillsRouteWithChildren
   ApiStartAgentRoute: typeof ApiStartAgentRoute
-  ApiStartClaudeRoute: typeof ApiStartClaudeRoute
+  ApiStartAgentoneRoute: typeof ApiStartAgentoneRoute
   ApiSwarmChatRoute: typeof ApiSwarmChatRoute
   ApiSwarmCheckpointRoute: typeof ApiSwarmCheckpointRoute
   ApiSwarmDecomposeRoute: typeof ApiSwarmDecomposeRoute
@@ -1878,7 +1854,7 @@ export interface RootRouteChildren {
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
-  ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
+  ApiAgentoneProxySplatRoute: typeof ApiAgentoneProxySplatRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
@@ -2289,11 +2265,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSwarmChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/start-claude': {
-      id: '/api/start-claude'
-      path: '/api/start-claude'
-      fullPath: '/api/start-claude'
-      preLoaderRoute: typeof ApiStartClaudeRouteImport
+    '/api/start-agentone': {
+      id: '/api/start-agentone'
+      path: '/api/start-agentone'
+      fullPath: '/api/start-agentone'
+      preLoaderRoute: typeof ApiStartAgentoneRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/start-agent': {
@@ -2450,13 +2426,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/hermes-tasks': {
-      id: '/api/hermes-tasks'
-      path: '/api/hermes-tasks'
-      fullPath: '/api/hermes-tasks'
-      preLoaderRoute: typeof ApiHermesTasksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/gateway-status': {
       id: '/api/gateway-status'
       path: '/api/gateway-status'
@@ -2527,41 +2496,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiConductorSpawnRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/claude-update': {
-      id: '/api/claude-update'
-      path: '/api/claude-update'
-      fullPath: '/api/claude-update'
-      preLoaderRoute: typeof ApiClaudeUpdateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/claude-tasks-assignees': {
-      id: '/api/claude-tasks-assignees'
-      path: '/api/claude-tasks-assignees'
-      fullPath: '/api/claude-tasks-assignees'
-      preLoaderRoute: typeof ApiClaudeTasksAssigneesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/claude-tasks': {
-      id: '/api/claude-tasks'
-      path: '/api/claude-tasks'
-      fullPath: '/api/claude-tasks'
-      preLoaderRoute: typeof ApiClaudeTasksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/claude-jobs': {
-      id: '/api/claude-jobs'
-      path: '/api/claude-jobs'
-      fullPath: '/api/claude-jobs'
-      preLoaderRoute: typeof ApiClaudeJobsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/claude-config': {
-      id: '/api/claude-config'
-      path: '/api/claude-config'
-      fullPath: '/api/claude-config'
-      preLoaderRoute: typeof ApiClaudeConfigRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/chat-events': {
       id: '/api/chat-events'
       path: '/api/chat-events'
@@ -2588,6 +2522,41 @@ declare module '@tanstack/react-router' {
       path: '/api/artifacts'
       fullPath: '/api/artifacts'
       preLoaderRoute: typeof ApiArtifactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agentone-update': {
+      id: '/api/agentone-update'
+      path: '/api/agentone-update'
+      fullPath: '/api/agentone-update'
+      preLoaderRoute: typeof ApiAgentoneUpdateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agentone-tasks-assignees': {
+      id: '/api/agentone-tasks-assignees'
+      path: '/api/agentone-tasks-assignees'
+      fullPath: '/api/agentone-tasks-assignees'
+      preLoaderRoute: typeof ApiAgentoneTasksAssigneesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agentone-tasks': {
+      id: '/api/agentone-tasks'
+      path: '/api/agentone-tasks'
+      fullPath: '/api/agentone-tasks'
+      preLoaderRoute: typeof ApiAgentoneTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agentone-jobs': {
+      id: '/api/agentone-jobs'
+      path: '/api/agentone-jobs'
+      fullPath: '/api/agentone-jobs'
+      preLoaderRoute: typeof ApiAgentoneJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agentone-config': {
+      id: '/api/agentone-config'
+      path: '/api/agentone-config'
+      fullPath: '/api/agentone-config'
+      preLoaderRoute: typeof ApiAgentoneConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/update/workspace': {
@@ -2849,13 +2818,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesworldReservationsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/hermes-tasks/$taskId': {
-      id: '/api/hermes-tasks/$taskId'
-      path: '/$taskId'
-      fullPath: '/api/hermes-tasks/$taskId'
-      preLoaderRoute: typeof ApiHermesTasksTaskIdRouteImport
-      parentRoute: typeof ApiHermesTasksRoute
-    }
     '/api/dashboard/overview': {
       id: '/api/dashboard/overview'
       path: '/api/dashboard/overview'
@@ -2863,33 +2825,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDashboardOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/claude-tasks/$taskId': {
-      id: '/api/claude-tasks/$taskId'
-      path: '/$taskId'
-      fullPath: '/api/claude-tasks/$taskId'
-      preLoaderRoute: typeof ApiClaudeTasksTaskIdRouteImport
-      parentRoute: typeof ApiClaudeTasksRoute
-    }
-    '/api/claude-proxy/$': {
-      id: '/api/claude-proxy/$'
-      path: '/api/claude-proxy/$'
-      fullPath: '/api/claude-proxy/$'
-      preLoaderRoute: typeof ApiClaudeProxySplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/claude-jobs/$jobId': {
-      id: '/api/claude-jobs/$jobId'
-      path: '/$jobId'
-      fullPath: '/api/claude-jobs/$jobId'
-      preLoaderRoute: typeof ApiClaudeJobsJobIdRouteImport
-      parentRoute: typeof ApiClaudeJobsRoute
-    }
     '/api/artifacts/$artifactId': {
       id: '/api/artifacts/$artifactId'
       path: '/$artifactId'
       fullPath: '/api/artifacts/$artifactId'
       preLoaderRoute: typeof ApiArtifactsArtifactIdRouteImport
       parentRoute: typeof ApiArtifactsRoute
+    }
+    '/api/agentone-tasks/$taskId': {
+      id: '/api/agentone-tasks/$taskId'
+      path: '/$taskId'
+      fullPath: '/api/agentone-tasks/$taskId'
+      preLoaderRoute: typeof ApiAgentoneTasksTaskIdRouteImport
+      parentRoute: typeof ApiAgentoneTasksRoute
+    }
+    '/api/agentone-proxy/$': {
+      id: '/api/agentone-proxy/$'
+      path: '/api/agentone-proxy/$'
+      fullPath: '/api/agentone-proxy/$'
+      preLoaderRoute: typeof ApiAgentoneProxySplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agentone-jobs/$jobId': {
+      id: '/api/agentone-jobs/$jobId'
+      path: '/$jobId'
+      fullPath: '/api/agentone-jobs/$jobId'
+      preLoaderRoute: typeof ApiAgentoneJobsJobIdRouteImport
+      parentRoute: typeof ApiAgentoneJobsRoute
     }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
@@ -2954,6 +2916,29 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
 
+interface ApiAgentoneJobsRouteChildren {
+  ApiAgentoneJobsJobIdRoute: typeof ApiAgentoneJobsJobIdRoute
+}
+
+const ApiAgentoneJobsRouteChildren: ApiAgentoneJobsRouteChildren = {
+  ApiAgentoneJobsJobIdRoute: ApiAgentoneJobsJobIdRoute,
+}
+
+const ApiAgentoneJobsRouteWithChildren = ApiAgentoneJobsRoute._addFileChildren(
+  ApiAgentoneJobsRouteChildren,
+)
+
+interface ApiAgentoneTasksRouteChildren {
+  ApiAgentoneTasksTaskIdRoute: typeof ApiAgentoneTasksTaskIdRoute
+}
+
+const ApiAgentoneTasksRouteChildren: ApiAgentoneTasksRouteChildren = {
+  ApiAgentoneTasksTaskIdRoute: ApiAgentoneTasksTaskIdRoute,
+}
+
+const ApiAgentoneTasksRouteWithChildren =
+  ApiAgentoneTasksRoute._addFileChildren(ApiAgentoneTasksRouteChildren)
+
 interface ApiArtifactsRouteChildren {
   ApiArtifactsArtifactIdRoute: typeof ApiArtifactsArtifactIdRoute
 }
@@ -2964,42 +2949,6 @@ const ApiArtifactsRouteChildren: ApiArtifactsRouteChildren = {
 
 const ApiArtifactsRouteWithChildren = ApiArtifactsRoute._addFileChildren(
   ApiArtifactsRouteChildren,
-)
-
-interface ApiClaudeJobsRouteChildren {
-  ApiClaudeJobsJobIdRoute: typeof ApiClaudeJobsJobIdRoute
-}
-
-const ApiClaudeJobsRouteChildren: ApiClaudeJobsRouteChildren = {
-  ApiClaudeJobsJobIdRoute: ApiClaudeJobsJobIdRoute,
-}
-
-const ApiClaudeJobsRouteWithChildren = ApiClaudeJobsRoute._addFileChildren(
-  ApiClaudeJobsRouteChildren,
-)
-
-interface ApiClaudeTasksRouteChildren {
-  ApiClaudeTasksTaskIdRoute: typeof ApiClaudeTasksTaskIdRoute
-}
-
-const ApiClaudeTasksRouteChildren: ApiClaudeTasksRouteChildren = {
-  ApiClaudeTasksTaskIdRoute: ApiClaudeTasksTaskIdRoute,
-}
-
-const ApiClaudeTasksRouteWithChildren = ApiClaudeTasksRoute._addFileChildren(
-  ApiClaudeTasksRouteChildren,
-)
-
-interface ApiHermesTasksRouteChildren {
-  ApiHermesTasksTaskIdRoute: typeof ApiHermesTasksTaskIdRoute
-}
-
-const ApiHermesTasksRouteChildren: ApiHermesTasksRouteChildren = {
-  ApiHermesTasksTaskIdRoute: ApiHermesTasksTaskIdRoute,
-}
-
-const ApiHermesTasksRouteWithChildren = ApiHermesTasksRoute._addFileChildren(
-  ApiHermesTasksRouteChildren,
 )
 
 interface ApiMcpNameRouteChildren {
@@ -3151,15 +3100,15 @@ const rootRouteChildren: RootRouteChildren = {
   TerminalRoute: TerminalRoute,
   VtCapitalRoute: VtCapitalRoute,
   WorldRoute: WorldRoute,
+  ApiAgentoneConfigRoute: ApiAgentoneConfigRoute,
+  ApiAgentoneJobsRoute: ApiAgentoneJobsRouteWithChildren,
+  ApiAgentoneTasksRoute: ApiAgentoneTasksRouteWithChildren,
+  ApiAgentoneTasksAssigneesRoute: ApiAgentoneTasksAssigneesRoute,
+  ApiAgentoneUpdateRoute: ApiAgentoneUpdateRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
   ApiChatEventsRoute: ApiChatEventsRoute,
-  ApiClaudeConfigRoute: ApiClaudeConfigRoute,
-  ApiClaudeJobsRoute: ApiClaudeJobsRouteWithChildren,
-  ApiClaudeTasksRoute: ApiClaudeTasksRouteWithChildren,
-  ApiClaudeTasksAssigneesRoute: ApiClaudeTasksAssigneesRoute,
-  ApiClaudeUpdateRoute: ApiClaudeUpdateRoute,
   ApiConductorSpawnRoute: ApiConductorSpawnRoute,
   ApiConductorStopRoute: ApiConductorStopRoute,
   ApiConnectionSettingsRoute: ApiConnectionSettingsRoute,
@@ -3170,7 +3119,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
-  ApiHermesTasksRoute: ApiHermesTasksRouteWithChildren,
   ApiHistoryRoute: ApiHistoryRoute,
   ApiIntegrationsRoute: ApiIntegrationsRoute,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
@@ -3193,7 +3141,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSessionsRoute: ApiSessionsRouteWithChildren,
   ApiSkillsRoute: ApiSkillsRouteWithChildren,
   ApiStartAgentRoute: ApiStartAgentRoute,
-  ApiStartClaudeRoute: ApiStartClaudeRoute,
+  ApiStartAgentoneRoute: ApiStartAgentoneRoute,
   ApiSwarmChatRoute: ApiSwarmChatRoute,
   ApiSwarmCheckpointRoute: ApiSwarmCheckpointRoute,
   ApiSwarmDecomposeRoute: ApiSwarmDecomposeRoute,
@@ -3223,7 +3171,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
-  ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
+  ApiAgentoneProxySplatRoute: ApiAgentoneProxySplatRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,

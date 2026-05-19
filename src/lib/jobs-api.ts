@@ -1,8 +1,8 @@
 /**
- * Jobs API client — talks to Hermes Agent FastAPI /api/jobs endpoints.
+ * Jobs API client — talks to Agent-e1 /api/jobs endpoints.
  */
 
-const CLAUDE_API = '/api/claude-jobs'
+const AGENTONE_API = '/api/agentone-jobs'
 
 export type JobProfileOption = {
   name: string
@@ -129,7 +129,7 @@ export function getJobErrorText(
 }
 
 export async function fetchJobs(): Promise<Array<ClaudeJob>> {
-  const res = await fetch(`${CLAUDE_API}?include_disabled=true&profiles=all`)
+  const res = await fetch(`${AGENTONE_API}?include_disabled=true&profiles=all`)
   if (!res.ok) throw new Error(`Failed to fetch jobs: ${res.status}`)
   const data = await res.json()
   return normalizeJobsResponse(data)
@@ -210,7 +210,7 @@ export function buildJobMutationPayload(
 }
 
 export async function createJob(input: JobMutationInput): Promise<ClaudeJob> {
-  const res = await fetch(CLAUDE_API, {
+  const res = await fetch(AGENTONE_API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(buildJobMutationPayload(input)),
@@ -239,7 +239,7 @@ export async function updateJob(
         }
       : {}),
   }
-  const res = await fetch(`${CLAUDE_API}/${jobId}`, {
+  const res = await fetch(`${AGENTONE_API}/${jobId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -254,7 +254,7 @@ export async function updateJob(
 }
 
 export async function deleteJob(jobId: string): Promise<void> {
-  const res = await fetch(`${CLAUDE_API}/${jobId}`, { method: 'DELETE' })
+  const res = await fetch(`${AGENTONE_API}/${jobId}`, { method: 'DELETE' })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
     throw new Error(
@@ -264,7 +264,7 @@ export async function deleteJob(jobId: string): Promise<void> {
 }
 
 export async function pauseJob(jobId: string): Promise<ClaudeJob> {
-  const res = await fetch(`${CLAUDE_API}/${jobId}?action=pause`, {
+  const res = await fetch(`${AGENTONE_API}/${jobId}?action=pause`, {
     method: 'POST',
   })
   if (!res.ok) {
@@ -277,7 +277,7 @@ export async function pauseJob(jobId: string): Promise<ClaudeJob> {
 }
 
 export async function resumeJob(jobId: string): Promise<ClaudeJob> {
-  const res = await fetch(`${CLAUDE_API}/${jobId}?action=resume`, {
+  const res = await fetch(`${AGENTONE_API}/${jobId}?action=resume`, {
     method: 'POST',
   })
   if (!res.ok) {
@@ -290,7 +290,7 @@ export async function resumeJob(jobId: string): Promise<ClaudeJob> {
 }
 
 export async function triggerJob(jobId: string): Promise<ClaudeJob> {
-  const res = await fetch(`${CLAUDE_API}/${jobId}?action=run`, {
+  const res = await fetch(`${AGENTONE_API}/${jobId}?action=run`, {
     method: 'POST',
   })
   if (!res.ok) {
@@ -328,7 +328,7 @@ export async function fetchJobOutput(
   jobId: string,
   limit = 10,
 ): Promise<Array<JobOutput>> {
-  const res = await fetch(`${CLAUDE_API}/${jobId}?action=output&limit=${limit}`)
+  const res = await fetch(`${AGENTONE_API}/${jobId}?action=output&limit=${limit}`)
   if (!res.ok) throw new Error(`Failed to fetch output: ${res.status}`)
   return (await res.json()).outputs ?? []
 }

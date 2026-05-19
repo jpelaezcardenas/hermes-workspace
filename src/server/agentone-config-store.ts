@@ -3,7 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 import YAML from 'yaml'
 
-import type { HermesConfigPaths } from './hermes-config-migration'
+import type { HermesConfigPaths } from './agentone-config-migration'
 
 export type SetDefaultModelPatch = {
   action: 'set-default-model'

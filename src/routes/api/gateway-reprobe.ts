@@ -31,7 +31,7 @@ export const Route = createFileRoute('/api/gateway-reprobe')({
           ok: true,
           capabilities,
           mode: getGatewayMode(),
-          claudeUrl: CLAUDE_API,
+          agentUrl: CLAUDE_API,
           dashboardUrl: CLAUDE_DASHBOARD_URL,
           gateway: {
             available: capabilities.health || capabilities.chatCompletions,

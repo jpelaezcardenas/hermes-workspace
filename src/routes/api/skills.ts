@@ -17,9 +17,10 @@ import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
 function getSkillsDir(): string {
   return (
+    process.env.AGENTONE_SKILLS_DIR ||
     process.env.HERMES_SKILLS_DIR ||
     path.join(
-      process.env.HERMES_HOME || path.join(os.homedir(), '.hermes'),
+      process.env.AGENTONE_HOME || process.env.HERMES_HOME || path.join(os.homedir(), '.hermes'),
       'skills',
     )
   )
@@ -359,7 +360,7 @@ function normalizeSkill(value: unknown): SkillSummary | null {
   }
 }
 
-async function fetchClaudeSkills(): Promise<Array<SkillSummary>> {
+async function fetchAgentSkills(): Promise<Array<SkillSummary>> {
   const capabilities = getCapabilities()
   const headers: Record<string, string> = {}
   if (BEARER_TOKEN) headers['Authorization'] = `Bearer ${BEARER_TOKEN}`
@@ -369,7 +370,7 @@ async function fetchClaudeSkills(): Promise<Array<SkillSummary>> {
     : await fetch(`${CLAUDE_API}/api/skills`, { headers })
   if (!response.ok) {
     const body = await response.text().catch(() => '')
-    throw new Error(body || `Claude skills request failed (${response.status})`)
+    throw new Error(body || `Agent skills request failed (${response.status})`)
   }
 
   const payload = (await response.json()) as unknown
@@ -457,7 +458,7 @@ export const Route = createFileRoute('/api/skills')({
           )
 
           const [sourceItems, localPathMap, bundledManifest] = await Promise.all([
-            fetchClaudeSkills(),
+            fetchAgentSkills(),
             buildLocalSkillPathMap(),
             loadBundledManifest(),
           ])

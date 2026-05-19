@@ -549,7 +549,7 @@ export function isLocalhostDeployment(): boolean {
  */
 async function probeMcpConfigKey(): Promise<boolean> {
   try {
-    const { getConfig } = await import('./claude-dashboard-api')
+    const { getConfig } = await import('./agentone-dashboard-api')
     const cfg = await getConfig()
     if (typeof cfg !== 'object') return false
     if ('mcp_servers' in cfg) return true

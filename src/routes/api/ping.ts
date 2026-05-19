@@ -9,7 +9,7 @@ type PingResponse = {
   ok: boolean
   error?: string
   status?: number
-  claudeUrl: string
+  agentUrl: string
 }
 
 export const Route = createFileRoute('/api/ping')({
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/api/ping')({
               ok: false,
               error: 'Authentication required',
               status: 401,
-              claudeUrl: CLAUDE_API,
+              agentUrl: CLAUDE_API,
             } satisfies PingResponse,
             { status: 401 },
           )
@@ -35,7 +35,7 @@ export const Route = createFileRoute('/api/ping')({
               ok: false,
               error: 'Agent-e1 Agent unavailable',
               status: 503,
-              claudeUrl: CLAUDE_API,
+              agentUrl: CLAUDE_API,
             } satisfies PingResponse,
             { status: 503 },
           )

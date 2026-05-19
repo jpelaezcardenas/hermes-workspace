@@ -1750,7 +1750,7 @@ function _LoaderContent() {
   ]
   function getPreset(s: LoaderStyle): BrailleSpinnerPreset | null {
     const m: Record<string, BrailleSpinnerPreset> = {
-      'braille-agentone': 'claude',
+      'braille-agentone': 'agentone',
       'braille-orbit': 'orbit',
       'braille-breathe': 'breathe',
       'braille-pulse': 'pulse',
@@ -1960,7 +1960,7 @@ function _AdvancedContent() {
     } else {
       setUrlError(null)
     }
-    updateSettings({ claudeUrl: value })
+    updateSettings({ agentUrl: value })
   }
 
   async function testConnection() {
@@ -1991,7 +1991,7 @@ function _AdvancedContent() {
             <Input
               type="url"
               placeholder="https://api.claudeworkspace.app"
-              value={settings.claudeUrl}
+              value={settings.agentUrl}
               onChange={(e) => validateAndUpdateUrl(e.target.value)}
               className="h-8 w-full rounded-lg border-primary-200 text-sm"
               aria-label="Agent-e1 URL"

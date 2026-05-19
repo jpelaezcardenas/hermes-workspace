@@ -22,7 +22,7 @@ async function probeAgentHealth(): Promise<boolean> {
   }
   // Fallback to direct health proxy
   try {
-    const response = await fetch('/api/claude-proxy/health', {
+    const response = await fetch('/api/agentone-proxy/health', {
       cache: 'no-store',
     })
     return response.ok
@@ -117,7 +117,7 @@ export function ReconnectBanner({
               Date.now() - autoRestartTriedAtRef.current
             if (sinceLastTry > AUTO_RESTART_COOLDOWN_MS) {
               autoRestartTriedAtRef.current = Date.now()
-              void fetch('/api/start-claude', {
+              void fetch('/api/start-agentone', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
               })

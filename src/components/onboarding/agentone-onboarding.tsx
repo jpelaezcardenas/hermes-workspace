@@ -56,7 +56,7 @@ type GatewayStatusResponse = {
     config?: boolean
     jobs?: boolean
   }
-  claudeUrl?: string
+  agentUrl?: string
 }
 
 const PROVIDERS = [
@@ -579,7 +579,7 @@ export function Onboarding() {
                   >
                     <p style={mutedStyle}>Backend URL</p>
                     <p className="mt-1 font-mono">
-                      {backendInfo?.claudeUrl || 'Configured automatically'}
+                      {backendInfo?.agentUrl || 'Configured automatically'}
                     </p>
                   </div>
                 </div>
@@ -811,7 +811,7 @@ export function Onboarding() {
                       className="rounded-lg px-3 py-2 font-mono text-xs"
                       style={{ background: 'rgba(0,0,0,0.2)' }}
                     >
-                      claude auth login openai-codex
+                      agentone auth login openai-codex
                     </div>
                     <p className="text-xs" style={mutedStyle}>
                       After the login flow completes, click below to refresh

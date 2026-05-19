@@ -84,7 +84,7 @@ const DEFAULT_TIMEOUT_S = 240
 const MAX_TIMEOUT_S = 600
 
 function getProfilesDir(): string {
-  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  const base = process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
   if (base) {
     const parts = base.split('/').filter(Boolean)
     if (parts.length >= 2 && parts.at(-2) === 'profiles') {
@@ -122,7 +122,7 @@ function resolveTmuxBin(): string | null {
   // Allow operators on non-standard installs (Docker, NixOS, custom
   // package layouts) to point Swarm at the right tmux binary without
   // patching this list. See #244.
-  const override = process.env.HERMES_TMUX_BIN || process.env.CLAUDE_TMUX_BIN
+  const override = process.env.AGENTONE_TMUX_BIN || process.env.HERMES_TMUX_BIN || process.env.CLAUDE_TMUX_BIN
   if (override) {
     if (existsSync(override)) return override
     // If the override looks like a bare command (no slashes), trust it
@@ -202,7 +202,9 @@ export function buildHermesTmuxLaunchCommand(input: {
   ghToken?: string | null
 }): string {
   const launchPrefix = [
+    `AGENTONE_HOME='${shellEscapeSingle(input.profilePath)}'`,
     `HERMES_HOME='${shellEscapeSingle(input.profilePath)}'`,
+    `AGENTONE_CLI_BIN='${shellEscapeSingle(input.hermesBin)}'`,
     `HERMES_CLI_BIN='${shellEscapeSingle(input.hermesBin)}'`,
     input.ghToken ? `GH_TOKEN='${shellEscapeSingle(input.ghToken)}'` : '',
     input.ghToken ? `GITHUB_TOKEN='${shellEscapeSingle(input.ghToken)}'` : '',
@@ -878,6 +880,7 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
     const args = ['chat', '-q', prompt, '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch']
     const env: NodeJS.ProcessEnv = {
       ...process.env,
+      AGENTONE_HOME: profilePath,
       HERMES_HOME: profilePath,
     }
     const ghToken = resolveGithubToken()

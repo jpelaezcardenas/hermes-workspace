@@ -10,14 +10,14 @@ import {
   ensureGatewayProbed,
   getCapabilities,
 } from './gateway-capabilities'
-import { normalizeHermesConfigState } from './hermes-config-migration'
+import { normalizeHermesConfigState } from './agentone-config-migration'
 import {
   applyHermesConfigPatch,
   parseEnvFile,
   readHermesConfigFiles,
   resolveHermesConfigPaths,
   stringifyEnv,
-} from './hermes-config-store'
+} from './agentone-config-store'
 import {
   ensureDiscovery,
   getDiscoveredModels,

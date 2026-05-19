@@ -1,6 +1,6 @@
 /**
  * Connection status endpoint — returns a summary of portable chat readiness
- * plus whether Hermes Agent gateway enhancements are available.
+ * plus whether Agent-e1 gateway enhancements are available.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -16,7 +16,7 @@ import {
 import { isAuthenticated } from '../../server/auth-middleware'
 
 const CONFIG_PATH = path.join(
-  process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes'),
+  process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes'),
   'config.yaml',
 )
 
@@ -46,7 +46,7 @@ type ConnectionStatus = {
   activeModel: string
   chatMode: 'enhanced-agent' | 'portable' | 'disconnected'
   capabilities: Record<string, boolean>
-  claudeUrl: string
+  agentUrl: string
 }
 
 export const Route = createFileRoute('/api/connection-status')({
@@ -135,7 +135,7 @@ export const Route = createFileRoute('/api/connection-status')({
             enhancedChat: caps.enhancedChat,
             dashboard: caps.dashboard.available,
           },
-          claudeUrl: CLAUDE_API,
+          agentUrl: CLAUDE_API,
         }
 
         return Response.json(body)
