@@ -58,16 +58,18 @@ function getTtlMs(): number {
   return DEFAULT_TTL_MS
 }
 
-function hermesHome(): string {
-  const override = process.env.HERMES_HOME?.trim()
+function agentoneHome(): string {
+  const override = process.env.AGENTONE_HOME?.trim()
   if (override) return override
+  const hermesOverride = process.env.HERMES_HOME?.trim()
+  if (hermesOverride) return hermesOverride
   const claudeHome = process.env.CLAUDE_HOME?.trim()
   if (claudeHome) return claudeHome
-  return join(homedir(), '.hermes')
+  return join(homedir(), '.agentone')
 }
 
 export function cacheFilePath(): string {
-  return join(hermesHome(), 'cache', 'mcp-tools.json')
+  return join(agentoneHome(), 'cache', 'mcp-tools.json')
 }
 
 // ---------------------------------------------------------------------------

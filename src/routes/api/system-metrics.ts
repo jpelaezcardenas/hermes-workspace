@@ -26,7 +26,7 @@ type SystemMetricsResponse = {
     totalBytes: number
     usedPercent: number
   }
-  hermes: {
+  agent: {
     status: 'connected' | 'enhanced' | 'partial' | 'disconnected'
     health: boolean
     dashboard: boolean
@@ -107,7 +107,7 @@ export const Route = createFileRoute('/api/system-metrics')({
           cpu: readCpu(),
           memory: readMemory(),
           disk: readDisk(),
-          hermes: {
+          agent: {
             status,
             health: caps.health,
             dashboard: caps.dashboard.available,

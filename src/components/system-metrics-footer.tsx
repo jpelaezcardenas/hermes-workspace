@@ -21,7 +21,7 @@ type SystemMetrics = {
     totalBytes: number
     usedPercent: number
   }
-  hermes: {
+  agent: {
     status: 'connected' | 'enhanced' | 'partial' | 'disconnected'
     health: boolean
     dashboard: boolean
@@ -119,9 +119,9 @@ export function SystemMetricsFooter({ leftOffsetPx = 0 }: { leftOffsetPx?: numbe
     staleTime: 14_000,
   })
 
-  const hermesHealthy = data?.hermes.status === 'connected' || data?.hermes.status === 'enhanced'
-  const hermesTone = hermesHealthy ? 'accent' : data?.hermes.status === 'disconnected' ? 'critical' : 'warn'
-  const hermesDotTone = hermesHealthy ? 'ok' : data?.hermes.status === 'disconnected' ? 'critical' : 'warn'
+  const agentHealthy = data?.agent.status === 'connected' || data?.agent.status === 'enhanced'
+  const agentTone = agentHealthy ? 'accent' : data?.agent.status === 'disconnected' ? 'critical' : 'warn'
+  const agentDotTone = agentHealthy ? 'ok' : data?.agent.status === 'disconnected' ? 'critical' : 'warn'
 
   return (
     <footer
@@ -152,8 +152,8 @@ export function SystemMetricsFooter({ leftOffsetPx = 0 }: { leftOffsetPx?: numbe
             />
             <Separator />
             <span className="inline-flex min-w-0 items-center gap-1.5 whitespace-nowrap">
-              <StatusDot tone={hermesDotTone} />
-              <MetricItem label="Agent-e1" value={data.hermes.status} tone={hermesTone} />
+              <StatusDot tone={agentDotTone} />
+              <MetricItem label="Agent-e1" value={data.agent.status} tone={agentTone} />
             </span>
             <Separator />
             <MetricItem

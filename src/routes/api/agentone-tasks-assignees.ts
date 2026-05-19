@@ -130,7 +130,7 @@ export const Route = createFileRoute('/api/agentone-tasks-assignees')({
         const humanReviewer = (tasksConfig.human_reviewer as string) || null
 
         // Prefer the dashboard plugin endpoint: it is the source used by the
-        // Hermes kanban CLI and includes ~/.hermes/profiles plus assignees
+        // Agent-e1 kanban CLI and includes ~/.agentone/profiles plus assignees
         // already present on the board.
         const remotePayload =
           await fetchJson(`${CLAUDE_DASHBOARD_URL}/api/plugins/kanban/assignees`) ??

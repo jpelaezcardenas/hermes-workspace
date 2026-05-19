@@ -1,7 +1,7 @@
 /**
  * MCP Hub Sources store — Phase 3.2.
  *
- * Manages `~/.hermes/mcp-hub-sources.json` — user-configurable marketplace
+ * Manages `~/.agentone/mcp-hub-sources.json` -- user-configurable marketplace
  * sources. Built-in sources (mcp-get, local-file) are always injected and
  * cannot be removed by the user.
  *
@@ -99,12 +99,12 @@ const KNOWN_TOP_FIELDS = new Set(['version', 'sources'])
 // Path helpers
 // ---------------------------------------------------------------------------
 
-function hermesHome(): string {
-  return process.env.HERMES_HOME?.trim() || process.env.CLAUDE_HOME?.trim() || join(homedir(), '.hermes')
+function agentoneHome(): string {
+  return process.env.AGENTONE_HOME?.trim() || process.env.HERMES_HOME?.trim() || process.env.CLAUDE_HOME?.trim() || join(homedir(), '.agentone')
 }
 
 export function hubSourcesFilePath(): string {
-  return join(hermesHome(), 'mcp-hub-sources.json')
+  return join(agentoneHome(), 'mcp-hub-sources.json')
 }
 
 // ---------------------------------------------------------------------------

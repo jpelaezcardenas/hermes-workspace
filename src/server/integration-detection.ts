@@ -28,7 +28,7 @@ type DetectMemoryIntegrationOptions = {
   env?: NodeJS.ProcessEnv
   homeDir?: string
   openClawHome?: string
-  claudeHome?: string
+  agentHome?: string
   now?: number
 }
 
@@ -181,8 +181,8 @@ export function detectHonchoIntegration(
       path.join(homeDir, '.openclaw'),
     homeDir,
   )
-  const claudeHome = expandHome(
-    options.claudeHome ??
+  const agentHome = expandHome(
+    options.agentHome ??
       env.HERMES_HOME ??
       env.CLAUDE_HOME ??
       path.join(homeDir, '.hermes'),
@@ -197,16 +197,16 @@ export function detectHonchoIntegration(
   const openClawConfigPath = path.join(openClawHome, 'config.yaml')
   const openClawConfigConfigured = configHasHoncho(readYaml(openClawConfigPath))
 
-  const claudeEnvPath = path.join(claudeHome, '.env')
-  const claudeEnvConfigured = envConfigured(readEnvFile(claudeEnvPath))
-  const claudeConfigPath = path.join(claudeHome, 'config.yaml')
-  const claudeConfigConfigured = configHasHoncho(readYaml(claudeConfigPath))
+  const agentEnvPath = path.join(agentHome, '.env')
+  const agentEnvConfigured = envConfigured(readEnvFile(agentEnvPath))
+  const agentConfigPath = path.join(agentHome, 'config.yaml')
+  const agentConfigConfigured = configHasHoncho(readYaml(agentConfigPath))
 
   const localDirs = [
     path.join(homeDir, '.honcho'),
     path.join(homeDir, '.config', 'honcho'),
     path.join(openClawHome, 'honcho'),
-    path.join(claudeHome, 'honcho'),
+    path.join(agentHome, 'honcho'),
   ]
 
   const sources: Array<MemoryIntegrationSource> = [
@@ -238,20 +238,20 @@ export function detectHonchoIntegration(
         : 'No Honcho keys found in OpenClaw config.',
     ),
     fileSource(
-      'claude-env',
+      'agentone-env',
       'Current .env compatibility',
-      claudeEnvPath,
-      claudeEnvConfigured,
-      claudeEnvConfigured
+      agentEnvPath,
+      agentEnvConfigured,
+      agentEnvConfigured
         ? 'Honcho env var present in current .env.'
         : 'No Honcho env var in current .env.',
     ),
     fileSource(
       'agentone-config',
       'Current config.yaml compatibility',
-      claudeConfigPath,
-      claudeConfigConfigured,
-      claudeConfigConfigured
+      agentConfigPath,
+      agentConfigConfigured,
+      agentConfigConfigured
         ? 'Honcho keys found in current config.'
         : 'No Honcho keys found in current config.',
     ),
@@ -350,8 +350,8 @@ export function detectByteroverIntegration(
       path.join(homeDir, '.openclaw'),
     homeDir,
   )
-  const claudeHome = expandHome(
-    options.claudeHome ??
+  const agentHome = expandHome(
+    options.agentHome ??
       env.HERMES_HOME ??
       env.CLAUDE_HOME ??
       path.join(homeDir, '.hermes'),
@@ -370,16 +370,16 @@ export function detectByteroverIntegration(
     readYaml(openClawConfigPath),
   )
 
-  const claudeEnvPath = path.join(claudeHome, '.env')
-  const claudeEnvConfigured = byteroverEnvConfigured(readEnvFile(claudeEnvPath))
-  const claudeConfigPath = path.join(claudeHome, 'config.yaml')
-  const claudeConfigConfigured = configHasByterover(readYaml(claudeConfigPath))
+  const agentEnvPath = path.join(agentHome, '.env')
+  const agentEnvConfigured = byteroverEnvConfigured(readEnvFile(agentEnvPath))
+  const agentConfigPath = path.join(agentHome, 'config.yaml')
+  const agentConfigConfigured = configHasByterover(readYaml(agentConfigPath))
 
   const localDirs = [
     path.join(homeDir, '.byterover'),
     path.join(homeDir, '.config', 'byterover'),
     path.join(openClawHome, 'byterover'),
-    path.join(claudeHome, 'byterover'),
+    path.join(agentHome, 'byterover'),
   ]
 
   const sources: Array<MemoryIntegrationSource> = [
@@ -411,20 +411,20 @@ export function detectByteroverIntegration(
         : 'No Byterover keys found in OpenClaw config.',
     ),
     fileSource(
-      'claude-env',
+      'agentone-env',
       'Current .env compatibility',
-      claudeEnvPath,
-      claudeEnvConfigured,
-      claudeEnvConfigured
+      agentEnvPath,
+      agentEnvConfigured,
+      agentEnvConfigured
         ? 'Byterover env var present in current .env.'
         : 'No Byterover env var in current .env.',
     ),
     fileSource(
       'agentone-config',
       'Current config.yaml compatibility',
-      claudeConfigPath,
-      claudeConfigConfigured,
-      claudeConfigConfigured
+      agentConfigPath,
+      agentConfigConfigured,
+      agentConfigConfigured
         ? 'Byterover keys found in current config.'
         : 'No Byterover keys found in current config.',
     ),

@@ -559,9 +559,9 @@ export const Route = createFileRoute('/api/send-stream')({
                   // Responses-API streaming surface at POST /v1/responses
                   // that carries full tool args + results, unlike the
                   // /v1/chat/completions surface which only emits a thin
-                  // hermes.tool.progress lifecycle event. When the user
+                  // agentone.tool.progress lifecycle event. When the user
                   // opts into the Responses path AND we're talking to the
-                  // local Hermes gateway (no localBaseUrl override), use
+                  // local Agent-e1 gateway (no localBaseUrl override), use
                   // it so the TUI tool card can render INPUT JSON and
                   // tool output text live during the run. Falls back
                   // automatically on any error to the existing
@@ -1037,7 +1037,7 @@ export const Route = createFileRoute('/api/send-stream')({
                               ],
                             },
                             sessionKey: sessionKeyFromEvent,
-                            source: 'claude',
+                            source: 'agent',
                             runId,
                           })
                       }

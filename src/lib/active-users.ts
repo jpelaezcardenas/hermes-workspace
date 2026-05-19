@@ -1,6 +1,6 @@
 'use client'
 
-const STORAGE_KEY = 'claude-session-pinged'
+const STORAGE_KEY = 'agentone-session-pinged'
 
 export async function generateFingerprint(): Promise<string> {
   const data = `${navigator.userAgent}${window.screen.width}${navigator.language}`

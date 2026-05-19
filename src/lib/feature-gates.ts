@@ -28,7 +28,7 @@ const FEATURE_PROBES: Record<EnhancedFeature, Array<string>> = {
   skills: ['/api/gateway-status', '/api/skills'],
   memory: ['/api/gateway-status', '/api/memory/list'],
   config: ['/api/gateway-status', '/api/agentone-config'],
-  jobs: ['/api/gateway-status', '/api/claude-jobs'],
+  jobs: ['/api/gateway-status', '/api/agentone-jobs'],
   mcp: ['/api/gateway-status', '/api/mcp'],
   mcpFallback: ['/api/gateway-status', '/api/mcp'],
   kanban: ['/api/gateway-status', '/api/swarm-kanban'],

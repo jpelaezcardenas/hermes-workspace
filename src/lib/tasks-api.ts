@@ -2,21 +2,20 @@
  * Tasks API client with automatic backend detection.
  *
  * Two backend routes exist for task storage:
- *   /api/hermes-tasks  — flat-file store at ~/.hermes/tasks.json (used by agents/cron)
- *   /api/claude-tasks  — kanban-backend abstraction (local JSON, or Hermes Dashboard proxy)
+ *   /api/agentone-tasks  — flat-file store at ~/.hermes/tasks.json (used by agents/cron)
+ *   /api/agentone-tasks  — kanban-backend abstraction (local JSON, or Agent-e1 Dashboard proxy)
  *
  * On first fetch this module probes both in parallel and selects the backend that has
- * data. If both have data, hermes-tasks wins (it is the canonical agent task store).
+ * data. If both have data, agentone-tasks wins (it is the canonical agent task store).
  * The decision is cached for the page session so subsequent calls never re-probe.
  *
  * All mutations (create, update, move, delete, launch) route through the same resolved
  * backend so reads and writes are always consistent.
  */
 
-const HERMES_BASE = '/api/hermes-tasks'
-const CLAUDE_BASE = '/api/claude-tasks'
+const AGENTONE_BASE = '/api/agentone-tasks'
 
-export type TasksBackend = 'hermes' | 'claude'
+export type TasksBackend = 'agentone'
 
 // --- Backend resolution -------------------------------------------------
 
@@ -48,20 +47,11 @@ async function resolveBackend(): Promise<BackendResolution> {
   if (_resolving) return _resolving
 
   _resolving = (async () => {
-    const [hermesCount, claudeCount] = await Promise.all([
-      probeBackend(HERMES_BASE),
-      probeBackend(CLAUDE_BASE),
-    ])
-
-    // Prefer hermes if it has real data (> 0); fall back to claude if hermes is
-    // missing (returns -1 for non-JSON / route-not-found) or empty.
-    // Default to claude when both are empty — it is the active backend after the
-    // hermes-tasks → claude-tasks route rename (commit efcb7d14).
-    const useHermes = hermesCount > 0 && hermesCount >= claudeCount
+    // Single unified backend after route rename
     _resolved = {
-      base: useHermes ? HERMES_BASE : CLAUDE_BASE,
-      assigneesBase: useHermes ? '/api/hermes-tasks-assignees' : '/api/claude-tasks-assignees',
-      backend: useHermes ? 'hermes' : 'claude',
+      base: AGENTONE_BASE,
+      assigneesBase: '/api/agentone-tasks-assignees',
+      backend: 'agentone',
     }
     return _resolved
   })()
@@ -85,7 +75,7 @@ export function resetBackendResolution(): void {
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
-export type ClaudeTask = {
+export type AgentTask = {
   id: string
   title: string
   description: string
@@ -139,7 +129,7 @@ export async function fetchTasks(params?: {
   assignee?: string
   priority?: TaskPriority
   include_done?: boolean
-}): Promise<Array<ClaudeTask>> {
+}): Promise<Array<AgentTask>> {
   const { base } = await resolveBackend()
   const q = new URLSearchParams()
   if (params?.column) q.set('column', params.column)
@@ -153,7 +143,7 @@ export async function fetchTasks(params?: {
   return data.tasks ?? []
 }
 
-export async function createTask(input: CreateTaskInput): Promise<ClaudeTask> {
+export async function createTask(input: CreateTaskInput): Promise<AgentTask> {
   const { base } = await resolveBackend()
   const res = await fetch(base, {
     method: 'POST',
@@ -167,7 +157,7 @@ export async function createTask(input: CreateTaskInput): Promise<ClaudeTask> {
   return (await res.json()).task
 }
 
-export async function updateTask(taskId: string, input: UpdateTaskInput): Promise<ClaudeTask> {
+export async function updateTask(taskId: string, input: UpdateTaskInput): Promise<AgentTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}`, {
     method: 'PATCH',
@@ -184,7 +174,7 @@ export async function deleteTask(taskId: string): Promise<void> {
   if (!res.ok) throw new Error(`Failed to delete task: ${res.status}`)
 }
 
-export async function linkSession(taskId: string, sessionId: string | null): Promise<ClaudeTask> {
+export async function linkSession(taskId: string, sessionId: string | null): Promise<AgentTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}`, {
     method: 'PATCH',
@@ -195,7 +185,7 @@ export async function linkSession(taskId: string, sessionId: string | null): Pro
   return (await res.json()).task
 }
 
-export async function launchSession(taskId: string): Promise<{ sessionId: string; briefing: string; task: ClaudeTask }> {
+export async function launchSession(taskId: string): Promise<{ sessionId: string; briefing: string; task: AgentTask }> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}?action=launch`, {
     method: 'POST',
@@ -206,7 +196,7 @@ export async function launchSession(taskId: string): Promise<{ sessionId: string
   return res.json()
 }
 
-export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user'): Promise<ClaudeTask> {
+export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user'): Promise<AgentTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}?action=move`, {
     method: 'POST',
@@ -250,7 +240,7 @@ export const COLUMN_COLORS: Record<TaskColumn, string> = {
   deleted: '#374151',
 }
 
-export function isOverdue(task: ClaudeTask): boolean {
+export function isOverdue(task: AgentTask): boolean {
   if (!task.due_date) return false
   // Parse YYYY-MM-DD manually to avoid UTC-vs-local offset issues.
   // new Date("2026-04-02") parses as UTC midnight, which in EST is the

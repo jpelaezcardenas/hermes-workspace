@@ -66,7 +66,7 @@ const AVATAR_OPTIONS: Array<AvatarOption> = [
 const GREEK_AVATARS = AVATAR_OPTIONS.filter((o) => o.tier === 'greek')
 const EMOJI_AVATARS = AVATAR_OPTIONS.filter((o) => o.tier === 'emoji')
 
-const STORAGE_KEY = 'hermes-workspace-orchestrator-avatar'
+const STORAGE_KEY = 'agentone-workspace-orchestrator-avatar'
 
 function getStoredAvatar(): AvatarStyle {
   try {
@@ -141,7 +141,7 @@ function makeGreekPNG(name: string, label: string) {
   }
 }
 
-const HermesPNG = makeGreekPNG('hermes', 'Agent-e1')
+const AgentPNG = makeGreekPNG('hermes', 'Agent-e1')
 const AthenaPNG = makeGreekPNG('athena', 'Athena')
 const ApolloPNG = makeGreekPNG('apollo', 'Apollo')
 const ArtemisPNG = makeGreekPNG('artemis', 'Artemis')
@@ -196,7 +196,7 @@ function LobsterSVG({
 }) {
   ensureStyles()
   const ey = state === 'thinking' ? 8 : 9.5
-  const hermesAnim =
+  const agentAnim =
     state !== 'idle' ? 'oa-type 0.6s ease-in-out infinite' : 'none'
   const mouth =
     state === 'orchestrating'
@@ -306,7 +306,7 @@ function LobsterSVG({
       />
 
       {/* Claws — left */}
-      <g style={{ transformOrigin: '5px 14px', animation: hermesAnim }}>
+      <g style={{ transformOrigin: '5px 14px', animation: agentAnim }}>
         <path
           d="M9,13 Q6,11 4,13"
           fill="none"
@@ -334,7 +334,7 @@ function LobsterSVG({
       <g
         style={{
           transformOrigin: '27px 14px',
-          animation: hermesAnim.replace('0.6s', '0.65s'),
+          animation: agentAnim.replace('0.6s', '0.65s'),
         }}
       >
         <path
@@ -1565,7 +1565,7 @@ const AVATAR_RENDERERS: Record<
   React.FC<{ state: OrchestratorState; size: number }>
 > = {
   // Greek PNGs
-  hermes: HermesPNG,
+  hermes: AgentPNG,
   athena: AthenaPNG,
   apollo: ApolloPNG,
   artemis: ArtemisPNG,

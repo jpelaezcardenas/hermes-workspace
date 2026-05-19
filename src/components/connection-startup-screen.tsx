@@ -36,12 +36,12 @@ function getSetupSteps(
     },
     {
       title: 'Set up your agent',
-      command: 'hermes setup',
+      command: 'agentone setup',
       note: 'Pick your providers once; Agent-e1 Agent stores them under ~/.hermes',
     },
     {
       title: 'Start the gateway',
-      command: 'hermes gateway run',
+      command: 'agentone gateway run',
       note: 'This starts the HTTP API on :8642 for the workspace',
     },
   ]
@@ -93,14 +93,14 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
       }
     }, FAILURE_REVEAL_MS)
 
-    // After a short grace period, fire /api/start-claude once silently.
+    // After a short grace period, fire /api/start-agentone once silently.
     // If agentone is installed and just not running, this brings it back
     // up without making the user click anything. The polling loop will see it.
     const fireSilentAutoStart = async () => {
       if (autoStartFired || isDone.current) return
       autoStartFired = true
       try {
-        const res = await fetch('/api/start-claude', {
+        const res = await fetch('/api/start-agentone', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         })
@@ -171,7 +171,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
     setServerError(null)
     setServerLog(['Looking for agentone...'])
     try {
-      const res = await fetch('/api/start-claude', {
+      const res = await fetch('/api/start-agentone', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       })

@@ -781,7 +781,7 @@ async function streamPortableConductorMission(params: {
     throw new Error(text || `Conductor stream failed (${response.status})`)
   }
 
-  let sessionKey = response.headers.get('x-hermes-session-key')?.trim() || params.sessionKey
+  let sessionKey = response.headers.get('x-agentone-session-key')?.trim() || response.headers.get('x-hermes-session-key')?.trim() || params.sessionKey
   let runId: string | null = null
   let accumulated = ''
   let sawDone = false

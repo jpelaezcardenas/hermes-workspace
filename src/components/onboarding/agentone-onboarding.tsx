@@ -614,7 +614,7 @@ export function Onboarding() {
                       className="mt-2 rounded-lg px-3 py-2 font-mono text-[11px]"
                       style={{ background: 'rgba(0,0,0,0.2)' }}
                     >
-                      hermes --gateway
+                      agentone --gateway
                     </div>
                   </div>
                 </div>

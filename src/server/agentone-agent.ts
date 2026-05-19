@@ -23,7 +23,7 @@ export type StartAgentResult =
  * Read ~/.hermes/.env and return key=value pairs as an object.
  * Silently returns {} if the file doesn't exist or can't be parsed.
  */
-function readClaudeEnv(): Record<string, string> {
+function readAgentEnv(): Record<string, string> {
   const envPath = join(
     process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? join(homedir(), '.hermes'),
     '.env',
@@ -124,7 +124,7 @@ export async function startAgent(): Promise<StartAgentResult> {
 
   startPromise = (async () => {
     try {
-      const agentEnv = readClaudeEnv()
+      const agentEnv = readAgentEnv()
       const agentBin = resolveAgentBinary()
       const agentDir = resolveAgentDir()
 

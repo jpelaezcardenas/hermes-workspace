@@ -84,8 +84,8 @@ function getClaudeHome(profilePath: string | null): string {
   return profilePath ? getProfileClaudeHome(profilePath) : getWorkspaceClaudeHome()
 }
 
-function readGatewayState(claudeHome: string) {
-  const path = join(claudeHome, 'gateway_state.json')
+function readGatewayState(agentHome: string) {
+  const path = join(agentHome, 'gateway_state.json')
   if (!existsSync(path)) return { pid: null, gatewayState: 'unknown', platforms: {}, updatedAt: null }
   try {
     const raw = JSON.parse(readFileSync(path, 'utf-8'))
@@ -110,8 +110,8 @@ function checkProcessAlive(pid: number | null): boolean {
   }
 }
 
-function readDbStats(claudeHome: string): DbStats {
-  const dbPath = join(claudeHome, 'state.db')
+function readDbStats(agentHome: string): DbStats {
+  const dbPath = join(agentHome, 'state.db')
   if (!existsSync(dbPath)) {
     return {
       sessionCount: 0,
@@ -181,8 +181,8 @@ print(json.dumps(out))
   }
 }
 
-function readConfig(claudeHome: string): { model: string; provider: string } {
-  const configPath = join(claudeHome, 'config.yaml')
+function readConfig(agentHome: string): { model: string; provider: string } {
+  const configPath = join(agentHome, 'config.yaml')
   if (!existsSync(configPath)) return { model: 'unknown', provider: 'unknown' }
   try {
     const raw = yaml.parse(readFileSync(configPath, 'utf-8')) as Record<string, unknown>
@@ -206,8 +206,8 @@ function readConfig(claudeHome: string): { model: string; provider: string } {
   }
 }
 
-function readCronJobCount(claudeHome: string): number {
-  const cronPath = join(claudeHome, 'cron', 'jobs.json')
+function readCronJobCount(agentHome: string): number {
+  const cronPath = join(agentHome, 'cron', 'jobs.json')
   if (!existsSync(cronPath)) return 0
   try {
     const jobs = JSON.parse(readFileSync(cronPath, 'utf-8'))
@@ -257,8 +257,8 @@ export const Route = createFileRoute('/api/crew-status')({
         const crewDefinitions = buildCrewDefinitions()
 
         const crew = crewDefinitions.map((member) => {
-          const claudeHome = getClaudeHome(member.profilePath)
-          const profileFound = existsSync(claudeHome)
+          const agentHome = getClaudeHome(member.profilePath)
+          const profileFound = existsSync(agentHome)
 
           if (!profileFound) {
             return {
@@ -288,9 +288,9 @@ export const Route = createFileRoute('/api/crew-status')({
             }
           }
 
-          const gatewayInfo = readGatewayState(claudeHome)
-          const dbStats = readDbStats(claudeHome)
-          const config = readConfig(claudeHome)
+          const gatewayInfo = readGatewayState(agentHome)
+          const dbStats = readDbStats(agentHome)
+          const config = readConfig(agentHome)
 
           return {
             id: member.id,
@@ -314,7 +314,7 @@ export const Route = createFileRoute('/api/crew-status')({
             toolCallCount: dbStats.toolCallCount,
             totalTokens: dbStats.totalTokens,
             estimatedCostUsd: dbStats.estimatedCostUsd,
-            cronJobCount: readCronJobCount(claudeHome),
+            cronJobCount: readCronJobCount(agentHome),
             assignedTaskCount: taskCounts[member.id] ?? 0,
           }
         })

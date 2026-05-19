@@ -2,9 +2,9 @@
  * Patch a swarm worker's profile `config.yaml` so its `model.provider`
  * and `model.default` match the roster.
  *
- * Agent-e1 reads `~/.hermes/profiles/<workerId>/config.yaml` on every
- * `hermes` invocation. The wrapper at `~/.local/bin/<workerId>` invokes
- * `hermes chat --continue` with no `--model` flag, so the per-profile
+ * Agent-e1 reads `~/.agentone/profiles/<workerId>/config.yaml` on every
+ * `agentone` invocation. The wrapper at `~/.local/bin/<workerId>` invokes
+ * `agentone chat --continue` with no `--model` flag, so the per-profile
  * config wins. Without a sync step, the roster's `model:` field is purely
  * cosmetic — the bug reported in #236.
  *
@@ -46,7 +46,7 @@ export type SwarmWorkerIdentity = {
  * Ensure a worker HERMES_HOME has enough runtime config to boot Hermes.
  *
  * Swarm dispatch runs workers with HERMES_HOME=~/.hermes/profiles/<workerId>.
- * A brand-new profile only has memory/runtime files, so `hermes chat -q` exits
+ * A brand-new profile only has memory/runtime files, so `agentone chat -q` exits
  * with first-run setup before the worker can do any work. Bootstrap by copying
  * the operator's non-secret config.yaml and linking the private .env locally.
  * The config is copied (not symlinked) because per-worker model sync edits it.

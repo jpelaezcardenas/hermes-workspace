@@ -112,7 +112,7 @@ async function searchBundledSkills(
       tags,
       source: 'Bundled Skills',
       trust: 'bundled',
-      installCommand: `claude skills install ${name}`,
+      installCommand: `agentone skills install ${name}`,
       installed: true,
       score,
     })

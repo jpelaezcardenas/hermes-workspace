@@ -96,7 +96,7 @@ export type ToolsetInfo = {
 
 export type DashboardStatus = {
   version: string
-  claude_home: string
+  agentone_home: string
   agentone_home?: string
   gateway_running?: boolean
   gateway_state?: string | null

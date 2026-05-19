@@ -439,14 +439,14 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
 
       // [DEBUG TUI] Log every SSE event so we can see whether tool.* events arrive
       // from Agent-e1 through Workspace. Toggle off by setting
-      // localStorage.removeItem('hermes:debug:sse')
+      // localStorage.removeItem('agentone:debug:sse')
       if (
         typeof window !== 'undefined' &&
-        window.localStorage?.getItem('hermes:debug:sse') === '1'
+        window.localStorage?.getItem('agentone:debug:sse') === '1'
       ) {
         // eslint-disable-next-line no-console
         console.log(
-          '[hermes-sse]',
+          '[agentone-sse]',
           event,
           (payload?.name as string) || '',
           (payload?.phase as string) || '',
@@ -868,7 +868,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             model: params.model || undefined,
             locale:
               typeof window !== 'undefined'
-                ? localStorage.getItem('hermes-workspace-locale') || 'en'
+                ? localStorage.getItem('agentone-workspace-locale') || 'en'
                 : 'en',
           }),
           signal: abortController.signal,

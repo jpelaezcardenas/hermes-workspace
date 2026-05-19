@@ -26,7 +26,7 @@ type SwarmNodeChatProps = {
   onCollapsedChange?: (next: boolean) => void
 }
 
-const STORAGE_PREFIX = 'claude-swarm-chat-v1:'
+const STORAGE_PREFIX = 'agentone-swarm-chat-v1:'
 
 function loadHistory(workerId: string): Message[] {
   if (typeof window === 'undefined') return []

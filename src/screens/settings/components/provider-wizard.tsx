@@ -80,7 +80,7 @@ function getAuthTypeMeta(authType: ProviderAuthType): AuthTypeMeta {
     return {
       title: 'CLI Token',
       description:
-        'Use your existing Hermes CLI auth token (from Claude Code / claude.ai)',
+        'Use your existing Agent-e1 CLI auth token (from Agent-e1 / agentone.ai)',
     }
   }
 
@@ -559,7 +559,7 @@ export function ProviderWizard({
                     <p className="mt-1 text-sm text-primary-600 text-pretty">
                       This will run{' '}
                       <code className="font-mono text-primary-800">
-                        hermes setup
+                        agentone setup
                       </code>{' '}
                       in the terminal to start the OAuth flow. A browser window
                       will open for you to sign in with Google.
@@ -571,7 +571,7 @@ export function ProviderWizard({
                         onClick={function onLaunchOAuth() {
                           window.open('/terminal', '_blank')
                           setVerificationMessage(
-                            'Run "hermes setup" in the terminal and select Google OAuth when prompted. ' +
+                            'Run "agentone setup" in the terminal and select Google OAuth when prompted. ' +
                               'A browser window will open for sign-in. Once complete, Agent-e1 will restart automatically.',
                           )
                           setVerifyState('warning')
@@ -586,7 +586,7 @@ export function ProviderWizard({
                           In the terminal, run:
                         </p>
                         <pre className="mt-1 rounded-lg bg-primary-200/60 px-2 py-1.5 text-xs font-mono text-primary-900">
-                          hermes setup
+                          agentone setup
                         </pre>
                         <p className="mt-1.5 text-xs text-primary-600 text-pretty">
                           Select <strong>Google Antigravity</strong> →{' '}
@@ -625,7 +625,7 @@ export function ProviderWizard({
                         onClick={function onLaunchCLI() {
                           window.open('/terminal', '_blank')
                           setVerificationMessage(
-                            'Run "hermes setup" in the terminal and select Anthropic → CLI Token. ' +
+                            'Run "agentone setup" in the terminal and select Anthropic → CLI Token. ' +
                               'It will detect compatible local credentials and import them automatically.',
                           )
                           setVerifyState('warning')
@@ -640,7 +640,7 @@ export function ProviderWizard({
                           In the terminal, run:
                         </p>
                         <pre className="mt-1 rounded-lg bg-primary-200/60 px-2 py-1.5 text-xs font-mono text-primary-900">
-                          hermes setup
+                          agentone setup
                         </pre>
                         <p className="mt-1.5 text-xs text-primary-600 text-pretty">
                           Select <strong>Anthropic</strong> →{' '}
@@ -652,9 +652,9 @@ export function ProviderWizard({
 
                       <div className="rounded-xl border border-amber-200 bg-amber-50/70 px-3 py-2">
                         <p className="text-xs text-amber-800 text-pretty">
-                          <strong>Requires:</strong> Claude Code or Hermes CLI
+                          <strong>Requires:</strong> Agent-e1 CLI
                           must be installed and authenticated first. Run{' '}
-                          <code className="font-mono">hermes</code> in terminal
+                          <code className="font-mono">agentone</code> in terminal
                           to verify.
                         </p>
                       </div>

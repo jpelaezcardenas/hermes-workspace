@@ -279,7 +279,7 @@ export function SkillsScreen() {
                   ? '📦'
                   : skill.source === 'lobehub'
                     ? '🧊'
-                    : skill.source === 'claude-marketplace'
+                    : skill.source === 'agentone-marketplace'
                       ? '🤖'
                       : '🧩',
           content: [

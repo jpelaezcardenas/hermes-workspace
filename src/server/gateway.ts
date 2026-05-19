@@ -74,8 +74,8 @@ let _identity: DeviceIdentity | null = null
 function getDeviceIdentity(): DeviceIdentity {
   if (_identity) return _identity
   const idPath = path.join(
-    process.env.HERMES_HOME || process.env.CLAUDE_HOME || path.join(os.homedir(), '.hermes'),
-    'identity', 'claude-device.json')
+    process.env.AGENTONE_HOME || process.env.HERMES_HOME || process.env.CLAUDE_HOME || path.join(os.homedir(), '.agentone'),
+    'identity', 'agentone-device.json')
   try {
     if (fs.existsSync(idPath)) {
       const p = JSON.parse(fs.readFileSync(idPath, 'utf8'))
@@ -133,7 +133,7 @@ export function buildConnectParams(
   const role = 'operator'
   const scopes = ['operator.admin']
   const signedAtMs = Date.now()
-  const clientId = 'hermes-workspace-ui'
+  const clientId = 'agentone-workspace-ui'
   const clientMode = 'ui'
   const version = nonce ? 'v2' : 'v1'
   const parts = [version, identity.deviceId, clientId, clientMode, role, scopes.join(','), String(signedAtMs), token || '']

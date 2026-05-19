@@ -27,8 +27,8 @@ import {
 } from '@/lib/tasks-api'
 import { stashPendingSend } from '@/screens/chat/pending-send'
 
-const QUERY_KEY = ['claude', 'tasks'] as const
-const ASSIGNEES_KEY = ['claude', 'tasks', 'assignees'] as const
+const QUERY_KEY = ['agentone', 'tasks'] as const
+const ASSIGNEES_KEY = ['agentone', 'tasks', 'assignees'] as const
 
 export const TASKS_BOARD_HELP_TEXT =
   'Workspace Tasks is a lightweight task board. Drag cards to change status. Use Dashboard Kanban for native multi-board controls.'

@@ -158,7 +158,7 @@ function persistStreamingState(
   if (_streamingPersistTimer) clearTimeout(_streamingPersistTimer)
   _streamingPersistTimer = setTimeout(() => {
     sessionStorage.setItem(
-      `claude_streaming_${sessionKey}`,
+      `agentone_streaming_${sessionKey}`,
       JSON.stringify({ ...state, _savedAt: Date.now() }),
     )
   }, 500)
@@ -169,7 +169,7 @@ export function restoreStreamingState(
 ): StreamingState | null {
   if (typeof sessionStorage === 'undefined') return null
 
-  const storageKey = `claude_streaming_${sessionKey}`
+  const storageKey = `agentone_streaming_${sessionKey}`
   const raw = sessionStorage.getItem(storageKey)
   if (!raw) return null
 
@@ -193,7 +193,7 @@ export function restoreStreamingState(
   }
 }
 
-const RECOVERY_MSG_PREFIX = 'claude_recovery_msg_'
+const RECOVERY_MSG_PREFIX = 'agentone_recovery_msg_'
 const RECOVERY_MSG_TTL_MS = 5 * 60 * 1000
 
 export function persistRecoveryMessage(
@@ -242,7 +242,7 @@ export function clearRecoveryMessage(sessionKey: string): void {
 }
 
 const WAITING_TTL_MS = 120_000
-const WAITING_STORAGE_PREFIX = 'claude_waiting_'
+const WAITING_STORAGE_PREFIX = 'agentone_waiting_'
 
 function persistWaitingState(
   sessionKey: string,
@@ -1140,7 +1140,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         streamingMap.delete(sessionKey)
         set({ streamingState: streamingMap, lastEventAt: now })
         if (typeof sessionStorage !== 'undefined') {
-          sessionStorage.removeItem(`claude_streaming_${sessionKey}`)
+          sessionStorage.removeItem(`agentone_streaming_${sessionKey}`)
         }
         break
       }

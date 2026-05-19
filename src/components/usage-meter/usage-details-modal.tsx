@@ -184,8 +184,8 @@ function getActionableMessage(
   originalMessage?: string,
 ): string {
   if (status === 'auth_expired') {
-    if (provider === 'claude' || provider === 'codex') {
-      const cliCmd = provider === 'claude' ? 'claude' : 'codex'
+    if (provider === 'agentone' || provider === 'codex') {
+      const cliCmd = provider === 'agentone' ? 'agentone' : 'codex'
       return `Run \`${cliCmd}\` in terminal to re-authenticate your session.`
     }
     if (provider === 'openai') {

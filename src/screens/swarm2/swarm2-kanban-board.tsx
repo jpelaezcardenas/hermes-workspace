@@ -28,7 +28,7 @@ type KanbanWorker = {
 }
 
 type KanbanBackendMeta = {
-  id: 'local' | 'claude' | 'hermes-proxy'
+  id: 'local' | 'agentone' | 'agentone-proxy'
   label: string
   detected: boolean
   writable: boolean
@@ -52,7 +52,7 @@ type Swarm2KanbanBoardProps = {
 
 type KanbanBackendPresentation = {
   badgeLabel: string
-  badgeTone: 'hermes-proxy' | 'claude' | 'local' | 'unknown'
+  badgeTone: 'agentone-proxy' | 'agentone' | 'local' | 'unknown'
   toastTitle: string
   toastBody: string
   title: string | undefined
@@ -80,7 +80,7 @@ export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null |
       title: undefined,
     }
   }
-  if (backend.id === 'hermes-proxy' && backend.detected) {
+  if (backend.id === 'agentone-proxy' && backend.detected) {
     // Backend.path is the dashboard origin. Do not deep-link to loopback
     // origins (127.0.0.1/localhost): in a remote browser that points at the
     // user's own device, not the VPS. The board still syncs via Workspace's
@@ -93,7 +93,7 @@ export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null |
         : undefined
     return {
       badgeLabel: 'Synced • Hermes',
-      badgeTone: 'hermes-proxy',
+      badgeTone: 'agentone-proxy',
       toastTitle: 'Synced with Agent-e1 Dashboard',
       toastBody:
         'Cards and status changes round-trip through the Agent-e1 Dashboard kanban plugin. Single source of truth, dispatcher-aware.',
@@ -104,10 +104,10 @@ export function getKanbanBackendPresentation(backend: KanbanBackendMeta | null |
       dashboardUrl,
     }
   }
-  if (backend.id === 'claude' && backend.detected) {
+  if (backend.id === 'agentone' && backend.detected) {
     return {
       badgeLabel: 'Shared board',
-      badgeTone: 'claude',
+      badgeTone: 'agentone',
       toastTitle: 'Board connected',
       toastBody: 'Cards and status changes are using the canonical Kanban store.',
       title: backend.details ?? backend.path ?? 'Canonical Kanban store detected',
@@ -323,9 +323,9 @@ export function Swarm2KanbanBoard({
             <span
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-full border px-2 py-1 font-medium',
-                backendPresentation.badgeTone === 'hermes-proxy'
+                backendPresentation.badgeTone === 'agentone-proxy'
                   ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-700'
-                  : backendPresentation.badgeTone === 'claude'
+                  : backendPresentation.badgeTone === 'agentone'
                     ? 'border-violet-400/40 bg-violet-500/10 text-violet-700'
                     : backendPresentation.badgeTone === 'local'
                       ? 'border-amber-400/40 bg-amber-500/10 text-amber-700'
@@ -337,9 +337,9 @@ export function Swarm2KanbanBoard({
               <span
                 className={cn(
                   'h-1.5 w-1.5 rounded-full',
-                  backendPresentation.badgeTone === 'hermes-proxy'
+                  backendPresentation.badgeTone === 'agentone-proxy'
                     ? 'bg-emerald-500'
-                    : backendPresentation.badgeTone === 'claude'
+                    : backendPresentation.badgeTone === 'agentone'
                       ? 'bg-violet-500'
                       : backendPresentation.badgeTone === 'local'
                         ? 'bg-amber-500'
@@ -370,7 +370,7 @@ export function Swarm2KanbanBoard({
           <div className="flex items-start gap-3">
             <span className={cn(
               'mt-1 h-2 w-2 shrink-0 rounded-full',
-              backendToast.badgeTone === 'claude' ? 'bg-violet-500' : backendToast.badgeTone === 'local' ? 'bg-amber-500' : 'bg-[var(--theme-muted)]',
+              backendToast.badgeTone === 'agentone' ? 'bg-violet-500' : backendToast.badgeTone === 'local' ? 'bg-amber-500' : 'bg-[var(--theme-muted)]',
             )} />
             <div>
               <div className="font-semibold">{backendToast.toastTitle}</div>

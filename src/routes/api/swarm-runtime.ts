@@ -118,7 +118,7 @@ async function probeTmuxName(
     hint,
     getSwarmTmuxSessionName(workerId),
     workerId,
-    `hermes-${workerId}`,
+    `agentone-${workerId}`,
     `agent-${workerId}`,
   ].filter((value): value is string => Boolean(value))
   const seen = new Set<string>()

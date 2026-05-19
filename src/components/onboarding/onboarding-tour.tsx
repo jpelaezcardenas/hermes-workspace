@@ -47,9 +47,9 @@ export function OnboardingTour() {
       // Wait for setup wizard to finish before starting tour
       const CLAUDE_SETUP_KEY = 'agentone-configured'
       const checkAndStart = () => {
-        const claudeConfigured =
+        const agentConfigured =
           localStorage.getItem(CLAUDE_SETUP_KEY) === 'true'
-        if (claudeConfigured) {
+        if (agentConfigured) {
           setRun(true)
           return true
         }

@@ -121,12 +121,16 @@ function extractWikilinks(content: string): Array<string> {
 
 function getLegacyKnowledgeRoot(): string {
   if (process.env.KNOWLEDGE_DIR) return path.resolve(process.env.KNOWLEDGE_DIR)
+  const agentHome = path.join(os.homedir(), '.agentone')
+  const agentKnowledge = path.join(agentHome, 'knowledge')
+  if (fs.existsSync(agentKnowledge)) return agentKnowledge
+  // backward compat: legacy .claude directory
   const claudeHome = path.join(os.homedir(), '.claude')
   const claudeKnowledge = path.join(claudeHome, 'knowledge')
   if (fs.existsSync(claudeKnowledge)) return claudeKnowledge
   const homeKnowledge = path.join(os.homedir(), 'knowledge', 'wiki')
   if (fs.existsSync(homeKnowledge)) return homeKnowledge
-  return claudeKnowledge
+  return agentKnowledge
 }
 
 // ─── GitHub Knowledge Provider ─────────────────────────────────────────────────

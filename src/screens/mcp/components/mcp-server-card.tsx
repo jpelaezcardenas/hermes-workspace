@@ -49,8 +49,8 @@ export function McpServerCard({ server, onEdit }: Props) {
   const oauth = useMcpOauth()
   const { mode: capabilityMode } = useMcpCapabilityMode()
   const fallbackMode = capabilityMode === 'fallback'
-  // Test + Refresh work in fallback mode via the hermes CLI bridge
-  // (workspace shells out to `hermes mcp test <name>`). Logs and Reauth
+  // Test + Refresh work in fallback mode via the agentone CLI bridge
+  // (workspace shells out to `agentone mcp test <name>`). Logs and Reauth
   // still require the live runtime /api/mcp endpoints.
   const liveOnlyTitle = fallbackMode
     ? 'Requires agentone /api/mcp runtime endpoint (not available in local fallback mode).'

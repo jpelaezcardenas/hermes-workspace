@@ -1,10 +1,10 @@
 /**
- * Hermes workspace API.
+ * Agent-e1 workspace API.
  *
- * Important distinction: HERMES_HOME / ~/.hermes is Hermes state/config, not the
+ * Important distinction: AGENTONE_HOME / ~/.agentone is Agent-e1 state/config, not the
  * user's project workspace. Workspace resolution intentionally mirrors the
- * Hermes Web UI semantics: active profile config first, then user workspace
- * defaults such as ~/workspace. Never fall back to ~/.hermes as a workspace.
+ * Agent-e1 Web UI semantics: active profile config first, then user workspace
+ * defaults such as ~/workspace. Never fall back to ~/.agentone as a workspace.
  */
 import os from 'node:os'
 import path from 'node:path'
@@ -109,8 +109,10 @@ function isHermesStatePath(candidatePath: string): boolean {
   const stateRoots = Array.from(
     new Set(
       [
+        process.env.AGENTONE_HOME,
         process.env.HERMES_HOME,
         process.env.CLAUDE_HOME,
+        path.join(os.homedir(), '.agentone'),
         path.join(os.homedir(), '.hermes'),
         activeProfileHome(),
       ]
@@ -193,9 +195,10 @@ function activeProfileHome(): string {
     return readProfile(active).path
   } catch {
     return (
+      process.env.AGENTONE_HOME ??
       process.env.HERMES_HOME ??
       process.env.CLAUDE_HOME ??
-      path.join(os.homedir(), '.hermes')
+      path.join(os.homedir(), '.agentone')
     )
   }
 }

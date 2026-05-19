@@ -1,5 +1,5 @@
 /**
- * Probes Hermes services to detect which API groups are available.
+ * Probes Agent-e1 services to detect which API groups are available.
  *
  * Zero-fork architecture:
  *   - Gateway (:8642 by default): /health, /v1/chat/completions, /v1/models
@@ -25,12 +25,12 @@ type WorkspaceOverrides = {
   agentoneDashboardUrl?: string
 }
 
-function hermesHome(): string {
-  return process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
+function agentoneHome(): string {
+  return process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.agentone')
 }
 
 function overridesPath(): string {
-  return path.join(hermesHome(), 'workspace-overrides.json')
+  return path.join(agentoneHome(), 'workspace-overrides.json')
 }
 
 function readOverrides(): WorkspaceOverrides {
@@ -139,7 +139,7 @@ export function getResolvedUrls(): {
 }
 
 export const CLAUDE_UPGRADE_INSTRUCTIONS =
-  'For full features, install Agent-e1 from source (`git clone https://github.com/NousResearch/hermes-agent && cd hermes-agent && pip install -e .`), then start the gateway on :8642 (`agentone gateway run`). For the extended APIs (Sessions, Skills, Config, Jobs) also start the dashboard on :9119 (`agentone dashboard`).'
+  'For full features, install Agent-e1 from source (`git clone https://github.com/NousResearch/agentone && cd agentone && pip install -e .`), then start the gateway on :8642 (`agentone gateway run`). For the extended APIs (Sessions, Skills, Config, Jobs) also start the dashboard on :9119 (`agentone dashboard`).'
 
 export const DASHBOARD_REQUIRED_INSTRUCTIONS =
   'Agent-e1 gateway core APIs are healthy, but dashboard-backed APIs are unavailable. Start the dashboard on :9119 (`agentone dashboard`) or point AGENTONE_DASHBOARD_URL at the running dashboard service.'
@@ -186,7 +186,7 @@ export type EnhancedCapabilities = {
    * exposes a `mcp_servers` map AND the deployment is loopback-only. The
    * workspace then performs CRUD against `config.mcp_servers` directly while
    * disabling Test/Discover/Logs (which require runtime probing). Removed
-   * once hermes-agent ships native `/api/mcp*` endpoints.
+   * once agentone ships native `/api/mcp*` endpoints.
    */
   mcpFallback: boolean
   /**
@@ -197,7 +197,7 @@ export type EnhancedCapabilities = {
   conductor: boolean
   /**
    * True when the dashboard exposes `/api/plugins/kanban/board` (the native
-   * Hermes kanban plugin shipped upstream). When available, the workspace's
+   * Agent-e1 kanban plugin shipped upstream). When available, the workspace's
    * /swarm kanban surface can sync with the dashboard's kanban DB so both
    * UIs read/write the same SQLite source of truth instead of running
    * separate stores. When false, the workspace falls back to its local
@@ -411,7 +411,7 @@ async function probe(path: string): Promise<boolean> {
  * Stricter probe for the legacy enhanced chat-stream endpoint.
  *
  * The previous probe used a generic GET and treated any non-404/403 status
- * as "available". That misclassified vanilla hermes-agent (which serves a
+ * as "available". That misclassified vanilla agentone (which serves a
  * router-level handler that 405s/400s GETs to that path) as having the
  * enhanced fork's session-stream capability. Workspace then fell through
  * to streamChat() which posts to /api/sessions/{id}/chat/stream — vanilla
@@ -433,7 +433,7 @@ async function probeEnhancedChatStream(): Promise<boolean> {
       body: '{}',
       signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
     })
-    // Vanilla hermes-agent has no such endpoint — dashboard layer 404s,
+    // Vanilla agentone has no such endpoint — dashboard layer 404s,
     // gateway 404s, anything in between 404s. Enhanced fork accepts POST
     // and returns either a 4xx structured error (validation) or starts a
     // stream; either way the path is registered.
@@ -614,10 +614,10 @@ async function probeConductor(dashboardAvailable: boolean): Promise<boolean> {
 }
 
 /**
- * Lightweight probe for the upstream Hermes kanban plugin. When the dashboard
+ * Lightweight probe for the upstream Agent-e1 kanban plugin. When the dashboard
  * exposes `/api/plugins/kanban/board` we assume the kanban plugin is loaded
  * and the workspace can sync its /swarm kanban surface with the dashboard's
- * SQLite-backed kanban DB. Mounted by hermes_cli.web_server
+ * SQLite-backed kanban DB. Mounted by agentone_cli.web_server
  * `_mount_plugin_api_routes()`. See v2.3.0 plan.
  */
 async function probeKanban(dashboardAvailable: boolean): Promise<boolean> {
@@ -638,7 +638,7 @@ async function probeKanban(dashboardAvailable: boolean): Promise<boolean> {
 }
 
 
-// Vanilla hermes-agent 0.10.0 satisfies: health, chatCompletions, models, streaming,
+// Vanilla agentone 0.10.0 satisfies: health, chatCompletions, models, streaming,
 // sessions, skills, config, jobs. Dashboard-only endpoints (themes/plugins) and the
 // legacy enhanced-fork chat stream are optional — their absence should not emit the
 // "Missing Agent-e1 APIs detected" warning, which only applies to critical gaps.
@@ -922,7 +922,7 @@ export function getEnhancedCapabilities(): EnhancedCapabilities {
 export function getGatewayMode(): GatewayMode {
   // 'zero-fork' requires the optional dashboard plugin bundle; 'enhanced' is
   // granted whenever the core enhanced-chat endpoints are present — which
-  // vanilla hermes-agent (≥0.10) satisfies. The label 'enhanced-fork' is
+  // vanilla agentone (≥0.10) satisfies. The label 'enhanced-fork' is
   // legacy copy from the 2025-era fork and does NOT imply an actual fork is
   // required. We keep the value for backwards compatibility with UI code.
   if (capabilities.dashboard.available && capabilities.chatCompletions) {

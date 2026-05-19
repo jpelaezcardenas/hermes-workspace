@@ -84,10 +84,10 @@ export function formatModelName(raw: string): string {
 /**
  * Strip namespace prefixes from a skill identifier.
  *
- * Hermes' analytics returns ids like:
+ * Agent-e1's analytics returns ids like:
  *   `autonomous-ai-agents:agentone`
  *   `software-development:systematic-debugging`
- *   `creative:hermes-promo-scene-collage`
+ *   `creative:agentone-promo-scene-collage`
  *
  * The colon-prefixed namespace is noise on the dashboard. Show the
  * trailing segment so labels stay readable.

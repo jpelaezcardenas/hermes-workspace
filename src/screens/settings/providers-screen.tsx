@@ -47,7 +47,7 @@ async function patchConfig(patch: Record<string, unknown>): Promise<Record<strin
 }
 
 /**
- * Strip the provider prefix that hermes-agent adds internally via litellm.
+ * Strip the provider prefix that agentone adds internally via litellm.
  * e.g. "openrouter/nvidia/nemotron-..." → "nvidia/nemotron-..."
  *      "anthropic/claude-3-5-sonnet"    → "claude-3-5-sonnet"
  * Only strips the first path segment if it matches a known provider ID.
@@ -197,7 +197,7 @@ async function fetchModels(): Promise<{
             ? record.owned_by.trim()
             : id.includes('/')
               ? id.split('/')[0]
-              : 'hermes-agent'
+              : 'agentone'
 
       return {
         ...record,
@@ -1024,7 +1024,7 @@ function ActiveModelCard({
   const [showFallback, setShowFallback] = useState(false)
 
   const configQuery = useQuery({
-    queryKey: ['claude', 'active-config'],
+    queryKey: ['agentone', 'active-config'],
     queryFn: getConfig,
   })
 
@@ -1070,9 +1070,9 @@ function ActiveModelCard({
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['claude', 'active-config'],
+          queryKey: ['agentone', 'active-config'],
         }),
-        queryClient.invalidateQueries({ queryKey: ['claude', 'config'] }),
+        queryClient.invalidateQueries({ queryKey: ['agentone', 'config'] }),
         queryClient.invalidateQueries({ queryKey: ['agentone-config'] }),
       ])
       toast('Model config saved — takes effect on next message', {
@@ -1421,7 +1421,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const modelsQuery = useQuery({
-    queryKey: ['claude', 'providers', 'models'],
+    queryKey: ['agentone', 'providers', 'models'],
     queryFn: fetchModels,
     refetchInterval: 60_000,
     retry: false,
@@ -1429,7 +1429,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
   })
 
   const configQuery = useQuery({
-    queryKey: ['claude', 'config'],
+    queryKey: ['agentone', 'config'],
     queryFn: async () => {
       const response = await fetch('/api/config-get')
       const payload = (await response
@@ -1459,7 +1459,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
       }
     },
     onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries({ queryKey: ['claude', 'config'] })
+      await queryClient.invalidateQueries({ queryKey: ['agentone', 'config'] })
       toast(`${variables.label} saved`, { type: 'success' })
     },
     onError: (error) => {
@@ -1555,7 +1555,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
         })
       } else {
         await queryClient.invalidateQueries({
-          queryKey: ['claude', 'providers', 'models'],
+          queryKey: ['agentone', 'providers', 'models'],
         })
         toast(`Provider "${provider.name}" removed`, { type: 'success' })
       }

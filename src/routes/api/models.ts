@@ -16,9 +16,9 @@ import {
   ensureProviderInConfig,
 } from '../../server/local-provider-discovery'
 
-const CLAUDE_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
-const MODELS_PATH = path.join(CLAUDE_HOME, 'models.json')
-const CONFIG_PATH = path.join(CLAUDE_HOME, 'config.yaml')
+const AGENTONE_HOME = process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
+const MODELS_PATH = path.join(AGENTONE_HOME, 'models.json')
+const CONFIG_PATH = path.join(AGENTONE_HOME, 'config.yaml')
 
 type ModelEntry = {
   provider?: string
@@ -172,7 +172,7 @@ function readClaudeDefaultModel(): ModelEntry | null {
 /**
  * Fallback: fetch models from the agentone /v1/models endpoint.
  */
-async function fetchClaudeModels(): Promise<Array<ModelEntry>> {
+async function fetchAgentModels(): Promise<Array<ModelEntry>> {
   const headers: Record<string, string> = {}
   if (BEARER_TOKEN) headers['Authorization'] = `Bearer ${BEARER_TOKEN}`
   const response = await fetch(`${CLAUDE_API}/v1/models`, { headers })
@@ -215,8 +215,8 @@ export const Route = createFileRoute('/api/models')({
           // Operations picker only showed the local Workspace subset and drifted
           // from the CLI/backend model universe.
           if (getGatewayCapabilities().models) {
-            const hermesModels = await fetchClaudeModels()
-            models = mergeModelEntries(models, hermesModels)
+            const agentModels = await fetchAgentModels()
+            models = mergeModelEntries(models, agentModels)
             source = source === 'models.json' ? 'models.json+agentone' : 'agentone'
           }
 

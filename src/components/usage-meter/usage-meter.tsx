@@ -783,7 +783,7 @@ export function UsageMeter() {
                 <div key={model.model} className="flex items-center gap-1">
                   <span className="text-[10px] uppercase tracking-wide text-primary-600">
                     {model.model
-                      .replace('claude-', '')
+                      .replace('claude-', '') // model ID prefix, not our brand
                       .replace('gpt-', '')
                       .slice(0, 8)}
                   </span>

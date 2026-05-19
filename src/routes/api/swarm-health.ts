@@ -282,7 +282,7 @@ export const Route = createFileRoute('/api/swarm-health')({
           checkedAt: Date.now(),
           workspaceModel,
           agentApiUrl: apiUrl,
-          claudeApiUrl: apiUrl,
+          legacyApiUrl: apiUrl,
           workers,
           summary,
         })

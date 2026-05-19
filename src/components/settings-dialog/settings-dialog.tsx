@@ -64,7 +64,7 @@ import { LOCALE_LABELS,  getLocale, setLocale } from '@/lib/i18n'
 // ── Types ───────────────────────────────────────────────────────────────
 
 type SectionId =
-  | 'claude'
+  | 'model'
   | 'agent'
   | 'voice'
   | 'display'
@@ -74,7 +74,7 @@ type SectionId =
   | 'language'
 
 const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
-  { id: 'claude', label: 'Model & Provider', icon: CloudIcon },
+  { id: 'model', label: 'Model & Provider', icon: CloudIcon },
   { id: 'agent', label: 'Agent', icon: Settings02Icon },
   { id: 'voice', label: 'Voice', icon: VolumeHighIcon },
   { id: 'display', label: 'Display', icon: PaintBoardIcon },
@@ -350,7 +350,7 @@ function HermesContent() {
         }
       }
       fetch(
-        `/api/claude-proxy/api/available-models?provider=${encodeURIComponent(providerId)}`,
+        `/api/agentone-proxy/api/available-models?provider=${encodeURIComponent(providerId)}`,
       )
         .then((r) => r.json())
         .then((d: { models?: Array<{ id: string }> }) => {
@@ -375,7 +375,7 @@ function HermesContent() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/hermes-config')
+    fetch('/api/agentone-config')
       .then((r) => r.json())
       .then((d: any) => {
         setActiveProvider(d.activeProvider || '')
@@ -406,7 +406,7 @@ function HermesContent() {
   }, [])
 
   const refreshConfig = async () => {
-    const ref = await fetch('/api/hermes-config')
+    const ref = await fetch('/api/agentone-config')
     const d = await ref.json()
     setDefaultProvider(d.activeProvider || '')
     setDefaultModelId(d.activeModel || '')
@@ -433,7 +433,7 @@ function HermesContent() {
     setSaving(true)
     setMsg(null)
     try {
-      const res = await fetch('/api/hermes-config', {
+      const res = await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -1086,7 +1086,7 @@ function HermesContent() {
           <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-200">
             ⚠️ Gateway restart needed to use {disc.name}. Run{' '}
             <code className="rounded bg-black/30 px-1">
-              hermes gateway restart
+              agentone gateway restart
             </code>{' '}
             in your terminal.
           </div>
@@ -1990,7 +1990,7 @@ function _AdvancedContent() {
           <div className="w-full max-w-sm">
             <Input
               type="url"
-              placeholder="https://api.claudeworkspace.app"
+              placeholder="https://api.agentone.app"
               value={settings.agentUrl}
               onChange={(e) => validateAndUpdateUrl(e.target.value)}
               className="h-8 w-full rounded-lg border-primary-200 text-sm"
@@ -2092,7 +2092,7 @@ function AgentBehaviorContent() {
   const [msg, setMsg] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/api/hermes-config')
+    fetch('/api/agentone-config')
       .then((r) => r.json())
       .then((d: any) => {
         setConfig((d.config?.agent as Record<string, unknown>) || {})
@@ -2103,7 +2103,7 @@ function AgentBehaviorContent() {
   const save = async (key: string, value: unknown) => {
     setMsg(null)
     try {
-      await fetch('/api/hermes-config', {
+      await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ config: { agent: { [key]: value } } }),
@@ -2182,7 +2182,7 @@ function VoiceContent() {
   const [msg, setMsg] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/api/hermes-config')
+    fetch('/api/agentone-config')
       .then((r) => r.json())
       .then((d: any) => {
         setTts((d.config?.tts as Record<string, unknown>) || {})
@@ -2194,7 +2194,7 @@ function VoiceContent() {
   const saveTts = async (key: string, value: unknown) => {
     setMsg(null)
     try {
-      await fetch('/api/hermes-config', {
+      await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ config: { tts: { [key]: value } } }),
@@ -2210,7 +2210,7 @@ function VoiceContent() {
   const saveStt = async (key: string, value: unknown) => {
     setMsg(null)
     try {
-      await fetch('/api/hermes-config', {
+      await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ config: { stt: { [key]: value } } }),
@@ -2352,7 +2352,7 @@ function DisplayContent() {
   const [msg, setMsg] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/api/hermes-config')
+    fetch('/api/agentone-config')
       .then((r) => r.json())
       .then((d: any) => {
         setConfig((d.config?.display as Record<string, unknown>) || {})
@@ -2363,7 +2363,7 @@ function DisplayContent() {
   const save = async (key: string, value: unknown) => {
     setMsg(null)
     try {
-      await fetch('/api/hermes-config', {
+      await fetch('/api/agentone-config', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ config: { display: { [key]: value } } }),
@@ -2474,7 +2474,7 @@ function LanguageContent() {
 // ── Main Dialog ─────────────────────────────────────────────────────────
 
 const CONTENT_MAP: Record<SectionId, () => React.JSX.Element> = {
-  claude: HermesContent,
+  model: HermesContent,
   agent: AgentBehaviorContent,
   voice: VoiceContent,
   display: DisplayContent,
@@ -2493,7 +2493,7 @@ type SettingsDialogProps = {
 export function SettingsDialog({
   open,
   onOpenChange,
-  initialSection = 'claude',
+  initialSection = 'model',
 }: SettingsDialogProps) {
   const [active, setActive] = useState<SectionId>(initialSection)
   const [mobileView, setMobileView] = useState<'nav' | 'content'>('nav')

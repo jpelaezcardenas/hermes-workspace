@@ -176,7 +176,7 @@ type ModelSwitchNotice = {
   retryProvider?: string
 }
 
-// Models are fetched through the workspace API proxy (/api/models, /api/claude-proxy)
+// Models are fetched through the workspace API proxy (/api/models, /api/agentone-proxy)
 // to support Docker and reverse-proxy deployments where the browser cannot reach
 // the Agent-e1 gateway directly.
 
@@ -221,7 +221,7 @@ async function fetchModels(): Promise<{
 }> {
   // Use the curated /api/models endpoint which returns only models
   // actually configured and available (OCPlatform gateway + local providers).
-  // Previously this hit /api/claude-proxy/api/available-models which returned
+  // Previously this hit /api/agentone-proxy/api/available-models which returned
   // every upstream provider model — flooding the picker with unusable options.
   const response = await fetch('/api/models')
   if (!response.ok) {
@@ -255,7 +255,7 @@ async function fetchModels(): Promise<{
       const provider =
         readModelText(record.provider) ||
         readModelText(record.owned_by) ||
-        (id.includes('/') ? id.split('/')[0] : 'hermes-agent')
+        (id.includes('/') ? id.split('/')[0] : 'agentone')
 
       return {
         ...record,
@@ -295,7 +295,7 @@ async function fetchModelsForProvider(
   if (!normalizedProvider) return []
 
   const response = await fetch(
-    `/api/claude-proxy/api/available-models?provider=${encodeURIComponent(normalizedProvider)}`,
+    `/api/agentone-proxy/api/available-models?provider=${encodeURIComponent(normalizedProvider)}`,
   )
   if (!response.ok) {
     throw new Error(`Agent-e1 models request failed (${response.status})`)
@@ -343,7 +343,7 @@ async function switchModel(
   const patch: Record<string, string> = { model: modelId }
   if (modelProvider) patch.provider = modelProvider
 
-  const response = await fetch('/api/claude-proxy/api/config', {
+  const response = await fetch('/api/agentone-proxy/api/config', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(patch),
@@ -356,7 +356,7 @@ async function switchModel(
   return {
     ok: true,
     resolved: {
-      modelProvider: modelProvider || 'hermes-agent',
+      modelProvider: modelProvider || 'agentone',
       model: modelId,
     },
   }
@@ -655,7 +655,7 @@ function normalizeDraftSessionKey(sessionKey?: string): string {
 }
 
 function toDraftStorageKey(sessionKey?: string): string {
-  return `claude-draft-${normalizeDraftSessionKey(sessionKey)}`
+  return `agentone-draft-${normalizeDraftSessionKey(sessionKey)}`
 }
 
 function readSlashCommandQuery(inputValue: string): string | null {
@@ -885,7 +885,7 @@ function ChatComposerComponent({
   const { pinned, isPinned, togglePin } = usePinnedModels()
 
   const modelsQuery = useQuery({
-    queryKey: ['claude', 'models'],
+    queryKey: ['agentone', 'models'],
     queryFn: fetchModels,
     refetchInterval: 60_000,
     retry: false,
@@ -900,7 +900,7 @@ function ChatComposerComponent({
   )
   const otherProviderModelsQuery = useQuery({
     queryKey: [
-      'claude',
+      'agentone',
       'models',
       'other-providers',
       otherProviders
@@ -928,13 +928,13 @@ function ChatComposerComponent({
     },
   })
   const currentModelQuery = useQuery({
-    queryKey: ['claude', 'session-status-model', sessionKey || 'main'],
+    queryKey: ['agentone', 'session-status-model', sessionKey || 'main'],
     queryFn: () => fetchCurrentModelFromStatus(sessionKey),
     refetchInterval: 30_000,
     retry: false,
   })
   const sttConfigQuery = useQuery({
-    queryKey: ['claude', 'config', 'stt'],
+    queryKey: ['agentone', 'config', 'stt'],
     queryFn: async () => {
       const response = await fetch('/api/agentone-config')
       if (!response.ok) {
@@ -980,9 +980,9 @@ function ChatComposerComponent({
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['profiles'] }),
         queryClient.invalidateQueries({ queryKey: ['workspace'] }),
-        queryClient.invalidateQueries({ queryKey: ['claude', 'models'] }),
+        queryClient.invalidateQueries({ queryKey: ['agentone', 'models'] }),
         queryClient.invalidateQueries({
-          queryKey: ['claude', 'session-status-model'],
+          queryKey: ['agentone', 'session-status-model'],
         }),
       ])
       setIsProfileMenuOpen(false)
@@ -1032,7 +1032,7 @@ function ChatComposerComponent({
   const setPersistedSessionModel = useSessionModelStore((s) => s.setModel)
 
   // Model switching is now per-session via the persistent store above.
-  // Previously this issued a PATCH /api/hermes-proxy/api/config to write to
+  // Previously this issued a PATCH /api/agentone-proxy/api/config to write to
   // ~/.hermes/config.yaml — that endpoint 404s and would clobber the global
   // default for every channel anyway. The mutation block + retry callback +
   // dead onError handler were removed alongside it.
@@ -1110,8 +1110,8 @@ function ChatComposerComponent({
 
   const currentModel = currentModelQuery.data ?? ''
 
-  // Auto-switch to hermes-agent model on mount (Agent-e1 uses Agent-e1)
-  // Removed: auto-switch to hermes-agent. The workspace respects the
+  // Auto-switch to agentone model on mount (Agent-e1 uses Agent-e1)
+  // Removed: auto-switch to agentone. The workspace respects the
   // model/provider configured in ~/.hermes/config.yaml. Users switch
   // via the model selector or Settings page.
 

@@ -1,6 +1,6 @@
 /**
- * Hermes Config API — read/write ~/.hermes/config.yaml and ~/.hermes/.env
- * Gives the web UI the same config power as `hermes setup`
+ * Agent-e1 Config API — read/write ~/.hermes/config.yaml and ~/.hermes/.env
+ * Gives the web UI the same config power as `agentone setup`
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -16,11 +16,11 @@ import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 
 type AuthResult = Response | true
 
-const CLAUDE_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
-const CONFIG_PATH = path.join(CLAUDE_HOME, 'config.yaml')
-const ENV_PATH = path.join(CLAUDE_HOME, '.env')
+const AGENTONE_HOME = process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
+const CONFIG_PATH = path.join(AGENTONE_HOME, 'config.yaml')
+const ENV_PATH = path.join(AGENTONE_HOME, '.env')
 
-// Known Hermes providers
+// Known providers
 const PROVIDERS = [
   { id: 'nous', name: 'Nous Portal', authType: 'oauth', envKeys: [] },
   { id: 'openai-codex', name: 'OpenAI Codex', authType: 'oauth', envKeys: [] },
@@ -94,7 +94,7 @@ function readConfig(): Record<string, unknown> {
 }
 
 function writeConfig(config: Record<string, unknown>): void {
-  fs.mkdirSync(CLAUDE_HOME, { recursive: true })
+  fs.mkdirSync(AGENTONE_HOME, { recursive: true })
   fs.writeFileSync(CONFIG_PATH, YAML.stringify(config), 'utf-8')
 }
 
@@ -126,7 +126,7 @@ function readEnv(): Record<string, string> {
 }
 
 function writeEnv(env: Record<string, string>): void {
-  fs.mkdirSync(CLAUDE_HOME, { recursive: true })
+  fs.mkdirSync(AGENTONE_HOME, { recursive: true })
   const lines = Object.entries(env).map(([k, v]) => `${k}=${v}`)
   fs.writeFileSync(ENV_PATH, lines.join('\n') + '\n', 'utf-8')
 }
@@ -142,7 +142,7 @@ function checkAuthStore(providerId: string): {
   maskedKey?: string
 } {
   // Check Claude auth store
-  const storePath = path.join(CLAUDE_HOME, 'auth-profiles.json')
+  const storePath = path.join(AGENTONE_HOME, 'auth-profiles.json')
   try {
     if (fs.existsSync(storePath)) {
       const store = JSON.parse(fs.readFileSync(storePath, 'utf-8'))
@@ -175,7 +175,7 @@ export const Route = createFileRoute('/api/agentone-config')({
             providers: [],
             activeProvider: '',
             activeModel: '',
-            claudeHome: CLAUDE_HOME,
+            claudeHome: AGENTONE_HOME,
           })
         }
 
@@ -229,7 +229,7 @@ export const Route = createFileRoute('/api/agentone-config')({
           providers: providerStatus,
           activeProvider,
           activeModel,
-          claudeHome: CLAUDE_HOME,
+          claudeHome: AGENTONE_HOME,
         })
       },
 

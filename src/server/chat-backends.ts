@@ -16,7 +16,7 @@ export type UnifiedChatOptions = {
   attachments?: Array<Record<string, unknown>>
 }
 
-async function* streamClaudeChat(
+async function* streamAgentChat(
   messages: Array<ChatMessage>,
   options: UnifiedChatOptions,
 ): AsyncGenerator<string, void, void> {
@@ -111,9 +111,9 @@ export async function sendChatUnified(
     })
   }
 
-  if (backend === 'claude-enhanced') {
+  if (backend === 'agentone-enhanced') {
     let text = ''
-    for await (const delta of streamClaudeChat(messages, options)) {
+    for await (const delta of streamAgentChat(messages, options)) {
       text += delta
     }
     return text
@@ -146,8 +146,8 @@ export async function streamChatUnified(
     return toStringStream()
   }
 
-  if (backend === 'claude-enhanced') {
-    return streamClaudeChat(messages, options)
+  if (backend === 'agentone-enhanced') {
+    return streamAgentChat(messages, options)
   }
 
   throw new Error('No chat backend available')

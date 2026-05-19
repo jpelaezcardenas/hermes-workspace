@@ -136,8 +136,8 @@ export type StreamChunkType =
       toolCallId?: string
       // Lifecycle phase from the upstream gateway. Vanilla Agent-e1
       // emits 'running' at tool start and 'completed' at tool finish via
-      // the `hermes.tool.progress` SSE event (#16588). Older builds that
-      // sent `claude.tool.progress` did not carry status — we treat
+      // the `agentone.tool.progress` SSE event (#16588). Older builds that
+      // sent `claude.tool.progress` did not carry status -- we treat
       // missing/unknown values as a one-shot 'running' so existing flows
       // keep working.
       status?: 'running' | 'completed'
@@ -232,7 +232,8 @@ export async function* parseOpenAIStream(
 
         if (
           eventName === 'claude.tool.progress' ||
-          eventName === 'hermes.tool.progress'
+          eventName === 'hermes.tool.progress' ||
+          eventName === 'agentone.tool.progress'
         ) {
           const toolChunk = parseClaudeToolProgressChunk(payload)
           if (toolChunk) yield toolChunk

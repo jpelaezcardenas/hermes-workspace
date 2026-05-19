@@ -53,7 +53,10 @@ export function getKnowledgeBaseEffectiveRoot(): string {
   }
   // fallback: legacy env var or default
   if (process.env.KNOWLEDGE_DIR) return path.resolve(process.env.KNOWLEDGE_DIR)
-  const claudeKnowledge = path.join(os.homedir(), '.claude', 'knowledge')
-  if (fs.existsSync(claudeKnowledge)) return claudeKnowledge
-  return claudeKnowledge
+  const agentKnowledge = path.join(os.homedir(), '.agentone', 'knowledge')
+  if (fs.existsSync(agentKnowledge)) return agentKnowledge
+  // backward compat: legacy .claude directory
+  const legacyClaudeKnowledge = path.join(os.homedir(), '.claude', 'knowledge')
+  if (fs.existsSync(legacyClaudeKnowledge)) return legacyClaudeKnowledge
+  return agentKnowledge
 }

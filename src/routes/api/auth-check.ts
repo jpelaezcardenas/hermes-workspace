@@ -24,7 +24,7 @@ export const Route = createFileRoute('/api/auth-check')({
               {
                 authenticated: false,
                 authRequired: false,
-                error: 'claude_agent_unreachable',
+                error: 'agent_unreachable',
               },
               { status: 503 },
             )
@@ -36,8 +36,8 @@ export const Route = createFileRoute('/api/auth-check')({
               authRequired: false,
               error:
                 error instanceof DOMException && error.name === 'AbortError'
-                  ? 'claude_agent_timeout'
-                  : 'claude_agent_unreachable',
+                  ? 'agent_timeout'
+                  : 'agent_unreachable',
             },
             { status: 503 },
           )

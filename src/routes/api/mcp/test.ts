@@ -11,7 +11,7 @@ import {
 } from '../../../server/gateway-capabilities'
 import { requireJsonContentType, safeErrorMessage } from '../../../server/rate-limit'
 import { normalizeTestResult } from '../../../server/mcp-normalize'
-import { runHermesMcpTest } from '../../../server/mcp-cli-bridge'
+import { runAgentMcpTest } from '../../../server/mcp-cli-bridge'
 import { setProbe } from '../../../server/mcp-tools-cache'
 import { parseMcpServerInput } from '../../../server/mcp-input-validate'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
@@ -58,7 +58,7 @@ export const Route = createFileRoute('/api/mcp/test')({
                   'Local fallback only supports testing existing servers by name.',
               })
             }
-            const result = await runHermesMcpTest(name, { timeoutMs: TEST_TIMEOUT_MS })
+            const result = await runAgentMcpTest(name, { timeoutMs: TEST_TIMEOUT_MS })
             setProbe(name, {
               status: result.status,
               toolCount: result.discoveredTools.length,

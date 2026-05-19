@@ -109,7 +109,7 @@ function ChatRoute() {
       })
       // Persist last session for refresh recovery
       try {
-        localStorage.setItem('claude-last-session', payload.friendlyId)
+        localStorage.setItem('agentone-last-session', payload.friendlyId)
       } catch {}
       navigate({
         to: '/chat/$sessionKey',

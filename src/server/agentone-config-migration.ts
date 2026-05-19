@@ -1,4 +1,4 @@
-export type HermesProviderKind = 'oauth' | 'api_key' | 'local' | 'custom'
+export type AgentProviderKind = 'oauth' | 'api_key' | 'local' | 'custom'
 
 export type HermesAuthSource =
   | 'env'
@@ -7,17 +7,17 @@ export type HermesAuthSource =
   | 'local-discovery'
   | 'none'
 
-export type HermesConfigPaths = {
-  hermesHome: string
+export type AgentConfigPaths = {
+  agentHome: string
   configPath: string
   envPath: string
   authProfilesPath: string
 }
 
-export type HermesProviderState = {
+export type AgentProviderState = {
   id: string
   name: string
-  kind: HermesProviderKind
+  kind: AgentProviderKind
   configured: boolean
   authenticated: boolean
   available: boolean
@@ -41,7 +41,7 @@ export type HermesCustomProviderState = {
 
 export type HermesConfigState = {
   ok: true
-  paths: HermesConfigPaths
+  paths: AgentConfigPaths
   defaultModel: {
     provider: string
     model: string
@@ -49,7 +49,7 @@ export type HermesConfigState = {
   } | null
   activeProvider: string
   activeModel: string
-  providers: Array<HermesProviderState>
+  providers: Array<AgentProviderState>
   customProviders: Array<HermesCustomProviderState>
   config: Record<string, unknown>
 }
@@ -57,7 +57,7 @@ export type HermesConfigState = {
 type ProviderDef = {
   id: string
   name: string
-  kind: HermesProviderKind
+  kind: AgentProviderKind
   envKeys: Array<string>
   models: Array<{ id: string; name: string }>
 }
@@ -75,7 +75,7 @@ type LocalModelSummary = {
 }
 
 export type NormalizeHermesConfigInput = {
-  paths: HermesConfigPaths
+  paths: AgentConfigPaths
   config: Record<string, unknown>
   env: Record<string, string>
   authProfiles: Record<string, unknown>
@@ -176,7 +176,7 @@ export function normalizeHermesConfigState(input: NormalizeHermesConfigInput): H
   const customByName = new Map(customEntries.map((entry) => [customProviderName(entry), entry]))
   const localById = new Map(input.localProviders.map((provider) => [provider.id, provider]))
 
-  const providers = HERMES_PROVIDER_CATALOG.map((def): HermesProviderState => {
+  const providers = HERMES_PROVIDER_CATALOG.map((def): AgentProviderState => {
     const maskedCredentials: Record<string, string> = {}
     let authenticated = false
     let configured = false

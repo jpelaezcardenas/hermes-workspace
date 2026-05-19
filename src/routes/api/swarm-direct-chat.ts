@@ -150,7 +150,7 @@ async function ensureLiveTmuxSession(workerId: string): Promise<{ ok: true; tmux
     sessionName,
     '-c',
     cwd,
-    `HERMES_HOME='${profilePath.replace(/'/g, `'\\''`)}' exec hermes chat --continue`,
+    `AGENTONE_HOME='${profilePath.replace(/'/g, `'\\''`)}' HERMES_HOME='${profilePath.replace(/'/g, `'\\''`)}' exec hermes chat --continue`,
   ])
   if (!started.ok) return { ok: false, error: started.error }
   await sleep(1200)

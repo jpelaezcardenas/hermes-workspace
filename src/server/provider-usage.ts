@@ -70,12 +70,12 @@ const CLAUDE_CRED_FILE = '~/.claude/.credentials.json'
 const CLAUDE_KEYCHAIN_SERVICE = 'Claude Code-credentials'
 const CLAUDE_USAGE_URL = 'https://api.anthropic.com/api/oauth/usage'
 const CLAUDE_REFRESH_URL = 'https://platform.claude.com/v1/oauth/token'
-const CLAUDE_CLIENT_ID = '9d1c250a-e61b-44d9-88ed-5944d1962f5e'
-const CLAUDE_SCOPES =
+const AGENTONE_CLIENT_ID = '9d1c250a-e61b-44d9-88ed-5944d1962f5e'
+const AGENTONE_SCOPES =
   'user:profile user:inference user:sessions:claude_code user:mcp_servers'
 const REFRESH_BUFFER_MS = 5 * 60 * 1000
 
-type ClaudeOAuth = {
+type AgentOAuth = {
   accessToken: string
   refreshToken?: string
   expiresAt?: number
@@ -83,7 +83,7 @@ type ClaudeOAuth = {
 }
 
 type ClaudeCredentials = {
-  oauth: ClaudeOAuth
+  oauth: AgentOAuth
   source: 'file' | 'keychain'
   fullData: Record<string, unknown>
 }
@@ -100,7 +100,7 @@ function tryParseKeychainHex(text: string): unknown | null {
   }
 }
 
-function loadClaudeCredentials(): ClaudeCredentials | null {
+function loadAgentCredentials(): ClaudeCredentials | null {
   // Try file first
   const credPath = expandHome(CLAUDE_CRED_FILE)
   if (existsSync(credPath)) {
@@ -130,7 +130,7 @@ function loadClaudeCredentials(): ClaudeCredentials | null {
         } catch {
           parsed = tryParseKeychainHex(raw) as Record<string, unknown> | null
         }
-        const oauth = parsed?.claudeAiOauth as ClaudeOAuth | undefined
+        const oauth = parsed?.claudeAiOauth as AgentOAuth | undefined
         if (oauth?.accessToken) {
           return { oauth, source: 'keychain', fullData: parsed! }
         }
@@ -163,7 +163,7 @@ function saveClaudeCredentials(creds: ClaudeCredentials): void {
   }
 }
 
-async function refreshClaudeToken(
+async function refreshAgentToken(
   creds: ClaudeCredentials,
 ): Promise<string | null> {
   if (!creds.oauth.refreshToken) return null
@@ -174,8 +174,8 @@ async function refreshClaudeToken(
     body: JSON.stringify({
       grant_type: 'refresh_token',
       refresh_token: creds.oauth.refreshToken,
-      client_id: CLAUDE_CLIENT_ID,
-      scope: CLAUDE_SCOPES,
+      client_id: AGENTONE_CLIENT_ID,
+      scope: AGENTONE_SCOPES,
     }),
   })
 
@@ -186,9 +186,9 @@ async function refreshClaudeToken(
     > | null
     const errorCode = body?.error ?? body?.error_description
     if (errorCode === 'invalid_grant') {
-      throw new Error('Claude session expired. Run `claude` to log in again.')
+      throw new Error('Agent-e1 session expired. Run `agentone` to log in again.')
     }
-    throw new Error('Claude token expired. Run `claude` to log in again.')
+    throw new Error('Agent-e1 token expired. Run `agentone` to log in again.')
   }
 
   if (!res.ok) return null
@@ -214,11 +214,11 @@ async function refreshClaudeToken(
 function planLabel(subType?: string): string | undefined {
   if (!subType) return undefined
   const labels: Record<string, string> = {
-    claude_pro: 'Pro',
-    claude_team: 'Team',
-    claude_enterprise: 'Enterprise',
-    claude_max_5x: 'Max 5x',
-    claude_max_20x: 'Max 20x',
+    agentone_pro: 'Pro',
+    agentone_team: 'Team',
+    agentone_enterprise: 'Enterprise',
+    agentone_max_5x: 'Max 5x',
+    agentone_max_20x: 'Max 20x',
     free: 'Free',
   }
   return labels[subType] ?? subType
@@ -226,14 +226,14 @@ function planLabel(subType?: string): string | undefined {
 
 export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
   const now = Date.now()
-  const creds = loadClaudeCredentials()
+  const creds = loadAgentCredentials()
 
   if (!creds) {
     return {
-      provider: 'claude',
-      displayName: 'Claude (OAuth)',
+      provider: 'agentone',
+      displayName: 'Agent-e1 (OAuth)',
       status: 'missing_credentials',
-      message: 'No Claude credentials found. Run `claude` to authenticate.',
+      message: 'No Agent-e1 credentials found. Run `agentone` to authenticate.',
       lines: [],
       updatedAt: now,
     }
@@ -247,11 +247,11 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
     now > creds.oauth.expiresAt - REFRESH_BUFFER_MS
   ) {
     try {
-      const refreshed = await refreshClaudeToken(creds)
+      const refreshed = await refreshAgentToken(creds)
       if (refreshed) accessToken = refreshed
     } catch (e) {
       return {
-        provider: 'claude',
+        provider: 'agentone',
         displayName: 'Claude (OAuth)',
         status: 'auth_expired',
         message: e instanceof Error ? e.message : String(e),
@@ -275,7 +275,7 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
     })
   } catch (e) {
     return {
-      provider: 'claude',
+      provider: 'agentone',
       displayName: 'Claude (OAuth)',
       status: 'error',
       message: `Request failed: ${e instanceof Error ? e.message : String(e)}`,
@@ -287,7 +287,7 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
   // If 401/403, try refresh once
   if (res.status === 401 || res.status === 403) {
     try {
-      const refreshed = await refreshClaudeToken(creds)
+      const refreshed = await refreshAgentToken(creds)
       if (refreshed) {
         res = await fetch(CLAUDE_USAGE_URL, {
           headers: {
@@ -301,7 +301,7 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
       }
     } catch (e) {
       return {
-        provider: 'claude',
+        provider: 'agentone',
         displayName: 'Claude (OAuth)',
         status: 'auth_expired',
         message: e instanceof Error ? e.message : String(e),
@@ -313,7 +313,7 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
 
   if (!res.ok) {
     return {
-      provider: 'claude',
+      provider: 'agentone',
       displayName: 'Claude (OAuth)',
       status: 'error',
       message: `HTTP ${res.status}`,
@@ -328,7 +328,7 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
   > | null
   if (!data) {
     return {
-      provider: 'claude',
+      provider: 'agentone',
       displayName: 'Claude (OAuth)',
       status: 'error',
       message: 'Invalid response',
@@ -417,7 +417,7 @@ export async function fetchClaudeUsage(): Promise<ProviderUsageResult> {
   }
 
   return {
-    provider: 'claude',
+    provider: 'agentone',
     displayName: 'Claude (OAuth)',
     status: 'ok',
     plan: planLabel(creds.oauth.subscriptionType),
@@ -1001,7 +1001,7 @@ export async function getProviderUsage(
   const providers: ProviderUsageResult[] = results.map((r, i) => {
     if (r.status === 'fulfilled') return r.value
     const names = ['Claude (OAuth)', 'Codex', 'OpenAI', 'OpenRouter']
-    const ids = ['claude', 'codex', 'openai', 'openrouter']
+    const ids = ['agentone', 'codex', 'openai', 'openrouter']
     return {
       provider: ids[i],
       displayName: names[i],

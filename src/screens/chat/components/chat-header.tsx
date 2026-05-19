@@ -183,7 +183,7 @@ function ChatHeaderComponent({
       onOpenAgentDetails()
       return
     }
-    window.dispatchEvent(new CustomEvent('claude:chat-agent-details'))
+    window.dispatchEvent(new CustomEvent('agentone:chat-agent-details'))
   }, [onOpenAgentDetails])
 
   useEffect(() => {

@@ -59,7 +59,7 @@ function classifyConnectionError(
     return {
       title: 'Agent-e1 gateway not running',
       description: 'The Agent-e1 gateway is not running on port 8642.',
-      action: 'Run the official Hermes installer, then start the gateway with: hermes gateway run',
+      action: 'Run the official Agent-e1 installer, then start the gateway with: agentone gateway run',
     }
   }
 
@@ -102,9 +102,9 @@ export function ConnectionStatusMessage({
       setFadingOut(true)
       setTimeout(() => setVisible(false), 300)
     }
-    window.addEventListener('claude:health-restored', handleRestored)
+    window.addEventListener('agentone:health-restored', handleRestored)
     return () =>
-      window.removeEventListener('claude:health-restored', handleRestored)
+      window.removeEventListener('agentone:health-restored', handleRestored)
   }, [])
 
   if (!visible) return null

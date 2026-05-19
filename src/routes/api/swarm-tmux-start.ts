@@ -10,7 +10,7 @@ import { resolveSwarmModelLabel } from '../../server/swarm-model-resolver'
 import { syncSwarmProfileModel } from '../../server/swarm-profile-config'
 
 // Inlined to avoid SSR module-resolution races against freshly-written
-// helpers; mirrors `src/server/claude-paths.ts` getProfilesDir().
+// helpers; mirrors `src/server/agentone-paths.ts` getProfilesDir().
 function getProfilesDir(): string {
   const envHome = process.env.HERMES_HOME || process.env.CLAUDE_HOME
   if (envHome) {
@@ -28,7 +28,7 @@ function getProfilesDir(): string {
  * Body: { workerId: "swarm1" }
  *
  * Idempotently ensures a long-lived tmux session exists for a worker.
- * The session runs the worker's `hermes` TUI inside its profile + cwd, so
+ * The session runs the worker's `agentone` TUI inside its profile + cwd, so
  * dispatch traffic + the swarm2 Runtime pane both see the same live agent.
  *
  * Returns: { workerId, sessionName, alreadyRunning, started }
@@ -80,22 +80,26 @@ function validateWorkerId(value: string): boolean {
   return /^[a-z0-9][a-z0-9_-]{0,63}$/i.test(value)
 }
 
-const HERMES_BIN_CANDIDATES = [
+const AGENT_BIN_CANDIDATES = [
+  process.env.AGENTONE_CLI_BIN,
   process.env.HERMES_CLI_BIN,
+  join(homedir(), '.agentone', 'bin', 'agentone'),
   join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
+  join(homedir(), '.local', 'bin', 'agentone'),
   join(homedir(), '.local', 'bin', 'hermes'),
+  'agentone',
   'hermes',
 ].filter((value): value is string => Boolean(value))
 
-function resolveHermesBin(): string {
-  for (const candidate of HERMES_BIN_CANDIDATES) {
+function resolveAgentBin(): string {
+  for (const candidate of AGENT_BIN_CANDIDATES) {
     if (candidate.includes('/')) {
       if (existsSync(candidate)) return candidate
       continue
     }
     return candidate
   }
-  return 'hermes'
+  return 'agentone'
 }
 
 function startSession(
@@ -114,7 +118,7 @@ function startSession(
         sessionName,
         '-c',
         cwd,
-        `HERMES_HOME='${profilePath.replace(/'/g, `'\\''`)}' HERMES_CLI_BIN='${resolveHermesBin().replace(/'/g, `'\\''`)}' exec '${resolveHermesBin().replace(/'/g, `'\\''`)}' chat --tui`,
+        `AGENTONE_HOME='${profilePath.replace(/'/g, `'\\''`)}' HERMES_HOME='${profilePath.replace(/'/g, `'\\''`)}' AGENTONE_CLI_BIN='${resolveAgentBin().replace(/'/g, `'\\''`)}' HERMES_CLI_BIN='${resolveAgentBin().replace(/'/g, `'\\''`)}' exec '${resolveAgentBin().replace(/'/g, `'\\''`)}' chat --tui`,
       ],
       { timeout: 8_000 },
       (error, _stdout, stderr) => {

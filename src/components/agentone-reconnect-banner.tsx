@@ -47,7 +47,7 @@ export function ReconnectBanner({
   const wasDisconnectedRef = useRef(false)
   const flashTimerRef = useRef<number | null>(null)
   // Silent auto-restart: if the gateway disappears mid-session, fire
-  // /api/start-claude once. After that, fall back to the manual "Start Agent"
+  // /api/start-agentone once. After that, fall back to the manual "Start Agent"
   // button so we don't loop forever on a busted environment.
   const autoRestartTriedAtRef = useRef<number>(0)
   // Cool-down so a permanently-dead gateway doesn't get poked every probe.

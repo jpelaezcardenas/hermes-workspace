@@ -333,7 +333,7 @@ function SettingsRoute() {
   }, [])
 
   const { section } = Route.useSearch()
-  const activeSection: SettingsSectionId = section ?? 'claude'
+  const activeSection: SettingsSectionId = section ?? 'model'
 
   return (
     <div className="min-h-screen bg-surface text-primary-900">
@@ -351,8 +351,8 @@ function SettingsRoute() {
           {activeSection === 'connection' && <ConnectionSection />}
 
           {/* ── Agent-e1 ──────────────────────────────────── */}
-          {activeSection === 'claude' && (
-            <AgentConfigSection activeView="claude" />
+          {activeSection === 'model' && (
+            <AgentConfigSection activeView="model" />
           )}
           {activeSection === 'agent' && (
             <AgentConfigSection activeView="agent" />
@@ -967,7 +967,7 @@ function _LoaderStyleSection() {
 
 // ── Agent-e1 Configuration ──────────────────────────────────────
 
-type ClaudeProvider = {
+type AgentProvider = {
   id: string
   name: string
   authType: string
@@ -978,10 +978,10 @@ type ClaudeProvider = {
 
 type AgentConfigData = {
   config: Record<string, unknown>
-  providers: Array<ClaudeProvider>
+  providers: Array<AgentProvider>
   activeProvider: string
   activeModel: string
-  claudeHome: string
+  agentHome: string
 }
 
 const AGENTONE_API =
@@ -1168,9 +1168,9 @@ function mergeModelForManifestSave(
 }
 
 function AgentConfigSection({
-  activeView = 'claude',
+  activeView = 'model',
 }: {
-  activeView?: 'claude' | 'agent' | 'routing' | 'voice' | 'display'
+  activeView?: 'model' | 'agent' | 'routing' | 'voice' | 'display'
 }) {
   const [data, setData] = useState<AgentConfigData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1232,7 +1232,7 @@ function AgentConfigSection({
     setLoadingModels(true)
     try {
       const res = await fetch(
-        `/api/claude-proxy/api/available-models?provider=${encodeURIComponent(provider)}`,
+        `/api/agentone-proxy/api/available-models?provider=${encodeURIComponent(provider)}`,
       )
       if (res.ok) {
         const result = (await res.json()) as AvailableModelsResponse
@@ -1487,7 +1487,7 @@ function AgentConfigSection({
 
   const manifestBaseUrlOnly = readManifestBlockBaseUrl(data.config)
 
-  const renderClaudeOverview = () => (
+  const renderAgentOverview = () => (
     <>
       <SettingsSection
         title="Model & Provider"
@@ -2294,7 +2294,7 @@ function AgentConfigSection({
             className="text-xs font-mono"
             style={{ color: 'var(--theme-muted)' }}
           >
-            {data.claudeHome}
+            {data.agentHome}
           </span>
         </SettingsRow>
         <SettingsRow
@@ -2731,7 +2731,7 @@ function AgentConfigSection({
   )
 
   const sectionContent = {
-    claude: renderClaudeOverview(),
+    model: renderAgentOverview(),
     agent: renderAgentBehavior(),
     routing: renderSmartRouting(),
     voice: renderVoice(),

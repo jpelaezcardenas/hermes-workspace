@@ -29,13 +29,13 @@ const MIME_BY_EXT: Record<string, string> = {
   '.ogg': 'audio/ogg',
 }
 
-function hermesHome(): string {
-  return process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? resolvePath(os.homedir(), '.hermes')
+function agentHome(): string {
+  return process.env.AGENTONE_HOME ?? process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? resolvePath(os.homedir(), '.hermes')
 }
 
 function allowedPrefixes(): Array<string> {
   const home = os.homedir()
-  const stateHome = resolvePath(hermesHome())
+  const stateHome = resolvePath(agentHome())
   return [
     '/tmp',
     resolvePath(home, 'tmp'),

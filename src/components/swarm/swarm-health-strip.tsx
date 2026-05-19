@@ -35,7 +35,7 @@ type HealthResponse = {
   checkedAt: number
   workspaceModel: string | null
   agentApiUrl?: string | null
-  claudeApiUrl?: string | null
+  agentApiUrl?: string | null
   workers: WorkerHealth[]
   summary: {
     totalWorkers: number

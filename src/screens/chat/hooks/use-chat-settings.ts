@@ -7,8 +7,8 @@ import { writeTextToClipboard } from '@/lib/clipboard'
 export function useChatSettings() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [settingsSection, setSettingsSection] = useState<
-    'claude' | 'appearance'
-  >('claude')
+    'model' | 'appearance'
+  >('model')
   const [pathsLoading, setPathsLoading] = useState(false)
   const [pathsError, setPathsError] = useState<string | null>(null)
   const [paths, setPaths] = useState<PathsPayload | null>(null)
@@ -43,7 +43,7 @@ export function useChatSettings() {
   }, [paths, pathsLoading])
 
   const handleOpenSettings = useCallback(
-    (section: 'claude' | 'appearance' = 'claude') => {
+    (section: 'model' | 'appearance' = 'model') => {
       setSettingsSection(section)
       void openSettings()
     },

@@ -25,7 +25,7 @@ function detectProviderAvatar(model: string): ProviderAvatar {
   const value = model.trim().toLowerCase()
 
   if (
-    value.includes('claude') ||
+    value.includes('agentone') ||
     value.includes('anthropic') ||
     value.includes('sonnet') ||
     value.includes('opus')

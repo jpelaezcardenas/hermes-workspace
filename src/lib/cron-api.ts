@@ -242,12 +242,12 @@ async function readJsonAndCheckOk<T>(response: Response): Promise<T> {
   return payload
 }
 
-// Claude-Workspace cron API: backed by /api/claude-jobs (FastAPI proxy)
-// Each "cron job" is a scheduled task in Claude' job runner. Operations
+// Agent-e1 cron API: backed by /api/agentone-jobs (FastAPI proxy)
+// Each "cron job" is a scheduled task in Agent-e1's job runner. Operations
 // names jobs `ops:<agentId>:<slug>` so they bind to a specific profile.
 
 export async function fetchCronJobs(): Promise<Array<CronJob>> {
-  const response = await fetch('/api/claude-jobs')
+  const response = await fetch('/api/agentone-jobs')
   if (!response.ok) {
     throw new Error(await readError(response))
   }
@@ -261,7 +261,7 @@ export async function fetchCronJobs(): Promise<Array<CronJob>> {
 
 export async function fetchCronRuns(jobId: string): Promise<Array<CronRun>> {
   const response = await fetch(
-    `/api/claude-jobs/${encodeURIComponent(jobId)}?action=runs&limit=20`,
+    `/api/agentone-jobs/${encodeURIComponent(jobId)}?action=runs&limit=20`,
   )
   if (!response.ok) {
     throw new Error(await readError(response))
@@ -276,7 +276,7 @@ export async function fetchCronRuns(jobId: string): Promise<Array<CronRun>> {
 
 export async function runCronJob(jobId: string): Promise<RunCronPayload> {
   const response = await fetch(
-    `/api/claude-jobs/${encodeURIComponent(jobId)}?action=run`,
+    `/api/agentone-jobs/${encodeURIComponent(jobId)}?action=run`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -294,7 +294,7 @@ export async function runCronJobIfDue(
   jobId: string,
 ): Promise<RunCronPayload> {
   const response = await fetch(
-    `/api/claude-jobs/${encodeURIComponent(jobId)}?action=run-if-due`,
+    `/api/agentone-jobs/${encodeURIComponent(jobId)}?action=run-if-due`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -313,7 +313,7 @@ export async function toggleCronJob(payload: {
   enabled: boolean
 }): Promise<ToggleCronPayload> {
   const response = await fetch(
-    `/api/claude-jobs/${encodeURIComponent(payload.jobId)}`,
+    `/api/agentone-jobs/${encodeURIComponent(payload.jobId)}`,
     {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -333,8 +333,8 @@ export async function upsertCronJob(
 ): Promise<UpsertCronPayload> {
   const isUpdate = Boolean(payload.jobId)
   const url = isUpdate
-    ? `/api/claude-jobs/${encodeURIComponent(payload.jobId as string)}`
-    : '/api/claude-jobs'
+    ? `/api/agentone-jobs/${encodeURIComponent(payload.jobId as string)}`
+    : '/api/agentone-jobs'
   const response = await fetch(url, {
     method: isUpdate ? 'PATCH' : 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -350,7 +350,7 @@ export async function upsertCronJob(
 
 export async function deleteCronJob(jobId: string): Promise<{ ok?: boolean }> {
   const response = await fetch(
-    `/api/claude-jobs/${encodeURIComponent(jobId)}`,
+    `/api/agentone-jobs/${encodeURIComponent(jobId)}`,
     {
       method: 'DELETE',
     },

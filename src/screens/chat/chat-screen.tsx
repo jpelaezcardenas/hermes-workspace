@@ -519,7 +519,7 @@ export function ChatScreen({
   // Per-session thinking level — stored in sessionStorage keyed by session
   const [thinkingLevel, setThinkingLevel] = useState<ThinkingLevel>(() => {
     if (typeof window === 'undefined') return 'low'
-    const key = `claude-thinking-${activeFriendlyId || 'new'}`
+    const key = `agentone-thinking-${activeFriendlyId || 'new'}`
     const stored = window.sessionStorage.getItem(key)
     if (stored === 'off' || stored === 'low' || stored === 'adaptive')
       return stored
@@ -690,7 +690,7 @@ export function ChatScreen({
       const agentId =
         typeof agentIdValue === 'string' && agentIdValue.trim().length > 0
           ? agentIdValue
-          : 'claude'
+          : 'agentone'
 
       addApproval({
         agentId,
@@ -950,7 +950,7 @@ export function ChatScreen({
 
   const currentModelQuery = useQuery({
     queryKey: [
-      'claude',
+      'agentone',
       'session-status-model',
       resolvedSessionKey || activeFriendlyId || 'main',
     ],
@@ -1004,7 +1004,7 @@ export function ChatScreen({
       currentModel.toLowerCase().includes('4-6') ||
       currentModel.toLowerCase().includes('claude-4.6')
     if (is46) {
-      const key = `claude-thinking-${activeFriendlyId || 'new'}`
+      const key = `agentone-thinking-${activeFriendlyId || 'new'}`
       const stored =
         typeof window !== 'undefined'
           ? window.sessionStorage.getItem(key)
@@ -1021,7 +1021,7 @@ export function ChatScreen({
     (level: ThinkingLevel) => {
       setThinkingLevel(level)
       if (typeof window !== 'undefined') {
-        const key = `claude-thinking-${activeFriendlyId || 'new'}`
+        const key = `agentone-thinking-${activeFriendlyId || 'new'}`
         window.sessionStorage.setItem(key, level)
       }
     },
@@ -1506,7 +1506,7 @@ export function ChatScreen({
   ])
 
   const statusQuery = useQuery({
-    queryKey: ['claude', 'status'],
+    queryKey: ['agentone', 'status'],
     queryFn: fetchStatus,
     retry: 2,
     retryDelay: 1000,
@@ -1548,9 +1548,9 @@ export function ChatScreen({
     const handleRefreshRequest = () => {
       void historyQuery.refetch()
     }
-    window.addEventListener('claude:chat-refresh', handleRefreshRequest)
+    window.addEventListener('agentone:chat-refresh', handleRefreshRequest)
     return () => {
-      window.removeEventListener('claude:chat-refresh', handleRefreshRequest)
+      window.removeEventListener('agentone:chat-refresh', handleRefreshRequest)
     }
   }, [historyQuery])
 
@@ -1581,9 +1581,9 @@ export function ChatScreen({
     function handleSSEDrop() {
       void historyQuery.refetch()
     }
-    window.addEventListener('claude:sse-dropped', handleSSEDrop)
+    window.addEventListener('agentone:sse-dropped', handleSSEDrop)
     return () => {
-      window.removeEventListener('claude:sse-dropped', handleSSEDrop)
+      window.removeEventListener('agentone:sse-dropped', handleSSEDrop)
     }
   }, [historyQuery])
 
@@ -2113,9 +2113,9 @@ export function ChatScreen({
       handleRefetch()
     }
 
-    window.addEventListener('claude:health-restored', handleHealthRestored)
+    window.addEventListener('agentone:health-restored', handleHealthRestored)
     return () => {
-      window.removeEventListener('claude:health-restored', handleHealthRestored)
+      window.removeEventListener('agentone:health-restored', handleHealthRestored)
     }
   }, [flushRetryableMessages, handleRefetch])
 
@@ -2243,7 +2243,7 @@ export function ChatScreen({
         window.dispatchEvent(
           new CustomEvent(CHAT_OPEN_SETTINGS_EVENT, {
             detail: {
-              section: trimmedCommand === '/skin' ? 'appearance' : 'claude',
+              section: trimmedCommand === '/skin' ? 'appearance' : 'model',
             },
           }),
         )
@@ -2558,9 +2558,9 @@ export function ChatScreen({
     const handler = () => {
       /* agent view removed */
     }
-    window.addEventListener('claude:chat-agent-details', handler)
+    window.addEventListener('agentone:chat-agent-details', handler)
     return () =>
-      window.removeEventListener('claude:chat-agent-details', handler)
+      window.removeEventListener('agentone:chat-agent-details', handler)
   }, [])
 
   return (

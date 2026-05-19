@@ -110,7 +110,7 @@ export function getConnectionErrorMessage(
       return {
         title: 'Pair this device first',
         description: 'This device is not paired with the gateway yet.',
-        action: 'Run `claude pair` on the gateway machine, then reconnect.',
+        action: 'Run `agentone pair` on the gateway machine, then reconnect.',
       }
     case 'gateway_unreachable':
       return {

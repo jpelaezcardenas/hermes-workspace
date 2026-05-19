@@ -33,8 +33,8 @@ import {
   updateJob,
 } from '@/lib/jobs-api'
 
-const QUERY_KEY = ['claude', 'jobs'] as const
-const PROFILES_QUERY_KEY = ['claude', 'job-profiles'] as const
+const QUERY_KEY = ['agentone', 'jobs'] as const
+const PROFILES_QUERY_KEY = ['agentone', 'job-profiles'] as const
 
 function formatNextRun(nextRun?: string | null): string {
   if (!nextRun) return '—'
@@ -115,7 +115,7 @@ function JobCard({
   const isCompleted = job.state === 'completed'
   const lastRunStatus = getLastRunStatus(job)
   const outputQuery = useQuery({
-    queryKey: ['claude', 'jobs', job.id, 'output'],
+    queryKey: ['agentone', 'jobs', job.id, 'output'],
     queryFn: () => fetchJobOutput(job.id),
     enabled: expanded,
     staleTime: 30_000,

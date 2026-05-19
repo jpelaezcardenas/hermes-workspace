@@ -43,7 +43,7 @@ export type ProductUpdateStatus = {
   blockingFiles?: Array<string>
   updateMode:
     | 'git-ff'
-    | 'hermes-update'
+    | 'agentone-update'
     | 'desktop-auto-updater'
     | 'docker-manual'
     | 'manual'
@@ -327,7 +327,7 @@ export function readWorkspaceUpdateStatus(
 
   const remoteUrl = git(['remote', 'get-url', 'origin'], gitRepo)
   const repoMatches = remoteUrlMatches(remoteUrl, [
-    'hermes-workspace',
+    'agentone-workspace',
     'outsourc-e/hermes-workspace',
   ])
   if (repoMatches) git(['fetch', 'origin', '--quiet'], gitRepo, 30_000)
@@ -371,7 +371,7 @@ export function readWorkspaceUpdateStatus(
               : 'blocked'
             : 'current',
     reason: !repoMatches
-      ? 'Workspace origin remote does not look like hermes-workspace.'
+      ? 'Workspace origin remote does not look like agentone-workspace.'
       : !supportedBranch
         ? 'Workspace one-click updates are only enabled on main/master branches.'
         : dirty
@@ -389,9 +389,9 @@ export function readWorkspaceUpdateStatus(
 function agentRepoPath(): string | null {
   const candidates = [
     process.env.HERMES_AGENT_REPO,
-    join(homedir(), '.hermes', 'hermes-agent'),
-    join(homedir(), 'Projects', 'hermes-agent'),
-    join(homedir(), 'hermes-agent'),
+    join(homedir(), '.hermes', 'agentone-agent'),
+    join(homedir(), 'Projects', 'agentone-agent'),
+    join(homedir(), 'agentone-agent'),
   ]
   for (const candidate of candidates) {
     const repo = realGitRepoPath(candidate)
@@ -402,9 +402,9 @@ function agentRepoPath(): string | null {
 
 export function readAgentUpdateStatus(): ProductUpdateStatus {
   const repoPath = agentRepoPath()
-  const repoHermes = repoPath ? join(repoPath, 'venv', 'bin', 'hermes') : null
+  const repoAgent = repoPath ? join(repoPath, 'venv', 'bin', 'hermes') : null
   const path =
-    repoHermes && existsSync(repoHermes) ? repoHermes : exec('which', ['hermes'])
+    repoAgent && existsSync(repoAgent) ? repoAgent : exec('which', ['agentone'])
   const version =
     (path ? exec(path, ['--version'], { timeout: 10_000 }) : null)?.split(
       '\n',
@@ -432,7 +432,7 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
 
   const remoteUrl = git(['remote', 'get-url', 'origin'], repoPath)
   const repoMatches = remoteUrlMatches(remoteUrl, [
-    'hermes-agent',
+    'agentone-agent',
     'outsourc-e/hermes-agent',
     'NousResearch/hermes-agent',
   ])
@@ -480,7 +480,7 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
             ? 'Agent-e1 Agent branch diverged from origin. One-click update will realign to the remote branch.'
             : null,
     blockingFiles: dirty ? listDirtyFiles(repoPath) : undefined,
-    updateMode: 'hermes-update',
+    updateMode: 'agentone-update',
   }
 }
 

@@ -90,4 +90,4 @@ export const DEFAULT_WORLD: AgoraWorld = {
   theme: 'agora',
 }
 
-export const AGORA_PROFILE_STORAGE_KEY = 'hermes-workspace-agora-profile'
+export const AGORA_PROFILE_STORAGE_KEY = 'agentone-workspace-agora-profile'

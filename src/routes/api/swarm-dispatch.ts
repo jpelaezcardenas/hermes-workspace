@@ -12,22 +12,26 @@ import { appendSwarmMemoryEvent, buildSwarmStartupSnapshot } from '../../server/
 import { rosterByWorkerId, type SwarmRosterWorker } from '../../server/swarm-roster'
 import { publishSwarmCheckpointNotification } from '../../server/swarm-notifications'
 
-const HERMES_BIN_CANDIDATES = [
+const AGENT_BIN_CANDIDATES = [
+  process.env.AGENTONE_CLI_BIN,
   process.env.HERMES_CLI_BIN,
+  join(homedir(), '.agentone', 'bin', 'agentone'),
   join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
+  join(homedir(), '.local', 'bin', 'agentone'),
   join(homedir(), '.local', 'bin', 'hermes'),
+  'agentone',
   'hermes',
 ].filter((value): value is string => Boolean(value))
 
-function resolveHermesBin(): string {
-  for (const candidate of HERMES_BIN_CANDIDATES) {
+function resolveAgentBin(): string {
+  for (const candidate of AGENT_BIN_CANDIDATES) {
     if (candidate.includes('/')) {
       if (existsSync(candidate)) return candidate
       continue
     }
     return candidate
   }
-  return 'hermes'
+  return 'agentone'
 }
 
 type AssignmentRequest = {
@@ -196,25 +200,25 @@ function shellEscapeSingle(value: string): string {
   return value.replace(/'/g, `'\\''`)
 }
 
-export function buildHermesTmuxLaunchCommand(input: {
+export function buildAgentTmuxLaunchCommand(input: {
   profilePath: string
-  hermesBin: string
+  agentBin: string
   ghToken?: string | null
 }): string {
   const launchPrefix = [
     `AGENTONE_HOME='${shellEscapeSingle(input.profilePath)}'`,
     `HERMES_HOME='${shellEscapeSingle(input.profilePath)}'`,
-    `AGENTONE_CLI_BIN='${shellEscapeSingle(input.hermesBin)}'`,
-    `HERMES_CLI_BIN='${shellEscapeSingle(input.hermesBin)}'`,
+    `AGENTONE_CLI_BIN='${shellEscapeSingle(input.agentBin)}'`,
+    `HERMES_CLI_BIN='${shellEscapeSingle(input.agentBin)}'`,
     input.ghToken ? `GH_TOKEN='${shellEscapeSingle(input.ghToken)}'` : '',
     input.ghToken ? `GITHUB_TOKEN='${shellEscapeSingle(input.ghToken)}'` : '',
   ].filter(Boolean).join(' ')
-  const hermesBin = shellEscapeSingle(input.hermesBin)
+  const agentBin = shellEscapeSingle(input.agentBin)
 
-  // Do not exec the Hermes process. Keeping the parent shell alive means a
+  // Do not exec the agent process. Keeping the parent shell alive means a
   // failed worker startup leaves a readable tmux pane instead of destroying the
   // session and turning the real error into "can't find pane".
-  return `${launchPrefix} '${hermesBin}' chat --tui; status=$?; printf '\n[Agent-e1 worker exited with status %s]\n' "$status"`
+  return `${launchPrefix} '${agentBin}' chat --tui; status=$?; printf '\n[Agent-e1 worker exited with status %s]\n' "$status"`
 }
 
 function parseAssignments(value: unknown): Array<AssignmentRequest> {
@@ -590,10 +594,10 @@ async function ensureLiveTmuxSession(workerId: string): Promise<{ ok: true; tmux
 
   const profilePath = getProfilePath(workerId)
   const cwd = resolveWorkerCwd(workerId)
-  const hermesBin = resolveHermesBin()
-  const launchCommand = buildHermesTmuxLaunchCommand({
+  const agentBin = resolveAgentBin()
+  const launchCommand = buildAgentTmuxLaunchCommand({
     profilePath,
-    hermesBin,
+    agentBin,
     ghToken: resolveGithubToken(),
   })
 
@@ -876,7 +880,7 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
     }
 
     const useWrapper = existsSync(wrapperPath)
-    const cmd = useWrapper ? wrapperPath : resolveHermesBin()
+    const cmd = useWrapper ? wrapperPath : resolveAgentBin()
     const args = ['chat', '-q', prompt, '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch']
     const env: NodeJS.ProcessEnv = {
       ...process.env,
