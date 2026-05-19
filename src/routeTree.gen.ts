@@ -17,6 +17,7 @@ import { Route as Swarm2RouteImport } from './routes/swarm2'
 import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScriptEditorRouteImport } from './routes/script-editor'
 import { Route as ReserveRouteImport } from './routes/reserve'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as PlaygroundRouteImport } from './routes/playground'
@@ -194,6 +195,11 @@ const SkillsRoute = SkillsRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScriptEditorRoute = ScriptEditorRouteImport.update({
+  id: '/script-editor',
+  path: '/script-editor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReserveRoute = ReserveRouteImport.update({
@@ -908,6 +914,7 @@ export interface FileRoutesByFullPath {
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
   '/reserve': typeof ReserveRouteWithChildren
+  '/script-editor': typeof ScriptEditorRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -1056,6 +1063,7 @@ export interface FileRoutesByTo {
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
   '/reserve': typeof ReserveRouteWithChildren
+  '/script-editor': typeof ScriptEditorRoute
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
   '/swarm2': typeof Swarm2Route
@@ -1204,6 +1212,7 @@ export interface FileRoutesById {
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
   '/reserve': typeof ReserveRouteWithChildren
+  '/script-editor': typeof ScriptEditorRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -1354,6 +1363,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/profiles'
     | '/reserve'
+    | '/script-editor'
     | '/settings'
     | '/skills'
     | '/swarm'
@@ -1502,6 +1512,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/profiles'
     | '/reserve'
+    | '/script-editor'
     | '/skills'
     | '/swarm'
     | '/swarm2'
@@ -1649,6 +1660,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/profiles'
     | '/reserve'
+    | '/script-editor'
     | '/settings'
     | '/skills'
     | '/swarm'
@@ -1798,6 +1810,7 @@ export interface RootRouteChildren {
   PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
   ReserveRoute: typeof ReserveRouteWithChildren
+  ScriptEditorRoute: typeof ScriptEditorRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
   SwarmRoute: typeof SwarmRoute
@@ -1958,6 +1971,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/script-editor': {
+      id: '/script-editor'
+      path: '/script-editor'
+      fullPath: '/script-editor'
+      preLoaderRoute: typeof ScriptEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reserve': {
@@ -3143,6 +3163,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
   ReserveRoute: ReserveRouteWithChildren,
+  ScriptEditorRoute: ScriptEditorRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
   SwarmRoute: SwarmRoute,

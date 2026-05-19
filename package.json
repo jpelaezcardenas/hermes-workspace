@@ -24,7 +24,9 @@
     "electron:build": "pnpm build && pnpm electron:bundle-server && electron-builder --config electron-builder.config.cjs",
     "electron:build:mac": "pnpm build && pnpm electron:bundle-server && electron-builder --mac --config electron-builder.config.cjs",
     "electron:build:win": "pnpm build && pnpm electron:bundle-server && electron-builder --win --config electron-builder.config.cjs",
-    "electron:bundle-server": "esbuild dist/server/server.js --bundle --platform=node --format=cjs --outfile=electron/server-bundle.cjs"
+    "electron:bundle-server": "esbuild dist/server/server.js --bundle --platform=node --format=cjs --outfile=electron/server-bundle.cjs",
+    "native:mac": "./macos-native/Scripts/build-macos-app.sh",
+    "script-editor:mac": "./scripts/start-script-editor-mac.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
