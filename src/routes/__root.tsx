@@ -47,16 +47,16 @@ const APP_CSP = [
 ].join('; ')
 
 const THEME_STORAGE_KEY = 'agentone-theme'
-const DEFAULT_THEME = 'claude-nous'
+const DEFAULT_THEME = 'agentone-nous'
 const VALID_THEMES = [
-  'claude-nous',
-  'claude-nous-light',
-  'claude-official',
-  'claude-official-light',
-  'claude-classic',
-  'claude-classic-light',
-  'claude-slate',
-  'claude-slate-light',
+  'agentone-nous',
+  'agentone-nous-light',
+  'agentone-official',
+  'agentone-official-light',
+  'agentone-classic',
+  'agentone-classic-light',
+  'agentone-slate',
+  'agentone-slate-light',
 ]
 
 const themeScript = `
@@ -65,9 +65,14 @@ const themeScript = `
 
   try {
     const root = document.documentElement
-    const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
+    let storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
+    // Migrate old claude-* theme IDs
+    if (storedTheme && storedTheme.startsWith('claude-')) {
+      storedTheme = storedTheme.replace(/^claude-/, 'agentone-')
+      localStorage.setItem('${THEME_STORAGE_KEY}', storedTheme)
+    }
     const theme = ${JSON.stringify(VALID_THEMES)}.includes(storedTheme) ? storedTheme : '${DEFAULT_THEME}'
-    const lightThemes = ['claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
+    const lightThemes = ['agentone-nous-light', 'agentone-official-light', 'agentone-classic-light', 'agentone-slate-light']
     const isDark = !lightThemes.includes(theme)
     root.classList.remove('light', 'dark', 'system')
     root.classList.add(isDark ? 'dark' : 'light')
@@ -90,17 +95,17 @@ const themeColorScript = `
     const root = document.documentElement
     const theme = root.getAttribute('data-theme') || '${DEFAULT_THEME}'
     const colors = {
-      'claude-nous': '#031A1A',
-      'claude-nous-light': '#F8FAF8',
-      'claude-official': '#0A0E1A',
-      'claude-official-light': '#F7F7F1',
-      'claude-classic': '#0d0f12',
-      'claude-classic-light': '#F5F2ED',
-      'claude-slate': '#0d1117',
-      'claude-slate-light': '#F6F8FA',
+      'agentone-nous': '#031A1A',
+      'agentone-nous-light': '#F8FAF8',
+      'agentone-official': '#0A0E1A',
+      'agentone-official-light': '#F7F7F1',
+      'agentone-classic': '#0d0f12',
+      'agentone-classic-light': '#F5F2ED',
+      'agentone-slate': '#0d1117',
+      'agentone-slate-light': '#F6F8FA',
     }
     const nextColor = colors[theme] || colors['${DEFAULT_THEME}']
-    const isDark = !['claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
+    const isDark = !['agentone-nous-light', 'agentone-official-light', 'agentone-classic-light', 'agentone-slate-light'].includes(String(theme))
 
     let meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) {
@@ -426,37 +431,38 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             var bg = '#031A1A', txt = '#F8F1E3', muted = '#9CB2AE', accent = '#FFAC02';
             try {
               var theme = localStorage.getItem('${THEME_STORAGE_KEY}') || '${DEFAULT_THEME}';
-              if (theme === 'claude-nous') {
+              if (theme.startsWith('claude-')) { theme = theme.replace(/^claude-/, 'agentone-'); localStorage.setItem('${THEME_STORAGE_KEY}', theme); }
+              if (theme === 'agentone-nous') {
                 bg = '#031A1A';
                 txt = '#F8F1E3';
                 muted = '#9CB2AE';
                 accent = '#FFAC02';
-              } else if (theme === 'claude-nous-light') {
+              } else if (theme === 'agentone-nous-light') {
                 bg = '#F8FAF8';
                 txt = '#16315F';
                 muted = '#6F7D96';
                 accent = '#2557B7';
-              } else if (theme === 'claude-classic') {
+              } else if (theme === 'agentone-classic') {
                 bg = '#0d0f12';
                 txt = '#eceff4';
                 muted = '#7f8a96';
                 accent = '#b98a44';
-              } else if (theme === 'claude-official-light') {
+              } else if (theme === 'agentone-official-light') {
                 bg = '#F7F7F1';
                 txt = '#16315F';
                 muted = '#6F7D96';
                 accent = '#2557B7';
-              } else if (theme === 'claude-classic-light') {
+              } else if (theme === 'agentone-classic-light') {
                 bg = '#F5F2ED';
                 txt = '#1a1f26';
                 muted = '#6F675E';
                 accent = '#b98a44';
-              } else if (theme === 'claude-slate') {
+              } else if (theme === 'agentone-slate') {
                 bg = '#0d1117';
                 txt = '#c9d1d9';
                 muted = '#8b949e';
                 accent = '#7eb8f6';
-              } else if (theme === 'claude-slate-light') {
+              } else if (theme === 'agentone-slate-light') {
                 bg = '#F6F8FA';
                 txt = '#24292f';
                 muted = '#57606A';
@@ -464,7 +470,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               }
             } catch(e){}
 
-            var isDark = !['claude-nous-light','claude-official-light','claude-classic-light','claude-slate-light'].includes(theme);
+            var isDark = !['agentone-nous-light','agentone-official-light','agentone-classic-light','agentone-slate-light'].includes(theme);
             var quips = ["Consulting the oracle...","Loading ancient knowledge...","Warming up the messenger...","Calibrating tool chain...","Summoning your agent...","Preparing the workspace...","Bridging realms...","Initializing agent runtime..."];
             var quip = quips[Math.floor(Math.random() * quips.length)];
 
@@ -499,7 +505,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             setTimeout(function(){ window.__dismissSplash && window.__dismissSplash(); }, 5000);
             // Fast dismiss: returning users skip quickly
             try {
-              if (localStorage.getItem('claude-claude-url') || localStorage.getItem('claude-url')) {
+              if (localStorage.getItem('agentone-url') || localStorage.getItem('agentone-claude-url') || localStorage.getItem('claude-url')) {
                 setTimeout(function(){ window.__dismissSplash && window.__dismissSplash(); }, 600);
               }
             } catch(e) {}

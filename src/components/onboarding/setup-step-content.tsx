@@ -111,7 +111,7 @@ export function ConnectionCheckStep({
       {status === 'disconnected' && (
         <div className="mb-6 w-full rounded-2xl border border-red-200 bg-red-50 p-4 text-left">
           <p className="mb-3 text-sm font-medium text-red-700">
-            Make sure the Hermes Agent HTTP API server is enabled:
+            Make sure the AgentOne Agent HTTP API server is enabled:
           </p>
           <div className="space-y-2">
             <div>
@@ -213,7 +213,7 @@ export function ModelConfigurationStep({
       </h2>
 
       <p className="mb-6 max-w-md text-base leading-relaxed text-primary-600">
-        Core chat works with any OpenAI-compatible backend. Hermes Agent gateway APIs
+        Core chat works with any OpenAI-compatible backend. AgentOne gateway APIs
         make provider and model setup editable from the workspace.
       </p>
 

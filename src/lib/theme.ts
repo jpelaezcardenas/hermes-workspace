@@ -1,14 +1,14 @@
 export type ThemeId =
-  | 'claude-nous'
-  | 'claude-nous-light'
+  | 'agentone-nous'
+  | 'agentone-nous-light'
   | 'matrix'
   | 'matrix-light'
-  | 'claude-official'
-  | 'claude-official-light'
-  | 'claude-classic'
-  | 'claude-classic-light'
-  | 'claude-slate'
-  | 'claude-slate-light'
+  | 'agentone-official'
+  | 'agentone-official-light'
+  | 'agentone-classic'
+  | 'agentone-classic-light'
+  | 'agentone-slate'
+  | 'agentone-slate-light'
   | 'scifi'
   | 'scifi-light'
 
@@ -19,13 +19,13 @@ export const THEMES: Array<{
   icon: string
 }> = [
   {
-    id: 'claude-nous',
+    id: 'agentone-nous',
     label: 'Nous',
     description: 'Deep teal background, cream accent — matches Nous Research chrome',
     icon: '◱',
   },
   {
-    id: 'claude-nous-light',
+    id: 'agentone-nous-light',
     label: 'Nous Light',
     description: 'Cold paper white with restrained cobalt framing',
     icon: '◲',
@@ -43,37 +43,37 @@ export const THEMES: Array<{
     icon: '▣',
   },
   {
-    id: 'claude-official',
-    label: 'AgentOne',
+    id: 'agentone-official',
+    label: 'Agent-e1',
     description: 'Navy and indigo flagship theme',
     icon: '⚕',
   },
   {
-    id: 'claude-official-light',
-    label: 'AgentOne Light',
+    id: 'agentone-official-light',
+    label: 'Agent-e1 Light',
     description: 'Editorial paper white with muted cobalt accents',
     icon: '⚕',
   },
   {
-    id: 'claude-classic',
+    id: 'agentone-classic',
     label: 'Bronze',
     description: 'Bronze accents on dark charcoal',
     icon: '🔶',
   },
   {
-    id: 'claude-classic-light',
+    id: 'agentone-classic-light',
     label: 'Bronze Light',
     description: 'Warm parchment with bronze accents',
     icon: '🔶',
   },
   {
-    id: 'claude-slate',
+    id: 'agentone-slate',
     label: 'Slate',
     description: 'Cool blue developer theme',
     icon: '🔷',
   },
   {
-    id: 'claude-slate-light',
+    id: 'agentone-slate-light',
     label: 'Slate Light',
     description: 'GitHub-light palette with blue accents',
     icon: '🔷',
@@ -93,37 +93,37 @@ export const THEMES: Array<{
 ]
 
 const STORAGE_KEY = 'agentone-theme'
-const DEFAULT_THEME: ThemeId = 'claude-nous'
+const DEFAULT_THEME: ThemeId = 'agentone-nous'
 const THEME_SET = new Set<ThemeId>(THEMES.map((theme) => theme.id))
 const LIGHT_THEME_MAP: Record<
   Exclude<ThemeId, `${string}-light`>,
   Extract<ThemeId, `${string}-light`>
 > = {
-  'claude-nous': 'claude-nous-light',
+  'agentone-nous': 'agentone-nous-light',
   matrix: 'matrix-light',
-  'claude-official': 'claude-official-light',
-  'claude-classic': 'claude-classic-light',
-  'claude-slate': 'claude-slate-light',
+  'agentone-official': 'agentone-official-light',
+  'agentone-classic': 'agentone-classic-light',
+  'agentone-slate': 'agentone-slate-light',
   'scifi': 'scifi-light',
 }
 const DARK_THEME_MAP: Record<
   Extract<ThemeId, `${string}-light`>,
   Exclude<ThemeId, `${string}-light`>
 > = {
-  'claude-nous-light': 'claude-nous',
+  'agentone-nous-light': 'agentone-nous',
   'matrix-light': 'matrix',
-  'claude-official-light': 'claude-official',
-  'claude-classic-light': 'claude-classic',
-  'claude-slate-light': 'claude-slate',
+  'agentone-official-light': 'agentone-official',
+  'agentone-classic-light': 'agentone-classic',
+  'agentone-slate-light': 'agentone-slate',
   'scifi-light': 'scifi',
 }
 
 const LIGHT_THEMES = new Set<ThemeId>([
-  'claude-nous-light',
+  'agentone-nous-light',
   'matrix-light',
-  'claude-official-light',
-  'claude-classic-light',
-  'claude-slate-light',
+  'agentone-official-light',
+  'agentone-classic-light',
+  'agentone-slate-light',
   'scifi-light',
 ])
 
@@ -155,7 +155,16 @@ export function getThemeVariant(
 export function getTheme(): ThemeId {
   if (typeof window === 'undefined') return DEFAULT_THEME
   const stored = localStorage.getItem(STORAGE_KEY)
-  return isValidTheme(stored) ? stored : DEFAULT_THEME
+  if (isValidTheme(stored)) return stored
+  // Migrate old claude-* theme IDs
+  if (stored && stored.startsWith('claude-')) {
+    const migrated = stored.replace(/^claude-/, 'agentone-') as ThemeId
+    if (isValidTheme(migrated)) {
+      localStorage.setItem(STORAGE_KEY, migrated)
+      return migrated
+    }
+  }
+  return DEFAULT_THEME
 }
 
 export function setTheme(theme: ThemeId): void {

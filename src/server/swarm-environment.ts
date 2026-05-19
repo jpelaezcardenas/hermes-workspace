@@ -78,7 +78,7 @@ export function getSwarmEnvironment(): SwarmEnvironment {
       'Swarm code, git, build, and tests run only in the canonical repo.',
       'Do not use the legacy hermes-workspace alias for Swarm work.',
       'Worker profiles live under ~/.hermes/profiles/<workerId> and wrappers under ~/.local/bin/swarmN.',
-      'Prefer live tmux-backed Hermes sessions over one-shot subprocesses.',
+      'Prefer live tmux-backed AgentOne sessions over one-shot subprocesses.',
       'Use the swarm APIs as the machine-readable source of worker/runtime truth.',
     ],
   }

@@ -801,7 +801,7 @@ code {
   --theme-input: #ffffff;
 }
 
-[data-theme='claude-official'] {
+[data-theme='agentone-official'] {
   --theme-bg: #0a0e1a;
   /* Sidebar gets a deeper shade than the main bg so the column
      reads as its own surface. Iter 014 fix: previously the sidebar
@@ -851,7 +851,7 @@ code {
   --theme-input: #0f1728;
 }
 
-[data-theme='claude-classic'] {
+[data-theme='agentone-classic'] {
   --theme-bg: #0d0f12;
   --theme-sidebar: #13171c;
   --theme-panel: #13171c;
@@ -898,7 +898,7 @@ code {
   --theme-input: #232a33;
 }
 
-[data-theme='claude-slate'] {
+[data-theme='agentone-slate'] {
   --theme-bg: #0d1117;
   --theme-sidebar: #0d1117;
   --theme-panel: #161b22;
@@ -944,7 +944,7 @@ code {
   --theme-input: #232a33;
 }
 
-[data-theme='claude-official-light'] {
+[data-theme='agentone-official-light'] {
   --theme-bg: #f7f7f1;
   --theme-sidebar: #f2f3ed;
   --theme-panel: #f4f5ef;
@@ -990,7 +990,7 @@ code {
   --theme-input: #fbfcf7;
 }
 
-[data-theme='claude-classic-light'] {
+[data-theme='agentone-classic-light'] {
   --theme-bg: #f5f2ed;
   --theme-sidebar: #eee8df;
   --theme-panel: #f0ebe4;
@@ -1036,7 +1036,7 @@ code {
   --theme-input: #fffdf9;
 }
 
-[data-theme='claude-slate-light'] {
+[data-theme='agentone-slate-light'] {
   --theme-bg: #f6f8fa;
   --theme-sidebar: #f3f5f7;
   --theme-panel: #eef2f6;
@@ -1088,7 +1088,7 @@ code {
    Light: warm parchment, deep teal text, amber #ffac02 accent
    ============================================================ */
 
-[data-theme='claude-nous'] {
+[data-theme='agentone-nous'] {
   --theme-bg: #041c1c;
   --theme-sidebar: #06282a;
   --theme-panel: #06282a;
@@ -1134,7 +1134,7 @@ code {
   --theme-input: #06282a;
 }
 
-[data-theme='claude-nous-light'] {
+[data-theme='agentone-nous-light'] {
   --theme-bg: #f8faf8;
   --theme-sidebar: #f2f6f4;
   --theme-panel: #f4f7f5;
@@ -1180,42 +1180,42 @@ code {
   --theme-input: #fbfdfb;
 }
 
-[data-theme='claude-nous'] html,
-[data-theme='claude-nous'] body,
-[data-theme='claude-nous'] #root,
-[data-theme='claude-nous'] .dark,
-[data-theme='claude-official'] html,
-[data-theme='claude-official'] body,
-[data-theme='claude-official'] #root,
-[data-theme='claude-official'] .dark,
-[data-theme='claude-classic'] html,
-[data-theme='claude-classic'] body,
-[data-theme='claude-classic'] #root,
-[data-theme='claude-classic'] .dark,
-[data-theme='claude-slate'] html,
-[data-theme='claude-slate'] body,
-[data-theme='claude-slate'] #root,
-[data-theme='claude-slate'] .dark {
+[data-theme='agentone-nous'] html,
+[data-theme='agentone-nous'] body,
+[data-theme='agentone-nous'] #root,
+[data-theme='agentone-nous'] .dark,
+[data-theme='agentone-official'] html,
+[data-theme='agentone-official'] body,
+[data-theme='agentone-official'] #root,
+[data-theme='agentone-official'] .dark,
+[data-theme='agentone-classic'] html,
+[data-theme='agentone-classic'] body,
+[data-theme='agentone-classic'] #root,
+[data-theme='agentone-classic'] .dark,
+[data-theme='agentone-slate'] html,
+[data-theme='agentone-slate'] body,
+[data-theme='agentone-slate'] #root,
+[data-theme='agentone-slate'] .dark {
   background-color: var(--theme-bg);
   color: var(--theme-text);
 }
 
-[data-theme='claude-nous-light'] html,
-[data-theme='claude-nous-light'] body,
-[data-theme='claude-nous-light'] #root,
-[data-theme='claude-nous-light'] .light,
-[data-theme='claude-official-light'] html,
-[data-theme='claude-official-light'] body,
-[data-theme='claude-official-light'] #root,
-[data-theme='claude-official-light'] .light,
-[data-theme='claude-classic-light'] html,
-[data-theme='claude-classic-light'] body,
-[data-theme='claude-classic-light'] #root,
-[data-theme='claude-classic-light'] .light,
-[data-theme='claude-slate-light'] html,
-[data-theme='claude-slate-light'] body,
-[data-theme='claude-slate-light'] #root,
-[data-theme='claude-slate-light'] .light {
+[data-theme='agentone-nous-light'] html,
+[data-theme='agentone-nous-light'] body,
+[data-theme='agentone-nous-light'] #root,
+[data-theme='agentone-nous-light'] .light,
+[data-theme='agentone-official-light'] html,
+[data-theme='agentone-official-light'] body,
+[data-theme='agentone-official-light'] #root,
+[data-theme='agentone-official-light'] .light,
+[data-theme='agentone-classic-light'] html,
+[data-theme='agentone-classic-light'] body,
+[data-theme='agentone-classic-light'] #root,
+[data-theme='agentone-classic-light'] .light,
+[data-theme='agentone-slate-light'] html,
+[data-theme='agentone-slate-light'] body,
+[data-theme='agentone-slate-light'] #root,
+[data-theme='agentone-slate-light'] .light {
   background-color: var(--theme-bg);
   color: var(--theme-text);
 }
@@ -1225,10 +1225,10 @@ code {
    to theme-appropriate values so ALL existing Tailwind classes work.
    Dark: 50=darkest surface, 950=lightest text (already set above) */
 
-[data-theme='claude-nous'],
-[data-theme='claude-official'],
-[data-theme='claude-classic'],
-[data-theme='claude-slate'] {
+[data-theme='agentone-nous'],
+[data-theme='agentone-official'],
+[data-theme='agentone-classic'],
+[data-theme='agentone-slate'] {
   --color-primary-50: var(--theme-panel);
   --color-primary-100: var(--theme-card);
   --color-primary-200: var(--theme-border);
@@ -1251,10 +1251,10 @@ code {
 /* ── Tailwind primary token remaps for light themes ────────────────────
    Light: 50=lightest surface, 950=darkest text */
 
-[data-theme='claude-nous-light'],
-[data-theme='claude-official-light'],
-[data-theme='claude-classic-light'],
-[data-theme='claude-slate-light'] {
+[data-theme='agentone-nous-light'],
+[data-theme='agentone-official-light'],
+[data-theme='agentone-classic-light'],
+[data-theme='agentone-slate-light'] {
   color-scheme: light !important;
   --color-primary-50: var(--theme-card) !important;
   --color-primary-100: var(--theme-card2) !important;

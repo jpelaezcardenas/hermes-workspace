@@ -298,7 +298,7 @@ async function fetchModelsForProvider(
     `/api/claude-proxy/api/available-models?provider=${encodeURIComponent(normalizedProvider)}`,
   )
   if (!response.ok) {
-    throw new Error(`Hermes models request failed (${response.status})`)
+    throw new Error(`AgentOne models request failed (${response.status})`)
   }
 
   const payload = (await response.json()) as ClaudeAvailableModelsResponse
@@ -1145,7 +1145,7 @@ function ChatComposerComponent({
   // Derive the label directly from the store so navigation between sessions
   // updates without a render-window flash from a stale React-state mirror.
   const modelButtonLabel =
-    persistedSessionModel || currentModel || configuredModel || '⚕ Hermes Agent'
+    persistedSessionModel || currentModel || configuredModel || '⚕ AgentOne Agent'
 
   // Measure composer height and set CSS variable for scroll padding
   useLayoutEffect(() => {
@@ -2437,7 +2437,7 @@ function ChatComposerComponent({
                                   No models available
                                 </p>
                                 <p className="text-xs">
-                                  Check your Hermes provider configuration.
+                                  Check your AgentOne provider configuration.
                                 </p>
                               </div>
                             )

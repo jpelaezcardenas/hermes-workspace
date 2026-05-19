@@ -569,7 +569,13 @@ async function probeDashboard(): Promise<{ available: boolean; url: string }> {
     if (!res.ok) return { available: false, url: CLAUDE_DASHBOARD_URL }
     const body = (await res.json()) as { version?: string }
     if (!body.version) return { available: false, url: CLAUDE_DASHBOARD_URL }
-    await fetchDashboardToken().catch(() => '')
+    // Verify the frontend is actually built — fetchDashboardToken
+    // will fail with 404 if the dashboard web UI isn't compiled.
+    try {
+      await fetchDashboardToken()
+    } catch {
+      return { available: false, url: CLAUDE_DASHBOARD_URL }
+    }
     return { available: true, url: CLAUDE_DASHBOARD_URL }
   } catch {
     return { available: false, url: CLAUDE_DASHBOARD_URL }
@@ -675,7 +681,7 @@ export function getCapabilityWarningMessage(
     return `[gateway] ${DASHBOARD_REQUIRED_INSTRUCTIONS}`
   }
 
-  return `[gateway] Missing Hermes APIs detected. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
+  return `[gateway] Missing AgentOne APIs detected. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
 }
 
 function logCapabilities(next: GatewayCapabilities): void {
@@ -738,7 +744,7 @@ async function autoDetectGatewayUrl(): Promise<void> {
       })
       if (res.ok) {
         CLAUDE_API = candidate
-        console.log(`[gateway] Connected to Hermes gateway at ${CLAUDE_API}`)
+        console.log(`[gateway] Connected to AgentOne gateway at ${CLAUDE_API}`)
         return
       }
     } catch {

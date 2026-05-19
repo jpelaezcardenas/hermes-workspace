@@ -114,49 +114,49 @@ const THEME_PREVIEWS: Record<
   ThemeId,
   { bg: string; panel: string; border: string; accent: string; text: string }
 > = {
-  'claude-nous': {
+  'agentone-nous': {
     bg: '#031a1a',
     panel: '#082224',
     border: 'rgba(255,255,255,0.12)',
     accent: '#ffac02',
     text: '#f8f1e3',
   },
-  'claude-nous-light': {
+  'agentone-nous-light': {
     bg: '#F8FAF8',
     panel: '#FBFDFB',
     border: 'rgba(30,74,92,0.18)',
     accent: '#2557B7',
     text: '#16315F',
   },
-  'claude-official': {
+  'agentone-official': {
     bg: '#0A0E1A',
     panel: '#11182A',
     border: '#24304A',
     accent: '#6366F1',
     text: '#E6EAF2',
   },
-  'claude-official-light': {
+  'agentone-official-light': {
     bg: '#F7F7F1',
     panel: '#FAFBF6',
     border: '#CDD5DA',
     accent: '#2557B7',
     text: '#16315F',
   },
-  'claude-classic': {
+  'agentone-classic': {
     bg: '#0d0f12',
     panel: '#1a1f26',
     border: '#2a313b',
     accent: '#b98a44',
     text: '#eceff4',
   },
-  'claude-slate': {
+  'agentone-slate': {
     bg: '#0d1117',
     panel: '#1c2128',
     border: '#30363d',
     accent: '#7eb8f6',
     text: '#c9d1d9',
   },
-  'claude-classic-light': {
+  'agentone-classic-light': {
     bg: '#F5F2ED',
     panel: '#FFFFFF',
     border: '#D9D0C4',
@@ -177,7 +177,7 @@ const THEME_PREVIEWS: Record<
     accent: '#008F2D',
     text: '#062A12',
   },
-  'claude-slate-light': {
+  'agentone-slate-light': {
     bg: '#F6F8FA',
     panel: '#FFFFFF',
     border: '#D0D7DE',

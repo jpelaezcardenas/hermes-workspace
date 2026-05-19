@@ -495,7 +495,7 @@ export function buildSwarmSessionMetadata(input: {
     sessionId: input.runtime.sessionId ?? input.tmuxSession ?? input.workerId,
     sessionTitle:
       input.runtime.sessionTitle ??
-      (input.tmuxSession ? `Hermes worker ${input.workerId}` : null),
+      (input.tmuxSession ? `AgentOne worker ${input.workerId}` : null),
     historySource:
       input.runtime.historySource === 'unavailable'
         ? inferSwarmHistorySource(input.profilePath)

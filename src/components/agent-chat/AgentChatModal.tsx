@@ -67,7 +67,7 @@ function toChatMessages(messages: Array<ChatMessage>): Array<AgentChatMessage> {
 }
 
 function buildDemoReply(agentName: string, text: string): string {
-  return `${agentName} (demo): Received "${text}". Hermes Agent is unavailable, so this is a simulated response.`
+  return `${agentName} (demo): Received "${text}". AgentOne Agent is unavailable, so this is a simulated response.`
 }
 
 export function AgentChatModal({

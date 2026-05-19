@@ -85,10 +85,10 @@ const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
 ]
 
 const DARK_ENTERPRISE_THEMES = new Set<ThemeId>([
-  'claude-nous',
-  'claude-official',
-  'claude-classic',
-  'claude-slate',
+  'agentone-nous',
+  'agentone-official',
+  'agentone-classic',
+  'agentone-slate',
 ])
 
 function _isDarkEnterpriseTheme(theme: string | null): theme is ThemeId {
@@ -1507,18 +1507,18 @@ function AppearanceContent() {
 }
 
 const ENTERPRISE_THEME_FAMILIES: Array<ThemeId> = [
-  'claude-nous',
+  'agentone-nous',
   'matrix',
-  'claude-official',
-  'claude-classic',
-  'claude-slate',
+  'agentone-official',
+  'agentone-classic',
+  'agentone-slate',
 ]
 
 const ENTERPRISE_THEMES = THEMES.map((theme) => ({
   ...theme,
   desc: theme.description,
   preview:
-    theme.id === 'claude-nous'
+    theme.id === 'agentone-nous'
       ? {
           bg: '#041C1C',
           panel: '#06282A',
@@ -1526,7 +1526,7 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
           accent: '#FFAC02',
           text: '#FFE6CB',
         }
-      : theme.id === 'claude-nous-light'
+      : theme.id === 'agentone-nous-light'
         ? {
             bg: '#F8FAF8',
             panel: '#FBFDFB',
@@ -1550,7 +1550,7 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                 accent: '#008F2D',
                 text: '#062A12',
               }
-            : theme.id === 'claude-official'
+            : theme.id === 'agentone-official'
               ? {
                   bg: '#0A0E1A',
                   panel: '#11182A',
@@ -1558,7 +1558,7 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                   accent: '#6366F1',
                   text: '#E6EAF2',
                 }
-              : theme.id === 'claude-official-light'
+              : theme.id === 'agentone-official-light'
                 ? {
                     bg: '#F7F7F1',
                     panel: '#FAFBF6',
@@ -1566,7 +1566,7 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                     accent: '#2557B7',
                     text: '#16315F',
                   }
-                : theme.id === 'claude-classic'
+                : theme.id === 'agentone-classic'
               ? {
                   bg: '#0d0f12',
                   panel: '#1a1f26',
@@ -1574,7 +1574,7 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                   accent: '#b98a44',
                   text: '#eceff4',
                 }
-              : theme.id === 'claude-classic-light'
+              : theme.id === 'agentone-classic-light'
                 ? {
                     bg: '#F5F2ED',
                     panel: '#FCFAF7',
@@ -1582,7 +1582,7 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                     accent: '#b98a44',
                     text: '#1a1f26',
                   }
-                : theme.id === 'claude-slate'
+                : theme.id === 'agentone-slate'
                   ? {
                       bg: '#0d1117',
                       panel: '#1c2128',
@@ -1642,7 +1642,7 @@ function ThemeSwatch({
 function EnterpriseThemePicker() {
   const { updateSettings } = useSettings()
   const [current, setCurrent] = useState(() => {
-    if (typeof window === 'undefined') return 'claude-nous'
+    if (typeof window === 'undefined') return 'agentone-nous'
     return getTheme()
   })
   const currentMode = isDarkTheme(current) ? 'dark' : 'light'
@@ -2521,7 +2521,7 @@ export function SettingsDialog({
                 Settings
               </DialogTitle>
               <DialogDescription className="sr-only">
-                Configure Hermes Workspace
+                Configure AgentOne
               </DialogDescription>
             </div>
             <DialogClose

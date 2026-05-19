@@ -180,7 +180,7 @@ function validateProfileAndMaybeJob(profile: string, jobId?: string): void {
     throw new Error('Invalid profile or job id')
   }
   if (!listCronProfiles().some((entry) => entry.profile === profile)) {
-    throw new Error(`Unknown Hermes profile: ${profile}`)
+    throw new Error(`Unknown AgentOne profile: ${profile}`)
   }
 }
 

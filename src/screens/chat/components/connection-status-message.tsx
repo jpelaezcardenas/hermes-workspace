@@ -133,7 +133,7 @@ export function ConnectionStatusMessage({
         />
         <div className="flex-1 text-xs">
           <p className="font-medium">
-            {isChecking ? 'Connecting to Hermes Agent...' : errorInfo.title}
+            {isChecking ? 'Connecting to AgentOne Agent...' : errorInfo.title}
           </p>
           {!isChecking ? (
             <>

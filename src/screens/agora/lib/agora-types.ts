@@ -83,7 +83,7 @@ export interface AgoraWorld {
 export const DEFAULT_WORLD: AgoraWorld = {
   id: 'agora-main',
   name: 'The Agora',
-  description: 'Default Hermes community lobby.',
+  description: 'Default AgentOne community lobby.',
   width: 1200,
   height: 720,
   spawn: { x: 600, y: 360 },

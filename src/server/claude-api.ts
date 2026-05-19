@@ -75,7 +75,7 @@ async function claudeGet<T>(path: string): Promise<T> {
   const res = await fetch(`${CLAUDE_API}${path}`, { headers: _authHeaders() })
   if (!res.ok) {
     const body = await res.text().catch(() => '')
-    throw new Error(`Hermes Agent API ${path}: ${res.status} ${body}`)
+    throw new Error(`AgentOne Agent API ${path}: ${res.status} ${body}`)
   }
   return res.json() as Promise<T>
 }
@@ -88,7 +88,7 @@ async function claudePost<T>(path: string, body?: unknown): Promise<T> {
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`Hermes Agent API POST ${path}: ${res.status} ${text}`)
+    throw new Error(`AgentOne Agent API POST ${path}: ${res.status} ${text}`)
   }
   return res.json() as Promise<T>
 }
@@ -101,7 +101,7 @@ async function claudePatch<T>(path: string, body: unknown): Promise<T> {
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`Hermes Agent API PATCH ${path}: ${res.status} ${text}`)
+    throw new Error(`AgentOne Agent API PATCH ${path}: ${res.status} ${text}`)
   }
   return res.json() as Promise<T>
 }
@@ -113,7 +113,7 @@ async function claudeDeleteReq(path: string): Promise<void> {
   })
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`Hermes Agent API DELETE ${path}: ${res.status} ${text}`)
+    throw new Error(`AgentOne Agent API DELETE ${path}: ${res.status} ${text}`)
   }
 }
 
@@ -382,7 +382,7 @@ export async function streamChat(
 
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    throw new Error(`Hermes chat stream: ${res.status} ${text}`)
+    throw new Error(`AgentOne chat stream: ${res.status} ${text}`)
   }
 
   const reader = res.body?.getReader()

@@ -849,17 +849,17 @@ export function DashboardScreen() {
           aria-label="Toggle theme"
           onClick={() => {
             const LIGHT_DARK_PAIRS: Record<string, string> = {
-              'claude-nous': 'claude-nous-light',
-              'claude-nous-light': 'claude-nous',
-              'claude-official': 'claude-official-light',
-              'claude-official-light': 'claude-official',
-              'claude-classic': 'claude-classic-light',
-              'claude-classic-light': 'claude-classic',
-              'claude-slate': 'claude-slate-light',
-              'claude-slate-light': 'claude-slate',
+              'agentone-nous': 'agentone-nous-light',
+              'agentone-nous-light': 'agentone-nous',
+              'agentone-official': 'agentone-official-light',
+              'agentone-official-light': 'agentone-official',
+              'agentone-classic': 'agentone-classic-light',
+              'agentone-classic-light': 'agentone-classic',
+              'agentone-slate': 'agentone-slate-light',
+              'agentone-slate-light': 'agentone-slate',
             }
-            const cur = document.documentElement.getAttribute('data-theme') || 'claude-official'
-            const nextDataTheme = LIGHT_DARK_PAIRS[cur] || (isDark ? 'claude-official-light' : 'claude-official')
+            const cur = document.documentElement.getAttribute('data-theme') || 'agentone-official'
+            const nextDataTheme = LIGHT_DARK_PAIRS[cur] || (isDark ? 'agentone-official-light' : 'agentone-official')
             import('@/lib/theme').then(({ setTheme }) => { setTheme(nextDataTheme as any) })
             const nextMode = nextDataTheme.endsWith('-light') ? 'light' : 'dark'
             applyTheme(nextMode)
@@ -920,7 +920,7 @@ export function DashboardScreen() {
                 lineHeight: 1.1,
               }}
             >
-              Hermes Workspace
+              AgentOne
             </h1>
           </div>
         </div>

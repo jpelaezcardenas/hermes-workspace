@@ -29,7 +29,7 @@ function getSetupSteps(
       note: 'Portable chat works with any backend that exposes /v1/chat/completions (Ollama, LiteLLM, vLLM, etc.)',
     },
     {
-      title: 'Optional: install Hermes Agent locally',
+      title: 'Optional: install AgentOne Agent locally',
       command:
         'curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash',
       note: 'Vanilla hermes-agent unlocks sessions, skills, memory, jobs, and config automatically — no fork required',
@@ -113,7 +113,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
           setServerLog([
             String(
               data.message ||
-                'Auto-started Hermes Agent gateway — reconnecting…',
+                'Auto-started AgentOne Agent gateway — reconnecting…',
             ),
           ])
         }
@@ -226,7 +226,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
         />
 
         <h1 className="text-[2rem] font-semibold tracking-tight text-white">
-          Hermes Workspace
+          AgentOne
         </h1>
 
         {/* Connecting spinner */}
@@ -255,7 +255,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
               Welcome! Let&apos;s connect your backend
             </p>
             <p className="mt-2 text-sm leading-6 text-white/60">
-              Hermes Workspace works with any OpenAI-compatible backend. Hermes Agent
+              AgentOne works with any OpenAI-compatible backend. AgentOne Agent
               gateway APIs unlock enhanced features automatically when they are
               available.
             </p>
@@ -279,7 +279,7 @@ export function ConnectionStartupScreen({ onConnected }: Props) {
                     Detecting...
                   </span>
                 ) : (
-                  'Auto-Start Hermes Agent Gateway'
+                  'Auto-Start AgentOne Agent Gateway'
                 )}
               </button>
 
