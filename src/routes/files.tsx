@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Editor } from '@monaco-editor/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -15,6 +15,21 @@ function note() {
   return 'Ready to explore files.'
 }
 `
+
+const FILE_EXPLORER_WIDTH_STORAGE_KEY = 'hermes.files.explorerWidth'
+const MIN_FILE_EXPLORER_WIDTH = 220
+const MAX_FILE_EXPLORER_WIDTH = 560
+const DEFAULT_FILE_EXPLORER_WIDTH = 340
+
+function getInitialFileExplorerWidth() {
+  if (typeof window === 'undefined') return DEFAULT_FILE_EXPLORER_WIDTH
+  const saved = Number(window.localStorage.getItem(FILE_EXPLORER_WIDTH_STORAGE_KEY))
+  if (!Number.isFinite(saved)) return DEFAULT_FILE_EXPLORER_WIDTH
+  return Math.min(
+    MAX_FILE_EXPLORER_WIDTH,
+    Math.max(MIN_FILE_EXPLORER_WIDTH, saved),
+  )
+}
 
 export const Route = createFileRoute('/files')({
   ssr: false,
@@ -56,7 +71,11 @@ function FilesRoute() {
   const { settings } = useSettings()
   const [isMobile, setIsMobile] = useState(false)
   const [fileExplorerCollapsed, setFileExplorerCollapsed] = useState(false)
+  const [fileExplorerWidth, setFileExplorerWidth] = useState(
+    getInitialFileExplorerWidth,
+  )
   const [editorValue, setEditorValue] = useState(INITIAL_EDITOR_VALUE)
+  const resizeStartRef = useRef<{ x: number; width: number } | null>(null)
   const resolvedTheme = resolveTheme(settings.theme)
 
   useEffect(() => {
@@ -72,6 +91,40 @@ function FilesRoute() {
     setFileExplorerCollapsed(true)
   }, [isMobile])
 
+  useEffect(() => {
+    window.localStorage.setItem(
+      FILE_EXPLORER_WIDTH_STORAGE_KEY,
+      String(fileExplorerWidth),
+    )
+  }, [fileExplorerWidth])
+
+  useEffect(() => {
+    function handleMouseMove(event: MouseEvent) {
+      if (!resizeStartRef.current) return
+      const nextWidth =
+        resizeStartRef.current.width + event.clientX - resizeStartRef.current.x
+      setFileExplorerWidth(
+        Math.min(
+          MAX_FILE_EXPLORER_WIDTH,
+          Math.max(MIN_FILE_EXPLORER_WIDTH, nextWidth),
+        ),
+      )
+    }
+
+    function handleMouseUp() {
+      resizeStartRef.current = null
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [])
+
   const handleInsertReference = useCallback(function handleInsertReference(
     reference: string,
   ) {
@@ -83,11 +136,29 @@ function FilesRoute() {
       <div className="flex h-full min-h-0 overflow-hidden">
         <FileExplorerSidebar
           collapsed={fileExplorerCollapsed}
+          width={fileExplorerWidth}
           onToggle={function onToggleFileExplorer() {
             setFileExplorerCollapsed((prev) => !prev)
           }}
           onInsertReference={handleInsertReference}
         />
+        {!fileExplorerCollapsed ? (
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize file explorer"
+            title="Resize file explorer"
+            onMouseDown={(event) => {
+              resizeStartRef.current = {
+                x: event.clientX,
+                width: fileExplorerWidth,
+              }
+              document.body.style.cursor = 'col-resize'
+              document.body.style.userSelect = 'none'
+            }}
+            className="w-1.5 shrink-0 cursor-col-resize border-r border-primary-200 bg-primary-100 hover:bg-accent-500/30 transition-colors"
+          />
+        ) : null}
         <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <header className="flex items-center gap-3 border-b border-primary-200 px-3 py-2 md:px-4 md:py-3">
             <button
