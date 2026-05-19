@@ -150,6 +150,11 @@ export function listProfiles(): Array<ProfileSummary> {
     for (const entry of entries) {
       if (!entry.isDirectory()) continue
       const name = entry.name
+      // Skip any profiles/default/ directory — the "default" profile is
+      // always sourced from the root claude dir (see readProfile() below),
+      // never from profiles/default/. Listing both produces a duplicate
+      // "default" card with empty config from the skeleton dir.
+      if (name === 'default') continue
       const profilePath = path.join(profilesRoot, name)
       const configPath = path.join(profilePath, 'config.yaml')
       const envPath = path.join(profilePath, '.env')
