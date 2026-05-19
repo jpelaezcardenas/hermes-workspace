@@ -52,6 +52,8 @@ export type Swarm2OrchestratorCardProps = {
   latestMission?: { id: string; title: string; state: string; assignmentCount: number; checkpointedCount: number } | null
   inboxCounts?: { needsReview: number; blocked: number; ready: number }
   routerSeed?: { key: number; prompt: string; mode: 'auto' | 'manual' | 'broadcast' } | null
+  liveWorkersStarting?: boolean
+  onStartLiveWorkers?: () => void
   onOpenRouter: () => void
   onRouterResults?: (response: DispatchResponse) => void
   /**
@@ -85,6 +87,8 @@ export function Swarm2OrchestratorCard({
   latestMission = null,
   inboxCounts = { needsReview: 0, blocked: 0, ready: 0 },
   routerSeed = null,
+  liveWorkersStarting = false,
+  onStartLiveWorkers,
   onOpenRouter,
   onRouterResults,
   onAnchorRef,
@@ -188,6 +192,23 @@ export function Swarm2OrchestratorCard({
           </div>
 
           <div className="absolute right-0 top-0 flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={onStartLiveWorkers}
+              disabled={!onStartLiveWorkers || liveWorkersStarting}
+              className={cn(
+                'inline-flex h-9 items-center gap-1 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)] hover:bg-[var(--theme-card2)] hover:text-[var(--theme-text)]',
+                (!onStartLiveWorkers || liveWorkersStarting) && 'cursor-not-allowed opacity-50',
+              )}
+              title="Ensure and start all 15 live Swarm workers"
+            >
+              <HugeiconsIcon
+                icon={ComputerTerminal01Icon}
+                size={13}
+                strokeWidth={1.8}
+              />
+              {liveWorkersStarting ? 'Starting…' : 'Start 15'}
+            </button>
             <button
               type="button"
               onClick={onOpenRouter}

@@ -235,21 +235,41 @@ export function RouterChat({
     setResults(null)
     setFollowUp(null)
     try {
-      const res = await fetch('/api/swarm-dispatch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          assignments: plan,
-          timeoutSeconds: 300,
-          waitForCheckpoint: true,
-          checkpointPollSeconds: 90,
-        }),
-      })
+      const res = mode === 'auto'
+        ? await fetch('/api/swarm-autopilot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: prompt.trim(),
+            dispatch: true,
+            ensureLiveWorkers: true,
+            timeoutSeconds: 300,
+            waitForCheckpoint: true,
+            checkpointPollSeconds: 90,
+          }),
+        })
+        : await fetch('/api/swarm-dispatch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assignments: plan,
+            timeoutSeconds: 300,
+            waitForCheckpoint: true,
+            checkpointPollSeconds: 90,
+          }),
+        })
       if (!res.ok) {
         const text = await res.text()
         throw new Error(text || `HTTP ${res.status}`)
       }
-      const data = (await res.json()) as DispatchResponse
+      const rawData = (await res.json()) as DispatchResponse | { dispatch?: DispatchResponse; plan?: { assignments?: Array<Assignment>; unassigned?: Array<string> } }
+      const data = mode === 'auto' && 'dispatch' in rawData && rawData.dispatch
+        ? rawData.dispatch
+        : rawData as DispatchResponse
+      if (mode === 'auto' && 'plan' in rawData && rawData.plan) {
+        setAssignments(rawData.plan.assignments ?? [])
+        setUnassigned(rawData.plan.unassigned ?? [])
+      }
       setResults(data)
       onResults(data)
       if (plan.length > 1 && data.results.some((result) => result.checkpointStatus === 'checkpointed')) {

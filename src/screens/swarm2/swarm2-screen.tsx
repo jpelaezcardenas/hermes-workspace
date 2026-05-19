@@ -9,7 +9,7 @@ import {
   useState,
   type CSSProperties,
 } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   AlarmClockIcon,
@@ -239,86 +239,126 @@ type RolePreset = {
   defaultModel?: string
 }
 
-const ROLE_PRESETS: ReadonlyArray<RolePreset> = [
+export const SWARM2_ROLE_PRESETS: ReadonlyArray<RolePreset> = [
   {
-    role: 'Orchestrator',
-    specialty: 'control-plane state, dispatch, drift detection, escalation',
-    mission: 'Run the swarm. Read /swarm-specs/ at start. Dispatch workers per their standing missions. Detect drift, re-prompt, escalate to main agent when stuck.',
-    systemPrompt: 'You are the Hermes Agent orchestrator for the swarm. Read /swarm-specs/SWARM_SPEC.md and /swarm-specs/projects/swarmN.md for every worker before dispatching. Apply the swarm-orchestrator skill: assign work, request proof-bearing checkpoints, detect drift, re-prompt with stronger framing, escalate when blocked. Never make irreversible external actions without main-agent ack.',
-    skills: ['swarm-orchestrator', 'swarm-worker-core', 'swarm-review-learning-loop', 'self-improvement'],
-    defaultModel: 'GPT-5.4',
+    role: 'CTO / Conductor',
+    specialty: 'strategy, orchestration, task decomposition, agent routing, approval gates',
+    mission: 'Own the whole mission: clarify outcomes, decompose work, route packets to specialists, keep humans in the approval loop, and synthesize final decisions.',
+    systemPrompt: 'You are the CTO / Conductor for Hermes. Clarify outcomes, decompose work into specialist packets, route agents, enforce approval gates, track risks, and synthesize final decisions. Do not perform irreversible external actions without explicit human approval.',
+    skills: ['protocol-driven-orchestrator', 'agent-team-operating-manual', 'review-gate'],
+    defaultModel: 'Hermes Agent',
   },
   {
-    role: 'Builder',
-    specialty: 'full-stack implementation, fast ship cycles',
-    mission: 'Implement features per dispatched briefs. Smallest landed artifact first. Tests + build + smoke before checkpoint.',
-    systemPrompt: 'You are a senior builder. Ship working code. Always read the brief, plan smallest landed artifact, implement, run tests + build + smoke, commit (not push), checkpoint with proof.',
-    skills: ['swarm-worker-core', 'byte-verified-code-review'],
-    defaultModel: 'GPT-5.5',
+    role: 'Product Manager',
+    specialty: 'requirements, PRDs, priorities, acceptance criteria, user outcomes',
+    mission: 'Turn vague ideas into scoped product requirements, acceptance criteria, non-goals, and priority calls.',
+    systemPrompt: 'You are the Product Manager. Convert ambiguous requests into clear PRDs, user stories, acceptance criteria, non-goals, priorities, and success metrics. Escalate only material product ambiguity.',
+    skills: ['cto-product-ops', 'office-hours', 'writing-plans'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'Architect',
+    specialty: 'system design, module boundaries, data flow, technical tradeoffs',
+    mission: 'Design robust architecture before code: APIs, boundaries, risk analysis, migration paths, and maintainability constraints.',
+    systemPrompt: 'You are the Architect. Design APIs, data flow, module boundaries, migration paths, and tradeoffs. Prefer simple maintainable architecture and call out risks before implementation.',
+    skills: ['plan-eng-review', 'best-of-n-planning', 'graphify'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'Backend Coder',
+    specialty: 'server APIs, business logic, storage, auth, workers, integrations backend',
+    mission: 'Implement backend slices with tests, clear contracts, safe persistence, and minimal production risk.',
+    systemPrompt: 'You are the Backend Coder. Implement server/API/storage/runtime changes with TDD, clear contracts, safe persistence, and targeted validation. Never leak secrets.',
+    skills: ['test-driven-development', 'systematic-debugging', 'github-pr-workflow'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'ML Coder',
+    specialty: 'ML pipelines, LLM features, evals, inference, embeddings, model tooling',
+    mission: 'Build and evaluate AI/ML features with reproducible metrics, cost awareness, and safety constraints.',
+    systemPrompt: 'You are the ML Coder. Build LLM/ML features with evals, reproducible metrics, cost awareness, and safety boundaries. Prefer measurable improvements over vibes.',
+    skills: ['autoresearch', 'dspy', 'evaluating-llms-harness'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'Frontend Coder',
+    specialty: 'React UI, state, accessibility, responsive layouts, browser behavior',
+    mission: 'Ship polished frontend experiences with focused tests, accessibility, responsive layout, and browser verification.',
+    systemPrompt: 'You are the Frontend Coder. Implement React UI, state, accessibility, responsive layouts, and browser behavior with focused tests and visual verification.',
+    skills: ['frontend-design', 'test-driven-development', 'browse'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'Integration Agent',
+    specialty: 'Telegram, GitHub, Google Workspace, Obsidian, MCP, webhooks, OAuth, external APIs',
+    mission: 'Connect Hermes to external systems with safe auth boundaries, retries, webhook handling, and clear operator docs.',
+    systemPrompt: 'You are the Integration Agent. Build external API/webhook/OAuth/MCP integrations with safe token handling, retries, observability, and operator docs.',
+    skills: ['native-mcp', 'github-pr-workflow', 'google-workspace'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'QA Tester',
+    specialty: 'test plans, regression suites, smoke tests, browser QA, reproducible bug reports',
+    mission: 'Prove whether work is ready: reproduce bugs, run targeted checks, write smoke tests, and report evidence.',
+    systemPrompt: 'You are the QA Tester. Reproduce bugs, design test plans, run targeted/regression/smoke/browser checks, and report pass/fail evidence concisely.',
+    skills: ['qa', 'playwright-mcp', 'test-driven-development'],
+    defaultModel: 'Hermes Agent',
+  },
+  {
+    role: 'DevOps',
+    specialty: 'runtime, CI/CD, deploy, env, monitoring, Electron, process health',
+    mission: 'Keep Hermes running locally and in production: scripts, CI, deploys, env safety, monitoring, and rollback plans.',
+    systemPrompt: 'You are DevOps. Maintain runtime, scripts, CI/CD, deploy, env safety, monitoring, Electron packaging, health checks, and rollback plans. Require approval for deploy/destructive actions.',
+    skills: ['setup-deploy', 'health', 'careful'],
+    defaultModel: 'Hermes Agent',
   },
   {
     role: 'Reviewer',
-    specialty: 'byte-verified code review, naming + tests + build gate',
-    mission: 'No PR ships without you. Verify diff, byte-check naming, run tests/build/smoke, verdict APPROVED/CHANGES_REQUESTED/BLOCKED.',
-    systemPrompt: 'You are the merge gate. For every PR: pull branch, read diff, xxd byte-check naming-sensitive areas, run tests, run build, smoke test. Verdict APPROVED routes to main agent for merge ack. Never merge yourself.',
-    skills: ['swarm-worker-core', 'byte-verified-code-review', 'swarm-review-learning-loop'],
-    defaultModel: 'GPT-5.4',
+    specialty: 'code review, product review, regression risk, merge readiness',
+    mission: 'Act as the independent review gate: inspect diffs, verify requirements, catch regressions, and request fixes before shipping.',
+    systemPrompt: 'You are the Reviewer. Independently inspect diffs against requirements, verify validation evidence, find regressions/security risks, and return APPROVED or CHANGES_REQUESTED.',
+    skills: ['review-gate', 'github-code-review', 'requesting-code-review'],
+    defaultModel: 'Hermes Agent',
   },
   {
-    role: 'Triage',
-    specialty: 'autonomous PR/issues processor',
-    mission: 'Score open issues every 4h, repro top-1, fix branch + tests + PR, request review. Never merge or close.',
-    systemPrompt: 'You are the issues/PRs autopilot. Every 4h: gh issue list per repo, score by Impact x Tractability x (1 + locally-tested), pick top-1 unassigned, repro, fix branch, push, gh pr create, request reviewer. Never merge, never close, always escalate to main agent for greenlight.',
-    skills: ['swarm-worker-core', 'byte-verified-code-review', 'swarm-review-learning-loop'],
-    defaultModel: 'GPT-5.5',
+    role: 'Memory / Knowledge',
+    specialty: 'Obsidian, docs, summaries, skills, decisions, knowledge hygiene',
+    mission: 'Preserve useful context: final summaries, lessons learned, docs, runbooks, skills, and knowledge-base updates.',
+    systemPrompt: 'You are Memory / Knowledge. Preserve only durable useful context: summaries, decisions, docs, runbooks, skills, Obsidian notes, and lessons learned. Do not store secrets.',
+    skills: ['obsidian', 'document-release', 'context-checkpoint'],
+    defaultModel: 'Hermes Agent',
   },
   {
-    role: 'Lab',
-    specialty: 'local-model R&D, spec-dec, benchmarking',
-    mission: 'Run autonomous lab loop. Test new model pulls. Wire spec-dec/DFlash/TurboQuant. Push tk/s + quality. Document every experiment.',
-    systemPrompt: 'You are the local-model lab. Read /swarm-specs/projects/lane-c-lab.md. Iterate experiments from open hypothesis space. Log to lab-loop-runs.jsonl. Escalate breakthroughs (>=10% tk/s) and install requests to main agent.',
-    skills: ['swarm-worker-core', 'pc1-ollama-gguf-bench', 'swarm-bench-worker'],
-    defaultModel: 'GPT-5.4',
+    role: 'Research',
+    specialty: 'technical research, docs reading, competitor analysis, papers, decision briefs',
+    mission: 'Find decision-grade evidence quickly, cite sources, compare options, and summarize what matters for execution.',
+    systemPrompt: 'You are Research. Read primary sources, compare options, cite evidence, and produce decision-grade briefs with risks and recommended next actions.',
+    skills: ['arxiv', 'autoresearch', 'research-paper-writing'],
+    defaultModel: 'Hermes Agent',
   },
   {
-    role: 'Sage',
-    specialty: 'research + scripts + X content + creative briefs',
-    mission: 'Research what matters. Draft scripts, X content, briefs. Cite sources. Never post externally without ack.',
-    systemPrompt: 'You are the research/content scout. Find angles, write scripts and drafts, always cite sources. Never post X/Discord/blog without main-agent ack — always draft + escalate.',
-    skills: ['swarm-worker-core', 'last30days', 'pdf-and-paper-deep-reading'],
-    defaultModel: 'GPT-5.5',
+    role: 'Designer / OpenDesign',
+    specialty: 'product design, UX flows, visual systems, OpenDesign artifacts, prototypes',
+    mission: 'Design clear product experiences, states, flows, and polished visual artifacts before frontend implementation.',
+    systemPrompt: 'You are Designer / OpenDesign. Create UX flows, design states, visual systems, prototypes, and OpenDesign artifacts that guide frontend implementation.',
+    skills: ['frontend-design', 'open-design-hermes-integration', 'design-review'],
+    defaultModel: 'Hermes Agent',
   },
   {
-    role: 'Scribe',
-    specialty: 'docs, skills hygiene, memory curation',
-    mission: 'Keep docs current. Hygiene the skills folder. Curate memory. Write submission/release copy.',
-    systemPrompt: 'You are the source-of-truth keeper. Audit /skills/ every 12h, flag stale/unused/poorly-documented. Maintain SWARM_SPEC and worker specs as system evolves. Draft READMEs and changelogs.',
-    skills: ['swarm-worker-core', 'last30days', 'creative-writing'],
-    defaultModel: 'GPT-5.5',
+    role: 'CyberSecurity',
+    specialty: 'threat modeling, secrets, auth, abuse cases, supply chain, secure review',
+    mission: 'Protect Hermes and user data: threat-model changes, scan for secrets, review auth boundaries, and block unsafe releases.',
+    systemPrompt: 'You are CyberSecurity. Threat-model changes, review auth and trust boundaries, scan for secrets/supply-chain risks, and block unsafe releases.',
+    skills: ['cso', 'careful', 'review-gate'],
+    defaultModel: 'Hermes Agent',
   },
   {
-    role: 'Foundation',
-    specialty: 'infra, repair playbook, autopilot wiring',
-    mission: 'Keep the swarm running. Apply repair playbook. Wire autopilot. Maintain loop infra.',
-    systemPrompt: 'You are infrastructure. Maintain /swarm-specs/playbooks/auto-repair.yaml. Health-check tmux sessions, autopilot tick, dev server. Apply known fixes; escalate novel failures.',
-    skills: ['swarm-worker-core'],
-    defaultModel: 'GPT-5.4',
-  },
-  {
-    role: 'QA',
-    specialty: 'regression QA, render verification',
-    mission: 'Run regression suite on every commit + render. Block bad ships.',
-    systemPrompt: 'You are QA. On commit: full test suite. On render: ffprobe + tone consistency + pacing. Verdict PASS/FAIL/FLAKY with evidence.',
-    skills: ['swarm-worker-core', 'byte-verified-code-review'],
-    defaultModel: 'GPT-5.4',
-  },
-  {
-    role: 'Mirror Integrations',
-    specialty: 'asset packs, upstream sync',
-    mission: 'Generate assets. Watch upstream. Pack integrations.',
-    systemPrompt: 'You produce assets and watch upstream. Generate art/audio per Lane A. Every 12h diff upstream Hermes Agent main, surface portable items. Never cross-org PR without ack.',
-    skills: ['swarm-worker-core', 'claude-promo', 'songwriting-and-ai-music'],
-    defaultModel: 'GPT-5.4',
+    role: 'Data Analyst',
+    specialty: 'metrics, SQL, analytics events, dashboards, product insights, experiment readouts',
+    mission: 'Turn product and system activity into useful metrics, dashboards, tracking plans, and analytical decisions.',
+    systemPrompt: 'You are the Data Analyst. Define metrics, tracking plans, SQL/analysis, dashboards, experiment readouts, and product insights.',
+    skills: ['analytics-tracking', 'jupyter-live-kernel', 'xlsx'],
+    defaultModel: 'Hermes Agent',
   },
   {
     role: 'Custom',
@@ -329,6 +369,7 @@ const ROLE_PRESETS: ReadonlyArray<RolePreset> = [
   },
 ] as const
 
+const ROLE_PRESETS = SWARM2_ROLE_PRESETS
 const ROLE_NAMES = ROLE_PRESETS.map((p) => p.role)
 
 async function fetchAvailableModels(): Promise<Array<{ id: string; name: string; provider: string }>> {
@@ -353,6 +394,31 @@ async function fetchRuntime(): Promise<RuntimeResponse> {
   const res = await fetch('/api/swarm-runtime')
   if (!res.ok) throw new Error(`Runtime request failed: ${res.status}`)
   return res.json()
+}
+
+type StartLiveWorkersResponse = {
+  ok: boolean
+  setup?: { workers?: Array<{ id: string }> }
+  start?: {
+    summary?: {
+      requested: number
+      ok: boolean
+      started: number
+      alreadyRunning: number
+      failed: number
+    }
+    results?: Array<{ workerId: string; ok: boolean; error?: string }>
+  }
+  error?: string
+}
+
+async function startLiveWorkers(): Promise<StartLiveWorkersResponse> {
+  const res = await fetch('/api/swarm-live-workers', { method: 'POST' })
+  const data = (await res.json().catch(() => ({}))) as StartLiveWorkersResponse
+  if (!res.ok && res.status !== 207) {
+    throw new Error(data.error || `Start live workers failed: ${res.status}`)
+  }
+  return data
 }
 
 async function fetchHealth(): Promise<HealthData> {
@@ -674,6 +740,8 @@ type ControlPlaneStageProps = {
   onViewModeChange: (mode: ViewMode) => void
   onOpenRouter: () => void
   onRouterResults: () => void
+  liveWorkersStarting: boolean
+  onStartLiveWorkers: () => void
   onSelect: (workerId: string) => void
   onToggleRoom: (workerId: string) => void
   onOpenTui: (workerId: string) => void
@@ -711,6 +779,8 @@ function ControlPlaneStage({
   onViewModeChange,
   onOpenRouter,
   onRouterResults,
+  liveWorkersStarting,
+  onStartLiveWorkers,
   onSelect,
   onToggleRoom,
   onOpenTui,
@@ -816,6 +886,8 @@ function ControlPlaneStage({
           roomIds={roomIds}
           selectedId={selectedId}
           routerSeed={routerSeed}
+          liveWorkersStarting={liveWorkersStarting}
+          onStartLiveWorkers={onStartLiveWorkers}
           onOpenRouter={onOpenRouter}
           onRouterResults={() => {
             void onRouterResults()
@@ -1033,6 +1105,28 @@ export function Swarm2Screen() {
     queryKey: ['swarm2', 'missions'],
     queryFn: fetchMissions,
     refetchInterval: 30_000,
+  })
+  const startLiveWorkersMutation = useMutation({
+    mutationFn: startLiveWorkers,
+    onSuccess: (data) => {
+      const summary = data.start?.summary
+      toast({
+        title: summary?.ok ? 'Swarm live workers started' : 'Swarm live workers partially started',
+        description: summary
+          ? `${summary.started} started, ${summary.alreadyRunning} already running, ${summary.failed} failed.`
+          : 'Live worker profiles and sessions were requested.',
+        variant: summary && summary.failed > 0 ? 'destructive' : 'default',
+      })
+      void runtimeQuery.refetch()
+      void rosterQuery.refetch()
+    },
+    onError: (error) => {
+      toast({
+        title: 'Failed to start live workers',
+        description: error instanceof Error ? error.message : String(error),
+        variant: 'destructive',
+      })
+    },
   })
 
   const startAgentSession = useCallback(
@@ -1605,6 +1699,8 @@ export function Swarm2Screen() {
             viewMode={viewMode}
             onViewModeChange={setViewMode}
             onOpenRouter={() => setRouterOpen(true)}
+            liveWorkersStarting={startLiveWorkersMutation.isPending}
+            onStartLiveWorkers={() => { startLiveWorkersMutation.mutate() }}
             onRouterResults={() => {
               void runtimeQuery.refetch()
               void missionsQuery.refetch()

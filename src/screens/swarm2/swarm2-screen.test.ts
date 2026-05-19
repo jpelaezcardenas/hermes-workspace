@@ -4,14 +4,15 @@ import {
   SWARM2_INFORMATION_HIERARCHY,
   SWARM2_OPERATIONS_REUSE,
   SWARM2_REAL_API_ENDPOINTS,
+  SWARM2_ROLE_PRESETS,
   SWARM2_SURFACE_CONTRACT,
 } from './swarm2-screen'
 
 describe('Swarm2 surface contract', () => {
-  it('keeps Aurora as the primary hub above wired operational worker cards', () => {
+  it('keeps the orchestrator as the primary hub above wired operational worker cards', () => {
     expect(SWARM2_INFORMATION_HIERARCHY[0]).toContain('Status header')
     expect(SWARM2_INFORMATION_HIERARCHY[1]).toContain(
-      'Aurora/orchestrator hub card',
+      'Orchestrator hub card',
     )
     expect(SWARM2_INFORMATION_HIERARCHY[2]).toContain('Visible routing wires')
     expect(SWARM2_INFORMATION_HIERARCHY[3]).toContain(
@@ -71,6 +72,27 @@ describe('Swarm2 surface contract', () => {
       'compact-operational-metadata-panel',
       'inline-direct-chat-panel',
       'bottom-card-action-row',
+    ])
+  })
+
+  it('offers the final specialist agent team as role presets', () => {
+    expect(SWARM2_ROLE_PRESETS.map((preset) => preset.role)).toEqual([
+      'CTO / Conductor',
+      'Product Manager',
+      'Architect',
+      'Backend Coder',
+      'ML Coder',
+      'Frontend Coder',
+      'Integration Agent',
+      'QA Tester',
+      'DevOps',
+      'Reviewer',
+      'Memory / Knowledge',
+      'Research',
+      'Designer / OpenDesign',
+      'CyberSecurity',
+      'Data Analyst',
+      'Custom',
     ])
   })
 

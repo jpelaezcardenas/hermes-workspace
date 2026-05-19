@@ -1,263 +1,379 @@
 version: 1
 workers:
-  - id: swarm6
-    name: Reviewer
-    role: Reviewer / Merge Gate
-    specialty: code review, regression detection, test coverage, merge readiness
-    model: Opus 4.7
-    mission: Catch breakage before it reaches Eric. Be the final quality gate.
+  - id: swarm1
+    name: Conductor
+    role: CTO / Conductor
+    specialty: strategy, orchestration, task decomposition, agent routing, approval gates
+    model: Hermes Agent
+    mission: Own the whole mission; clarify outcomes, decompose work, route packets to specialists, keep humans in the approval loop, and synthesize final decisions.
     skills:
-      - swarm-pr-worker
-      - swarm-worker-core
+      - protocol-driven-orchestrator
+      - agent-team-operating-manual
+      - review-gate
+    capabilities:
+      - orchestration
+      - task-decomposition
+      - agent-routing
+      - approval-gates
+      - decision-synthesis
+    preferredTaskTypes:
+      - orchestration
+      - planning
+      - coordination
+      - approval
+      - handoff
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm2
+    name: Product
+    role: Product Manager
+    specialty: requirements, PRDs, priorities, acceptance criteria, user outcomes
+    model: Hermes Agent
+    mission: Turn vague ideas into scoped product requirements, acceptance criteria, non-goals, and priority calls.
+    skills:
+      - cto-product-ops
+      - office-hours
+      - writing-plans
+    capabilities:
+      - prd
+      - requirements
+      - prioritization
+      - acceptance-criteria
+      - scope-control
+    preferredTaskTypes:
+      - product
+      - requirements
+      - prd
+      - scope
+      - roadmap
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm3
+    name: Architect
+    role: Architect
+    specialty: system design, module boundaries, data flow, technical tradeoffs
+    model: Hermes Agent
+    mission: Design robust architecture before code; APIs, boundaries, risk analysis, migration paths, and maintainability constraints.
+    skills:
+      - plan-eng-review
+      - best-of-n-planning
+      - graphify
+    capabilities:
+      - architecture
+      - api-design
+      - data-flow
+      - tradeoff-analysis
+      - technical-risk
+    preferredTaskTypes:
+      - architecture
+      - design
+      - api
+      - refactor
+      - technical-plan
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm4
+    name: Backend
+    role: Backend Coder
+    specialty: server APIs, business logic, storage, auth, workers, integrations backend
+    model: Hermes Agent
+    mission: Implement backend slices with tests, clear contracts, safe persistence, and minimal production risk.
+    skills:
+      - test-driven-development
+      - systematic-debugging
+      - github-pr-workflow
+    capabilities:
+      - backend
+      - api-routes
+      - storage
+      - auth
+      - server-runtime
+    preferredTaskTypes:
+      - backend
+      - api
+      - database
+      - auth
+      - worker
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: true
+  - id: swarm5
+    name: ML
+    role: ML Coder
+    specialty: ML pipelines, LLM features, evals, inference, embeddings, model tooling
+    model: Hermes Agent
+    mission: Build and evaluate AI/ML features with reproducible metrics, cost awareness, and safety constraints.
+    skills:
+      - autoresearch
+      - dspy
+      - evaluating-llms-harness
+    capabilities:
+      - ml
+      - llm
+      - evals
+      - inference
+      - embeddings
+    preferredTaskTypes:
+      - ml
+      - llm
+      - eval
+      - model
+      - rag
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: true
+  - id: swarm6
+    name: Frontend
+    role: Frontend Coder
+    specialty: React UI, state, accessibility, responsive layouts, browser behavior
+    model: Hermes Agent
+    mission: Ship polished frontend experiences with focused tests, accessibility, responsive layout, and browser verification.
+    skills:
+      - frontend-design
+      - test-driven-development
+      - browse
+    capabilities:
+      - frontend
+      - react
+      - ui-state
+      - accessibility
+      - responsive-layout
+    preferredTaskTypes:
+      - frontend
+      - ui
+      - react
+      - layout
+      - browser
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: true
+  - id: swarm7
+    name: Integration
+    role: Integration Agent
+    specialty: Telegram, GitHub, Google Workspace, Obsidian, MCP, webhooks, OAuth, external APIs
+    model: Hermes Agent
+    mission: Connect Hermes to external systems with safe auth boundaries, retries, webhook handling, and clear operator docs.
+    skills:
+      - native-mcp
+      - github-pr-workflow
+      - google-workspace
+    capabilities:
+      - integrations
+      - webhooks
+      - oauth
+      - telegram
+      - github
+      - mcp
+    preferredTaskTypes:
+      - integration
+      - webhook
+      - telegram
+      - github
+      - google
+      - mcp
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: true
+  - id: swarm8
+    name: QA
+    role: QA Tester
+    specialty: test plans, regression suites, smoke tests, browser QA, reproducible bug reports
+    model: Hermes Agent
+    mission: Prove whether work is ready; reproduce bugs, run targeted checks, write smoke tests, and report evidence.
+    skills:
+      - qa
+      - playwright-mcp
+      - test-driven-development
+    capabilities:
+      - qa
+      - regression
+      - smoke-tests
+      - e2e
+      - bug-reproduction
+    preferredTaskTypes:
+      - qa
+      - test
+      - regression
+      - smoke
+      - verification
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm9
+    name: DevOps
+    role: DevOps
+    specialty: runtime, CI/CD, deploy, env, monitoring, Electron, process health
+    model: Hermes Agent
+    mission: Keep Hermes running locally and in production; scripts, CI, deploys, env safety, monitoring, and rollback plans.
+    skills:
+      - setup-deploy
+      - health
+      - careful
+    capabilities:
+      - devops
+      - ci-cd
+      - deploy
+      - monitoring
+      - runtime-health
+    preferredTaskTypes:
+      - devops
+      - deploy
+      - ci
+      - infra
+      - runtime
+      - electron
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: true
+  - id: swarm10
+    name: Reviewer
+    role: Reviewer
+    specialty: code review, product review, regression risk, merge readiness
+    model: Hermes Agent
+    mission: Act as the independent review gate; inspect diffs, verify requirements, catch regressions, and request fixes before shipping.
+    skills:
+      - review-gate
+      - github-code-review
+      - requesting-code-review
     capabilities:
       - code-review
-      - regression-analysis
-      - test-planning
       - quality-gate
+      - regression-analysis
       - merge-readiness
     preferredTaskTypes:
       - review
-      - qa
-      - regression
-      - verification
+      - code-review
+      - quality
       - merge-gate
+      - risk
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
     reviewRequired: false
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm12
-    name: Triage
-    role: PR / Issues Primary
-    specialty: GitHub triage, issue reproduction, PR review prep, focused fixes
-    model: GPT-5.5
-    mission: Turn repo issues and review feedback into reproductions, plans, and tested PRs.
-    skills:
-      - swarm-pr-worker
-      - swarm-worker-core
-    capabilities:
-      - github-triage
-      - issue-reproduction
-      - pr-patching
-      - review-feedback
-      - gh-cli
-    preferredTaskTypes:
-      - pr
-      - issue
-      - bugfix
-      - github
-      - triage
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm5
-    name: Builder
-    role: Primary Builder
-    specialty: full-stack implementation across Hermes Workspace and Swarm2
-    model: GPT-5.5
-    mission: Ship focused product slices with tests and clean diffs.
-    skills:
-      - swarm-ui-worker
-      - swarm-worker-core
-    capabilities:
-      - code-editing
-      - ui-implementation
-      - full-stack-integration
-      - build-verification
-    preferredTaskTypes:
-      - implementation
-      - ui
-      - frontend
-      - integration
-      - feature
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm4
-    name: Sage
-    role: Research / AI Intelligence / X Content
-    specialty: AI/model/runtime research, technical synthesis, X post drafting
-    model: GPT-5.5
-    mission: Produce decision-grade research and copy so builders and Eric stay unblocked.
-    skills:
-      - swarm-worker-core
-    capabilities:
-      - research
-      - benchmark-planning
-      - model-analysis
-      - technical-synthesis
-      - x-content
-    preferredTaskTypes:
-      - research
-      - benchmark
-      - analysis
-      - options
-      - x-post
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm10
-    name: Sidekick
-    role: Secondary Builder / Fast Patch Lane
-    specialty: parallel implementation slices, refactors, focused bug fixes
-    model: GPT-5.5
-    mission: Take decomposed tasks and produce clean patches quickly.
-    skills:
-      - swarm-ui-worker
-      - swarm-worker-core
-    capabilities:
-      - code-editing
-      - refactor
-      - parallel-implementation
-      - bug-fix
-      - build-verification
-    preferredTaskTypes:
-      - implementation
-      - refactor
-      - backend
-      - frontend
-      - patch
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm2
-    name: Foundation
-    role: Backend Foundation / Runtime Contracts
-    specialty: ClaudeSwarm runtime contracts, API design, plugin foundations, state
-    model: GPT-5.4
-    mission: Build the backend substrate that keeps swarm state, dispatch, sessions, and plugins coherent.
-    skills:
-      - swarm-dev-runtime
-      - swarm-worker-core
-    capabilities:
-      - api-design
-      - runtime-contracts
-      - plugin-foundation
-      - state-management
-    preferredTaskTypes:
-      - backend
-      - runtime
-      - api
-      - infrastructure
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm3
-    name: Mirror
-    role: Swarm Control Plane / Main-Session Mirror
-    specialty: control-plane state, card parity, main-agent continuity
-    model: GPT-5.4
-    mission: Keep the swarm control plane operationally useful and visually canonical.
-    skills:
-      - swarm-orchestrator
-      - swarm-worker-core
-    capabilities:
-      - orchestration
-      - main-session-continuity
-      - control-plane-state
-    preferredTaskTypes:
-      - orchestration
-      - coordination
-      - handoff
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm8
-    name: Watch
-    role: Ops / Health / Lifecycle
-    specialty: gateway health, cron, runtime/process status, lifecycle sweeps
-    model: GPT-5.4
-    mission: Keep the local swarm/gateway environment stable and observable.
-    skills:
-      - swarm-dev-runtime
-      - swarm-worker-core
-    capabilities:
-      - ops-health
-      - gateway-status
-      - runtime-monitoring
-      - cron
-      - lifecycle-sweep
-    preferredTaskTypes:
-      - ops
-      - health
-      - monitoring
-      - lifecycle
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm7
-    name: Scribe
-    role: Docs / Specs / Handoffs / Memory Hygiene
-    specialty: handoffs, specs, README/docs, skill documentation, memory curation
-    model: GPT-5.5
-    mission: Preserve context and make the swarm understandable across sessions.
-    skills:
-      - swarm-worker-core
-    capabilities:
-      - documentation
-      - handoffs
-      - spec-writing
-      - runbooks
-      - memory-curation
-    preferredTaskTypes:
-      - docs
-      - handoff
-      - spec
-      - runbook
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
-  - id: swarm9
-    name: Lab
-    role: PC1 Experiments / Local-Model R&D / BenchLoop
-    specialty: PC1 experiments, local model testing, model runtime comparisons
-    model: GPT-5.5
-    mission: Explore fast without destabilizing canonical paths.
-    skills:
-      - swarm-ui-worker
-      - swarm-worker-core
-    capabilities:
-      - prototype
-      - experiment
-      - local-model
-      - benchmark-experiment
-      - rapid-build
-    preferredTaskTypes:
-      - prototype
-      - experiment
-      - hackathon
-      - benchmark
-    maxConcurrentTasks: 1
-    acceptsBroadcast: true
   - id: swarm11
-    name: QA
-    role: Secondary QA / Reviewer Support
-    specialty: secondary review, smoke verification, expected-vs-actual checks
-    model: GPT-5.4
-    mission: Review parallel outputs and protect quality gates.
+    name: Memory
+    role: Memory / Knowledge
+    specialty: Obsidian, docs, summaries, skills, decisions, knowledge hygiene
+    model: Hermes Agent
+    mission: Preserve useful context; final summaries, lessons learned, docs, runbooks, skills, and knowledge-base updates.
     skills:
-      - swarm-pr-worker
-      - swarm-worker-core
+      - obsidian
+      - document-release
+      - context-checkpoint
     capabilities:
-      - secondary-review
-      - quality-gate
-      - regression-analysis
-      - smoke-verification
+      - memory
+      - knowledge-base
+      - docs
+      - summaries
+      - skills
     preferredTaskTypes:
-      - review
-      - qa
-      - verification
-      - smoke
+      - memory
+      - docs
+      - summary
+      - obsidian
+      - runbook
+      - skill
     maxConcurrentTasks: 1
     acceptsBroadcast: true
-  - id: swarm1
-    name: Overflow
-    role: PR / Issues Overflow / Clawsuite (offline for now)
-    specialty: parked broken lane, keep out of rotation until worker runtime is repaired
-    model: GPT-5.5
-    mission: Stay out of active rotation until the swarm1 worker runtime is repaired, then absorb overflow from PR/issues lanes and cover Clawsuite.
+    reviewRequired: false
+  - id: swarm12
+    name: Research
+    role: Research
+    specialty: technical research, docs reading, competitor analysis, papers, decision briefs
+    model: Hermes Agent
+    mission: Find decision-grade evidence quickly, cite sources, compare options, and summarize what matters for execution.
     skills:
-      - swarm-pr-worker
-      - swarm-worker-core
+      - arxiv
+      - autoresearch
+      - research-paper-writing
     capabilities:
-      - github-triage
-      - small-patches
-      - issue-reproduction
-      - clawsuite
+      - research
+      - docs-analysis
+      - competitive-analysis
+      - technical-synthesis
     preferredTaskTypes:
-      - pr
-      - issue
-      - small-fix
-      - clawsuite
+      - research
+      - analysis
+      - docs
+      - papers
+      - options
     maxConcurrentTasks: 1
-    acceptsBroadcast: false
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm13
+    name: Designer
+    role: Designer / OpenDesign
+    specialty: product design, UX flows, visual systems, OpenDesign artifacts, prototypes
+    model: Hermes Agent
+    mission: Design clear product experiences, states, flows, and polished visual artifacts before frontend implementation.
+    skills:
+      - frontend-design
+      - open-design-hermes-integration
+      - design-review
+    capabilities:
+      - design
+      - ux
+      - prototype
+      - opendesign
+      - visual-system
+    preferredTaskTypes:
+      - design
+      - ux
+      - prototype
+      - visual
+      - opendesign
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm14
+    name: Security
+    role: CyberSecurity
+    specialty: threat modeling, secrets, auth, abuse cases, supply chain, secure review
+    model: Hermes Agent
+    mission: Protect Hermes and user data; threat-model changes, scan for secrets, review auth boundaries, and block unsafe releases.
+    skills:
+      - cso
+      - careful
+      - review-gate
+    capabilities:
+      - security
+      - threat-modeling
+      - secrets
+      - auth-review
+      - supply-chain
+    preferredTaskTypes:
+      - security
+      - auth
+      - secrets
+      - threat-model
+      - audit
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
+  - id: swarm15
+    name: Data Analyst
+    role: Data Analyst
+    specialty: metrics, SQL, analytics events, dashboards, product insights, experiment readouts
+    model: Hermes Agent
+    mission: Turn product and system activity into useful metrics, dashboards, tracking plans, and analytical decisions.
+    skills:
+      - analytics-tracking
+      - jupyter-live-kernel
+      - xlsx
+    capabilities:
+      - analytics
+      - metrics
+      - sql
+      - dashboards
+      - experiments
+    preferredTaskTypes:
+      - analytics
+      - data
+      - metrics
+      - dashboard
+      - experiment
+    maxConcurrentTasks: 1
+    acceptsBroadcast: true
+    reviewRequired: false
