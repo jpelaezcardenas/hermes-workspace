@@ -12,6 +12,7 @@ import {
   File01Icon,
   McpServerIcon,
   Menu01Icon,
+  PencilEdit02Icon,
   PuzzleIcon,
   Rocket01Icon,
   Settings01Icon,
@@ -55,6 +56,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: CommandLineIcon,
     to: '/terminal',
     match: (p: string) => p.startsWith('/terminal'),
+  },
+  {
+    id: 'script-editor',
+    label: 'Script Editor',
+    icon: PencilEdit02Icon,
+    to: '/script-editor',
+    match: (p: string) => p.startsWith('/script-editor'),
   },
   {
     id: 'jobs',

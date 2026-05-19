@@ -10,6 +10,13 @@ From the Hermes Workspace repo root:
 pnpm script-editor:mac
 ```
 
+If the local Swift toolchain is unavailable, use the built-in Hermes Workspace
+web section instead:
+
+```text
+http://127.0.0.1:3000/script-editor
+```
+
 Or launch the script directly:
 
 ```sh
