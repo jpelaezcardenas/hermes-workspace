@@ -359,6 +359,7 @@ private struct ReviewEditor: View {
                     }
 
                     AgentChat(model: model)
+                    ExportPanel(model: model)
                 }
                 .padding(22)
             }
@@ -399,6 +400,36 @@ private struct AgentChat: View {
                 }
                 .help("Send")
                 .disabled(model.chatInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+        }
+    }
+}
+
+private struct ExportPanel: View {
+    @ObservedObject var model: AppViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                SectionTitle("Approved Export", systemImage: "square.and.arrow.up")
+                Spacer()
+                Button {
+                    model.renderExportMarkdown()
+                } label: {
+                    Label("Render Markdown", systemImage: "doc.text")
+                }
+                .disabled(model.selectedCandidate == nil)
+            }
+            if model.exportedMarkdown.isEmpty {
+                EmptyState(text: "Render a local Markdown artifact when the script is human-approved.")
+            } else {
+                TextEditor(text: $model.exportedMarkdown)
+                    .font(.system(.caption, design: .monospaced))
+                    .scrollContentBackground(.hidden)
+                    .padding(8)
+                    .frame(minHeight: 180)
+                    .background(.thinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
     }

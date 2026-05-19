@@ -15,6 +15,7 @@ final class AppViewModel: ObservableObject {
     @Published var candidateCount = 24.0
     @Published var editorText = ""
     @Published var chatInput = ""
+    @Published var exportedMarkdown = ""
     @Published var isBusy = false
     @Published var status = "Ready"
     @Published var lastError: String?
@@ -244,6 +245,18 @@ final class AppViewModel: ObservableObject {
                 show(error)
             }
         }
+    }
+
+    func renderExportMarkdown() {
+        guard let project = selectedProject, let candidate = selectedCandidate else { return }
+        exportedMarkdown = ExportService().renderApprovedScriptMarkdown(
+            project: project,
+            candidate: candidate,
+            brief: selectedBrief,
+            sources: projectSources,
+            exportedAt: Date()
+        )
+        status = "Approved script export rendered"
     }
 
     private func saveProject(_ project: Project, selectAfterSave: Bool) async {
