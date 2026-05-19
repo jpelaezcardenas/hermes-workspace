@@ -766,7 +766,7 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           ) {
             transitionToHandoff()
           } else {
-            markFailed('Hermes Agent connection closed')
+            markFailed('AgentOne Agent connection closed')
           }
           break
         }

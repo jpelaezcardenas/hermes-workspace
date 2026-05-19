@@ -1319,7 +1319,7 @@ export const Route = createFileRoute('/api/send-stream')({
                             ?.message,
                         ) ||
                         readString(data.message) ||
-                        'Hermes stream error'
+                        'AgentOne stream error'
                       persistActiveRun((runSessionKey, activeId) =>
                         markRunStatus(
                           runSessionKey,

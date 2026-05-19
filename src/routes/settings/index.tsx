@@ -1309,7 +1309,7 @@ function ClaudeConfigSection({
   if (loading) {
     return (
       <SettingsSection
-        title="Hermes Agent"
+        title="AgentOne Agent"
         description="Loading configuration..."
         icon={Settings02Icon}
       >
@@ -1324,12 +1324,12 @@ function ClaudeConfigSection({
   if (!data) {
     return (
       <SettingsSection
-        title="Hermes Agent"
-        description="Could not load Hermes configuration."
+        title="AgentOne Agent"
+        description="Could not load AgentOne configuration."
         icon={Settings02Icon}
       >
         <p className="text-sm" style={{ color: 'var(--theme-muted)' }}>
-          Make sure Hermes Agent is running on localhost:8642
+          Make sure AgentOne Agent is running on localhost:8642
         </p>
       </SettingsSection>
     )
@@ -1490,7 +1490,7 @@ function ClaudeConfigSection({
     <>
       <SettingsSection
         title="Model & Provider"
-        description="Configure the default AI model for Hermes Agent."
+        description="Configure the default AI model for AgentOne Agent."
         icon={SourceCodeSquareIcon}
       >
         <SettingsRow
@@ -1530,7 +1530,7 @@ function ClaudeConfigSection({
         </SettingsRow>
         <SettingsRow
           label="Model"
-          description="The model Claude uses for conversations."
+          description="The model AgentOne uses for conversations."
         >
           <div className="flex w-full max-w-sm gap-2">
             {availableModels.length > 0 ? (
@@ -1752,7 +1752,7 @@ function ClaudeConfigSection({
 
       <SettingsSection
         title="Memory"
-        description="Configure Hermes Agent memory and user profiles."
+        description="Configure AgentOne Agent memory and user profiles."
         icon={UserIcon}
       >
         <SettingsRow
@@ -1823,7 +1823,7 @@ function ClaudeConfigSection({
             <p className="mt-1 text-xs text-primary-600">
               <span className="font-medium">Title</span> is for your list only (e.g.{' '}
               <span className="font-mono">Qwen3.6.Eclipse</span> = model + host).{' '}
-              <span className="font-medium">Provider id</span> is the config name Hermes uses — leave
+              <span className="font-medium">Provider id</span> is the config name AgentOne uses — leave
               blank to derive a safe id from the title. Optional row API key is stored on this
               provider entry, not in .env.
             </p>
@@ -2282,12 +2282,12 @@ function ClaudeConfigSection({
 
       <SettingsSection
         title="About"
-        description="Hermes Agent runtime information."
+        description="AgentOne Agent runtime information."
         icon={Notification03Icon}
       >
         <SettingsRow
           label="Config location"
-          description="Where Claude stores its configuration."
+          description="Where AgentOne stores its configuration."
         >
           <span
             className="text-xs font-mono"
@@ -2852,7 +2852,7 @@ function ConnectionSection() {
   return (
     <SettingsSection
       title="Connection"
-      description="Point the workspace at your Hermes Agent services. Useful for Tailscale, LAN, or remote-server setups (#101)."
+      description="Point the workspace at your AgentOne Agent services. Useful for Tailscale, LAN, or remote-server setups (#101)."
       icon={Link01Icon}
     >
       <div className="text-xs text-primary-600">

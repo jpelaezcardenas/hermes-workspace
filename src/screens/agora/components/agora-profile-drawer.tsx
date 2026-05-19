@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import type { AgoraAvatarId, AgoraProfile, AgoraStatus, AgoraUser } from '../lib/agora-types'
 
 const ALL_AVATARS: { id: AgoraAvatarId; label: string; tier: 'greek' | 'emoji' }[] = [
-  { id: 'hermes', label: 'Hermes', tier: 'greek' },
+  { id: 'hermes', label: 'AgentOne', tier: 'greek' },
   { id: 'athena', label: 'Athena', tier: 'greek' },
   { id: 'apollo', label: 'Apollo', tier: 'greek' },
   { id: 'artemis', label: 'Artemis', tier: 'greek' },

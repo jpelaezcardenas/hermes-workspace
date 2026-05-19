@@ -143,7 +143,7 @@ export function AgentChatModal({
             {
               id: `demo-intro-${sessionKey}`,
               role: 'agent',
-              text: 'Hermes Agent is unavailable. Running in demo mode with simulated responses.',
+              text: 'AgentOne Agent is unavailable. Running in demo mode with simulated responses.',
               timestamp: Date.now(),
             },
           ])

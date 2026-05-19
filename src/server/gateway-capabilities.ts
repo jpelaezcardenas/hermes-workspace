@@ -140,9 +140,9 @@ export const CLAUDE_UPGRADE_INSTRUCTIONS =
   'For full features, install Hermes Agent from source (`git clone https://github.com/NousResearch/hermes-agent && cd hermes-agent && pip install -e .`), then start the gateway on :8642 (`hermes gateway run`). For the extended APIs (Sessions, Skills, Config, Jobs) also start the dashboard on :9119 (`hermes dashboard`).'
 
 export const DASHBOARD_REQUIRED_INSTRUCTIONS =
-  'Hermes gateway core APIs are healthy, but dashboard-backed APIs are unavailable. Start the dashboard on :9119 (`hermes dashboard`) or point HERMES_DASHBOARD_URL at the running dashboard service.'
+  'AgentOne gateway core APIs are healthy, but dashboard-backed APIs are unavailable. Start the dashboard on :9119 (`agentone dashboard`) or point HERMES_DASHBOARD_URL at the running dashboard service.'
 
-export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your Hermes backend does not support the sessions API. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
+export const SESSIONS_API_UNAVAILABLE_MESSAGE = `Your AgentOne backend does not support the sessions API. ${CLAUDE_UPGRADE_INSTRUCTIONS}`
 
 const PROBE_TIMEOUT_MS = 3_000
 // Probe TTL: 120s when the gateway is healthy, 15s when it isn't. The

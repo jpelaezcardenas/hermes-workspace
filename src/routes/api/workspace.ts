@@ -128,7 +128,7 @@ function isHermesStatePath(candidatePath: string): boolean {
 function assertWorkspaceAllowed(candidatePath: string): void {
   if (isHermesStatePath(candidatePath)) {
     throw new Error(
-      'Hermes profile/state directories cannot be used as workspaces',
+      'AgentOne profile/state directories cannot be used as workspaces',
     )
   }
   if (isBlockedSystemPath(candidatePath)) {

@@ -193,7 +193,7 @@ function detectClaudeKanban(): ClaudeDetection {
       cliPath: null,
       dbPath,
       workspacePath,
-      reason: 'Hermes Kanban storage not found; using the local Swarm Board fallback.',
+      reason: 'AgentOne Kanban storage not found; using the local Swarm Board fallback.',
     }
   }
 
@@ -419,13 +419,13 @@ const claudeBackend: KanbanBackend = {
     const detection = detectClaudeKanban()
     return {
       id: 'claude',
-      label: 'Hermes Kanban',
+      label: 'AgentOne Kanban',
       detected: detection.available,
       writable: detection.available,
       path: fs.existsSync(detection.dbPath) ? detection.dbPath : null,
       details: detection.available
-        ? detection.reason ?? `Hermes Kanban storage detected (${detection.cliPath ?? 'direct sqlite'}, ${detection.dbPath})`
-        : detection.reason ?? 'Hermes Kanban not detected.',
+        ? detection.reason ?? `AgentOne Kanban storage detected (${detection.cliPath ?? 'direct sqlite'}, ${detection.dbPath})`
+        : detection.reason ?? 'AgentOne Kanban not detected.',
     }
   },
   list() {
@@ -433,7 +433,7 @@ const claudeBackend: KanbanBackend = {
   },
   create(input) {
     const detection = detectClaudeKanban()
-    if (!detection.available) throw new Error(detection.reason ?? 'Hermes Kanban not detected')
+    if (!detection.available) throw new Error(detection.reason ?? 'AgentOne Kanban not detected')
     const nowSeconds = Math.floor(Date.now() / 1000)
     const parentIds = Array.isArray(input.parents)
       ? input.parents.filter((parentId): parentId is string => typeof parentId === 'string' && parentId.trim().length > 0)
@@ -517,13 +517,13 @@ const dashboardProxyBackend: KanbanBackend = {
     const caps = getCapabilities()
     return {
       id: 'hermes-proxy',
-      label: 'Hermes Dashboard kanban',
+      label: 'AgentOne Dashboard kanban',
       detected: caps.kanban,
       writable: caps.kanban,
       path: caps.dashboard.url || CLAUDE_DASHBOARD_URL,
       details: caps.kanban
-        ? `Synced with the Hermes Dashboard kanban plugin at ${caps.dashboard.url}/kanban (single SQLite source of truth, dispatcher-aware).`
-        : 'Hermes Dashboard kanban plugin not detected.',
+        ? `Synced with the AgentOne Dashboard kanban plugin at ${caps.dashboard.url}/kanban (single SQLite source of truth, dispatcher-aware).`
+        : 'AgentOne Dashboard kanban plugin not detected.',
     }
   },
   async list() {

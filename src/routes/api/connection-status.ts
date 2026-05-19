@@ -84,17 +84,17 @@ export const Route = createFileRoute('/api/connection-status')({
           label = 'Enhanced'
           detail = modelConfigured
             ? caps.dashboard.available
-              ? 'Core chat works and the Hermes Agent dashboard APIs are available.'
-              : 'Core chat works and Hermes Agent gateway APIs are available.'
+              ? 'Core chat works and the AgentOne dashboard APIs are available.'
+              : 'Core chat works and AgentOne gateway APIs are available.'
             : caps.dashboard.available
-              ? 'Hermes Agent dashboard APIs are available. Choose a model to start chatting.'
-              : 'Hermes Agent gateway APIs are available. Choose a model to start chatting.'
+              ? 'AgentOne dashboard APIs are available. Choose a model to start chatting.'
+              : 'AgentOne gateway APIs are available. Choose a model to start chatting.'
         } else if (chatReady && modelConfigured) {
           status = 'connected'
           label = 'Connected'
           detail = caps.dashboard.available
             ? 'Core chat is ready on this backend.'
-            : 'Core chat is ready. Start `hermes dashboard` to enable Sessions, Skills, Config, and Jobs.'
+            : 'Core chat is ready. Start `agentone dashboard` to enable Sessions, Skills, Config, and Jobs.'
         } else {
           status = 'partial'
           label = 'Partial'
@@ -105,7 +105,7 @@ export const Route = createFileRoute('/api/connection-status')({
               'Backend connected. Choose a provider and model to test chat.'
           } else {
             detail =
-              'Core chat works. Enhanced Hermes Agent gateway APIs are optional and unlock automatically when available.'
+              'Core chat works. Enhanced AgentOne gateway APIs are optional and unlock automatically when available.'
           }
         }
 

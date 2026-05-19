@@ -177,7 +177,7 @@ async function fetchClaudeModels(): Promise<Array<ModelEntry>> {
   if (BEARER_TOKEN) headers['Authorization'] = `Bearer ${BEARER_TOKEN}`
   const response = await fetch(`${CLAUDE_API}/v1/models`, { headers })
   if (!response.ok)
-    throw new Error(`Hermes models request failed (${response.status})`)
+    throw new Error(`AgentOne models request failed (${response.status})`)
   const payload = asRecord(await response.json())
   const rawModels = Array.isArray(payload.data)
     ? payload.data

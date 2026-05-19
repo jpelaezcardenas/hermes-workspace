@@ -132,7 +132,7 @@ export function ClaudeReconnectBanner({
                   if (res.ok && data.ok) {
                     setMessage(
                       data.message ||
-                        'Auto-restarting Hermes Agent gateway…',
+                        'Auto-restarting AgentOne Agent gateway…',
                     )
                     // Probe again shortly so the banner clears as soon as
                     // the gateway answers /health.
@@ -210,17 +210,17 @@ export function ClaudeReconnectBanner({
       }
 
       if (!response.ok || !payload.ok) {
-        throw new Error(payload.error || 'Failed to start Hermes Agent')
+        throw new Error(payload.error || 'Failed to start AgentOne Agent')
       }
 
       setMessage(
         payload.message === 'already running'
-          ? 'Hermes Agent is already running'
-          : 'Starting Hermes Agent…',
+          ? 'AgentOne Agent is already running'
+          : 'Starting AgentOne Agent…',
       )
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : 'Failed to start Hermes Agent',
+        error instanceof Error ? error.message : 'Failed to start AgentOne Agent',
       )
     } finally {
       setIsStarting(false)
@@ -260,7 +260,7 @@ export function ClaudeReconnectBanner({
           />
           <div className="min-w-0">
             <p className="text-sm font-semibold">
-              {isDisconnected ? 'Hermes Agent not connected' : 'Connected'}
+              {isDisconnected ? 'AgentOne Agent not connected' : 'Connected'}
             </p>
             {message ? (
               <p className="truncate text-xs opacity-80">{message}</p>

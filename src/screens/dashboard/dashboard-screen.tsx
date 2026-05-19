@@ -900,7 +900,7 @@ export function DashboardScreen() {
           >
             <img
               src="/agentone-avatar.png"
-              alt="Hermes Workspace logo"
+              alt="AgentOne logo"
               className="size-8 rounded-md"
               style={{ background: 'transparent' }}
             />

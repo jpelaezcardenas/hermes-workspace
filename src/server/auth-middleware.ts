@@ -296,13 +296,13 @@ function shouldSetSecureCookie(): boolean {
  * Attributes:
  *   - HttpOnly    — blocks JS access, mitigates XSS session theft
  *   - Secure      — HTTPS only (production default, overridable)
- *   - SameSite=Strict — CSRF protection
+ *   - SameSite=Lax — CSRF protection
  *   - Path=/      — available across the whole app
  *   - Max-Age     — 30 days
  */
 export function createSessionCookie(token: string): string {
   const attrs = ['HttpOnly']
   if (shouldSetSecureCookie()) attrs.push('Secure')
-  attrs.push('SameSite=Strict', 'Path=/', `Max-Age=${30 * 24 * 60 * 60}`)
+  attrs.push('SameSite=Lax', 'Path=/', `Max-Age=${30 * 24 * 60 * 60}`)
   return `claude-auth=${token}; ${attrs.join('; ')}`
 }

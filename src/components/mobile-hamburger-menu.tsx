@@ -44,7 +44,7 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
   },
   {
     id: 'playground',
-    label: 'HermesWorld',
+    label: 'AgentOne',
     icon: Castle02Icon,
     to: '/playground',
     match: (p: string) => p.startsWith('/playground'),
@@ -223,7 +223,7 @@ export function MobileHamburgerMenu() {
                 className="font-bold text-[15px] tracking-tight"
                 style={{ color: 'var(--color-ink, #111)' }}
               >
-                Hermes Agent
+                AgentOne Agent
               </span>
               <span
                 className="text-[11px]"

@@ -212,7 +212,7 @@ export function buildHermesTmuxLaunchCommand(input: {
   // Do not exec the Hermes process. Keeping the parent shell alive means a
   // failed worker startup leaves a readable tmux pane instead of destroying the
   // session and turning the real error into "can't find pane".
-  return `${launchPrefix} '${hermesBin}' chat --tui; status=$?; printf '\n[Hermes worker exited with status %s]\n' "$status"`
+  return `${launchPrefix} '${hermesBin}' chat --tui; status=$?; printf '\n[AgentOne worker exited with status %s]\n' "$status"`
 }
 
 function parseAssignments(value: unknown): Array<AssignmentRequest> {
@@ -447,7 +447,7 @@ export function buildWorkerPrompt(input: {
     input.task,
     '',
     '## Operating Rules',
-    '- Work in your persistent Hermes worker session and preserve your profile context.',
+    '- Work in your persistent AgentOne worker session and preserve your profile context.',
     `- The Worker Startup Memory Snapshot above is your authoritative starting context. If you have filesystem tools, also read \`~/.\u0068\u0065\u0072\u006d\u0065\u0073/profiles/${input.workerId}/MEMORY.md\`, \`SOUL.md\`, \`USER.md\`, and \`memory/IDENTITY.md\` for full detail.`,
     `- Search your own memory before starting if relevant: GET /api/swarm-memory/search?workerId=${input.workerId}&q=<term>.`,
     '- Do not blame a generic sandbox for missing access. Assume repo/filesystem/network are available unless a command proves otherwise. If auth or tools fail, report the exact failing command and exact missing token/tool/env.',
@@ -612,16 +612,16 @@ async function ensureLiveTmuxSession(workerId: string): Promise<{ ok: true; tmux
     return { ok: false, error: launched.error }
   }
 
-  // Give the agent a moment to render its prompt before sending keys. If Hermes
+  // Give the agent a moment to render its prompt before sending keys. If AgentOne
   // exits immediately, the shell stays alive and prints a sentinel that lets us
   // surface the real startup failure instead of a later tmux "can't find pane".
   await sleep(1200)
   if (!(await tmuxHasSession(tmuxBin, sessionName))) {
-    return { ok: false, error: `Hermes worker tmux session ${sessionName} exited during startup` }
+    return { ok: false, error: `AgentOne worker tmux session ${sessionName} exited during startup` }
   }
 
   const startupOutput = await captureTmuxPane(tmuxBin, sessionName)
-  if (startupOutput.includes('[Hermes worker exited with status')) {
+  if (startupOutput.includes('[AgentOne worker exited with status')) {
     const sanitizedOutput = redactStartupOutput(startupOutput).slice(-4_000)
     const logsDir = join(profilePath, 'logs')
     mkdirSync(logsDir, { recursive: true })
@@ -630,7 +630,7 @@ async function ensureLiveTmuxSession(workerId: string): Promise<{ ok: true; tmux
 `, { flag: 'a' })
     return {
       ok: false,
-      error: `Hermes worker failed to start in tmux session ${sessionName}. Startup output saved to ${startupLogPath}: ${sanitizedOutput}`,
+      error: `AgentOne worker failed to start in tmux session ${sessionName}. Startup output saved to ${startupLogPath}: ${sanitizedOutput}`,
     }
   }
 
@@ -703,7 +703,7 @@ async function sendPromptToLiveSession(workerId: string, prompt: string): Promis
     }
   }
 
-  // Give the TUI enough time to ingest the paste before submitting. The Hermes
+  // Give the TUI enough time to ingest the paste before submitting. The AgentOne
   // prompt can visually contain the pasted text before prompt_toolkit is ready
   // to accept Enter; sending a confirmation Enter shortly after the first one
   // prevents the user-visible failure mode where the task sits at the prompt.

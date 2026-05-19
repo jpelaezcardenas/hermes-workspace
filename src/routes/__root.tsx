@@ -126,12 +126,12 @@ export const Route = createRootRoute({
           'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual',
       },
       {
-        title: 'Hermes Workspace',
+        title: 'AgentOne',
       },
       {
         name: 'description',
         content:
-          'Hermes Agent workspace for chat, tools, files, memory, and jobs.',
+          'AgentOne workspace for chat, tools, files, memory, and jobs.',
       },
       {
         property: 'og:image',

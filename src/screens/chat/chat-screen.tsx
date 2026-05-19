@@ -1526,7 +1526,7 @@ export function ChatScreen({
           }
         : statusQuery.data && !statusQuery.data.ok
           ? {
-              message: statusQuery.data.error || 'Hermes Agent unavailable',
+              message: statusQuery.data.error || 'AgentOne Agent unavailable',
               status: statusQuery.data.status,
             }
           : null
