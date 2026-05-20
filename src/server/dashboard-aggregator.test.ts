@@ -10,21 +10,21 @@ function jsonResponse(payload: unknown, status = 200): Response {
 }
 
 function makeFetcher(routes: Record<string, unknown>): DashboardFetcher {
-  return async (path: string) => {
+  return (path: string) => {
     const key = Object.keys(routes).find((p) => path.startsWith(p))
     if (key === undefined) {
-      return new Response('not found', { status: 404 })
+      return Promise.resolve(new Response('not found', { status: 404 }))
     }
     const value = routes[key]
-    if (value instanceof Response) return value
-    return jsonResponse(value)
+    if (value instanceof Response) return Promise.resolve(value)
+    return Promise.resolve(jsonResponse(value))
   }
 }
 
 describe('buildDashboardOverview', () => {
   it('returns null sections when every upstream call fails', async () => {
-    const fetcher: DashboardFetcher = async () =>
-      new Response('boom', { status: 500 })
+    const fetcher: DashboardFetcher = () =>
+      Promise.resolve(new Response('boom', { status: 500 }))
     const overview = await buildDashboardOverview({ fetcher })
     expect(overview.status).toBeNull()
     expect(overview.platforms).toEqual([])
@@ -87,39 +87,40 @@ describe('buildDashboardOverview', () => {
     const fetcher = makeFetcher({})
     const overview = await buildDashboardOverview({
       fetcher,
-      patchAidFaireOrdersFetcher: async () => ({
-        source: 'corpus-gmail-faire-order-emails',
-        sourceLabel: 'Faire / PatchAid',
-        corpusDbPath: '/tmp/corpus.db',
-        orders: [
-          {
-            orderId: 'VZ3VM8JP9Q',
-            gmailId: '49a4cf3463681d93',
-            threadId: '49a4cf3463681d93',
-            source: 'faire',
-            sourceLabel: 'Faire / PatchAid',
-            brand: 'PatchAid',
-            fulfillmentSource: 'Faire',
-            customerName: 'K9 Korral',
-            orderDate: '2022-01-05',
-            totalAmount: 224.78,
-            unitCount: 10,
-            commissionLabel: '25% Commission (Opening Order)',
-            orderUrl:
-              'https://www.faire.com/maker-portal/orders/bo_vz3vm8jp9q/order-fulfilment',
-            items: [],
-          },
-        ],
-        summary: {
+      patchAidFaireOrdersFetcher: () =>
+        Promise.resolve({
+          source: 'corpus-gmail-faire-order-emails',
           sourceLabel: 'Faire / PatchAid',
-          orderCount: 1,
-          revenue: 224.78,
-          units: 10,
-          latestOrderDate: '2022-01-05',
-        },
-        generatedAt: '2026-05-19T14:00:00.000Z',
-        warning: null,
-      }),
+          corpusDbPath: '/tmp/corpus.db',
+          orders: [
+            {
+              orderId: 'VZ3VM8JP9Q',
+              gmailId: '49a4cf3463681d93',
+              threadId: '49a4cf3463681d93',
+              source: 'faire',
+              sourceLabel: 'Faire / PatchAid',
+              brand: 'PatchAid',
+              fulfillmentSource: 'Faire',
+              customerName: 'K9 Korral',
+              orderDate: '2022-01-05',
+              totalAmount: 224.78,
+              unitCount: 10,
+              commissionLabel: '25% Commission (Opening Order)',
+              orderUrl:
+                'https://www.faire.com/maker-portal/orders/bo_vz3vm8jp9q/order-fulfilment',
+              items: [],
+            },
+          ],
+          summary: {
+            sourceLabel: 'Faire / PatchAid',
+            orderCount: 1,
+            revenue: 224.78,
+            units: 10,
+            latestOrderDate: '2022-01-05',
+          },
+          generatedAt: '2026-05-19T14:00:00.000Z',
+          warning: null,
+        }),
     })
 
     expect(overview.patchAidFaireOrders?.sourceLabel).toBe('Faire / PatchAid')
@@ -194,11 +195,11 @@ describe('buildDashboardOverview', () => {
         platforms: {},
       },
     })
-    const gatewayFetcher: DashboardFetcher = async (p) => {
+    const gatewayFetcher: DashboardFetcher = (p) => {
       if (p === '/health/detailed') {
-        return jsonResponse({ active_agents: 2 })
+        return Promise.resolve(jsonResponse({ active_agents: 2 }))
       }
-      return new Response('nope', { status: 404 })
+      return Promise.resolve(new Response('nope', { status: 404 }))
     }
     const overview = await buildDashboardOverview({
       fetcher,
@@ -465,20 +466,24 @@ describe('buildDashboardOverview', () => {
   })
 
   it('survives mixed-status inputs (some succeed, some fail)', async () => {
-    const fetcher: DashboardFetcher = async (path) => {
+    const fetcher: DashboardFetcher = (path) => {
       if (path.startsWith('/api/status')) {
-        return jsonResponse({
-          gateway_state: 'running',
-          active_agents: 1,
-          active_sessions: 3,
-          platforms: {},
-        })
+        return Promise.resolve(
+          jsonResponse({
+            gateway_state: 'running',
+            active_agents: 1,
+            active_sessions: 3,
+            platforms: {},
+          }),
+        )
       }
       if (path.startsWith('/api/cron/jobs')) {
-        return jsonResponse({ jobs: [{ id: 'a', status: 'scheduled' }] })
+        return Promise.resolve(
+          jsonResponse({ jobs: [{ id: 'a', status: 'scheduled' }] }),
+        )
       }
       // Everything else fails
-      return new Response('nope', { status: 401 })
+      return Promise.resolve(new Response('nope', { status: 401 }))
     }
     const overview = await buildDashboardOverview({ fetcher })
     expect(overview.status?.gatewayState).toBe('running')
