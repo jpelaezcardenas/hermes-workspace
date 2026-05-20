@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   createCachedPatchAidFaireOrdersFetcher,
   parseFaireOrderEmail,
+  sqliteReadonlyUriForCorpusPath,
   summarizeFaireOrders,
 } from './faire-orders'
 import type { FaireCorpusMessage, PatchAidFaireOrdersResponse } from './faire-orders'
@@ -188,6 +189,12 @@ Item Subtotal (20 Items)
       units: 10,
       latestOrderDate: '2022-01-05',
     })
+  })
+
+  it('builds an immutable read-only sqlite URI for Corpus paths with spaces', () => {
+    expect(
+      sqliteReadonlyUriForCorpusPath('/Volumes/My External Drive/Corpus/index.db'),
+    ).toBe('file:/Volumes/My%20External%20Drive/Corpus/index.db?mode=ro&immutable=1')
   })
 
   it('caches dashboard fetches so frequent overview refreshes do not rescan Corpus', async () => {

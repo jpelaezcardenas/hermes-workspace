@@ -258,13 +258,21 @@ LIMIT ${limit};
 
   const { stdout } = await execFileAsync(
     'sqlite3',
-    ['-readonly', '-json', corpusDbPath, sql],
+    ['-json', sqliteReadonlyUriForCorpusPath(corpusDbPath), sql],
     { maxBuffer: 25 * 1024 * 1024, timeout: CORPUS_SQLITE_TIMEOUT_MS },
   )
   const rows = stdout.trim()
     ? (JSON.parse(stdout) as Array<RawSqliteMessage>)
     : []
   return rows.map(normalizeRawSqliteMessage)
+}
+
+export function sqliteReadonlyUriForCorpusPath(corpusDbPath: string): string {
+  const encodedPath = corpusDbPath
+    .split('/')
+    .map((segment, index) => (index === 0 ? segment : encodeURIComponent(segment)))
+    .join('/')
+  return `file:${encodedPath}?mode=ro&immutable=1`
 }
 
 function normalizeRawSqliteMessage(row: RawSqliteMessage): FaireCorpusMessage {
