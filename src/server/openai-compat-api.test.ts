@@ -1,6 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { parseOpenAIStream } from './openai-compat-api'
+import { parseOpenAIStream, selectDefaultModelId } from './openai-compat-api'
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+  vi.unstubAllEnvs()
+})
 
 function createStreamResponse(chunks: string[]): Response {
   const encoder = new TextEncoder()
@@ -88,5 +93,21 @@ describe('parseOpenAIStream', () => {
       },
       { type: 'content', text: 'done' },
     ])
+  })
+})
+
+describe('buildRequestBody', () => {
+  it('selects the runtime model advertised by the Hermes alias as the default', () => {
+    expect(
+      selectDefaultModelId([
+        {
+          id: 'hermes-agent',
+          runtime_model: 'deepseek/deepseek-chat',
+        },
+        {
+          id: 'deepseek/deepseek-chat',
+        },
+      ]),
+    ).toBe('deepseek/deepseek-chat')
   })
 })

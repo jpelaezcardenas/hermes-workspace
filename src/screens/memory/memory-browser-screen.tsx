@@ -1,5 +1,6 @@
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
+  Add01Icon,
   ArrowDown01Icon,
   ArrowUp01Icon,
   BrainIcon,
@@ -10,6 +11,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
+import {
+  getDefaultMemoryFileContent,
+  getLiveMemoryTargetPreview,
+  getTodayMemoryPath,
+  normalizeLiveMemoryTargets,
+  type LiveMemoryResponseInput,
+  type NormalizedLiveMemoryTarget,
+} from './memory-live-data'
 
 type MemoryFileMeta = {
   path: string
@@ -122,8 +131,18 @@ export function MemoryBrowserScreen() {
     queryFn: () => readJson<ListResponse>('/api/memory/list'),
   })
 
+  const liveMemoryQuery = useQuery({
+    queryKey: ['memory', 'live'],
+    queryFn: () => readJson<LiveMemoryResponseInput>('/api/memory'),
+    refetchInterval: 10_000,
+  })
+
   const files = filesQuery.data?.files ?? []
   const { rootMemory, memoryFiles } = useMemo(() => splitFiles(files), [files])
+  const liveTargets = useMemo(
+    () => normalizeLiveMemoryTargets(liveMemoryQuery.data),
+    [liveMemoryQuery.data],
+  )
 
   useEffect(() => {
     if (selectedPath) return
@@ -243,6 +262,46 @@ export function MemoryBrowserScreen() {
     }
   }
 
+  async function handleCreateMemoryFile(pathValue: string) {
+    if (isSaving) return
+    if (fileItems.some((file) => file.path === pathValue)) {
+      trySelectFile(pathValue)
+      setMobileFilesOpen(false)
+      return
+    }
+
+    setIsSaving(true)
+    const initialContent = getDefaultMemoryFileContent(pathValue)
+    try {
+      const response = await fetch('/api/memory/write', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: pathValue,
+          content: initialContent,
+        }),
+      })
+      const payload = (await response.json().catch(() => ({}))) as WriteResponse
+      if (!response.ok || !payload.success) {
+        throw new Error(payload.error || `Create failed (${response.status})`)
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ['memory'] })
+      setSelectedPath(payload.path || pathValue)
+      setDraftContent(initialContent)
+      setHasUnsavedChanges(false)
+      setIsEditing(true)
+      setMobileFilesOpen(false)
+      toast('Memory file created', { type: 'success' })
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to create memory file'
+      toast(message, { type: 'warning' })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   return (
     <div
       className="flex h-full min-h-0 flex-col"
@@ -288,11 +347,34 @@ export function MemoryBrowserScreen() {
               />
             </div>
           </div>
+          <button
+            type="button"
+            onClick={() => handleCreateMemoryFile(getTodayMemoryPath())}
+            disabled={isSaving}
+            className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+            style={{
+              borderColor: 'var(--theme-border)',
+              backgroundColor: 'var(--theme-card)',
+              color: 'var(--theme-text)',
+            }}
+          >
+            <HugeiconsIcon icon={Add01Icon} size={14} strokeWidth={1.8} />
+            Daily
+          </button>
         </div>
       </div>
 
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 p-3 md:grid-cols-3 md:p-4">
         <aside className="flex min-h-0 flex-col rounded-2xl border border-primary-200 bg-primary-50 dark:border-neutral-800 dark:bg-neutral-950 md:col-span-1">
+          <LiveMemoryPanel
+            targets={liveTargets}
+            loading={liveMemoryQuery.isLoading}
+            error={
+              liveMemoryQuery.error instanceof Error
+                ? liveMemoryQuery.error.message
+                : null
+            }
+          />
           <button
             type="button"
             className="flex items-center justify-between px-3 py-2 text-left md:cursor-default"
@@ -309,6 +391,31 @@ export function MemoryBrowserScreen() {
               />
             </span>
           </button>
+
+          <div className="flex gap-2 px-2 pb-2">
+            <button
+              type="button"
+              onClick={() => handleCreateMemoryFile('MEMORY.md')}
+              disabled={isSaving}
+              className="flex-1 rounded-lg border border-primary-200 bg-primary-50/80 px-2.5 py-2 text-left text-xs font-semibold text-primary-700 transition-colors hover:border-primary-300 hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-200 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <HugeiconsIcon icon={Add01Icon} size={13} strokeWidth={1.8} />
+                Root
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleCreateMemoryFile(getTodayMemoryPath())}
+              disabled={isSaving}
+              className="flex-1 rounded-lg border border-primary-200 bg-primary-50/80 px-2.5 py-2 text-left text-xs font-semibold text-primary-700 transition-colors hover:border-primary-300 hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-200 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <HugeiconsIcon icon={Add01Icon} size={13} strokeWidth={1.8} />
+                Today
+              </span>
+            </button>
+          </div>
 
           {searchEnabled ? (
             <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
@@ -547,6 +654,82 @@ export function MemoryBrowserScreen() {
           </div>
         </section>
       </div>
+    </div>
+  )
+}
+
+function LiveMemoryPanel({
+  targets,
+  loading,
+  error,
+}: {
+  targets: Array<NormalizedLiveMemoryTarget>
+  loading: boolean
+  error: string | null
+}) {
+  return (
+    <div className="border-b border-primary-200 px-3 py-3 dark:border-neutral-800">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="text-xs font-semibold uppercase tracking-wide text-primary-500 dark:text-neutral-400">
+          Live Memory ({targets.length})
+        </div>
+        {loading ? (
+          <div className="text-[10px] text-primary-400 dark:text-neutral-500">
+            Syncing
+          </div>
+        ) : null}
+      </div>
+
+      {error ? (
+        <div className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/20 dark:text-red-300">
+          {error}
+        </div>
+      ) : targets.length === 0 ? (
+        <div className="rounded-lg border border-primary-200 bg-primary-50/80 px-3 py-2 text-xs text-primary-400 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-500">
+          No live memory targets
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {targets.map((target) => {
+            const preview = target.entries
+              .map(getLiveMemoryTargetPreview)
+              .filter(Boolean)
+              .slice(0, 2)
+            return (
+              <div
+                key={target.key}
+                className="rounded-lg border border-primary-200 bg-primary-50/80 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-900/60"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="truncate font-mono text-xs text-primary-900 dark:text-neutral-100">
+                    {target.label}
+                  </div>
+                  <div className="shrink-0 rounded-full bg-primary-100 px-1.5 py-0.5 text-[10px] text-primary-500 dark:bg-neutral-800 dark:text-neutral-400">
+                    {target.entryCount}
+                  </div>
+                </div>
+                {target.usage ? (
+                  <div className="mt-0.5 truncate text-[11px] text-primary-400 dark:text-neutral-500">
+                    {target.usage}
+                  </div>
+                ) : null}
+                {preview.length > 0 ? (
+                  <div className="mt-1 space-y-0.5">
+                    {preview.map((line, index) => (
+                      <div
+                        key={`${target.key}:${index}`}
+                        className="line-clamp-1 text-[11px] text-primary-700 dark:text-neutral-300"
+                      >
+                        {line}
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

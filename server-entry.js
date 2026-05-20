@@ -9,6 +9,9 @@ const CLIENT_DIR = join(__dirname, 'dist', 'client')
 
 const port = parseInt(process.env.PORT || '3000', 10)
 const host = process.env.HOST || '0.0.0.0'
+const HTML_SECURITY_HEADERS = {
+  'Content-Security-Policy': "frame-ancestors 'none'",
+}
 
 const MIME_TYPES = {
   '.js': 'application/javascript',
@@ -110,10 +113,14 @@ const httpServer = createServer(async (req, res) => {
 
   try {
     const response = await server.fetch(request)
+    const responseHeaders = {
+      ...Object.fromEntries(response.headers.entries()),
+      ...HTML_SECURITY_HEADERS,
+    }
 
     res.writeHead(
       response.status,
-      Object.fromEntries(response.headers.entries()),
+      responseHeaders,
     )
 
     if (response.body) {

@@ -11,16 +11,31 @@
 #
 # ─── build stage ─────────────────────────────────────────────────────────
 FROM node:22-slim AS build
-RUN corepack enable && apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Install deps (cache-friendly: copy only manifests first)
-COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
-COPY workspace-daemon/package.json workspace-daemon/
+# Copy the workspace's package config
+COPY sidecar/hermes-workspace/package.json sidecar/hermes-workspace/pnpm-lock.yaml* sidecar/hermes-workspace/pnpm-workspace.yaml* ./sidecar/hermes-workspace/
+COPY sidecar/hermes-workspace/workspace-daemon/package.json ./sidecar/hermes-workspace/workspace-daemon/
+
+# Copy the monorepo package it depends on.
+# For a `file:` dependency, pnpm snapshots the package during install, so the
+# prebuilt dist must be present before `pnpm install` runs.
+COPY packages/hermes-ui/package.json packages/hermes-ui/
+COPY packages/hermes-ui/dist ./packages/hermes-ui/dist
+
+# We need to run pnpm install in the sidecar dir
+WORKDIR /app/sidecar/hermes-workspace
 RUN pnpm install --frozen-lockfile
 
-# Copy sources and build
-COPY . .
+# Now copy the full source for both
+WORKDIR /app
+COPY sidecar/hermes-workspace ./sidecar/hermes-workspace
+COPY packages/hermes-ui/package.json ./packages/hermes-ui/package.json
+
+# Build the workspace
+WORKDIR /app/sidecar/hermes-workspace
 RUN pnpm build
 
 # ─── runtime stage ────────────────────────────────────────────────────────
@@ -32,12 +47,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy build artefacts + runtime deps
-COPY --from=build --chown=workspace:workspace /app/dist ./dist
-COPY --from=build --chown=workspace:workspace /app/node_modules ./node_modules
-COPY --from=build --chown=workspace:workspace /app/package.json ./package.json
-COPY --from=build --chown=workspace:workspace /app/skills ./skills
-COPY --from=build --chown=workspace:workspace /app/server-entry.js ./server-entry.js
+# Copy build artefacts + runtime deps from the sidecar directory
+COPY --from=build --chown=workspace:workspace /app/sidecar/hermes-workspace/dist ./dist
+COPY --from=build --chown=workspace:workspace /app/sidecar/hermes-workspace/node_modules ./node_modules
+COPY --from=build --chown=workspace:workspace /app/sidecar/hermes-workspace/package.json ./package.json
+COPY --from=build --chown=workspace:workspace /app/sidecar/hermes-workspace/skills ./skills
+COPY --from=build --chown=workspace:workspace /app/sidecar/hermes-workspace/server-entry.js ./server-entry.js
+COPY --chown=workspace:workspace infra/model-catalog.json ./model-catalog.json
 
 USER workspace
 ENV NODE_ENV=production \

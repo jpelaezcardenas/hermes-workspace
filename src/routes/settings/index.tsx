@@ -16,7 +16,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { useCallback, useEffect, useState } from 'react'
 import type * as React from 'react'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
-import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
+import type { BrailleSpinnerPreset } from '@agrv/hermes-ui'
 import type { ThemeId } from '@/lib/theme'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { Button } from '@/components/ui/button'
@@ -32,7 +32,7 @@ import {
 import { UserAvatar } from '@/components/avatars'
 import { Input } from '@/components/ui/input'
 import { LogoLoader } from '@/components/logo-loader'
-import { BrailleSpinner } from '@/components/ui/braille-spinner'
+import { BrailleSpinner } from '@agrv/hermes-ui'
 import { ThreeDotsSpinner } from '@/components/ui/three-dots-spinner'
 // useWorkspaceStore removed — hamburger eliminated on mobile
 

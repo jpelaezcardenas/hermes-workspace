@@ -5,7 +5,7 @@
 import { cn } from '@/lib/utils'
 import type { AgentWorkingRow } from './agents-working-panel'
 import type { TeamMember } from './team-panel'
-import { AGENT_ACCENT_COLORS, AgentAvatar, resolveAgentAvatarIndex } from './agent-avatar'
+import { AGENT_ACCENT_COLORS, AgentAvatar, resolveAgentAvatarIndex } from '@agrv/hermes-ui'
 import { getAgentStatusMeta, getOfficeModelLabel, OfficeView } from './office-view'
 
 export interface OverviewTabProps {

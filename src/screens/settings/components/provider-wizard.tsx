@@ -589,7 +589,7 @@ export function ProviderWizard({
                           hermes setup
                         </pre>
                         <p className="mt-1.5 text-xs text-primary-600 text-pretty">
-                          Select <strong>Google Antigravity</strong> →{' '}
+                          Select <strong>Google atti.cloud</strong> →{' '}
                           <strong>OAuth</strong>. A browser tab will open for
                           Google sign-in.
                         </p>

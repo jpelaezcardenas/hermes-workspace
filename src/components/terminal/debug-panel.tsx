@@ -1,7 +1,7 @@
 import { Cancel01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { motion } from 'motion/react'
-import { BrailleSpinner } from '@/components/ui/braille-spinner'
+import { BrailleSpinner } from '@agrv/hermes-ui'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 

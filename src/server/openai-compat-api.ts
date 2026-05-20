@@ -6,6 +6,38 @@ const BEARER_TOKEN = process.env.HERMES_API_TOKEN || ''
 /** Cached first available model from /v1/models — used as fallback when no model is specified. */
 let _cachedDefaultModel: string | null = null
 
+type ModelListEntry = {
+  id?: string
+  runtime_model?: string
+  runtimeModel?: string
+}
+
+function readModelId(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+export function selectDefaultModelId(models: Array<ModelListEntry>): string {
+  const normalized = models
+    .map((model) => ({
+      id: readModelId(model.id),
+      runtimeModel:
+        readModelId(model.runtime_model) || readModelId(model.runtimeModel),
+    }))
+    .filter((model) => model.id || model.runtimeModel)
+
+  const hermesAlias = normalized.find(
+    (model) => model.id === 'hermes-agent' && model.runtimeModel,
+  )
+  if (hermesAlias?.runtimeModel) return hermesAlias.runtimeModel
+
+  const preferred = normalized.find((model) =>
+    /deepseek|qwen|llama|mistral|gemma/i.test(
+      model.runtimeModel || model.id,
+    ),
+  )
+  return preferred?.runtimeModel || preferred?.id || normalized[0]?.id || ''
+}
+
 async function getDefaultModel(): Promise<string> {
   if (_cachedDefaultModel) return _cachedDefaultModel
   if (process.env.HERMES_DEFAULT_MODEL) {
@@ -20,13 +52,10 @@ async function getDefaultModel(): Promise<string> {
       signal: AbortSignal.timeout(3_000),
     })
     if (res.ok) {
-      const data = (await res.json()) as { data?: Array<{ id: string }> }
+      const data = (await res.json()) as { data?: Array<ModelListEntry> }
       if (data.data && data.data.length > 0) {
-        // Prefer a known-good chat model over the first alphabetical one
-        const preferred = data.data.find((m) =>
-          /qwen|llama|mistral|gemma/i.test(m.id),
-        )
-        _cachedDefaultModel = preferred?.id ?? data.data[0].id
+        _cachedDefaultModel = selectDefaultModelId(data.data) || data.data[0].id || null
+        if (!_cachedDefaultModel) return 'default'
         return _cachedDefaultModel
       }
     }

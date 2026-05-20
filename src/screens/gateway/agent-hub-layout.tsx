@@ -6,7 +6,7 @@ import type { AgentWorkingRow } from './components/agents-working-panel'
 import { OfficeView } from './components/office-view'
 import type { AgentHubLayoutProps } from './components/hub-constants'
 
-export { AgentAvatar } from './components/agent-avatar'
+export { AgentAvatar } from '@agrv/hermes-ui'
 
 const THEME_STYLE: CSSProperties = {
   ['--theme-bg' as string]: 'var(--color-surface)',

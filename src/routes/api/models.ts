@@ -14,12 +14,23 @@ import {
   getDiscoveredModels,
   ensureProviderInConfig,
 } from '../../server/local-provider-discovery'
+import {
+  buildPaidLiveProviderFallbackSelections,
+  buildTopModelSelections,
+  type LiveProviderModelInput,
+  readCanonicalModelCatalog,
+} from '../../server/model-catalog'
+import { getModelAvailability } from '../../server/model-availability'
 
 type ModelEntry = {
   provider?: string
   id?: string
   name?: string
   [key: string]: unknown
+}
+
+function modelKey(entry: ModelEntry): string {
+  return `${readString(entry.provider)}:${readString(entry.id)}`
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -32,7 +43,10 @@ function readString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
 
-function normalizeModel(entry: unknown): ModelEntry | null {
+export function normalizeModel(
+  entry: unknown,
+  runtimeProvider = '',
+): ModelEntry | null {
   if (typeof entry === 'string') {
     const id = entry.trim()
     if (!id) return null
@@ -46,19 +60,41 @@ function normalizeModel(entry: unknown): ModelEntry | null {
   const id =
     readString(record.id) || readString(record.name) || readString(record.model)
   if (!id) return null
+  const runtimeModel =
+    readString(record.runtime_model) || readString(record.runtimeModel)
+  const resolvedId = id === 'hermes-agent' && runtimeModel ? runtimeModel : id
+  const providerFromRuntime =
+    id === 'hermes-agent' || readString(record.owned_by) === 'runtime'
+      ? runtimeProvider
+      : ''
   return {
     ...record,
-    id,
+    id: resolvedId,
     name:
+      (id === 'hermes-agent' ? runtimeModel : '') ||
       readString(record.name) ||
       readString(record.display_name) ||
       readString(record.label) ||
-      id,
+      resolvedId,
     provider:
+      providerFromRuntime ||
       readString(record.provider) ||
+      (resolvedId.includes('/') ? resolvedId.split('/')[0] : '') ||
       readString(record.owned_by) ||
-      (id.includes('/') ? id.split('/')[0] : 'unknown'),
+      'unknown',
   }
+}
+
+export function dedupeModelsByKey(
+  entries: Array<ModelEntry>,
+): Array<ModelEntry> {
+  const seen = new Set<string>()
+  return entries.filter((entry) => {
+    const key = modelKey(entry)
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 }
 
 /**
@@ -117,18 +153,47 @@ function readHermesDefaultModel(): ModelEntry | null {
 async function fetchHermesModels(): Promise<Array<ModelEntry>> {
   const headers: Record<string, string> = {}
   if (BEARER_TOKEN) headers['Authorization'] = `Bearer ${BEARER_TOKEN}`
-  const response = await fetch(`${HERMES_API}/v1/models`, { headers })
+  const [modelsResponse, configResponse] = await Promise.all([
+    fetch(`${HERMES_API}/v1/models`, { headers }),
+    fetch(`${HERMES_API}/api/config`, { headers }).catch(() => null),
+  ])
+  const response = modelsResponse
   if (!response.ok)
     throw new Error(`Hermes models request failed (${response.status})`)
+  const configPayload =
+    configResponse?.ok === true ? asRecord(await configResponse.json()) : {}
+  const configRecord = asRecord(configPayload.config)
+  const runtimeProvider =
+    readString(configPayload.provider) || readString(configRecord.provider)
   const payload = asRecord(await response.json())
   const rawModels = Array.isArray(payload.data)
     ? payload.data
     : Array.isArray(payload.models)
       ? payload.models
       : []
-  return rawModels
-    .map(normalizeModel)
-    .filter((e): e is ModelEntry => e !== null)
+  return dedupeModelsByKey(
+    rawModels
+      .map((model) => normalizeModel(model, runtimeProvider))
+      .filter((e): e is ModelEntry => e !== null),
+  )
+}
+
+async function fetchAvailableModelsForProvider(
+  provider: string,
+): Promise<Array<LiveProviderModelInput>> {
+  const headers: Record<string, string> = {}
+  if (BEARER_TOKEN) headers['Authorization'] = `Bearer ${BEARER_TOKEN}`
+  const response = await fetch(
+    `${HERMES_API}/api/available-models?provider=${encodeURIComponent(provider)}`,
+    { headers, signal: AbortSignal.timeout(1_500) },
+  )
+  if (!response.ok) return []
+  const payload = asRecord(await response.json())
+  return Array.isArray(payload.models)
+    ? (payload.models as Array<LiveProviderModelInput>)
+    : Array.isArray(payload.data)
+      ? (payload.data as Array<LiveProviderModelInput>)
+      : []
 }
 
 export const Route = createFileRoute('/api/models')({
@@ -163,12 +228,50 @@ export const Route = createFileRoute('/api/models')({
           // Merge auto-discovered local models (Ollama, Atomic Chat, etc.)
           await ensureDiscovery()
           const localModels = getDiscoveredModels()
-          const existingIds = new Set(models.map((m) => m.id))
+          const liveLocalModelKeys = new Set(
+            localModels.map((model) => `${model.provider}:${model.id}`),
+          )
+          const existingIds = new Set(models.map((m) => readString(m.id)))
           for (const m of localModels) {
             if (!existingIds.has(m.id)) {
               models.push(m)
               existingIds.add(m.id)
               ensureProviderInConfig(m.provider)
+            }
+          }
+
+          models = dedupeModelsByKey(models)
+
+          const existingModelKeys = new Set(models.map(modelKey))
+          const catalogModels = buildTopModelSelections(
+            readCanonicalModelCatalog(),
+            10,
+          )
+          for (const catalogModel of catalogModels) {
+            const key = modelKey(catalogModel)
+            if (existingModelKeys.has(key)) continue
+            models.push(catalogModel)
+            existingModelKeys.add(key)
+          }
+
+          const paidCatalogCount = catalogModels.filter(
+            (model) => model.costTier === 'paid',
+          ).length
+          if (paidCatalogCount < 10) {
+            const openrouterModels = await fetchAvailableModelsForProvider(
+              'openrouter',
+            ).catch(() => [])
+            const livePaidModels = buildPaidLiveProviderFallbackSelections({
+              provider: 'openrouter',
+              models: openrouterModels,
+              existingModels: catalogModels,
+              limit: 10,
+            })
+            for (const model of livePaidModels) {
+              const key = modelKey(model)
+              if (existingModelKeys.has(key)) continue
+              models.push(model)
+              existingModelKeys.add(key)
             }
           }
 
@@ -182,13 +285,30 @@ export const Route = createFileRoute('/api/models')({
             ),
           )
 
+          const annotatedModels = models.map((model) => {
+            const availability = getModelAvailability(
+              {
+                id: readString(model.id),
+                provider: readString(model.provider),
+                costTier: readString(model.costTier),
+                source: readString(model.source),
+              },
+              { liveLocalModelKeys },
+            )
+            return {
+              ...model,
+              ...availability,
+            }
+          })
+
           return json({
             ok: true,
             object: 'list',
-            data: models,
-            models,
+            data: annotatedModels,
+            models: annotatedModels,
             configuredProviders,
             source,
+            catalogSource: 'infra/model-catalog.json',
           })
         } catch (err) {
           return json(

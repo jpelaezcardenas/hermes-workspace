@@ -1,9 +1,9 @@
 'use client'
 
-import { BrailleSpinner } from './ui/braille-spinner'
 import { ThreeDotsSpinner } from './ui/three-dots-spinner'
 import { LogoLoader } from './logo-loader'
-import type { BrailleSpinnerPreset } from './ui/braille-spinner'
+import { BrailleSpinner } from '@agrv/hermes-ui'
+import type { BrailleSpinnerPreset } from '@agrv/hermes-ui'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import { useChatSettingsStore } from '@/hooks/use-chat-settings'
 import { cn } from '@/lib/utils'

@@ -144,13 +144,21 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     return null
   })()
 
+  const isEmbedded = useMemo(() => {
+    if (typeof window === 'undefined') return false
+    return (
+      new URLSearchParams(window.location.search).get('embed') === '1' ||
+      window.self !== window.top
+    )
+  }, [])
+
   const chatMatch = pathname.match(/^\/chat\/(.+)$/)
   const activeFriendlyId = chatMatch ? chatMatch[1] : 'main'
   const isOnChatRoute = Boolean(chatMatch) || pathname === '/new'
   const isOnTerminalRoute = pathname.startsWith('/terminal')
-  const hideChatSidebar = isOnChatRoute && chatFocusMode
+  const hideChatSidebar = (isOnChatRoute && chatFocusMode) || isEmbedded
   const showDesktopSidebarBackdrop =
-    !isMobile && !isOnChatRoute && !sidebarCollapsed
+    !isMobile && !isOnChatRoute && !sidebarCollapsed && !isEmbedded
 
   // Sessions query — shared across sidebar and chat
   const sessionsQuery = useQuery({
@@ -260,14 +268,36 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     height: 'var(--vvh, 100dvh)',
     paddingTop: isElectron ? 40 : 0,
     '--titlebar-h': isElectron ? '40px' : '0px',
+    background: 'var(--background-deep, #000)',
+    color: 'var(--text-main, #fff)',
+    fontFamily: "var(--font-inter, 'Inter', sans-serif)",
   }
 
   return (
     <>
       <div
-        className="relative overflow-hidden theme-bg theme-text"
+        className="relative overflow-hidden"
         style={shellStyle}
       >
+        {/* Dynamic Glassmorphism Background Glows */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+          zIndex: 0, pointerEvents: 'none',
+        }}>
+          <div style={{
+            position: 'absolute', top: '10%', left: '20%', width: '40%', height: '40%',
+            background: 'var(--bg-glow-1, rgba(0, 122, 255, 0.2))',
+            filter: 'blur(100px)',
+            transition: 'background 0.5s ease',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: '10%', right: '10%', width: '35%', height: '35%',
+            background: 'var(--bg-glow-2, rgba(88, 86, 214, 0.25))',
+            filter: 'blur(100px)',
+            transition: 'background 0.5s ease',
+          }} />
+        </div>
+
         <HermesReconnectBanner enabled={authState.checked} />
         {/* Electron: native-style title bar (absolute over the padding) */}
         {isElectron && (
@@ -351,7 +381,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
                 zIndex: isOnTerminalRoute ? 1 : -1,
               }}
             >
-              {isMobile && isOnTerminalRoute && (
+              {isMobile && isOnTerminalRoute && !isEmbedded && (
                 <MobilePageHeader title="Terminal" />
               )}
               <div className="flex-1 min-h-0 overflow-hidden">
@@ -380,17 +410,18 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
               {isMobile &&
                 !isOnChatRoute &&
                 !isOnTerminalRoute &&
+                !isEmbedded &&
                 mobilePageTitle && <MobilePageHeader title={mobilePageTitle} />}
               {children}
             </div>
           </main>
 
           {/* Chat panel — visible on non-chat routes */}
-          {!isOnChatRoute && !isMobile && <ChatPanel />}
+          {!isOnChatRoute && !isMobile && !isEmbedded && <ChatPanel />}
         </div>
 
         {/* Floating chat toggle — visible on non-chat routes */}
-        {!isOnChatRoute && !isMobile && <ChatPanelToggle />}
+        {!isOnChatRoute && !isMobile && !isEmbedded && <ChatPanelToggle />}
 
         {showDesktopSidebarBackdrop ? (
           <button
@@ -406,7 +437,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         ) : null}
       </div>
 
-      <MobileHamburgerMenu />
+      {!isEmbedded && <MobileHamburgerMenu />}
       {/* System metrics footer removed */}
       <CommandPalette pathname={pathname} sessions={sessions} />
     </>

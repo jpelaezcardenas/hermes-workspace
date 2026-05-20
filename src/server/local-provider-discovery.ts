@@ -29,6 +29,11 @@ export type LocalProviderDef = {
   apiMode: string
 }
 
+export type LocalProviderEndpoint = {
+  baseUrl: string
+  modelsUrl: string
+}
+
 const LOCAL_PROVIDERS: LocalProviderDef[] = [
   {
     id: 'ollama',
@@ -58,6 +63,7 @@ export type DiscoveredModel = {
   id: string
   name: string
   provider: string
+  costTier: 'local'
   source: 'local-discovery'
   size?: number | null
 }
@@ -89,17 +95,78 @@ function cleanModelName(id: string): string {
   return id.replace(/:latest$/, '')
 }
 
+function trimTrailingSlash(value: string): string {
+  return value.replace(/\/+$/, '')
+}
+
+function getProviderBaseUrlEnvKeys(providerId: string): string[] {
+  if (providerId === 'ollama') return ['OLLAMA_BASE_URL', 'NEXT_PUBLIC_OLLAMA_URL']
+  if (providerId === 'atomic-chat') return ['ATOMIC_CHAT_BASE_URL']
+  return []
+}
+
+function readEnvBaseUrl(
+  providerId: string,
+  env: Record<string, string | undefined>,
+): string {
+  for (const key of getProviderBaseUrlEnvKeys(providerId)) {
+    const value = typeof env[key] === 'string' ? env[key]?.trim() : ''
+    if (value) return value
+  }
+  return ''
+}
+
+function normalizeOpenAIBaseUrl(value: string): string {
+  const base = trimTrailingSlash(value.trim())
+  if (!base) return base
+  return base.endsWith('/v1') ? base : `${base}/v1`
+}
+
+export function getLocalProviderEndpoint(
+  def: LocalProviderDef,
+  env: Record<string, string | undefined> = process.env,
+): LocalProviderEndpoint {
+  const baseUrl = normalizeOpenAIBaseUrl(readEnvBaseUrl(def.id, env) || def.baseUrl)
+  return {
+    baseUrl,
+    modelsUrl: `${baseUrl}/models`,
+  }
+}
+
+function resolveLocalProviderDef(
+  def: LocalProviderDef,
+  env: Record<string, string | undefined> = process.env,
+): LocalProviderDef {
+  return {
+    ...def,
+    baseUrl: getLocalProviderEndpoint(def, env).baseUrl,
+  }
+}
+
+export function isChatCapableLocalModelId(id: string): boolean {
+  const normalized = id.toLowerCase()
+  return !(
+    normalized.includes('embed') ||
+    normalized.startsWith('bge-') ||
+    normalized.includes('/bge-') ||
+    normalized.startsWith('e5-') ||
+    normalized.includes('/e5-') ||
+    normalized.includes('rerank')
+  )
+}
+
 async function probeProvider(
   def: LocalProviderDef,
 ): Promise<DiscoveredProvider> {
-  const url = `http://127.0.0.1:${def.port}${def.modelsPath}`
+  const endpoint = getLocalProviderEndpoint(def)
+  const resolvedDef = { ...def, baseUrl: endpoint.baseUrl }
   try {
-    const response = await fetch(url, {
+    const response = await fetch(endpoint.modelsUrl, {
       signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
       headers: { Accept: 'application/json' },
     })
     if (!response.ok) {
-      return { def, online: false, models: [], lastProbe: Date.now() }
+      return { def: resolvedDef, online: false, models: [], lastProbe: Date.now() }
     }
     const payload = (await response.json()) as Record<string, unknown>
     const rawModels = Array.isArray(payload.data)
@@ -116,11 +183,12 @@ async function probeProvider(
             : typeof entry.name === 'string'
               ? entry.name
               : ''
-        if (!id) return []
+        if (!id || !isChatCapableLocalModelId(id)) return []
         return [{
           id,
           name: cleanModelName(id),
           provider: def.id,
+          costTier: 'local' as const,
           source: 'local-discovery' as const,
           size:
             typeof entry.size === 'number'
@@ -129,9 +197,9 @@ async function probeProvider(
         }]
       })
 
-    return { def, online: true, models, lastProbe: Date.now() }
+    return { def: resolvedDef, online: true, models, lastProbe: Date.now() }
   } catch {
-    return { def, online: false, models: [], lastProbe: Date.now() }
+    return { def: resolvedDef, online: false, models: [], lastProbe: Date.now() }
   }
 }
 
@@ -227,7 +295,10 @@ export function getDiscoveryStatus(): Array<{
 export function getLocalProviderDef(
   id: string,
 ): LocalProviderDef | undefined {
-  return LOCAL_PROVIDERS.find((def) => def.id === id)
+  const state = discoveryState.get(id)
+  if (state) return state.def
+  const def = LOCAL_PROVIDERS.find((candidate) => candidate.id === id)
+  return def ? resolveLocalProviderDef(def) : undefined
 }
 
 /**

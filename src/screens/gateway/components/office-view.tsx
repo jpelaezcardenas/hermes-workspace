@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import type { AgentWorkingRow, AgentWorkingStatus } from './agents-working-panel'
 import type { ModelPresetId } from './team-panel'
-import { AGENT_ACCENT_COLORS, AgentAvatar } from './agent-avatar'
+import { AGENT_ACCENT_COLORS, AgentAvatar } from '@agrv/hermes-ui'
 
 export type RemoteSession = {
   sessionKey: string

@@ -45,7 +45,12 @@ import { useVoiceInput } from '@/hooks/use-voice-input'
 import { useVoiceRecorder } from '@/hooks/use-voice-recorder'
 import { toast } from '@/components/ui/toast'
 import {
+  compareModelPickerGroups,
+  formatModelPickerGroupLabel,
+  getModelPickerBadge,
+  getModelPickerGroup,
   getZeroForkModelInfoFlags,
+  isModelPickerEntryAvailable,
   MODEL_SWITCH_BLOCKED_TOAST,
   shouldBlockZeroForkModelSwitch,
 } from './chat-composer-model-switch'
@@ -2225,8 +2230,41 @@ function ChatComposerComponent({
                                 ? defaultProvider
                                 : ((m as Record<string, unknown>)
                                     .provider as string) || defaultProvider
+                            const costTier =
+                              typeof m === 'string'
+                                ? undefined
+                                : ((m as Record<string, unknown>)
+                                    .costTier as string | undefined)
+                            const rank =
+                              typeof m === 'string'
+                                ? undefined
+                                : ((m as Record<string, unknown>).rank as
+                                    | number
+                                    | undefined)
+                            const availability =
+                              typeof m === 'string'
+                                ? undefined
+                                : readModelText(
+                                    (m as Record<string, unknown>)
+                                      .availability,
+                                  )
+                            const availabilityReason =
+                              typeof m === 'string'
+                                ? undefined
+                                : readModelText(
+                                    (m as Record<string, unknown>)
+                                      .availabilityReason,
+                                  )
+                            const available =
+                              typeof m !== 'string' &&
+                              typeof (m as Record<string, unknown>)
+                                .available === 'boolean'
+                                ? ((m as Record<string, unknown>)
+                                    .available as boolean)
+                                : undefined
                             const LOCAL_PROVIDER_IDS = ['ollama', 'atomic-chat']
                             const isLocal =
+                              costTier === 'local' ||
                               (typeof m !== 'string' &&
                               (m as Record<string, unknown>).description ===
                                 'local') || LOCAL_PROVIDER_IDS.includes(mProvider)
@@ -2235,6 +2273,11 @@ function ChatComposerComponent({
                               name: mName,
                               provider: mProvider,
                               isLocal,
+                              costTier,
+                              rank,
+                              availability,
+                              availabilityReason,
+                              available,
                             }
                           })
                           // Split pinned vs unpinned, group unpinned by provider
@@ -2243,19 +2286,32 @@ function ChatComposerComponent({
                           )
                           const unpinnedGroups = new Map<
                             string,
-                            typeof parsed
+                            {
+                              group: ReturnType<typeof getModelPickerGroup>
+                              models: typeof parsed
+                            }
                           >()
                           for (const entry of parsed) {
                             if (isPinned(entry.id)) continue
-                            const group =
-                              unpinnedGroups.get(entry.provider) ?? []
-                            group.push(entry)
-                            unpinnedGroups.set(entry.provider, group)
+                            const group = getModelPickerGroup(entry)
+                            const existing = unpinnedGroups.get(group.key) ?? {
+                              group,
+                              models: [],
+                            }
+                            existing.models.push(entry)
+                            unpinnedGroups.set(group.key, existing)
                           }
                           const renderEntry = (entry: (typeof parsed)[0]) => {
                             const isActive =
                               entry.id === currentModel ||
                               `${defaultProvider}/${entry.id}` === currentModel
+                            const badge = getModelPickerBadge(entry)
+                            const isAvailable =
+                              isModelPickerEntryAvailable(entry)
+                            const badgeClass =
+                              badge === 'offline'
+                                ? 'text-amber-700 bg-amber-50 dark:text-amber-300 dark:bg-amber-900/30'
+                                : 'text-neutral-400 bg-neutral-100 dark:bg-neutral-800'
                             return (
                               <div
                                 key={entry.id}
@@ -2263,7 +2319,15 @@ function ChatComposerComponent({
                               >
                                 <button
                                   type="button"
+                                  disabled={!isAvailable}
+                                  title={
+                                    !isAvailable
+                                      ? entry.availabilityReason ||
+                                        'Model unavailable'
+                                      : undefined
+                                  }
                                   onClick={() => {
+                                    if (!isAvailable) return
                                     handleModelSelect(
                                       entry.id,
                                       entry.provider || undefined,
@@ -2274,14 +2338,21 @@ function ChatComposerComponent({
                                     isActive
                                       ? 'bg-accent-50 text-accent-700 font-medium dark:bg-accent-900/30 dark:text-accent-300 border-l-2 border-accent-500'
                                       : 'text-neutral-700 hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-800'
-                                  }`}
+                                  } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent`}
                                 >
                                   <span className="flex-1 truncate">
                                     {entry.name}
                                   </span>
-                                  {entry.isLocal && (
-                                    <span className="text-[10px] text-neutral-400 px-1.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800">
-                                      local
+                                  {entry.rank && (
+                                    <span className="text-[10px] text-neutral-400">
+                                      #{entry.rank}
+                                    </span>
+                                  )}
+                                  {badge && (
+                                    <span
+                                      className={`text-[10px] px-1.5 py-0.5 rounded-full ${badgeClass}`}
+                                    >
+                                      {badge}
                                     </span>
                                   )}
                                   {isActive && (
@@ -2344,12 +2415,17 @@ function ChatComposerComponent({
                                   {pinnedEntries.map(renderEntry)}
                                 </div>
                               )}
-                              {Array.from(unpinnedGroups.entries())
-                                .sort((a, b) => a[0].localeCompare(b[0]))
-                                .map(([provider, models]) => (
-                                  <div key={provider}>
+                              {Array.from(unpinnedGroups.values())
+                                .sort((a, b) =>
+                                  compareModelPickerGroups(a.group, b.group),
+                                )
+                                .map(({ group, models }) => (
+                                  <div key={group.key}>
                                     <div className="px-4 pb-1 pt-3 text-[10px] font-medium uppercase tracking-wider text-neutral-400">
-                                      {provider}
+                                      {formatModelPickerGroupLabel(
+                                        group,
+                                        models.length,
+                                      )}
                                     </div>
                                     {models.map(renderEntry)}
                                   </div>
@@ -2486,15 +2562,53 @@ function ChatComposerComponent({
                                   ? defaultProvider
                                   : ((m as Record<string, unknown>)
                                       .provider as string) || defaultProvider
-                              const isLocal =
+                              const costTier =
+                                typeof m === 'string'
+                                  ? undefined
+                                  : ((m as Record<string, unknown>)
+                                      .costTier as string | undefined)
+                              const rank =
+                                typeof m === 'string'
+                                  ? undefined
+                                  : ((m as Record<string, unknown>).rank as
+                                      | number
+                                      | undefined)
+                              const availability =
+                                typeof m === 'string'
+                                  ? undefined
+                                  : readModelText(
+                                      (m as Record<string, unknown>)
+                                        .availability,
+                                    )
+                              const availabilityReason =
+                                typeof m === 'string'
+                                  ? undefined
+                                  : readModelText(
+                                      (m as Record<string, unknown>)
+                                        .availabilityReason,
+                                    )
+                              const available =
                                 typeof m !== 'string' &&
-                                (m as Record<string, unknown>).description ===
-                                  'local'
+                                typeof (m as Record<string, unknown>)
+                                  .available === 'boolean'
+                                  ? ((m as Record<string, unknown>)
+                                      .available as boolean)
+                                  : undefined
+                              const isLocal =
+                                costTier === 'local' ||
+                                (typeof m !== 'string' &&
+                                  (m as Record<string, unknown>).description ===
+                                    'local')
                               return {
                                 id: mId,
                                 name: mName,
                                 provider: mProvider,
                                 isLocal,
+                                costTier,
+                                rank,
+                                availability,
+                                availabilityReason,
+                                available,
                               }
                             })
                             const pinnedEntries = parsed.filter((e) =>
@@ -2502,20 +2616,33 @@ function ChatComposerComponent({
                             )
                             const unpinnedGroups = new Map<
                               string,
-                              typeof parsed
+                              {
+                                group: ReturnType<typeof getModelPickerGroup>
+                                models: typeof parsed
+                              }
                             >()
                             for (const entry of parsed) {
                               if (isPinned(entry.id)) continue
-                              const group =
-                                unpinnedGroups.get(entry.provider) ?? []
-                              group.push(entry)
-                              unpinnedGroups.set(entry.provider, group)
+                              const group = getModelPickerGroup(entry)
+                              const existing = unpinnedGroups.get(group.key) ?? {
+                                group,
+                                models: [],
+                              }
+                              existing.models.push(entry)
+                              unpinnedGroups.set(group.key, existing)
                             }
                             const renderEntry = (entry: (typeof parsed)[0]) => {
                               const isActive =
                                 entry.id === currentModel ||
                                 `${defaultProvider}/${entry.id}` ===
                                   currentModel
+                              const badge = getModelPickerBadge(entry)
+                              const isAvailable =
+                                isModelPickerEntryAvailable(entry)
+                              const badgeClass =
+                                badge === 'offline'
+                                  ? 'text-amber-700 bg-amber-50 dark:text-amber-300 dark:bg-amber-900/30'
+                                  : 'text-neutral-400 bg-neutral-100 dark:bg-neutral-700'
                               return (
                                 <div
                                   key={entry.id}
@@ -2523,7 +2650,15 @@ function ChatComposerComponent({
                                 >
                                   <button
                                     type="button"
+                                    disabled={!isAvailable}
+                                    title={
+                                      !isAvailable
+                                        ? entry.availabilityReason ||
+                                          'Model unavailable'
+                                        : undefined
+                                    }
                                     onClick={() => {
+                                      if (!isAvailable) return
                                       handleModelSelect(
                                         entry.id,
                                         entry.provider || undefined,
@@ -2534,14 +2669,21 @@ function ChatComposerComponent({
                                       isActive
                                         ? 'border-l-2 border-accent-500 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
                                         : 'text-neutral-700 hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-800/50'
-                                    }`}
+                                    } disabled:cursor-not-allowed disabled:opacity-55 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent`}
                                   >
                                     <span className="flex-1 truncate">
                                       {entry.name}
                                     </span>
-                                    {entry.isLocal && (
-                                      <span className="text-[10px] text-neutral-400 px-1.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-700">
-                                        local
+                                    {entry.rank && (
+                                      <span className="text-[10px] text-neutral-400">
+                                        #{entry.rank}
+                                      </span>
+                                    )}
+                                    {badge && (
+                                      <span
+                                        className={`text-[10px] px-1.5 py-0.5 rounded-full ${badgeClass}`}
+                                      >
+                                        {badge}
                                       </span>
                                     )}
                                     {isActive && (
@@ -2604,15 +2746,20 @@ function ChatComposerComponent({
                                     {pinnedEntries.map(renderEntry)}
                                   </div>
                                 )}
-                                {Array.from(unpinnedGroups.entries())
-                                  .sort((a, b) => a[0].localeCompare(b[0]))
-                                  .map(([provider, models]) => (
-                                    <div key={provider}>
-                                      <div className="px-3 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-neutral-400">
-                                        {provider}
-                                      </div>
-                                      {models.map(renderEntry)}
+                                {Array.from(unpinnedGroups.values())
+                                  .sort((a, b) =>
+                                  compareModelPickerGroups(a.group, b.group),
+                                )
+                                .map(({ group, models }) => (
+                                  <div key={group.key}>
+                                    <div className="px-3 pb-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-neutral-400">
+                                      {formatModelPickerGroupLabel(
+                                        group,
+                                        models.length,
+                                      )}
                                     </div>
+                                    {models.map(renderEntry)}
+                                  </div>
                                   ))}
                               </>
                             )
