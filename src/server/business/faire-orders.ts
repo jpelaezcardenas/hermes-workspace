@@ -96,6 +96,7 @@ export function parseFaireOrderEmail(
 
   const orderId = extractOrderId(subject, body)
   if (!orderId) return null
+  if (!hasFaireOrderDetails(body)) return null
 
   const customerName = extractCustomerName(subject, body)
   const totalAmount = extractTotalAmount(body)
@@ -329,8 +330,18 @@ function isPatchAidFaireOrder(text: string): boolean {
   // sent from a PatchAid mailbox, or to use Faire's brand-heading copy.
   return (
     /(?:^|[\s<])(?:alex|faire|wholesale)@patchaid\.com\b/i.test(text) ||
+    /\bPatchAid\s*<[^>\s]+@[^>]+>/i.test(text) ||
     /to:\s*patchaid\b/i.test(text) ||
     /patchaid\s*-\s*you have a new order/i.test(text)
+  )
+}
+
+function hasFaireOrderDetails(body: string): boolean {
+  return (
+    /received a \$[\d,.]+ order/i.test(body) ||
+    /Order Summary[\s\S]{0,200}?Total:\s*\$[\d,.]+/i.test(body) ||
+    /Item subtotal\s*\(\d+\s+Items?\)/i.test(body) ||
+    /https:\/\/www\.faire\.com\/(?:maker|brand)-portal\/orders\//i.test(body)
   )
 }
 

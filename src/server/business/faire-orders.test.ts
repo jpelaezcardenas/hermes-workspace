@@ -182,6 +182,41 @@ PatchAid <https://www.PatchAid.com>
     expect(parseFaireOrderEmail(netritionMessage)).toBeNull()
   })
 
+  it('accepts PatchAid Faire orders routed through shared operational mailboxes', () => {
+    const sharedMailboxPatchAidMessage: FaireCorpusMessage = {
+      ...patchAidMessage,
+      gmailId: 'shared-mailbox-patchaid-faire-order',
+      threadId: 'shared-mailbox-patchaid-faire-thread',
+      fromAddr: 'amazon@bariatricpal.com',
+      fromName: "'Faire' via Amazon Team",
+      toAddrs: ['PatchAid <amazon@bariatricpal.com>'],
+      subject: 'New wholesale order from Crystal Flower Health and Wellness (#YV79QCRP9N)',
+      bodyText: `
+From: 'Faire' via Amazon Team <amazon@bariatricpal.com>
+Subject: New wholesale order from Crystal Flower Health and Wellness (#YV79QCRP9N)
+
+You just received a $301.95 order. Congratulations!
+Order #YV79QCRP9N
+You have a new order from Crystal Flower Health and Wellness.
+Order Summary
+Total: $301.95
+Order Date
+Aug 19, 2023
+Item Subtotal (15 Items)
+`,
+    }
+
+    const order = parseFaireOrderEmail(sharedMailboxPatchAidMessage)
+
+    expect(order).toMatchObject({
+      orderId: 'YV79QCRP9N',
+      customerName: 'Crystal Flower Health and Wellness',
+      totalAmount: 301.95,
+      unitCount: 15,
+      orderDate: '2023-08-19',
+    })
+  })
+
   it('rejects generic non-PatchAid Faire forwards that only mention PatchAid in a signature', () => {
     const nonPatchAidForwardWithPatchAidSignature: FaireCorpusMessage = {
       ...patchAidMessage,
@@ -209,6 +244,36 @@ PatchAid <https://www.PatchAid.com>
     }
 
     expect(parseFaireOrderEmail(nonPatchAidForwardWithPatchAidSignature)).toBeNull()
+  })
+
+  it('rejects Faire support threads that only quote a wholesale order subject without order details', () => {
+    const supportThreadWithBareOrderSubject: FaireCorpusMessage = {
+      ...patchAidMessage,
+      gmailId: 'zendesk-support-order-mention',
+      threadId: 'zendesk-support-order-thread',
+      fromAddr: 'support@indigofair.zendesk.com',
+      fromName: 'Tayler (Faire Support)',
+      toAddrs: ['Alex Brecher <alex@patchaid.com>'],
+      subject: 'Fwd: Wholesale Account Help',
+      bodyText: `
+Tayler, Aug 21, 2023, 10:16 PDT
+Hi Alex,
+Please provide screenshots for this commission review.
+
+Alex Brecher, Aug 20, 2023, 04:11 PDT
+I sent her to Faire!!!!!! See below.
+
+New wholesale order from Salt MedSpa of Dawsonville (#SZA45YCUBQ)
+
+---------- Forwarded message ---------
+From: Alex Brecher <alex@patchaid.com>
+Date: Thu, Mar 9, 2023 at 5:54 PM
+Subject: Re: Wholesale Account Help
+To: Sue Gantick <suegantick@gmail.com>
+`,
+    }
+
+    expect(parseFaireOrderEmail(supportThreadWithBareOrderSubject)).toBeNull()
   })
 
   it('prefers the Faire wholesale order id over internal fulfillment order references', () => {
