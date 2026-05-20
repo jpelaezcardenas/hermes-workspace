@@ -272,7 +272,7 @@ export function sqliteReadonlyUriForCorpusPath(corpusDbPath: string): string {
     .split('/')
     .map((segment, index) => (index === 0 ? segment : encodeURIComponent(segment)))
     .join('/')
-  return `file:${encodedPath}?mode=ro&immutable=1`
+  return `file:${encodedPath}?mode=ro`
 }
 
 function normalizeRawSqliteMessage(row: RawSqliteMessage): FaireCorpusMessage {
@@ -330,10 +330,7 @@ function isPatchAidFaireOrder(text: string): boolean {
   return (
     /(?:^|[\s<])(?:alex|faire|wholesale)@patchaid\.com\b/i.test(text) ||
     /to:\s*patchaid\b/i.test(text) ||
-    /patchaid\s*</i.test(text) ||
-    /patchaid\s*-\s*you have a new order/i.test(text) ||
-    /\/direct\/patchaid/i.test(text) ||
-    /\bby\s+patchaid\b/i.test(text)
+    /patchaid\s*-\s*you have a new order/i.test(text)
   )
 }
 

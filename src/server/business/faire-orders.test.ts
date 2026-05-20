@@ -182,6 +182,35 @@ PatchAid <https://www.PatchAid.com>
     expect(parseFaireOrderEmail(netritionMessage)).toBeNull()
   })
 
+  it('rejects generic non-PatchAid Faire forwards that only mention PatchAid in a signature', () => {
+    const nonPatchAidForwardWithPatchAidSignature: FaireCorpusMessage = {
+      ...patchAidMessage,
+      gmailId: 'other-brand-faire-order',
+      threadId: 'other-brand-faire-thread',
+      fromAddr: 'wholesale@info.faire.com',
+      toAddrs: ['Wholesale Team <faire@otherbrand.example>'],
+      subject: 'New wholesale order from Generic Market (#GENERIC123)',
+      bodyText: `
+From: Faire <wholesale@info.faire.com>
+Subject: New wholesale order from Generic Market (#GENERIC123)
+To: Wholesale Team <faire@otherbrand.example>
+
+You just received a $412.20 order.
+Order #GENERIC123
+Order Summary
+Total: $412.20
+Order Date
+Jul 2, 2024
+
+All the best,
+Alex Brecher
+PatchAid <https://www.PatchAid.com>
+`,
+    }
+
+    expect(parseFaireOrderEmail(nonPatchAidForwardWithPatchAidSignature)).toBeNull()
+  })
+
   it('prefers the Faire wholesale order id over internal fulfillment order references', () => {
     const replyWithInternalOrderReference: FaireCorpusMessage = {
       ...patchAidMessage,
@@ -230,10 +259,10 @@ Item Subtotal (20 Items)
     })
   })
 
-  it('builds an immutable read-only sqlite URI for Corpus paths with spaces', () => {
+  it('builds a read-only sqlite URI for live Corpus paths with spaces', () => {
     expect(
       sqliteReadonlyUriForCorpusPath('/Volumes/My External Drive/Corpus/index.db'),
-    ).toBe('file:/Volumes/My%20External%20Drive/Corpus/index.db?mode=ro&immutable=1')
+    ).toBe('file:/Volumes/My%20External%20Drive/Corpus/index.db?mode=ro')
   })
 
   it('preserves HTML body line boundaries so HTML-only Corpus rows include item details', async () => {
