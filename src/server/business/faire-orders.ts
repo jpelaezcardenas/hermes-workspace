@@ -312,13 +312,16 @@ function isPatchAidFaireOrder(text: string): boolean {
     (lower.includes('faire') || lower.includes('faire.com'))
   if (!isFaireOrder) return false
 
-  const isAlacSource =
+  const isNonPatchAidFaireSource =
     lower.includes('lowacidcoffee.com') ||
     lower.includes("alex's low-acid") ||
     lower.includes("alex's low acid") ||
     lower.includes('low-acid organic coffee') ||
-    lower.includes('low acid organic coffee')
-  if (isAlacSource) return false
+    lower.includes('low acid organic coffee') ||
+    lower.includes('faire@netrition.com') ||
+    lower.includes('netrition <faire@netrition.com>') ||
+    lower.includes('to: netrition')
+  if (isNonPatchAidFaireSource) return false
 
   // Be intentionally stricter than a generic "patchaid.com" hit: Alex's
   // non-PatchAid Faire forwards often carry a PatchAid link in the email

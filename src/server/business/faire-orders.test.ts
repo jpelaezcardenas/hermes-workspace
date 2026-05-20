@@ -143,6 +143,36 @@ describe('PatchAid Faire order ingestion', () => {
     expect(parseFaireOrderEmail(alacMessage)).toBeNull()
   })
 
+  it('rejects Netrition Faire orders even when the email signature links to PatchAid', () => {
+    const netritionMessage: FaireCorpusMessage = {
+      ...alacMessage,
+      gmailId: 'netrition-faire-order',
+      threadId: 'netrition-faire-thread',
+      subject: 'New wholesale order from Akron Nutrition Center (#9B58VVT4N6)',
+      toAddrs: ['Netrition <faire@netrition.com>'],
+      bodyText: `
+From: Faire <wholesale@info.faire.com>
+Subject: New wholesale order from Akron Nutrition Center (#9B58VVT4N6)
+To: Netrition <faire@netrition.com>
+
+You just received a $412.20 order.
+Order #9B58VVT4N6
+Order Summary
+Total: $412.20
+Order Date
+Jul 2, 2024
+
+All the best,
+Alex Brecher
+BariatricPal Store
+Netrition
+PatchAid <https://www.PatchAid.com>
+`,
+    }
+
+    expect(parseFaireOrderEmail(netritionMessage)).toBeNull()
+  })
+
   it('prefers the Faire wholesale order id over internal fulfillment order references', () => {
     const replyWithInternalOrderReference: FaireCorpusMessage = {
       ...patchAidMessage,
