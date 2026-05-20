@@ -82,17 +82,7 @@ export function parseFaireOrderEmail(
   if (!message) return null
   const subject = message.subject ?? ''
   const body = [message.snippet, message.bodyText].filter(Boolean).join('\n')
-  const searchable = [
-    subject,
-    message.fromName,
-    message.fromAddr,
-    message.toAddrs.join('\n'),
-    body,
-  ]
-    .filter(Boolean)
-    .join('\n')
-
-  if (!isPatchAidFaireOrder(searchable)) return null
+  if (!isPatchAidFaireOrder(message, subject, body)) return null
 
   const orderId = extractOrderId(subject, body)
   if (!orderId) return null
@@ -306,8 +296,21 @@ function parseJsonStringArray(raw: string | null | undefined): Array<string> {
   }
 }
 
-function isPatchAidFaireOrder(text: string): boolean {
-  const lower = text.toLowerCase()
+function isPatchAidFaireOrder(
+  message: FaireCorpusMessage,
+  subject: string,
+  body: string,
+): boolean {
+  const allText = [
+    subject,
+    message.fromName,
+    message.fromAddr,
+    message.toAddrs.join('\n'),
+    body,
+  ]
+    .filter(Boolean)
+    .join('\n')
+  const lower = allText.toLowerCase()
   const isFaireOrder =
     lower.includes('new wholesale order') &&
     (lower.includes('faire') || lower.includes('faire.com'))
@@ -324,15 +327,23 @@ function isPatchAidFaireOrder(text: string): boolean {
     lower.includes('to: netrition')
   if (isNonPatchAidFaireSource) return false
 
+  const routeText = [
+    message.fromName,
+    message.fromAddr,
+    message.toAddrs.join('\n'),
+  ]
+    .filter(Boolean)
+    .join('\n')
+
   // Be intentionally stricter than a generic "patchaid.com" hit: Alex's
   // non-PatchAid Faire forwards often carry a PatchAid link in the email
-  // signature. Require the Faire order itself to be addressed to PatchAid,
-  // sent from a PatchAid mailbox, or to use Faire's brand-heading copy.
+  // signature. Require the Faire order routing/headers to point at PatchAid,
+  // or require Faire's own brand-heading copy in the order body.
   return (
-    /(?:^|[\s<])(?:alex|faire|wholesale)@patchaid\.com\b/i.test(text) ||
-    /\bPatchAid\s*<[^>\s]+@[^>]+>/i.test(text) ||
-    /to:\s*patchaid\b/i.test(text) ||
-    /patchaid\s*-\s*you have a new order/i.test(text)
+    /(?:^|[\s<])(?:alex|faire|wholesale)@patchaid\.com\b/i.test(routeText) ||
+    /\bPatchAid\s*<[^>\s]+@[^>]+>/i.test(routeText) ||
+    /to:\s*patchaid\b/i.test(body) ||
+    /patchaid\s*-\s*you have a new order/i.test(body)
   )
 }
 

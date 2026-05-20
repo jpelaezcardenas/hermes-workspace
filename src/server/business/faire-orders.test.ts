@@ -246,6 +246,35 @@ PatchAid <https://www.PatchAid.com>
     expect(parseFaireOrderEmail(nonPatchAidForwardWithPatchAidSignature)).toBeNull()
   })
 
+  it('rejects generic non-PatchAid Faire forwards that mention a PatchAid email signature', () => {
+    const otherBrandOrderWithPatchAidEmailSignature: FaireCorpusMessage = {
+      ...patchAidMessage,
+      gmailId: 'other-brand-faire-order-email-signature',
+      threadId: 'other-brand-faire-thread-email-signature',
+      fromAddr: 'wholesale@info.faire.com',
+      toAddrs: ['Wholesale Team <faire@otherbrand.example>'],
+      subject: 'New wholesale order from Generic Market (#GENERIC456)',
+      bodyText: `
+From: Faire <wholesale@info.faire.com>
+Subject: New wholesale order from Generic Market (#GENERIC456)
+To: Wholesale Team <faire@otherbrand.example>
+
+You just received a $412.20 order.
+Order #GENERIC456
+Order Summary
+Total: $412.20
+Order Date
+Jul 2, 2024
+
+All the best,
+Alex Brecher
+PatchAid <alex@patchaid.com>
+`,
+    }
+
+    expect(parseFaireOrderEmail(otherBrandOrderWithPatchAidEmailSignature)).toBeNull()
+  })
+
   it('rejects Faire support threads that only quote a wholesale order subject without order details', () => {
     const supportThreadWithBareOrderSubject: FaireCorpusMessage = {
       ...patchAidMessage,
