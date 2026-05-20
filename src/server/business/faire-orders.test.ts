@@ -1,6 +1,11 @@
+import { execFileSync } from 'node:child_process'
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   createCachedPatchAidFaireOrdersFetcher,
+  fetchPatchAidFaireOrders,
   parseFaireOrderEmail,
   sqliteReadonlyUriForCorpusPath,
   summarizeFaireOrders,
@@ -103,6 +108,10 @@ Qty Price Subtotal
 $10.19
 $122.28
 `,
+}
+
+function sqlTestLiteral(value: string): string {
+  return `'${value.replace(/'/g, "''")}'`
 }
 
 describe('PatchAid Faire order ingestion', () => {
@@ -225,6 +234,88 @@ Item Subtotal (20 Items)
     expect(
       sqliteReadonlyUriForCorpusPath('/Volumes/My External Drive/Corpus/index.db'),
     ).toBe('file:/Volumes/My%20External%20Drive/Corpus/index.db?mode=ro&immutable=1')
+  })
+
+  it('preserves HTML body line boundaries so HTML-only Corpus rows include item details', async () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'patchaid-faire-corpus-'))
+    const dbPath = join(tempDir, 'index.db')
+    const htmlBody = `
+<html><body>
+  <p>You just received a $88.88 order. Way to go!</p>
+  <p>Order #HTML12345</p>
+  <p>PatchAid - You have a new order from HTML Wellness.</p>
+  <h2>Order Summary</h2>
+  <p>Total: $88.88</p>
+  <p>Order Date</p>
+  <p>Feb 2, 2024</p>
+  <h2>Order Details</h2>
+  <p>Vitamin Patch</p>
+  <p>0737669293999</p>
+  <p>QtyPriceSubtotal</p>
+  <p>3</p>
+  <p>$12.34</p>
+  <p>$37.02</p>
+  <p>Item Subtotal (3 Items)</p>
+</body></html>`
+
+    try {
+      execFileSync('sqlite3', [
+        dbPath,
+        `
+CREATE TABLE messages (
+  gmail_id TEXT PRIMARY KEY,
+  thread_id TEXT,
+  internal_date_ms INTEGER,
+  from_addr TEXT,
+  from_name TEXT,
+  to_addrs TEXT,
+  subject TEXT,
+  snippet TEXT,
+  body_text TEXT,
+  body_html TEXT
+);
+CREATE VIRTUAL TABLE messages_fts USING fts5(gmail_id UNINDEXED, body);
+INSERT INTO messages VALUES (
+  'html-only-gmail',
+  'html-only-thread',
+  ${Date.parse('2024-02-02T12:00:00Z')},
+  'wholesale@info.faire.com',
+  'Faire',
+  ${sqlTestLiteral(JSON.stringify(['PatchAid <alex@patchaid.com>']))},
+  'New wholesale order from HTML Wellness (#HTML12345)',
+  '',
+  '',
+  ${sqlTestLiteral(htmlBody)}
+);
+INSERT INTO messages_fts (gmail_id, body) VALUES (
+  'html-only-gmail',
+  'New wholesale order Faire PatchAid HTML Wellness'
+);
+`.trim(),
+      ])
+
+      const data = await fetchPatchAidFaireOrders({ corpusDbPath: dbPath, limit: 10 })
+
+      expect(data.warning).toBeNull()
+      expect(data.orders).toHaveLength(1)
+      expect(data.orders[0]).toMatchObject({
+        orderId: 'HTML12345',
+        customerName: 'HTML Wellness',
+        totalAmount: 88.88,
+        unitCount: 3,
+      })
+      expect(data.orders[0].items).toEqual([
+        expect.objectContaining({
+          title: 'Vitamin Patch',
+          skuOrUpc: '0737669293999',
+          quantity: 3,
+          unitPrice: 12.34,
+          subtotal: 37.02,
+        }),
+      ])
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true })
+    }
   })
 
   it('caches dashboard fetches so frequent overview refreshes do not rescan Corpus', async () => {

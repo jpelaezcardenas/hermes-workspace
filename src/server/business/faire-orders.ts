@@ -458,6 +458,7 @@ function extractItems(body: string): Array<FaireOrderItem> {
     .filter(Boolean)
 
   const items: Array<FaireOrderItem> = []
+  const seenItems = new Set<string>()
   for (let i = 0; i < lines.length; i += 1) {
     if (!/^\d{8,14}$/.test(lines[i])) continue
 
@@ -465,13 +466,17 @@ function extractItems(body: string): Array<FaireOrderItem> {
     if (!title) continue
 
     const numbers = findQuantityPriceSubtotalAfterSku(lines, i)
-    items.push({
+    const item = {
       title,
       skuOrUpc: lines[i],
       quantity: numbers.quantity,
       unitPrice: numbers.unitPrice,
       subtotal: numbers.subtotal,
-    })
+    }
+    const itemKey = JSON.stringify(item)
+    if (seenItems.has(itemKey)) continue
+    seenItems.add(itemKey)
+    items.push(item)
   }
   return items
 }
@@ -553,7 +558,11 @@ function htmlToText(value: string): string {
       /[\u034f\u061c\u00ad\u180e\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]/g,
       ' ',
     )
-    .replace(/\s+/g, ' ')
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map(cleanText)
+    .filter(Boolean)
+    .join('\n')
     .trim()
 }
 
