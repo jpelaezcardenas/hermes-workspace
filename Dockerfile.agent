@@ -1,0 +1,35 @@
+# Hermes Agent — SaaS image
+# Extends the upstream hermes-agent image with:
+#   - Management API (FastAPI, port 8080)
+#   - Startup script that runs gateway + API together
+#
+# Build:
+#   docker build -f Dockerfile.agent -t hermes-saas:latest .
+
+FROM nousresearch/hermes-agent:latest
+
+# /root внутри контейнера по умолчанию 700 — hermes user (uid 10000) не может
+# его обойти. Делаем traversable для чтения конфигов и git-info.
+RUN chmod 755 /root
+
+# Management API рядом с остальным кодом Hermes
+COPY management_api.py /opt/hermes/management_api.py
+
+# SaaS-патч api_server.py: добавляет диспатч слэш-команд (/status, /sessions,
+# /retry, /agents и т.д.) через gateway._handle_message, чтобы команды
+# работали из Telegram-router (OpenAI API path) так же, как в нативном CLI.
+# Без патча команды доезжают до LLM как обычный текст — модель галлюцинирует.
+# См. patches/README.md, патч валиден против hermes-agent:latest от 2026-05-17.
+COPY patches/api_server.py /opt/hermes/gateway/platforms/api_server.py
+
+# Wrapper-скрипт запускается как CMD ПОСЛЕ того как оригинальный entrypoint
+# уже: сбросил права до hermes (uid 10000), активировал venv, создал директории
+# и скопировал дефолтные конфиги. Здесь 'python3' и 'hermes' уже в PATH.
+COPY scripts/start_agent.sh /opt/hermes/start_gateway.sh
+RUN chmod +x /opt/hermes/start_gateway.sh
+
+EXPOSE 8080
+
+# НЕ переопределяем ENTRYPOINT — оригинальный /opt/hermes/docker/entrypoint.sh
+# делает privilege drop + bootstrap. Переопределяем только CMD.
+CMD ["/opt/hermes/start_gateway.sh"]
