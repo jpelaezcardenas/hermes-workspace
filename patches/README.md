@@ -46,3 +46,22 @@ LLM-ответ.
 вставки в патче. Якорь — строка `# history already set from request body above`
 сразу перед `completion_id = f"chatcmpl-..."`. Оригинал лежит в
 `api_server.py.original` для diff'а.
+
+## run.py
+
+**Зачем:** `_handle_status_command` в `gateway/run.py` не показывает
+`Model` / `Provider` / `Path`, хотя CLI `_show_session_status` показывает.
+Пользователь видит `/status` в Telegram и недосчитывается строки про
+активную модель.
+
+**Что меняет:** добавляет три поля в `lines` блока статуса:
+- `Path:` через `hermes_constants.display_hermes_home()`
+- `Model: <model> (<provider>)` через модульные `_resolve_gateway_model()` и
+  `_resolve_runtime_agent_kwargs()` (обе уже в том же файле)
+
+Все три обёрнуты в `try/except` и degrade-ятся в `(unknown)` / пропуск,
+чтоб патч не положил `/status` при необычном конфиге.
+
+**Применение / проверка:** аналогично api_server.py выше. Якорь —
+строка `t("gateway.status.header"),` в `_handle_status_command`. Оригинал
+в `run.py.original`.

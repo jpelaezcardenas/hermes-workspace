@@ -22,6 +22,10 @@ COPY management_api.py /opt/hermes/management_api.py
 # См. patches/README.md, патч валиден против hermes-agent:latest от 2026-05-17.
 COPY patches/api_server.py /opt/hermes/gateway/platforms/api_server.py
 
+# SaaS-патч gateway/run.py: добавляет в /status строки Path / Model / Provider
+# (CLI их показывает, а gateway-шаблон — нет). См. patches/README.md.
+COPY patches/run.py /opt/hermes/gateway/run.py
+
 # Wrapper-скрипт запускается как CMD ПОСЛЕ того как оригинальный entrypoint
 # уже: сбросил права до hermes (uid 10000), активировал venv, создал директории
 # и скопировал дефолтные конфиги. Здесь 'python3' и 'hermes' уже в PATH.
