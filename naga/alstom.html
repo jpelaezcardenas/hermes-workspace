@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnostic B2B — Naga × Alstom | BrainStorm BI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hot: #ef4444; --hot-glow: rgba(239,68,68,.15);
+      --warm: #f59e0b; --warm-glow: rgba(245,158,11,.15);
+      --cold: #3b82f6; --cold-glow: rgba(59,130,246,.15);
+      --bg: #0a0a0f; --surface: #13131a; --surface2: #1a1a24; --border: #22223a;
+      --text: #e2e2f0; --text2: #8888a0; --accent: #ff3355;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #0a0a0f 0%, #13131a 50%, #1a0a15 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .brand { font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: -1px; }
+    .brand span { color: var(--accent); }
+    .header-right { text-align: right; }
+    .tag-line { font-size: .7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 2px; }
+    .header-date { font-size: .75rem; color: var(--text2); margin-top: 4px; }
+
+    /* HERO */
+    .hero {
+      text-align: center; padding: 60px 40px 50px;
+      background: linear-gradient(180deg, transparent, rgba(255,51,85,.03));
+    }
+    .hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; line-height: 1.1; letter-spacing: -2px; margin-bottom: 12px; }
+    .hero h1 .hl { color: var(--accent); }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 640px; margin: 0 auto; }
+    .scores-bar {
+      display: flex; justify-content: center; gap: 40px; margin-top: 36px; flex-wrap: wrap;
+    }
+    .score-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 50px;
+      padding: 10px 20px;
+    }
+    .score-pill .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .score-pill .name { font-size: .8rem; color: var(--text2); }
+    .score-pill .val { font-weight: 700; font-size: 1rem; }
+
+    /* MAIN GRID */
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      padding: 0 40px 60px; max-width: 1400px; margin: 0 auto;
+    }
+
+    /* PROSPECT CARD */
+    .prospect-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      transition: transform .2s;
+    }
+    .prospect-card:hover { transform: translateY(-2px); }
+
+    .card-header {
+      padding: 20px 24px; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid var(--border);
+    }
+    .card-title { font-size: 1.25rem; font-weight: 700; }
+    .card-subtitle { font-size: .8rem; color: var(--text2); margin-top: 2px; }
+    .verdict-badge {
+      font-size: .75rem; font-weight: 700; letter-spacing: 1px;
+      padding: 6px 14px; border-radius: 50px;
+      text-transform: uppercase;
+    }
+    .verdict-hot { background: var(--hot-glow); color: var(--hot); border: 1px solid var(--hot); }
+    .verdict-warm { background: var(--warm-glow); color: var(--warm); border: 1px solid var(--warm); }
+    .verdict-cold { background: var(--cold-glow); color: var(--cold); border: 1px solid var(--cold); }
+
+    .card-body { padding: 20px 24px; }
+
+    /* SCORES GRID */
+    .scores-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 20px;
+    }
+    .score-item {
+      background: var(--surface2); border-radius: 8px; padding: 10px 12px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .score-label { font-size: .65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); }
+    .score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .score-bar {
+      flex: 1; height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden;
+    }
+    .score-fill { height: 100%; border-radius: 3px; }
+    .score-num { font-size: .85rem; font-weight: 700; min-width: 28px; text-align: right; }
+
+    /* SCORE COLORS */
+    .s-high { color: #4ade80; }
+    .s-mid  { color: #fbbf24; }
+    .s-low  { color: #f87171; }
+    .f-high { background: #4ade80; }
+    .f-mid  { background: #fbbf24; }
+    .f-low  { background: #f87171; }
+
+    /* GLOBAL SCORE */
+    .global-score {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--surface2); border-radius: 12px;
+      padding: 14px 18px; margin-bottom: 20px;
+    }
+    .gauge {
+      position: relative; width: 64px; height: 64px; flex-shrink: 0;
+    }
+    .gauge svg { transform: rotate(-90deg); }
+    .gauge circle { fill: none; stroke-width: 5; }
+    .gauge .bg { stroke: var(--surface); }
+    .gauge .fg { stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+    .gauge .num {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem; font-weight: 800;
+    }
+    .global-score .gs-label { font-size: .85rem; color: var(--text2); line-height: 1.4; }
+    .global-score .gs-label strong { display: block; font-size: 1rem; color: var(--text); }
+
+    /* RECOS */
+    .reco-title { font-size: .65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 10px; }
+    .reco-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .reco-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--surface2); border-radius: 8px; padding: 12px;
+    }
+    .reco-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 800; flex-shrink: 0;
+    }
+    .reco-text { font-size: .85rem; line-height: 1.5; color: var(--text); }
+
+    /* ARGUMENT */
+    .argument {
+      margin-top: 16px; padding: 14px;
+      border-radius: 10px; border-left: 3px solid;
+      font-size: .85rem; line-height: 1.6; color: var(--text2);
+    }
+    .arg-hot { background: var(--hot-glow); border-color: var(--hot); }
+    .arg-warm { background: var(--warm-glow); border-color: var(--warm); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border); padding: 20px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--text2); font-size: .75rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; padding: 0 16px 40px; }
+      header, footer, .hero { padding-left: 16px; padding-right: 16px; }
+      .scores-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="brand">BrainStorm<span>BI</span></div>
+  </div>
+  <div class="header-right">
+    <div class="tag-line">Diagnostics B2B</div>
+    <div class="header-date">Mai 2026 · 2 prospects analysés</div>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Diagnostic <span class="hl">2 Prospects</span></h1>
+  <p>Analyse scoring digital B2B · Agence digitale vendant des prestations web/marketing</p>
+  <div class="scores-bar">
+    <div class="score-pill">
+      <div class="dot" style="background:#f87171"></div>
+      <span class="name">Naga</span>
+      <span class="val" style="color:#fbbf24">5.6/10</span>
+    </div>
+    <div class="score-pill">
+      <div class="dot" style="background:#ef4444"></div>
+      <span class="name">Alstom</span>
+      <span class="val" style="color:#4ade80">7/10</span>
+    </div>
+  </div>
+</section>
+
+<main class="grid">
+
+  <!-- ==================== NAGA ==================== -->
+  <article class="prospect-card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Agence Naga</div>
+        <div class="card-subtitle">agence-naga.fr · Lyon / Paris / Bordeaux</div>
+      </div>
+      <div class="verdict-badge verdict-warm">Warm</div>
+    </div>
+    <div class="card-body">
+
+      <div class="scores-grid">
+        <div class="score-item">
+          <span class="score-label">Maturité digitale</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:60%"></div></div>
+            <span class="score-num s-mid">6/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Présence SEO/SEA</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:50%"></div></div>
+            <span class="score-num s-mid">5/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Engagement réseaux</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:60%"></div></div>
+            <span class="score-num s-mid">6/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Maturité Tech/IA</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:70%"></div></div>
+            <span class="score-num s-mid">7/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Signaux d'achat</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-low" style="width:40%"></div></div>
+            <span class="score-num s-low">4/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Score global</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:56%"></div></div>
+            <span class="score-num s-mid">5.6/10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="global-score">
+        <div class="gauge">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle class="bg" cx="32" cy="32" r="27"/>
+            <circle class="fg" cx="32" cy="32" r="27" stroke="#fbbf24"
+              stroke-dasharray="169.6" stroke-dashoffset="74.6"/>
+          </svg>
+          <div class="num" style="color:#fbbf24">5.6</div>
+        </div>
+        <div class="gs-label">
+          <strong>Prospect moyennement qualifié</strong>
+          Opportunité mid-market. Besoin de nurturing spécifique avant approche commerciale directe.
+        </div>
+      </div>
+
+      <div class="reco-title">Recommandations</div>
+      <ul class="reco-list">
+        <li class="reco-item">
+          <div class="reco-num">1</div>
+          <div class="reco-text">Proposer solution de <strong>tracking avancé</strong> ou études de cas interactives — le manque de case studies détaillés sur leur site indique un besoin de rationalisation de la preuve sociale.</div>
+        </li>
+        <li class="reco-item">
+          <div class="reco-num">2</div>
+          <div class="reco-text">Approche <strong>partenariale outils/technologique</strong> : proposer solutions SaaS d'automatisation marketing ou IA générative pour renforcer leur offre « Data & IA » sans recrutement lourd.</div>
+        </li>
+        <li class="reco-item">
+          <div class="reco-num">3</div>
+          <div class="reco-text">Timing <strong>expansion géographique</strong> : prospecter lors d'annonces d'ouverture de bureau (4ème ville) ou recrutement de profils seniors — signal d'investissement et besoin d'outils scalables.</div>
+        </li>
+      </ul>
+
+      <div class="argument arg-warm">
+        Structure établie (3 villes) avec références prestige mais sans urgence stratégique détectée. L'absence de transparence tarifaire et de cas clients détaillés suggère un modèle de vente consultatif classique peu mature sur l'automatisation du funnel B2B. Opportunité sur le mid-market, pas le enterprise.
+      </div>
+    </div>
+  </article>
+
+  <!-- ==================== ALSTOM ==================== -->
+  <article class="prospect-card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Alstom France</div>
+        <div class="card-subtitle">alstom.com/fr · Groupe industriel rail</div>
+      </div>
+      <div class="verdict-badge verdict-hot">Hot 🔥</div>
+    </div>
+    <div class="card-body">
+
+      <div class="scores-grid">
+        <div class="score-item">
+          <span class="score-label">Maturité digitale</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:70%"></div></div>
+            <span class="score-num s-mid">7/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Présence SEO/SEA</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:60%"></div></div>
+            <span class="score-num s-mid">6/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Engagement réseaux</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-mid" style="width:50%"></div></div>
+            <span class="score-num s-mid">5/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Maturité Tech/IA</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-high" style="width:70%"></div></div>
+            <span class="score-num s-high">7/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Signaux d'achat</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-high" style="width:80%"></div></div>
+            <span class="score-num s-high">8/10</span>
+          </div>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Score global</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar"><div class="score-fill f-high" style="width:70%"></div></div>
+            <span class="score-num s-high">7/10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="global-score">
+        <div class="gauge">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle class="bg" cx="32" cy="32" r="27"/>
+            <circle class="fg" cx="32" cy="32" r="27" stroke="#ef4444"
+              stroke-dasharray="169.6" stroke-dashoffset="50.9"/>
+          </svg>
+          <div class="num" style="color:#ef4444">7/10</div>
+        </div>
+        <div class="gs-label">
+          <strong>Prospect majeur en phase de transformation</strong>
+          Budget et décideurs en mouvement. Fenêtre d'opportunité active Q4 2025 → Q1 2026.
+        </div>
+      </div>
+
+      <div class="reco-title">Recommandations</div>
+      <ul class="reco-list">
+        <li class="reco-item">
+          <div class="reco-num">1</div>
+          <div class="reco-text"><strong>Timing événementiel Mai 2026</strong> — Cibler l'event IoT/AI/Data in Rail (20-21 mai) comme levier d'entrée. Workshop co-brandé « Data platform unifiée pour maintenance prédictive multi-sites ».</div>
+        </li>
+        <li class="reco-item">
+          <div class="reco-num">2</div>
+          <div class="reco-text"><strong>ABM sur Martin Sion + division Mobilité Digitale</strong> — Séquence ABM ciblant le nouveau DG et les DSI des 5 Business Units. Message : « Industrialiser la data des nouveaux contrats turnkey sans disruption des legacy systems ».</div>
+        </li>
+        <li class="reco-item">
+          <div class="reco-num">3</div>
+          <div class="reco-text"><strong>POC "Digital Twin" CBTC Lausanne</strong> — Proof-of-concept à faible coût sur le projet CBTC : jumeau numérique temps réel pour optimisation trafic. Alstom cherche des cas d'usage concrets pour justifier l'IA générative.</div>
+        </li>
+      </ul>
+
+      <div class="argument arg-hot">
+        Convergence de 3 facteurs rendant Alstom chaud immédiatement : changement de direction (effet « nouveau balai » sur la stratégie digitale), internationalisation massive (projets Égypte/Australie nécessitant des plateformes cloud/data unifiées), et événement phare IoT/AI en mai 2026.
+      </div>
+    </div>
+  </article>
+
+</main>
+
+<footer>
+  <span>BrainStorm BI · brainstormbi.com</span>
+  <span>Analysé via Kimi K2.5 · Mai 2026</span>
+</footer>
+
+</body>
+</html>
