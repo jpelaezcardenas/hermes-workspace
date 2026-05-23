@@ -27,8 +27,10 @@ import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
+import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
+import { Route as CaelHomeRouteImport } from './routes/cael-home'
 import { Route as AgoraRouteImport } from './routes/agora'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
@@ -106,6 +108,7 @@ import { Route as ApiClaudeTasksRouteImport } from './routes/api/claude-tasks'
 import { Route as ApiClaudeJobsRouteImport } from './routes/api/claude-jobs'
 import { Route as ApiClaudeConfigRouteImport } from './routes/api/claude-config'
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
+import { Route as ApiCaelStatusRouteImport } from './routes/api/cael-status'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
@@ -249,6 +252,11 @@ const EarlyAccessRoute = EarlyAccessRouteImport.update({
   path: '/early-access',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DesktopRoute = DesktopRouteImport.update({
+  id: '/desktop',
+  path: '/desktop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -257,6 +265,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConductorRoute = ConductorRouteImport.update({
   id: '/conductor',
   path: '/conductor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CaelHomeRoute = CaelHomeRouteImport.update({
+  id: '/cael-home',
+  path: '/cael-home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgoraRoute = AgoraRouteImport.update({
@@ -645,6 +658,11 @@ const ApiChatEventsRoute = ApiChatEventsRouteImport.update({
   path: '/api/chat-events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCaelStatusRoute = ApiCaelStatusRouteImport.update({
+  id: '/api/cael-status',
+  path: '/api/cael-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthCheckRoute = ApiAuthCheckRouteImport.update({
   id: '/api/auth-check',
   path: '/api/auth-check',
@@ -914,8 +932,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/agora': typeof AgoraRoute
+  '/cael-home': typeof CaelHomeRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/desktop': typeof DesktopRoute
   '/early-access': typeof EarlyAccessRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
@@ -937,6 +957,7 @@ export interface FileRoutesByFullPath {
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
+  '/api/cael-status': typeof ApiCaelStatusRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/claude-config': typeof ApiClaudeConfigRoute
   '/api/claude-jobs': typeof ApiClaudeJobsRouteWithChildren
@@ -1065,8 +1086,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/agora': typeof AgoraRoute
+  '/cael-home': typeof CaelHomeRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/desktop': typeof DesktopRoute
   '/early-access': typeof EarlyAccessRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
@@ -1087,6 +1110,7 @@ export interface FileRoutesByTo {
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
+  '/api/cael-status': typeof ApiCaelStatusRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/claude-config': typeof ApiClaudeConfigRoute
   '/api/claude-jobs': typeof ApiClaudeJobsRouteWithChildren
@@ -1216,8 +1240,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/agora': typeof AgoraRoute
+  '/cael-home': typeof CaelHomeRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/desktop': typeof DesktopRoute
   '/early-access': typeof EarlyAccessRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
@@ -1239,6 +1265,7 @@ export interface FileRoutesById {
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
+  '/api/cael-status': typeof ApiCaelStatusRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/claude-config': typeof ApiClaudeConfigRoute
   '/api/claude-jobs': typeof ApiClaudeJobsRouteWithChildren
@@ -1369,8 +1396,10 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/agora'
+    | '/cael-home'
     | '/conductor'
     | '/dashboard'
+    | '/desktop'
     | '/early-access'
     | '/files'
     | '/hermes-world'
@@ -1392,6 +1421,7 @@ export interface FileRouteTypes {
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
+    | '/api/cael-status'
     | '/api/chat-events'
     | '/api/claude-config'
     | '/api/claude-jobs'
@@ -1520,8 +1550,10 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/agora'
+    | '/cael-home'
     | '/conductor'
     | '/dashboard'
+    | '/desktop'
     | '/early-access'
     | '/files'
     | '/hermes-world'
@@ -1542,6 +1574,7 @@ export interface FileRouteTypes {
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
+    | '/api/cael-status'
     | '/api/chat-events'
     | '/api/claude-config'
     | '/api/claude-jobs'
@@ -1670,8 +1703,10 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/agora'
+    | '/cael-home'
     | '/conductor'
     | '/dashboard'
+    | '/desktop'
     | '/early-access'
     | '/files'
     | '/hermes-world'
@@ -1693,6 +1728,7 @@ export interface FileRouteTypes {
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
+    | '/api/cael-status'
     | '/api/chat-events'
     | '/api/claude-config'
     | '/api/claude-jobs'
@@ -1822,8 +1858,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   AgoraRoute: typeof AgoraRoute
+  CaelHomeRoute: typeof CaelHomeRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
+  DesktopRoute: typeof DesktopRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   FilesRoute: typeof FilesRoute
   HermesWorldRoute: typeof HermesWorldRoute
@@ -1845,6 +1883,7 @@ export interface RootRouteChildren {
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
+  ApiCaelStatusRoute: typeof ApiCaelStatusRoute
   ApiChatEventsRoute: typeof ApiChatEventsRoute
   ApiClaudeConfigRoute: typeof ApiClaudeConfigRoute
   ApiClaudeJobsRoute: typeof ApiClaudeJobsRouteWithChildren
@@ -2068,6 +2107,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EarlyAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/desktop': {
+      id: '/desktop'
+      path: '/desktop'
+      fullPath: '/desktop'
+      preLoaderRoute: typeof DesktopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -2080,6 +2126,13 @@ declare module '@tanstack/react-router' {
       path: '/conductor'
       fullPath: '/conductor'
       preLoaderRoute: typeof ConductorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cael-home': {
+      id: '/cael-home'
+      path: '/cael-home'
+      fullPath: '/cael-home'
+      preLoaderRoute: typeof CaelHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agora': {
@@ -2619,6 +2672,13 @@ declare module '@tanstack/react-router' {
       path: '/api/chat-events'
       fullPath: '/api/chat-events'
       preLoaderRoute: typeof ApiChatEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cael-status': {
+      id: '/api/cael-status'
+      path: '/api/cael-status'
+      fullPath: '/api/cael-status'
+      preLoaderRoute: typeof ApiCaelStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth-check': {
@@ -3202,8 +3262,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   AgoraRoute: AgoraRoute,
+  CaelHomeRoute: CaelHomeRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
+  DesktopRoute: DesktopRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   FilesRoute: FilesRoute,
   HermesWorldRoute: HermesWorldRoute,
@@ -3225,6 +3287,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
+  ApiCaelStatusRoute: ApiCaelStatusRoute,
   ApiChatEventsRoute: ApiChatEventsRoute,
   ApiClaudeConfigRoute: ApiClaudeConfigRoute,
   ApiClaudeJobsRoute: ApiClaudeJobsRouteWithChildren,

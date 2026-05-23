@@ -29,6 +29,20 @@ import {
 
 export const MOBILE_HAMBURGER_NAV_ITEMS = [
   {
+    id: 'homebase',
+    label: 'Homebase',
+    icon: DashboardSquare01Icon,
+    to: '/cael-home',
+    match: (p: string) => p.startsWith('/cael-home') || p === '/',
+  },
+  {
+    id: 'desktop',
+    label: 'Desktop App',
+    icon: CommandLineIcon,
+    to: '/desktop',
+    match: (p: string) => p.startsWith('/desktop'),
+  },
+  {
     id: 'chat',
     label: 'Chat',
     icon: Chat01Icon,
@@ -37,7 +51,7 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
   },
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    label: 'Metrics',
     icon: DashboardSquare01Icon,
     to: '/dashboard',
     match: (p: string) => p.startsWith('/dashboard'),
@@ -65,14 +79,14 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
   },
   {
     id: 'conductor',
-    label: 'Conductor',
+    label: 'Mission Control',
     icon: Rocket01Icon,
     to: '/conductor',
     match: (p: string) => p.startsWith('/conductor'),
   },
   {
     id: 'operations',
-    label: 'Operations',
+    label: 'Ops',
     icon: UserMultipleIcon,
     to: '/operations',
     match: (p: string) => p.startsWith('/operations'),

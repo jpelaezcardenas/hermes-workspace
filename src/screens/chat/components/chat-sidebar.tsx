@@ -587,7 +587,7 @@ function ChatSidebarComponent({
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
-  const mainRoutes = ['/chat', '/new', '/files', '/terminal']
+  const mainRoutes = ['/cael-home', '/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
 
@@ -597,7 +597,7 @@ function ChatSidebarComponent({
     if (systemRoutes.includes(pathname)) setLastRoute('system', pathname)
   }, [pathname])
 
-  const mainNav = getLastRoute('main') || '/chat'
+  const mainNav = getLastRoute('main') || '/cael-home'
   const knowledgeNav = getLastRoute('knowledge') || '/memory'
   const _systemNav = getLastRoute('system') || '/settings'
 
@@ -779,13 +779,29 @@ function ChatSidebarComponent({
   }
 
   const isDashboardActive = pathname === '/dashboard'
+  const isCaelHomeActive = pathname === '/cael-home'
+  const isDesktopActive = pathname === '/desktop'
 
   const mainItems: Array<NavItemDef> = [
     {
       kind: 'link',
+      to: '/cael-home',
+      icon: DashboardSquare01Icon,
+      label: 'Cael Homebase',
+      active: isCaelHomeActive,
+    },
+    {
+      kind: 'link',
+      to: '/desktop',
+      icon: ComputerTerminal01Icon,
+      label: 'Desktop App',
+      active: isDesktopActive,
+    },
+    {
+      kind: 'link',
       to: '/dashboard',
       icon: DashboardSquare01Icon,
-      label: t('nav.dashboard'),
+      label: 'Metrics',
       active: isDashboardActive,
     },
     {
@@ -800,7 +816,7 @@ function ChatSidebarComponent({
       kind: 'link',
       to: '/files',
       icon: File01Icon,
-      label: t('nav.files'),
+      label: 'Artifacts',
       active: isFilesActive,
     },
     {
@@ -814,7 +830,7 @@ function ChatSidebarComponent({
       kind: 'link',
       to: '/jobs',
       icon: Clock01Icon,
-      label: t('nav.jobs'),
+      label: 'Watchdogs',
       active: isJobsActive,
     },
     {
@@ -828,14 +844,14 @@ function ChatSidebarComponent({
       kind: 'link',
       to: '/conductor',
       icon: Rocket01Icon,
-      label: 'Conductor',
+      label: 'Mission Control',
       active: isConductorActive,
     },
     {
       kind: 'link',
       to: '/operations',
       icon: UserMultipleIcon,
-      label: 'Operations',
+      label: 'Ops',
       active: isOperationsActive,
     },
     {
@@ -930,7 +946,7 @@ function ChatSidebarComponent({
               transition={transition}
             >
               <Link
-                to="/chat"
+                to="/cael-home"
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
                   'w-full pl-1.5 justify-start gap-2',
@@ -945,7 +961,7 @@ function ChatSidebarComponent({
                   className="text-sm font-semibold tracking-tight"
                   style={{ color: 'var(--theme-text)' }}
                 >
-                  Hermes Workspace
+                  Cael Workspace
                 </span>
               </Link>
             </motion.div>
