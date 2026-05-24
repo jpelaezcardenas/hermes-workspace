@@ -281,7 +281,7 @@ async function collectReceiptPaths(
   return receipts
 }
 
-async function collectPromotionReceipts(): Promise<
+export async function collectPromotionReceipts(): Promise<
   Array<PromotionReceiptSummary>
 > {
   const nested = await Promise.all(

@@ -165,7 +165,16 @@ import { Route as ApiIntegrationsStatusRouteImport } from './routes/api/integrat
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
+import { Route as ApiCommandCenterVaultRefsRouteImport } from './routes/api/command-center/vault-refs'
+import { Route as ApiCommandCenterUsageLimitsRouteImport } from './routes/api/command-center/usage-limits'
+import { Route as ApiCommandCenterTodayRouteImport } from './routes/api/command-center/today'
 import { Route as ApiCommandCenterSummaryRouteImport } from './routes/api/command-center/summary'
+import { Route as ApiCommandCenterMemoryArtifactsRouteImport } from './routes/api/command-center/memory-artifacts'
+import { Route as ApiCommandCenterHomebaseRecordsRouteImport } from './routes/api/command-center/homebase-records'
+import { Route as ApiCommandCenterBrainRouteImport } from './routes/api/command-center/brain'
+import { Route as ApiCommandCenterAutomationsRouteImport } from './routes/api/command-center/automations'
+import { Route as ApiCommandCenterAgentRunsRouteImport } from './routes/api/command-center/agent-runs'
+import { Route as ApiCommandCenterActionGatesRouteImport } from './routes/api/command-center/action-gates'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
@@ -958,11 +967,63 @@ const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   path: '/api/dashboard/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCommandCenterVaultRefsRoute =
+  ApiCommandCenterVaultRefsRouteImport.update({
+    id: '/api/command-center/vault-refs',
+    path: '/api/command-center/vault-refs',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCommandCenterUsageLimitsRoute =
+  ApiCommandCenterUsageLimitsRouteImport.update({
+    id: '/api/command-center/usage-limits',
+    path: '/api/command-center/usage-limits',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCommandCenterTodayRoute = ApiCommandCenterTodayRouteImport.update({
+  id: '/api/command-center/today',
+  path: '/api/command-center/today',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCommandCenterSummaryRoute = ApiCommandCenterSummaryRouteImport.update({
   id: '/api/command-center/summary',
   path: '/api/command-center/summary',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCommandCenterMemoryArtifactsRoute =
+  ApiCommandCenterMemoryArtifactsRouteImport.update({
+    id: '/api/command-center/memory-artifacts',
+    path: '/api/command-center/memory-artifacts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCommandCenterHomebaseRecordsRoute =
+  ApiCommandCenterHomebaseRecordsRouteImport.update({
+    id: '/api/command-center/homebase-records',
+    path: '/api/command-center/homebase-records',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCommandCenterBrainRoute = ApiCommandCenterBrainRouteImport.update({
+  id: '/api/command-center/brain',
+  path: '/api/command-center/brain',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCommandCenterAutomationsRoute =
+  ApiCommandCenterAutomationsRouteImport.update({
+    id: '/api/command-center/automations',
+    path: '/api/command-center/automations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCommandCenterAgentRunsRoute =
+  ApiCommandCenterAgentRunsRouteImport.update({
+    id: '/api/command-center/agent-runs',
+    path: '/api/command-center/agent-runs',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiCommandCenterActionGatesRoute =
+  ApiCommandCenterActionGatesRouteImport.update({
+    id: '/api/command-center/action-gates',
+    path: '/api/command-center/action-gates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiClaudeTasksTaskIdRoute = ApiClaudeTasksTaskIdRouteImport.update({
   id: '/$taskId',
   path: '/$taskId',
@@ -1126,7 +1187,16 @@ export interface FileRoutesByFullPath {
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/command-center/action-gates': typeof ApiCommandCenterActionGatesRoute
+  '/api/command-center/agent-runs': typeof ApiCommandCenterAgentRunsRoute
+  '/api/command-center/automations': typeof ApiCommandCenterAutomationsRoute
+  '/api/command-center/brain': typeof ApiCommandCenterBrainRoute
+  '/api/command-center/homebase-records': typeof ApiCommandCenterHomebaseRecordsRoute
+  '/api/command-center/memory-artifacts': typeof ApiCommandCenterMemoryArtifactsRoute
   '/api/command-center/summary': typeof ApiCommandCenterSummaryRoute
+  '/api/command-center/today': typeof ApiCommandCenterTodayRoute
+  '/api/command-center/usage-limits': typeof ApiCommandCenterUsageLimitsRoute
+  '/api/command-center/vault-refs': typeof ApiCommandCenterVaultRefsRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1293,7 +1363,16 @@ export interface FileRoutesByTo {
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/command-center/action-gates': typeof ApiCommandCenterActionGatesRoute
+  '/api/command-center/agent-runs': typeof ApiCommandCenterAgentRunsRoute
+  '/api/command-center/automations': typeof ApiCommandCenterAutomationsRoute
+  '/api/command-center/brain': typeof ApiCommandCenterBrainRoute
+  '/api/command-center/homebase-records': typeof ApiCommandCenterHomebaseRecordsRoute
+  '/api/command-center/memory-artifacts': typeof ApiCommandCenterMemoryArtifactsRoute
   '/api/command-center/summary': typeof ApiCommandCenterSummaryRoute
+  '/api/command-center/today': typeof ApiCommandCenterTodayRoute
+  '/api/command-center/usage-limits': typeof ApiCommandCenterUsageLimitsRoute
+  '/api/command-center/vault-refs': typeof ApiCommandCenterVaultRefsRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1462,7 +1541,16 @@ export interface FileRoutesById {
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/command-center/action-gates': typeof ApiCommandCenterActionGatesRoute
+  '/api/command-center/agent-runs': typeof ApiCommandCenterAgentRunsRoute
+  '/api/command-center/automations': typeof ApiCommandCenterAutomationsRoute
+  '/api/command-center/brain': typeof ApiCommandCenterBrainRoute
+  '/api/command-center/homebase-records': typeof ApiCommandCenterHomebaseRecordsRoute
+  '/api/command-center/memory-artifacts': typeof ApiCommandCenterMemoryArtifactsRoute
   '/api/command-center/summary': typeof ApiCommandCenterSummaryRoute
+  '/api/command-center/today': typeof ApiCommandCenterTodayRoute
+  '/api/command-center/usage-limits': typeof ApiCommandCenterUsageLimitsRoute
+  '/api/command-center/vault-refs': typeof ApiCommandCenterVaultRefsRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1632,7 +1720,16 @@ export interface FileRouteTypes {
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/command-center/action-gates'
+    | '/api/command-center/agent-runs'
+    | '/api/command-center/automations'
+    | '/api/command-center/brain'
+    | '/api/command-center/homebase-records'
+    | '/api/command-center/memory-artifacts'
     | '/api/command-center/summary'
+    | '/api/command-center/today'
+    | '/api/command-center/usage-limits'
+    | '/api/command-center/vault-refs'
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
@@ -1799,7 +1896,16 @@ export interface FileRouteTypes {
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/command-center/action-gates'
+    | '/api/command-center/agent-runs'
+    | '/api/command-center/automations'
+    | '/api/command-center/brain'
+    | '/api/command-center/homebase-records'
+    | '/api/command-center/memory-artifacts'
     | '/api/command-center/summary'
+    | '/api/command-center/today'
+    | '/api/command-center/usage-limits'
+    | '/api/command-center/vault-refs'
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
@@ -1967,7 +2073,16 @@ export interface FileRouteTypes {
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/command-center/action-gates'
+    | '/api/command-center/agent-runs'
+    | '/api/command-center/automations'
+    | '/api/command-center/brain'
+    | '/api/command-center/homebase-records'
+    | '/api/command-center/memory-artifacts'
     | '/api/command-center/summary'
+    | '/api/command-center/today'
+    | '/api/command-center/usage-limits'
+    | '/api/command-center/vault-refs'
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
@@ -2130,7 +2245,16 @@ export interface RootRouteChildren {
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
+  ApiCommandCenterActionGatesRoute: typeof ApiCommandCenterActionGatesRoute
+  ApiCommandCenterAgentRunsRoute: typeof ApiCommandCenterAgentRunsRoute
+  ApiCommandCenterAutomationsRoute: typeof ApiCommandCenterAutomationsRoute
+  ApiCommandCenterBrainRoute: typeof ApiCommandCenterBrainRoute
+  ApiCommandCenterHomebaseRecordsRoute: typeof ApiCommandCenterHomebaseRecordsRoute
+  ApiCommandCenterMemoryArtifactsRoute: typeof ApiCommandCenterMemoryArtifactsRoute
   ApiCommandCenterSummaryRoute: typeof ApiCommandCenterSummaryRoute
+  ApiCommandCenterTodayRoute: typeof ApiCommandCenterTodayRoute
+  ApiCommandCenterUsageLimitsRoute: typeof ApiCommandCenterUsageLimitsRoute
+  ApiCommandCenterVaultRefsRoute: typeof ApiCommandCenterVaultRefsRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
@@ -3254,11 +3378,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDashboardOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/command-center/vault-refs': {
+      id: '/api/command-center/vault-refs'
+      path: '/api/command-center/vault-refs'
+      fullPath: '/api/command-center/vault-refs'
+      preLoaderRoute: typeof ApiCommandCenterVaultRefsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/usage-limits': {
+      id: '/api/command-center/usage-limits'
+      path: '/api/command-center/usage-limits'
+      fullPath: '/api/command-center/usage-limits'
+      preLoaderRoute: typeof ApiCommandCenterUsageLimitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/today': {
+      id: '/api/command-center/today'
+      path: '/api/command-center/today'
+      fullPath: '/api/command-center/today'
+      preLoaderRoute: typeof ApiCommandCenterTodayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/command-center/summary': {
       id: '/api/command-center/summary'
       path: '/api/command-center/summary'
       fullPath: '/api/command-center/summary'
       preLoaderRoute: typeof ApiCommandCenterSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/memory-artifacts': {
+      id: '/api/command-center/memory-artifacts'
+      path: '/api/command-center/memory-artifacts'
+      fullPath: '/api/command-center/memory-artifacts'
+      preLoaderRoute: typeof ApiCommandCenterMemoryArtifactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/homebase-records': {
+      id: '/api/command-center/homebase-records'
+      path: '/api/command-center/homebase-records'
+      fullPath: '/api/command-center/homebase-records'
+      preLoaderRoute: typeof ApiCommandCenterHomebaseRecordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/brain': {
+      id: '/api/command-center/brain'
+      path: '/api/command-center/brain'
+      fullPath: '/api/command-center/brain'
+      preLoaderRoute: typeof ApiCommandCenterBrainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/automations': {
+      id: '/api/command-center/automations'
+      path: '/api/command-center/automations'
+      fullPath: '/api/command-center/automations'
+      preLoaderRoute: typeof ApiCommandCenterAutomationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/agent-runs': {
+      id: '/api/command-center/agent-runs'
+      path: '/api/command-center/agent-runs'
+      fullPath: '/api/command-center/agent-runs'
+      preLoaderRoute: typeof ApiCommandCenterAgentRunsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/command-center/action-gates': {
+      id: '/api/command-center/action-gates'
+      path: '/api/command-center/action-gates'
+      fullPath: '/api/command-center/action-gates'
+      preLoaderRoute: typeof ApiCommandCenterActionGatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/claude-tasks/$taskId': {
@@ -3657,7 +3844,16 @@ const rootRouteChildren: RootRouteChildren = {
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
+  ApiCommandCenterActionGatesRoute: ApiCommandCenterActionGatesRoute,
+  ApiCommandCenterAgentRunsRoute: ApiCommandCenterAgentRunsRoute,
+  ApiCommandCenterAutomationsRoute: ApiCommandCenterAutomationsRoute,
+  ApiCommandCenterBrainRoute: ApiCommandCenterBrainRoute,
+  ApiCommandCenterHomebaseRecordsRoute: ApiCommandCenterHomebaseRecordsRoute,
+  ApiCommandCenterMemoryArtifactsRoute: ApiCommandCenterMemoryArtifactsRoute,
   ApiCommandCenterSummaryRoute: ApiCommandCenterSummaryRoute,
+  ApiCommandCenterTodayRoute: ApiCommandCenterTodayRoute,
+  ApiCommandCenterUsageLimitsRoute: ApiCommandCenterUsageLimitsRoute,
+  ApiCommandCenterVaultRefsRoute: ApiCommandCenterVaultRefsRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
