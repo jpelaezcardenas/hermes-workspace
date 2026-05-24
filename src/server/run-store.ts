@@ -38,6 +38,29 @@ export type PersistedRunState = {
 const RUNS_ROOT = path.join(getHermesRoot(), 'webui-mvp', 'runs')
 const runUpdateQueues = new Map<string, Promise<void>>()
 
+const RECOVERABLE_RUN_STATUSES = new Set<PersistedRunState['status']>([
+  'accepted',
+  'active',
+  'handoff',
+  'stalled',
+])
+const DEFAULT_RECOVERABLE_RUN_MAX_AGE_MS = 30 * 60 * 1000
+
+function getRecoverableRunMaxAgeMs(): number {
+  const configured = Number(process.env.HERMES_RUN_RECOVERY_MAX_AGE_MS)
+  if (Number.isFinite(configured) && configured > 0) return configured
+  return DEFAULT_RECOVERABLE_RUN_MAX_AGE_MS
+}
+
+function isRecoverableRun(run: PersistedRunState, now = Date.now()): boolean {
+  if (!RECOVERABLE_RUN_STATUSES.has(run.status)) return false
+  if (hasActiveSendRun(run.runId)) return true
+  const lastEventAt = Number.isFinite(run.lastEventAt)
+    ? run.lastEventAt
+    : run.updatedAt
+  return now - lastEventAt <= getRecoverableRunMaxAgeMs()
+}
+
 function encodeSessionKey(sessionKey: string): string {
   return encodeURIComponent(sessionKey || 'main')
 }
@@ -231,9 +254,16 @@ export async function getActiveRunForSession(
     )
     const candidates = runs
       .filter((run): run is PersistedRunState => Boolean(run))
-      .filter((run) => !['complete', 'error'].includes(run.status))
-      .filter((run) => hasActiveSendRun(run.runId))
-      .sort((a, b) => b.updatedAt - a.updatedAt)
+      .filter((run) => isRecoverableRun(run))
+      .sort((a, b) => {
+        const bLastEventAt = Number.isFinite(b.lastEventAt)
+          ? b.lastEventAt
+          : b.updatedAt
+        const aLastEventAt = Number.isFinite(a.lastEventAt)
+          ? a.lastEventAt
+          : a.updatedAt
+        return bLastEventAt - aLastEventAt
+      })
     return candidates[0] ?? null
   } catch {
     return null

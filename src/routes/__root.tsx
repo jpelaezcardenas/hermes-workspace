@@ -221,7 +221,10 @@ export function wrapInlineScript(source: string): string {
 }
 
 type ServiceWorkerLike = {
-  register: (scriptURL: string, options?: RegistrationOptions) => Promise<unknown>
+  register: (
+    scriptURL: string,
+    options?: RegistrationOptions,
+  ) => Promise<unknown>
 }
 
 type CachesLike = {
@@ -244,7 +247,7 @@ export async function registerAppServiceWorker({
     .catch(() => undefined)
 
   await serviceWorker
-    ?.register('/sw.js', { scope: '/' })
+    ?.register('/sw.js', { scope: '/', updateViaCache: 'none' })
     .catch((error: unknown) => {
       console.warn('PWA service worker registration failed', error)
     })
@@ -252,13 +255,18 @@ export async function registerAppServiceWorker({
 
 function RootLayout() {
   const { settings } = useSettings()
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
   const isHermesWorldLandingRoute =
     pathname === '/hermes-world' ||
     pathname.startsWith('/hermes-world/') ||
     pathname === '/world' ||
     pathname.startsWith('/world/')
-  const isGameSurfaceRoute = isHermesWorldLandingRoute || pathname === '/playground' || pathname.startsWith('/playground/')
+  const isGameSurfaceRoute =
+    isHermesWorldLandingRoute ||
+    pathname === '/playground' ||
+    pathname.startsWith('/playground/')
   const [onboardingComplete, setOnboardingComplete] = useState<boolean | null>(
     null,
   )
@@ -371,10 +379,13 @@ function RootLayout() {
           </WorkspaceShell>
           {!isHermesWorldLandingRoute ? <SearchModal /> : null}
           {/* Keep UsageMeter mounted so search-modal OPEN_USAGE still works even when the pill is hidden by default. */}
-          {!isGameSurfaceRoute ? <UsageMeter visible={settings.showUsageMeter} /> : null}
+          {!isGameSurfaceRoute ? (
+            <UsageMeter visible={settings.showUsageMeter} />
+          ) : null}
           {!isHermesWorldLandingRoute ? <KeyboardShortcutsModal /> : null}
           {!isHermesWorldLandingRoute ? <UpdateCenterNotifier /> : null}
-          {rootSurfaceState.showPostOnboardingOverlays && !isGameSurfaceRoute ? (
+          {rootSurfaceState.showPostOnboardingOverlays &&
+          !isGameSurfaceRoute ? (
             <>
               <MobilePromptTrigger />
               <OnboardingTour />
@@ -426,89 +437,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: wrapInlineScript(`
           (function(){
-            if (location.pathname === '/hermes-world' || location.pathname.indexOf('/hermes-world/') === 0 || location.pathname === '/world' || location.pathname.indexOf('/world/') === 0) return;
-            var d = document.getElementById('splash-screen');
-            if (!d) return;
-            var bg = '#031A1A', txt = '#F8F1E3', muted = '#9CB2AE', accent = '#FFAC02';
-            try {
-              var theme = localStorage.getItem('${THEME_STORAGE_KEY}') || '${DEFAULT_THEME}';
-              if (theme === 'claude-nous') {
-                bg = '#031A1A';
-                txt = '#F8F1E3';
-                muted = '#9CB2AE';
-                accent = '#FFAC02';
-              } else if (theme === 'claude-nous-light') {
-                bg = '#F8FAF8';
-                txt = '#16315F';
-                muted = '#6F7D96';
-                accent = '#2557B7';
-              } else if (theme === 'claude-classic') {
-                bg = '#0d0f12';
-                txt = '#eceff4';
-                muted = '#7f8a96';
-                accent = '#b98a44';
-              } else if (theme === 'claude-official-light') {
-                bg = '#F7F7F1';
-                txt = '#16315F';
-                muted = '#6F7D96';
-                accent = '#2557B7';
-              } else if (theme === 'claude-classic-light') {
-                bg = '#F5F2ED';
-                txt = '#1a1f26';
-                muted = '#6F675E';
-                accent = '#b98a44';
-              } else if (theme === 'claude-slate') {
-                bg = '#0d1117';
-                txt = '#c9d1d9';
-                muted = '#8b949e';
-                accent = '#7eb8f6';
-              } else if (theme === 'claude-slate-light') {
-                bg = '#F6F8FA';
-                txt = '#24292f';
-                muted = '#57606A';
-                accent = '#3b82f6';
-              }
-            } catch(e){}
-
-            var isDark = !['claude-nous-light','claude-official-light','claude-classic-light','claude-slate-light'].includes(theme);
-            var quips = ["Consulting the oracle...","Loading ancient knowledge...","Warming up the messenger...","Calibrating tool chain...","Summoning your agent...","Preparing the workspace...","Bridging realms...","Initializing agent runtime..."];
-            var quip = quips[Math.floor(Math.random() * quips.length)];
-
-            d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';transition:opacity 0.5s ease;';
-            d.innerHTML = '<img src="/claude-avatar.webp" alt="Hermes Agent" style="width:80px;height:80px;margin-bottom:20px;border-radius:16px;filter:drop-shadow(0 8px 32px color-mix(in srgb,'+accent+' 45%, transparent))" />'
-              + '<img src="'+(isDark ? '/claude-banner.png' : '/claude-banner-light.png')+'" alt="Cael Workspace" style="width:280px;height:auto;margin-bottom:8px;filter:drop-shadow(0 4px 16px '+(isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)')+')" />'
-              + '<div style="font:400 14px/1 system-ui,-apple-system,sans-serif;letter-spacing:0.04em;color:'+muted+'">Cael Workspace</div>'
-              + '<div style="margin-top:28px;width:140px;height:3px;background:'+(isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')+';border-radius:3px;overflow:hidden;position:relative"><div id=splash-bar style="width:0%;height:100%;background:'+accent+';border-radius:3px;transition:width 0.4s ease"></div></div>';
-
-            var bar = document.getElementById('splash-bar');
-            if (bar) {
-              setTimeout(function(){ bar.style.width='15%' }, 300);
-              setTimeout(function(){ bar.style.width='40%' }, 800);
-              setTimeout(function(){ bar.style.width='65%' }, 1500);
-              setTimeout(function(){ bar.style.width='85%' }, 2500);
-              setTimeout(function(){ bar.style.width='92%' }, 3200);
-            }
-
             window.__dismissSplash = function() {
               var el = document.getElementById('splash-screen');
               if (!el) return;
-              if (bar) bar.style.width = '100%';
-              setTimeout(function(){
-                el.style.opacity = '0';
-                setTimeout(function(){
-                  el.innerHTML = '';
-                  el.style.cssText = 'display:none';
-                }, 500);
-              }, 300);
+              el.innerHTML = '';
+              el.style.cssText = 'display:none';
             };
-            // Fallback: always dismiss after 5s
-            setTimeout(function(){ window.__dismissSplash && window.__dismissSplash(); }, 5000);
-            // Fast dismiss: returning users skip quickly
-            try {
-              if (localStorage.getItem('claude-claude-url') || localStorage.getItem('claude-url')) {
-                setTimeout(function(){ window.__dismissSplash && window.__dismissSplash(); }, 600);
-              }
-            } catch(e) {}
           })()
         `),
           }}

@@ -1224,6 +1224,9 @@ export function ChatScreen({
             status: 'queued',
           }),
         )
+        setSending(false)
+        setPendingGeneration(false)
+        // Keep the run visible as background work without trapping the composer.
       },
       [queryClient],
     ),
@@ -1975,6 +1978,21 @@ export function ChatScreen({
         idempotencyKey: optimisticClientId || crypto.randomUUID(),
       }).catch((err: unknown) => {
         const messageText = err instanceof Error ? err.message : String(err)
+        const activeSend = activeSendRef.current
+        if (activeSend?.clientId) {
+          updateHistoryMessageByClientIdEverywhere(
+            queryClient,
+            activeSend.clientId,
+            (message) => ({
+              ...message,
+              status: 'error',
+            }),
+          )
+        }
+        activeSendRef.current = null
+        setSending(false)
+        setPendingGeneration(false)
+        setWaitingForResponse(false)
         if (import.meta.env.DEV) {
           console.warn('[chat] send-stream failed', messageText)
         }
@@ -2810,7 +2828,7 @@ export function ChatScreen({
             <ChatComposer
               onSubmit={send}
               onAbort={handleAbortStreaming}
-              isLoading={sending || waitingForResponse}
+              isLoading={sending}
               disabled={sending || hideUi}
               sessionKey={
                 isNewChat

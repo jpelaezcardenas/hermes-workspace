@@ -1,16 +1,34 @@
 import { describe, expect, it } from 'vitest'
 import { getRootSurfaceState } from './-root-layout-state'
 
+const authed = { authRequired: false, authenticated: true }
+
 describe('root layout surface state', () => {
-  it('shows fullscreen onboarding until onboarding is complete', () => {
+  it('waits for auth before rendering onboarding or workspace surfaces', () => {
     expect(getRootSurfaceState(false)).toEqual({
+      showLogin: false,
+      showOnboarding: false,
+      showWorkspaceShell: false,
+      showPostOnboardingOverlays: false,
+    })
+
+    expect(getRootSurfaceState(true)).toEqual({
+      showLogin: false,
+      showOnboarding: false,
+      showWorkspaceShell: false,
+      showPostOnboardingOverlays: false,
+    })
+  })
+
+  it('shows fullscreen onboarding until onboarding is complete after auth is known', () => {
+    expect(getRootSurfaceState(false, authed)).toEqual({
       showLogin: false,
       showOnboarding: true,
       showWorkspaceShell: false,
       showPostOnboardingOverlays: false,
     })
 
-    expect(getRootSurfaceState(null)).toEqual({
+    expect(getRootSurfaceState(null, authed)).toEqual({
       showLogin: false,
       showOnboarding: true,
       showWorkspaceShell: false,
@@ -19,7 +37,7 @@ describe('root layout surface state', () => {
   })
 
   it('shows workspace shell and post-onboarding overlays after completion', () => {
-    expect(getRootSurfaceState(true)).toEqual({
+    expect(getRootSurfaceState(true, authed)).toEqual({
       showLogin: false,
       showOnboarding: false,
       showWorkspaceShell: true,
