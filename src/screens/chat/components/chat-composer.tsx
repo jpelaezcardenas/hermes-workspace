@@ -407,6 +407,8 @@ const MAX_IMAGE_DIMENSION = 1920
 const IMAGE_QUALITY = 0.85
 /** Safe image attachment limit after processing (1MB). */
 const MAX_TRANSPORT_IMAGE_SIZE = 1 * 1024 * 1024
+/** Safe non-image attachment payload limit after processing (10MB). */
+const MAX_TRANSPORT_FILE_SIZE = 10 * 1024 * 1024
 
 const IMAGE_EXTENSION_TO_MIME: Record<string, string> = {
   png: 'image/png',
@@ -428,10 +430,26 @@ const TEXT_EXTENSION_TO_MIME: Record<string, string> = {
   txt: 'text/plain',
   json: 'application/json',
   csv: 'text/csv',
+  log: 'text/plain',
+  yml: 'text/yaml',
+  yaml: 'text/yaml',
+  xml: 'application/xml',
+  html: 'text/html',
+  css: 'text/css',
   ts: 'text/plain',
   tsx: 'text/plain',
   js: 'text/plain',
+  jsx: 'text/plain',
   py: 'text/plain',
+  rb: 'text/plain',
+  go: 'text/plain',
+  rs: 'text/plain',
+  swift: 'text/plain',
+  sh: 'text/plain',
+  bash: 'text/plain',
+  zsh: 'text/plain',
+  toml: 'text/plain',
+  ini: 'text/plain',
 }
 
 function normalizeMimeType(value: string): string {
@@ -457,7 +475,13 @@ function inferTextMimeTypeFromFileName(name: string): string {
 
 function isTextMimeType(value: string): boolean {
   const normalized = normalizeMimeType(value)
-  return normalized.startsWith('text/') || normalized === 'application/json'
+  return (
+    normalized.startsWith('text/') ||
+    normalized === 'application/json' ||
+    normalized === 'application/xml' ||
+    normalized === 'application/yaml' ||
+    normalized === 'application/x-yaml'
+  )
 }
 
 function isImageFile(file: File): boolean {
@@ -486,21 +510,9 @@ function formatFileSize(size: number): string {
 function hasAttachableData(dt: DataTransfer | null): boolean {
   if (!dt) return false
   const items = Array.from(dt.items)
-  if (
-    items.some(
-      (item) =>
-        item.kind === 'file' &&
-        (isImageMimeType(item.type) ||
-          isTextMimeType(item.type) ||
-          item.type.trim().length === 0),
-    )
-  )
-    return true
+  if (items.some((item) => item.kind === 'file')) return true
   const files = Array.from(dt.files)
-  return files.some(
-    (file) =>
-      isImageFile(file) || isTextFile(file) || file.type.trim().length === 0,
-  )
+  return files.length > 0
 }
 
 function collectFilesFromDataTransfer(dt: DataTransfer | null): Array<File> {
@@ -906,6 +918,7 @@ function ChatComposerComponent({
   const promptRef = useRef<HTMLTextAreaElement | null>(null)
   const slashMenuRef = useRef<SlashCommandMenuHandle | null>(null)
   const attachmentInputRef = useRef<HTMLInputElement | null>(null)
+  const imageAttachmentInputRef = useRef<HTMLInputElement | null>(null)
   const profileMenuRef = useRef<HTMLDivElement | null>(null)
   const dragCounterRef = useRef(0)
   const shouldRefocusAfterSendRef = useRef(false)
@@ -1420,9 +1433,6 @@ function ChatComposerComponent({
           async (file, index): Promise<ChatComposerAttachment | null> => {
             const imageFile = isImageFile(file)
             const textFile = isTextFile(file)
-            if (!imageFile && !textFile && file.type.trim().length > 0) {
-              return null
-            }
 
             if (file.size > MAX_ATTACHMENT_FILE_SIZE) {
               toast(
@@ -1451,6 +1461,32 @@ function ChatComposerComponent({
                   'text/plain',
                 size: textBytes,
                 dataUrl: textContent,
+                kind: 'file',
+              }
+            }
+
+            if (!imageFile && !textFile) {
+              if (file.size > MAX_TRANSPORT_FILE_SIZE) {
+                toast(
+                  `“${file.name || 'file'}” is ${formatFileSize(file.size)}. Non-text files are limited to ${formatFileSize(MAX_TRANSPORT_FILE_SIZE)}.`,
+                  { type: 'warning' },
+                )
+                return null
+              }
+
+              const dataUrl = await readFileAsDataUrl(file)
+              if (!dataUrl) return null
+              const name =
+                file.name && file.name.trim().length > 0
+                  ? file.name.trim()
+                  : `attached-file-${timestamp}-${index + 1}`
+              return {
+                id: crypto.randomUUID(),
+                name,
+                contentType:
+                  normalizeMimeType(file.type) || 'application/octet-stream',
+                size: file.size,
+                dataUrl,
                 kind: 'file',
               }
             }
@@ -1848,6 +1884,17 @@ function ChatComposerComponent({
     [disabled],
   )
 
+  const handleOpenImageAttachmentPicker = useCallback(
+    function handleOpenImageAttachmentPicker(
+      event: React.MouseEvent<HTMLButtonElement>,
+    ) {
+      event.preventDefault()
+      if (disabled) return
+      imageAttachmentInputRef.current?.click()
+    },
+    [disabled],
+  )
+
   const handleAttachmentInputChange = useCallback(
     function handleAttachmentInputChange(
       event: React.ChangeEvent<HTMLInputElement>,
@@ -2100,7 +2147,15 @@ function ChatComposerComponent({
       <input
         ref={attachmentInputRef}
         type="file"
-        accept="image/*,.md,.txt,.json,.csv,.ts,.tsx,.js,.py"
+        accept="image/*,text/*,.md,.txt,.log,.json,.csv,.yaml,.yml,.xml,.html,.css,.ts,.tsx,.js,.jsx,.py,.rb,.go,.rs,.swift,.sh,.bash,.zsh,.toml,.ini,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+        multiple
+        className="hidden"
+        onChange={handleAttachmentInputChange}
+      />
+      <input
+        ref={imageAttachmentInputRef}
+        type="file"
+        accept="image/*"
         multiple
         className="hidden"
         onChange={handleAttachmentInputChange}
@@ -2365,6 +2420,27 @@ function ChatComposerComponent({
                         Actions
                       </div>
                       <div className="grid grid-cols-2 gap-2 px-4 pb-4">
+                        {/* Photos / screenshots — separate input keeps iOS picker image-first. */}
+                        <button
+                          type="button"
+                          disabled={disabled}
+                          onClick={(event) => {
+                            handleOpenImageAttachmentPicker(event)
+                          }}
+                          className="rounded-xl border border-neutral-100 bg-neutral-50 dark:bg-neutral-800 dark:border-neutral-700 p-3 flex flex-col items-start gap-2 text-left disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <span className="rounded-lg bg-sky-100 dark:bg-sky-900/30 p-1.5 text-sky-600 dark:text-sky-400">
+                            <HugeiconsIcon
+                              icon={AttachmentIcon}
+                              size={24}
+                              strokeWidth={1.5}
+                            />
+                          </span>
+                          <span className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
+                            Photo / Image
+                          </span>
+                        </button>
+
                         {/* Attach File — keep sheet open so iOS picker can layer on top */}
                         <button
                           type="button"

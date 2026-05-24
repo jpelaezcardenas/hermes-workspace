@@ -12,6 +12,14 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
+import {
+  readHermesConfigFiles,
+  resolveHermesConfigPaths,
+} from './hermes-config-store'
+import {
+  normalizeHermesConfigState,
+  type HermesConfigState,
+} from './hermes-config-migration'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -38,6 +46,11 @@ export type ProviderUsageResult = {
   status: ProviderStatus
   message?: string
   plan?: string
+  caelConfigured?: boolean
+  caelDefault?: boolean
+  caelModel?: string
+  caelModels?: string[]
+  monitorKind?: 'cael' | 'external'
   lines: UsageLine[]
   updatedAt: number
 }
@@ -62,6 +75,113 @@ function readNumber(v: unknown): number | undefined {
 
 function expandHome(p: string): string {
   return p.startsWith('~') ? join(homedir(), p.slice(1)) : p
+}
+
+function normalizeCaelProviderId(providerId: string): string {
+  const normalized = providerId.trim().toLowerCase()
+  const aliases: Record<string, string> = {
+    'openai-codex': 'codex',
+    codex: 'codex',
+    anthropic: 'claude',
+    claude: 'claude',
+    'claude-code': 'claude',
+    'google-gemini-cli': 'gemini',
+    gemini: 'gemini',
+    openai: 'openai',
+    openrouter: 'openrouter',
+  }
+  return aliases[normalized] ?? normalized
+}
+
+type CaelUsageContext = {
+  activeProvider: string
+  activeModel: string
+  modelsByProvider: Map<string, string[]>
+}
+
+function fallbackProviderModels(config: Record<string, unknown>): Map<string, string[]> {
+  const map = new Map<string, string[]>()
+  const fallbacks = config.fallback_providers
+  if (!Array.isArray(fallbacks)) return map
+  for (const entry of fallbacks) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue
+    const record = entry as Record<string, unknown>
+    const provider = typeof record.provider === 'string'
+      ? normalizeCaelProviderId(record.provider)
+      : ''
+    const model = typeof record.model === 'string' ? record.model.trim() : ''
+    if (!provider || !model) continue
+    const models = map.get(provider) ?? []
+    if (!models.includes(model)) models.push(model)
+    map.set(provider, models)
+  }
+  return map
+}
+
+function readCaelUsageContext(): CaelUsageContext | null {
+  try {
+    const paths = resolveHermesConfigPaths()
+    const files = readHermesConfigFiles(paths)
+    const state = normalizeHermesConfigState({
+      paths,
+      config: files.config,
+      env: files.env,
+      authProfiles: files.authProfiles,
+      localProviders: [],
+      localModels: [],
+    }) as HermesConfigState
+
+    const activeProvider = normalizeCaelProviderId(state.activeProvider)
+    const activeModel = state.activeModel
+    const modelsByProvider = fallbackProviderModels(files.config)
+    if (activeProvider && activeModel) {
+      const models = modelsByProvider.get(activeProvider) ?? []
+      if (!models.includes(activeModel)) models.unshift(activeModel)
+      modelsByProvider.set(activeProvider, models)
+    }
+
+    for (const provider of state.providers) {
+      const id = normalizeCaelProviderId(provider.id)
+      const models = modelsByProvider.get(id) ?? []
+      for (const model of provider.models) {
+        if (!models.includes(model.id)) models.push(model.id)
+      }
+      if (models.length > 0) modelsByProvider.set(id, models)
+    }
+
+    return { activeProvider, activeModel, modelsByProvider }
+  } catch {
+    return null
+  }
+}
+
+function withCaelContext(
+  providers: ProviderUsageResult[],
+  context: CaelUsageContext | null,
+): ProviderUsageResult[] {
+  if (!context) return providers.map((provider) => ({ ...provider, monitorKind: 'external' }))
+
+  return providers
+    .map((provider) => {
+      const models = context.modelsByProvider.get(provider.provider) ?? []
+      const caelDefault = provider.provider === context.activeProvider
+      const caelConfigured = caelDefault || models.length > 0
+      return {
+        ...provider,
+        caelConfigured,
+        caelDefault,
+        caelModel: caelDefault ? context.activeModel : models[0],
+        caelModels: models,
+        monitorKind: caelConfigured ? 'cael' as const : 'external' as const,
+      }
+    })
+    .sort((a, b) => {
+      if (a.caelDefault !== b.caelDefault) return a.caelDefault ? -1 : 1
+      if (a.caelConfigured !== b.caelConfigured) return a.caelConfigured ? -1 : 1
+      if (a.status === 'ok' && b.status !== 'ok') return -1
+      if (a.status !== 'ok' && b.status === 'ok') return 1
+      return a.displayName.localeCompare(b.displayName)
+    })
 }
 
 // ── Claude OAuth ─────────────────────────────────────────────────────────────
@@ -765,6 +885,293 @@ export async function fetchCodexUsage(): Promise<ProviderUsageResult> {
   }
 }
 
+// ── Gemini CLI (Google Code Assist OAuth) ───────────────────────────────────
+
+const GEMINI_CRED_FILE = '~/.gemini/oauth_creds.json'
+const GEMINI_SETTINGS_FILE = '~/.gemini/settings.json'
+const GEMINI_QUOTA_URL =
+  'https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota'
+const GEMINI_CODE_ASSIST_URL =
+  'https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist'
+const GEMINI_PROJECTS_URL =
+  'https://cloudresourcemanager.googleapis.com/v1/projects'
+
+type GeminiCredentials = {
+  access_token?: string
+  id_token?: string
+  refresh_token?: string
+  expiry_date?: number
+}
+
+type GeminiClaims = {
+  email?: string
+  hd?: string
+}
+
+function loadGeminiCredentials(): GeminiCredentials | null {
+  const credPath = expandHome(GEMINI_CRED_FILE)
+  if (!existsSync(credPath)) return null
+  try {
+    return JSON.parse(readFileSync(credPath, 'utf-8')) as GeminiCredentials
+  } catch {
+    return null
+  }
+}
+
+function currentGeminiAuthType(): string | undefined {
+  const settingsPath = expandHome(GEMINI_SETTINGS_FILE)
+  if (!existsSync(settingsPath)) return undefined
+  try {
+    const parsed = JSON.parse(readFileSync(settingsPath, 'utf-8')) as Record<
+      string,
+      unknown
+    >
+    const security = parsed.security as Record<string, unknown> | undefined
+    const auth = security?.auth as Record<string, unknown> | undefined
+    return typeof auth?.selectedType === 'string'
+      ? auth.selectedType
+      : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function decodeGeminiClaims(idToken?: string): GeminiClaims {
+  if (!idToken) return {}
+  const part = idToken.split('.')[1]
+  if (!part) return {}
+  try {
+    const padded = part
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
+      .padEnd(Math.ceil(part.length / 4) * 4, '=')
+    return JSON.parse(Buffer.from(padded, 'base64').toString('utf-8'))
+  } catch {
+    return {}
+  }
+}
+
+async function fetchGeminiJSON(
+  url: string,
+  accessToken: string,
+  body?: Record<string, unknown>,
+): Promise<{ status: number; data: Record<string, unknown> | null }> {
+  const res = await fetch(url, {
+    method: body ? 'POST' : 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  })
+  const data = (await res.json().catch(() => null)) as Record<
+    string,
+    unknown
+  > | null
+  return { status: res.status, data }
+}
+
+async function loadGeminiCodeAssist(
+  accessToken: string,
+): Promise<{ plan?: string; projectId?: string }> {
+  const { status, data } = await fetchGeminiJSON(
+    GEMINI_CODE_ASSIST_URL,
+    accessToken,
+    { metadata: { ideType: 'GEMINI_CLI', pluginType: 'GEMINI' } },
+  )
+  if (status !== 200 || !data) return {}
+
+  const project = data.cloudaicompanionProject as
+    | string
+    | Record<string, unknown>
+    | undefined
+  const projectId =
+    typeof project === 'string'
+      ? project
+      : typeof project?.id === 'string'
+        ? project.id
+        : typeof project?.projectId === 'string'
+          ? project.projectId
+          : undefined
+
+  const tier = (data.currentTier as Record<string, unknown> | undefined)?.id
+  const plan =
+    tier === 'standard-tier'
+      ? 'Paid'
+      : tier === 'free-tier'
+        ? 'Free'
+        : tier === 'legacy-tier'
+          ? 'Legacy'
+          : undefined
+
+  return { plan, projectId }
+}
+
+async function discoverGeminiProjectId(
+  accessToken: string,
+): Promise<string | undefined> {
+  const { status, data } = await fetchGeminiJSON(
+    GEMINI_PROJECTS_URL,
+    accessToken,
+  )
+  if (status !== 200 || !data) return undefined
+  const projects = data.projects as Array<Record<string, unknown>> | undefined
+  if (!Array.isArray(projects)) return undefined
+  for (const project of projects) {
+    const projectId = project.projectId
+    if (typeof projectId !== 'string') continue
+    const labels = project.labels as Record<string, unknown> | undefined
+    if (
+      projectId.startsWith('gen-lang-client') ||
+      labels?.['generative-language'] !== undefined
+    ) {
+      return projectId
+    }
+  }
+  return undefined
+}
+
+function geminiModelGroup(modelId: string): 'Pro' | 'Flash' | 'Flash Lite' {
+  const id = modelId.toLowerCase()
+  if (id.includes('flash-lite')) return 'Flash Lite'
+  if (id.includes('flash')) return 'Flash'
+  return 'Pro'
+}
+
+export async function fetchGeminiUsage(): Promise<ProviderUsageResult> {
+  const now = Date.now()
+  const authType = currentGeminiAuthType()
+
+  if (authType === 'api-key' || authType === 'vertex-ai') {
+    return {
+      provider: 'gemini',
+      displayName: 'Gemini',
+      status: 'missing_credentials',
+      message: `Gemini ${authType} auth cannot report Code Assist quota. Use Google account OAuth.`,
+      lines: [],
+      updatedAt: now,
+    }
+  }
+
+  const creds = loadGeminiCredentials()
+  if (!creds?.access_token) {
+    return {
+      provider: 'gemini',
+      displayName: 'Gemini',
+      status: 'missing_credentials',
+      message: 'No Gemini OAuth credentials found. Run `gemini` to authenticate.',
+      lines: [],
+      updatedAt: now,
+    }
+  }
+
+  if (creds.expiry_date && creds.expiry_date < now) {
+    return {
+      provider: 'gemini',
+      displayName: 'Gemini',
+      status: 'auth_expired',
+      message: 'Gemini access token is expired. Run `gemini` once to refresh the OAuth session.',
+      lines: [],
+      updatedAt: now,
+    }
+  }
+
+  try {
+    const claims = decodeGeminiClaims(creds.id_token)
+    const codeAssist = await loadGeminiCodeAssist(creds.access_token)
+    const projectId =
+      codeAssist.projectId ?? (await discoverGeminiProjectId(creds.access_token))
+
+    const { status, data } = await fetchGeminiJSON(
+      GEMINI_QUOTA_URL,
+      creds.access_token,
+      projectId ? { project: projectId } : {},
+    )
+
+    if (status === 401 || status === 403) {
+      return {
+        provider: 'gemini',
+        displayName: 'Gemini',
+        status: 'auth_expired',
+        message: 'Gemini OAuth session was rejected. Run `gemini` once to refresh it.',
+        lines: [],
+        updatedAt: now,
+      }
+    }
+
+    if (status !== 200 || !data) {
+      return {
+        provider: 'gemini',
+        displayName: 'Gemini',
+        status: 'error',
+        message: `HTTP ${status}`,
+        lines: [],
+        updatedAt: now,
+      }
+    }
+
+    const buckets = data.buckets as Array<Record<string, unknown>> | undefined
+    const byGroup = new Map<string, { used: number; resetsAt?: string }>()
+    for (const bucket of buckets ?? []) {
+      const modelId = bucket.modelId
+      const fraction = readNumber(bucket.remainingFraction)
+      if (typeof modelId !== 'string' || fraction === undefined) continue
+      const group = geminiModelGroup(modelId)
+      const used = Math.max(0, Math.min(100, 100 - fraction * 100))
+      const resetsAt =
+        typeof bucket.resetTime === 'string'
+          ? new Date(bucket.resetTime).toISOString()
+          : undefined
+      const existing = byGroup.get(group)
+      if (!existing || used > existing.used) {
+        byGroup.set(group, { used, resetsAt })
+      }
+    }
+
+    const lines: UsageLine[] = []
+    for (const label of ['Pro', 'Flash', 'Flash Lite']) {
+      const item = byGroup.get(label)
+      if (!item) continue
+      lines.push({
+        type: 'progress',
+        label,
+        used: item.used,
+        limit: 100,
+        format: 'percent',
+        resetsAt: item.resetsAt,
+      })
+    }
+
+    if (lines.length === 0) {
+      lines.push({
+        type: 'badge',
+        label: 'Status',
+        value: 'Connected',
+        color: '#10b981',
+      })
+    }
+
+    const plan = codeAssist.plan ?? (claims.hd ? 'Workspace' : undefined)
+    return {
+      provider: 'gemini',
+      displayName: 'Gemini',
+      status: 'ok',
+      plan,
+      lines,
+      updatedAt: now,
+    }
+  } catch (e) {
+    return {
+      provider: 'gemini',
+      displayName: 'Gemini',
+      status: 'error',
+      message: e instanceof Error ? e.message : String(e),
+      lines: [],
+      updatedAt: now,
+    }
+  }
+}
+
 // ── OpenAI (API Key) ─────────────────────────────────────────────────────────
 
 export async function fetchOpenAIUsage(): Promise<ProviderUsageResult> {
@@ -994,14 +1401,15 @@ export async function getProviderUsage(
   const results = await Promise.allSettled([
     fetchClaudeUsage(),
     fetchCodexUsage(),
+    fetchGeminiUsage(),
     fetchOpenAIUsage(),
     fetchOpenRouterUsage(),
   ])
 
   const providers: ProviderUsageResult[] = results.map((r, i) => {
     if (r.status === 'fulfilled') return r.value
-    const names = ['Claude (OAuth)', 'Codex', 'OpenAI', 'OpenRouter']
-    const ids = ['claude', 'codex', 'openai', 'openrouter']
+    const names = ['Claude (OAuth)', 'Codex', 'Gemini', 'OpenAI', 'OpenRouter']
+    const ids = ['claude', 'codex', 'gemini', 'openai', 'openrouter']
     return {
       provider: ids[i],
       displayName: names[i],
@@ -1012,8 +1420,9 @@ export async function getProviderUsage(
     }
   })
 
-  // Show all providers — unconfigured ones display setup instructions
-  const activeProviders = providers
+  // Cael-configured providers come first. Other probes remain available as
+  // external monitors, but they no longer drive the default meter.
+  const activeProviders = withCaelContext(providers, readCaelUsageContext())
 
   const payload: ProviderUsageResponse = {
     ok: true,

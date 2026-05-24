@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorldRouteImport } from './routes/world'
 import { Route as VtCapitalRouteImport } from './routes/vt-capital'
+import { Route as UsageRouteImport } from './routes/usage'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as Swarm2RouteImport } from './routes/swarm2'
@@ -23,13 +24,17 @@ import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as MailRouteImport } from './routes/mail'
 import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as ConductorRouteImport } from './routes/conductor'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as CaelHomeRouteImport } from './routes/cael-home'
 import { Route as AgoraRouteImport } from './routes/agora'
 import { Route as SplatRouteImport } from './routes/$'
@@ -112,6 +117,7 @@ import { Route as ApiCaelStatusRouteImport } from './routes/api/cael-status'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
+import { Route as ApiUsageLimitsRouteImport } from './routes/api/usage/limits'
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
 import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
@@ -149,6 +155,7 @@ import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/rea
 import { Route as ApiKnowledgeListRouteImport } from './routes/api/knowledge/list'
 import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/graph'
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
+import { Route as ApiIntegrationsStatusRouteImport } from './routes/api/integrations/status'
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
@@ -170,6 +177,11 @@ const WorldRoute = WorldRouteImport.update({
 const VtCapitalRoute = VtCapitalRouteImport.update({
   id: '/vt-capital',
   path: '/vt-capital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsageRoute = UsageRouteImport.update({
+  id: '/usage',
+  path: '/usage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TerminalRoute = TerminalRouteImport.update({
@@ -232,9 +244,19 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MailRoute = MailRouteImport.update({
+  id: '/mail',
+  path: '/mail',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntegrationsRoute = IntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HermesWorldRoute = HermesWorldRouteImport.update({
@@ -262,9 +284,19 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactsRoute = ContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConductorRoute = ConductorRouteImport.update({
   id: '/conductor',
   path: '/conductor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CaelHomeRoute = CaelHomeRouteImport.update({
@@ -678,6 +710,11 @@ const ApiArtifactsRoute = ApiArtifactsRouteImport.update({
   path: '/api/artifacts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiUsageLimitsRoute = ApiUsageLimitsRouteImport.update({
+  id: '/api/usage/limits',
+  path: '/api/usage/limits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiUpdateWorkspaceRoute = ApiUpdateWorkspaceRouteImport.update({
   id: '/api/update/workspace',
   path: '/api/update/workspace',
@@ -863,6 +900,11 @@ const ApiKnowledgeConfigRoute = ApiKnowledgeConfigRouteImport.update({
   path: '/api/knowledge/config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiIntegrationsStatusRoute = ApiIntegrationsStatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => ApiIntegrationsRoute,
+} as any)
 const ApiHermesworldReservationsRoute =
   ApiHermesworldReservationsRouteImport.update({
     id: '/api/hermesworld/reservations',
@@ -933,13 +975,17 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/agora': typeof AgoraRoute
   '/cael-home': typeof CaelHomeRoute
+  '/calendar': typeof CalendarRoute
   '/conductor': typeof ConductorRoute
+  '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/desktop': typeof DesktopRoute
   '/early-access': typeof EarlyAccessRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
+  '/integrations': typeof IntegrationsRoute
   '/jobs': typeof JobsRoute
+  '/mail': typeof MailRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -952,6 +998,7 @@ export interface FileRoutesByFullPath {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/usage': typeof UsageRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -978,7 +1025,7 @@ export interface FileRoutesByFullPath {
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
-  '/api/integrations': typeof ApiIntegrationsRoute
+  '/api/integrations': typeof ApiIntegrationsRouteWithChildren
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
@@ -1039,6 +1086,7 @@ export interface FileRoutesByFullPath {
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
+  '/api/integrations/status': typeof ApiIntegrationsStatusRoute
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1076,6 +1124,7 @@ export interface FileRoutesByFullPath {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/usage/limits': typeof ApiUsageLimitsRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1087,13 +1136,17 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/agora': typeof AgoraRoute
   '/cael-home': typeof CaelHomeRoute
+  '/calendar': typeof CalendarRoute
   '/conductor': typeof ConductorRoute
+  '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/desktop': typeof DesktopRoute
   '/early-access': typeof EarlyAccessRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
+  '/integrations': typeof IntegrationsRoute
   '/jobs': typeof JobsRoute
+  '/mail': typeof MailRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -1105,6 +1158,7 @@ export interface FileRoutesByTo {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/usage': typeof UsageRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -1131,7 +1185,7 @@ export interface FileRoutesByTo {
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
-  '/api/integrations': typeof ApiIntegrationsRoute
+  '/api/integrations': typeof ApiIntegrationsRouteWithChildren
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
@@ -1192,6 +1246,7 @@ export interface FileRoutesByTo {
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
+  '/api/integrations/status': typeof ApiIntegrationsStatusRoute
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1229,6 +1284,7 @@ export interface FileRoutesByTo {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/usage/limits': typeof ApiUsageLimitsRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1241,13 +1297,17 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/agora': typeof AgoraRoute
   '/cael-home': typeof CaelHomeRoute
+  '/calendar': typeof CalendarRoute
   '/conductor': typeof ConductorRoute
+  '/contacts': typeof ContactsRoute
   '/dashboard': typeof DashboardRoute
   '/desktop': typeof DesktopRoute
   '/early-access': typeof EarlyAccessRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
+  '/integrations': typeof IntegrationsRoute
   '/jobs': typeof JobsRoute
+  '/mail': typeof MailRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -1260,6 +1320,7 @@ export interface FileRoutesById {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/usage': typeof UsageRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -1286,7 +1347,7 @@ export interface FileRoutesById {
   '/api/hermes-config': typeof ApiHermesConfigRoute
   '/api/hermes-tasks': typeof ApiHermesTasksRouteWithChildren
   '/api/history': typeof ApiHistoryRoute
-  '/api/integrations': typeof ApiIntegrationsRoute
+  '/api/integrations': typeof ApiIntegrationsRouteWithChildren
   '/api/local-providers': typeof ApiLocalProvidersRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
@@ -1347,6 +1408,7 @@ export interface FileRoutesById {
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
+  '/api/integrations/status': typeof ApiIntegrationsStatusRoute
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
   '/api/knowledge/graph': typeof ApiKnowledgeGraphRoute
   '/api/knowledge/list': typeof ApiKnowledgeListRoute
@@ -1384,6 +1446,7 @@ export interface FileRoutesById {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/usage/limits': typeof ApiUsageLimitsRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1397,13 +1460,17 @@ export interface FileRouteTypes {
     | '/$'
     | '/agora'
     | '/cael-home'
+    | '/calendar'
     | '/conductor'
+    | '/contacts'
     | '/dashboard'
     | '/desktop'
     | '/early-access'
     | '/files'
     | '/hermes-world'
+    | '/integrations'
     | '/jobs'
+    | '/mail'
     | '/mcp'
     | '/memory'
     | '/operations'
@@ -1416,6 +1483,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/usage'
     | '/vt-capital'
     | '/world'
     | '/api/artifacts'
@@ -1503,6 +1571,7 @@ export interface FileRouteTypes {
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
+    | '/api/integrations/status'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1540,6 +1609,7 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/usage/limits'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1551,13 +1621,17 @@ export interface FileRouteTypes {
     | '/$'
     | '/agora'
     | '/cael-home'
+    | '/calendar'
     | '/conductor'
+    | '/contacts'
     | '/dashboard'
     | '/desktop'
     | '/early-access'
     | '/files'
     | '/hermes-world'
+    | '/integrations'
     | '/jobs'
+    | '/mail'
     | '/mcp'
     | '/memory'
     | '/operations'
@@ -1569,6 +1643,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/usage'
     | '/vt-capital'
     | '/world'
     | '/api/artifacts'
@@ -1656,6 +1731,7 @@ export interface FileRouteTypes {
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
+    | '/api/integrations/status'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1693,6 +1769,7 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/usage/limits'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1704,13 +1781,17 @@ export interface FileRouteTypes {
     | '/$'
     | '/agora'
     | '/cael-home'
+    | '/calendar'
     | '/conductor'
+    | '/contacts'
     | '/dashboard'
     | '/desktop'
     | '/early-access'
     | '/files'
     | '/hermes-world'
+    | '/integrations'
     | '/jobs'
+    | '/mail'
     | '/mcp'
     | '/memory'
     | '/operations'
@@ -1723,6 +1804,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/usage'
     | '/vt-capital'
     | '/world'
     | '/api/artifacts'
@@ -1810,6 +1892,7 @@ export interface FileRouteTypes {
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
+    | '/api/integrations/status'
     | '/api/knowledge/config'
     | '/api/knowledge/graph'
     | '/api/knowledge/list'
@@ -1847,6 +1930,7 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/usage/limits'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1859,13 +1943,17 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   AgoraRoute: typeof AgoraRoute
   CaelHomeRoute: typeof CaelHomeRoute
+  CalendarRoute: typeof CalendarRoute
   ConductorRoute: typeof ConductorRoute
+  ContactsRoute: typeof ContactsRoute
   DashboardRoute: typeof DashboardRoute
   DesktopRoute: typeof DesktopRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   FilesRoute: typeof FilesRoute
   HermesWorldRoute: typeof HermesWorldRoute
+  IntegrationsRoute: typeof IntegrationsRoute
   JobsRoute: typeof JobsRoute
+  MailRoute: typeof MailRoute
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
@@ -1878,6 +1966,7 @@ export interface RootRouteChildren {
   Swarm2Route: typeof Swarm2Route
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
+  UsageRoute: typeof UsageRoute
   VtCapitalRoute: typeof VtCapitalRoute
   WorldRoute: typeof WorldRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
@@ -1904,7 +1993,7 @@ export interface RootRouteChildren {
   ApiHermesConfigRoute: typeof ApiHermesConfigRoute
   ApiHermesTasksRoute: typeof ApiHermesTasksRouteWithChildren
   ApiHistoryRoute: typeof ApiHistoryRoute
-  ApiIntegrationsRoute: typeof ApiIntegrationsRoute
+  ApiIntegrationsRoute: typeof ApiIntegrationsRouteWithChildren
   ApiLocalProvidersRoute: typeof ApiLocalProvidersRoute
   ApiMcpRoute: typeof ApiMcpRouteWithChildren
   ApiMediaRoute: typeof ApiMediaRoute
@@ -1977,6 +2066,7 @@ export interface RootRouteChildren {
   ApiUpdateAgentRoute: typeof ApiUpdateAgentRoute
   ApiUpdateStatusRoute: typeof ApiUpdateStatusRoute
   ApiUpdateWorkspaceRoute: typeof ApiUpdateWorkspaceRoute
+  ApiUsageLimitsRoute: typeof ApiUsageLimitsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1993,6 +2083,13 @@ declare module '@tanstack/react-router' {
       path: '/vt-capital'
       fullPath: '/vt-capital'
       preLoaderRoute: typeof VtCapitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/usage': {
+      id: '/usage'
+      path: '/usage'
+      fullPath: '/usage'
+      preLoaderRoute: typeof UsageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terminal': {
@@ -2079,11 +2176,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mail': {
+      id: '/mail'
+      path: '/mail'
+      fullPath: '/mail'
+      preLoaderRoute: typeof MailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jobs': {
       id: '/jobs'
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/integrations': {
+      id: '/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof IntegrationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hermes-world': {
@@ -2121,11 +2232,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contacts': {
+      id: '/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conductor': {
       id: '/conductor'
       path: '/conductor'
       fullPath: '/conductor'
       preLoaderRoute: typeof ConductorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cael-home': {
@@ -2702,6 +2827,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiArtifactsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/usage/limits': {
+      id: '/api/usage/limits'
+      path: '/api/usage/limits'
+      fullPath: '/api/usage/limits'
+      preLoaderRoute: typeof ApiUsageLimitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/update/workspace': {
       id: '/api/update/workspace'
       path: '/api/update/workspace'
@@ -2961,6 +3093,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiKnowledgeConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/integrations/status': {
+      id: '/api/integrations/status'
+      path: '/status'
+      fullPath: '/api/integrations/status'
+      preLoaderRoute: typeof ApiIntegrationsStatusRouteImport
+      parentRoute: typeof ApiIntegrationsRoute
+    }
     '/api/hermesworld/reservations': {
       id: '/api/hermesworld/reservations'
       path: '/api/hermesworld/reservations'
@@ -3121,6 +3260,18 @@ const ApiHermesTasksRouteWithChildren = ApiHermesTasksRoute._addFileChildren(
   ApiHermesTasksRouteChildren,
 )
 
+interface ApiIntegrationsRouteChildren {
+  ApiIntegrationsStatusRoute: typeof ApiIntegrationsStatusRoute
+}
+
+const ApiIntegrationsRouteChildren: ApiIntegrationsRouteChildren = {
+  ApiIntegrationsStatusRoute: ApiIntegrationsStatusRoute,
+}
+
+const ApiIntegrationsRouteWithChildren = ApiIntegrationsRoute._addFileChildren(
+  ApiIntegrationsRouteChildren,
+)
+
 interface ApiMcpNameRouteChildren {
   ApiMcpNameLogsRoute: typeof ApiMcpNameLogsRoute
 }
@@ -3263,13 +3414,17 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   AgoraRoute: AgoraRoute,
   CaelHomeRoute: CaelHomeRoute,
+  CalendarRoute: CalendarRoute,
   ConductorRoute: ConductorRoute,
+  ContactsRoute: ContactsRoute,
   DashboardRoute: DashboardRoute,
   DesktopRoute: DesktopRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   FilesRoute: FilesRoute,
   HermesWorldRoute: HermesWorldRoute,
+  IntegrationsRoute: IntegrationsRoute,
   JobsRoute: JobsRoute,
+  MailRoute: MailRoute,
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
@@ -3282,6 +3437,7 @@ const rootRouteChildren: RootRouteChildren = {
   Swarm2Route: Swarm2Route,
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
+  UsageRoute: UsageRoute,
   VtCapitalRoute: VtCapitalRoute,
   WorldRoute: WorldRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
@@ -3308,7 +3464,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiHermesConfigRoute: ApiHermesConfigRoute,
   ApiHermesTasksRoute: ApiHermesTasksRouteWithChildren,
   ApiHistoryRoute: ApiHistoryRoute,
-  ApiIntegrationsRoute: ApiIntegrationsRoute,
+  ApiIntegrationsRoute: ApiIntegrationsRouteWithChildren,
   ApiLocalProvidersRoute: ApiLocalProvidersRoute,
   ApiMcpRoute: ApiMcpRouteWithChildren,
   ApiMediaRoute: ApiMediaRoute,
@@ -3381,6 +3537,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiUpdateAgentRoute: ApiUpdateAgentRoute,
   ApiUpdateStatusRoute: ApiUpdateStatusRoute,
   ApiUpdateWorkspaceRoute: ApiUpdateWorkspaceRoute,
+  ApiUsageLimitsRoute: ApiUsageLimitsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

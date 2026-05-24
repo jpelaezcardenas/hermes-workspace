@@ -23,6 +23,10 @@ type ProviderUsageEntry = {
   status: 'ok' | 'missing_credentials' | 'auth_expired' | 'error'
   message?: string
   plan?: string
+  caelConfigured?: boolean
+  caelDefault?: boolean
+  caelModel?: string
+  monitorKind?: 'cael' | 'external'
   lines: Array<UsageLine>
   updatedAt: number
 }
@@ -138,11 +142,20 @@ export function UsageMeterCompact() {
     (providers: ProviderUsageEntry[], preferred: string | null) => {
       if (preferred) {
         const match = providers.find(
-          (p) => p.provider === preferred && p.status === 'ok' && p.lines.length > 0,
+          (p) =>
+            p.provider === preferred &&
+            p.status === 'ok' &&
+            p.lines.length > 0 &&
+            p.caelConfigured !== false,
         )
         if (match) return match
       }
-      return providers.find((p) => p.status === 'ok' && p.lines.length > 0) ?? null
+      return (
+        providers.find((p) => p.caelDefault && p.status === 'ok' && p.lines.length > 0) ??
+        providers.find((p) => p.caelConfigured && p.status === 'ok' && p.lines.length > 0) ??
+        providers.find((p) => p.status === 'ok' && p.lines.length > 0) ??
+        null
+      )
     },
     [],
   )
@@ -183,7 +196,8 @@ export function UsageMeterCompact() {
       setProgressRows(rows)
 
       const name = primary.displayName.split(' ')[0]
-      const label = primary.plan ? `${name} ${primary.plan}` : name
+      const model = primary.caelModel ? ` · ${primary.caelModel}` : ''
+      const label = primary.plan ? `${name} ${primary.plan}${model}` : `${name}${model}`
       setProviderLabel(label.length > 14 ? name : label)
     },
     [getPrimary],

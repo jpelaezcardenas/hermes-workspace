@@ -578,6 +578,10 @@ function ChatSidebarComponent({
   const isSkillsActive = pathname === '/skills'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
+  const isMailActive = pathname === '/mail'
+  const isContactsActive = pathname === '/contacts'
+  const isCalendarActive = pathname === '/calendar'
+  const isIntegrationsActive = pathname === '/integrations'
   const isPlaygroundActive = pathname === '/playground'
   const isAgoraActive = pathname === '/agora'
   const isTerminalActive = pathname === '/terminal'
@@ -587,7 +591,7 @@ function ChatSidebarComponent({
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
-  const mainRoutes = ['/cael-home', '/chat', '/new', '/files', '/terminal']
+  const mainRoutes = ['/cael-home', '/chat', '/new', '/usage', '/mail', '/contacts', '/calendar', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
 
@@ -779,6 +783,7 @@ function ChatSidebarComponent({
   }
 
   const isDashboardActive = pathname === '/dashboard'
+  const isUsageActive = pathname === '/usage'
   const isCaelHomeActive = pathname === '/cael-home'
   const isDesktopActive = pathname === '/desktop'
 
@@ -806,12 +811,40 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
+      to: '/usage',
+      icon: DashboardSquare01Icon,
+      label: 'Usage',
+      active: isUsageActive,
+    },
+    {
+      kind: 'link',
       to: '/chat',
       icon: MessageMultiple01Icon,
       label: t('nav.chat'),
       active: isChatActive,
     },
 
+    {
+      kind: 'link',
+      to: '/mail',
+      icon: MessageMultiple01Icon,
+      label: 'Mail',
+      active: isMailActive,
+    },
+    {
+      kind: 'link',
+      to: '/contacts',
+      icon: UserMultipleIcon,
+      label: 'Contacts',
+      active: isContactsActive,
+    },
+    {
+      kind: 'link',
+      to: '/calendar',
+      icon: Clock01Icon,
+      label: 'Calendar',
+      active: isCalendarActive,
+    },
     {
       kind: 'link',
       to: '/files',
@@ -879,6 +912,13 @@ function ChatSidebarComponent({
       label: t('nav.skills'),
       active: isSkillsActive,
       dataTour: 'skills',
+    },
+    {
+      kind: 'link',
+      to: '/integrations',
+      icon: McpServerIcon,
+      label: 'Integrations',
+      active: isIntegrationsActive,
     },
     {
       kind: 'link',

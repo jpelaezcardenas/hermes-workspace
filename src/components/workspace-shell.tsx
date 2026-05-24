@@ -82,10 +82,11 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   useMobileKeyboard()
 
   const [creatingSession, setCreatingSession] = useState(false)
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(max-width: 767px)').matches
-  })
+  // Start desktop-shaped on both SSR and the first client render so React
+  // hydrates the same HTML. The effect below switches to mobile immediately
+  // after mount. Using window.matchMedia in the initializer caused iPhone
+  // hydration mismatches after the Cael mobile nav additions.
+  const [isMobile, setIsMobile] = useState(false)
 
   // Slide transition direction tracking (mobile only)
   const [slideClass, setSlideClass] = useState<string>('')
@@ -93,17 +94,11 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
 
   // Map pathname to tab index (mirrors TABS order in mobile-tab-bar)
   const getTabIndex = useCallback((path: string): number => {
-    if (path === '/dashboard') return 0
+    if (path === '/cael-home' || path === '/' || path === '/dashboard') return 0
     if (path.startsWith('/chat') || path === '/new' || path === '/') return 1
-    if (path.startsWith('/files')) return 2
+    if (path.startsWith('/usage')) return 2
     if (path.startsWith('/terminal')) return 3
-    if (path.startsWith('/jobs')) return 4
-    if (path === '/swarm' || path.startsWith('/swarm2')) return 5
-    if (path.startsWith('/memory')) return 6
-    if (path.startsWith('/skills')) return 7
-    if (path.startsWith('/mcp')) return 8
-    if (path.startsWith('/profiles')) return 9
-    if (path.startsWith('/settings')) return 10
+    if (path.startsWith('/tasks')) return 4
     return -1
   }, [])
 
@@ -114,7 +109,11 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const [connectionVerified, setConnectionVerified] = useState(false)
 
   const authState = {
-    checked: !isClient || connectionVerified,
+    // Keep SSR and the first client render identical. Rendering the app as
+    // checked on the server but unchecked on the client caused React hydration
+    // error #418 on iPhone. The startup overlay now renders consistently until
+    // the client verifies auth/connection state.
+    checked: connectionVerified,
     authenticated: authStatus?.authenticated ?? true,
     authRequired: authStatus?.authRequired ?? false,
   }
@@ -167,6 +166,13 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
 
   // Derive active session from URL
   const mobilePageTitle = (() => {
+    if (pathname.startsWith('/cael-home')) return 'Homebase'
+    if (pathname.startsWith('/desktop')) return 'Desktop App'
+    if (pathname.startsWith('/usage')) return 'Usage'
+    if (pathname.startsWith('/mail')) return 'Mail'
+    if (pathname.startsWith('/contacts')) return 'Contacts'
+    if (pathname.startsWith('/calendar')) return 'Calendar'
+    if (pathname.startsWith('/integrations')) return 'Integrations'
     if (pathname.startsWith('/terminal')) return 'Terminal'
     if (pathname.startsWith('/files')) return 'Files'
     if (pathname.startsWith('/jobs')) return 'Jobs'

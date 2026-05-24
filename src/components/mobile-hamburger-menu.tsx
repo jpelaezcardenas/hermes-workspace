@@ -43,11 +43,39 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     match: (p: string) => p.startsWith('/desktop'),
   },
   {
+    id: 'usage',
+    label: 'Usage',
+    icon: DashboardSquare01Icon,
+    to: '/usage',
+    match: (p: string) => p.startsWith('/usage'),
+  },
+  {
     id: 'chat',
     label: 'Chat',
     icon: Chat01Icon,
     to: '/chat/main',
     match: (p: string) => p.startsWith('/chat') || p === '/new' || p === '/',
+  },
+  {
+    id: 'mail',
+    label: 'Mail',
+    icon: Chat01Icon,
+    to: '/mail',
+    match: (p: string) => p.startsWith('/mail'),
+  },
+  {
+    id: 'contacts',
+    label: 'Contacts',
+    icon: UserMultipleIcon,
+    to: '/contacts',
+    match: (p: string) => p.startsWith('/contacts'),
+  },
+  {
+    id: 'calendar',
+    label: 'Calendar',
+    icon: Clock01Icon,
+    to: '/calendar',
+    match: (p: string) => p.startsWith('/calendar'),
   },
   {
     id: 'dashboard',
@@ -112,6 +140,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: PuzzleIcon,
     to: '/skills',
     match: (p: string) => p.startsWith('/skills'),
+  },
+  {
+    id: 'integrations',
+    label: 'Integrations',
+    icon: McpServerIcon,
+    to: '/integrations',
+    match: (p: string) => p.startsWith('/integrations'),
   },
   {
     id: 'mcp',

@@ -77,6 +77,13 @@ for (const [token, expiry] of Object.entries(initial.tokens)) {
   _tokens.set(token, expiry)
 }
 
+function hydratePersistedTokens(): void {
+  const persisted = loadStore()
+  for (const [token, expiry] of Object.entries(persisted.tokens)) {
+    _tokens.set(token, expiry)
+  }
+}
+
 /**
  * Prune expired tokens from the store (called on every write + a periodic sweep).
  */
@@ -119,7 +126,12 @@ export function storeSessionToken(token: string): void {
  * Check if a session token is valid and not expired.
  */
 export function isValidSessionToken(token: string): boolean {
-  const expiry = _tokens.get(token)
+  let expiry = _tokens.get(token)
+  if (expiry === undefined) {
+    hydratePersistedTokens()
+    expiry = _tokens.get(token)
+  }
+
   if (expiry === undefined) return false
   if (expiry <= Date.now()) {
     _tokens.delete(token)

@@ -56,6 +56,24 @@ type StreamChunk = {
   chunk?: string
 }
 
+function isRecoverableBrowserStreamInterruption(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+  const message = `${error.name} ${error.message}`.toLowerCase()
+  return (
+    error.name === 'AbortError' ||
+    message.includes('abort') ||
+    message.includes('cancel') ||
+    message.includes('load failed') ||
+    message.includes('network connection was lost') ||
+    message.includes('body stream') ||
+    message.includes('fetch')
+  )
+}
+
+function isAcceptedOrActivePhase(phase: StreamLifecyclePhase): boolean {
+  return phase === 'accepted' || phase === 'active' || phase === 'handoff'
+}
+
 type StepUsagePayload = {
   inputTokens?: number
   outputTokens?: number
@@ -104,8 +122,6 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
     onMessageAccepted,
     onAbort,
     onSessionResolved,
-    acceptedTimeoutMs,
-    handoffTimeoutMs,
   } = options
 
   const [state, setState] = useState<StreamingState>({
@@ -150,9 +166,6 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
   const unregisterSendStreamRun = useChatStore((s) => s.unregisterSendStreamRun)
   const processStoreEvent = useChatStore((s) => s.processEvent)
   const clearStreamingSession = useChatStore((s) => s.clearStreamingSession)
-
-  const ACCEPTED_NO_ACTIVITY_TIMEOUT_MS = acceptedTimeoutMs ?? 120_000
-  const HANDOFF_NO_ACTIVITY_TIMEOUT_MS = handoffTimeoutMs ?? 300_000
 
   const stopFrame = useCallback(() => {
     if (frameRef.current !== null) {
@@ -254,46 +267,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
   const schedulePostAcceptanceTimeout = useCallback(
     (reason: 'accepted' | 'handoff') => {
       clearHandoffTimer()
-      const timeoutMs =
-        reason === 'handoff'
-          ? HANDOFF_NO_ACTIVITY_TIMEOUT_MS
-          : ACCEPTED_NO_ACTIVITY_TIMEOUT_MS
-      handoffTimerRef.current = window.setTimeout(() => {
-        if (finishedRef.current) return
-        if (
-          lifecyclePhaseRef.current !== 'accepted' &&
-          lifecyclePhaseRef.current !== 'handoff'
-        ) {
-          return
-        }
-        if (reason === 'handoff') {
-          const store = useChatStore.getState()
-          const streamingState =
-            store.streamingState.get(activeSessionKeyRef.current) ?? null
-          const lastEventTimestamp = store.lastEventAt
-          if (
-            streamingState !== null ||
-            (lastEventTimestamp > 0 &&
-              Date.now() - lastEventTimestamp < timeoutMs)
-          ) {
-            schedulePostAcceptanceTimeout(reason)
-            return
-          }
-        }
-        const lastActivityAt =
-          lastActivityAtRef.current ?? acceptedAtRef.current
-        if (lastActivityAt && Date.now() - lastActivityAt < timeoutMs - 250) {
-          schedulePostAcceptanceTimeout(reason)
-          return
-        }
-        markFailed(
-          reason === 'handoff'
-            ? 'Run stalled after handoff'
-            : 'No activity received after message was accepted',
-        )
-      }, timeoutMs)
+      // Once the server accepts the message, the browser is only a subscriber.
+      // Mobile Safari can suspend or kill this fetch when the app loses focus;
+      // do not fail the run from client-side inactivity.
+      void reason
     },
-    [clearHandoffTimer, markFailed],
+    [clearHandoffTimer],
   )
 
   const transitionToHandoff = useCallback(() => {
@@ -456,7 +435,12 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
 
       // hb_signal/keepalive events from server: just mark activity, never let them
       // surface as user-visible thinking or tool rows.
-      if (event === 'hb_signal' || event === 'heartbeat' || event === 'keepalive' || event === 'ping') {
+      if (
+        event === 'hb_signal' ||
+        event === 'heartbeat' ||
+        event === 'keepalive' ||
+        event === 'ping'
+      ) {
         markActivity()
         return
       }
@@ -986,6 +970,15 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
           finishStream()
         }
       } catch (err) {
+        const interruptedPhase =
+          lifecyclePhaseRef.current as StreamLifecyclePhase
+        if (
+          isRecoverableBrowserStreamInterruption(err) &&
+          isAcceptedOrActivePhase(interruptedPhase)
+        ) {
+          transitionToHandoff()
+          return
+        }
         if ((err as Error).name === 'AbortError') {
           eventSourceRef.current = null
           clearHandoffTimer()
@@ -994,11 +987,6 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             ...prev,
             isStreaming: false,
           }))
-          const abortedPhase = lifecyclePhaseRef.current as StreamLifecyclePhase
-          if (abortedPhase === 'handoff') {
-            schedulePostAcceptanceTimeout('handoff')
-            return
-          }
           onAbort?.()
           return
         }

@@ -151,8 +151,10 @@ export function UpdateCenterNotifier() {
 
   useEffect(() => {
     if (!data?.pendingReleaseNotes?.length) return
-    const stored = storeNotes(data.pendingReleaseNotes)
-    if (stored) setNotes((current) => current ?? stored)
+    // Do not open release notes from passive status polling. On mobile/PWA
+    // launch this modal blocks the workspace before the user has done
+    // anything. Successful in-app updates still call setNotes from update().
+    storeNotes(data.pendingReleaseNotes)
   }, [data?.pendingReleaseNotes])
 
   const visibleProducts = useMemo(() => {

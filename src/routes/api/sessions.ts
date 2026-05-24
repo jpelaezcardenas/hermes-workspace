@@ -43,24 +43,31 @@ export const Route = createFileRoute('/api/sessions')({
           const sessions = await listSessions(50, 0)
           const gatewaySessions = sessions.map(toSessionSummary)
 
-          // Merge local portable sessions (Ollama, Atomic Chat, etc.)
-          const localSessions = listLocalSessions()
-          const gatewayIds = new Set(gatewaySessions.map((s: any) => s.key || s.id))
-          for (const ls of localSessions) {
-            if (!gatewayIds.has(ls.id)) {
-              gatewaySessions.push({
-                key: ls.id,
-                id: ls.id,
-                friendlyId: ls.id,
-                title: ls.title || 'Local Chat',
-                label: ls.title || 'Local Chat',
-                derivedTitle: ls.title || 'Local Chat',
-                startedAt: ls.createdAt,
-                updatedAt: ls.updatedAt,
-                message_count: ls.messageCount,
-                model: ls.model,
-                source: 'local',
-              } as any)
+          // Only merge Workspace-local portable sessions when there is no
+          // dashboard-backed session source. Port 3077 should show the same
+          // canonical session list as the desktop/dashboard when dashboard is
+          // available.
+          if (!capabilities.dashboard.available) {
+            const localSessions = listLocalSessions()
+            const gatewayIds = new Set(
+              gatewaySessions.map((s: any) => s.key || s.id),
+            )
+            for (const ls of localSessions) {
+              if (!gatewayIds.has(ls.id)) {
+                gatewaySessions.push({
+                  key: ls.id,
+                  id: ls.id,
+                  friendlyId: ls.id,
+                  title: ls.title || 'Local Chat',
+                  label: ls.title || 'Local Chat',
+                  derivedTitle: ls.title || 'Local Chat',
+                  startedAt: ls.createdAt,
+                  updatedAt: ls.updatedAt,
+                  message_count: ls.messageCount,
+                  model: ls.model,
+                  source: 'local',
+                } as any)
+              }
             }
           }
 
@@ -108,28 +115,6 @@ export const Route = createFileRoute('/api/sessions')({
           const requestedModel =
             typeof body.model === 'string' ? body.model.trim() : ''
           const model = requestedModel || undefined
-
-          if (capabilities.dashboard.available && !capabilities.enhancedChat) {
-            return json({
-              ok: true,
-              sessionKey: friendlyId,
-              friendlyId,
-              entry: {
-                key: friendlyId,
-                id: friendlyId,
-                title: label || friendlyId,
-                label: label || friendlyId,
-                derivedTitle: label || friendlyId,
-                model: model || '',
-                startedAt: Date.now(),
-                updatedAt: Date.now(),
-                message_count: 0,
-                source: 'dashboard',
-              },
-              modelApplied: Boolean(model),
-              persisted: false,
-            })
-          }
 
           const session = await createSession({
             id: friendlyId || randomUUID(),
@@ -222,22 +207,6 @@ export const Route = createFileRoute('/api/sessions')({
               },
               updated: true,
               source: 'local',
-            })
-          }
-
-          if (capabilities.dashboard.available && !capabilities.enhancedChat) {
-            return json({
-              ok: true,
-              sessionKey,
-              entry: {
-                key: sessionKey,
-                id: sessionKey,
-                title: label || sessionKey,
-                label: label || sessionKey,
-                derivedTitle: label || sessionKey,
-                updatedAt: Date.now(),
-              },
-              updated: false,
             })
           }
 

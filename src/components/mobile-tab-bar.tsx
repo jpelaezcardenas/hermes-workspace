@@ -47,11 +47,11 @@ type TabItem = {
 
 export const MOBILE_NAV_TABS: Array<TabItem> = [
   {
-    id: 'dashboard',
+    id: 'homebase',
     label: 'Home',
     icon: DashboardSquare01Icon,
-    to: '/dashboard',
-    match: (p) => p === '/dashboard',
+    to: '/cael-home',
+    match: (p) => p === '/cael-home' || p === '/' || p === '/dashboard',
   },
   {
     id: 'chat',
@@ -61,18 +61,11 @@ export const MOBILE_NAV_TABS: Array<TabItem> = [
     match: (p) => p.startsWith('/chat') || p === '/new',
   },
   {
-    id: 'playground',
-    label: 'Play',
-    icon: Rocket01Icon,
-    to: '/playground',
-    match: (p) => p.startsWith('/playground'),
-  },
-  {
-    id: 'files',
-    label: 'Files',
-    icon: File01Icon,
-    to: '/files',
-    match: (p) => p.startsWith('/files'),
+    id: 'usage',
+    label: 'Usage',
+    icon: DashboardSquare01Icon,
+    to: '/usage',
+    match: (p) => p.startsWith('/usage'),
   },
   {
     id: 'terminal',
@@ -82,54 +75,11 @@ export const MOBILE_NAV_TABS: Array<TabItem> = [
     match: (p) => p.startsWith('/terminal'),
   },
   {
-    id: 'jobs',
-    label: 'Jobs',
+    id: 'tasks',
+    label: 'Tasks',
     icon: Clock01Icon,
-    to: '/jobs',
-    match: (p) => p.startsWith('/jobs'),
-  },
-  {
-    id: 'swarm',
-    label: 'Swarm',
-    icon: UserGroupIcon,
-    to: '/swarm',
-    match: (p) => p === '/swarm' || p.startsWith('/swarm2'),
-  },
-
-  {
-    id: 'memory',
-    label: 'Memory',
-    icon: BrainIcon,
-    to: '/memory',
-    match: (p) => p.startsWith('/memory'),
-  },
-  {
-    id: 'skills',
-    label: 'Skills',
-    icon: PuzzleIcon,
-    to: '/skills',
-    match: (p) => p.startsWith('/skills'),
-  },
-  {
-    id: 'mcp',
-    label: 'MCP',
-    icon: McpServerIcon,
-    to: '/mcp',
-    match: (p) => p.startsWith('/mcp'),
-  },
-  {
-    id: 'profiles',
-    label: 'Profiles',
-    icon: UserGroupIcon,
-    to: '/profiles',
-    match: (p) => p.startsWith('/profiles'),
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    icon: Settings01Icon,
-    to: '/settings',
-    match: (p) => p.startsWith('/settings'),
+    to: '/tasks',
+    match: (p) => p.startsWith('/tasks'),
   },
 ]
 
@@ -253,8 +203,8 @@ export function MobileTabBar() {
       <nav
         ref={navRef}
         className={cn(
-          // Pill: fixed bottom center, shrink to content width
-          'fixed bottom-0 left-0 right-0 mx-auto w-fit z-[80] md:hidden',
+          // Pill: fixed bottom center. Keep it within viewport on iPhone.
+          'fixed bottom-0 left-3 right-3 mx-auto max-w-[calc(100vw-1.5rem)] w-fit z-[80] md:hidden',
           // Vertical position: above home indicator
           'mb-[max(env(safe-area-inset-bottom,8px),16px)]',
           // Keep the pill visually isolated from page and error-state backgrounds
@@ -275,7 +225,7 @@ export function MobileTabBar() {
         onTouchMove={handlePillTouchMove}
         onTouchEnd={handlePillTouchEnd}
       >
-        <div className="flex items-center gap-1">
+        <div className="flex items-center justify-center gap-1">
           {MOBILE_NAV_TABS.map((tab, idx) => {
             const isActive = tab.match(pathname)
             const isCenter = tab.id === 'chat'

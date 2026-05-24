@@ -52,6 +52,10 @@ type ProviderUsage = {
   status: 'ok' | 'missing_credentials' | 'auth_expired' | 'error'
   message?: string
   plan?: string
+  caelConfigured?: boolean
+  caelDefault?: boolean
+  caelModel?: string
+  monitorKind?: 'cael' | 'external'
   lines: UsageLine[]
   updatedAt: number
 }
@@ -495,7 +499,8 @@ export function UsageDetailsModal({
                 </div>
               ) : (
                 providerUsage.map((provider) => {
-                  const isDefault = preferredProvider === provider.provider
+                  const isDefault =
+                    provider.caelDefault || preferredProvider === provider.provider
 
                   return (
                     <div
@@ -518,7 +523,17 @@ export function UsageDetailsModal({
                           ) : null}
                           {isDefault ? (
                             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
-                              ⭐ Default
+                              Cael Default
+                            </span>
+                          ) : null}
+                          {!isDefault && provider.caelConfigured ? (
+                            <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+                              Cael Fallback
+                            </span>
+                          ) : null}
+                          {provider.caelModel ? (
+                            <span className="rounded-full bg-primary-100 px-2 py-0.5 text-[10px] font-medium text-primary-700">
+                              {provider.caelModel}
                             </span>
                           ) : null}
                         </div>
@@ -555,7 +570,7 @@ export function UsageDetailsModal({
                         <>
                           <div className="mt-3 flex items-center justify-between gap-2">
                             <div className="flex-1"></div>
-                            {!isDefault ? (
+                            {!isDefault && provider.caelConfigured ? (
                               <button
                                 type="button"
                                 onClick={() =>

@@ -140,6 +140,10 @@ type ProviderUsageEntry = {
   status: 'ok' | 'missing_credentials' | 'auth_expired' | 'error'
   message?: string
   plan?: string
+  caelConfigured?: boolean
+  caelDefault?: boolean
+  caelModel?: string
+  monitorKind?: 'cael' | 'external'
   lines: Array<UsageLine>
   updatedAt: number
 }
@@ -631,11 +635,16 @@ export function UsageMeter({ visible = true }: { visible?: boolean }) {
         (p) =>
           p.provider === preferredProvider &&
           p.status === 'ok' &&
-          p.lines.length > 0,
+          p.lines.length > 0 &&
+          p.caelConfigured !== false,
       )
       if (preferred) return preferred
     }
-    return providerUsage.find((p) => p.status === 'ok' && p.lines.length > 0)
+    return (
+      providerUsage.find((p) => p.caelDefault && p.status === 'ok' && p.lines.length > 0) ??
+      providerUsage.find((p) => p.caelConfigured && p.status === 'ok' && p.lines.length > 0) ??
+      providerUsage.find((p) => p.status === 'ok' && p.lines.length > 0)
+    )
   }, [providerUsage, preferredProvider])
   const providerProgressLines =
     primaryProvider?.lines.filter((l) => l.type === 'progress') ?? []

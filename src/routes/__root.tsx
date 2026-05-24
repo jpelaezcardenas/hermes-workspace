@@ -415,8 +415,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           }}
         />
       </head>
-      <body>
-        <div id="splash-screen" aria-hidden="true" style={{ display: 'none' }} />
+      <body suppressHydrationWarning>
+        <div
+          id="splash-screen"
+          aria-hidden="true"
+          suppressHydrationWarning
+          style={{ display: 'none' }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: wrapInlineScript(`

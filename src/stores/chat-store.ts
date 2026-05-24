@@ -241,7 +241,6 @@ export function clearRecoveryMessage(sessionKey: string): void {
   sessionStorage.removeItem(`${RECOVERY_MSG_PREFIX}${sessionKey}`)
 }
 
-const WAITING_TTL_MS = 120_000
 const WAITING_STORAGE_PREFIX = 'claude_waiting_'
 
 function persistWaitingState(
@@ -268,17 +267,13 @@ function restoreWaitingSessions(): {
   const meta: Record<string, { since: number; runId: string | null }> = {}
   if (typeof sessionStorage === 'undefined') return { keys, meta }
 
-  const now = Date.now()
   for (let i = sessionStorage.length - 1; i >= 0; i--) {
     const storageKey = sessionStorage.key(i)
     if (!storageKey || !storageKey.startsWith(WAITING_STORAGE_PREFIX)) continue
     const sessionKey = storageKey.slice(WAITING_STORAGE_PREFIX.length)
     try {
       const parsed = JSON.parse(sessionStorage.getItem(storageKey) ?? '')
-      if (
-        typeof parsed.since === 'number' &&
-        now - parsed.since < WAITING_TTL_MS
-      ) {
+      if (typeof parsed.since === 'number') {
         keys.add(sessionKey)
         meta[sessionKey] = {
           since: parsed.since,

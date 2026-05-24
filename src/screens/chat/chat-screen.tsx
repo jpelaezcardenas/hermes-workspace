@@ -1,7 +1,9 @@
 // Module-level local model override — set by composer when user picks a local model
 // Avoids prop threading. Reset when switching back to cloud models.
 export let _localModelOverride = ''
-export function setLocalModelOverride(model: string) { _localModelOverride = model }
+export function setLocalModelOverride(model: string) {
+  _localModelOverride = model
+}
 
 import {
   useCallback,
@@ -105,7 +107,10 @@ import { useResearchCard } from '@/hooks/use-research-card'
 // MOBILE_TAB_BAR_OFFSET removed — tab bar always hidden in chat
 import { useTapDebug } from '@/hooks/use-tap-debug'
 import { useChatMode } from '@/hooks/use-chat-mode'
-import { useChatActivityStore, type AgentActivity } from '@/stores/chat-activity-store'
+import {
+  useChatActivityStore,
+  type AgentActivity,
+} from '@/stores/chat-activity-store'
 
 type ChatScreenProps = {
   activeFriendlyId: string
@@ -633,7 +638,8 @@ export function ChatScreen({
   // If so, re-set waitingForResponse in the store so the UI shows the spinner.
   useActiveRunCheck({
     sessionKey: resolvedSessionKey ?? '',
-    enabled: !isNewChat && Boolean(resolvedSessionKey) && historyQuery.isSuccess,
+    enabled:
+      !isNewChat && Boolean(resolvedSessionKey) && historyQuery.isSuccess,
     onCheckComplete: useCallback(() => {
       setActiveRunCheckDone(true)
     }, []),
@@ -659,9 +665,9 @@ export function ChatScreen({
       : isNewChat
         ? 'new'
         : resolvedSessionKey ||
-        sessionKeyForHistory ||
-        activeCanonicalKey ||
-        'main',
+          sessionKeyForHistory ||
+          activeCanonicalKey ||
+          'main',
     friendlyId: portableChatFriendlyId,
     historyMessages,
     portableMode: isPortableMode,
@@ -693,7 +699,9 @@ export function ChatScreen({
       if (
         approvalId &&
         currentApprovals.some((entry) => {
-          return entry.status === 'pending' && entry.gatewayApprovalId === approvalId
+          return (
+            entry.status === 'pending' && entry.gatewayApprovalId === approvalId
+          )
         })
       ) {
         setPendingApprovals(
@@ -949,8 +957,14 @@ export function ChatScreen({
         if (!res.ok) return
         const data = await res.json()
         if (!data.ok) return
-        // Run not yet registered (gateway lag during silent processing) → keep waiting
-        if (!data.run) return
+        // No active run means the server either completed while this browser
+        // was disconnected or the persisted waiting state is stale. Clear the
+        // spinner and refetch history so mobile focus loss can recover.
+        if (!data.run) {
+          streamFinish()
+          refreshHistoryRef.current()
+          return
+        }
         // Treat unknown / transient statuses as still-active to avoid premature teardown
         if (isTerminalActiveRunStatus(data.run.status)) {
           streamFinish()
@@ -993,7 +1007,8 @@ export function ChatScreen({
     ],
     queryFn: async () => {
       try {
-        const statusSessionKey = resolvedSessionKey || activeFriendlyId || 'main'
+        const statusSessionKey =
+          resolvedSessionKey || activeFriendlyId || 'main'
         const query = statusSessionKey
           ? `?sessionKey=${encodeURIComponent(statusSessionKey)}`
           : ''
@@ -1254,10 +1269,12 @@ export function ChatScreen({
     activeRealtimeStreamingText,
     activeIsRealtimeStreaming,
   )
-  const stickyStreamingTextRef = useRef<{ runId: string | null; text: string }>({
-    runId: null,
-    text: '',
-  })
+  const stickyStreamingTextRef = useRef<{ runId: string | null; text: string }>(
+    {
+      runId: null,
+      text: '',
+    },
+  )
   stickyStreamingTextRef.current = advanceStickyStreamingText({
     isStreaming: activeIsRealtimeStreaming,
     runId: streamingRunId ?? null,
@@ -1522,9 +1539,9 @@ export function ChatScreen({
   }, [suggestion, resolvedSessionKey, dismiss])
 
   // Sync chat activity to global store for sidebar orchestrator avatar
-  const setLocalActivity = useChatActivityStore(
-    (s) => s.setLocalActivity,
-  ) as (next: AgentActivity) => void
+  const setLocalActivity = useChatActivityStore((s) => s.setLocalActivity) as (
+    next: AgentActivity,
+  ) => void
   useEffect(() => {
     if (liveToolActivity.length > 0) {
       setLocalActivity('tool-use')
@@ -1836,8 +1853,17 @@ export function ChatScreen({
         .filter((a) => {
           const mime =
             normalizeMimeType(a.contentType ?? '') ||
-            readDataUrlMimeType(a.dataUrl ?? '')
-          return !isImageMimeType(mime) && (a.dataUrl ?? '').length > 0
+            readDataUrlMimeType(a.dataUrl ?? '') ||
+            ''
+          return (
+            !isImageMimeType(mime) &&
+            (mime.startsWith('text/') ||
+              mime === 'application/json' ||
+              mime === 'application/xml' ||
+              mime === 'application/yaml' ||
+              mime === 'application/x-yaml') &&
+            (a.dataUrl ?? '').length > 0
+          )
         })
         .map((a) => {
           const raw = a.dataUrl ?? ''
@@ -1881,14 +1907,13 @@ export function ChatScreen({
         clientId: optimisticClientId,
       }
 
-      // Failsafe: clear waitingForResponse after 120s no matter what
-      // Prevents infinite spinner if SSE/idle detection both fail
+      // Server-side runs are fire-and-forget. The browser may lose focus or be
+      // suspended on mobile, so only completion/history/active-run checks clear
+      // waiting state.
       if (failsafeTimerRef.current) {
         window.clearTimeout(failsafeTimerRef.current)
+        failsafeTimerRef.current = null
       }
-      failsafeTimerRef.current = window.setTimeout(() => {
-        streamFinish()
-      }, 120_000)
 
       // Send a compatibility shape for attachment parsing.
       // Different server/channel versions read different keys.

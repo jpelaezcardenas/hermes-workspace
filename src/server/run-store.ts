@@ -2,6 +2,7 @@ import { mkdir, readFile, readdir, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { getHermesRoot } from './claude-paths'
+import { hasActiveSendRun } from './send-run-tracker'
 
 export type PersistedRunToolCall = {
   id: string
@@ -231,6 +232,7 @@ export async function getActiveRunForSession(
     const candidates = runs
       .filter((run): run is PersistedRunState => Boolean(run))
       .filter((run) => !['complete', 'error'].includes(run.status))
+      .filter((run) => hasActiveSendRun(run.runId))
       .sort((a, b) => b.updatedAt - a.updatedAt)
     return candidates[0] ?? null
   } catch {

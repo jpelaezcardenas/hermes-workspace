@@ -118,6 +118,11 @@ export const Route = createFileRoute('/api/cael-status')({
             services,
             links: [
               { label: 'Desktop App', href: '/desktop', description: 'Download/install the native macOS Cael companion.' },
+              { label: 'Usage', href: '/usage', description: 'Provider remaining limits, reset windows, credits, and freshness.' },
+              { label: 'Mail', href: '/mail', description: 'Read/search inbox, summarize threads, and draft replies safely.' },
+              { label: 'Contacts', href: '/contacts', description: 'Manage Twenty legacy + Google People contacts read-only first.' },
+              { label: 'Calendar', href: '/calendar', description: 'Agenda, daily brief, and approval-gated scheduling.' },
+              { label: 'Integrations', href: '/integrations', description: 'Check Google, Vaultwarden, and Twenty migration readiness.' },
               { label: 'Chat', href: '/chat', description: 'Talk to Cael through Hermes Agent.' },
               { label: 'Conductor', href: '/conductor', description: 'Dispatch mission-style autonomous work.' },
               { label: 'Operations', href: '/operations', description: 'Inspect agent/worker operations.' },
