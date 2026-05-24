@@ -1,6 +1,11 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { usePageTitle } from '@/hooks/use-page-title'
+import {
+  readCommandCenterSummaryCache,
+  writeCommandCenterSummaryCache,
+} from '@/lib/command-center-summary-cache'
 
 type ServiceCheck = {
   id: string
@@ -40,6 +45,10 @@ type CaelStatusResponse = {
 
 type N8nInstanceId = 'personal-bigmac' | 'business-devserver'
 
+type CommandCenterSummaryCacheMeta = {
+  cachedAt: string
+  fromCache: boolean
+}
 
 type CommandCenterSummaryEnvelope = {
   ok: boolean
@@ -49,10 +58,18 @@ type CommandCenterSummaryEnvelope = {
   data: CommandCenterSummary | null
   warnings: string[]
   errors: string[]
+  cacheMeta?: CommandCenterSummaryCacheMeta
 }
 
 type CommandCenterSummary = {
   version: string
+  posture: {
+    host: string
+    bind: string
+    remoteAccess: string
+    auth: string
+    publicInternet: string
+  } | null
   nowNext: Array<{
     id: string
     label: string
@@ -176,6 +193,31 @@ async function fetchN8nGovernance(): Promise<N8nGovernanceResponse> {
   return response.json()
 }
 
+function getBrowserStorage(): Storage | null {
+  if (typeof window === 'undefined') return null
+  return window.localStorage
+}
+
+function withCacheMeta(
+  envelope: CommandCenterSummaryEnvelope,
+  cacheMeta: CommandCenterSummaryCacheMeta,
+): CommandCenterSummaryEnvelope {
+  return { ...envelope, cacheMeta }
+}
+
+function readCachedCommandCenterSummary():
+  | CommandCenterSummaryEnvelope
+  | undefined {
+  const cached =
+    readCommandCenterSummaryCache<CommandCenterSummaryEnvelope>(
+      getBrowserStorage(),
+    )
+  if (!cached) return undefined
+  return withCacheMeta(cached.envelope, {
+    cachedAt: cached.cachedAt,
+    fromCache: true,
+  })
+}
 
 async function fetchCommandCenterSummary(): Promise<CommandCenterSummaryEnvelope> {
   const response = await fetch('/api/command-center/summary', {
@@ -183,7 +225,12 @@ async function fetchCommandCenterSummary(): Promise<CommandCenterSummaryEnvelope
   })
   if (!response.ok)
     throw new Error(`Command center summary failed: HTTP ${response.status}`)
-  return response.json()
+  const envelope = (await response.json()) as CommandCenterSummaryEnvelope
+  const cached = writeCommandCenterSummaryCache(getBrowserStorage(), envelope)
+  return withCacheMeta(envelope, {
+    cachedAt: cached?.cachedAt ?? envelope.generatedAt,
+    fromCache: false,
+  })
 }
 
 export const Route = createFileRoute('/cael-home')({
@@ -248,6 +295,7 @@ function LanePill({ lane }: { lane: ServiceCheck['lane'] }) {
 
 function CaelHomeRoute() {
   usePageTitle('Cael Homebase')
+  const initialCommandSummary = useMemo(readCachedCommandCenterSummary, [])
   const { data, error, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['cael-status'],
     queryFn: fetchStatus,
@@ -273,8 +321,14 @@ function CaelHomeRoute() {
   } = useQuery({
     queryKey: ['command-center-summary'],
     queryFn: fetchCommandCenterSummary,
+    initialData: initialCommandSummary,
+    initialDataUpdatedAt: initialCommandSummary?.cacheMeta?.cachedAt
+      ? Date.parse(initialCommandSummary.cacheMeta.cachedAt)
+      : undefined,
+    staleTime: 15_000,
     refetchInterval: 30_000,
   })
+  const commandCenterOk = commandSummary?.ok ?? data?.ok
 
   return (
     <main className="h-full overflow-y-auto bg-[var(--theme-bg)] text-[var(--theme-text)]">
@@ -296,17 +350,23 @@ function CaelHomeRoute() {
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
-              {data ? <StatusPill ok={data.ok} /> : null}
+              {typeof commandCenterOk === 'boolean' ? (
+                <StatusPill ok={commandCenterOk} />
+              ) : null}
               <button
                 className="rounded-xl border border-[var(--theme-border)] px-4 py-2 text-sm hover:bg-white/5 disabled:opacity-50"
-                disabled={isFetching || isN8nFetching || isCommandSummaryFetching}
+                disabled={
+                  isFetching || isN8nFetching || isCommandSummaryFetching
+                }
                 onClick={() => {
                   void refetch()
                   void refetchN8n()
                   void refetchCommandSummary()
                 }}
               >
-                {isFetching || isN8nFetching || isCommandSummaryFetching ? 'Refreshing...' : 'Refresh status'}
+                {isFetching || isN8nFetching || isCommandSummaryFetching
+                  ? 'Refreshing...'
+                  : 'Refresh command center'}
               </button>
             </div>
           </div>
@@ -316,37 +376,21 @@ function CaelHomeRoute() {
           envelope={commandSummary}
           error={commandSummaryError}
           isLoading={commandSummaryLoading}
+          isFetching={isCommandSummaryFetching}
         />
 
-        {isLoading ? (
+        <CommandCenterPostureGrid envelope={commandSummary} fallback={data} />
+
+        {isLoading && !commandSummary?.data ? (
           <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 text-sm text-[var(--theme-muted)]">
             Loading Cael status…
           </div>
-        ) : error ? (
+        ) : error && !commandSummary?.data ? (
           <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-sm text-rose-200">
             {error instanceof Error ? error.message : String(error)}
           </div>
         ) : data ? (
           <>
-            <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <InfoCard
-                title="Host"
-                value={data.host}
-                sub="BigMac is the personal runtime host."
-              />
-              <InfoCard
-                title="Bind"
-                value={data.posture.bind}
-                sub="Tailscale mesh surface."
-              />
-              <InfoCard
-                title="Internet"
-                value={data.posture.publicInternet}
-                sub="No public tunnel/funnel."
-              />
-              <InfoCard title="Auth" value="enabled" sub={data.posture.auth} />
-            </section>
-
             <section className="grid gap-4 lg:grid-cols-3">
               <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 lg:col-span-2">
                 <div className="mb-4 flex items-center justify-between">
@@ -460,18 +504,19 @@ function CaelHomeRoute() {
   )
 }
 
-
 function CommandCenterSummaryPanel({
   envelope,
   error,
   isLoading,
+  isFetching,
 }: {
   envelope?: CommandCenterSummaryEnvelope
   error: Error | null
   isLoading: boolean
+  isFetching: boolean
 }) {
   const summary = envelope?.data
-  if (isLoading) {
+  if (isLoading && !summary) {
     return (
       <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 text-sm text-[var(--theme-muted)]">
         Loading command center summary...
@@ -479,7 +524,7 @@ function CommandCenterSummaryPanel({
     )
   }
 
-  if (error) {
+  if (error && !summary) {
     return (
       <section className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5 text-sm text-rose-200">
         {error.message}
@@ -489,12 +534,19 @@ function CommandCenterSummaryPanel({
 
   if (!summary) return null
 
-  const activeProviders = summary.usage?.providers.filter(
-    (provider) => provider.monitorKind === 'cael' || provider.caelDefault,
-  ) ?? []
-  const availableBrainSources = summary.brain?.sources.filter(
-    (source) => source.status === 'available',
-  ).length ?? 0
+  const updatedAt = envelope?.cacheMeta?.cachedAt ?? envelope?.generatedAt
+  const updatedLabel = updatedAt
+    ? new Date(updatedAt).toLocaleTimeString()
+    : 'unknown'
+  const isCached = Boolean(envelope?.cacheMeta?.fromCache)
+
+  const activeProviders =
+    summary.usage?.providers.filter(
+      (provider) => provider.monitorKind === 'cael' || provider.caelDefault,
+    ) ?? []
+  const availableBrainSources =
+    summary.brain?.sources.filter((source) => source.status === 'available')
+      .length ?? 0
 
   return (
     <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6">
@@ -503,16 +555,35 @@ function CommandCenterSummaryPanel({
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--theme-muted)]">
             Shared Command Center API
           </p>
-          <h2 className="mt-2 text-2xl font-semibold">Now, gates, receipts, and limits</h2>
+          <h2 className="mt-2 text-2xl font-semibold">
+            Now, gates, receipts, and limits
+          </h2>
           <p className="mt-2 text-sm text-[var(--theme-muted)]">
-            {envelope?.source} - {summary.version} - {new Date(envelope?.generatedAt ?? summary.version).toLocaleTimeString()}
+            {envelope?.source} - {summary.version} -{' '}
+            {isCached ? 'last known' : 'live'} {updatedLabel}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <StatusPill ok={Boolean(envelope?.ok)} />
+          {isCached ? (
+            <span className="rounded-full bg-sky-500/15 px-2.5 py-1 text-xs font-semibold text-sky-200 ring-1 ring-sky-400/30">
+              Last known
+            </span>
+          ) : null}
+          {isFetching ? (
+            <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-[var(--theme-muted)] ring-1 ring-white/10">
+              Refreshing
+            </span>
+          ) : null}
+          {error ? (
+            <span className="rounded-full bg-rose-500/15 px-2.5 py-1 text-xs font-semibold text-rose-200 ring-1 ring-rose-400/30">
+              Refresh failed
+            </span>
+          ) : null}
           {envelope?.warnings.length ? (
             <span className="rounded-full bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-200 ring-1 ring-amber-400/30">
-              {envelope.warnings.length} warning{envelope.warnings.length === 1 ? '' : 's'}
+              {envelope.warnings.length} warning
+              {envelope.warnings.length === 1 ? '' : 's'}
             </span>
           ) : null}
         </div>
@@ -521,9 +592,14 @@ function CommandCenterSummaryPanel({
       <div className="mt-5 grid gap-4 xl:grid-cols-4">
         <SummaryColumn title="Now / Next">
           {summary.nowNext.slice(0, 5).map((item) => (
-            <div key={item.id} className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+            <div
+              key={item.id}
+              className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+            >
               <div className="text-sm font-semibold">{item.label}</div>
-              <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">{item.detail}</p>
+              <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
+                {item.detail}
+              </p>
             </div>
           ))}
         </SummaryColumn>
@@ -531,12 +607,20 @@ function CommandCenterSummaryPanel({
         <SummaryColumn title="Action Gates">
           {summary.actionGates.length ? (
             summary.actionGates.slice(0, 4).map((gate) => (
-              <div key={gate.id} className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+              <div
+                key={gate.id}
+                className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+              >
                 <div className="flex items-start justify-between gap-2">
                   <div className="text-sm font-semibold">{gate.label}</div>
-                  <RiskPill risk={gate.riskLevel} gated={gate.approvalRequired} />
+                  <RiskPill
+                    risk={gate.riskLevel}
+                    gated={gate.approvalRequired}
+                  />
                 </div>
-                <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">{gate.detail}</p>
+                <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
+                  {gate.detail}
+                </p>
               </div>
             ))
           ) : (
@@ -547,10 +631,16 @@ function CommandCenterSummaryPanel({
         <SummaryColumn title="Receipts">
           {summary.agentRuns.length ? (
             summary.agentRuns.slice(0, 4).map((run) => (
-              <div key={run.id} className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+              <div
+                key={run.id}
+                className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+              >
                 <div className="text-sm font-semibold">{run.title}</div>
                 <p className="mt-2 text-xs text-[var(--theme-muted)]">
-                  {run.status} - {run.updatedAt ? new Date(run.updatedAt).toLocaleString() : 'unknown'}
+                  {run.status} -{' '}
+                  {run.updatedAt
+                    ? new Date(run.updatedAt).toLocaleString()
+                    : 'unknown'}
                 </p>
               </div>
             ))
@@ -562,15 +652,19 @@ function CommandCenterSummaryPanel({
         <SummaryColumn title="Models + Brain">
           <div className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
             <div className="text-sm font-semibold">
-              {activeProviders.length} Cael model monitor{activeProviders.length === 1 ? '' : 's'}
+              {activeProviders.length} Cael model monitor
+              {activeProviders.length === 1 ? '' : 's'}
             </div>
             <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
-              {activeProviders.map((provider) => provider.caelModel || provider.label).join(', ') || 'No active model monitors reported.'}
+              {activeProviders
+                .map((provider) => provider.caelModel || provider.label)
+                .join(', ') || 'No active model monitors reported.'}
             </p>
           </div>
           <div className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
             <div className="text-sm font-semibold">
-              {availableBrainSources} available brain source{availableBrainSources === 1 ? '' : 's'}
+              {availableBrainSources} available brain source
+              {availableBrainSources === 1 ? '' : 's'}
             </div>
             <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
               References only; secret and runtime stores remain filtered.
@@ -578,6 +672,43 @@ function CommandCenterSummaryPanel({
           </div>
         </SummaryColumn>
       </div>
+    </section>
+  )
+}
+
+function CommandCenterPostureGrid({
+  envelope,
+  fallback,
+}: {
+  envelope?: CommandCenterSummaryEnvelope
+  fallback?: CaelStatusResponse
+}) {
+  const posture = envelope?.data?.posture ?? fallback?.posture
+  const host = envelope?.data?.posture?.host ?? fallback?.host
+  if (!posture || !host) return null
+
+  return (
+    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <InfoCard
+        title="Host"
+        value={host}
+        sub="BigMac is the personal runtime host."
+      />
+      <InfoCard
+        title="Bind"
+        value={posture.bind}
+        sub="Tailscale mesh surface."
+      />
+      <InfoCard
+        title="Internet"
+        value={posture.publicInternet}
+        sub="No public tunnel/funnel."
+      />
+      <InfoCard
+        title="Auth"
+        value={posture.auth}
+        sub="Workspace authentication posture."
+      />
     </section>
   )
 }
