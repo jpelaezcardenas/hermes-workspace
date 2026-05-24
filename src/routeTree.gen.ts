@@ -26,6 +26,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
+import { Route as EchoStudioRouteImport } from './routes/echo-studio'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
@@ -242,6 +243,11 @@ const HermesWorldRoute = HermesWorldRouteImport.update({
 const FilesRoute = FilesRouteImport.update({
   id: '/files',
   path: '/files',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EchoStudioRoute = EchoStudioRouteImport.update({
+  id: '/echo-studio',
+  path: '/echo-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EarlyAccessRoute = EarlyAccessRouteImport.update({
@@ -917,6 +923,7 @@ export interface FileRoutesByFullPath {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/echo-studio': typeof EchoStudioRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -1068,6 +1075,7 @@ export interface FileRoutesByTo {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/echo-studio': typeof EchoStudioRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -1219,6 +1227,7 @@ export interface FileRoutesById {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/echo-studio': typeof EchoStudioRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -1372,6 +1381,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/echo-studio'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1523,6 +1533,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/echo-studio'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1673,6 +1684,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/echo-studio'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1825,6 +1837,7 @@ export interface RootRouteChildren {
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
+  EchoStudioRoute: typeof EchoStudioRoute
   FilesRoute: typeof FilesRoute
   HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
@@ -2059,6 +2072,13 @@ declare module '@tanstack/react-router' {
       path: '/files'
       fullPath: '/files'
       preLoaderRoute: typeof FilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/echo-studio': {
+      id: '/echo-studio'
+      path: '/echo-studio'
+      fullPath: '/echo-studio'
+      preLoaderRoute: typeof EchoStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/early-access': {
@@ -3205,6 +3225,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
+  EchoStudioRoute: EchoStudioRoute,
   FilesRoute: FilesRoute,
   HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
