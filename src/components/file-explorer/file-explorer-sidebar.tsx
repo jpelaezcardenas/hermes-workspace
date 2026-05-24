@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
+  ArrowMoveRightDownIcon,
   ArrowRight01Icon,
   Delete01Icon,
-  Download01Icon,
   File01Icon,
   Folder01Icon,
   Image01Icon,
   Pen01Icon,
   PlusSignIcon,
   RefreshIcon,
+  Sorting01Icon,
+  SortingAZ01Icon,
+  SortingZA01Icon,
   Upload01Icon,
 } from '@hugeicons/core-free-icons'
 import FilePreviewDialog from './file-preview-dialog'
@@ -39,6 +43,7 @@ export type FileEntry = {
 
 type FileExplorerSidebarProps = {
   collapsed: boolean
+  width?: number
   onToggle: () => void
   onInsertReference: (reference: string) => void
   hidden?: boolean
@@ -49,15 +54,39 @@ type ContextMenuState = {
   x: number
   y: number
   entry: FileEntry
+  entries: Array<FileEntry>
 }
 
 type PromptState = {
-  mode: 'rename' | 'new-file' | 'new-folder'
+  mode: 'rename' | 'new-file' | 'new-folder' | 'move'
   targetPath: string
+  targetPaths?: Array<string>
   defaultValue?: string
 }
 
+type SortMode = 'none' | 'asc' | 'desc'
+
+type VisibleEntry = {
+  entry: FileEntry
+  depth: number
+}
+
+type ContextMenuProps = {
+  contextMenu: ContextMenuState
+  onOpenEntry: (entry: FileEntry) => void
+  onRename: (entry: FileEntry) => void
+  onMove: (entries: Array<FileEntry>) => void
+  onDelete: (entries: Array<FileEntry>) => void
+  onClose: () => void
+}
+
 const ROOT_LABEL = 'Workspace'
+const SORT_STORAGE_KEY = 'hermes.files.sortMode'
+const sortModes: Array<SortMode> = ['none', 'asc', 'desc']
+const fileNameCollator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: 'base',
+})
 
 function isImageFile(fileName: string) {
   const ext = fileName.split('.').pop()?.toLowerCase() || ''
@@ -81,9 +110,73 @@ function getParentPath(pathValue: string) {
   return parts.slice(0, -1).join('/')
 }
 
+function getBaseName(pathValue: string) {
+  const normalized = normalizePath(pathValue)
+  return normalized.split('/').filter(Boolean).at(-1) || normalized
+}
+
 function buildReference(pathValue: string) {
   const normalized = normalizePath(pathValue)
   return `See file: workspace/${normalized}`
+}
+
+function getInitialSortMode(): SortMode {
+  if (typeof window === 'undefined') return 'none'
+  const saved = window.localStorage.getItem(SORT_STORAGE_KEY)
+  return saved === 'asc' || saved === 'desc' ? saved : 'none'
+}
+
+function getNextSortMode(mode: SortMode): SortMode {
+  const index = sortModes.indexOf(mode)
+  return sortModes[(index + 1) % sortModes.length]
+}
+
+function compareEntries(a: FileEntry, b: FileEntry, sortMode: SortMode) {
+  if (a.type !== b.type) return a.type === 'folder' ? -1 : 1
+  const result = fileNameCollator.compare(a.name, b.name)
+  return sortMode === 'desc' ? -result : result
+}
+
+function sortTree(entries: Array<FileEntry>, sortMode: SortMode): Array<FileEntry> {
+  const withChildren = entries.map((entry) => ({
+    ...entry,
+    children: entry.children ? sortTree(entry.children, sortMode) : undefined,
+  }))
+
+  if (sortMode === 'none') return withChildren
+  return [...withChildren].sort((a, b) => compareEntries(a, b, sortMode))
+}
+
+function flattenEntries(entries: Array<FileEntry>) {
+  const flattened: Array<FileEntry> = []
+  const visit = (entry: FileEntry) => {
+    flattened.push(entry)
+    entry.children?.forEach(visit)
+  }
+  entries.forEach(visit)
+  return flattened
+}
+
+function flattenVisibleEntries(
+  entries: Array<FileEntry>,
+  expanded: Set<string>,
+  forceExpanded: boolean,
+  depth = 0,
+): Array<VisibleEntry> {
+  const rows: Array<VisibleEntry> = []
+  for (const entry of entries) {
+    rows.push({ entry, depth })
+    if (
+      entry.type === 'folder' &&
+      entry.children?.length &&
+      (forceExpanded || expanded.has(entry.path))
+    ) {
+      rows.push(
+        ...flattenVisibleEntries(entry.children, expanded, forceExpanded, depth + 1),
+      )
+    }
+  }
+  return rows
 }
 
 async function fetchFileTree(): Promise<Array<FileEntry>> {
@@ -114,8 +207,125 @@ function filterTree(entries: Array<FileEntry>, term: string): Array<FileEntry> {
     .filter((entry): entry is FileEntry => entry !== null)
 }
 
+function isNestedPath(candidatePath: string, parentPath: string) {
+  const candidate = normalizePath(candidatePath)
+  const parent = normalizePath(parentPath)
+  return candidate.startsWith(`${parent}/`)
+}
+
+function getTopLevelEntries(entries: Array<FileEntry>) {
+  const sorted = [...entries].sort((a, b) => a.path.length - b.path.length)
+  const topLevel: Array<FileEntry> = []
+  for (const entry of sorted) {
+    if (topLevel.some((parent) => isNestedPath(entry.path, parent.path))) {
+      continue
+    }
+    topLevel.push(entry)
+  }
+  return topLevel
+}
+
+function hasHermesDrag(event: React.DragEvent) {
+  return Array.from(event.dataTransfer.types).includes(
+    'application/x-hermes-file-paths',
+  )
+}
+
+function readDragPaths(event: React.DragEvent) {
+  try {
+    const raw = event.dataTransfer.getData('application/x-hermes-file-paths')
+    const parsed = JSON.parse(raw) as unknown
+    return Array.isArray(parsed)
+      ? parsed.filter((pathValue): pathValue is string => typeof pathValue === 'string')
+      : []
+  } catch {
+    return []
+  }
+}
+
+function FileExplorerContextMenu({
+  contextMenu,
+  onOpenEntry,
+  onRename,
+  onMove,
+  onDelete,
+  onClose,
+}: ContextMenuProps) {
+  const menuWidth = 176
+  const menuHeight = contextMenu.entries.length === 1 ? 144 : 84
+  const left =
+    typeof window === 'undefined'
+      ? contextMenu.x
+      : Math.min(contextMenu.x, window.innerWidth - menuWidth - 8)
+  const top =
+    typeof window === 'undefined'
+      ? contextMenu.y
+      : Math.min(contextMenu.y, window.innerHeight - menuHeight - 8)
+
+  return createPortal(
+    <div
+      className="fixed min-w-[176px] rounded-lg border border-primary-200 p-1 text-sm text-primary-900 shadow-xl"
+      style={{
+        top: Math.max(8, top),
+        left: Math.max(8, left),
+        zIndex: 100000,
+        backgroundColor: 'var(--color-primary-50)',
+        opacity: 1,
+      }}
+      onClick={(event) => event.stopPropagation()}
+      onContextMenu={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+      }}
+    >
+      {contextMenu.entries.length === 1 ? (
+        <>
+          <button
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-primary-900 hover:bg-primary-100"
+            onClick={() => {
+              onOpenEntry(contextMenu.entry)
+              onClose()
+            }}
+          >
+            <HugeiconsIcon icon={File01Icon} size={16} /> Open
+          </button>
+          <button
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-primary-900 hover:bg-primary-100"
+            onClick={() => {
+              onRename(contextMenu.entry)
+              onClose()
+            }}
+          >
+            <HugeiconsIcon icon={Pen01Icon} size={16} /> Rename
+          </button>
+        </>
+      ) : null}
+      <button
+        className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-primary-900 hover:bg-primary-100"
+        onClick={() => {
+          onMove(contextMenu.entries)
+          onClose()
+        }}
+      >
+        <HugeiconsIcon icon={ArrowMoveRightDownIcon} size={16} /> Move
+      </button>
+      <button
+        className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-red-700 hover:bg-red-50/80"
+        onClick={() => {
+          onDelete(contextMenu.entries)
+          onClose()
+        }}
+      >
+        <HugeiconsIcon icon={Delete01Icon} size={16} /> Delete
+      </button>
+    </div>,
+    document.body,
+  )
+}
+
 export function FileExplorerSidebar({
   collapsed,
+  width = 260,
   onToggle,
   onInsertReference,
   hidden = false,
@@ -126,12 +336,20 @@ export function FileExplorerSidebar({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [sortMode, setSortMode] = useState<SortMode>(getInitialSortMode)
+  const [selectedPaths, setSelectedPaths] = useState<Set<string>>(
+    () => new Set(),
+  )
+  const [anchorPath, setAnchorPath] = useState<string | null>(null)
+  const [isMouseSelecting, setIsMouseSelecting] = useState(false)
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [promptState, setPromptState] = useState<PromptState | null>(null)
   const [promptValue, setPromptValue] = useState('')
   const [previewPath, setPreviewPath] = useState<string | null>(null)
+  const [dropTargetPath, setDropTargetPath] = useState<string | null>(null)
   const uploadTargetRef = useRef<string>('')
   const uploadInputRef = useRef<HTMLInputElement | null>(null)
+  const dragSelectAnchorRef = useRef<string | null>(null)
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -151,17 +369,29 @@ export function FileExplorerSidebar({
   }, [refresh])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(SORT_STORAGE_KEY, sortMode)
+  }, [sortMode])
+
+  useEffect(() => {
+    const handleMouseUp = () => {
+      setIsMouseSelecting(false)
+      dragSelectAnchorRef.current = null
+    }
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => window.removeEventListener('mouseup', handleMouseUp)
+  }, [])
+
+  useEffect(() => {
     if (!contextMenu) return
     const handleClick = () => setContextMenu(null)
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setContextMenu(null)
     }
     window.addEventListener('click', handleClick)
-    window.addEventListener('contextmenu', handleClick)
     window.addEventListener('keydown', handleEscape)
     return () => {
       window.removeEventListener('click', handleClick)
-      window.removeEventListener('contextmenu', handleClick)
       window.removeEventListener('keydown', handleEscape)
     }
   }, [contextMenu])
@@ -171,7 +401,45 @@ export function FileExplorerSidebar({
     [entries, search],
   )
 
+  const sortedEntries = useMemo(
+    () => sortTree(filteredEntries, sortMode),
+    [filteredEntries, sortMode],
+  )
+
   const isSearchActive = search.trim().length > 0
+
+  const visibleEntries = useMemo(
+    () => flattenVisibleEntries(sortedEntries, expanded, isSearchActive),
+    [expanded, isSearchActive, sortedEntries],
+  )
+
+  const entryByPath = useMemo(() => {
+    const map = new Map<string, FileEntry>()
+    flattenEntries(entries).forEach((entry) => map.set(entry.path, entry))
+    return map
+  }, [entries])
+
+  const selectedEntries = useMemo(
+    () =>
+      Array.from(selectedPaths)
+        .map((pathValue) => entryByPath.get(pathValue))
+        .filter((entry): entry is FileEntry => Boolean(entry)),
+    [entryByPath, selectedPaths],
+  )
+
+  const selectedCount = selectedEntries.length
+  const SortIcon =
+    sortMode === 'asc'
+      ? SortingAZ01Icon
+      : sortMode === 'desc'
+        ? SortingZA01Icon
+        : Sorting01Icon
+  const sortTitle =
+    sortMode === 'asc'
+      ? 'Sort: A-Z'
+      : sortMode === 'desc'
+        ? 'Sort: Z-A'
+        : 'Sort: default'
 
   const toggleFolder = useCallback((pathValue: string) => {
     setExpanded((prev) => {
@@ -182,10 +450,101 @@ export function FileExplorerSidebar({
     })
   }, [])
 
+  const openEntry = useCallback(
+    (entry: FileEntry) => {
+      if (entry.type === 'folder') {
+        toggleFolder(entry.path)
+        return
+      }
+      onInsertReference(buildReference(entry.path))
+      setPreviewPath(entry.path)
+    },
+    [onInsertReference, toggleFolder],
+  )
+
+  const selectRange = useCallback(
+    (fromPath: string, toPath: string, additive = false) => {
+      const startIndex = visibleEntries.findIndex(
+        ({ entry }) => entry.path === fromPath,
+      )
+      const endIndex = visibleEntries.findIndex(({ entry }) => entry.path === toPath)
+      if (startIndex < 0 || endIndex < 0) {
+        setSelectedPaths(new Set([toPath]))
+        setAnchorPath(toPath)
+        return
+      }
+      const [start, end] =
+        startIndex < endIndex ? [startIndex, endIndex] : [endIndex, startIndex]
+      const rangePaths = visibleEntries
+        .slice(start, end + 1)
+        .map(({ entry }) => entry.path)
+      setSelectedPaths((prev) => {
+        const next = additive ? new Set(prev) : new Set<string>()
+        rangePaths.forEach((pathValue) => next.add(pathValue))
+        return next
+      })
+      setAnchorPath(fromPath)
+    },
+    [visibleEntries],
+  )
+
   const openPrompt = useCallback((state: PromptState) => {
     setPromptState(state)
     setPromptValue(state.defaultValue || '')
   }, [])
+
+  const moveEntriesTo = useCallback(
+    async (entriesToMove: Array<FileEntry>, targetPath: string) => {
+      const normalizedTarget = normalizePath(targetPath.trim())
+      const topLevelEntries = getTopLevelEntries(entriesToMove)
+      const movableEntries = topLevelEntries.filter((entry) => {
+        if (entry.type !== 'folder') return true
+        return (
+          normalizedTarget !== normalizePath(entry.path) &&
+          !isNestedPath(normalizedTarget, entry.path)
+        )
+      })
+
+      if (movableEntries.length === 0) {
+        window.alert('Nothing can be moved to that folder.')
+        return
+      }
+
+      const movedPaths: Array<string> = []
+      for (const entry of movableEntries) {
+        const nextPath = normalizedTarget
+          ? `${normalizedTarget}/${getBaseName(entry.path)}`
+          : getBaseName(entry.path)
+        if (normalizePath(nextPath) === normalizePath(entry.path)) continue
+
+        const res = await fetch('/api/files', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            action: 'rename',
+            from: entry.path,
+            to: nextPath,
+          }),
+        })
+
+        if (!res.ok) {
+          const data = (await res.json().catch(() => ({}))) as { error?: string }
+          throw new Error(data.error || `Failed to move ${entry.name}`)
+        }
+        movedPaths.push(nextPath)
+      }
+
+      if (normalizedTarget) {
+        setExpanded((prev) => new Set(prev).add(normalizedTarget))
+      }
+      if (movedPaths.length > 0) {
+        setSelectedPaths(new Set(movedPaths))
+        setAnchorPath(movedPaths.at(-1) || null)
+      }
+      await refresh()
+    },
+    [refresh],
+  )
 
   const handleRename = useCallback(
     (entry: FileEntry) => {
@@ -212,32 +571,38 @@ export function FileExplorerSidebar({
     [openPrompt],
   )
 
-  const handleDelete = useCallback(
-    async (entry: FileEntry) => {
-      if (!window.confirm(`Move ${entry.name} to trash?`)) return
-      await fetch('/api/files', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ action: 'delete', path: entry.path }),
+  const handleMove = useCallback(
+    (entriesToMove: Array<FileEntry>) => {
+      openPrompt({
+        mode: 'move',
+        targetPath: '',
+        targetPaths: entriesToMove.map((entry) => entry.path),
       })
+    },
+    [openPrompt],
+  )
+
+  const handleDeleteEntries = useCallback(
+    async (entriesToDelete: Array<FileEntry>) => {
+      const topLevelEntries = getTopLevelEntries(entriesToDelete)
+      const label =
+        topLevelEntries.length === 1
+          ? topLevelEntries[0].name
+          : `${topLevelEntries.length} selected items`
+      if (!window.confirm(`Move ${label} to trash?`)) return
+      for (const entry of topLevelEntries) {
+        await fetch('/api/files', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', path: entry.path }),
+        })
+      }
+      setSelectedPaths(new Set())
+      setAnchorPath(null)
       await refresh()
     },
     [refresh],
   )
-
-  const handleDownload = useCallback(async (entry: FileEntry) => {
-    const res = await fetch(
-      `/api/files?action=download&path=${encodeURIComponent(entry.path)}`,
-    )
-    if (!res.ok) return
-    const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = entry.name
-    anchor.click()
-    URL.revokeObjectURL(url)
-  }, [])
 
   const handleUploadClick = useCallback((targetPath: string) => {
     uploadTargetRef.current = targetPath
@@ -264,106 +629,236 @@ export function FileExplorerSidebar({
   const handlePromptSubmit = useCallback(async () => {
     if (!promptState) return
     const value = promptValue.trim()
-    if (!value) return
+    if (!value && promptState.mode !== 'move') return
 
-    if (promptState.mode === 'rename') {
-      const parent = getParentPath(promptState.targetPath)
-      const nextPath = parent ? `${parent}/${value}` : value
-      await fetch('/api/files', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          action: 'rename',
-          from: promptState.targetPath,
-          to: nextPath,
-        }),
-      })
-    } else if (promptState.mode === 'new-folder') {
-      const nextPath = promptState.targetPath
-        ? `${promptState.targetPath}/${value}`
-        : value
-      await fetch('/api/files', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ action: 'mkdir', path: nextPath }),
-      })
-    } else {
-      const nextPath = promptState.targetPath
-        ? `${promptState.targetPath}/${value}`
-        : value
-      await fetch('/api/files', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ action: 'write', path: nextPath, content: '' }),
-      })
+    try {
+      if (promptState.mode === 'rename') {
+        const parent = getParentPath(promptState.targetPath)
+        const nextPath = parent ? `${parent}/${value}` : value
+        await fetch('/api/files', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            action: 'rename',
+            from: promptState.targetPath,
+            to: nextPath,
+          }),
+        })
+      } else if (promptState.mode === 'new-folder') {
+        const nextPath = promptState.targetPath
+          ? `${promptState.targetPath}/${value}`
+          : value
+        await fetch('/api/files', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ action: 'mkdir', path: nextPath }),
+        })
+      } else if (promptState.mode === 'move') {
+        const entriesToMove = (promptState.targetPaths || [])
+          .map((pathValue) => entryByPath.get(pathValue))
+          .filter((entry): entry is FileEntry => Boolean(entry))
+        await moveEntriesTo(entriesToMove, value)
+      } else {
+        const nextPath = promptState.targetPath
+          ? `${promptState.targetPath}/${value}`
+          : value
+        await fetch('/api/files', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ action: 'write', path: nextPath, content: '' }),
+        })
+      }
+
+      setPromptState(null)
+      setPromptValue('')
+      if (promptState.mode !== 'move') await refresh()
+    } catch (err) {
+      window.alert(err instanceof Error ? err.message : String(err))
     }
+  }, [entryByPath, moveEntriesTo, promptState, promptValue, refresh])
 
-    setPromptState(null)
-    setPromptValue('')
-    await refresh()
-  }, [promptState, promptValue, refresh])
-
-  const handleFileClick = useCallback(
-    (entry: FileEntry) => {
-      if (entry.type === 'folder') {
-        toggleFolder(entry.path)
+  const handleEntryMouseDown = useCallback(
+    (event: React.MouseEvent, entry: FileEntry) => {
+      if (event.button !== 0) return
+      if (event.shiftKey) {
+        const rangeAnchor = anchorPath || entry.path
+        selectRange(rangeAnchor, entry.path, event.ctrlKey || event.metaKey)
+        dragSelectAnchorRef.current = rangeAnchor
+        setIsMouseSelecting(true)
         return
       }
-      onInsertReference(buildReference(entry.path))
-      setPreviewPath(entry.path)
+      if (event.ctrlKey || event.metaKey) {
+        setSelectedPaths((prev) => {
+          const next = new Set(prev)
+          if (next.has(entry.path)) next.delete(entry.path)
+          else next.add(entry.path)
+          return next
+        })
+        setAnchorPath(entry.path)
+        dragSelectAnchorRef.current = null
+        setIsMouseSelecting(false)
+        return
+      }
+      if (selectedPaths.has(entry.path) && selectedPaths.size > 1) {
+        dragSelectAnchorRef.current = null
+        setIsMouseSelecting(false)
+        return
+      }
+
+      setSelectedPaths(new Set([entry.path]))
+      setAnchorPath(entry.path)
+      dragSelectAnchorRef.current = entry.path
+      setIsMouseSelecting(true)
     },
-    [onInsertReference, toggleFolder],
+    [anchorPath, selectRange, selectedPaths],
+  )
+
+  const handleEntryMouseEnter = useCallback(
+    (event: React.MouseEvent, entry: FileEntry) => {
+      if (!isMouseSelecting || event.buttons !== 1 || !dragSelectAnchorRef.current) {
+        return
+      }
+      selectRange(dragSelectAnchorRef.current, entry.path)
+    },
+    [isMouseSelecting, selectRange],
+  )
+
+  const handleEntryContextMenu = useCallback(
+    (event: React.MouseEvent, entry: FileEntry) => {
+      event.preventDefault()
+      const contextEntries =
+        selectedPaths.has(entry.path) && selectedEntries.length > 1
+          ? selectedEntries
+          : [entry]
+      if (!selectedPaths.has(entry.path)) {
+        setSelectedPaths(new Set([entry.path]))
+        setAnchorPath(entry.path)
+      }
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        entry,
+        entries: contextEntries,
+      })
+    },
+    [selectedEntries, selectedPaths],
+  )
+
+  const handleDragStart = useCallback(
+    (event: React.DragEvent, entry: FileEntry) => {
+      const dragEntries =
+        selectedPaths.has(entry.path) && selectedEntries.length > 0
+          ? selectedEntries
+          : [entry]
+      if (!selectedPaths.has(entry.path)) {
+        setSelectedPaths(new Set([entry.path]))
+        setAnchorPath(entry.path)
+      }
+      const dragPaths = dragEntries.map((dragEntry) => dragEntry.path)
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData(
+        'application/x-hermes-file-paths',
+        JSON.stringify(dragPaths),
+      )
+      event.dataTransfer.setData('text/plain', dragPaths.join('\n'))
+    },
+    [selectedEntries, selectedPaths],
+  )
+
+  const handleDrop = useCallback(
+    async (event: React.DragEvent, targetPath: string) => {
+      if (!hasHermesDrag(event)) return
+      event.preventDefault()
+      event.stopPropagation()
+      setDropTargetPath(null)
+      const entriesToMove = readDragPaths(event)
+        .map((pathValue) => entryByPath.get(pathValue))
+        .filter((entry): entry is FileEntry => Boolean(entry))
+      try {
+        await moveEntriesTo(entriesToMove, targetPath)
+      } catch (err) {
+        window.alert(err instanceof Error ? err.message : String(err))
+      }
+    },
+    [entryByPath, moveEntriesTo],
   )
 
   const renderEntry = useCallback(
-    (entry: FileEntry, depth: number) => {
+    ({ entry, depth }: VisibleEntry) => {
       const Icon = getFileIcon(entry)
       const isExpanded = isSearchActive ? true : expanded.has(entry.path)
+      const isSelected = selectedPaths.has(entry.path)
+      const isDropTarget = dropTargetPath === entry.path
       const padding = 12 + depth * 14
 
       return (
-        <div key={entry.path}>
-          <button
-            type="button"
-            onClick={() => handleFileClick(entry)}
-            onContextMenu={(event) => {
-              event.preventDefault()
-              setContextMenu({
-                x: event.clientX,
-                y: event.clientY,
-                entry,
-              })
-            }}
-            className={cn(
-              'group flex w-full items-center gap-2 rounded-md py-1.5 text-left text-sm text-primary-900',
-              'hover:bg-primary-200',
-            )}
-            style={{ paddingLeft: padding }}
-          >
-            {entry.type === 'folder' ? (
-              <span
-                className={cn(
-                  'transition-transform',
-                  isExpanded ? 'rotate-90' : 'rotate-0',
-                )}
-              >
-                <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
-              </span>
-            ) : (
-              <span className="w-4" />
-            )}
-            <HugeiconsIcon icon={Icon} size={18} strokeWidth={1.6} />
-            <span className="truncate">{entry.name}</span>
-          </button>
-          {entry.type === 'folder' && isExpanded && entry.children?.length ? (
-            <div>
-              {entry.children.map((child) => renderEntry(child, depth + 1))}
-            </div>
+        <button
+          key={entry.path}
+          type="button"
+          draggable={isSelected}
+          aria-selected={isSelected}
+          onMouseDown={(event) => handleEntryMouseDown(event, entry)}
+          onMouseEnter={(event) => handleEntryMouseEnter(event, entry)}
+          onDoubleClick={() => openEntry(entry)}
+          onContextMenu={(event) => handleEntryContextMenu(event, entry)}
+          onDragStart={(event) => handleDragStart(event, entry)}
+          onDragEnd={() => setDropTargetPath(null)}
+          onDragOver={(event) => {
+            if (!hasHermesDrag(event)) return
+            event.stopPropagation()
+            if (entry.type !== 'folder') return
+            event.preventDefault()
+            event.dataTransfer.dropEffect = 'move'
+            setDropTargetPath(entry.path)
+          }}
+          onDrop={(event) => {
+            if (!hasHermesDrag(event)) return
+            event.stopPropagation()
+            if (entry.type === 'folder') void handleDrop(event, entry.path)
+          }}
+          className={cn(
+            'group flex w-full items-center gap-2 rounded-md py-1.5 text-left text-sm text-primary-900',
+            'hover:bg-primary-200',
+            isSelected &&
+              'bg-accent-500/15 text-primary-950 ring-1 ring-accent-500/40',
+            isDropTarget && 'bg-accent-500/25 ring-1 ring-accent-500',
+          )}
+          style={{ paddingLeft: padding }}
+        >
+          {entry.type === 'folder' ? (
+            <span
+              className={cn(
+                'transition-transform',
+                isExpanded ? 'rotate-90' : 'rotate-0',
+              )}
+            >
+              <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
+            </span>
+          ) : (
+            <span className="w-4" />
+          )}
+          {depth > 0 ? (
+            <span className="text-primary-400" aria-hidden="true">
+              -
+            </span>
           ) : null}
-        </div>
+          <HugeiconsIcon icon={Icon} size={18} strokeWidth={1.6} />
+          <span className="truncate">{entry.name}</span>
+        </button>
       )
     },
-    [expanded, handleFileClick, isSearchActive, setContextMenu],
+    [
+      dropTargetPath,
+      expanded,
+      handleDragStart,
+      handleDrop,
+      handleEntryContextMenu,
+      handleEntryMouseDown,
+      handleEntryMouseEnter,
+      isSearchActive,
+      openEntry,
+      selectedPaths,
+    ],
   )
 
   if (hidden) return null
@@ -371,14 +866,27 @@ export function FileExplorerSidebar({
   return (
     <aside
       className={cn(
-        'border-r border-primary-200 bg-primary-100 h-full flex flex-col transition-all duration-200 ease-out',
+        'border-r border-primary-200 bg-primary-100 h-full flex flex-col transition-opacity duration-200 ease-out',
         collapsed
           ? 'w-0 opacity-0 pointer-events-none'
-          : 'w-[260px] opacity-100',
+          : 'opacity-100',
         className,
       )}
+      style={{ width: collapsed ? 0 : width }}
     >
-      <div className="flex items-center justify-between h-12 px-3 border-b border-primary-200">
+      <div
+        className={cn(
+          'flex items-center justify-between h-12 px-3 border-b border-primary-200',
+          dropTargetPath === '' && 'bg-accent-500/10',
+        )}
+        onDragOver={(event) => {
+          if (!hasHermesDrag(event)) return
+          event.preventDefault()
+          event.dataTransfer.dropEffect = 'move'
+          setDropTargetPath('')
+        }}
+        onDrop={(event) => void handleDrop(event, '')}
+      >
         <div className="text-sm font-semibold text-primary-900">
           {ROOT_LABEL}
         </div>
@@ -394,10 +902,26 @@ export function FileExplorerSidebar({
           <Button
             size="icon-sm"
             variant="ghost"
+            onClick={() => setSortMode((mode) => getNextSortMode(mode))}
+            title={sortTitle}
+          >
+            <HugeiconsIcon icon={SortIcon} size={18} />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant="ghost"
             onClick={() => handleUploadClick('')}
             title="Upload"
           >
             <HugeiconsIcon icon={Upload01Icon} size={18} />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            onClick={() => openPrompt({ mode: 'new-folder', targetPath: '' })}
+            title="New folder"
+          >
+            <HugeiconsIcon icon={Folder01Icon} size={18} />
           </Button>
           <Button
             size="icon-sm"
@@ -419,8 +943,23 @@ export function FileExplorerSidebar({
         />
       </div>
 
+      {selectedCount > 0 ? (
+        <div className="border-y border-primary-200 bg-primary-50 px-3 py-1.5 text-xs text-primary-600">
+          {selectedCount} selected
+        </div>
+      ) : null}
+
       <ScrollAreaRoot className="flex-1 min-h-0">
-        <ScrollAreaViewport className="px-1">
+        <ScrollAreaViewport
+          className="px-1"
+          onDragOver={(event) => {
+            if (!hasHermesDrag(event)) return
+            event.preventDefault()
+            event.dataTransfer.dropEffect = 'move'
+            setDropTargetPath('')
+          }}
+          onDrop={(event) => void handleDrop(event, '')}
+        >
           {loading ? (
             <div className="px-3 py-2 text-xs text-primary-500">Loading…</div>
           ) : error ? (
@@ -469,7 +1008,17 @@ export function FileExplorerSidebar({
                   Create files or upload content to get started.
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    openPrompt({ mode: 'new-folder', targetPath: '' })
+                  }
+                >
+                  <HugeiconsIcon icon={Folder01Icon} size={16} />
+                  New folder
+                </Button>
                 <Button
                   size="sm"
                   variant="outline"
@@ -491,8 +1040,13 @@ export function FileExplorerSidebar({
               </div>
             </div>
           ) : (
-            <div className="pb-4">
-              {filteredEntries.map((entry) => renderEntry(entry, 0))}
+            <div
+              className={cn(
+                'min-h-full rounded-md pb-4',
+                dropTargetPath === '' && 'bg-accent-500/10',
+              )}
+            >
+              {visibleEntries.map(renderEntry)}
             </div>
           )}
         </ScrollAreaViewport>
@@ -514,70 +1068,14 @@ export function FileExplorerSidebar({
       />
 
       {contextMenu ? (
-        <div
-          className="fixed z-50 min-w-[160px] rounded-lg bg-primary-50 p-1 text-sm text-primary-900 shadow-lg outline outline-primary-900/10"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-        >
-          <button
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary-100"
-            onClick={() => {
-              handleRename(contextMenu.entry)
-              setContextMenu(null)
-            }}
-          >
-            <HugeiconsIcon icon={Pen01Icon} size={16} /> Rename
-          </button>
-          {contextMenu.entry.type === 'folder' ? (
-            <>
-              <button
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary-100"
-                onClick={() => {
-                  handleNewFile(contextMenu.entry)
-                  setContextMenu(null)
-                }}
-              >
-                <HugeiconsIcon icon={PlusSignIcon} size={16} /> New file
-              </button>
-              <button
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary-100"
-                onClick={() => {
-                  handleNewFolder(contextMenu.entry)
-                  setContextMenu(null)
-                }}
-              >
-                <HugeiconsIcon icon={Folder01Icon} size={16} /> New folder
-              </button>
-              <button
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary-100"
-                onClick={() => {
-                  handleUploadClick(contextMenu.entry.path)
-                  setContextMenu(null)
-                }}
-              >
-                <HugeiconsIcon icon={Upload01Icon} size={16} /> Upload
-              </button>
-            </>
-          ) : (
-            <button
-              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-primary-100"
-              onClick={() => {
-                void handleDownload(contextMenu.entry)
-                setContextMenu(null)
-              }}
-            >
-              <HugeiconsIcon icon={Download01Icon} size={16} /> Download
-            </button>
-          )}
-          <button
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-red-700 hover:bg-red-50/80"
-            onClick={() => {
-              void handleDelete(contextMenu.entry)
-              setContextMenu(null)
-            }}
-          >
-            <HugeiconsIcon icon={Delete01Icon} size={16} /> Delete
-          </button>
-        </div>
+        <FileExplorerContextMenu
+          contextMenu={contextMenu}
+          onOpenEntry={openEntry}
+          onRename={handleRename}
+          onMove={handleMove}
+          onDelete={(entriesToDelete) => void handleDeleteEntries(entriesToDelete)}
+          onClose={() => setContextMenu(null)}
+        />
       ) : null}
 
       <DialogRoot
@@ -593,12 +1091,16 @@ export function FileExplorerSidebar({
                 ? 'Rename'
                 : promptState?.mode === 'new-folder'
                   ? 'New Folder'
-                  : 'New File'}
+                  : promptState?.mode === 'move'
+                    ? 'Move'
+                    : 'New File'}
             </DialogTitle>
             <DialogDescription>
               {promptState?.mode === 'rename'
                 ? 'Enter a new name.'
-                : 'Enter a name to create.'}
+                : promptState?.mode === 'move'
+                  ? 'Enter a destination folder path. Leave blank for the workspace root.'
+                  : 'Enter a name to create.'}
             </DialogDescription>
             <input
               value={promptValue}
@@ -608,7 +1110,9 @@ export function FileExplorerSidebar({
             />
             <div className="flex justify-end gap-2 pt-2">
               <DialogClose render={<Button variant="outline">Cancel</Button>} />
-              <Button onClick={handlePromptSubmit}>Save</Button>
+              <Button onClick={handlePromptSubmit}>
+                {promptState?.mode === 'move' ? 'Move' : 'Save'}
+              </Button>
             </div>
           </div>
         </DialogContent>
