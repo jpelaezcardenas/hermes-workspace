@@ -11,6 +11,7 @@ export type ProfileSummary = {
   model?: string
   provider?: string
   description?: string
+  displayName?: string
   skillCount: number
   sessionCount: number
   hasEnv: boolean
@@ -23,6 +24,7 @@ export type ProfileDetail = {
   active: boolean
   config: Record<string, unknown>
   description: string
+  displayName?: string
   envPath?: string
   hasEnv: boolean
   sessionsDir?: string
@@ -155,17 +157,94 @@ function latestMtime(paths: Array<string>): string | undefined {
   return latest > 0 ? new Date(latest).toISOString() : undefined
 }
 
-function extractDescription(config: Record<string, unknown>): string {
-  const direct = config.description
-  if (typeof direct === 'string') return direct.trim()
+function readProfileMetadata(profilePath: string): Record<string, unknown> {
+  const metaPath = path.join(profilePath, 'profile.yaml')
+  if (!fs.existsSync(metaPath)) return {}
+  try {
+    const parsed = YAML.parse(safeReadText(metaPath)) as unknown
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {}
+  } catch {
+    return {}
+  }
+}
+
+function readStringField(
+  source: Record<string, unknown>,
+  keys: Array<string>,
+): string {
+  for (const key of keys) {
+    const value = source[key]
+    if (typeof value === 'string' && value.trim()) return value.trim()
+  }
+  return ''
+}
+
+function extractDescription(
+  config: Record<string, unknown>,
+  profileMetadata: Record<string, unknown> = {},
+): string {
+  const direct = readStringField(profileMetadata, ['description'])
+  if (direct) return direct
+
+  const configDirect = readStringField(config, ['description'])
+  if (configDirect) return configDirect
 
   const metadata = config.metadata
   if (metadata && typeof metadata === 'object' && !Array.isArray(metadata)) {
-    const nested = (metadata as Record<string, unknown>).description
-    if (typeof nested === 'string') return nested.trim()
+    const nested = readStringField(metadata as Record<string, unknown>, [
+      'description',
+    ])
+    if (nested) return nested
   }
 
   return ''
+}
+
+function titleCaseProfileName(name: string): string {
+  return name
+    .replace(/[-_]+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+function extractDisplayName(
+  name: string,
+  config: Record<string, unknown>,
+  profileMetadata: Record<string, unknown> = {},
+): string {
+  const fromProfile = readStringField(profileMetadata, [
+    'display_name',
+    'displayName',
+    'agent_name',
+    'agentName',
+    'name',
+  ])
+  if (fromProfile) return fromProfile
+
+  const metadata = config.metadata
+  if (metadata && typeof metadata === 'object' && !Array.isArray(metadata)) {
+    const fromMetadata = readStringField(metadata as Record<string, unknown>, [
+      'display_name',
+      'displayName',
+      'agent_name',
+      'agentName',
+    ])
+    if (fromMetadata) return fromMetadata
+  }
+
+  const agent = config.agent
+  if (agent && typeof agent === 'object' && !Array.isArray(agent)) {
+    const fromAgent = readStringField(agent as Record<string, unknown>, [
+      'display_name',
+      'displayName',
+      'name',
+    ])
+    if (fromAgent) return fromAgent
+  }
+
+  return name === 'default' ? 'Cael' : titleCaseProfileName(name)
 }
 
 export function getActiveProfileName(): string {
@@ -209,6 +288,7 @@ export function listProfiles(): Array<ProfileSummary> {
       const skillsDir = path.join(profilePath, 'skills')
       const sessionsDir = path.join(profilePath, 'sessions')
       const config = readYamlConfig(configPath)
+      const profileMetadata = readProfileMetadata(profilePath)
       const skillCount = countFilesRecursive(
         skillsDir,
         (full) => path.basename(full) === 'SKILL.md',
@@ -240,7 +320,8 @@ export function listProfiles(): Array<ProfileSummary> {
         exists: true,
         model: modelName,
         provider: providerName,
-        description: extractDescription(config) || undefined,
+        description: extractDescription(config, profileMetadata) || undefined,
+        displayName: extractDisplayName(name, config, profileMetadata),
         skillCount,
         sessionCount,
         hasEnv: fs.existsSync(envPath),
@@ -257,6 +338,7 @@ export function listProfiles(): Array<ProfileSummary> {
 
   const root = getClaudeRoot()
   const config = readYamlConfig(path.join(root, 'config.yaml'))
+  const profileMetadata = readProfileMetadata(root)
   // Resolve model/provider for default profile too
   let defaultModel: string | undefined
   let defaultProvider: string | undefined
@@ -281,7 +363,8 @@ export function listProfiles(): Array<ProfileSummary> {
     exists: true,
     model: defaultModel,
     provider: defaultProvider,
-    description: extractDescription(config) || undefined,
+    description: extractDescription(config, profileMetadata) || undefined,
+    displayName: extractDisplayName('default', config, profileMetadata),
     skillCount: countFilesRecursive(
       path.join(root, 'skills'),
       (full) => path.basename(full) === 'SKILL.md',
@@ -314,12 +397,14 @@ export function readProfile(name: string): ProfileDetail {
   const sessionsDir = path.join(profilePath, 'sessions')
   const skillsDir = path.join(profilePath, 'skills')
   const config = readYamlConfig(configPath)
+  const profileMetadata = readProfileMetadata(profilePath)
   return {
     name: normalized,
     path: profilePath,
     active: normalized === active,
     config,
-    description: extractDescription(config),
+    description: extractDescription(config, profileMetadata),
+    displayName: extractDisplayName(normalized, config, profileMetadata),
     envPath: fs.existsSync(envPath) ? envPath : undefined,
     hasEnv: fs.existsSync(envPath),
     sessionsDir: fs.existsSync(sessionsDir) ? sessionsDir : undefined,
@@ -330,8 +415,11 @@ export function readProfile(name: string): ProfileDetail {
 export function setActiveProfile(name: string): void {
   const trimmed = name.trim()
   if (!trimmed) throw new Error('Profile name is required')
-  // "default" means clear the active_profile file (revert to default)
-  if (trimmed === 'default') {
+  // "default" means clear the active_profile file (revert to default).
+  // In Cael Workspace, "cael" is an agent display identity for the default
+  // base profile, not a second active Hermes home. Treat it as an alias so
+  // web/desktop/gateway do not split between ~/.hermes and profiles/cael.
+  if (trimmed === 'default' || trimmed.toLowerCase() === 'cael') {
     if (stickyActiveProfileEnabled()) {
       const activePath = getActiveProfilePath()
       if (fs.existsSync(activePath)) fs.unlinkSync(activePath)

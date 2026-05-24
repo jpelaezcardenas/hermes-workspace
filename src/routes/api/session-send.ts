@@ -51,6 +51,7 @@ export const Route = createFileRoute('/api/session-send')({
               ...body,
               sessionKey,
               message,
+              serverSide: true,
               idempotencyKey:
                 typeof body.idempotencyKey === 'string'
                   ? body.idempotencyKey

@@ -28,6 +28,7 @@ type ProfileSummary = {
   model?: string
   provider?: string
   description?: string
+  displayName?: string
   skillCount: number
   sessionCount: number
   hasEnv: boolean
@@ -40,6 +41,7 @@ type ProfileDetail = {
   active: boolean
   config: Record<string, unknown>
   description: string
+  displayName?: string
   envPath?: string
   hasEnv: boolean
   sessionsDir?: string
@@ -295,7 +297,9 @@ export function ProfilesScreen() {
       toast(`Saved description for ${detailsName}`, { type: 'success' })
       await Promise.all([
         refreshProfiles(),
-        queryClient.invalidateQueries({ queryKey: ['profiles', 'read', detailsName] }),
+        queryClient.invalidateQueries({
+          queryKey: ['profiles', 'read', detailsName],
+        }),
       ])
       await detailQuery.refetch()
     } catch (error) {
@@ -353,7 +357,7 @@ export function ProfilesScreen() {
                   >
                     <img
                       src="/cael-avatar.png"
-                      alt={profile.name}
+                      alt={profile.displayName || profile.name}
                       className={cn(
                         'size-20 rounded-full border-2 object-cover',
                         profile.active
@@ -384,8 +388,13 @@ export function ProfilesScreen() {
 
                 {/* Name + provider */}
                 <h2 className="mt-3 text-center text-lg font-bold text-primary-900 dark:text-neutral-100">
-                  {profile.name}
+                  {profile.displayName || profile.name}
                 </h2>
+                <span className="mt-1 inline-block rounded-full bg-primary-100 px-2.5 py-0.5 text-[11px] font-medium text-primary-600 dark:bg-neutral-800 dark:text-neutral-400">
+                  {profile.name === 'default'
+                    ? 'base profile: default'
+                    : `profile: ${profile.name}`}
+                </span>
                 <span className="mt-1 inline-block rounded-full bg-primary-100 px-2.5 py-0.5 text-[11px] font-medium text-primary-600 dark:bg-neutral-800 dark:text-neutral-400">
                   {profile.provider || 'no provider'}
                 </span>
@@ -488,7 +497,7 @@ export function ProfilesScreen() {
 
       {sorted.length === 0 && !profilesQuery.isLoading ? (
         <div className="rounded-2xl border border-dashed border-primary-200 bg-primary-50/70 p-8 text-center text-sm text-primary-600">
-          No named profiles found yet. The active profile is{' '}
+          No named profiles found yet. The active base profile is{' '}
           <span className="font-semibold">{activeProfile}</span>.
         </div>
       ) : null}
@@ -643,8 +652,8 @@ export function ProfilesScreen() {
                     </div>
                   ) : allModels.length === 0 ? (
                     <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3 text-xs text-amber-700 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-                      No models found. Make sure Hermes Agent is running and
-                      has models configured.
+                      No models found. Make sure Hermes Agent is running and has
+                      models configured.
                     </div>
                   ) : (
                     <select
@@ -896,7 +905,14 @@ export function ProfilesScreen() {
               <div className="space-y-4 text-sm">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <DetailField
-                    label="Name"
+                    label="Agent display"
+                    value={
+                      detailQuery.data.profile.displayName ||
+                      detailQuery.data.profile.name
+                    }
+                  />
+                  <DetailField
+                    label="Base profile"
                     value={detailQuery.data.profile.name}
                   />
                   <DetailField
@@ -945,12 +961,15 @@ export function ProfilesScreen() {
                   </div>
                   <textarea
                     value={descriptionDraft}
-                    onChange={(event) => setDescriptionDraft(event.target.value)}
+                    onChange={(event) =>
+                      setDescriptionDraft(event.target.value)
+                    }
                     placeholder="What this profile is for, how it should behave, or what makes it different"
                     className="min-h-[96px] w-full rounded-lg border border-primary-200 bg-primary-100/70 p-3 text-sm text-primary-900 outline-none transition-colors focus:border-accent-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                   />
                   <p className="mt-2 text-xs text-primary-400 dark:text-neutral-500">
-                    Saved into the profile config, so manual file edits show up here after refresh.
+                    Saved into the profile config, so manual file edits show up
+                    here after refresh.
                   </p>
                 </div>
                 <div className="rounded-xl border border-primary-200 bg-primary-50/80 p-4 dark:border-neutral-800 dark:bg-neutral-900/60">

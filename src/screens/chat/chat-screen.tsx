@@ -1115,7 +1115,6 @@ export function ChatScreen({
     isStreaming: localIsStreaming,
     streamingText: localStreamingText,
     streamingMessageId: localStreamingMessageId,
-    startStreaming,
     cancelStreaming,
   } = useStreamingMessage({
     pinMainSession:
@@ -1985,37 +1984,79 @@ export function ChatScreen({
         }
       }
 
-      void startStreaming({
-        sessionKey,
-        friendlyId,
-        message: enrichedBody,
-        history,
-        attachments:
-          payloadAttachments.length > 0 ? payloadAttachments : undefined,
-        thinking:
-          currentThinkingLevel === 'off' ? undefined : currentThinkingLevel,
-        fastMode,
-        model: currentModel || undefined,
-        idempotencyKey: optimisticClientId || crypto.randomUUID(),
-      }).catch((err: unknown) => {
+      const idempotencyKey = optimisticClientId || crypto.randomUUID()
+      void (async () => {
+        const response = await fetch('/api/session-send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionKey,
+            friendlyId,
+            message: enrichedBody,
+            history,
+            attachments:
+              payloadAttachments.length > 0 ? payloadAttachments : undefined,
+            thinking:
+              currentThinkingLevel === 'off' ? undefined : currentThinkingLevel,
+            fastMode,
+            model: currentModel || undefined,
+            idempotencyKey,
+            locale:
+              typeof window !== 'undefined'
+                ? localStorage.getItem('hermes-workspace-locale') || 'en'
+                : 'en',
+          }),
+        })
+        const responseText = await response.text()
+        let result: { ok?: boolean; error?: string } = {}
+        try {
+          result = responseText
+            ? (JSON.parse(responseText) as { ok?: boolean; error?: string })
+            : {}
+        } catch {
+          result = {}
+        }
+        if (!response.ok || result.ok === false) {
+          throw new Error(
+            result.error || responseText || `session-send failed (${response.status})`,
+          )
+        }
+
+        updateHistoryMessageByClientIdEverywhere(
+          queryClient,
+          idempotencyKey,
+          (message) => ({
+            ...message,
+            status: 'queued',
+          }),
+        )
+        if (activeSendRef.current?.clientId === idempotencyKey) {
+          activeSendRef.current = null
+        }
+        setSending(false)
+        setPendingGeneration(false)
+        setWaitingForResponse(true)
+        window.setTimeout(() => refreshHistoryRef.current(), 1200)
+      })().catch((err: unknown) => {
         const messageText = err instanceof Error ? err.message : String(err)
-        const activeSend = activeSendRef.current
-        if (activeSend?.clientId) {
+        if (idempotencyKey) {
           updateHistoryMessageByClientIdEverywhere(
             queryClient,
-            activeSend.clientId,
+            idempotencyKey,
             (message) => ({
               ...message,
               status: 'error',
             }),
           )
         }
-        activeSendRef.current = null
+        if (activeSendRef.current?.clientId === idempotencyKey) {
+          activeSendRef.current = null
+        }
         setSending(false)
         setPendingGeneration(false)
         setWaitingForResponse(false)
         if (import.meta.env.DEV) {
-          console.warn('[chat] send-stream failed', messageText)
+          console.warn('[chat] session-send failed', messageText)
         }
       })
     },
@@ -2024,8 +2065,7 @@ export function ChatScreen({
       clearCompletedStreaming,
       queryClient,
       setLocalActivity,
-      startStreaming,
-      streamFinish,
+      setWaitingForResponse,
       streamStart,
       currentModel,
     ],

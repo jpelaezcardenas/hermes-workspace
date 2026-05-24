@@ -322,6 +322,7 @@ export const Route = createFileRoute('/api/send-stream')({
           typeof body.thinking === 'string' ? body.thinking : undefined
         const attachments = normalizeAttachments(body.attachments)
         const history = normalizePortableHistory(body.history)
+        const shouldPublishServerSideEvents = body.serverSide === true
         if (!message.trim() && (!attachments || attachments.length === 0)) {
           return new Response(
             JSON.stringify({ ok: false, error: 'message required' }),
@@ -443,6 +444,15 @@ export const Route = createFileRoute('/api/send-stream')({
               lastClientEventAt = Date.now()
               const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`
               enqueueRaw(payload)
+              if (
+                shouldPublishServerSideEvents &&
+                event !== 'heartbeat' &&
+                event !== 'hb_signal' &&
+                data &&
+                typeof data === 'object'
+              ) {
+                publishChatEvent(event, data as Record<string, unknown>)
+              }
             }
 
             // Cloudflare Tunnel/Access can otherwise leave small SSE streams idle
@@ -519,7 +529,9 @@ export const Route = createFileRoute('/api/send-stream')({
                 let accumulated = ''
 
                 activeRunId = runId
-                registerActiveSendRun(runId)
+                if (!shouldPublishServerSideEvents) {
+                  registerActiveSendRun(runId)
+                }
                 persistRunStarted(runId, portableSessionKey, portableFriendlyId)
                 unregisterTimer = setTimeout(() => {
                   if (activeRunId) {
@@ -1028,7 +1040,9 @@ export const Route = createFileRoute('/api/send-stream')({
 
                       if (runId && !activeRunId) {
                         activeRunId = runId
-                        registerActiveSendRun(runId)
+                        if (!shouldPublishServerSideEvents) {
+                          registerActiveSendRun(runId)
+                        }
                         persistRunStarted(
                           runId,
                           sessionKeyFromEvent,
