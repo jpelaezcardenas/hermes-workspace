@@ -31,6 +31,7 @@ import { EditModePanel } from './components/edit-mode-panel'
 import { HeroMetrics } from './components/hero-metrics'
 import { LogsTailCard } from './components/logs-tail-card'
 import { OperatorTipCard } from './components/operator-tip-card'
+import { PatchAidFaireOrdersCard } from './components/patchaid-faire-orders-card'
 import { OpsStrip } from './components/ops-strip'
 import { ProviderMixCard } from './components/provider-mix-card'
 import { SessionsIntelligenceCard } from './components/sessions-intelligence-card'
@@ -1173,6 +1174,11 @@ export function DashboardScreen() {
           <WidgetShell id="achievements" layout={layout}>
             <AchievementsCard
               achievements={overview?.achievements ?? null}
+            />
+          </WidgetShell>
+          <WidgetShell id="patchaid_faire_orders" layout={layout}>
+            <PatchAidFaireOrdersCard
+              data={overview?.patchAidFaireOrders ?? null}
             />
           </WidgetShell>
           <WidgetShell id="skills_usage" layout={layout}>
