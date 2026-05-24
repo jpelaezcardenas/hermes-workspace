@@ -2035,7 +2035,10 @@ export function ChatScreen({
         }
         setSending(false)
         setPendingGeneration(false)
-        setWaitingForResponse(true)
+        // The server owns this run now. Keep the composer unlocked after the
+        // accepted send; realtime events and history refreshes will render the
+        // answer when it arrives.
+        setWaitingForResponse(false)
         window.setTimeout(() => refreshHistoryRef.current(), 1200)
       })().catch((err: unknown) => {
         const messageText = err instanceof Error ? err.message : String(err)

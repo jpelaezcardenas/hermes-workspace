@@ -13,7 +13,16 @@ export type ResponseWaitSnapshot = {
 export function isTerminalActiveRunStatus(status: unknown): boolean {
   return (
     typeof status === 'string' &&
-    ['complete', 'completed', 'failed', 'cancelled', 'error'].includes(status)
+    [
+      'accepted',
+      'complete',
+      'completed',
+      'failed',
+      'cancelled',
+      'error',
+      'handoff',
+      'stalled',
+    ].includes(status)
   )
 }
 

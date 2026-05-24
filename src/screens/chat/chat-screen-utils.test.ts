@@ -60,6 +60,9 @@ describe('response wait detection', () => {
   it('treats persisted complete runs as terminal', () => {
     expect(isTerminalActiveRunStatus('complete')).toBe(true)
     expect(isTerminalActiveRunStatus('completed')).toBe(true)
+    expect(isTerminalActiveRunStatus('accepted')).toBe(true)
+    expect(isTerminalActiveRunStatus('handoff')).toBe(true)
+    expect(isTerminalActiveRunStatus('stalled')).toBe(true)
     expect(isTerminalActiveRunStatus('active')).toBe(false)
   })
 

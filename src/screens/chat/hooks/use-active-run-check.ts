@@ -19,16 +19,14 @@ type ActiveRunResponse = {
   } | null
 }
 
-const ACTIVE_STATUSES: ReadonlySet<string> = new Set([
-  'accepted',
-  'active',
-  'handoff',
-])
+const ACTIVE_STATUSES: ReadonlySet<string> = new Set(['active'])
 
 /**
  * On mount, checks whether the server has an active run for this session.
  * If so, marks the session as waiting in the persistent Zustand store.
- * If the server says the run is done, clears the stale waiting state.
+ * Accepted/handoff/stalled runs stay recoverable in the server ledger, but
+ * they should not resurrect a blocking thinking state in the UI. If the
+ * server says the run is not actively streaming, clear stale waiting state.
  *
  * This closes the gap where a user navigates away during streaming,
  * the component unmounts (losing local state), and on remount the UI
