@@ -51,8 +51,9 @@ export const Route = createFileRoute('/api/provider-usage')({
               updatedAt: Date.now(),
               providers: [],
               error: err instanceof Error ? err.message : String(err),
+              degraded: true,
             },
-            { status: 503 },
+            { status: 200 },
           )
         }
       },

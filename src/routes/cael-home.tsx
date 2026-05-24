@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { usePageTitle } from '@/hooks/use-page-title'
 import {
   readCommandCenterSummaryCache,
@@ -130,6 +130,16 @@ type CommandCenterSummary = {
       failures: number
     }>
   } | null
+  homebaseRecords: {
+    status: string
+    detail: string
+    records: Array<{
+      id: string
+      label: string
+      kind: string
+      updatedAt: string | null
+    }>
+  }
 }
 
 type N8nGovernanceResponse = {
@@ -175,6 +185,110 @@ type N8nGovernanceResponse = {
     status: 'available' | 'planned' | 'approval_gated'
   }>
   guardrails: Array<string>
+}
+
+type CommandCenterSectionEnvelope<T> = {
+  ok: boolean
+  generatedAt: string
+  source: string
+  scope: 'personal' | 'business' | 'mixed' | 'system'
+  data: T | null
+  warnings: string[]
+  errors: string[]
+}
+
+type CommandCenterActionGateDetail =
+  CommandCenterSummary['actionGates'][number] & {
+    ownerSystem: string
+    sideEffects: string
+    rollback: string
+    href: string | null
+  }
+
+type CommandCenterActionGatesSection = {
+  total: number
+  approvalRequired: number
+  dryRun: number
+  actions: CommandCenterActionGateDetail[]
+}
+
+type CommandCenterAgentRunsSection = {
+  runs: Array<
+    CommandCenterSummary['agentRuns'][number] & {
+      receiptCount: number | null
+      verification: string
+    }
+  >
+  receipts: Array<{
+    title: string
+    path: string
+    updatedAt: string
+    instance: N8nInstanceId | 'unknown'
+  }>
+}
+
+type CommandCenterAutomationSection = {
+  boundary: string
+  instances: N8nGovernanceResponse['instances']
+  promotionReceipts: N8nGovernanceResponse['promotionReceipts']
+  guardrails: string[]
+}
+
+type CommandCenterBrainSection = {
+  sources: NonNullable<CommandCenterSummary['brain']>['sources']
+  memoryArtifacts: {
+    count: number
+    rootConfigured: boolean
+    root: string | null
+  }
+  policy: string[]
+}
+
+type CommandCenterMemoryArtifactsSection = {
+  root: string
+  count: number
+  artifacts: Array<{
+    id: string
+    title: string
+    path: string
+    scope: 'personal' | 'business' | 'shared'
+    tenant: string | null
+    updatedAt: string | null
+    sensitivity: 'normal' | 'secret_ref'
+    tags: string[]
+    excerpt: string
+  }>
+}
+
+type CommandCenterVaultRefsSection = {
+  warningCount: number
+  refs: Array<{
+    id: string
+    displayName: string
+    scope: 'personal' | 'business' | 'shared'
+    exists: boolean
+    lastVerifiedAt: string | null
+    rotationDueAt: string | null
+    linkedSystems: string[]
+    vaultHref: string | null
+    secretValue: null
+  }>
+  policy: string[]
+}
+
+type CommandCenterHomebaseSection = CommandCenterSummary['homebaseRecords']
+type CommandCenterUsageSection = NonNullable<CommandCenterSummary['usage']>
+
+type CommandCenterSectionsSnapshot = {
+  actionGates?: CommandCenterSectionEnvelope<CommandCenterActionGatesSection>
+  agentRuns?: CommandCenterSectionEnvelope<CommandCenterAgentRunsSection>
+  automations?: CommandCenterSectionEnvelope<CommandCenterAutomationSection>
+  brain?: CommandCenterSectionEnvelope<CommandCenterBrainSection>
+  homebaseRecords?: CommandCenterSectionEnvelope<CommandCenterHomebaseSection>
+  memoryArtifacts?: CommandCenterSectionEnvelope<CommandCenterMemoryArtifactsSection>
+  usageLimits?: CommandCenterSectionEnvelope<CommandCenterUsageSection>
+  vaultRefs?: CommandCenterSectionEnvelope<CommandCenterVaultRefsSection>
+  errors: string[]
 }
 
 async function fetchStatus(): Promise<CaelStatusResponse> {
@@ -231,6 +345,86 @@ async function fetchCommandCenterSummary(): Promise<CommandCenterSummaryEnvelope
     cachedAt: cached?.cachedAt ?? envelope.generatedAt,
     fromCache: false,
   })
+}
+
+async function fetchCommandCenterSection<T>(
+  path: string,
+): Promise<CommandCenterSectionEnvelope<T>> {
+  const response = await fetch(path, { cache: 'no-store' })
+  if (!response.ok) {
+    throw new Error(`${path} failed: HTTP ${response.status}`)
+  }
+  return (await response.json()) as CommandCenterSectionEnvelope<T>
+}
+
+async function captureSection<T>(
+  path: string,
+): Promise<CommandCenterSectionEnvelope<T> | Error> {
+  try {
+    return await fetchCommandCenterSection<T>(path)
+  } catch (error) {
+    return error instanceof Error ? error : new Error(String(error))
+  }
+}
+
+async function fetchCommandCenterSections(): Promise<CommandCenterSectionsSnapshot> {
+  const [
+    actionGates,
+    agentRuns,
+    automations,
+    brain,
+    homebaseRecords,
+    memoryArtifacts,
+    usageLimits,
+    vaultRefs,
+  ] = await Promise.all([
+    captureSection<CommandCenterActionGatesSection>(
+      '/api/command-center/action-gates',
+    ),
+    captureSection<CommandCenterAgentRunsSection>(
+      '/api/command-center/agent-runs',
+    ),
+    captureSection<CommandCenterAutomationSection>(
+      '/api/command-center/automations',
+    ),
+    captureSection<CommandCenterBrainSection>('/api/command-center/brain'),
+    captureSection<CommandCenterHomebaseSection>(
+      '/api/command-center/homebase-records',
+    ),
+    captureSection<CommandCenterMemoryArtifactsSection>(
+      '/api/command-center/memory-artifacts',
+    ),
+    captureSection<CommandCenterUsageSection>(
+      '/api/command-center/usage-limits',
+    ),
+    captureSection<CommandCenterVaultRefsSection>(
+      '/api/command-center/vault-refs',
+    ),
+  ])
+
+  const errors: string[] = []
+  function unwrap<T>(
+    name: string,
+    value: CommandCenterSectionEnvelope<T> | Error,
+  ) {
+    if (value instanceof Error) {
+      errors.push(`${name}: ${value.message}`)
+      return undefined
+    }
+    return value
+  }
+
+  return {
+    actionGates: unwrap('Action gates', actionGates),
+    agentRuns: unwrap('Agent runs', agentRuns),
+    automations: unwrap('Automations', automations),
+    brain: unwrap('Brain', brain),
+    homebaseRecords: unwrap('Homebase', homebaseRecords),
+    memoryArtifacts: unwrap('Memory artifacts', memoryArtifacts),
+    usageLimits: unwrap('Usage limits', usageLimits),
+    vaultRefs: unwrap('Vault refs', vaultRefs),
+    errors,
+  }
 }
 
 export const Route = createFileRoute('/cael-home')({
@@ -328,7 +522,35 @@ function CaelHomeRoute() {
     staleTime: 15_000,
     refetchInterval: 30_000,
   })
+  const {
+    data: commandSections,
+    error: commandSectionsError,
+    isLoading: commandSectionsLoading,
+    refetch: refetchCommandSections,
+    isFetching: isCommandSectionsFetching,
+  } = useQuery({
+    queryKey: ['command-center-sections'],
+    queryFn: fetchCommandCenterSections,
+    staleTime: 15_000,
+    refetchInterval: 45_000,
+  })
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false)
   const commandCenterOk = commandSummary?.ok ?? data?.ok
+
+  async function refreshCommandCenter() {
+    if (isManualRefreshing) return
+    setIsManualRefreshing(true)
+    try {
+      await Promise.allSettled([
+        refetch(),
+        refetchN8n(),
+        refetchCommandSummary(),
+        refetchCommandSections(),
+      ])
+    } finally {
+      setIsManualRefreshing(false)
+    }
+  }
 
   return (
     <main className="h-full overflow-y-auto bg-[var(--theme-bg)] text-[var(--theme-text)]">
@@ -355,16 +577,12 @@ function CaelHomeRoute() {
               ) : null}
               <button
                 className="rounded-xl border border-[var(--theme-border)] px-4 py-2 text-sm hover:bg-white/5 disabled:opacity-50"
-                disabled={
-                  isFetching || isN8nFetching || isCommandSummaryFetching
-                }
+                disabled={isManualRefreshing}
                 onClick={() => {
-                  void refetch()
-                  void refetchN8n()
-                  void refetchCommandSummary()
+                  void refreshCommandCenter()
                 }}
               >
-                {isFetching || isN8nFetching || isCommandSummaryFetching
+                {isManualRefreshing
                   ? 'Refreshing...'
                   : 'Refresh command center'}
               </button>
@@ -377,6 +595,13 @@ function CaelHomeRoute() {
           error={commandSummaryError}
           isLoading={commandSummaryLoading}
           isFetching={isCommandSummaryFetching}
+        />
+
+        <CommandCenterSectionsPanel
+          snapshot={commandSections}
+          error={commandSectionsError}
+          isLoading={commandSectionsLoading}
+          isFetching={isCommandSectionsFetching}
         />
 
         <CommandCenterPostureGrid envelope={commandSummary} fallback={data} />
@@ -673,6 +898,248 @@ function CommandCenterSummaryPanel({
         </SummaryColumn>
       </div>
     </section>
+  )
+}
+
+function CommandCenterSectionsPanel({
+  snapshot,
+  error,
+  isLoading,
+  isFetching,
+}: {
+  snapshot?: CommandCenterSectionsSnapshot
+  error: Error | null
+  isLoading: boolean
+  isFetching: boolean
+}) {
+  if (isLoading && !snapshot) {
+    return (
+      <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 text-sm text-[var(--theme-muted)]">
+        Loading command center sections...
+      </section>
+    )
+  }
+
+  if (error && !snapshot) {
+    return (
+      <section className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5 text-sm text-rose-200">
+        {error.message}
+      </section>
+    )
+  }
+
+  if (!snapshot) return null
+
+  const actionGates = snapshot.actionGates?.data?.actions ?? []
+  const runs = snapshot.agentRuns?.data?.runs ?? []
+  const automationInstances = snapshot.automations?.data?.instances ?? []
+  const memoryArtifacts = snapshot.memoryArtifacts?.data?.artifacts ?? []
+  const vaultRefs = snapshot.vaultRefs?.data?.refs ?? []
+  const homebase = snapshot.homebaseRecords?.data
+  const usageProviders = snapshot.usageLimits?.data?.providers ?? []
+  const brainSources = snapshot.brain?.data?.sources ?? []
+  const warningCount = [
+    snapshot.actionGates,
+    snapshot.agentRuns,
+    snapshot.automations,
+    snapshot.brain,
+    snapshot.homebaseRecords,
+    snapshot.memoryArtifacts,
+    snapshot.usageLimits,
+    snapshot.vaultRefs,
+  ].reduce(
+    (count, envelope) => count + (envelope?.warnings.length ?? 0),
+    snapshot.errors.length,
+  )
+
+  return (
+    <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--theme-muted)]">
+            Section Contract
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold">
+            Native-ready command center sections
+          </h2>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--theme-muted)]">
+            These cards are hydrated from the dedicated `/api/command-center/*`
+            section endpoints. Desktop and mobile web can render this data
+            without porting the business logic into either client.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {isFetching ? (
+            <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-[var(--theme-muted)] ring-1 ring-white/10">
+              Refreshing
+            </span>
+          ) : null}
+          {warningCount ? (
+            <span className="rounded-full bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-200 ring-1 ring-amber-400/30">
+              {warningCount} warning{warningCount === 1 ? '' : 's'}
+            </span>
+          ) : (
+            <StatusPill ok />
+          )}
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 xl:grid-cols-3">
+        <SummaryColumn title="Action Gates">
+          <SectionCount
+            label="Approval required"
+            value={String(snapshot.actionGates?.data?.approvalRequired ?? 0)}
+            detail={`${snapshot.actionGates?.data?.dryRun ?? 0} dry-run capable actions`}
+          />
+          {actionGates.slice(0, 3).map((gate) => (
+            <div
+              key={gate.id}
+              className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-semibold">{gate.label}</div>
+                <RiskPill risk={gate.riskLevel} gated={gate.approvalRequired} />
+              </div>
+              <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
+                {gate.sideEffects || gate.detail}
+              </p>
+            </div>
+          ))}
+        </SummaryColumn>
+
+        <SummaryColumn title="Runs + Receipts">
+          <SectionCount
+            label="Runs surfaced"
+            value={String(runs.length)}
+            detail={`${snapshot.agentRuns?.data?.receipts.length ?? 0} receipt refs`}
+          />
+          {runs.slice(0, 3).map((run) => (
+            <div
+              key={run.id}
+              className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+            >
+              <div className="text-sm font-semibold">{run.title}</div>
+              <p className="mt-2 text-xs text-[var(--theme-muted)]">
+                {run.status} - {run.verification}
+              </p>
+            </div>
+          ))}
+        </SummaryColumn>
+
+        <SummaryColumn title="Brain + Memory">
+          <SectionCount
+            label="Brain sources"
+            value={String(brainSources.length)}
+            detail={`${snapshot.brain?.data?.memoryArtifacts.count ?? memoryArtifacts.length} artifact refs`}
+          />
+          {memoryArtifacts.slice(0, 3).map((artifact) => (
+            <div
+              key={artifact.id}
+              className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-semibold">{artifact.title}</div>
+                <span className="rounded-full bg-white/10 px-2 py-1 text-[10px] font-semibold uppercase text-[var(--theme-muted)]">
+                  {artifact.sensitivity}
+                </span>
+              </div>
+              <p className="mt-2 line-clamp-2 text-xs leading-5 text-[var(--theme-muted)]">
+                {artifact.excerpt || artifact.scope}
+              </p>
+            </div>
+          ))}
+        </SummaryColumn>
+
+        <SummaryColumn title="Automations">
+          <SectionCount
+            label="Automation lanes"
+            value={String(automationInstances.length)}
+            detail={
+              snapshot.automations?.data?.boundary ?? 'No automation snapshot'
+            }
+          />
+          {automationInstances.map((instance) => (
+            <div
+              key={instance.id}
+              className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-semibold">{instance.label}</div>
+                <StatusPill ok={instance.health.ok} />
+              </div>
+              <p className="mt-2 text-xs text-[var(--theme-muted)]">
+                {instance.failures.length} recent failure families
+              </p>
+            </div>
+          ))}
+        </SummaryColumn>
+
+        <SummaryColumn title="Vault + Models">
+          <SectionCount
+            label="Vault refs"
+            value={String(vaultRefs.length)}
+            detail="Reference-only. Secret values are never returned."
+          />
+          <SectionCount
+            label="Model monitors"
+            value={String(usageProviders.length)}
+            detail={
+              usageProviders
+                .filter(
+                  (provider) =>
+                    provider.caelDefault || provider.monitorKind === 'cael',
+                )
+                .map((provider) => provider.caelModel || provider.label)
+                .join(', ') || 'No active Cael model monitors reported.'
+            }
+          />
+        </SummaryColumn>
+
+        <SummaryColumn title="Homebase">
+          <SectionCount
+            label={homebase?.status ?? 'unknown'}
+            value={String(homebase?.records.length ?? 0)}
+            detail={homebase?.detail ?? 'Homebase section unavailable.'}
+          />
+          {(homebase?.records ?? []).slice(0, 3).map((record) => (
+            <div
+              key={record.id}
+              className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4"
+            >
+              <div className="text-sm font-semibold">{record.label}</div>
+              <p className="mt-2 text-xs uppercase tracking-wide text-[var(--theme-muted)]">
+                {record.kind}
+              </p>
+            </div>
+          ))}
+          {!homebase?.records.length ? (
+            <EmptySummary label="Homebase is running in reference-only/degraded mode until the server credential resolver is wired." />
+          ) : null}
+        </SummaryColumn>
+      </div>
+    </section>
+  )
+}
+
+function SectionCount({
+  label,
+  value,
+  detail,
+}: {
+  label: string
+  value: string
+  detail: string
+}) {
+  return (
+    <div className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+        {label}
+      </div>
+      <div className="mt-2 text-2xl font-semibold tabular-nums">{value}</div>
+      <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
+        {detail}
+      </p>
+    </div>
   )
 }
 
