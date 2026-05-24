@@ -16,10 +16,17 @@ const KnowledgeBrowserScreen = lazy(async () => {
   return { default: module.KnowledgeBrowserScreen }
 })
 
+const SecondBrainFilesScreen = lazy(async () => {
+  const module = await import('@/screens/memory/second-brain-files-screen')
+  return { default: module.SecondBrainFilesScreen }
+})
+
+type MemoryTab = 'memory' | 'knowledge' | 'second-brain-files'
+
 export const Route = createFileRoute('/memory')({
   ssr: false,
   component: function MemoryRoute() {
-    const [tab, setTab] = useState<'memory' | 'knowledge'>('memory')
+    const [tab, setTab] = useState<MemoryTab>('memory')
     const memoryAvailable = useFeatureAvailable('memory')
 
     usePageTitle('Memory')
@@ -28,7 +35,7 @@ export const Route = createFileRoute('/memory')({
       <div className="flex h-full min-h-0 flex-col">
         <Tabs
           value={tab}
-          onValueChange={(value) => setTab(value as 'memory' | 'knowledge')}
+          onValueChange={(value) => setTab(value as MemoryTab)}
           className="h-full min-h-0 gap-0"
         >
           <div className="border-b border-primary-200 px-3 pt-3 dark:border-neutral-800 md:px-4 md:pt-4">
@@ -38,6 +45,7 @@ export const Route = createFileRoute('/memory')({
             >
               <TabsTab value="memory">Memory</TabsTab>
               <TabsTab value="knowledge">Knowledge</TabsTab>
+              <TabsTab value="second-brain-files">Second Brain Files</TabsTab>
             </TabsList>
           </div>
 
@@ -68,6 +76,18 @@ export const Route = createFileRoute('/memory')({
                 }
               >
                 <KnowledgeBrowserScreen />
+              </Suspense>
+            ) : null}
+          </TabsPanel>
+
+          <TabsPanel value="second-brain-files" className="min-h-0 flex-1">
+            {tab === 'second-brain-files' ? (
+              <Suspense
+                fallback={
+                  <RouteLoadingState label="Loading Second Brain files..." />
+                }
+              >
+                <SecondBrainFilesScreen />
               </Suspense>
             ) : null}
           </TabsPanel>

@@ -24,6 +24,9 @@ describe('root runtime guards', () => {
     ).resolves.toBeUndefined()
 
     expect(deleteCache).toHaveBeenCalledWith('stale')
-    expect(register).toHaveBeenCalledWith('/sw.js', { scope: '/' })
+    expect(register).toHaveBeenCalledWith('/sw.js', {
+      scope: '/',
+      updateViaCache: 'none',
+    })
   })
 })

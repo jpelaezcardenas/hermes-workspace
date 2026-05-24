@@ -114,6 +114,7 @@ import { Route as ApiClaudeJobsRouteImport } from './routes/api/claude-jobs'
 import { Route as ApiClaudeConfigRouteImport } from './routes/api/claude-config'
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiCaelStatusRouteImport } from './routes/api/cael-status'
+import { Route as ApiCaelN8nGovernanceRouteImport } from './routes/api/cael-n8n-governance'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
@@ -128,6 +129,11 @@ import { Route as ApiSkillsToggleRouteImport } from './routes/api/skills/toggle'
 import { Route as ApiSkillsInstallRouteImport } from './routes/api/skills/install'
 import { Route as ApiSkillsHubSearchRouteImport } from './routes/api/skills/hub-search'
 import { Route as ApiSessionsSendRouteImport } from './routes/api/sessions/send'
+import { Route as ApiSecondBrainWriteRouteImport } from './routes/api/second-brain/write'
+import { Route as ApiSecondBrainSourcesRouteImport } from './routes/api/second-brain/sources'
+import { Route as ApiSecondBrainReadRouteImport } from './routes/api/second-brain/read'
+import { Route as ApiSecondBrainListRouteImport } from './routes/api/second-brain/list'
+import { Route as ApiSecondBrainDispatchRouteImport } from './routes/api/second-brain/dispatch'
 import { Route as ApiProfilesUpdateRouteImport } from './routes/api/profiles/update'
 import { Route as ApiProfilesRenameRouteImport } from './routes/api/profiles/rename'
 import { Route as ApiProfilesReadRouteImport } from './routes/api/profiles/read'
@@ -695,6 +701,11 @@ const ApiCaelStatusRoute = ApiCaelStatusRouteImport.update({
   path: '/api/cael-status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCaelN8nGovernanceRoute = ApiCaelN8nGovernanceRouteImport.update({
+  id: '/api/cael-n8n-governance',
+  path: '/api/cael-n8n-governance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthCheckRoute = ApiAuthCheckRouteImport.update({
   id: '/api/auth-check',
   path: '/api/auth-check',
@@ -764,6 +775,31 @@ const ApiSessionsSendRoute = ApiSessionsSendRouteImport.update({
   id: '/send',
   path: '/send',
   getParentRoute: () => ApiSessionsRoute,
+} as any)
+const ApiSecondBrainWriteRoute = ApiSecondBrainWriteRouteImport.update({
+  id: '/api/second-brain/write',
+  path: '/api/second-brain/write',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSecondBrainSourcesRoute = ApiSecondBrainSourcesRouteImport.update({
+  id: '/api/second-brain/sources',
+  path: '/api/second-brain/sources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSecondBrainReadRoute = ApiSecondBrainReadRouteImport.update({
+  id: '/api/second-brain/read',
+  path: '/api/second-brain/read',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSecondBrainListRoute = ApiSecondBrainListRouteImport.update({
+  id: '/api/second-brain/list',
+  path: '/api/second-brain/list',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSecondBrainDispatchRoute = ApiSecondBrainDispatchRouteImport.update({
+  id: '/api/second-brain/dispatch',
+  path: '/api/second-brain/dispatch',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiProfilesUpdateRoute = ApiProfilesUpdateRouteImport.update({
   id: '/api/profiles/update',
@@ -1004,6 +1040,7 @@ export interface FileRoutesByFullPath {
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
+  '/api/cael-n8n-governance': typeof ApiCaelN8nGovernanceRoute
   '/api/cael-status': typeof ApiCaelStatusRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/claude-config': typeof ApiClaudeConfigRoute
@@ -1114,6 +1151,11 @@ export interface FileRoutesByFullPath {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/second-brain/dispatch': typeof ApiSecondBrainDispatchRoute
+  '/api/second-brain/list': typeof ApiSecondBrainListRoute
+  '/api/second-brain/read': typeof ApiSecondBrainReadRoute
+  '/api/second-brain/sources': typeof ApiSecondBrainSourcesRoute
+  '/api/second-brain/write': typeof ApiSecondBrainWriteRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
   '/api/skills/install': typeof ApiSkillsInstallRoute
@@ -1164,6 +1206,7 @@ export interface FileRoutesByTo {
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
+  '/api/cael-n8n-governance': typeof ApiCaelN8nGovernanceRoute
   '/api/cael-status': typeof ApiCaelStatusRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/claude-config': typeof ApiClaudeConfigRoute
@@ -1274,6 +1317,11 @@ export interface FileRoutesByTo {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/second-brain/dispatch': typeof ApiSecondBrainDispatchRoute
+  '/api/second-brain/list': typeof ApiSecondBrainListRoute
+  '/api/second-brain/read': typeof ApiSecondBrainReadRoute
+  '/api/second-brain/sources': typeof ApiSecondBrainSourcesRoute
+  '/api/second-brain/write': typeof ApiSecondBrainWriteRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
   '/api/skills/install': typeof ApiSkillsInstallRoute
@@ -1326,6 +1374,7 @@ export interface FileRoutesById {
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
+  '/api/cael-n8n-governance': typeof ApiCaelN8nGovernanceRoute
   '/api/cael-status': typeof ApiCaelStatusRoute
   '/api/chat-events': typeof ApiChatEventsRoute
   '/api/claude-config': typeof ApiClaudeConfigRoute
@@ -1436,6 +1485,11 @@ export interface FileRoutesById {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/second-brain/dispatch': typeof ApiSecondBrainDispatchRoute
+  '/api/second-brain/list': typeof ApiSecondBrainListRoute
+  '/api/second-brain/read': typeof ApiSecondBrainReadRoute
+  '/api/second-brain/sources': typeof ApiSecondBrainSourcesRoute
+  '/api/second-brain/write': typeof ApiSecondBrainWriteRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
   '/api/skills/install': typeof ApiSkillsInstallRoute
@@ -1489,6 +1543,7 @@ export interface FileRouteTypes {
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
+    | '/api/cael-n8n-governance'
     | '/api/cael-status'
     | '/api/chat-events'
     | '/api/claude-config'
@@ -1599,6 +1654,11 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/second-brain/dispatch'
+    | '/api/second-brain/list'
+    | '/api/second-brain/read'
+    | '/api/second-brain/sources'
+    | '/api/second-brain/write'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
     | '/api/skills/install'
@@ -1649,6 +1709,7 @@ export interface FileRouteTypes {
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
+    | '/api/cael-n8n-governance'
     | '/api/cael-status'
     | '/api/chat-events'
     | '/api/claude-config'
@@ -1759,6 +1820,11 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/second-brain/dispatch'
+    | '/api/second-brain/list'
+    | '/api/second-brain/read'
+    | '/api/second-brain/sources'
+    | '/api/second-brain/write'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
     | '/api/skills/install'
@@ -1810,6 +1876,7 @@ export interface FileRouteTypes {
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
+    | '/api/cael-n8n-governance'
     | '/api/cael-status'
     | '/api/chat-events'
     | '/api/claude-config'
@@ -1920,6 +1987,11 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/second-brain/dispatch'
+    | '/api/second-brain/list'
+    | '/api/second-brain/read'
+    | '/api/second-brain/sources'
+    | '/api/second-brain/write'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
     | '/api/skills/install'
@@ -1972,6 +2044,7 @@ export interface RootRouteChildren {
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
+  ApiCaelN8nGovernanceRoute: typeof ApiCaelN8nGovernanceRoute
   ApiCaelStatusRoute: typeof ApiCaelStatusRoute
   ApiChatEventsRoute: typeof ApiChatEventsRoute
   ApiClaudeConfigRoute: typeof ApiClaudeConfigRoute
@@ -2063,6 +2136,11 @@ export interface RootRouteChildren {
   ApiProfilesReadRoute: typeof ApiProfilesReadRoute
   ApiProfilesRenameRoute: typeof ApiProfilesRenameRoute
   ApiProfilesUpdateRoute: typeof ApiProfilesUpdateRoute
+  ApiSecondBrainDispatchRoute: typeof ApiSecondBrainDispatchRoute
+  ApiSecondBrainListRoute: typeof ApiSecondBrainListRoute
+  ApiSecondBrainReadRoute: typeof ApiSecondBrainReadRoute
+  ApiSecondBrainSourcesRoute: typeof ApiSecondBrainSourcesRoute
+  ApiSecondBrainWriteRoute: typeof ApiSecondBrainWriteRoute
   ApiUpdateAgentRoute: typeof ApiUpdateAgentRoute
   ApiUpdateStatusRoute: typeof ApiUpdateStatusRoute
   ApiUpdateWorkspaceRoute: typeof ApiUpdateWorkspaceRoute
@@ -2806,6 +2884,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCaelStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/cael-n8n-governance': {
+      id: '/api/cael-n8n-governance'
+      path: '/api/cael-n8n-governance'
+      fullPath: '/api/cael-n8n-governance'
+      preLoaderRoute: typeof ApiCaelN8nGovernanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth-check': {
       id: '/api/auth-check'
       path: '/api/auth-check'
@@ -2903,6 +2988,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/sessions/send'
       preLoaderRoute: typeof ApiSessionsSendRouteImport
       parentRoute: typeof ApiSessionsRoute
+    }
+    '/api/second-brain/write': {
+      id: '/api/second-brain/write'
+      path: '/api/second-brain/write'
+      fullPath: '/api/second-brain/write'
+      preLoaderRoute: typeof ApiSecondBrainWriteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/second-brain/sources': {
+      id: '/api/second-brain/sources'
+      path: '/api/second-brain/sources'
+      fullPath: '/api/second-brain/sources'
+      preLoaderRoute: typeof ApiSecondBrainSourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/second-brain/read': {
+      id: '/api/second-brain/read'
+      path: '/api/second-brain/read'
+      fullPath: '/api/second-brain/read'
+      preLoaderRoute: typeof ApiSecondBrainReadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/second-brain/list': {
+      id: '/api/second-brain/list'
+      path: '/api/second-brain/list'
+      fullPath: '/api/second-brain/list'
+      preLoaderRoute: typeof ApiSecondBrainListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/second-brain/dispatch': {
+      id: '/api/second-brain/dispatch'
+      path: '/api/second-brain/dispatch'
+      fullPath: '/api/second-brain/dispatch'
+      preLoaderRoute: typeof ApiSecondBrainDispatchRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/profiles/update': {
       id: '/api/profiles/update'
@@ -3443,6 +3563,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
+  ApiCaelN8nGovernanceRoute: ApiCaelN8nGovernanceRoute,
   ApiCaelStatusRoute: ApiCaelStatusRoute,
   ApiChatEventsRoute: ApiChatEventsRoute,
   ApiClaudeConfigRoute: ApiClaudeConfigRoute,
@@ -3534,6 +3655,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesReadRoute: ApiProfilesReadRoute,
   ApiProfilesRenameRoute: ApiProfilesRenameRoute,
   ApiProfilesUpdateRoute: ApiProfilesUpdateRoute,
+  ApiSecondBrainDispatchRoute: ApiSecondBrainDispatchRoute,
+  ApiSecondBrainListRoute: ApiSecondBrainListRoute,
+  ApiSecondBrainReadRoute: ApiSecondBrainReadRoute,
+  ApiSecondBrainSourcesRoute: ApiSecondBrainSourcesRoute,
+  ApiSecondBrainWriteRoute: ApiSecondBrainWriteRoute,
   ApiUpdateAgentRoute: ApiUpdateAgentRoute,
   ApiUpdateStatusRoute: ApiUpdateStatusRoute,
   ApiUpdateWorkspaceRoute: ApiUpdateWorkspaceRoute,

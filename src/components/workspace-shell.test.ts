@@ -27,3 +27,22 @@ describe('swarm2 navigation alias handling', () => {
     expect(swarm2).toBeUndefined()
   })
 })
+
+describe('mobile navigation coverage', () => {
+  it('keeps the primary iPhone cockpit destinations reachable from the hamburger drawer', () => {
+    const targets = MOBILE_HAMBURGER_NAV_ITEMS.map((item) => item.to)
+
+    expect(targets).toEqual(
+      expect.arrayContaining([
+        '/cael-home',
+        '/chat/main',
+        '/desktop',
+        '/terminal',
+        '/operations',
+        '/jobs',
+        '/memory',
+        '/settings',
+      ]),
+    )
+  })
+})

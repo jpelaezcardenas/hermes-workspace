@@ -29,4 +29,17 @@ describe('ChatComposer context controls', () => {
     expect(src).toContain("['medium', 'Medium']")
     expect(src).toContain("['high', 'High']")
   })
+
+  it('accepts pasted, picked, and dropped attachments across images, text/code, PDFs, and binary files', () => {
+    const src = source()
+
+    expect(src).toContain('handlePaste')
+    expect(src).toContain('handleDrop')
+    expect(src).toContain('collectFilesFromDataTransfer')
+    expect(src).toContain('readFileAsDataUrl')
+    expect(src).toContain('readFileAsText')
+    expect(src).toContain('.pdf')
+    expect(src).toContain('application/octet-stream')
+    expect(src).toContain('MAX_TRANSPORT_FILE_SIZE')
+  })
 })

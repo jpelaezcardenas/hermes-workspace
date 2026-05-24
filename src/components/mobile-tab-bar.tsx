@@ -81,6 +81,13 @@ export const MOBILE_NAV_TABS: Array<TabItem> = [
     to: '/tasks',
     match: (p) => p.startsWith('/tasks'),
   },
+  {
+    id: 'swarm',
+    label: 'Swarm',
+    icon: UserGroupIcon,
+    to: '/swarm',
+    match: (p) => p === '/swarm' || p.startsWith('/swarm2'),
+  },
 ]
 
 export function MobileTabBar() {

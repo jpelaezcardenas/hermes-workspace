@@ -162,6 +162,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     to: '/profiles',
     match: (p: string) => p.startsWith('/profiles'),
   },
+  {
+    id: 'settings',
+    label: 'Settings',
+    icon: Settings01Icon,
+    to: '/settings',
+    match: (p: string) => p.startsWith('/settings'),
+  },
 ]
 
 /** Shared drawer state — used by both the trigger button and the drawer itself */
