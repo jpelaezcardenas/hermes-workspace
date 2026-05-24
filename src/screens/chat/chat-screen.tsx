@@ -944,19 +944,21 @@ export function ChatScreen({
     return () => window.clearTimeout(fallback)
   }, [waitingForResponse])
 
-  // Issue #43 polling fallback: when waiting but SSE hasn't reconnected,
-  // poll the active-run endpoint every 5s to detect completion.
+  // Active-run recovery fallback: poll even when SSE says connected.
+  // Browser focus loss, stale sessionStorage, or a server-side handoff can leave
+  // the waiting badge up after the run has completed or gone stale.
   useEffect(() => {
     if (!waitingForResponse || !resolvedSessionKey) return
-    if (sseConnectionState === 'connected') return // SSE will deliver the event
-    const interval = window.setInterval(async () => {
+    let cancelled = false
+
+    const checkActiveRun = async () => {
       try {
         const res = await fetch(
           `/api/sessions/${encodeURIComponent(resolvedSessionKey)}/active-run`,
         )
-        if (!res.ok) return
+        if (!res.ok || cancelled) return
         const data = await res.json()
-        if (!data.ok) return
+        if (!data.ok || cancelled) return
         // No active run means the server either completed while this browser
         // was disconnected or the persisted waiting state is stale. Clear the
         // spinner and refetch history so mobile focus loss can recover.
@@ -965,7 +967,6 @@ export function ChatScreen({
           refreshHistoryRef.current()
           return
         }
-        // Treat unknown / transient statuses as still-active to avoid premature teardown
         if (isTerminalActiveRunStatus(data.run.status)) {
           streamFinish()
           refreshHistoryRef.current()
@@ -973,8 +974,28 @@ export function ChatScreen({
       } catch {
         // ignore network errors
       }
-    }, 5000)
-    return () => window.clearInterval(interval)
+    }
+
+    void checkActiveRun()
+    const interval = window.setInterval(
+      checkActiveRun,
+      sseConnectionState === 'connected' ? 10000 : 5000,
+    )
+    const handleFocus = () => {
+      void checkActiveRun()
+    }
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') void checkActiveRun()
+    }
+    window.addEventListener('focus', handleFocus)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      cancelled = true
+      window.clearInterval(interval)
+      window.removeEventListener('focus', handleFocus)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [waitingForResponse, resolvedSessionKey, sseConnectionState, streamFinish])
 
   useAutoSessionTitle({

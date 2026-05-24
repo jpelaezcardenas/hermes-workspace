@@ -10,6 +10,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
+import { startServerSideSessionSend } from '../../server/session-send-runner'
 
 export const Route = createFileRoute('/api/session-send')({
   server: {
@@ -21,7 +22,7 @@ export const Route = createFileRoute('/api/session-send')({
         const csrfCheck = requireJsonContentType(request)
         if (csrfCheck) return csrfCheck
         try {
-          const body = (await request.json()) as {
+          const body = (await request.json()) as Record<string, unknown> & {
             sessionKey?: string
             message?: string
           }
@@ -39,24 +40,24 @@ export const Route = createFileRoute('/api/session-send')({
               { status: 400 },
             )
           }
-          // Fire-and-forget: kick off the stream, then return. Operations
-          // chat panel polls /api/session-history for new assistant turns.
-          const url = new URL('/api/send-stream', request.url)
+          // Fire-and-forget from the browser's perspective, but keep the
+          // /api/send-stream response drained on the server so mobile/browser
+          // focus loss cannot stall the underlying Hermes run.
           const cookie = request.headers.get('cookie') || ''
-          fetch(url, {
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-              ...(cookie ? { cookie } : {}),
-            },
-            body: JSON.stringify({
+          startServerSideSessionSend({
+            requestUrl: request.url,
+            cookie,
+            payload: {
+              ...body,
               sessionKey,
               message,
-            }),
-          }).catch(() => {
-            // swallow; UI discovers failures via next /api/session-history poll
+              idempotencyKey:
+                typeof body.idempotencyKey === 'string'
+                  ? body.idempotencyKey
+                  : crypto.randomUUID(),
+            },
           })
-          return json({ ok: true, sessionKey, queued: true })
+          return json({ ok: true, sessionKey, queued: true, serverSide: true })
         } catch (error) {
           return json(
             {

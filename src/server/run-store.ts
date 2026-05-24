@@ -45,20 +45,49 @@ const RECOVERABLE_RUN_STATUSES = new Set<PersistedRunState['status']>([
   'stalled',
 ])
 const DEFAULT_RECOVERABLE_RUN_MAX_AGE_MS = 30 * 60 * 1000
+const DEFAULT_ACCEPTED_RUN_MAX_AGE_MS = 2 * 60 * 1000
+const DEFAULT_HANDOFF_RUN_MAX_AGE_MS = 5 * 60 * 1000
+const DEFAULT_STALLED_RUN_MAX_AGE_MS = 2 * 60 * 1000
 
-function getRecoverableRunMaxAgeMs(): number {
-  const configured = Number(process.env.HERMES_RUN_RECOVERY_MAX_AGE_MS)
+function readPositiveEnvNumber(name: string): number | null {
+  const configured = Number(process.env[name])
   if (Number.isFinite(configured) && configured > 0) return configured
-  return DEFAULT_RECOVERABLE_RUN_MAX_AGE_MS
+  return null
 }
 
-function isRecoverableRun(run: PersistedRunState, now = Date.now()): boolean {
+export function getRecoverableRunMaxAgeMs(
+  status: PersistedRunState['status'],
+): number {
+  const statusOverride = readPositiveEnvNumber(
+    `HERMES_RUN_RECOVERY_${status.toUpperCase()}_MAX_AGE_MS`,
+  )
+  if (statusOverride !== null) return statusOverride
+
+  const globalOverride = readPositiveEnvNumber('HERMES_RUN_RECOVERY_MAX_AGE_MS')
+  if (globalOverride !== null) return globalOverride
+
+  switch (status) {
+    case 'accepted':
+      return DEFAULT_ACCEPTED_RUN_MAX_AGE_MS
+    case 'handoff':
+      return DEFAULT_HANDOFF_RUN_MAX_AGE_MS
+    case 'stalled':
+      return DEFAULT_STALLED_RUN_MAX_AGE_MS
+    default:
+      return DEFAULT_RECOVERABLE_RUN_MAX_AGE_MS
+  }
+}
+
+export function isPersistedRunRecoverable(
+  run: PersistedRunState,
+  now = Date.now(),
+): boolean {
   if (!RECOVERABLE_RUN_STATUSES.has(run.status)) return false
   if (hasActiveSendRun(run.runId)) return true
   const lastEventAt = Number.isFinite(run.lastEventAt)
     ? run.lastEventAt
     : run.updatedAt
-  return now - lastEventAt <= getRecoverableRunMaxAgeMs()
+  return now - lastEventAt <= getRecoverableRunMaxAgeMs(run.status)
 }
 
 function encodeSessionKey(sessionKey: string): string {
@@ -254,7 +283,7 @@ export async function getActiveRunForSession(
     )
     const candidates = runs
       .filter((run): run is PersistedRunState => Boolean(run))
-      .filter((run) => isRecoverableRun(run))
+      .filter((run) => isPersistedRunRecoverable(run))
       .sort((a, b) => {
         const bLastEventAt = Number.isFinite(b.lastEventAt)
           ? b.lastEventAt

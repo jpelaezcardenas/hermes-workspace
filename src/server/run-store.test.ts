@@ -81,6 +81,44 @@ describe('run-store persistence', () => {
     await expect(getActiveRunForSession('session-1')).resolves.toBeNull()
   })
 
+  it('expires accepted runs faster than active runs when no server run is registered', async () => {
+    const { createPersistedRun, getActiveRunForSession, updatePersistedRun } =
+      await import('./run-store')
+
+    await createPersistedRun({
+      runId: 'run-accepted-stale',
+      sessionKey: 'session-1',
+    })
+
+    const staleTime = Date.now() - 3 * 60 * 1000
+    await updatePersistedRun('session-1', 'run-accepted-stale', (run) => ({
+      ...run,
+      lastEventAt: staleTime,
+    }))
+
+    await expect(getActiveRunForSession('session-1')).resolves.toBeNull()
+  })
+
+  it('keeps active runs recoverable longer than accepted handshakes', async () => {
+    const { createPersistedRun, getActiveRunForSession, updatePersistedRun } =
+      await import('./run-store')
+
+    await createPersistedRun({
+      runId: 'run-active-recent',
+      sessionKey: 'session-1',
+    })
+
+    const recentTime = Date.now() - 3 * 60 * 1000
+    await updatePersistedRun('session-1', 'run-active-recent', (run) => ({
+      ...run,
+      status: 'active',
+      lastEventAt: recentTime,
+    }))
+
+    const active = await getActiveRunForSession('session-1')
+    expect(active?.runId).toBe('run-active-recent')
+  })
+
   it('keeps an old run recoverable while the server still tracks it', async () => {
     const { createPersistedRun, getActiveRunForSession, updatePersistedRun } =
       await import('./run-store')
