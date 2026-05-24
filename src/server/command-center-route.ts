@@ -27,7 +27,7 @@ export async function commandCenterJson<T>(
   })
 
   return Response.json(envelope, {
-    status: envelope.errors.length ? 502 : 200,
+    status: 200,
     headers: {
       'Cache-Control': 'private, max-age=5, stale-while-revalidate=20',
     },

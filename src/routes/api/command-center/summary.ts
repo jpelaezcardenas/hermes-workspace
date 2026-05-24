@@ -19,7 +19,7 @@ export const Route = createFileRoute('/api/command-center/summary')({
         })
 
         return Response.json(summary, {
-          status: summary.errors.length ? 502 : 200,
+          status: 200,
           headers: {
             'Cache-Control': 'private, max-age=5, stale-while-revalidate=20',
           },

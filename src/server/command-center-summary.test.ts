@@ -178,4 +178,28 @@ describe('command center summary', () => {
     )
     expect(envelope.data?.systems).toEqual([])
   })
+
+  it('keeps a partial summary renderable when the status source times out', async () => {
+    const fetcher = async (input: string | URL): Promise<Response> => {
+      const path = new URL(input).pathname
+      if (path === '/api/cael-status') {
+        throw new DOMException('The operation was aborted.', 'AbortError')
+      }
+      return jsonResponse({ ok: false }, 503)
+    }
+
+    const envelope = await buildCommandCenterSummary({
+      requestUrl: 'http://100.97.216.111:3077/api/command-center/summary',
+      fetcher,
+    })
+
+    expect(envelope.ok).toBe(false)
+    expect(envelope.errors).toEqual(
+      expect.arrayContaining(['Cael status: The operation was aborted.']),
+    )
+    expect(envelope.data).not.toBeNull()
+    expect(envelope.data?.posture).toBeNull()
+    expect(envelope.data?.nowNext[0]?.label).toBe('Runtime needs attention')
+  })
+
 })

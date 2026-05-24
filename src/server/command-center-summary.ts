@@ -434,6 +434,7 @@ export async function buildCommandCenterSummary(options: {
         cookie: options.cookie,
         fetcher,
         required: true,
+        timeoutMs: 15000,
       }),
       fetchJson<Record<string, unknown>>({
         baseUrl,
@@ -554,7 +555,10 @@ export async function buildCommandCenterSummary(options: {
     generatedAt,
     source: 'cael-workspace:3077',
     scope: 'mixed',
-    data: errors.length ? null : summary,
+    // A command-center response is a state snapshot, not an all-or-nothing
+    // transport contract. Keep partial summaries renderable so Desktop/Web can
+    // show degraded subsystems instead of failing the whole command center.
+    data: summary,
     warnings,
     errors,
     links,
