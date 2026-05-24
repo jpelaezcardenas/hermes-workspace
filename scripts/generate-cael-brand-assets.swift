@@ -6,23 +6,10 @@ import Foundation
 enum AssetError: Error {
     case badArguments
     case cannotLoadImage(String)
-    case cannotCreateBitmap
     case cannotEncodePNG
 }
 
-struct Output {
-    let url: URL
-    let size: CGSize
-    let kind: Kind
-
-    enum Kind {
-        case appIcon
-        case avatar
-        case cover
-    }
-}
-
-func writePNG(_ image: NSImage, to url: URL) throws {
+private func writePNG(_ image: NSImage, to url: URL) throws {
     guard
         let tiff = image.tiffRepresentation,
         let bitmap = NSBitmapImageRep(data: tiff),
@@ -30,6 +17,7 @@ func writePNG(_ image: NSImage, to url: URL) throws {
     else {
         throw AssetError.cannotEncodePNG
     }
+
     try FileManager.default.createDirectory(
         at: url.deletingLastPathComponent(),
         withIntermediateDirectories: true
@@ -37,185 +25,209 @@ func writePNG(_ image: NSImage, to url: URL) throws {
     try data.write(to: url, options: [.atomic])
 }
 
-func sourceImage(_ url: URL) throws -> NSImage {
+private func loadSource(_ path: String) throws -> NSImage {
+    let url = URL(fileURLWithPath: path)
     guard let image = NSImage(contentsOf: url) else {
-        throw AssetError.cannotLoadImage(url.path)
+        throw AssetError.cannotLoadImage(path)
     }
     return image
 }
 
-func makeImage(size: CGSize, draw: (CGRect) -> Void) throws -> NSImage {
-    let image = NSImage(size: size)
-    image.lockFocus()
-    defer { image.unlockFocus() }
-    guard NSGraphicsContext.current != nil else {
-        throw AssetError.cannotCreateBitmap
-    }
-    draw(CGRect(origin: .zero, size: size))
-    return image
+private func image(size: CGSize, drawing: (CGRect) -> Void) -> NSImage {
+    let output = NSImage(size: size)
+    output.lockFocus()
+    drawing(CGRect(origin: .zero, size: size))
+    output.unlockFocus()
+    return output
 }
 
-func drawSource(_ source: NSImage, crop: CGRect, in rect: CGRect) {
+private func cropRect(for source: NSImage, mode: CropMode) -> CGRect {
+    let width = source.size.width
+    let height = source.size.height
+    let side = min(width, height)
+
+    switch mode {
+    case .full:
+        return CGRect(x: (width - side) / 2, y: (height - side) / 2, width: side, height: side)
+    case .portrait:
+        let cropSide = side * 0.69
+        return CGRect(
+            x: (width - cropSide) / 2,
+            y: (height - cropSide) / 2 + side * 0.035,
+            width: cropSide,
+            height: cropSide
+        )
+    case .cover:
+        let targetAspect: CGFloat = 1200.0 / 630.0
+        let sourceAspect = width / height
+        if sourceAspect > targetAspect {
+            let cropWidth = height * targetAspect
+            return CGRect(x: (width - cropWidth) / 2, y: 0, width: cropWidth, height: height)
+        }
+        let cropHeight = width / targetAspect
+        return CGRect(x: 0, y: (height - cropHeight) / 2, width: width, height: cropHeight)
+    }
+}
+
+private enum CropMode {
+    case full
+    case portrait
+    case cover
+}
+
+private func drawSource(_ source: NSImage, crop: CGRect, in rect: CGRect) {
     source.draw(
         in: rect,
         from: crop,
         operation: .copy,
         fraction: 1.0,
-        respectFlipped: true,
+        respectFlipped: false,
         hints: [.interpolation: NSImageInterpolation.high]
     )
 }
 
-func makeAvatar(source: NSImage, size: CGSize) throws -> NSImage {
-    let crop = CGRect(x: 342, y: 142, width: 340, height: 340)
-    return try makeImage(size: size) { canvas in
+private func appIcon(from source: NSImage, size: CGSize) -> NSImage {
+    image(size: size) { canvas in
         NSColor.clear.setFill()
         canvas.fill()
-
-        let inset = canvas.width * 0.045
-        let ringRect = canvas.insetBy(dx: inset, dy: inset)
-        let outer = NSBezierPath(ovalIn: ringRect)
-        NSColor(calibratedRed: 0.06, green: 0.86, blue: 0.94, alpha: 0.92).setFill()
-        outer.fill()
-
-        let goldRing = NSBezierPath(ovalIn: ringRect.insetBy(dx: canvas.width * 0.035, dy: canvas.height * 0.035))
-        NSColor(calibratedRed: 0.94, green: 0.74, blue: 0.34, alpha: 0.96).setFill()
-        goldRing.fill()
-
-        let imageRect = ringRect.insetBy(dx: canvas.width * 0.075, dy: canvas.height * 0.075)
-        let clip = NSBezierPath(ovalIn: imageRect)
-        NSGraphicsContext.saveGraphicsState()
-        clip.addClip()
-        drawSource(source, crop: crop, in: imageRect)
-        NSGraphicsContext.restoreGraphicsState()
-
-        let stroke = NSBezierPath(ovalIn: imageRect)
-        NSColor(calibratedRed: 0.68, green: 1.0, blue: 0.95, alpha: 0.75).setStroke()
-        stroke.lineWidth = max(3, canvas.width * 0.012)
-        stroke.stroke()
+        drawSource(source, crop: cropRect(for: source, mode: .full), in: canvas)
     }
 }
 
-func makeAppIcon(source: NSImage, size: CGSize) throws -> NSImage {
-    let crop = CGRect(x: 342, y: 142, width: 340, height: 340)
-    return try makeImage(size: size) { canvas in
+private func avatar(from source: NSImage, size: CGSize) -> NSImage {
+    image(size: size) { canvas in
         NSColor.clear.setFill()
         canvas.fill()
 
-        let shadow = NSShadow()
-        shadow.shadowColor = NSColor.black.withAlphaComponent(0.38)
-        shadow.shadowBlurRadius = canvas.width * 0.055
-        shadow.shadowOffset = CGSize(width: 0, height: -canvas.height * 0.018)
-        shadow.set()
+        let crop = cropRect(for: source, mode: .portrait)
+        drawSource(source, crop: crop, in: canvas)
 
-        let tile = canvas.insetBy(dx: canvas.width * 0.075, dy: canvas.height * 0.075)
-        let tilePath = NSBezierPath(roundedRect: tile, xRadius: canvas.width * 0.18, yRadius: canvas.height * 0.18)
+        let ringInset = canvas.width * 0.025
+        let ring = NSBezierPath(ovalIn: canvas.insetBy(dx: ringInset, dy: ringInset))
+        NSColor(calibratedRed: 0.20, green: 0.92, blue: 1.0, alpha: 0.72).setStroke()
+        ring.lineWidth = max(2, canvas.width * 0.018)
+        ring.stroke()
+    }
+}
+
+private func cover(from source: NSImage, size: CGSize) -> NSImage {
+    image(size: size) { canvas in
         let bg = NSGradient(colorsAndLocations:
-            (NSColor(calibratedRed: 0.015, green: 0.055, blue: 0.13, alpha: 1), 0),
-            (NSColor(calibratedRed: 0.035, green: 0.18, blue: 0.32, alpha: 1), 0.45),
-            (NSColor(calibratedRed: 0.06, green: 0.42, blue: 0.55, alpha: 1), 1)
+            (NSColor(calibratedRed: 0.01, green: 0.03, blue: 0.08, alpha: 1), 0.0),
+            (NSColor(calibratedRed: 0.02, green: 0.10, blue: 0.18, alpha: 1), 0.55),
+            (NSColor(calibratedRed: 0.01, green: 0.02, blue: 0.05, alpha: 1), 1.0)
         )!
-        bg.draw(in: tilePath, angle: 135)
+        bg.draw(in: NSBezierPath(rect: canvas), angle: 0)
 
-        NSGraphicsContext.saveGraphicsState()
-        tilePath.addClip()
-        for i in 0..<8 {
-            let y = tile.minY + CGFloat(i) * tile.height / 7
-            let line = NSBezierPath()
-            line.move(to: CGPoint(x: tile.minX + tile.width * 0.12, y: y))
-            line.line(to: CGPoint(x: tile.maxX - tile.width * 0.12, y: y + tile.height * 0.08))
-            NSColor(calibratedRed: 0.18, green: 0.92, blue: 1.0, alpha: 0.08).setStroke()
-            line.lineWidth = max(2, canvas.width * 0.006)
-            line.stroke()
+        let iconSize = canvas.height * 0.63
+        let iconRect = CGRect(
+            x: canvas.midX - iconSize / 2,
+            y: canvas.midY - iconSize / 2 + canvas.height * 0.12,
+            width: iconSize,
+            height: iconSize
+        )
+
+        NSGraphicsContext.current?.saveGraphicsState()
+        NSShadow().apply {
+            $0.shadowColor = NSColor(calibratedRed: 0.12, green: 0.78, blue: 1.0, alpha: 0.45)
+            $0.shadowBlurRadius = canvas.height * 0.035
+            $0.shadowOffset = .zero
         }
-        NSGraphicsContext.restoreGraphicsState()
+        let iconMask = NSBezierPath(roundedRect: iconRect, xRadius: iconSize * 0.18, yRadius: iconSize * 0.18)
+        iconMask.addClip()
+        drawSource(source, crop: cropRect(for: source, mode: .full), in: iconRect)
+        NSGraphicsContext.current?.restoreGraphicsState()
 
-        let portraitRect = tile.insetBy(dx: canvas.width * 0.16, dy: canvas.height * 0.16)
-        let outer = NSBezierPath(ovalIn: portraitRect)
-        NSColor(calibratedRed: 0.06, green: 0.86, blue: 0.94, alpha: 0.96).setFill()
-        outer.fill()
-        let gold = NSBezierPath(ovalIn: portraitRect.insetBy(dx: canvas.width * 0.024, dy: canvas.height * 0.024))
-        NSColor(calibratedRed: 0.94, green: 0.72, blue: 0.32, alpha: 0.96).setFill()
-        gold.fill()
+        NSColor(calibratedRed: 0.20, green: 0.86, blue: 1.0, alpha: 0.65).setStroke()
+        iconMask.lineWidth = max(3, canvas.height * 0.006)
+        iconMask.stroke()
 
-        let imageRect = portraitRect.insetBy(dx: canvas.width * 0.055, dy: canvas.height * 0.055)
-        let imageClip = NSBezierPath(ovalIn: imageRect)
-        NSGraphicsContext.saveGraphicsState()
-        imageClip.addClip()
-        drawSource(source, crop: crop, in: imageRect)
-        NSGraphicsContext.restoreGraphicsState()
-
-        let wordmark = "CAEL" as NSString
+        let title = "CAEL" as NSString
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: canvas.width * 0.13, weight: .black),
+            .font: NSFont.systemFont(ofSize: canvas.height * 0.11, weight: .black),
             .foregroundColor: NSColor.white,
-            .kern: 4.0
+            .kern: 7.0
         ]
-        let wordSize = wordmark.size(withAttributes: attrs)
-        wordmark.draw(
-            at: CGPoint(x: canvas.midX - wordSize.width / 2, y: tile.minY + canvas.height * 0.12),
+        let titleSize = title.size(withAttributes: attrs)
+        title.draw(
+            at: CGPoint(x: canvas.midX - titleSize.width / 2, y: canvas.height * 0.08),
             withAttributes: attrs
+        )
+
+        let subtitle = "HERMES AI AGENT" as NSString
+        let subAttrs: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: canvas.height * 0.035, weight: .semibold),
+            .foregroundColor: NSColor(calibratedRed: 0.35, green: 0.86, blue: 1.0, alpha: 0.88),
+            .kern: 3.0
+        ]
+        let subtitleSize = subtitle.size(withAttributes: subAttrs)
+        subtitle.draw(
+            at: CGPoint(x: canvas.midX - subtitleSize.width / 2, y: canvas.height * 0.045),
+            withAttributes: subAttrs
         )
     }
 }
 
-func makeCover(source: NSImage, size: CGSize) throws -> NSImage {
-    let sourceSize = source.size
-    let sourceAspect = sourceSize.width / sourceSize.height
-    let targetAspect = size.width / size.height
-    let crop: CGRect
-    if sourceAspect > targetAspect {
-        let width = sourceSize.height * targetAspect
-        crop = CGRect(x: (sourceSize.width - width) / 2, y: 0, width: width, height: sourceSize.height)
-    } else {
-        let height = sourceSize.width / targetAspect
-        crop = CGRect(x: 0, y: (sourceSize.height - height) / 2, width: sourceSize.width, height: height)
-    }
-    return try makeImage(size: size) { canvas in
-        drawSource(source, crop: crop, in: canvas)
+private extension NSShadow {
+    func apply(_ configure: (NSShadow) -> Void) {
+        configure(self)
+        set()
     }
 }
 
+private struct Output {
+    let path: String
+    let size: CGSize
+    let renderer: (NSImage, CGSize) -> NSImage
+}
+
 func run() throws {
-    let args = CommandLine.arguments
-    guard args.count == 4 else {
-        fputs("usage: generate-cael-brand-assets.swift /path/to/source.jpg /desktop/root /web/root\n", stderr)
+    guard CommandLine.arguments.count == 4 else {
+        fputs("usage: generate-cael-brand-assets.swift /path/to/generated-master.png /desktop-root /web-root\n", stderr)
         throw AssetError.badArguments
     }
 
-    let source = try sourceImage(URL(fileURLWithPath: args[1]))
-    let desktopRoot = URL(fileURLWithPath: args[2], isDirectory: true)
-    let webRoot = URL(fileURLWithPath: args[3], isDirectory: true)
+    let sourcePath = CommandLine.arguments[1]
+    let desktopRoot = CommandLine.arguments[2]
+    let webRoot = CommandLine.arguments[3]
+    let source = try loadSource(sourcePath)
 
-    let outputs: [Output] = [
-        Output(url: desktopRoot.appendingPathComponent("packaging/AppIcon-1024.png"), size: CGSize(width: 1024, height: 1024), kind: .appIcon),
-        Output(url: desktopRoot.appendingPathComponent("Sources/HermesDesktop/Resources/CaelProfile.png"), size: CGSize(width: 512, height: 512), kind: .avatar),
-        Output(url: webRoot.appendingPathComponent("public/cael-avatar.png"), size: CGSize(width: 512, height: 512), kind: .avatar),
-        Output(url: webRoot.appendingPathComponent("public/cael-avatar-small.png"), size: CGSize(width: 128, height: 128), kind: .avatar),
-        Output(url: webRoot.appendingPathComponent("public/cael-icon-192.png"), size: CGSize(width: 192, height: 192), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("public/cael-icon-512.png"), size: CGSize(width: 512, height: 512), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("assets/icon.png"), size: CGSize(width: 1024, height: 1024), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("public/apple-touch-icon.png"), size: CGSize(width: 180, height: 180), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("public/logo-icon.png"), size: CGSize(width: 512, height: 512), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("public/claude-avatar.png"), size: CGSize(width: 512, height: 512), kind: .avatar),
-        Output(url: webRoot.appendingPathComponent("public/claude-icon-192.png"), size: CGSize(width: 192, height: 192), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("public/claude-icon-512.png"), size: CGSize(width: 512, height: 512), kind: .appIcon),
-        Output(url: webRoot.appendingPathComponent("public/cover.png"), size: CGSize(width: 1200, height: 630), kind: .cover),
-        Output(url: webRoot.appendingPathComponent("public/social-preview.png"), size: CGSize(width: 1200, height: 630), kind: .cover)
+    let fileManager = FileManager.default
+    try? fileManager.removeItem(atPath: "\(webRoot)/public/cael-imagegen-master.png")
+    try fileManager.copyItem(
+        at: URL(fileURLWithPath: sourcePath),
+        to: URL(fileURLWithPath: "\(webRoot)/public/cael-imagegen-master.png")
+    )
+    try? fileManager.removeItem(atPath: "\(desktopRoot)/packaging/CaelImageGenMaster.png")
+    try fileManager.copyItem(
+        at: URL(fileURLWithPath: sourcePath),
+        to: URL(fileURLWithPath: "\(desktopRoot)/packaging/CaelImageGenMaster.png")
+    )
+
+    let outputs = [
+        Output(path: "\(desktopRoot)/packaging/AppIcon-1024.png", size: CGSize(width: 1024, height: 1024), renderer: appIcon),
+        Output(path: "\(desktopRoot)/Sources/HermesDesktop/Resources/CaelProfile.png", size: CGSize(width: 512, height: 512), renderer: avatar),
+        Output(path: "\(webRoot)/assets/icon.png", size: CGSize(width: 1024, height: 1024), renderer: appIcon),
+        Output(path: "\(webRoot)/public/cael-icon-1024.png", size: CGSize(width: 1024, height: 1024), renderer: appIcon),
+        Output(path: "\(webRoot)/public/cael-icon-512.png", size: CGSize(width: 512, height: 512), renderer: appIcon),
+        Output(path: "\(webRoot)/public/cael-icon-192.png", size: CGSize(width: 192, height: 192), renderer: appIcon),
+        Output(path: "\(webRoot)/public/apple-touch-icon.png", size: CGSize(width: 180, height: 180), renderer: appIcon),
+        Output(path: "\(webRoot)/public/logo-icon.png", size: CGSize(width: 512, height: 512), renderer: appIcon),
+        Output(path: "\(webRoot)/public/cael-avatar.png", size: CGSize(width: 512, height: 512), renderer: avatar),
+        Output(path: "\(webRoot)/public/cael-avatar-small.png", size: CGSize(width: 128, height: 128), renderer: avatar),
+        Output(path: "\(webRoot)/public/cael-profile.png", size: CGSize(width: 1024, height: 1024), renderer: avatar),
+        Output(path: "\(webRoot)/public/avatars/cael.png", size: CGSize(width: 512, height: 512), renderer: avatar),
+        Output(path: "\(webRoot)/public/claude-avatar.png", size: CGSize(width: 512, height: 512), renderer: avatar),
+        Output(path: "\(webRoot)/public/claude-icon-192.png", size: CGSize(width: 192, height: 192), renderer: appIcon),
+        Output(path: "\(webRoot)/public/claude-icon-512.png", size: CGSize(width: 512, height: 512), renderer: appIcon),
+        Output(path: "\(webRoot)/public/cover.png", size: CGSize(width: 1200, height: 630), renderer: cover),
+        Output(path: "\(webRoot)/public/social-preview.png", size: CGSize(width: 1200, height: 630), renderer: cover)
     ]
 
     for output in outputs {
-        let image: NSImage
-        switch output.kind {
-        case .appIcon:
-            image = try makeAppIcon(source: source, size: output.size)
-        case .avatar:
-            image = try makeAvatar(source: source, size: output.size)
-        case .cover:
-            image = try makeCover(source: source, size: output.size)
-        }
-        try writePNG(image, to: output.url)
-        print("wrote \(output.url.path)")
+        let rendered = output.renderer(source, output.size)
+        try writePNG(rendered, to: URL(fileURLWithPath: output.path))
+        print("wrote \(output.path)")
     }
 }
 
