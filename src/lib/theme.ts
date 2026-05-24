@@ -1,4 +1,6 @@
 export type ThemeId =
+  | 'cael'
+  | 'cael-light'
   | 'claude-nous'
   | 'claude-nous-light'
   | 'matrix'
@@ -18,6 +20,18 @@ export const THEMES: Array<{
   description: string
   icon: string
 }> = [
+  {
+    id: 'cael',
+    label: 'Cael',
+    description: 'Unified Cael command center theme with deep navy, cyan, and gold',
+    icon: '◉',
+  },
+  {
+    id: 'cael-light',
+    label: 'Cael Light',
+    description: 'Bright Cael workspace theme with crisp blue framing',
+    icon: '◎',
+  },
   {
     id: 'claude-nous',
     label: 'Nous',
@@ -93,12 +107,13 @@ export const THEMES: Array<{
 ]
 
 const STORAGE_KEY = 'claude-theme'
-const DEFAULT_THEME: ThemeId = 'claude-nous'
+const DEFAULT_THEME: ThemeId = 'cael'
 const THEME_SET = new Set<ThemeId>(THEMES.map((theme) => theme.id))
 const LIGHT_THEME_MAP: Record<
   Exclude<ThemeId, `${string}-light`>,
   Extract<ThemeId, `${string}-light`>
 > = {
+  cael: 'cael-light',
   'claude-nous': 'claude-nous-light',
   matrix: 'matrix-light',
   'claude-official': 'claude-official-light',
@@ -110,6 +125,7 @@ const DARK_THEME_MAP: Record<
   Extract<ThemeId, `${string}-light`>,
   Exclude<ThemeId, `${string}-light`>
 > = {
+  'cael-light': 'cael',
   'claude-nous-light': 'claude-nous',
   'matrix-light': 'matrix',
   'claude-official-light': 'claude-official',
@@ -119,6 +135,7 @@ const DARK_THEME_MAP: Record<
 }
 
 const LIGHT_THEMES = new Set<ThemeId>([
+  'cael-light',
   'claude-nous-light',
   'matrix-light',
   'claude-official-light',
@@ -155,6 +172,8 @@ export function getThemeVariant(
 export function getTheme(): ThemeId {
   if (typeof window === 'undefined') return DEFAULT_THEME
   const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored === 'claude-nous') return DEFAULT_THEME
+  if (stored === 'claude-nous-light') return 'cael-light'
   return isValidTheme(stored) ? stored : DEFAULT_THEME
 }
 

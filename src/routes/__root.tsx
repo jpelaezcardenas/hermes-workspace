@@ -47,8 +47,10 @@ const APP_CSP = [
 ].join('; ')
 
 const THEME_STORAGE_KEY = 'claude-theme'
-const DEFAULT_THEME = 'claude-nous'
+const DEFAULT_THEME = 'cael'
 const VALID_THEMES = [
+  'cael',
+  'cael-light',
   'claude-nous',
   'claude-nous-light',
   'claude-official',
@@ -67,11 +69,12 @@ const themeScript = `
     const root = document.documentElement
     const storedTheme = localStorage.getItem('${THEME_STORAGE_KEY}')
     const theme = ${JSON.stringify(VALID_THEMES)}.includes(storedTheme) ? storedTheme : '${DEFAULT_THEME}'
-    const lightThemes = ['claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
-    const isDark = !lightThemes.includes(theme)
+    const normalizedTheme = storedTheme === 'claude-nous' ? '${DEFAULT_THEME}' : storedTheme === 'claude-nous-light' ? 'cael-light' : theme
+    const lightThemes = ['cael-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light']
+    const isDark = !lightThemes.includes(normalizedTheme)
     root.classList.remove('light', 'dark', 'system')
     root.classList.add(isDark ? 'dark' : 'light')
-    root.setAttribute('data-theme', theme)
+    root.setAttribute('data-theme', normalizedTheme)
     root.style.setProperty('color-scheme', isDark ? 'dark' : 'light')
 
     // Demo mode
@@ -90,6 +93,8 @@ const themeColorScript = `
     const root = document.documentElement
     const theme = root.getAttribute('data-theme') || '${DEFAULT_THEME}'
     const colors = {
+      'cael': '#020812',
+      'cael-light': '#f5fbff',
       'claude-nous': '#031A1A',
       'claude-nous-light': '#F8FAF8',
       'claude-official': '#0A0E1A',
@@ -100,7 +105,7 @@ const themeColorScript = `
       'claude-slate-light': '#F6F8FA',
     }
     const nextColor = colors[theme] || colors['${DEFAULT_THEME}']
-    const isDark = !['claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
+    const isDark = !['cael-light', 'claude-nous-light', 'claude-official-light', 'claude-classic-light', 'claude-slate-light'].includes(String(theme))
 
     let meta = document.querySelector('meta[name="theme-color"]')
     if (!meta) {
@@ -171,16 +176,16 @@ export const Route = createRootRoute({
       {
         rel: 'icon',
         type: 'image/png',
-        href: '/cael-avatar.png',
+        href: '/cael-avatar-v20260524.png',
       },
       // PWA manifest and icons
       {
         rel: 'manifest',
-        href: '/manifest.json',
+        href: '/manifest.json?v=20260524',
       },
       {
         rel: 'apple-touch-icon',
-        href: '/apple-touch-icon.png',
+        href: '/apple-touch-icon-v20260524.png',
         sizes: '180x180',
       },
     ],

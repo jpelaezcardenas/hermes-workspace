@@ -114,6 +114,20 @@ const THEME_PREVIEWS: Record<
   ThemeId,
   { bg: string; panel: string; border: string; accent: string; text: string }
 > = {
+  cael: {
+    bg: '#020812',
+    panel: '#0A2138',
+    border: 'rgba(86,217,255,0.18)',
+    accent: '#56D9FF',
+    text: '#EAF7FF',
+  },
+  'cael-light': {
+    bg: '#F5FBFF',
+    panel: '#FFFFFF',
+    border: 'rgba(25,88,122,0.18)',
+    accent: '#007EAA',
+    text: '#09263A',
+  },
   'claude-nous': {
     bg: '#031a1a',
     panel: '#082224',

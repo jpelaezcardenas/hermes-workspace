@@ -711,6 +711,100 @@ code {
 
 /* ── Hermes Workspace Themes ── */
 
+[data-theme='cael'] {
+  --theme-bg: #020812;
+  --theme-sidebar: #061326;
+  --theme-panel: #071a2e;
+  --theme-card: #0a2138;
+  --theme-card2: #0d2945;
+  --theme-border: rgba(86, 217, 255, 0.18);
+  --theme-border-subtle: rgba(86, 217, 255, 0.10);
+  --theme-text: #eaf7ff;
+  --theme-muted: rgba(180, 213, 230, 0.66);
+  --theme-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.62);
+  --theme-shadow-2: 0 10px 28px rgba(0, 0, 0, 0.50);
+  --theme-shadow-3: 0 22px 58px rgba(0, 0, 0, 0.62);
+  --theme-glass: rgba(2, 8, 18, 0.90);
+  --theme-focus: #56d9ff;
+  --theme-accent: #56d9ff;
+  --theme-accent-secondary: #e9b95d;
+  --theme-accent-subtle: rgba(86, 217, 255, 0.13);
+  --theme-accent-border: rgba(86, 217, 255, 0.38);
+  --theme-active: #56d9ff;
+  --theme-link: #8ae8ff;
+  --theme-success: #4ade80;
+  --theme-warning: #f6c453;
+  --theme-danger: #fb7185;
+  --theme-stripe: rgba(86, 217, 255, 0.055);
+  --theme-header-bg: #04101f;
+  --theme-header-border: rgba(86, 217, 255, 0.20);
+  --chat-user-bg: #0c2d46;
+  --chat-user-border: rgba(86, 217, 255, 0.30);
+  --chat-user-foreground: #f3fbff;
+  --chat-assistant-bg: #071a2e;
+  --chat-assistant-border: rgba(86, 217, 255, 0.14);
+  --chat-assistant-foreground: #eaf7ff;
+  --composer-bg: #061426;
+  --composer-border: rgba(86, 217, 255, 0.24);
+  --composer-placeholder: rgba(180, 213, 230, 0.44);
+  --tool-card-bg: #071a2e;
+  --tool-card-border: rgba(86, 217, 255, 0.17);
+  --tool-card-title: #f3fbff;
+  --tool-card-muted: rgba(180, 213, 230, 0.58);
+  --code-bg: #020812;
+  --code-border: rgba(86, 217, 255, 0.16);
+  --code-foreground: #b8f3ff;
+  --theme-input: #0a2138;
+  --theme-on-accent: #02101d;
+}
+
+[data-theme='cael-light'] {
+  --theme-bg: #f5fbff;
+  --theme-sidebar: #eaf6fd;
+  --theme-panel: #eff8fd;
+  --theme-card: #ffffff;
+  --theme-card2: #edf7fc;
+  --theme-border: rgba(25, 88, 122, 0.18);
+  --theme-border-subtle: rgba(25, 88, 122, 0.10);
+  --theme-text: #09263a;
+  --theme-muted: rgba(9, 38, 58, 0.60);
+  --theme-shadow-1: 0 0 0 rgba(9, 38, 58, 0);
+  --theme-shadow-2: 0 1px 2px rgba(9, 38, 58, 0.04);
+  --theme-shadow-3: 0 12px 34px rgba(9, 38, 58, 0.08);
+  --theme-glass: rgba(245, 251, 255, 0.92);
+  --theme-focus: #007eaa;
+  --theme-accent: #007eaa;
+  --theme-accent-secondary: #af7d1c;
+  --theme-accent-subtle: rgba(0, 126, 170, 0.08);
+  --theme-accent-border: rgba(0, 126, 170, 0.22);
+  --theme-active: #007eaa;
+  --theme-link: #006a91;
+  --theme-success: #2f8f5b;
+  --theme-warning: #a66a00;
+  --theme-danger: #b2384e;
+  --theme-stripe: rgba(0, 126, 170, 0.045);
+  --theme-header-bg: #eaf6fd;
+  --theme-header-border: rgba(25, 88, 122, 0.16);
+  --chat-user-bg: #e5f6fd;
+  --chat-user-border: rgba(0, 126, 170, 0.20);
+  --chat-user-foreground: #09263a;
+  --chat-assistant-bg: #ffffff;
+  --chat-assistant-border: rgba(25, 88, 122, 0.11);
+  --chat-assistant-foreground: #09263a;
+  --composer-bg: #ffffff;
+  --composer-border: rgba(25, 88, 122, 0.20);
+  --composer-placeholder: rgba(9, 38, 58, 0.40);
+  --tool-card-bg: #f2f9fd;
+  --tool-card-border: rgba(25, 88, 122, 0.14);
+  --tool-card-title: #09263a;
+  --tool-card-muted: rgba(9, 38, 58, 0.58);
+  --code-bg: #eaf6fd;
+  --code-border: rgba(25, 88, 122, 0.14);
+  --code-foreground: #09263a;
+  --theme-input: #ffffff;
+  --theme-on-accent: #ffffff;
+}
+
 [data-theme='matrix'] {
   --theme-bg: #020804;
   --theme-sidebar: #030d06;
@@ -1180,6 +1274,10 @@ code {
   --theme-input: #fbfdfb;
 }
 
+[data-theme='cael'] html,
+[data-theme='cael'] body,
+[data-theme='cael'] #root,
+[data-theme='cael'] .dark,
 [data-theme='claude-nous'] html,
 [data-theme='claude-nous'] body,
 [data-theme='claude-nous'] #root,
@@ -1200,6 +1298,10 @@ code {
   color: var(--theme-text);
 }
 
+[data-theme='cael-light'] html,
+[data-theme='cael-light'] body,
+[data-theme='cael-light'] #root,
+[data-theme='cael-light'] .light,
 [data-theme='claude-nous-light'] html,
 [data-theme='claude-nous-light'] body,
 [data-theme='claude-nous-light'] #root,
@@ -1225,6 +1327,7 @@ code {
    to theme-appropriate values so ALL existing Tailwind classes work.
    Dark: 50=darkest surface, 950=lightest text (already set above) */
 
+[data-theme='cael'],
 [data-theme='claude-nous'],
 [data-theme='claude-official'],
 [data-theme='claude-classic'],
@@ -1251,6 +1354,7 @@ code {
 /* ── Tailwind primary token remaps for light themes ────────────────────
    Light: 50=lightest surface, 950=darkest text */
 
+[data-theme='cael-light'],
 [data-theme='claude-nous-light'],
 [data-theme='claude-official-light'],
 [data-theme='claude-classic-light'],
