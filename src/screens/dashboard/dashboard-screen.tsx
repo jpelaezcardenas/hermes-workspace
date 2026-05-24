@@ -899,7 +899,7 @@ export function DashboardScreen() {
             }}
           >
             <img
-              src="/claude-avatar.webp"
+              src="/cael-avatar.png"
               alt="Hermes Workspace logo"
               className="size-8 rounded-md"
               style={{ background: 'transparent' }}

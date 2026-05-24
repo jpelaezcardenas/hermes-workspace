@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./public/claude-avatar.webp" alt="Hermes Workspace" width="80" style="border-radius: 16px" />
+<img src="./public/cael-avatar.png" alt="Hermes Workspace" width="80" style="border-radius: 16px" />
 <!-- avatar filename retained for cache stability — do not rename without coordinated cache-bust -->
 
 # Hermes Workspace

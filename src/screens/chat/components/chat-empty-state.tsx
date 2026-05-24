@@ -70,7 +70,7 @@ export function ChatEmptyState({
         {/* Avatar in editorial frame, no glow — architectural restraint */}
         <div className="relative mb-6">
           <img
-            src="/claude-avatar.webp"
+            src="/cael-avatar.png"
             alt="Hermes Agent"
             className="relative size-20 rounded-md"
             style={{

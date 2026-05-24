@@ -270,7 +270,7 @@ export function MobileHamburgerMenu() {
         >
           <div className="flex items-center gap-2.5">
             <img
-              src="/claude-avatar.webp"
+              src="/cael-avatar.png"
               alt="Hermes Agent"
               className="size-8 rounded-xl shrink-0"
             />

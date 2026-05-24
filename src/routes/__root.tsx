@@ -171,7 +171,7 @@ export const Route = createRootRoute({
       {
         rel: 'icon',
         type: 'image/png',
-        href: '/claude-avatar.png',
+        href: '/cael-avatar.png',
       },
       // PWA manifest and icons
       {

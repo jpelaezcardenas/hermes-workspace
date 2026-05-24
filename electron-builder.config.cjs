@@ -1,7 +1,7 @@
 module.exports = {
   appId: 'com.hermesworkspace.app',
-  productName: 'hermes-workspace',
-  copyright: 'Copyright © 2026 hermes-workspace',
+  productName: 'Cael Workspace',
+  copyright: 'Copyright © 2026 Cael Workspace',
   icon: 'assets/icon.png',
   directories: {
     output: 'release',
@@ -30,7 +30,7 @@ module.exports = {
     gatekeeperAssess: false,
   },
   dmg: {
-    title: 'Hermes Workspace',
+    title: 'Cael Workspace',
     iconSize: 80,
     contents: [
       { x: 130, y: 220 },
