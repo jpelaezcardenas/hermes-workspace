@@ -131,6 +131,7 @@ describe('command center summary', () => {
       requestUrl: 'http://100.97.216.111:3077/api/command-center/summary',
       cookie: 'claude-auth=test',
       fetcher,
+      includeChatRuns: false,
     })
 
     expect(envelope.ok).toBe(true)
@@ -165,6 +166,7 @@ describe('command center summary', () => {
     const envelope = await buildCommandCenterSummary({
       requestUrl: 'http://100.97.216.111:3077/api/command-center/summary',
       fetcher,
+      includeChatRuns: false,
     })
 
     expect(envelope.errors).toEqual([])
@@ -191,12 +193,14 @@ describe('command center summary', () => {
     const envelope = await buildCommandCenterSummary({
       requestUrl: 'http://100.97.216.111:3077/api/command-center/summary',
       fetcher,
+      includeChatRuns: false,
     })
 
     expect(envelope.ok).toBe(false)
-    expect(envelope.errors).toEqual(
+    expect(envelope.warnings).toEqual(
       expect.arrayContaining(['Cael status: The operation was aborted.']),
     )
+    expect(envelope.errors).toEqual([])
     expect(envelope.data).not.toBeNull()
     expect(envelope.data?.posture).toBeNull()
     expect(envelope.data?.nowNext[0]?.label).toBe('Runtime needs attention')

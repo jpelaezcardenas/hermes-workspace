@@ -264,6 +264,48 @@ export async function markRunStatus(
   }))
 }
 
+export async function listRecentPersistedRuns(
+  limit = 16,
+): Promise<PersistedRunState[]> {
+  try {
+    const sessionEntries = await readdir(RUNS_ROOT, { withFileTypes: true })
+    const runs: PersistedRunState[] = []
+    await Promise.all(
+      sessionEntries
+        .filter((entry) => entry.isDirectory())
+        .map(async (entry) => {
+          const dir = path.join(RUNS_ROOT, entry.name)
+          const files = (await readdir(dir).catch(() => [])).filter((name) =>
+            name.endsWith('.json'),
+          )
+          await Promise.all(
+            files.map(async (name) => {
+              try {
+                const raw = await readFile(path.join(dir, name), 'utf8')
+                runs.push(JSON.parse(raw) as PersistedRunState)
+              } catch {
+                // Ignore corrupt partial run files.
+              }
+            }),
+          )
+        }),
+    )
+    return runs
+      .sort((a, b) => {
+        const bTime = Number.isFinite(b.lastEventAt)
+          ? b.lastEventAt
+          : b.updatedAt
+        const aTime = Number.isFinite(a.lastEventAt)
+          ? a.lastEventAt
+          : a.updatedAt
+        return bTime - aTime
+      })
+      .slice(0, limit)
+  } catch {
+    return []
+  }
+}
+
 export async function getActiveRunForSession(
   sessionKey: string,
 ): Promise<PersistedRunState | null> {

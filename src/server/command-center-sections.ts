@@ -21,6 +21,7 @@ import {
   type PromotionReceiptSummary,
   type SafeWorkflowCommand,
 } from '../lib/cael-n8n-governance'
+import { listRecentPersistedRuns, type PersistedRunState } from './run-store'
 
 type JsonFetcher = (
   input: string | URL,
@@ -31,6 +32,22 @@ type CommandCenterBuildOptions = {
   requestUrl: string
   cookie?: string | null
   fetcher?: JsonFetcher
+}
+
+async function withCommandCenterTimeout<T>(
+  promise: Promise<T>,
+  fallback: T,
+  timeoutMs = 1500,
+): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | null = null
+  const timeout = new Promise<T>((resolve) => {
+    timer = setTimeout(() => resolve(fallback), timeoutMs)
+  })
+  try {
+    return await Promise.race([promise, timeout])
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
 }
 
 export type CommandCenterToday = {
@@ -565,6 +582,26 @@ function receiptToRun(receipt: PromotionReceiptSummary): CommandCenterAgentRun {
   }
 }
 
+function persistedRunToAgentRun(run: PersistedRunState): CommandCenterAgentRun {
+  const toolCount = run.toolCalls.length
+  const assistantChars = run.assistantText.length
+  return {
+    id: `cael-chat:${run.runId}`,
+    title: excerpt(`Chat run ${run.friendlyId || run.sessionKey}`, 140),
+    status: run.status,
+    updatedAt: new Date(
+      run.updatedAt || run.lastEventAt || run.createdAt,
+    ).toISOString(),
+    source: 'cael-chat',
+    path: null,
+    receiptCount: null,
+    verification:
+      toolCount > 0 || assistantChars > 0
+        ? `${toolCount} tool events, ${assistantChars} assistant chars persisted`
+        : 'Accepted by server run ledger; awaiting persisted output',
+  }
+}
+
 function homebaseQuery(): string {
   return `{
     tasks(first: 8, orderBy: [{ updatedAt: DescNullsLast }]) { edges { node { id title status dueAt updatedAt } } totalCount }
@@ -818,15 +855,17 @@ export async function buildCommandCenterVaultRefs(
 export async function buildCommandCenterAgentRuns(
   _options: CommandCenterBuildOptions,
 ): Promise<CommandCenterEnvelope<CommandCenterAgentRuns>> {
-  const [devHarnessRuns, promotionReceipts] = await Promise.all([
-    listDevHarnessRuns(),
-    collectPromotionReceipts(),
+  const [devHarnessRuns, promotionReceipts, chatRuns] = await Promise.all([
+    withCommandCenterTimeout(listDevHarnessRuns(), []),
+    withCommandCenterTimeout(collectPromotionReceipts(), []),
+    withCommandCenterTimeout(listRecentPersistedRuns(12), []),
   ])
   const receiptRuns = promotionReceipts.map(receiptToRun)
+  const persistedChatRuns = chatRuns.map(persistedRunToAgentRun)
   return createEnvelope({
     source: 'cael-workspace:command-center/agent-runs',
     data: {
-      runs: [...devHarnessRuns, ...receiptRuns]
+      runs: [...persistedChatRuns, ...devHarnessRuns, ...receiptRuns]
         .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
         .slice(0, 16),
       receipts: promotionReceipts,

@@ -119,6 +119,26 @@ describe('run-store persistence', () => {
     expect(active?.runId).toBe('run-active-recent')
   })
 
+  it('lists recent persisted runs across sessions', async () => {
+    const { createPersistedRun, listRecentPersistedRuns, updatePersistedRun } =
+      await import('./run-store')
+
+    await createPersistedRun({ runId: 'run-a', sessionKey: 'session-a' })
+    await createPersistedRun({ runId: 'run-b', sessionKey: 'session-b' })
+
+    await updatePersistedRun('session-a', 'run-a', (run) => ({
+      ...run,
+      lastEventAt: 10,
+    }))
+    await updatePersistedRun('session-b', 'run-b', (run) => ({
+      ...run,
+      lastEventAt: 20,
+    }))
+
+    const runs = await listRecentPersistedRuns(2)
+    expect(runs.map((run) => run.runId)).toEqual(['run-b', 'run-a'])
+  })
+
   it('keeps an old run recoverable while the server still tracks it', async () => {
     const { createPersistedRun, getActiveRunForSession, updatePersistedRun } =
       await import('./run-store')

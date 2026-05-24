@@ -1,4 +1,5 @@
 import type { CommandCenterContract } from './command-center-contract'
+import { listRecentPersistedRuns, type PersistedRunState } from './run-store'
 
 export type CommandCenterEnvelope<T> = {
   ok: boolean
@@ -335,6 +336,21 @@ function normalizeAgentRuns(raw: unknown): CommandCenterSummaryAgentRun[] {
     }))
 }
 
+function persistedRunToSummaryRun(
+  run: PersistedRunState,
+): CommandCenterSummaryAgentRun {
+  return {
+    id: `cael-chat:${run.runId}`,
+    title: `Chat run ${run.friendlyId || run.sessionKey}`,
+    status: run.status,
+    updatedAt: new Date(
+      run.updatedAt || run.lastEventAt || run.createdAt,
+    ).toISOString(),
+    source: 'cael-chat',
+    path: null,
+  }
+}
+
 function normalizeBrainSources(raw: unknown): CommandCenterSummaryBrainSource[] {
   if (!isRecord(raw)) return []
   return readArray(raw.sources)
@@ -420,6 +436,7 @@ export async function buildCommandCenterSummary(options: {
   requestUrl: string
   cookie?: string | null
   fetcher?: JsonFetcher
+  includeChatRuns?: boolean
 }): Promise<CommandCenterEnvelope<CommandCenterSummary>> {
   const generatedAt = new Date().toISOString()
   const fetcher = options.fetcher ?? fetch
@@ -433,8 +450,7 @@ export async function buildCommandCenterSummary(options: {
         label: 'Cael status',
         cookie: options.cookie,
         fetcher,
-        required: true,
-        timeoutMs: 15000,
+        timeoutMs: 2500,
       }),
       fetchJson<Record<string, unknown>>({
         baseUrl,
@@ -456,7 +472,7 @@ export async function buildCommandCenterSummary(options: {
         label: 'n8n governance',
         cookie: options.cookie,
         fetcher,
-        timeoutMs: 12000,
+        timeoutMs: 2500,
       }),
       fetchJson<Record<string, unknown>>({
         baseUrl,
@@ -485,7 +501,13 @@ export async function buildCommandCenterSummary(options: {
   const usage = normalizeUsage(usageRaw.data)
   const automations = normalizeAutomations(n8nRaw.data)
   const actionGates = normalizeActionGates(n8nRaw.data)
-  const agentRuns = normalizeAgentRuns(n8nRaw.data)
+  const chatRuns =
+    options.includeChatRuns === false
+      ? []
+      : (await listRecentPersistedRuns(8)).map(persistedRunToSummaryRun)
+  const agentRuns = [...chatRuns, ...normalizeAgentRuns(n8nRaw.data)]
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+    .slice(0, 12)
   const brainSources = normalizeBrainSources(brainRaw.data)
   const statusData = status.data
   const posture = isRecord(statusData)
