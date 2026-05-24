@@ -40,6 +40,81 @@ type CaelStatusResponse = {
 
 type N8nInstanceId = 'personal-bigmac' | 'business-devserver'
 
+
+type CommandCenterSummaryEnvelope = {
+  ok: boolean
+  generatedAt: string
+  source: string
+  scope: 'personal' | 'business' | 'mixed' | 'system'
+  data: CommandCenterSummary | null
+  warnings: string[]
+  errors: string[]
+}
+
+type CommandCenterSummary = {
+  version: string
+  nowNext: Array<{
+    id: string
+    label: string
+    detail: string
+    tone: 'info' | 'success' | 'warning' | 'danger'
+    href: string | null
+  }>
+  actionGates: Array<{
+    id: string
+    label: string
+    status: string
+    riskLevel: string
+    approvalRequired: boolean
+    dryRunSupported: boolean
+    detail: string
+  }>
+  agentRuns: Array<{
+    id: string
+    title: string
+    status: string
+    updatedAt: string
+    source: string
+    path: string | null
+  }>
+  usage: {
+    enabledProviders: string[]
+    providers: Array<{
+      id: string
+      label: string
+      status: string
+      confidence: string
+      monitorKind: string | null
+      caelDefault: boolean
+      caelModel: string | null
+      primary: {
+        label: string
+        usedPercent: number
+        remainingPercent: number
+        resetsAt: string | null
+      } | null
+    }>
+  } | null
+  brain: {
+    sources: Array<{
+      id: string
+      label: string
+      category: string
+      status: string
+      writable: boolean
+    }>
+  } | null
+  automations: {
+    boundary: string
+    instances: Array<{
+      id: string
+      label: string
+      ok: boolean
+      failures: number
+    }>
+  } | null
+}
+
 type N8nGovernanceResponse = {
   ok: boolean
   generatedAt: string
@@ -98,6 +173,16 @@ async function fetchN8nGovernance(): Promise<N8nGovernanceResponse> {
   })
   if (!response.ok)
     throw new Error(`n8n governance check failed: HTTP ${response.status}`)
+  return response.json()
+}
+
+
+async function fetchCommandCenterSummary(): Promise<CommandCenterSummaryEnvelope> {
+  const response = await fetch('/api/command-center/summary', {
+    cache: 'no-store',
+  })
+  if (!response.ok)
+    throw new Error(`Command center summary failed: HTTP ${response.status}`)
   return response.json()
 }
 
@@ -179,6 +264,17 @@ function CaelHomeRoute() {
     queryFn: fetchN8nGovernance,
     refetchInterval: 60_000,
   })
+  const {
+    data: commandSummary,
+    error: commandSummaryError,
+    isLoading: commandSummaryLoading,
+    refetch: refetchCommandSummary,
+    isFetching: isCommandSummaryFetching,
+  } = useQuery({
+    queryKey: ['command-center-summary'],
+    queryFn: fetchCommandCenterSummary,
+    refetchInterval: 30_000,
+  })
 
   return (
     <main className="h-full overflow-y-auto bg-[var(--theme-bg)] text-[var(--theme-text)]">
@@ -203,17 +299,24 @@ function CaelHomeRoute() {
               {data ? <StatusPill ok={data.ok} /> : null}
               <button
                 className="rounded-xl border border-[var(--theme-border)] px-4 py-2 text-sm hover:bg-white/5 disabled:opacity-50"
-                disabled={isFetching || isN8nFetching}
+                disabled={isFetching || isN8nFetching || isCommandSummaryFetching}
                 onClick={() => {
                   void refetch()
                   void refetchN8n()
+                  void refetchCommandSummary()
                 }}
               >
-                {isFetching || isN8nFetching ? 'Refreshing…' : 'Refresh status'}
+                {isFetching || isN8nFetching || isCommandSummaryFetching ? 'Refreshing...' : 'Refresh status'}
               </button>
             </div>
           </div>
         </section>
+
+        <CommandCenterSummaryPanel
+          envelope={commandSummary}
+          error={commandSummaryError}
+          isLoading={commandSummaryLoading}
+        />
 
         {isLoading ? (
           <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6 text-sm text-[var(--theme-muted)]">
@@ -354,6 +457,153 @@ function CaelHomeRoute() {
         />
       </div>
     </main>
+  )
+}
+
+
+function CommandCenterSummaryPanel({
+  envelope,
+  error,
+  isLoading,
+}: {
+  envelope?: CommandCenterSummaryEnvelope
+  error: Error | null
+  isLoading: boolean
+}) {
+  const summary = envelope?.data
+  if (isLoading) {
+    return (
+      <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 text-sm text-[var(--theme-muted)]">
+        Loading command center summary...
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5 text-sm text-rose-200">
+        {error.message}
+      </section>
+    )
+  }
+
+  if (!summary) return null
+
+  const activeProviders = summary.usage?.providers.filter(
+    (provider) => provider.monitorKind === 'cael' || provider.caelDefault,
+  ) ?? []
+  const availableBrainSources = summary.brain?.sources.filter(
+    (source) => source.status === 'available',
+  ).length ?? 0
+
+  return (
+    <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--theme-muted)]">
+            Shared Command Center API
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold">Now, gates, receipts, and limits</h2>
+          <p className="mt-2 text-sm text-[var(--theme-muted)]">
+            {envelope?.source} - {summary.version} - {new Date(envelope?.generatedAt ?? summary.version).toLocaleTimeString()}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusPill ok={Boolean(envelope?.ok)} />
+          {envelope?.warnings.length ? (
+            <span className="rounded-full bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-200 ring-1 ring-amber-400/30">
+              {envelope.warnings.length} warning{envelope.warnings.length === 1 ? '' : 's'}
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 xl:grid-cols-4">
+        <SummaryColumn title="Now / Next">
+          {summary.nowNext.slice(0, 5).map((item) => (
+            <div key={item.id} className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+              <div className="text-sm font-semibold">{item.label}</div>
+              <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">{item.detail}</p>
+            </div>
+          ))}
+        </SummaryColumn>
+
+        <SummaryColumn title="Action Gates">
+          {summary.actionGates.length ? (
+            summary.actionGates.slice(0, 4).map((gate) => (
+              <div key={gate.id} className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="text-sm font-semibold">{gate.label}</div>
+                  <RiskPill risk={gate.riskLevel} gated={gate.approvalRequired} />
+                </div>
+                <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">{gate.detail}</p>
+              </div>
+            ))
+          ) : (
+            <EmptySummary label="No approval gates surfaced." />
+          )}
+        </SummaryColumn>
+
+        <SummaryColumn title="Receipts">
+          {summary.agentRuns.length ? (
+            summary.agentRuns.slice(0, 4).map((run) => (
+              <div key={run.id} className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+                <div className="text-sm font-semibold">{run.title}</div>
+                <p className="mt-2 text-xs text-[var(--theme-muted)]">
+                  {run.status} - {run.updatedAt ? new Date(run.updatedAt).toLocaleString() : 'unknown'}
+                </p>
+              </div>
+            ))
+          ) : (
+            <EmptySummary label="No receipt summaries found." />
+          )}
+        </SummaryColumn>
+
+        <SummaryColumn title="Models + Brain">
+          <div className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+            <div className="text-sm font-semibold">
+              {activeProviders.length} Cael model monitor{activeProviders.length === 1 ? '' : 's'}
+            </div>
+            <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
+              {activeProviders.map((provider) => provider.caelModel || provider.label).join(', ') || 'No active model monitors reported.'}
+            </p>
+          </div>
+          <div className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4">
+            <div className="text-sm font-semibold">
+              {availableBrainSources} available brain source{availableBrainSources === 1 ? '' : 's'}
+            </div>
+            <p className="mt-2 text-xs leading-5 text-[var(--theme-muted)]">
+              References only; secret and runtime stores remain filtered.
+            </p>
+          </div>
+        </SummaryColumn>
+      </div>
+    </section>
+  )
+}
+
+function SummaryColumn({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+        {title}
+      </h3>
+      <div className="flex flex-col gap-3">{children}</div>
+    </div>
+  )
+}
+
+function EmptySummary({ label }: { label: string }) {
+  return (
+    <div className="rounded-xl border border-[var(--theme-border)] bg-black/10 p-4 text-sm text-[var(--theme-muted)]">
+      {label}
+    </div>
   )
 }
 

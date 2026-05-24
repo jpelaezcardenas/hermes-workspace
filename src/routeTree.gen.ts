@@ -165,6 +165,7 @@ import { Route as ApiIntegrationsStatusRouteImport } from './routes/api/integrat
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
+import { Route as ApiCommandCenterSummaryRouteImport } from './routes/api/command-center/summary'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
@@ -957,6 +958,11 @@ const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   path: '/api/dashboard/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCommandCenterSummaryRoute = ApiCommandCenterSummaryRouteImport.update({
+  id: '/api/command-center/summary',
+  path: '/api/command-center/summary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiClaudeTasksTaskIdRoute = ApiClaudeTasksTaskIdRouteImport.update({
   id: '/$taskId',
   path: '/$taskId',
@@ -1120,6 +1126,7 @@ export interface FileRoutesByFullPath {
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/command-center/summary': typeof ApiCommandCenterSummaryRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1286,6 +1293,7 @@ export interface FileRoutesByTo {
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/command-center/summary': typeof ApiCommandCenterSummaryRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1454,6 +1462,7 @@ export interface FileRoutesById {
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/command-center/summary': typeof ApiCommandCenterSummaryRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1623,6 +1632,7 @@ export interface FileRouteTypes {
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/command-center/summary'
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
@@ -1789,6 +1799,7 @@ export interface FileRouteTypes {
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/command-center/summary'
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
@@ -1956,6 +1967,7 @@ export interface FileRouteTypes {
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/command-center/summary'
     | '/api/dashboard/overview'
     | '/api/hermes-tasks/$taskId'
     | '/api/hermesworld/reservations'
@@ -2118,6 +2130,7 @@ export interface RootRouteChildren {
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
+  ApiCommandCenterSummaryRoute: typeof ApiCommandCenterSummaryRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
@@ -3241,6 +3254,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDashboardOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/command-center/summary': {
+      id: '/api/command-center/summary'
+      path: '/api/command-center/summary'
+      fullPath: '/api/command-center/summary'
+      preLoaderRoute: typeof ApiCommandCenterSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/claude-tasks/$taskId': {
       id: '/api/claude-tasks/$taskId'
       path: '/$taskId'
@@ -3637,6 +3657,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
+  ApiCommandCenterSummaryRoute: ApiCommandCenterSummaryRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
