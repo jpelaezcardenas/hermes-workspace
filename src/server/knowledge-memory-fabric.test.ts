@@ -68,4 +68,24 @@ describe('knowledge memory fabric client', () => {
     expect(searchBody.params.name).toBe('search_knowledge_with_evidence')
     expect(searchBody.params.arguments.memory_scope).toBe('business')
   })
+
+  it('routes scoped document lookups with the Memory Fabric identifier contract', async () => {
+    const fetchSpy = vi.fn()
+      .mockResolvedValueOnce(response(200, sse({ result: { serverInfo: { name: 'knowledge-vault' } } }), { 'mcp-session-id': 'sid-1' }))
+      .mockResolvedValueOnce(response(200, sse({ result: { content: [{ type: 'text', text: JSON.stringify({ route: { memory_scope: 'business' } }) }] } })))
+      .mockResolvedValueOnce(response(200, sse({ result: { serverInfo: { name: 'knowledge-vault' } } }), { 'mcp-session-id': 'sid-2' }))
+      .mockResolvedValueOnce(response(200, sse({ result: { content: [{ type: 'text', text: JSON.stringify({ title: 'Hermes artifact' }) }] } })))
+    global.fetch = fetchSpy as unknown as typeof fetch
+
+    const { getDocumentRecord } = await import('./knowledge-memory-fabric')
+    const result = await getDocumentRecord({ docId: 'doc-123', memoryScope: 'business' })
+
+    expect(result.memoryScope).toBe('business')
+    expect(result.data).toEqual({ title: 'Hermes artifact' })
+    const lookupBody = JSON.parse(fetchSpy.mock.calls[3][1].body)
+    expect(lookupBody.params.name).toBe('get_document_record')
+    expect(lookupBody.params.arguments.identifier).toBe('doc-123')
+    expect(lookupBody.params.arguments.memory_scope).toBe('business')
+    expect(lookupBody.params.arguments.doc_id).toBeUndefined()
+  })
 })

@@ -309,7 +309,7 @@ export async function getDocumentRecord({
   if (!id) throw new Error('docId is required')
   const route = await routeMemoryRequest({ memoryScope: scope, operation: 'query' })
   const result = await callMemoryFabricTool('get_document_record', {
-    doc_id: id,
+    identifier: id,
     memory_scope: scope,
   })
   return { ...result, memoryScope: scope, route: route.data }
