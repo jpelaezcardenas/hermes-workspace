@@ -179,10 +179,17 @@ import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-ta
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
+import { Route as ApiKnowledgeFabricRouteRouteImport } from './routes/api/knowledge/fabric/route'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
+import { Route as ApiKnowledgeFabricSessionStateRouteImport } from './routes/api/knowledge/fabric/session-state'
+import { Route as ApiKnowledgeFabricSearchAllRouteImport } from './routes/api/knowledge/fabric/search-all'
+import { Route as ApiKnowledgeFabricSearchRouteImport } from './routes/api/knowledge/fabric/search'
+import { Route as ApiKnowledgeFabricHealthRouteImport } from './routes/api/knowledge/fabric/health'
+import { Route as ApiKnowledgeFabricDocumentRecordRouteImport } from './routes/api/knowledge/fabric/document-record'
+import { Route as ApiKnowledgeFabricAgentSearchRouteImport } from './routes/api/knowledge/fabric/agent-search'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 
 const WorldRoute = WorldRouteImport.update({
@@ -1044,6 +1051,11 @@ const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   path: '/$artifactId',
   getParentRoute: () => ApiArtifactsRoute,
 } as any)
+const ApiKnowledgeFabricRouteRoute = ApiKnowledgeFabricRouteRouteImport.update({
+  id: '/api/knowledge/fabric',
+  path: '/api/knowledge/fabric',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
     id: '/$sessionKey/status',
@@ -1066,6 +1078,42 @@ const ApiMcpNameLogsRoute = ApiMcpNameLogsRouteImport.update({
   path: '/logs',
   getParentRoute: () => ApiMcpNameRoute,
 } as any)
+const ApiKnowledgeFabricSessionStateRoute =
+  ApiKnowledgeFabricSessionStateRouteImport.update({
+    id: '/session-state',
+    path: '/session-state',
+    getParentRoute: () => ApiKnowledgeFabricRouteRoute,
+  } as any)
+const ApiKnowledgeFabricSearchAllRoute =
+  ApiKnowledgeFabricSearchAllRouteImport.update({
+    id: '/search-all',
+    path: '/search-all',
+    getParentRoute: () => ApiKnowledgeFabricRouteRoute,
+  } as any)
+const ApiKnowledgeFabricSearchRoute =
+  ApiKnowledgeFabricSearchRouteImport.update({
+    id: '/search',
+    path: '/search',
+    getParentRoute: () => ApiKnowledgeFabricRouteRoute,
+  } as any)
+const ApiKnowledgeFabricHealthRoute =
+  ApiKnowledgeFabricHealthRouteImport.update({
+    id: '/health',
+    path: '/health',
+    getParentRoute: () => ApiKnowledgeFabricRouteRoute,
+  } as any)
+const ApiKnowledgeFabricDocumentRecordRoute =
+  ApiKnowledgeFabricDocumentRecordRouteImport.update({
+    id: '/document-record',
+    path: '/document-record',
+    getParentRoute: () => ApiKnowledgeFabricRouteRoute,
+  } as any)
+const ApiKnowledgeFabricAgentSearchRoute =
+  ApiKnowledgeFabricAgentSearchRouteImport.update({
+    id: '/agent-search',
+    path: '/agent-search',
+    getParentRoute: () => ApiKnowledgeFabricRouteRoute,
+  } as any)
 const ApiHermesworldReservationsConfirmRoute =
   ApiHermesworldReservationsConfirmRouteImport.update({
     id: '/confirm',
@@ -1183,6 +1231,7 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/knowledge/fabric': typeof ApiKnowledgeFabricRouteRouteWithChildren
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1245,6 +1294,12 @@ export interface FileRoutesByFullPath {
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/usage/limits': typeof ApiUsageLimitsRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
+  '/api/knowledge/fabric/agent-search': typeof ApiKnowledgeFabricAgentSearchRoute
+  '/api/knowledge/fabric/document-record': typeof ApiKnowledgeFabricDocumentRecordRoute
+  '/api/knowledge/fabric/health': typeof ApiKnowledgeFabricHealthRoute
+  '/api/knowledge/fabric/search': typeof ApiKnowledgeFabricSearchRoute
+  '/api/knowledge/fabric/search-all': typeof ApiKnowledgeFabricSearchAllRoute
+  '/api/knowledge/fabric/session-state': typeof ApiKnowledgeFabricSessionStateRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
@@ -1359,6 +1414,7 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/api/knowledge/fabric': typeof ApiKnowledgeFabricRouteRouteWithChildren
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1421,6 +1477,12 @@ export interface FileRoutesByTo {
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/usage/limits': typeof ApiUsageLimitsRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
+  '/api/knowledge/fabric/agent-search': typeof ApiKnowledgeFabricAgentSearchRoute
+  '/api/knowledge/fabric/document-record': typeof ApiKnowledgeFabricDocumentRecordRoute
+  '/api/knowledge/fabric/health': typeof ApiKnowledgeFabricHealthRoute
+  '/api/knowledge/fabric/search': typeof ApiKnowledgeFabricSearchRoute
+  '/api/knowledge/fabric/search-all': typeof ApiKnowledgeFabricSearchAllRoute
+  '/api/knowledge/fabric/session-state': typeof ApiKnowledgeFabricSessionStateRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
@@ -1537,6 +1599,7 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/knowledge/fabric': typeof ApiKnowledgeFabricRouteRouteWithChildren
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1599,6 +1662,12 @@ export interface FileRoutesById {
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/usage/limits': typeof ApiUsageLimitsRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
+  '/api/knowledge/fabric/agent-search': typeof ApiKnowledgeFabricAgentSearchRoute
+  '/api/knowledge/fabric/document-record': typeof ApiKnowledgeFabricDocumentRecordRoute
+  '/api/knowledge/fabric/health': typeof ApiKnowledgeFabricHealthRoute
+  '/api/knowledge/fabric/search': typeof ApiKnowledgeFabricSearchRoute
+  '/api/knowledge/fabric/search-all': typeof ApiKnowledgeFabricSearchAllRoute
+  '/api/knowledge/fabric/session-state': typeof ApiKnowledgeFabricSessionStateRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
@@ -1716,6 +1785,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/knowledge/fabric'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -1778,6 +1848,12 @@ export interface FileRouteTypes {
     | '/api/update/workspace'
     | '/api/usage/limits'
     | '/api/hermesworld/reservations/confirm'
+    | '/api/knowledge/fabric/agent-search'
+    | '/api/knowledge/fabric/document-record'
+    | '/api/knowledge/fabric/health'
+    | '/api/knowledge/fabric/search'
+    | '/api/knowledge/fabric/search-all'
+    | '/api/knowledge/fabric/session-state'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
@@ -1892,6 +1968,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/api/knowledge/fabric'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -1954,6 +2031,12 @@ export interface FileRouteTypes {
     | '/api/update/workspace'
     | '/api/usage/limits'
     | '/api/hermesworld/reservations/confirm'
+    | '/api/knowledge/fabric/agent-search'
+    | '/api/knowledge/fabric/document-record'
+    | '/api/knowledge/fabric/health'
+    | '/api/knowledge/fabric/search'
+    | '/api/knowledge/fabric/search-all'
+    | '/api/knowledge/fabric/session-state'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
@@ -2069,6 +2152,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/knowledge/fabric'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -2131,6 +2215,12 @@ export interface FileRouteTypes {
     | '/api/update/workspace'
     | '/api/usage/limits'
     | '/api/hermesworld/reservations/confirm'
+    | '/api/knowledge/fabric/agent-search'
+    | '/api/knowledge/fabric/document-record'
+    | '/api/knowledge/fabric/health'
+    | '/api/knowledge/fabric/search'
+    | '/api/knowledge/fabric/search-all'
+    | '/api/knowledge/fabric/session-state'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
@@ -2244,6 +2334,7 @@ export interface RootRouteChildren {
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  ApiKnowledgeFabricRouteRoute: typeof ApiKnowledgeFabricRouteRouteWithChildren
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiCommandCenterActionGatesRoute: typeof ApiCommandCenterActionGatesRoute
   ApiCommandCenterAgentRunsRoute: typeof ApiCommandCenterAgentRunsRoute
@@ -3476,6 +3567,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiArtifactsArtifactIdRouteImport
       parentRoute: typeof ApiArtifactsRoute
     }
+    '/api/knowledge/fabric': {
+      id: '/api/knowledge/fabric'
+      path: '/api/knowledge/fabric'
+      fullPath: '/api/knowledge/fabric'
+      preLoaderRoute: typeof ApiKnowledgeFabricRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
       path: '/$sessionKey/status'
@@ -3503,6 +3601,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/mcp/$name/logs'
       preLoaderRoute: typeof ApiMcpNameLogsRouteImport
       parentRoute: typeof ApiMcpNameRoute
+    }
+    '/api/knowledge/fabric/session-state': {
+      id: '/api/knowledge/fabric/session-state'
+      path: '/session-state'
+      fullPath: '/api/knowledge/fabric/session-state'
+      preLoaderRoute: typeof ApiKnowledgeFabricSessionStateRouteImport
+      parentRoute: typeof ApiKnowledgeFabricRouteRoute
+    }
+    '/api/knowledge/fabric/search-all': {
+      id: '/api/knowledge/fabric/search-all'
+      path: '/search-all'
+      fullPath: '/api/knowledge/fabric/search-all'
+      preLoaderRoute: typeof ApiKnowledgeFabricSearchAllRouteImport
+      parentRoute: typeof ApiKnowledgeFabricRouteRoute
+    }
+    '/api/knowledge/fabric/search': {
+      id: '/api/knowledge/fabric/search'
+      path: '/search'
+      fullPath: '/api/knowledge/fabric/search'
+      preLoaderRoute: typeof ApiKnowledgeFabricSearchRouteImport
+      parentRoute: typeof ApiKnowledgeFabricRouteRoute
+    }
+    '/api/knowledge/fabric/health': {
+      id: '/api/knowledge/fabric/health'
+      path: '/health'
+      fullPath: '/api/knowledge/fabric/health'
+      preLoaderRoute: typeof ApiKnowledgeFabricHealthRouteImport
+      parentRoute: typeof ApiKnowledgeFabricRouteRoute
+    }
+    '/api/knowledge/fabric/document-record': {
+      id: '/api/knowledge/fabric/document-record'
+      path: '/document-record'
+      fullPath: '/api/knowledge/fabric/document-record'
+      preLoaderRoute: typeof ApiKnowledgeFabricDocumentRecordRouteImport
+      parentRoute: typeof ApiKnowledgeFabricRouteRoute
+    }
+    '/api/knowledge/fabric/agent-search': {
+      id: '/api/knowledge/fabric/agent-search'
+      path: '/agent-search'
+      fullPath: '/api/knowledge/fabric/agent-search'
+      preLoaderRoute: typeof ApiKnowledgeFabricAgentSearchRouteImport
+      parentRoute: typeof ApiKnowledgeFabricRouteRoute
     }
     '/api/hermesworld/reservations/confirm': {
       id: '/api/hermesworld/reservations/confirm'
@@ -3721,6 +3861,31 @@ const ApiSwarmRuntimeRouteWithChildren = ApiSwarmRuntimeRoute._addFileChildren(
   ApiSwarmRuntimeRouteChildren,
 )
 
+interface ApiKnowledgeFabricRouteRouteChildren {
+  ApiKnowledgeFabricAgentSearchRoute: typeof ApiKnowledgeFabricAgentSearchRoute
+  ApiKnowledgeFabricDocumentRecordRoute: typeof ApiKnowledgeFabricDocumentRecordRoute
+  ApiKnowledgeFabricHealthRoute: typeof ApiKnowledgeFabricHealthRoute
+  ApiKnowledgeFabricSearchRoute: typeof ApiKnowledgeFabricSearchRoute
+  ApiKnowledgeFabricSearchAllRoute: typeof ApiKnowledgeFabricSearchAllRoute
+  ApiKnowledgeFabricSessionStateRoute: typeof ApiKnowledgeFabricSessionStateRoute
+}
+
+const ApiKnowledgeFabricRouteRouteChildren: ApiKnowledgeFabricRouteRouteChildren =
+  {
+    ApiKnowledgeFabricAgentSearchRoute: ApiKnowledgeFabricAgentSearchRoute,
+    ApiKnowledgeFabricDocumentRecordRoute:
+      ApiKnowledgeFabricDocumentRecordRoute,
+    ApiKnowledgeFabricHealthRoute: ApiKnowledgeFabricHealthRoute,
+    ApiKnowledgeFabricSearchRoute: ApiKnowledgeFabricSearchRoute,
+    ApiKnowledgeFabricSearchAllRoute: ApiKnowledgeFabricSearchAllRoute,
+    ApiKnowledgeFabricSessionStateRoute: ApiKnowledgeFabricSessionStateRoute,
+  }
+
+const ApiKnowledgeFabricRouteRouteWithChildren =
+  ApiKnowledgeFabricRouteRoute._addFileChildren(
+    ApiKnowledgeFabricRouteRouteChildren,
+  )
+
 interface ApiHermesworldReservationsRouteChildren {
   ApiHermesworldReservationsConfirmRoute: typeof ApiHermesworldReservationsConfirmRoute
 }
@@ -3843,6 +4008,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
+  ApiKnowledgeFabricRouteRoute: ApiKnowledgeFabricRouteRouteWithChildren,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiCommandCenterActionGatesRoute: ApiCommandCenterActionGatesRoute,
   ApiCommandCenterAgentRunsRoute: ApiCommandCenterAgentRunsRoute,

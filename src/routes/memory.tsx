@@ -6,6 +6,11 @@ import { useFeatureAvailable } from '@/hooks/use-feature-available'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { getUnavailableReason } from '@/lib/feature-gates'
 
+const KnowledgeFabricScreen = lazy(async () => {
+  const module = await import('@/screens/memory/knowledge-fabric-screen')
+  return { default: module.KnowledgeFabricScreen }
+})
+
 const MemoryBrowserScreen = lazy(async () => {
   const module = await import('@/screens/memory/memory-browser-screen')
   return { default: module.MemoryBrowserScreen }
@@ -21,12 +26,12 @@ const SecondBrainFilesScreen = lazy(async () => {
   return { default: module.SecondBrainFilesScreen }
 })
 
-type MemoryTab = 'memory' | 'knowledge' | 'second-brain-files'
+type MemoryTab = 'fabric' | 'memory' | 'knowledge' | 'second-brain-files'
 
 export const Route = createFileRoute('/memory')({
   ssr: false,
   component: function MemoryRoute() {
-    const [tab, setTab] = useState<MemoryTab>('memory')
+    const [tab, setTab] = useState<MemoryTab>('fabric')
     const memoryAvailable = useFeatureAvailable('memory')
 
     usePageTitle('Memory')
@@ -43,11 +48,24 @@ export const Route = createFileRoute('/memory')({
               variant="underline"
               className="w-full justify-start gap-1"
             >
+              <TabsTab value="fabric">Knowledge Fabric</TabsTab>
               <TabsTab value="memory">Memory</TabsTab>
               <TabsTab value="knowledge">Knowledge</TabsTab>
               <TabsTab value="second-brain-files">Second Brain Files</TabsTab>
             </TabsList>
           </div>
+
+          <TabsPanel value="fabric" className="min-h-0 flex-1">
+            {tab === 'fabric' ? (
+              <Suspense
+                fallback={
+                  <RouteLoadingState label="Loading Knowledge Fabric..." />
+                }
+              >
+                <KnowledgeFabricScreen />
+              </Suspense>
+            ) : null}
+          </TabsPanel>
 
           <TabsPanel value="memory" className="min-h-0 flex-1">
             {tab === 'memory' ? (
