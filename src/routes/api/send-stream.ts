@@ -419,6 +419,11 @@ export const Route = createFileRoute('/api/send-stream')({
           async start(controller) {
             let heartbeatTimer: ReturnType<typeof setInterval> | null = null
             let lastClientEventAt = Date.now()
+            // Track the last human-readable activity so the heartbeat can
+            // forward it to the UI. Without this the ThinkingBubble shows a
+            // static "Thinking…" for minutes when the agent is reasoning
+            // without tool calls, making it look hung.
+            let lastActivity: string | null = null
             const enqueueRaw = (payload: string) => {
               if (streamClosed) return
               controller.enqueue(encoder.encode(payload))
@@ -481,9 +486,11 @@ export const Route = createFileRoute('/api/send-stream')({
             // Keep the SSE stream alive during long agent processing (tool calls,
             // slow LLM responses on large contexts). Without this the client-side
             // no-activity timer fires after 2-3 min and aborts the stream.
+            // Every 10s we also forward the last known activity so the UI can
+            // show meaningful progress instead of a static "Thinking…".
             heartbeatTimer = setInterval(() => {
-              sendEvent('heartbeat', { timestamp: Date.now() })
-            }, 30_000)
+              sendEvent('heartbeat', { timestamp: Date.now(), activity: lastActivity })
+            }, 10_000)
 
             try {
               if (chatMode === 'portable') {
@@ -514,6 +521,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   sessionKey: portableSessionKey,
                   friendlyId: portableFriendlyId,
                 })
+                lastActivity = 'Processing your message...'
 
                 try {
                   const userContent = buildMultimodalContent(
@@ -633,6 +641,7 @@ export const Route = createFileRoute('/api/send-stream')({
                             sessionKey: portableSessionKey,
                             runId,
                           })
+                          lastActivity = `Running: ${ev.name.replace(/_/g, ' ')}`
                           continue
                         }
                         if (ev.kind === 'tool.completed') {
@@ -670,6 +679,7 @@ export const Route = createFileRoute('/api/send-stream')({
                             sessionKey: portableSessionKey,
                             runId,
                           })
+                          lastActivity = `Completed: ${name.replace(/_/g, ' ')}`
                           continue
                         }
                         if (ev.kind === 'completed') {
@@ -1012,6 +1022,7 @@ export const Route = createFileRoute('/api/send-stream')({
                         sessionKey: sessionKeyFromEvent,
                         friendlyId: sessionKeyFromEvent,
                       })
+                      lastActivity = 'Processing your message...'
                     }
 
                     if (event === 'run.started') {
@@ -1137,6 +1148,7 @@ export const Route = createFileRoute('/api/send-stream')({
                       )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
+                      lastActivity = `Running: ${toolName.replace(/_/g, ' ')}`
                       return
                     }
 
@@ -1155,6 +1167,7 @@ export const Route = createFileRoute('/api/send-stream')({
                         }
                         sendEvent('thinking', translated)
                         skipPublish || publishChatEvent('thinking', translated)
+                        lastActivity = delta.length > 60 ? delta.slice(0, 60) + '...' : delta
                         return
                       }
                       const translated = {
@@ -1203,6 +1216,7 @@ export const Route = createFileRoute('/api/send-stream')({
                       )
                       sendEvent('tool', translated)
                       skipPublish || publishChatEvent('tool', translated)
+                      lastActivity = `Completed: ${toolName.replace(/_/g, ' ')}`
                       return
                     }
 

@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useChatStream } from '../../../hooks/use-chat-stream'
 import { useChatStore } from '../../../stores/chat-store'
 import { appendHistoryMessage, chatQueryKeys } from '../chat-queries'
+import { snapshotOptimisticUserMessages } from './optimistic-message-reinject'
 import { toast } from '../../../components/ui/toast'
 import { textFromMessage } from '../utils'
 import type { ChatMessage } from '../types'
@@ -324,6 +325,14 @@ export function useRealtimeChatHistory({
             const prevCount =
               (prevData?.messages as Array<unknown> | undefined)?.length ?? 0
 
+            // Snapshot optimistic user messages before refetch so they
+            // survive the cache replacement. Re-injected after refetch.
+            const reInjectOptimistic = snapshotOptimisticUserMessages(
+              queryClient,
+              effectiveFriendlyId,
+              effectiveSessionKey,
+            )
+
             // Issue #441 fix: Directly merge realtime buffer into history cache
             // INSTEAD of invalidateQueries. The old approach caused a race:
             // invalidateQueries → refetch (async) → merge runs with stale data
@@ -418,6 +427,8 @@ export function useRealtimeChatHistory({
                   )
                 }
               }
+              // Re-inject optimistic user messages that the server hasn't echoed yet
+              reInjectOptimistic()
             })
 
             // Check for compaction — significant message count drop
