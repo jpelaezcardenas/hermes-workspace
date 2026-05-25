@@ -16,10 +16,37 @@ import {
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
 import {
   deleteLocalSession,
+  ensureLocalSession,
   getLocalSession,
   listLocalSessions,
   updateLocalSessionTitle,
 } from '../../server/local-session-store'
+
+function localSessionEntry(session: ReturnType<typeof ensureLocalSession>) {
+  const title = session.title || 'Local Chat'
+  return {
+    key: session.id,
+    id: session.id,
+    friendlyId: session.id,
+    title,
+    label: title,
+    derivedTitle: title,
+    startedAt: session.createdAt,
+    updatedAt: session.updatedAt,
+    message_count: session.messageCount,
+    model: session.model,
+    source: 'local',
+  }
+}
+
+function isDashboardSessionCreateUnsupported(err: unknown): boolean {
+  const message = err instanceof Error ? err.message : String(err)
+  return (
+    message.includes('dashboard /api/sessions: 405') ||
+    (message.includes('/api/sessions') &&
+      message.toLowerCase().includes('method not allowed'))
+  )
+}
 
 export const Route = createFileRoute('/api/sessions')({
   server: {
@@ -43,31 +70,16 @@ export const Route = createFileRoute('/api/sessions')({
           const sessions = await listSessions(50, 0)
           const gatewaySessions = sessions.map(toSessionSummary)
 
-          // Only merge Workspace-local portable sessions when there is no
-          // dashboard-backed session source. Port 3077 should show the same
-          // canonical session list as the desktop/dashboard when dashboard is
-          // available.
-          if (!capabilities.dashboard.available) {
-            const localSessions = listLocalSessions()
-            const gatewayIds = new Set(
-              gatewaySessions.map((s: any) => s.key || s.id),
-            )
-            for (const ls of localSessions) {
-              if (!gatewayIds.has(ls.id)) {
-                gatewaySessions.push({
-                  key: ls.id,
-                  id: ls.id,
-                  friendlyId: ls.id,
-                  title: ls.title || 'Local Chat',
-                  label: ls.title || 'Local Chat',
-                  derivedTitle: ls.title || 'Local Chat',
-                  startedAt: ls.createdAt,
-                  updatedAt: ls.updatedAt,
-                  message_count: ls.messageCount,
-                  model: ls.model,
-                  source: 'local',
-                } as any)
-              }
+          // The dashboard can be list-capable while refusing POST /api/sessions.
+          // Keep locally-created fallback chats visible without duplicating
+          // canonical dashboard IDs.
+          const localSessions = listLocalSessions()
+          const gatewayIds = new Set(
+            gatewaySessions.map((s: any) => s.key || s.id),
+          )
+          for (const ls of localSessions) {
+            if (!gatewayIds.has(ls.id)) {
+              gatewaySessions.push(localSessionEntry(ls) as any)
             }
           }
 
@@ -98,24 +110,23 @@ export const Route = createFileRoute('/api/sessions')({
             persisted: false,
           })
         }
+        const body = (await request.json().catch(() => ({}))) as Record<
+          string,
+          unknown
+        >
+        const requestedLabel =
+          typeof body.label === 'string' ? body.label.trim() : ''
+        const label = requestedLabel || undefined
+
+        const requestedFriendlyId =
+          typeof body.friendlyId === 'string' ? body.friendlyId.trim() : ''
+        const friendlyId = requestedFriendlyId || randomUUID()
+
+        const requestedModel =
+          typeof body.model === 'string' ? body.model.trim() : ''
+        const model = requestedModel || undefined
+
         try {
-          const body = (await request.json().catch(() => ({}))) as Record<
-            string,
-            unknown
-          >
-
-          const requestedLabel =
-            typeof body.label === 'string' ? body.label.trim() : ''
-          const label = requestedLabel || undefined
-
-          const requestedFriendlyId =
-            typeof body.friendlyId === 'string' ? body.friendlyId.trim() : ''
-          const friendlyId = requestedFriendlyId || randomUUID()
-
-          const requestedModel =
-            typeof body.model === 'string' ? body.model.trim() : ''
-          const model = requestedModel || undefined
-
           const session = await createSession({
             id: friendlyId || randomUUID(),
             title: label,
@@ -130,6 +141,25 @@ export const Route = createFileRoute('/api/sessions')({
             modelApplied: true,
           })
         } catch (err) {
+          if (isDashboardSessionCreateUnsupported(err)) {
+            const localSession = ensureLocalSession(friendlyId, model)
+            if (requestedLabel) {
+              updateLocalSessionTitle(friendlyId, requestedLabel)
+              localSession.title = requestedLabel
+            }
+
+            return json({
+              ok: true,
+              sessionKey: localSession.id,
+              friendlyId: localSession.id,
+              entry: localSessionEntry(localSession),
+              modelApplied: Boolean(model),
+              persisted: false,
+              source: 'local',
+              warning:
+                'Dashboard session creation is not supported; using workspace-local session.',
+            })
+          }
           return json(
             {
               ok: false,
