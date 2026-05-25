@@ -423,6 +423,7 @@ workers:
   acceptsBroadcast: true
   plugins:
   - image_gen/openai-codex
+  - image_gen/gemini
   pluginToolsets:
   - image_gen
   mcpServers:

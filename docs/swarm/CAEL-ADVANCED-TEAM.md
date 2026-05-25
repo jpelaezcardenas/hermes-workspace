@@ -4,7 +4,7 @@ Cael should stay on the fast lane for conversation, routing, inbox triage, and l
 
 ## Runtime Model
 
-Google documents `gemini-3.5-flash` as the stable Gemini 3.5 Flash model code. Its supported inputs are text, image, video, audio, and PDF, with text output; image generation is not supported by this model, so image generation remains routed through the active ChatGPT/Codex image backend.
+Google documents `gemini-3.5-flash` as the stable Gemini 3.5 Flash model code. Its supported inputs are text, image, video, audio, and PDF, with text output. Nano Banana Pro image generation is `gemini-3-pro-image-preview` and is available through the `gemini-image` backend once `GEMINI_API_KEY` or `GOOGLE_API_KEY` is configured; the default active backend remains ChatGPT/Codex until explicitly switched.
 
 | Lane | Worker | Model | Use |
 | --- | --- | --- | --- |
@@ -27,7 +27,7 @@ Google documents `gemini-3.5-flash` as the stable Gemini 3.5 Flash model code. I
 - Builder changes code only from a scoped acceptance contract.
 - Reviewer is independent of Builder and should gate merge/readiness claims.
 - QA provides concrete behavior proof for web, desktop, PWA, CLI, and workflow changes.
-- Multimodal handles visual inputs and generates structured briefs for the active ChatGPT/Codex image-generation backend.
+- Multimodal handles visual inputs and generates structured briefs for the active image backend. ChatGPT/Codex remains the default image backend; Gemini Nano Banana Pro is configured as `gemini-image` with `gemini-3-pro-image-preview`, pending a Gemini API key.
 - Researcher must preserve source trails and uncertainty; KM Agent decides what becomes durable memory.
 
 ## Greenlight Gates
