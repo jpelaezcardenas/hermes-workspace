@@ -15,6 +15,44 @@ const DEFAULT_CONFIG: KnowledgeBaseConfig = {
   source: { type: 'local', path: '' },
 }
 
+function expandHome(input: string): string {
+  return input.replace(/^~(?=$|\/)/, os.homedir())
+}
+
+function resolveConfiguredPath(input: string): string {
+  return path.resolve(expandHome(input.trim()))
+}
+
+function directoryExists(input: string): boolean {
+  try {
+    return fs.statSync(input).isDirectory()
+  } catch {
+    return false
+  }
+}
+
+export function getDefaultKnowledgeRoot(): string {
+  if (process.env.KNOWLEDGE_DIR?.trim()) {
+    return resolveConfiguredPath(process.env.KNOWLEDGE_DIR)
+  }
+
+  const candidates = [
+    process.env.SECOND_BRAIN_PERSONAL_KV_DIR,
+    '~/StorageRuntime/KnowledgeVault/personal',
+    '~/.codex/knowledge-vault',
+    '~/.claude/knowledge',
+    '~/knowledge/wiki',
+  ]
+    .map((candidate) => candidate?.trim())
+    .filter((candidate): candidate is string => Boolean(candidate))
+    .map(resolveConfiguredPath)
+
+  return (
+    candidates.find(directoryExists) ??
+    resolveConfiguredPath('~/StorageRuntime/KnowledgeVault/personal')
+  )
+}
+
 function getConfigPath(): string {
   return path.join(getStateDir(), 'knowledge-config.json')
 }
@@ -48,11 +86,7 @@ export function getKnowledgeBaseEffectiveRoot(): string {
   const config = readKnowledgeBaseConfig()
   if (config.source.type === 'local') {
     const p = config.source.path.trim()
-    if (p) return path.resolve(p.replace(/^~\//, os.homedir() + '/'))
+    if (p) return resolveConfiguredPath(p)
   }
-  // fallback: legacy env var or default
-  if (process.env.KNOWLEDGE_DIR) return path.resolve(process.env.KNOWLEDGE_DIR)
-  const claudeKnowledge = path.join(os.homedir(), '.claude', 'knowledge')
-  if (fs.existsSync(claudeKnowledge)) return claudeKnowledge
-  return claudeKnowledge
+  return getDefaultKnowledgeRoot()
 }

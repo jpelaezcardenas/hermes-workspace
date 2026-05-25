@@ -3,6 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 import YAML from 'yaml'
 import {
+  getKnowledgeBaseEffectiveRoot,
   readKnowledgeBaseConfig,
   type KnowledgeBaseSource,
 } from './knowledge-config'
@@ -115,18 +116,6 @@ function extractWikilinks(content: string): Array<string> {
     if (target) links.add(target)
   }
   return Array.from(links)
-}
-
-// ─── Legacy env-var fallback ──────────────────────────────────────────────────
-
-function getLegacyKnowledgeRoot(): string {
-  if (process.env.KNOWLEDGE_DIR) return path.resolve(process.env.KNOWLEDGE_DIR)
-  const claudeHome = path.join(os.homedir(), '.claude')
-  const claudeKnowledge = path.join(claudeHome, 'knowledge')
-  if (fs.existsSync(claudeKnowledge)) return claudeKnowledge
-  const homeKnowledge = path.join(os.homedir(), 'knowledge', 'wiki')
-  if (fs.existsSync(homeKnowledge)) return homeKnowledge
-  return claudeKnowledge
 }
 
 // ─── GitHub Knowledge Provider ─────────────────────────────────────────────────
@@ -242,7 +231,11 @@ function getKnowledgeRoot(): string {
   if (p) {
     return path.resolve(p.replace(/^~\//, `${os.homedir()}/`))
   }
-  return getLegacyKnowledgeRoot()
+  return getKnowledgeBaseEffectiveRoot()
+}
+
+export function getKnowledgeBrowserRoot(): string {
+  return getKnowledgeRoot()
 }
 
 export function knowledgeRootExists(): boolean {
