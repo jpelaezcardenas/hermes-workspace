@@ -41,7 +41,10 @@ function resolveModel(label) {
     return { provider: 'openai-codex', default: 'gpt-5.3-codex-spark' }
   }
   if (/^gemini\s*3\.1\s*pro(?:\s*preview)?$|^gemini[- ]?3\.1[- ]pro[- ]preview$/.test(normalized)) {
-    return { provider: 'google-gemini-cli', default: 'gemini-3.1-pro-preview' }
+    return { provider: 'google-gemini-cli', default: 'gemini-3.1-pro-preview', base_url: 'cloudcode-pa://google' }
+  }
+  if (/^gemini\s*3\s*flash(?:\s*preview)?$|^gemini[- ]?3[- ]flash[- ]preview$|^gemini\s*flash$/.test(normalized)) {
+    return { provider: 'google-gemini-cli', default: 'gemini-3-flash-preview', base_url: 'cloudcode-pa://google' }
   }
 
   const passthrough = String(label).trim().match(/^([\w.-]+)\/(.+)$/)

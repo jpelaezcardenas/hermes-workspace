@@ -15,6 +15,7 @@
 export type ResolvedSwarmModel = {
   provider: string
   default: string
+  base_url?: string
 }
 
 /**
@@ -62,6 +63,14 @@ export function resolveSwarmModelLabel(
     return {
       provider: 'google-gemini-cli',
       default: 'gemini-3.1-pro-preview',
+      base_url: 'cloudcode-pa://google',
+    }
+  }
+  if (/^gemini\s*3\s*flash(?:\s*preview)?$|^gemini[- ]?3[- ]flash[- ]preview$|^gemini\s*flash$/.test(normalized)) {
+    return {
+      provider: 'google-gemini-cli',
+      default: 'gemini-3-flash-preview',
+      base_url: 'cloudcode-pa://google',
     }
   }
 

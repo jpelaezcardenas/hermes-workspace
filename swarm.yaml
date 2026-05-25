@@ -47,6 +47,7 @@ workers:
   - reviewer
   - qa
   - researcher
+  - multimodal
   - km-agent
   - ops-watch
   - maintainer
@@ -365,6 +366,68 @@ workers:
   mcpServers:
   - gbrain
   wrapper: researcher:quick
+- id: multimodal
+  name: Multimodal
+  role: Gemini Flash Multimodal Agent
+  specialty: screenshots, visual reasoning, image/PDF analysis, design critique, asset-generation briefs
+  model: Gemini 3 Flash Preview
+  mission: Handle fast multimodal work with Gemini Flash, including screenshot analysis, visual QA, document-image reasoning, and prompt briefs for image generation.
+  profile: multimodal
+  modes:
+  - vision
+  - brief
+  tools:
+  - vision
+  - browser
+  - terminal
+  - file
+  - web
+  - gbrain
+  - session_search
+  - skills
+  - todo
+  skills:
+  - multimodal-core
+  - qa-core
+  - browser-harness-power-use
+  - gbrain
+  - gstack-for-hermes
+  capabilities:
+  - vision-analysis
+  - multimodal-reasoning
+  - screenshot-review
+  - asset-critique
+  - image-generation-briefs
+  routeWhen:
+  - the task depends on screenshots, visual files, PDFs, images, or UI state
+  - a specialist needs a fast multimodal second opinion
+  - image generation needs a structured prompt, critique, or visual acceptance check
+  delegateTo:
+  - qa
+  - researcher
+  - builder
+  - reviewer
+  budgetClass: fast-multimodal
+  preferredTaskTypes:
+  - multimodal
+  - vision
+  - screenshots
+  - image-analysis
+  - design-review
+  - asset-generation-brief
+  greenlightRequiredFor:
+  - destructive
+  - external-send
+  - publish
+  maxConcurrentTasks: 1
+  acceptsBroadcast: true
+  plugins:
+  - image_gen/openai-codex
+  pluginToolsets:
+  - image_gen
+  mcpServers:
+  - gbrain
+  wrapper: multimodal:vision
 - id: ops-watch
   name: Ops Watch
   role: Local Infra / Runtime Health Watch

@@ -62,10 +62,22 @@ describe('resolveSwarmModelLabel', () => {
     expect(resolveSwarmModelLabel('Gemini 3.1 Pro Preview')).toEqual({
       provider: 'google-gemini-cli',
       default: 'gemini-3.1-pro-preview',
+      base_url: 'cloudcode-pa://google',
     })
     expect(resolveSwarmModelLabel('gemini-3.1-pro-preview')).toEqual({
       provider: 'google-gemini-cli',
       default: 'gemini-3.1-pro-preview',
+      base_url: 'cloudcode-pa://google',
+    })
+    expect(resolveSwarmModelLabel('Gemini 3 Flash Preview')).toEqual({
+      provider: 'google-gemini-cli',
+      default: 'gemini-3-flash-preview',
+      base_url: 'cloudcode-pa://google',
+    })
+    expect(resolveSwarmModelLabel('Gemini Flash')).toEqual({
+      provider: 'google-gemini-cli',
+      default: 'gemini-3-flash-preview',
+      base_url: 'cloudcode-pa://google',
     })
   })
 
