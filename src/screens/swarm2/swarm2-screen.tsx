@@ -186,6 +186,9 @@ type SwarmRosterWorker = {
   mission?: string
   skills?: Array<string>
   capabilities?: Array<string>
+  routeWhen?: Array<string>
+  delegateTo?: Array<string>
+  budgetClass?: string
   defaultCwd?: string
   preferredTaskTypes?: Array<string>
   maxConcurrentTasks?: number
@@ -1156,6 +1159,9 @@ export function Swarm2Screen() {
         mission: roster?.mission,
         skills: roster?.skills ?? [],
         capabilities: roster?.capabilities ?? [],
+        routeWhen: roster?.routeWhen ?? [],
+        delegateTo: roster?.delegateTo ?? [],
+        budgetClass: roster?.budgetClass,
         model: roster?.model || member.model,
       }
     })
@@ -1176,6 +1182,9 @@ export function Swarm2Screen() {
         mission: worker.mission,
         skills: worker.skills ?? [],
         capabilities: worker.capabilities ?? [],
+        routeWhen: worker.routeWhen ?? [],
+        delegateTo: worker.delegateTo ?? [],
+        budgetClass: worker.budgetClass,
         lastSessionTitle: worker.mission || null,
         lastSessionAt: null,
         sessionCount: 0,

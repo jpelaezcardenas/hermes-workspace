@@ -1,11 +1,11 @@
 version: 1
 workers:
 - id: orchestrator
-  name: Orchestrator
-  role: Swarm Orchestrator / Greenlight Gate
-  specialty: mission routing, task decomposition, handoffs, proof contracts, human approval gates
-  model: GPT-5.5
-  mission: Decompose missions into safe, proof-bearing work and route to the right specialist while preserving human greenlight control.
+  name: Cael Router
+  role: Spark Router / Greenlight Gate
+  specialty: fast intent routing, task decomposition, budget-aware handoffs, proof contracts, human approval gates
+  model: GPT-5.3 Spark
+  mission: Stay fast and inexpensive for day-to-day interaction, then route advanced work to focused specialist agents with proof requirements and final human gate checks.
   profile: orchestrator
   modes:
   - plan
@@ -36,7 +36,26 @@ workers:
   - routing
   - proof-contracts
   - greenlight-gate
+  - budget-routing
+  - specialist-handoff
+  routeWhen:
+  - user asks Cael for anything that can be answered or routed quickly
+  - task needs decomposition before specialist execution
+  - work touches approval gates, budgets, or multiple systems
+  delegateTo:
+  - builder
+  - reviewer
+  - qa
+  - researcher
+  - km-agent
+  - ops-watch
+  - maintainer
+  - strategist
+  - inbox-triage
+  budgetClass: free-fast-router
   preferredTaskTypes:
+  - intent-router
+  - daily-driver
   - orchestration
   - planning
   - routing
@@ -48,6 +67,8 @@ workers:
   - destructive
   - external-send
   - credential-change
+  - production-deploy
+  - irreversible-decision
   maxConcurrentTasks: 1
   acceptsBroadcast: true
   plugins: []
@@ -89,6 +110,14 @@ workers:
   - tasknotes
   - drift-audit
   - knowledge-curation
+  routeWhen:
+  - durable memory, second brain, graph, or source-of-record coherence is required
+  - completed work needs a restartable artifact or memory-safe summary
+  - knowledge drift or duplicate context needs cleanup
+  delegateTo:
+  - reviewer
+  - researcher
+  budgetClass: premium-memory
   preferredTaskTypes:
   - knowledge
   - curation
@@ -139,6 +168,14 @@ workers:
   - tests
   - integration
   - build-verification
+  routeWhen:
+  - a scoped code or product change is ready to implement
+  - tests or integration fixes are required
+  - Cael has a clear acceptance contract for a narrow diff
+  delegateTo:
+  - reviewer
+  - qa
+  budgetClass: premium-implementation
   preferredTaskTypes:
   - implementation
   - bugfix
@@ -161,7 +198,7 @@ workers:
   name: Reviewer
   role: Independent Review / Merge Gate
   specialty: security review, logic review, regression detection, quality gates
-  model: GPT-5.5
+  model: Claude Opus 4.7
   mission: Independently review changes and block unsafe, untested, or logically broken work before it lands.
   profile: reviewer
   modes:
@@ -187,6 +224,14 @@ workers:
   - regression-analysis
   - quality-gate
   - merge-readiness
+  routeWhen:
+  - code, config, permissions, or architecture needs independent review
+  - a builder claims completion and needs a merge/readiness gate
+  - security or regression risk is non-trivial
+  delegateTo:
+  - builder
+  - qa
+  budgetClass: premium-review
   preferredTaskTypes:
   - review
   - qa
@@ -234,6 +279,14 @@ workers:
   - regression-reproduction
   - cli-verification
   - evidence-capture
+  routeWhen:
+  - user-visible behavior needs browser, CLI, or workflow smoke proof
+  - a reviewer asks for reproduction or regression evidence
+  - a change affects desktop, web, PWA, or local runtime behavior
+  delegateTo:
+  - reviewer
+  - builder
+  budgetClass: premium-verification
   preferredTaskTypes:
   - qa
   - smoke
@@ -254,7 +307,7 @@ workers:
   name: Researcher
   role: Brain-first Research / Bounded Autoresearch
   specialty: GBrain-first lookup, external research, synthesis, source trails, bounded research loops
-  model: GPT-5.5
+  model: Gemini 3.1 Pro Preview
   mission: Produce decision-grade research with brain-first context, external verification, and explicit uncertainty.
   profile: researcher
   modes:
@@ -287,6 +340,14 @@ workers:
   - source-verification
   - gbrain-query
   - autoresearch
+  routeWhen:
+  - the answer depends on current external information, source trails, or options analysis
+  - strategy needs evidence before implementation
+  - a specialist needs market, technical, legal, or vendor context
+  delegateTo:
+  - strategist
+  - km-agent
+  budgetClass: premium-research
   preferredTaskTypes:
   - research
   - analysis
@@ -308,7 +369,7 @@ workers:
   name: Ops Watch
   role: Local Infra / Runtime Health Watch
   specialty: gateway health, cron, MCP, workspace services, local process status, boring reliability
-  model: GPT-5.5
+  model: GPT-5.3 Spark
   mission: Keep Hermes, Workspace, GBrain, gateway, cron, and local services observable and healthy with quiet, low-risk checks.
   profile: ops-watch
   modes:
@@ -334,6 +395,15 @@ workers:
   - cron
   - mcp-health
   - lifecycle-sweep
+  routeWhen:
+  - health checks, restarts, service status, or runtime visibility are needed
+  - low-risk local diagnostics can keep systems online without a premium model
+  - an incident needs first-pass triage before specialist escalation
+  delegateTo:
+  - builder
+  - reviewer
+  - km-agent
+  budgetClass: free-fast-ops
   preferredTaskTypes:
   - ops
   - health
@@ -384,6 +454,14 @@ workers:
   - patch-hygiene
   - git-review
   - issue-tracking
+  routeWhen:
+  - upstream drift, dependency hygiene, release notes, or patch preservation matters
+  - local forks need careful update planning
+  - repo state needs cleanup without losing user changes
+  delegateTo:
+  - reviewer
+  - builder
+  budgetClass: premium-maintenance
   preferredTaskTypes:
   - maintenance
   - upstream
@@ -431,6 +509,14 @@ workers:
   - ideation
   - decision-framing
   - kill-criteria
+  routeWhen:
+  - the work needs bets, kill criteria, operating plan, or prioritization
+  - a broad idea must become a scoped implementation wedge
+  - tradeoffs should be framed before premium execution
+  delegateTo:
+  - researcher
+  - orchestrator
+  budgetClass: premium-strategy
   preferredTaskTypes:
   - strategy
   - planning
@@ -452,7 +538,7 @@ workers:
   name: Inbox Triage
   role: Capture / Discard / Route / Task Triage
   specialty: low-friction inbox processing, capture routing, task/research/defer decisions, durable-context filtering
-  model: GPT-5.5
+  model: GPT-5.3 Spark
   mission: Route incoming material into discard, task, research, or durable brain capture with minimal overhead and no junk accumulation.
   profile: inbox-triage
   modes:
@@ -478,6 +564,16 @@ workers:
   - task-routing
   - knowledge-filtering
   - source-review
+  routeWhen:
+  - incoming material needs quick capture, discard, task routing, or reading queue triage
+  - Cael needs to sort low-risk inputs without spending premium model budget
+  - the user drops unsorted notes, links, emails, or ideas
+  delegateTo:
+  - km-agent
+  - researcher
+  - builder
+  - strategist
+  budgetClass: free-fast-triage
   preferredTaskTypes:
   - triage
   - inbox

@@ -45,6 +45,9 @@ describe('swarm roster semantic workers', () => {
           mcpServers: ['gbrain'],
           wrapper: 'km:health',
           capabilities: ['gbrain', 'obsidian', 'drift-audit'],
+          routeWhen: ['durable memory needs curation'],
+          delegateTo: ['reviewer'],
+          budgetClass: 'premium',
           preferredTaskTypes: ['knowledge', 'curation'],
           greenlightRequiredFor: ['delete', 'purge', 'publish'],
           maxConcurrentTasks: 1,
@@ -62,6 +65,9 @@ describe('swarm roster semantic workers', () => {
       pluginToolsets: ['spotify'],
       mcpServers: ['gbrain'],
       wrapper: 'km:health',
+      routeWhen: ['durable memory needs curation'],
+      delegateTo: ['reviewer'],
+      budgetClass: 'premium',
       greenlightRequiredFor: ['delete', 'purge', 'publish'],
     })
   })

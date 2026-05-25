@@ -48,6 +48,25 @@ describe('resolveSwarmModelLabel', () => {
       provider: 'openai-codex',
       default: 'gpt-5.5',
     })
+    expect(resolveSwarmModelLabel('GPT-5.3 Spark')).toEqual({
+      provider: 'openai-codex',
+      default: 'gpt-5.3-codex-spark',
+    })
+    expect(resolveSwarmModelLabel('Spark')).toEqual({
+      provider: 'openai-codex',
+      default: 'gpt-5.3-codex-spark',
+    })
+  })
+
+  it('resolves Gemini CLI labels', () => {
+    expect(resolveSwarmModelLabel('Gemini 3.1 Pro Preview')).toEqual({
+      provider: 'google-gemini-cli',
+      default: 'gemini-3.1-pro-preview',
+    })
+    expect(resolveSwarmModelLabel('gemini-3.1-pro-preview')).toEqual({
+      provider: 'google-gemini-cli',
+      default: 'gemini-3.1-pro-preview',
+    })
   })
 
   it('resolves PC1 local labels regardless of TPS qualifier', () => {

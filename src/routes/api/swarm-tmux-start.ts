@@ -7,7 +7,11 @@ import { join } from 'node:path'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { rosterByWorkerId } from '../../server/swarm-roster'
 import { resolveSwarmModelLabel } from '../../server/swarm-model-resolver'
-import { syncSwarmProfileModel } from '../../server/swarm-profile-config'
+import {
+  ensureSwarmProfileConfig,
+  syncSwarmProfileIdentity,
+  syncSwarmProfileModel,
+} from '../../server/swarm-profile-config'
 
 // Inlined to avoid SSR module-resolution races against freshly-written
 // helpers; mirrors `src/server/claude-paths.ts` getProfilesDir().
@@ -198,6 +202,11 @@ export const Route = createFileRoute('/api/swarm-tmux-start')({
           )
         }
 
+        const profileBootstrap = ensureSwarmProfileConfig(profilePath)
+        const identitySync = worker
+          ? syncSwarmProfileIdentity(profilePath, worker)
+          : { ok: false, error: `No roster worker found for ${workerId}` }
+
         // Sync the worker's profile config.yaml model section to the
         // roster's `model:` label before we (re)attach tmux. Hermes Agent
         // reads config.yaml on every invocation, and the wrapper does not
@@ -240,6 +249,8 @@ export const Route = createFileRoute('/api/swarm-tmux-start')({
             alreadyRunning: true,
             started: false,
             tmuxBin,
+            profileBootstrap,
+            identitySync,
             modelSync,
           })
         }
@@ -265,6 +276,8 @@ export const Route = createFileRoute('/api/swarm-tmux-start')({
           started: true,
           tmuxBin,
           cwd,
+          profileBootstrap,
+          identitySync,
           modelSync,
         })
       },

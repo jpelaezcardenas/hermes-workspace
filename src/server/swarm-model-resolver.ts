@@ -1,6 +1,6 @@
 /**
  * Resolve a roster `model:` display string (e.g. "Opus 4.7", "GPT-5.5",
- * "PC1 Coder") into the concrete `provider` + `default` model id pair
+ * "GPT-5.3 Spark", "PC1 Coder") into the concrete `provider` + `default` model id pair
  * that Hermes Agent's `config.yaml` expects.
  *
  * The roster YAML carries a human-friendly label so the Swarm UI can
@@ -53,8 +53,16 @@ export function resolveSwarmModelLabel(
   if (/^gpt[- ]?5\.4$|^codex\s*\(?gpt[- ]?5\.4\)?$/.test(normalized)) {
     return { provider: 'openai-codex', default: 'gpt-5.4' }
   }
-  if (/^gpt[- ]?5\.3[- ]codex(?:[- ]?spark)?$/.test(normalized)) {
+  if (/^spark$|^gpt[- ]?5\.3\s*spark$|^gpt[- ]?5\.3[- ]codex(?:[- ]?spark)?$/.test(normalized)) {
     return { provider: 'openai-codex', default: 'gpt-5.3-codex-spark' }
+  }
+
+  // Google Gemini CLI family
+  if (/^gemini\s*3\.1\s*pro(?:\s*preview)?$|^gemini[- ]?3\.1[- ]pro[- ]preview$/.test(normalized)) {
+    return {
+      provider: 'google-gemini-cli',
+      default: 'gemini-3.1-pro-preview',
+    }
   }
 
   // MiniMax
