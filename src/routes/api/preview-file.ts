@@ -9,7 +9,9 @@
 import { statSync, readFileSync } from 'node:fs'
 import { extname, resolve as resolvePath } from 'node:path'
 import os from 'node:os'
+import { createHash } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
+import { json } from '@tanstack/react-start'
 import { isAuthenticated } from '../../server/auth-middleware'
 
 const MAX_BYTES = 5 * 1024 * 1024 // 5MB ceiling for embedded previews
@@ -52,6 +54,26 @@ function isAllowed(absPath: string): boolean {
   )
 }
 
+function contentHash(buffer: Buffer) {
+  return createHash('sha256').update(buffer).digest('hex')
+}
+
+function isTextMime(mime: string) {
+  return (
+    mime.startsWith('text/') ||
+    mime.includes('json') ||
+    mime.includes('javascript') ||
+    mime.includes('xml') ||
+    mime === 'image/svg+xml'
+  )
+}
+
+function previewKind(mime: string) {
+  if (mime.startsWith('image/') && mime !== 'image/svg+xml') return 'image'
+  if (isTextMime(mime)) return 'text'
+  return 'binary'
+}
+
 export const Route = createFileRoute('/api/preview-file')({
   server: {
     handlers: {
@@ -83,6 +105,19 @@ export const Route = createFileRoute('/api/preview-file')({
           }
           const body = readFileSync(abs)
           const mime = MIME_BY_EXT[extname(abs).toLowerCase()] ?? 'application/octet-stream'
+          if (url.searchParams.get('format') === 'json') {
+            const kind = previewKind(mime)
+            return json({
+              ok: true,
+              path: abs,
+              mime,
+              kind,
+              size: stat.size,
+              contentHash: contentHash(body),
+              content: kind === 'text' ? body.toString('utf8') : undefined,
+              contentBase64: kind === 'image' ? body.toString('base64') : undefined,
+            })
+          }
           return new Response(body, {
             status: 200,
             headers: {

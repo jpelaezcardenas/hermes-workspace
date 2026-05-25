@@ -118,6 +118,7 @@ const IGNORED_DIRS = new Set([
 
 const MAX_DIRECTORY_DEPTH = 3
 const MAX_DIRECTORY_ENTRIES = 20_000
+const MAX_JSON_UPLOAD_BYTES = 10 * 1024 * 1024
 
 type ReadDirectoryOptions = {
   maxDepth: number
@@ -275,6 +276,43 @@ function getExpectedContentHash(body: Record<string, unknown>) {
   return null
 }
 
+function isErrno(error: unknown, code: string) {
+  return (
+    error !== null &&
+    typeof error === 'object' &&
+    'code' in error &&
+    error.code === code
+  )
+}
+
+async function resolveUploadDestination(
+  targetPath: string,
+  fileName: string,
+  workspaceRoot: string,
+) {
+  const safeName = path.basename(fileName).trim()
+  if (!safeName || safeName === '.' || safeName === '..') {
+    throw new Error('Invalid upload filename')
+  }
+
+  const resolvedTarget = ensureWorkspacePath(targetPath, workspaceRoot)
+  try {
+    const stats = await fs.stat(resolvedTarget)
+    const destination = stats.isDirectory()
+      ? path.join(resolvedTarget, safeName)
+      : resolvedTarget
+    return ensureWorkspacePath(destination, workspaceRoot)
+  } catch (error) {
+    if (!isErrno(error, 'ENOENT')) throw error
+    const trimmedTarget = targetPath.trim()
+    const destination =
+      !trimmedTarget || trimmedTarget.endsWith('/') || trimmedTarget.endsWith(path.sep)
+        ? path.join(resolvedTarget, safeName)
+        : resolvedTarget
+    return ensureWorkspacePath(destination, workspaceRoot)
+  }
+}
+
 export const Route = createFileRoute('/api/files')({
   server: {
     handlers: {
@@ -403,6 +441,35 @@ export const Route = createFileRoute('/api/files')({
             unknown
           >
           const action = typeof body.action === 'string' ? body.action : 'write'
+
+          if (action === 'uploadBase64') {
+            const encoded =
+              typeof body.contentBase64 === 'string' ? body.contentBase64 : ''
+            const fileName = typeof body.fileName === 'string' ? body.fileName : ''
+            if (!encoded || !fileName.trim()) {
+              return json({ ok: false, error: 'Missing upload payload' }, { status: 400 })
+            }
+            const buffer = Buffer.from(encoded, 'base64')
+            if (buffer.byteLength > MAX_JSON_UPLOAD_BYTES) {
+              return json(
+                { ok: false, error: 'Upload too large for desktop bridge' },
+                { status: 413 },
+              )
+            }
+            const destination = await resolveUploadDestination(
+              String(body.path || ''),
+              fileName,
+              workspaceRoot,
+            )
+            await fs.mkdir(path.dirname(destination), { recursive: true })
+            await fs.writeFile(destination, buffer)
+            return json({
+              ok: true,
+              path: toRelative(destination, workspaceRoot),
+              size: buffer.byteLength,
+              contentHash: contentHash(buffer),
+            })
+          }
 
           if (action === 'mkdir') {
             const dirPath = ensureWorkspacePath(
