@@ -6,7 +6,7 @@
  * a /api/tasks/assignees endpoint.
  */
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import { BEARER_TOKEN, CLAUDE_API, CLAUDE_DASHBOARD_URL } from '../../server/gateway-capabilities'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -121,7 +121,7 @@ export const Route = createFileRoute('/api/claude-tasks-assignees')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
         }
 

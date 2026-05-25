@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import { createTask, listTasks } from '../../server/tasks-store'
 import type { TaskColumn, TaskPriority } from '../../server/tasks-store'
 
@@ -30,7 +30,7 @@ export const Route = createFileRoute('/api/hermes-tasks')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
@@ -46,7 +46,7 @@ export const Route = createFileRoute('/api/hermes-tasks')({
       },
 
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 

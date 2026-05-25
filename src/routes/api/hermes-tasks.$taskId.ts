@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { randomUUID } from 'node:crypto'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import { deleteTask, getTask, moveTask, updateTask } from '../../server/tasks-store'
 import { ensureLocalSession, appendLocalMessage, getLocalMessages } from '../../server/local-session-store'
 import { getSessionMessages } from '../../server/claude-dashboard-api'
@@ -33,7 +33,7 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
@@ -43,7 +43,7 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
       },
 
       PATCH: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
@@ -69,7 +69,7 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
       },
 
       DELETE: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
@@ -79,7 +79,7 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
       },
 
       POST: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 

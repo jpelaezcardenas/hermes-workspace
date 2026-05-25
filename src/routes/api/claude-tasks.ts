@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import { createClaudeTask, listClaudeTasks } from '../../server/claude-tasks-backend'
 import type { TaskColumn, TaskPriority } from '../../server/claude-tasks-backend'
 
@@ -29,7 +29,7 @@ export const Route = createFileRoute('/api/claude-tasks')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
@@ -45,7 +45,7 @@ export const Route = createFileRoute('/api/claude-tasks')({
       },
 
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return jsonResponse({ error: 'Unauthorized' }, 401)
         }
 
