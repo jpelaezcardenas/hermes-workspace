@@ -19,6 +19,10 @@ export type TerminalSessionEvent = {
 export type TerminalSession = {
   id: string
   createdAt: number
+  cwd: string
+  command: Array<string>
+  cols: number
+  rows: number
   emitter: EventEmitter
   sendInput: (data: string) => void
   resize: (cols: number, rows: number) => void
@@ -34,10 +38,20 @@ export type TerminalSession = {
   markAttached: () => void
 }
 
+export type TerminalSessionSummary = {
+  id: string
+  createdAt: number
+  cwd: string
+  command: Array<string>
+  cols: number
+  rows: number
+  idleTtlMs: number
+}
+
 // How long an unattached PTY session stays alive before it's reaped, in ms.
 // Long enough to absorb tab suspension and short network blips, short enough
 // that abandoned tabs don't pile up forever. Override with HERMES_TERMINAL_DETACH_TTL_MS.
-const DETACH_TTL_MS = (() => {
+export const TERMINAL_DETACH_TTL_MS = (() => {
   const raw = process.env.HERMES_TERMINAL_DETACH_TTL_MS
   const parsed = raw ? Number(raw) : NaN
   if (Number.isFinite(parsed) && parsed > 0) return Math.floor(parsed)
@@ -81,8 +95,8 @@ export function createTerminalSession(params: {
     cwd = home
   }
 
-  const cols = params.cols ?? 80
-  const rows = params.rows ?? 24
+  let cols = params.cols ?? 80
+  let rows = params.rows ?? 24
 
   // Buffer early output before any listener registers
   const earlyBuffer: Array<TerminalSessionEvent> = []
@@ -177,6 +191,10 @@ export function createTerminalSession(params: {
   const session: TerminalSession = {
     id: sessionId,
     createdAt: Date.now(),
+    cwd,
+    command,
+    cols,
+    rows,
     emitter,
 
     sendInput(data: string) {
@@ -185,7 +203,11 @@ export function createTerminalSession(params: {
       }
     },
 
-    resize(_newCols: number, _newRows: number) {
+    resize(newCols: number, newRows: number) {
+      cols = Math.max(20, Math.min(500, Math.floor(newCols)))
+      rows = Math.max(5, Math.min(300, Math.floor(newRows)))
+      session.cols = cols
+      session.rows = rows
       // Send SIGWINCH to the Python helper, which propagates to the PTY
       if (proc.pid) {
         // Note: can't update env on running ChildProcess, SIGWINCH alone is sent
@@ -205,7 +227,7 @@ export function createTerminalSession(params: {
         if (sessions.get(sessionId) === session) {
           session.close()
         }
-      }, DETACH_TTL_MS)
+      }, TERMINAL_DETACH_TTL_MS)
     },
 
     markAttached() {
@@ -242,6 +264,20 @@ export function createTerminalSession(params: {
 
 export function getTerminalSession(id: string): TerminalSession | null {
   return sessions.get(id) ?? null
+}
+
+export function listTerminalSessions(): Array<TerminalSessionSummary> {
+  return Array.from(sessions.values())
+    .map((session) => ({
+      id: session.id,
+      createdAt: session.createdAt,
+      cwd: session.cwd,
+      command: session.command,
+      cols: session.cols,
+      rows: session.rows,
+      idleTtlMs: TERMINAL_DETACH_TTL_MS,
+    }))
+    .sort((a, b) => b.createdAt - a.createdAt)
 }
 
 export function closeTerminalSession(id: string): void {

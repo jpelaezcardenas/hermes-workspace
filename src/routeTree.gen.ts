@@ -48,6 +48,7 @@ import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
 import { Route as ApiVtCapitalRouteImport } from './routes/api/vt-capital'
 import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
+import { Route as ApiTerminalSessionsRouteImport } from './routes/api/terminal-sessions'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
 import { Route as ApiTerminalCloseRouteImport } from './routes/api/terminal-close'
@@ -385,6 +386,11 @@ const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
 const ApiTerminalStreamRoute = ApiTerminalStreamRouteImport.update({
   id: '/api/terminal-stream',
   path: '/api/terminal-stream',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTerminalSessionsRoute = ApiTerminalSessionsRouteImport.update({
+  id: '/api/terminal-sessions',
+  path: '/api/terminal-sessions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTerminalResizeRoute = ApiTerminalResizeRouteImport.update({
@@ -1222,6 +1228,7 @@ export interface FileRoutesByFullPath {
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
+  '/api/terminal-sessions': typeof ApiTerminalSessionsRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
@@ -1405,6 +1412,7 @@ export interface FileRoutesByTo {
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
+  '/api/terminal-sessions': typeof ApiTerminalSessionsRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
@@ -1590,6 +1598,7 @@ export interface FileRoutesById {
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
+  '/api/terminal-sessions': typeof ApiTerminalSessionsRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/transcribe': typeof ApiTranscribeRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
@@ -1776,6 +1785,7 @@ export interface FileRouteTypes {
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
+    | '/api/terminal-sessions'
     | '/api/terminal-stream'
     | '/api/transcribe'
     | '/api/vt-capital'
@@ -1959,6 +1969,7 @@ export interface FileRouteTypes {
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
+    | '/api/terminal-sessions'
     | '/api/terminal-stream'
     | '/api/transcribe'
     | '/api/vt-capital'
@@ -2143,6 +2154,7 @@ export interface FileRouteTypes {
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
+    | '/api/terminal-sessions'
     | '/api/terminal-stream'
     | '/api/transcribe'
     | '/api/vt-capital'
@@ -2328,6 +2340,7 @@ export interface RootRouteChildren {
   ApiTerminalCloseRoute: typeof ApiTerminalCloseRoute
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
+  ApiTerminalSessionsRoute: typeof ApiTerminalSessionsRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
   ApiTranscribeRoute: typeof ApiTranscribeRoute
   ApiVtCapitalRoute: typeof ApiVtCapitalRoute
@@ -2648,6 +2661,13 @@ declare module '@tanstack/react-router' {
       path: '/api/terminal-stream'
       fullPath: '/api/terminal-stream'
       preLoaderRoute: typeof ApiTerminalStreamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/terminal-sessions': {
+      id: '/api/terminal-sessions'
+      path: '/api/terminal-sessions'
+      fullPath: '/api/terminal-sessions'
+      preLoaderRoute: typeof ApiTerminalSessionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/terminal-resize': {
@@ -4002,6 +4022,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalCloseRoute: ApiTerminalCloseRoute,
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
+  ApiTerminalSessionsRoute: ApiTerminalSessionsRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
   ApiTranscribeRoute: ApiTranscribeRoute,
   ApiVtCapitalRoute: ApiVtCapitalRoute,
