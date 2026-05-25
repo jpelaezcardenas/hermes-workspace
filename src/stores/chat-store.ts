@@ -242,6 +242,7 @@ export function clearRecoveryMessage(sessionKey: string): void {
 }
 
 const WAITING_STORAGE_PREFIX = 'claude_waiting_'
+const WAITING_STORAGE_MAX_AGE_MS = 10 * 60 * 1000
 
 function persistWaitingState(
   sessionKey: string,
@@ -267,16 +268,23 @@ function restoreWaitingSessions(): {
   const meta: Record<string, { since: number; runId: string | null }> = {}
   if (typeof sessionStorage === 'undefined') return { keys, meta }
 
+  const now = Date.now()
   for (let i = sessionStorage.length - 1; i >= 0; i--) {
     const storageKey = sessionStorage.key(i)
     if (!storageKey || !storageKey.startsWith(WAITING_STORAGE_PREFIX)) continue
     const sessionKey = storageKey.slice(WAITING_STORAGE_PREFIX.length)
     try {
       const parsed = JSON.parse(sessionStorage.getItem(storageKey) ?? '')
-      if (typeof parsed.since === 'number') {
+      const since = typeof parsed.since === 'number' ? parsed.since : 0
+      const ageMs = now - since
+      if (
+        since > 0 &&
+        ageMs >= 0 &&
+        ageMs <= WAITING_STORAGE_MAX_AGE_MS
+      ) {
         keys.add(sessionKey)
         meta[sessionKey] = {
-          since: parsed.since,
+          since,
           runId: typeof parsed.runId === 'string' ? parsed.runId : null,
         }
       } else {

@@ -1,6 +1,23 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useChatStore } from '../../../stores/chat-store'
 
+
+const ACTIVE_RUN_CHECK_TIMEOUT_MS = 5_000
+
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init: RequestInit | undefined,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
+
 type ActiveRunStatus =
   | 'accepted'
   | 'active'
@@ -56,9 +73,10 @@ export function useActiveRunCheck({
 
     async function check() {
       try {
-        const response = await fetch(
+        const response = await fetchWithTimeout(
           `/api/sessions/${encodeURIComponent(sessionKey)}/active-run`,
           { signal: controller.signal },
+          ACTIVE_RUN_CHECK_TIMEOUT_MS,
         )
         if (!response.ok) return
 

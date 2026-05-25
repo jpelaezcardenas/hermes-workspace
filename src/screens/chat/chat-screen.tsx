@@ -135,6 +135,29 @@ type PortableHistoryMessage = {
   content: string
 }
 
+const CHAT_ACCEPT_TIMEOUT_MS = 10_000
+const ACTIVE_RUN_CHECK_TIMEOUT_MS = 5_000
+
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init: RequestInit | undefined,
+  timeoutMs: number,
+  label: string,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(`${label} timed out after ${timeoutMs}ms`)
+    }
+    throw error
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
+
 function normalizeMimeType(value: unknown): string {
   if (typeof value !== 'string') return ''
   return value.trim().toLowerCase()
@@ -953,8 +976,11 @@ export function ChatScreen({
 
     const checkActiveRun = async () => {
       try {
-        const res = await fetch(
+        const res = await fetchWithTimeout(
           `/api/sessions/${encodeURIComponent(resolvedSessionKey)}/active-run`,
+          undefined,
+          ACTIVE_RUN_CHECK_TIMEOUT_MS,
+          'active-run check',
         )
         if (!res.ok || cancelled) return
         const data = await res.json()
@@ -1986,7 +2012,7 @@ export function ChatScreen({
 
       const idempotencyKey = optimisticClientId || crypto.randomUUID()
       void (async () => {
-        const response = await fetch('/api/session-send', {
+        const response = await fetchWithTimeout('/api/session-send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2006,7 +2032,7 @@ export function ChatScreen({
                 ? localStorage.getItem('hermes-workspace-locale') || 'en'
                 : 'en',
           }),
-        })
+        }, CHAT_ACCEPT_TIMEOUT_MS, 'session-send accept')
         const responseText = await response.text()
         let result: { ok?: boolean; error?: string } = {}
         try {
