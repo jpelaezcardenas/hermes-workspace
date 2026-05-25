@@ -4,7 +4,7 @@ Cael should stay on the fast lane for conversation, routing, inbox triage, and l
 
 ## Runtime Model
 
-Hermes' current Google account model catalog exposes `gemini-3-flash-preview` for the fast Flash lane. If Google exposes a `gemini-3.5-flash` id later, update `swarm.yaml` and the model resolver together before syncing profiles.
+Google documents `gemini-3.5-flash` as the stable Gemini 3.5 Flash model code. Its supported inputs are text, image, video, audio, and PDF, with text output; image generation is not supported by this model, so image generation remains routed through the active ChatGPT/Codex image backend.
 
 | Lane | Worker | Model | Use |
 | --- | --- | --- | --- |
@@ -15,7 +15,7 @@ Hermes' current Google account model catalog exposes `gemini-3-flash-preview` fo
 | Review | `reviewer` | Claude Opus 4.7 | Independent logic, security, and merge-readiness gate. |
 | QA | `qa` | GPT-5.5 | Browser, CLI, workflow, and user-visible smoke verification. |
 | Research | `researcher` | Gemini 3.1 Pro Preview | Current external research, source trails, options analysis. |
-| Multimodal | `multimodal` | Gemini 3 Flash Preview | Screenshots, visual reasoning, image/PDF analysis, design critique, and prompt briefs for image generation. |
+| Multimodal | `multimodal` | Gemini 3.5 Flash | Screenshots, visual reasoning, image/PDF analysis, design critique, and prompt briefs for image generation. |
 | Memory | `km-agent` | GPT-5.5 | Second-brain curation, durable handoffs, drift audits. |
 | Strategy | `strategist` | GPT-5.5 | Bets, kill criteria, operating plans, prioritization. |
 | Maintenance | `maintainer` | GPT-5.5 | Dependency, upstream, patch hygiene, release follow-through. |

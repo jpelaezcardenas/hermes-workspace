@@ -66,6 +66,13 @@ export function resolveSwarmModelLabel(
       base_url: 'cloudcode-pa://google',
     }
   }
+  if (/^gemini\s*3\.5\s*flash$|^gemini[- ]?3\.5[- ]flash$/.test(normalized)) {
+    return {
+      provider: 'google-gemini-cli',
+      default: 'gemini-3.5-flash',
+      base_url: 'cloudcode-pa://google',
+    }
+  }
   if (/^gemini\s*3\s*flash(?:\s*preview)?$|^gemini[- ]?3[- ]flash[- ]preview$|^gemini\s*flash$/.test(normalized)) {
     return {
       provider: 'google-gemini-cli',

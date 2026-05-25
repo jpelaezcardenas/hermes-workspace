@@ -43,6 +43,9 @@ function resolveModel(label) {
   if (/^gemini\s*3\.1\s*pro(?:\s*preview)?$|^gemini[- ]?3\.1[- ]pro[- ]preview$/.test(normalized)) {
     return { provider: 'google-gemini-cli', default: 'gemini-3.1-pro-preview', base_url: 'cloudcode-pa://google' }
   }
+  if (/^gemini\s*3\.5\s*flash$|^gemini[- ]?3\.5[- ]flash$/.test(normalized)) {
+    return { provider: 'google-gemini-cli', default: 'gemini-3.5-flash', base_url: 'cloudcode-pa://google' }
+  }
   if (/^gemini\s*3\s*flash(?:\s*preview)?$|^gemini[- ]?3[- ]flash[- ]preview$|^gemini\s*flash$/.test(normalized)) {
     return { provider: 'google-gemini-cli', default: 'gemini-3-flash-preview', base_url: 'cloudcode-pa://google' }
   }

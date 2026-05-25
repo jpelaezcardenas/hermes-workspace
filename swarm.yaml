@@ -368,10 +368,10 @@ workers:
   wrapper: researcher:quick
 - id: multimodal
   name: Multimodal
-  role: Gemini Flash Multimodal Agent
+  role: Gemini 3.5 Flash Multimodal Agent
   specialty: screenshots, visual reasoning, image/PDF analysis, design critique, asset-generation briefs
-  model: Gemini 3 Flash Preview
-  mission: Handle fast multimodal work with Gemini Flash, including screenshot analysis, visual QA, document-image reasoning, and prompt briefs for image generation.
+  model: Gemini 3.5 Flash
+  mission: Handle fast multimodal work with Gemini 3.5 Flash, including screenshot analysis, visual QA, document-image reasoning, and prompt briefs for image generation.
   profile: multimodal
   modes:
   - vision
