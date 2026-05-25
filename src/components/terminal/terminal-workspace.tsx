@@ -60,6 +60,7 @@ type TerminalWorkspaceProps = {
 
 type TerminalSessionResponse = {
   sessionId?: string
+  label?: string
 }
 
 // See terminal-panel.tsx — ~/.hermes is not guaranteed to exist in the workspace image.
@@ -429,7 +430,8 @@ export function TerminalWorkspace({
             const payload = JSON.parse(eventData) as TerminalSessionResponse
             if (payload.sessionId) {
               setTabSessionId(tab.id, payload.sessionId)
-              const nextTitle = tab.cwd === '~' ? tab.title : tab.cwd
+              const label = payload.label?.trim()
+              const nextTitle = label || (tab.cwd === '~' ? tab.title : tab.cwd)
               renameTab(tab.id, nextTitle)
             }
             continue
@@ -582,6 +584,20 @@ export function TerminalWorkspace({
     },
     [createTab, ensureTerminalForTab, focusActiveTerminal],
   )
+
+  const persistTerminalLabel = useCallback(async function persistTerminalLabel(
+    sessionId: string | null,
+    label: string,
+  ) {
+    if (!sessionId) return
+    await fetch('/api/terminal-sessions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'rename', sessionId, label }),
+    }).catch(function ignore() {
+      return undefined
+    })
+  }, [])
 
   useEffect(
     function closeContextMenuOnClick() {
@@ -928,7 +944,10 @@ export function TerminalWorkspace({
                 menuTab.title,
               )
               if (!nextName) return
-              renameTab(menuTab.id, nextName)
+              const trimmedName = nextName.trim()
+              if (!trimmedName) return
+              renameTab(menuTab.id, trimmedName)
+              void persistTerminalLabel(menuTab.sessionId, trimmedName)
             }}
           >
             Rename

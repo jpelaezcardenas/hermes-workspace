@@ -287,6 +287,27 @@ export function listTerminalSessions(): Array<TerminalSessionSummary> {
     .sort((a, b) => b.createdAt - a.createdAt)
 }
 
+export function updateTerminalSessionLabel(
+  id: string,
+  label: string,
+): TerminalSessionSummary | null {
+  const session = sessions.get(id)
+  if (!session) return null
+  const sanitized = sanitizeTerminalLabel(label)
+  if (!sanitized) return null
+  session.label = sanitized
+  return {
+    id: session.id,
+    label: session.label,
+    createdAt: session.createdAt,
+    cwd: session.cwd,
+    command: session.command,
+    cols: session.cols,
+    rows: session.rows,
+    idleTtlMs: TERMINAL_DETACH_TTL_MS,
+  }
+}
+
 function sanitizeTerminalLabel(input: string | undefined): string | null {
   const value = input?.replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ').trim()
   if (!value) return null
