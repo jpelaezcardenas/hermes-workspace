@@ -13,7 +13,7 @@ import {
   ensureGatewayProbed,
   getChatMode,
 } from '../../server/gateway-capabilities'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 
 const CONFIG_PATH = path.join(
   process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes'),
@@ -56,13 +56,29 @@ export const Route = createFileRoute('/api/connection-status')({
         // isAuthenticated() returns boolean. The previous "return authResult as
         // unknown as Response" cast silenced TypeScript but threw at runtime
         // because the framework received `false`, not a Response. See #261, #263.
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const caps = await ensureGatewayProbed()
         const activeModel = readActiveModel()
         const modelConfigured = Boolean(activeModel)
+        const caps = await ensureGatewayProbed().catch((error) => {
+          if (import.meta.env.DEV) {
+            console.warn('[/api/connection-status] Gateway probe failed', error)
+          }
+          return {
+            health: false,
+            chatCompletions: false,
+            models: false,
+            streaming: false,
+            sessions: false,
+            skills: false,
+            memory: false,
+            config: false,
+            jobs: false,
+            dashboard: { available: false },
+          }
+        })
 
         const chatReady = caps.chatCompletions
         const enhancedReady =

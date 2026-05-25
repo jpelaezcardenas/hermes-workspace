@@ -40,10 +40,14 @@ export const Route = createFileRoute('/api/terminal-resize')({
         }
         const session = getTerminalSession(sessionId)
         if (!session) {
-          return new Response(JSON.stringify({ ok: false }), {
-            status: 404,
-            headers: { 'Content-Type': 'application/json' },
-          })
+          // Resize is a best-effort sync from persisted terminal UI state.
+          // A stale browser tab may reference a session that was already closed;
+          // treat that as an idempotent no-op so background hydration does not
+          // surface a false broken-resource error in the command center.
+          return new Response(
+            JSON.stringify({ ok: false, reason: 'session-not-found' }),
+            { headers: { 'Content-Type': 'application/json' } },
+          )
         }
         session.resize(cols, rows)
         return new Response(JSON.stringify({ ok: true }), {

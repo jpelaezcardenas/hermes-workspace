@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { CaelHomeRoute } from '@/routes/cael-home'
 import { usePageTitle } from '@/hooks/use-page-title'
-import { DashboardScreen } from '@/screens/dashboard/dashboard-screen'
 
 export const Route = createFileRoute('/dashboard')({
   ssr: false,
@@ -8,6 +8,6 @@ export const Route = createFileRoute('/dashboard')({
 })
 
 function DashboardRoute() {
-  usePageTitle('Dashboard')
-  return <DashboardScreen />
+  usePageTitle('Cael Homebase')
+  return <CaelHomeRoute />
 }

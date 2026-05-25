@@ -250,7 +250,7 @@ export const Route = createFileRoute('/api/files')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         try {

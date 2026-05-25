@@ -505,7 +505,7 @@ function LanePill({ lane }: { lane: ServiceCheck['lane'] }) {
   )
 }
 
-function CaelHomeRoute() {
+export function CaelHomeRoute() {
   usePageTitle('Cael Homebase')
   const initialCommandSummary = useMemo(readCachedCommandCenterSummary, [])
   const { data, error, isLoading, refetch, isFetching } = useQuery({
