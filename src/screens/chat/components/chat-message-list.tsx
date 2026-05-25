@@ -25,6 +25,7 @@ import { AssistantAvatar } from '@/components/avatars'
 import { cn } from '@/lib/utils'
 import { hapticTap } from '@/lib/haptics'
 import { CHAT_OPEN_MESSAGE_SEARCH_EVENT } from '@/screens/chat/chat-events'
+import { useChatStore } from '@/stores/chat-store'
 
 /** Duration (ms) the thinking indicator stays visible after waitingForResponse
  *  clears, giving the first response message time to render before the
@@ -187,20 +188,35 @@ type ThinkingBubbleProps = {
  * label that reflects what's actually happening (tool calls, etc.).
  */
 function ThinkingBubble({
-  activeToolCalls: _activeToolCalls = [],
-  liveToolActivity: _liveToolActivity = [],
+  activeToolCalls = [],
+  liveToolActivity = [],
   researchCard,
   isCompacting = false,
 }: ThinkingBubbleProps) {
-  const statusLabel = isCompacting ? 'Compacting context...' : 'Thinking…'
+  // Fallback activity from heartbeat — shows last known agent activity
+  // when no tool calls are in flight (e.g. during pure reasoning)
+  const heartbeatActivity = useChatStore((s) => s.heartbeatActivity)
 
-  // Elapsed time counter — resets when the status label changes (new tool)
+  // Build a meaningful status label from live activity
+  const activeToolNames = activeToolCalls
+    .filter((tc) => tc.phase !== 'done' && tc.phase !== 'complete' && tc.phase !== 'completed')
+    .map((tc) => tc.name.replace(/_/g, ' '))
+  const liveToolNames = liveToolActivity.map((a) => a.name.replace(/_/g, ' '))
+  const uniqueNames = [...new Set([...activeToolNames, ...liveToolNames])]
+  const activityLabel =
+    uniqueNames.length > 0
+      ? `Using: ${uniqueNames.slice(0, 3).join(', ')}${uniqueNames.length > 3 ? ` +${uniqueNames.length - 3} more` : ''}`
+      : null
+  const statusLabel = isCompacting
+    ? 'Compacting context...'
+    : activityLabel || heartbeatActivity || 'Thinking…'
+
+  // Elapsed time counter — counts from bubble mount, not from last label change
   const [elapsed, setElapsed] = useState(0)
   useEffect(() => {
-    setElapsed(0)
     const interval = window.setInterval(() => setElapsed((s) => s + 1), 1000)
     return () => window.clearInterval(interval)
-  }, [statusLabel])
+  }, [])
 
   const elapsedLabel =
     elapsed >= 60
@@ -1955,11 +1971,24 @@ function getStableMessageId(message: ChatMessage, index: number): string {
   }
 
   const timestamp = getRawMessageTimestamp(message)
+  const text = textFromMessage(message)
+  // Content-based fingerprint: hash of text content + timestamp.
+  // This survives reordering because it doesn't depend on array position.
+  const fingerprint = djb2(text.slice(0, 120))
   if (timestamp) {
-    return `${message.role ?? 'assistant'}-${timestamp}-${index}`
+    return `${message.role ?? 'assistant'}-${timestamp}-${fingerprint}`
   }
 
-  return `${message.role ?? 'assistant'}-${index}`
+  return `${message.role ?? 'assistant'}-${fingerprint}-${index}`
+}
+
+/** djb2 string hash — fast, decent distribution, no deps */
+function djb2(str: string): string {
+  let hash = 5381
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) + hash + str.charCodeAt(i)) | 0
+  }
+  return (hash >>> 0).toString(36)
 }
 
 function getRawMessageTimestamp(message: ChatMessage): number | null {
