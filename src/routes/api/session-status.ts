@@ -14,7 +14,7 @@ import {
 } from '../../server/session-utils'
 import { getLocalSession } from '../../server/local-session-store'
 import { getActiveRunForSession } from '../../server/run-store'
-import { isAuthenticated } from '@/server/auth-middleware'
+import { requireLocalOrAuth } from '@/server/auth-middleware'
 import { readContextUsage } from '@/server/context-usage'
 
 function estimateTokensFromText(text: string): number {
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/api/session-status')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         await ensureGatewayProbed()

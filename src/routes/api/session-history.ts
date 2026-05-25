@@ -14,7 +14,7 @@ import {
   toChatMessage,
 } from '../../server/claude-api'
 import { resolveSessionKey } from '../../server/session-utils'
-import { isAuthenticated } from '@/server/auth-middleware'
+import { requireLocalOrAuth } from '@/server/auth-middleware'
 import {
   getLocalMessages,
   getLocalSession,
@@ -24,7 +24,7 @@ export const Route = createFileRoute('/api/session-history')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         await ensureGatewayProbed()

@@ -9,6 +9,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
  * depend on `TRUST_PROXY`.
  */
 
+function makeRequest(headers: Record<string, string>): Request {
+  return new Request('http://localhost/', { headers })
+}
+
 beforeEach(() => {
   vi.resetModules()
 })
@@ -37,6 +41,24 @@ describe('getSessionTokenFromCookie', () => {
     expect(
       getSessionTokenFromCookie('hermes_auth=tok456; claude-auth=tok123'),
     ).toBe('tok123')
+  })
+})
+
+
+
+describe('requireLocalOrAuth', () => {
+  it('trusts Tailscale mesh requests even when password protection is enabled', async () => {
+    process.env.HERMES_PASSWORD = 'configured-test-password'
+    const { requireLocalOrAuth } = await import('./auth-middleware')
+    const request = Object.assign(makeRequest({}), { remoteAddress: '100.97.216.111' })
+    expect(requireLocalOrAuth(request)).toBe(true)
+  })
+
+  it('rejects public requests without auth when TRUST_PROXY exposes a public peer', async () => {
+    process.env.HERMES_PASSWORD = 'configured-test-password'
+    process.env.TRUST_PROXY = '1'
+    const { requireLocalOrAuth } = await import('./auth-middleware')
+    expect(requireLocalOrAuth(makeRequest({ 'x-real-ip': '203.0.113.77' }))).toBe(false)
   })
 })
 
@@ -79,10 +101,6 @@ describe('createSessionCookie (#123)', () => {
 })
 
 describe('getRequestIp (#125)', () => {
-  function makeRequest(headers: Record<string, string>): Request {
-    return new Request('http://localhost/', { headers })
-  }
-
   it('ignores x-forwarded-for when TRUST_PROXY is unset', async () => {
     delete process.env.TRUST_PROXY
     const { getRequestIp } = await import('./auth-middleware')

@@ -283,11 +283,7 @@ export function isAuthenticated(request: Request): boolean {
 }
 
 export function requireLocalOrAuth(request: Request): boolean {
-  if (!isPasswordProtectionEnabled()) {
-    return isLocalRequest(request)
-  }
-
-  return isAuthenticated(request)
+  return isLocalRequest(request) || isAuthenticated(request)
 }
 
 /**

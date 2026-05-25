@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import {
-  isAuthenticated,
   isPasswordProtectionEnabled,
+  requireLocalOrAuth,
 } from '../../server/auth-middleware'
 import { ensureGatewayProbed } from '../../server/gateway-capabilities'
 
@@ -44,7 +44,7 @@ export const Route = createFileRoute('/api/auth-check')({
         }
 
         const authRequired = isPasswordProtectionEnabled()
-        const authenticated = isAuthenticated(request)
+        const authenticated = requireLocalOrAuth(request)
 
         return json({
           authenticated,
