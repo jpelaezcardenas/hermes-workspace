@@ -25,7 +25,6 @@ import {
   moveTask,
   updateTask,
 } from '@/lib/tasks-api'
-import { stashPendingSend } from '@/screens/chat/pending-send'
 
 const QUERY_KEY = ['claude', 'tasks'] as const
 const ASSIGNEES_KEY = ['claude', 'tasks', 'assignees'] as const
@@ -137,6 +136,31 @@ export function TasksScreen() {
     mutationFn: ({ id, column }: { id: string; column: TaskColumn }) => moveTask(id, column, 'user'),
     onSuccess: () => invalidate(),
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to move task', { type: 'error' }),
+  })
+
+  const launchTaskSessionMutation = useMutation({
+    mutationFn: async (task: ClaudeTask) => {
+      const launched = await launchSession(task.id)
+      const linkedTask = await linkSession(task.id, launched.sessionId)
+      return { ...launched, task: linkedTask }
+    },
+    onSuccess: (result) => {
+      invalidate()
+      setEditingTask(result.task)
+      toast('Task session launched')
+      navigate({ to: '/chat/$sessionKey', params: { sessionKey: result.sessionId } })
+    },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to launch task session', { type: 'error' }),
+  })
+
+  const linkSessionMutation = useMutation({
+    mutationFn: ({ task, sessionId }: { task: ClaudeTask; sessionId: string | null }) => linkSession(task.id, sessionId),
+    onSuccess: (task) => {
+      invalidate()
+      setEditingTask(task)
+      toast(task.session_id ? 'Task session linked' : 'Task session link cleared')
+    },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to link task session', { type: 'error' }),
   })
 
   function handleDragStart(e: React.DragEvent, taskId: string) {
@@ -384,9 +408,19 @@ export function TasksScreen() {
         task={editingTask}
         assignees={assignees}
         isSubmitting={updateMutation.isPending}
+        isSessionActionPending={launchTaskSessionMutation.isPending || linkSessionMutation.isPending}
         onSubmit={async (input) => {
           if (!editingTask) return
           await updateMutation.mutateAsync({ id: editingTask.id, input })
+        }}
+        onLaunchSession={async (task) => {
+          await launchTaskSessionMutation.mutateAsync(task)
+        }}
+        onOpenSession={(sessionId) => {
+          navigate({ to: '/chat/$sessionKey', params: { sessionKey: sessionId } })
+        }}
+        onLinkSession={async (task, sessionId) => {
+          await linkSessionMutation.mutateAsync({ task, sessionId })
         }}
       />
     </div>

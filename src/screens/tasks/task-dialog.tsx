@@ -18,9 +18,25 @@ type Props = {
   assignees: Array<TaskAssignee>
   onSubmit: (input: CreateTaskInput) => Promise<void>
   isSubmitting: boolean
+  isSessionActionPending?: boolean
+  onLaunchSession?: (task: ClaudeTask) => Promise<void>
+  onOpenSession?: (sessionId: string) => void
+  onLinkSession?: (task: ClaudeTask, sessionId: string | null) => Promise<void>
 }
 
-export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees, onSubmit, isSubmitting }: Props) {
+export function TaskDialog({
+  open,
+  onOpenChange,
+  task,
+  defaultColumn,
+  assignees,
+  onSubmit,
+  isSubmitting,
+  isSessionActionPending = false,
+  onLaunchSession,
+  onOpenSession,
+  onLinkSession,
+}: Props) {
   const isEdit = Boolean(task)
 
   const [title, setTitle] = useState('')
@@ -30,6 +46,7 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
   const [assignee, setAssignee] = useState<string>('')
   const [tags, setTags] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [sessionId, setSessionId] = useState('')
 
   useEffect(() => {
     if (task) {
@@ -40,6 +57,7 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
       setAssignee(task.assignee ?? '')
       setTags(task.tags.join(', '))
       setDueDate(task.due_date ?? '')
+      setSessionId(task.session_id ?? '')
     } else {
       setTitle('')
       setDescription('')
@@ -48,6 +66,7 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
       setAssignee('')
       setTags('')
       setDueDate('')
+      setSessionId('')
     }
   }, [task, open, defaultColumn])
 
@@ -73,6 +92,8 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
   )
 
   const labelClass = 'block text-xs font-medium text-[var(--theme-muted)] mb-1'
+  const normalizedSessionId = sessionId.trim()
+  const linkedSessionId = task?.session_id?.trim() || ''
 
   return (
     <DialogRoot open={open} onOpenChange={onOpenChange}>
@@ -180,6 +201,68 @@ export function TaskDialog({ open, onOpenChange, task, defaultColumn, assignees,
                 placeholder="frontend, bug, research"
               />
             </div>
+
+            {isEdit && task && (
+              <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-3">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold text-[var(--theme-text)]">Session</p>
+                    <p className="text-[10px] text-[var(--theme-muted)]">Launch a task handoff or attach an existing Cael session.</p>
+                  </div>
+                  {linkedSessionId && (
+                    <span className="rounded-full bg-[var(--theme-hover)] px-2 py-1 text-[10px] text-[var(--theme-muted)]">
+                      Linked
+                    </span>
+                  )}
+                </div>
+
+                <input
+                  className={cn(inputClass, 'font-mono text-xs')}
+                  value={sessionId}
+                  onChange={e => setSessionId(e.target.value)}
+                  placeholder="session-id"
+                />
+
+                <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => void onLaunchSession?.(task)}
+                    disabled={isSessionActionPending || !onLaunchSession}
+                  >
+                    {isSessionActionPending ? 'Working...' : 'Launch Session'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onOpenSession?.(linkedSessionId || normalizedSessionId)}
+                    disabled={isSessionActionPending || !(linkedSessionId || normalizedSessionId) || !onOpenSession}
+                  >
+                    Open Session
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => void onLinkSession?.(task, null)}
+                    disabled={isSessionActionPending || !linkedSessionId || !onLinkSession}
+                  >
+                    Clear Link
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => void onLinkSession?.(task, normalizedSessionId || null)}
+                    disabled={isSessionActionPending || !onLinkSession || normalizedSessionId === linkedSessionId}
+                    style={{ background: 'var(--theme-accent)', color: 'white' }}
+                  >
+                    Save Link
+                  </Button>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center justify-between pt-2">
               <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>
