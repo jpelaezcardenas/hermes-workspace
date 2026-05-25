@@ -3,16 +3,16 @@
  *
  * Serves a file from disk so the Conductor complete-phase panel can embed
  * the mission output (typically /tmp/dispatch-<slug>/index.html) in an
- * iframe. Locks serving to a small list of trusted prefixes so the route
- * can never be used to exfiltrate arbitrary user files.
+ * iframe. Locks serving to trusted prefixes plus the active Workspace root.
  */
 import { statSync, readFileSync } from 'node:fs'
-import { extname, resolve as resolvePath } from 'node:path'
+import path, { extname, resolve as resolvePath } from 'node:path'
 import os from 'node:os'
 import { createHash } from 'node:crypto'
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
+import { loadWorkspaceCatalog } from './workspace'
 
 const MAX_BYTES = 5 * 1024 * 1024 // 5MB ceiling for embedded previews
 const MIME_BY_EXT: Record<string, string> = {
@@ -35,14 +35,14 @@ const MIME_BY_EXT: Record<string, string> = {
 
 function allowedPrefixes(): string[] {
   const home = os.homedir()
-  const claudeHome =
+  const hermesHome =
     process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? resolvePath(home, '.hermes')
   return [
     '/tmp',
     `${home}/tmp`,
     resolvePath(home, 'dispatch'),
     resolvePath(home, 'projects'),
-    resolvePath(claudeHome, 'projects'),
+    resolvePath(hermesHome, 'projects'),
     resolvePath(home, '.claude', 'projects'),
     resolvePath(home, '.ocplatform', 'workspace', 'projects'),
   ]
@@ -52,6 +52,42 @@ function isAllowed(absPath: string): boolean {
   return allowedPrefixes().some(
     (prefix) => absPath === prefix || absPath.startsWith(`${prefix}/`),
   )
+}
+
+async function getWorkspaceRoot(): Promise<string | null> {
+  try {
+    const catalog = await loadWorkspaceCatalog()
+    if (catalog.isValid && catalog.path) return resolvePath(catalog.path)
+  } catch {
+    // Absolute trusted-prefix previews should still work if no workspace is active.
+  }
+  return null
+}
+
+function isWithinWorkspace(absPath: string, workspaceRoot: string | null): boolean {
+  if (!workspaceRoot) return false
+  if (absPath === workspaceRoot) return true
+  const relative = path.relative(workspaceRoot, absPath)
+  return Boolean(relative) && !relative.startsWith('..') && relative !== '..' && !path.isAbsolute(relative)
+}
+
+async function resolvePreviewPath(input: string): Promise<string> {
+  const raw = input.trim()
+  const workspaceRoot = await getWorkspaceRoot()
+  const abs = path.isAbsolute(raw)
+    ? resolvePath(raw)
+    : resolvePath(workspaceRoot ?? process.cwd(), raw)
+
+  if (isAllowed(abs) || isWithinWorkspace(abs, workspaceRoot)) {
+    return abs
+  }
+
+  throw new Error('Forbidden path')
+}
+
+function errorResponse(message: string, status: number, asJson: boolean) {
+  if (asJson) return json({ ok: false, error: message }, { status })
+  return new Response(message, { status })
 }
 
 function contentHash(buffer: Buffer) {
@@ -78,34 +114,34 @@ export const Route = createFileRoute('/api/preview-file')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
-          return new Response('Unauthorized', { status: 401 })
+        const url = new URL(request.url)
+        const wantsJson = url.searchParams.get('format') === 'json'
+        if (!requireLocalOrAuth(request)) {
+          return errorResponse('Unauthorized', 401, wantsJson)
         }
+
         try {
-          const url = new URL(request.url)
           const rawPath = url.searchParams.get('path') || ''
           if (!rawPath) {
-            return new Response('path required', { status: 400 })
+            return errorResponse('path required', 400, wantsJson)
           }
-          const abs = resolvePath(rawPath)
-          if (!isAllowed(abs)) {
-            return new Response('Forbidden path', { status: 403 })
-          }
+
+          const abs = await resolvePreviewPath(rawPath)
           let stat
           try {
             stat = statSync(abs)
           } catch {
-            return new Response('Not found', { status: 404 })
+            return errorResponse('Not found', 404, wantsJson)
           }
           if (!stat.isFile()) {
-            return new Response('Not a file', { status: 400 })
+            return errorResponse('Not a file', 400, wantsJson)
           }
           if (stat.size > MAX_BYTES) {
-            return new Response('File too large for preview', { status: 413 })
+            return errorResponse('File too large for preview', 413, wantsJson)
           }
           const body = readFileSync(abs)
           const mime = MIME_BY_EXT[extname(abs).toLowerCase()] ?? 'application/octet-stream'
-          if (url.searchParams.get('format') === 'json') {
+          if (wantsJson) {
             const kind = previewKind(mime)
             return json({
               ok: true,
@@ -123,14 +159,15 @@ export const Route = createFileRoute('/api/preview-file')({
             headers: {
               'Content-Type': mime,
               'Cache-Control': 'no-store',
-              // Restrict referrer so preview content can't phone home with paths
+              // Restrict referrer so preview content cannot phone home with paths.
               'Referrer-Policy': 'no-referrer',
             },
           })
         } catch (error) {
-          return new Response(
+          return errorResponse(
             error instanceof Error ? error.message : 'Preview failed',
-            { status: 500 },
+            error instanceof Error && error.message === 'Forbidden path' ? 403 : 500,
+            wantsJson,
           )
         }
       },
