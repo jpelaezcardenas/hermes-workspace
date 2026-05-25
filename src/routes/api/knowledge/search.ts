@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { searchKnowledgePages } from '../../../server/knowledge-browser'
 
 export const Route = createFileRoute('/api/knowledge/search')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ error: 'Unauthorized' }, { status: 401 })
         }
 

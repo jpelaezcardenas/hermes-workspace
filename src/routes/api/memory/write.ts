@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { getMemoryWorkspaceRoot } from '../../../server/memory-browser'
 import { requireJsonContentType } from '../../../server/rate-limit'
 
@@ -37,7 +37,7 @@ export const Route = createFileRoute('/api/memory/write')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ error: 'Unauthorized' }, { status: 401 })
         }
         const csrfCheck = requireJsonContentType(request)

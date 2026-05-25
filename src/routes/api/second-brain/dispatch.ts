@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { requireJsonContentType } from '../../../server/rate-limit'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { dispatchSecondBrainWorkflow } from '../../../server/second-brain-files'
 import type { SecondBrainWorkflowOperation } from '../../../server/second-brain-files'
 
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/api/second-brain/dispatch')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         const contentTypeCheck = requireJsonContentType(request)
