@@ -3,7 +3,7 @@
  * or the upstream dashboard cron API.
  */
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import {
   BEARER_TOKEN,
   CLAUDE_API,
@@ -36,7 +36,7 @@ export const Route = createFileRoute('/api/claude-jobs/$jobId')({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
           })
@@ -84,7 +84,7 @@ export const Route = createFileRoute('/api/claude-jobs/$jobId')({
         })
       },
       POST: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
           })
@@ -170,7 +170,7 @@ export const Route = createFileRoute('/api/claude-jobs/$jobId')({
         })
       },
       PATCH: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
           })
@@ -259,7 +259,7 @@ export const Route = createFileRoute('/api/claude-jobs/$jobId')({
         })
       },
       DELETE: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
           })

@@ -2,7 +2,7 @@
  * Jobs API proxy — forwards to Hermes Agent FastAPI /api/jobs
  */
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import {
   BEARER_TOKEN,
   CLAUDE_API,
@@ -54,7 +54,7 @@ export const Route = createFileRoute('/api/claude-jobs')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
           })
@@ -87,7 +87,7 @@ export const Route = createFileRoute('/api/claude-jobs')({
         return jobsResponse(res)
       },
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
           })

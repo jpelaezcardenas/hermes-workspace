@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import {
   getActiveProfileName,
   listProfiles,
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/api/profiles/list')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ error: 'Unauthorized' }, { status: 401 })
         }
         try {
