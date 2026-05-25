@@ -10,7 +10,7 @@
  * errors[] so the UI can surface them inline without special HTTP handling.
  */
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import {
   readHubSources,
   addHubSource,
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/api/mcp/hub-sources')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         try {
@@ -46,7 +46,7 @@ export const Route = createFileRoute('/api/mcp/hub-sources')({
       },
 
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         let body: unknown

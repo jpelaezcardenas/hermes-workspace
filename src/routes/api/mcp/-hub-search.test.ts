@@ -4,7 +4,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 vi.mock('../../../server/auth-middleware', () => ({
-  isAuthenticated: vi.fn(),
+  requireLocalOrAuth: vi.fn(),
 }))
 vi.mock('../../../server/rate-limit', () => ({
   rateLimit: vi.fn(),
@@ -16,12 +16,12 @@ vi.mock('../../../server/mcp-hub/index', () => ({
   unifiedSearch: vi.fn(),
 }))
 
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { rateLimit, getClientIp, rateLimitResponse } from '../../../server/rate-limit'
 import { unifiedSearch } from '../../../server/mcp-hub/index'
 import { Route } from './hub-search'
 
-const mockIsAuthenticated = vi.mocked(isAuthenticated)
+const mockRequireLocalOrAuth = vi.mocked(requireLocalOrAuth)
 const mockRateLimit = vi.mocked(rateLimit)
 const mockGetClientIp = vi.mocked(getClientIp)
 const mockRateLimitResponse = vi.mocked(rateLimitResponse)
@@ -40,7 +40,7 @@ async function callGet(url: string): Promise<Response> {
 
 beforeEach(() => {
   vi.resetAllMocks()
-  mockIsAuthenticated.mockReturnValue(true)
+  mockRequireLocalOrAuth.mockReturnValue(true)
   mockGetClientIp.mockReturnValue('127.0.0.1')
   mockRateLimit.mockReturnValue(true)
   mockRateLimitResponse.mockReturnValue(
@@ -49,8 +49,8 @@ beforeEach(() => {
 })
 
 describe('GET /api/mcp/hub-search — auth', () => {
-  it('returns 401 when not authenticated', async () => {
-    mockIsAuthenticated.mockReturnValue(false)
+  it('returns 401 when not local or authenticated', async () => {
+    mockRequireLocalOrAuth.mockReturnValue(false)
     const res = await callGet('http://localhost/api/mcp/hub-search?q=test')
     expect(res.status).toBe(401)
     const body = await res.json()
@@ -68,25 +68,25 @@ describe('GET /api/mcp/hub-search — query parsing', () => {
   it('passes q, source, limit to unifiedSearch', async () => {
     mockUnifiedSearch.mockResolvedValue({ results: [], source: 'mcp-get', total: 0 })
     await callGet('http://localhost/api/mcp/hub-search?q=github&source=mcp-get&limit=5')
-    expect(mockUnifiedSearch).toHaveBeenCalledWith('github', 'mcp-get', 5)
+    expect(mockUnifiedSearch).toHaveBeenCalledWith('github', 'mcp-get', 5, 0)
   })
 
   it('uses defaults when params absent', async () => {
     mockUnifiedSearch.mockResolvedValue({ results: [], source: 'all', total: 0 })
     await callGet('http://localhost/api/mcp/hub-search')
-    expect(mockUnifiedSearch).toHaveBeenCalledWith('', 'all', 20)
+    expect(mockUnifiedSearch).toHaveBeenCalledWith('', 'all', 20, 0)
   })
 
   it('clamps limit to 100', async () => {
     mockUnifiedSearch.mockResolvedValue({ results: [], source: 'all', total: 0 })
     await callGet('http://localhost/api/mcp/hub-search?limit=9999')
-    expect(mockUnifiedSearch).toHaveBeenCalledWith('', 'all', 100)
+    expect(mockUnifiedSearch).toHaveBeenCalledWith('', 'all', 500, 0)
   })
 
   it('defaults invalid source to all', async () => {
     mockUnifiedSearch.mockResolvedValue({ results: [], source: 'all', total: 0 })
     await callGet('http://localhost/api/mcp/hub-search?source=invalid')
-    expect(mockUnifiedSearch).toHaveBeenCalledWith('', 'all', 20)
+    expect(mockUnifiedSearch).toHaveBeenCalledWith('', 'all', 20, 0)
   })
 })
 

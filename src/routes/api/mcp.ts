@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../server/auth-middleware'
 import {
   BEARER_TOKEN,
   CLAUDE_API,
@@ -109,7 +109,7 @@ export const Route = createFileRoute('/api/mcp')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         const capabilities = await ensureGatewayProbed()
@@ -184,7 +184,7 @@ export const Route = createFileRoute('/api/mcp')({
         }
       },
       POST: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         const csrfCheck = requireJsonContentType(request)

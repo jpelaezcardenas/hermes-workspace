@@ -174,7 +174,7 @@ describe('Phase 1.5 fallback — capability gating shape', () => {
       dashboardFetch: () => Promise.resolve(new Response(null, { status: 404 })),
     }))
     vi.doMock('../../server/auth-middleware', () => ({
-      isAuthenticated: () => true,
+      requireLocalOrAuth: () => true,
     }))
     vi.doMock('../../server/claude-dashboard-api', () => ({
       getConfig: () =>

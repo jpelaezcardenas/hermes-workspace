@@ -5,7 +5,7 @@
  * Auth-gated. Returns 200 with ok:false + errors[] on validation failure.
  */
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { updateHubSource, deleteHubSource, readHubSources } from '../../../server/mcp-hub-sources-store'
 import { invalidateUserSourceCache } from '../../../server/mcp-hub/sources/generic-json'
 
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/api/mcp/hub-sources/$id')({
   server: {
     handlers: {
       PUT: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         let body: unknown
@@ -49,7 +49,7 @@ export const Route = createFileRoute('/api/mcp/hub-sources/$id')({
       },
 
       DELETE: async ({ request, params }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return Response.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         const result = await deleteHubSource(params.id)

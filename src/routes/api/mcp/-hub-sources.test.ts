@@ -12,11 +12,11 @@ vi.mock('../../../server/mcp-hub-sources-store', () => ({
   deleteHubSource: vi.fn(),
 }))
 vi.mock('../../../server/auth-middleware', () => ({
-  isAuthenticated: vi.fn(),
+  requireLocalOrAuth: vi.fn(),
 }))
 
 import { readHubSources, addHubSource, updateHubSource, deleteHubSource } from '../../../server/mcp-hub-sources-store'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { Route as HubSourcesRoute } from './hub-sources'
 import { Route as HubSourcesIdRoute } from './hub-sources.$id'
 
@@ -24,7 +24,7 @@ const mockReadHubSources = vi.mocked(readHubSources)
 const mockAddHubSource = vi.mocked(addHubSource)
 const mockUpdateHubSource = vi.mocked(updateHubSource)
 const mockDeleteHubSource = vi.mocked(deleteHubSource)
-const mockIsAuthenticated = vi.mocked(isAuthenticated)
+const mockRequireLocalOrAuth = vi.mocked(requireLocalOrAuth)
 
 const BUILTIN_SOURCES = [
   { id: 'mcp-get', name: 'Smithery Registry', url: 'https://registry.smithery.ai/servers', trust: 'community', format: 'smithery', enabled: true, builtin: true },
@@ -61,13 +61,13 @@ async function callDelete(request: Request, id: string) {
 
 beforeEach(() => {
   vi.clearAllMocks()
-  mockIsAuthenticated.mockReturnValue(true)
+  mockRequireLocalOrAuth.mockReturnValue(true)
   mockReadHubSources.mockResolvedValue({ sources: BUILTIN_SOURCES as never, source: 'seed' })
 })
 
 describe('GET /api/mcp/hub-sources', () => {
-  it('returns 401 when not authenticated', async () => {
-    mockIsAuthenticated.mockReturnValue(false)
+  it('returns 401 when not local or authenticated', async () => {
+    mockRequireLocalOrAuth.mockReturnValue(false)
     const res = await callGet(makeRequest('GET', 'http://localhost/api/mcp/hub-sources'))
     expect(res.status).toBe(401)
     const body = await res.json()
@@ -98,8 +98,8 @@ describe('GET /api/mcp/hub-sources', () => {
 })
 
 describe('POST /api/mcp/hub-sources', () => {
-  it('returns 401 when not authenticated', async () => {
-    mockIsAuthenticated.mockReturnValue(false)
+  it('returns 401 when not local or authenticated', async () => {
+    mockRequireLocalOrAuth.mockReturnValue(false)
     const res = await callPost(makeRequest('POST', 'http://localhost/api/mcp/hub-sources', {}))
     expect(res.status).toBe(401)
   })
@@ -134,8 +134,8 @@ describe('POST /api/mcp/hub-sources', () => {
 })
 
 describe('PUT /api/mcp/hub-sources/:id', () => {
-  it('returns 401 when not authenticated', async () => {
-    mockIsAuthenticated.mockReturnValue(false)
+  it('returns 401 when not local or authenticated', async () => {
+    mockRequireLocalOrAuth.mockReturnValue(false)
     const res = await callPut(makeRequest('PUT', 'http://localhost/api/mcp/hub-sources/corp', {}), 'corp')
     expect(res.status).toBe(401)
   })
@@ -168,8 +168,8 @@ describe('PUT /api/mcp/hub-sources/:id', () => {
 })
 
 describe('DELETE /api/mcp/hub-sources/:id', () => {
-  it('returns 401 when not authenticated', async () => {
-    mockIsAuthenticated.mockReturnValue(false)
+  it('returns 401 when not local or authenticated', async () => {
+    mockRequireLocalOrAuth.mockReturnValue(false)
     const res = await callDelete(makeRequest('DELETE', 'http://localhost/api/mcp/hub-sources/corp'), 'corp')
     expect(res.status).toBe(401)
   })

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import { readPresets } from '../../../server/mcp-presets-store'
 import { safeErrorMessage } from '../../../server/rate-limit'
 
@@ -8,7 +8,7 @@ export const Route = createFileRoute('/api/mcp/presets')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return json({ ok: false, error: 'Unauthorized' }, { status: 401 })
         }
         try {

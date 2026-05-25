@@ -6,15 +6,15 @@
  * Query params:
  *   q       Free-text search query (default '')
  *   source  'all' | 'mcp-get' | 'local' (default 'all')
- *   limit   Max results 1..100 (default 20)
+ *   limit   Max results 1..500 (default 20)
  *
- * Auth-gated via isAuthenticated.
+ * Auth-gated via requireLocalOrAuth.
  * Rate-limited: 60 req/min per IP.
  * Returns {ok, results, source, total, warnings?}
  * Never 5xx — always 200 even on full failure (returns local fallback).
  */
 import { createFileRoute } from '@tanstack/react-router'
-import { isAuthenticated } from '../../../server/auth-middleware'
+import { requireLocalOrAuth } from '../../../server/auth-middleware'
 import {
   getClientIp,
   rateLimit,
@@ -30,7 +30,7 @@ export const Route = createFileRoute('/api/mcp/hub-search')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!isAuthenticated(request)) {
+        if (!requireLocalOrAuth(request)) {
           return Response.json(
             { ok: false, error: 'Unauthorized' },
             { status: 401 },
