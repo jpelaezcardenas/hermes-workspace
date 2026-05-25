@@ -198,16 +198,18 @@ export function verifyPassword(password: string): boolean {
 /**
  * Extract session token from cookie header.
  */
+const SESSION_COOKIE_NAMES = ['claude-auth', 'hermes_auth'] as const
+
 export function getSessionTokenFromCookie(
   cookieHeader: string | null,
 ): string | null {
   if (!cookieHeader) return null
 
   const cookies = cookieHeader.split(';').map((c) => c.trim())
-  for (const cookie of cookies) {
-    if (cookie.startsWith('claude-auth=')) {
-      return cookie.substring('claude-auth='.length)
-    }
+  for (const name of SESSION_COOKIE_NAMES) {
+    const prefix = `${name}=`
+    const cookie = cookies.find((candidate) => candidate.startsWith(prefix))
+    if (cookie) return cookie.substring(prefix.length)
   }
   return null
 }

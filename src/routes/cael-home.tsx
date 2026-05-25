@@ -347,10 +347,28 @@ async function fetchCommandCenterSummary(): Promise<CommandCenterSummaryEnvelope
   })
 }
 
+async function fetchWithTimeout(
+  path: string,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(path, { cache: 'no-store', signal: controller.signal })
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new Error(`${path} timed out after ${timeoutMs}ms`)
+    }
+    throw error
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
+
 async function fetchCommandCenterSection<T>(
   path: string,
 ): Promise<CommandCenterSectionEnvelope<T>> {
-  const response = await fetch(path, { cache: 'no-store' })
+  const response = await fetchWithTimeout(path, 7000)
   if (!response.ok) {
     throw new Error(`${path} failed: HTTP ${response.status}`)
   }

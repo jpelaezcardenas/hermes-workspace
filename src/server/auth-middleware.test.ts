@@ -18,6 +18,26 @@ afterEach(() => {
   delete process.env.NODE_ENV
   delete process.env.TRUST_PROXY
   delete process.env.CLAUDE_PASSWORD
+  delete process.env.HERMES_PASSWORD
+})
+
+describe('getSessionTokenFromCookie', () => {
+  it('accepts the legacy claude-auth cookie', async () => {
+    const { getSessionTokenFromCookie } = await import('./auth-middleware')
+    expect(getSessionTokenFromCookie('theme=dark; claude-auth=tok123')).toBe('tok123')
+  })
+
+  it('accepts the Hermes cookie name for existing clients', async () => {
+    const { getSessionTokenFromCookie } = await import('./auth-middleware')
+    expect(getSessionTokenFromCookie('theme=dark; hermes_auth=tok456')).toBe('tok456')
+  })
+
+  it('prefers the legacy session cookie when both are present', async () => {
+    const { getSessionTokenFromCookie } = await import('./auth-middleware')
+    expect(
+      getSessionTokenFromCookie('hermes_auth=tok456; claude-auth=tok123'),
+    ).toBe('tok123')
+  })
 })
 
 describe('createSessionCookie (#123)', () => {

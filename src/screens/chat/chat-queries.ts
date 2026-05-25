@@ -55,8 +55,26 @@ export const chatQueryKeys = {
   },
 } as const
 
+async function fetchWithTimeout(
+  path: string,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(path, { signal: controller.signal })
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new Error(`${path} timed out after ${timeoutMs}ms`)
+    }
+    throw error
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
+
 export async function fetchSessions(): Promise<Array<SessionMeta>> {
-  const res = await fetch('/api/sessions')
+  const res = await fetchWithTimeout('/api/sessions', 7000)
   if (!res.ok) throw new Error(await readError(res))
   const data = (await res.json()) as SessionListResponse
   return normalizeSessions(data.sessions)
