@@ -310,7 +310,7 @@ export const Route = createFileRoute('/api/cael-status')({
               '-o',
               'BatchMode=yes',
               '-o',
-              'ConnectTimeout=4',
+              'ConnectTimeout=2',
               'mbp',
               'hostname; whoami',
             ],
@@ -319,27 +319,23 @@ export const Route = createFileRoute('/api/cael-status')({
               owner: 'Tailscale personal mesh',
               description:
                 'Confirms the MBP is awake/reachable through the dedicated mbp SSH alias.',
-              timeoutMs: 6500,
+              timeoutMs: 3000,
             },
           ),
           checkCommand(
             'devserver-twingate',
-            'Dev-server Twingate SSH lane',
-            '/usr/bin/ssh',
+            'Dev-server Twingate lane configured',
+            '/bin/test',
             [
-              '-o',
-              'BatchMode=yes',
-              '-o',
-              'ConnectTimeout=5',
-              'devserver-tg',
-              'hostname; whoami; curl -fsS --max-time 4 http://127.0.0.1:5678/healthz',
+              '-x',
+              '/Users/cderamos/.hermes/twingate-devserver-access/bin/status.sh',
             ],
             {
               lane: 'business',
               owner: 'Twingate business/dev-server lane',
               description:
-                'Confirms scoped business access to dev-server and its local n8n health endpoint.',
-              timeoutMs: 9000,
+                'Confirms the business-lane status helper is installed; live dev-server probes stay out of the personal Workspace status path.',
+              timeoutMs: 1000,
             },
           ),
           checkCommand(
