@@ -1,6 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import { execFile } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { promisify } from 'node:util'
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
@@ -246,6 +247,34 @@ function isImageFile(filePath: string) {
   return ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'].includes(ext)
 }
 
+function contentHash(buffer: Buffer | Uint8Array | string) {
+  return createHash('sha256').update(buffer).digest('hex')
+}
+
+async function currentFileHash(filePath: string) {
+  try {
+    return contentHash(await fs.readFile(filePath))
+  } catch (error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'ENOENT'
+    ) {
+      return null
+    }
+    throw error
+  }
+}
+
+function getExpectedContentHash(body: Record<string, unknown>) {
+  const camel = body.expectedContentHash
+  if (typeof camel === 'string' && camel.trim()) return camel.trim()
+  const snake = body.expected_content_hash
+  if (typeof snake === 'string' && snake.trim()) return snake.trim()
+  return null
+}
+
 export const Route = createFileRoute('/api/files')({
   server: {
     handlers: {
@@ -286,12 +315,14 @@ export const Route = createFileRoute('/api/files')({
                 type: 'image',
                 path: toRelative(resolvedPath, workspaceRoot),
                 content: `data:${mime};base64,${buffer.toString('base64')}`,
+                contentHash: contentHash(buffer),
               })
             }
             return json({
               type: 'text',
               path: toRelative(resolvedPath, workspaceRoot),
               content: buffer.toString('utf8'),
+              contentHash: contentHash(buffer),
             })
           }
 
@@ -363,6 +394,7 @@ export const Route = createFileRoute('/api/files')({
             return json({
               ok: true,
               path: toRelative(destination, workspaceRoot),
+              contentHash: contentHash(buffer),
             })
           }
 
@@ -418,9 +450,39 @@ export const Route = createFileRoute('/api/files')({
             workspaceRoot,
           )
           const content = typeof body.content === 'string' ? body.content : ''
+          const expectedContentHash = getExpectedContentHash(body)
+          if (expectedContentHash) {
+            const actualContentHash = await currentFileHash(filePath)
+            if (actualContentHash === null) {
+              return json(
+                {
+                  ok: false,
+                  error: 'File changed on disk: file no longer exists.',
+                  code: 'content_hash_missing',
+                },
+                { status: 409 },
+              )
+            }
+            if (actualContentHash !== expectedContentHash) {
+              return json(
+                {
+                  ok: false,
+                  error: 'File changed on disk. Reload before saving.',
+                  code: 'content_hash_mismatch',
+                  contentHash: actualContentHash,
+                },
+                { status: 409 },
+              )
+            }
+          }
           await fs.mkdir(path.dirname(filePath), { recursive: true })
-          await fs.writeFile(filePath, content, 'utf8')
-          return json({ ok: true, path: toRelative(filePath, workspaceRoot) })
+          const buffer = Buffer.from(content, 'utf8')
+          await fs.writeFile(filePath, buffer)
+          return json({
+            ok: true,
+            path: toRelative(filePath, workspaceRoot),
+            contentHash: contentHash(buffer),
+          })
         } catch (err) {
           return json({ error: safeErrorMessage(err) }, { status: 500 })
         }
