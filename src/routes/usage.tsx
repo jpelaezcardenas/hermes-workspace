@@ -19,6 +19,11 @@ type UsageProviderCard = {
   status: 'ok' | 'missing_credentials' | 'auth_expired' | 'error'
   plan?: string
   message?: string
+  caelConfigured?: boolean
+  caelDefault?: boolean
+  caelModel?: string
+  caelModels?: string[]
+  monitorKind?: 'cael' | 'external'
   updatedAt: string
   source: string
   confidence: 'live' | 'configured' | 'missing' | 'error'
@@ -91,8 +96,10 @@ function UsageRoute() {
               <InfoCard title="Source" value="Hermes" sub="Shared backend JSON for web + desktop." />
             </section>
 
+            <CaelRosterPanel providers={sortedProviders(data.providers)} />
+
             <section className="grid gap-4 lg:grid-cols-2">
-              {data.providers.map((provider) => (
+              {sortedProviders(data.providers).map((provider) => (
                 <ProviderCard key={provider.id} provider={provider} />
               ))}
             </section>
@@ -100,6 +107,56 @@ function UsageRoute() {
         ) : null}
       </div>
     </main>
+  )
+}
+
+
+function sortedProviders(providers: UsageProviderCard[]): UsageProviderCard[] {
+  return [...providers].sort((left, right) => {
+    const leftRank = providerRank(left)
+    const rightRank = providerRank(right)
+    if (leftRank !== rightRank) return leftRank - rightRank
+    return left.label.localeCompare(right.label)
+  })
+}
+
+function providerRank(provider: UsageProviderCard): number {
+  if (provider.caelDefault) return 0
+  if (provider.caelConfigured) return 1
+  if (provider.monitorKind === 'cael') return 2
+  return 3
+}
+
+function CaelRosterPanel({ providers }: { providers: UsageProviderCard[] }) {
+  const caelProviders = providers.filter((provider) => provider.caelConfigured || provider.monitorKind === 'cael')
+  return (
+    <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">Cael model roster</p>
+          <h2 className="mt-2 text-xl font-semibold">Active Hermes/Cael models drive these meters</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--theme-muted)]">
+            This is sourced from /api/usage/limits and the active Hermes config, not a separate monitor registry.
+          </p>
+        </div>
+        <a className="rounded-xl border border-[var(--theme-border)] px-4 py-2 text-sm hover:bg-white/5" href="/settings/providers">
+          Manage model config
+        </a>
+      </div>
+      {caelProviders.length > 0 ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {caelProviders.map((provider) => (
+            <span key={provider.id} className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ${provider.caelDefault ? 'bg-sky-500/15 text-sky-200 ring-sky-400/30' : 'bg-white/10 text-[var(--theme-muted)] ring-white/10'}`}>
+              {provider.caelDefault ? 'Default: ' : ''}{provider.label} / {provider.caelModel ?? provider.caelModels?.[0] ?? 'configured'}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4 rounded-xl border border-[var(--theme-border)] bg-black/10 p-4 text-sm text-[var(--theme-muted)]">
+          No Cael-configured model providers were reported by /api/usage/limits.
+        </div>
+      )}
+    </section>
   )
 }
 
@@ -114,10 +171,15 @@ function ProviderCard({ provider }: { provider: UsageProviderCard }) {
             Updated {relativeTime(provider.updatedAt)} · {provider.confidence} · {provider.source}
           </p>
         </div>
-        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${status.className}`}>{status.label}</span>
+        <div className="flex flex-wrap justify-end gap-2">
+          {provider.caelDefault ? <span className="rounded-full bg-sky-500/15 px-2.5 py-1 text-xs font-semibold text-sky-200 ring-1 ring-sky-400/30">Cael default</span> : null}
+          {!provider.caelDefault && (provider.caelConfigured || provider.monitorKind === 'cael') ? <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold text-[var(--theme-muted)] ring-1 ring-white/10">Cael model</span> : null}
+          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${status.className}`}>{status.label}</span>
+        </div>
       </div>
 
       {provider.plan ? <p className="mt-3 text-sm text-[var(--theme-muted)]">Plan: {provider.plan}</p> : null}
+      {provider.caelModel ? <p className="mt-2 text-xs text-[var(--theme-muted)]">Cael model: {provider.caelModel}</p> : null}
       {provider.message ? <p className="mt-3 rounded-xl border border-[var(--theme-border)] bg-black/10 p-3 text-xs leading-5 text-[var(--theme-muted)]">{provider.message}</p> : null}
 
       {provider.usageRows.length > 0 ? (
