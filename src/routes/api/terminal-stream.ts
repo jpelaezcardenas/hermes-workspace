@@ -53,6 +53,10 @@ export const Route = createFileRoute('/api/terminal-stream')({
         const command = Array.isArray(body.command)
           ? body.command.slice(0, 32).map((part) => String(part).slice(0, 2000))
           : undefined
+        const label =
+          typeof body.label === 'string' && body.label.trim()
+            ? body.label.trim().slice(0, 80)
+            : undefined
         // Optional attach: if the client passes an existing sessionId that's
         // still alive, reattach to it instead of spawning a fresh PTY. Lets
         // browser tabs survive transient SSE disconnects without losing the
@@ -98,6 +102,7 @@ export const Route = createFileRoute('/api/terminal-stream')({
                   cwd,
                   cols,
                   rows,
+                  label,
                 })
               } catch (error) {
                 if (import.meta.env.DEV)
@@ -115,7 +120,11 @@ export const Route = createFileRoute('/api/terminal-stream')({
               }
             }
 
-            send('session', { sessionId: session.id, reattach: isReattach })
+            send('session', {
+              sessionId: session.id,
+              reattach: isReattach,
+              label: session.label,
+            })
 
             const handleEvent = (evt: { event: string; payload: unknown }) => {
               if (evt.event === 'data') {

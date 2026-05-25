@@ -18,6 +18,7 @@ export type TerminalSessionEvent = {
 
 export type TerminalSession = {
   id: string
+  label: string
   createdAt: number
   cwd: string
   command: Array<string>
@@ -40,6 +41,7 @@ export type TerminalSession = {
 
 export type TerminalSessionSummary = {
   id: string
+  label: string
   createdAt: number
   cwd: string
   command: Array<string>
@@ -73,6 +75,7 @@ export function createTerminalSession(params: {
   env?: Record<string, string>
   cols?: number
   rows?: number
+  label?: string
 }): TerminalSession {
   const emitter = new EventEmitter()
   const sessionId = randomUUID()
@@ -94,6 +97,8 @@ export function createTerminalSession(params: {
   if (!existsSync(cwd)) {
     cwd = home
   }
+
+  const label = sanitizeTerminalLabel(params.label) ?? defaultTerminalLabel(command, cwd, home)
 
   let cols = params.cols ?? 80
   let rows = params.rows ?? 24
@@ -190,6 +195,7 @@ export function createTerminalSession(params: {
 
   const session: TerminalSession = {
     id: sessionId,
+    label,
     createdAt: Date.now(),
     cwd,
     command,
@@ -270,6 +276,7 @@ export function listTerminalSessions(): Array<TerminalSessionSummary> {
   return Array.from(sessions.values())
     .map((session) => ({
       id: session.id,
+      label: session.label,
       createdAt: session.createdAt,
       cwd: session.cwd,
       command: session.command,
@@ -278,6 +285,19 @@ export function listTerminalSessions(): Array<TerminalSessionSummary> {
       idleTtlMs: TERMINAL_DETACH_TTL_MS,
     }))
     .sort((a, b) => b.createdAt - a.createdAt)
+}
+
+function sanitizeTerminalLabel(input: string | undefined): string | null {
+  const value = input?.replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ').trim()
+  if (!value) return null
+  return value.slice(0, 80)
+}
+
+function defaultTerminalLabel(command: Array<string>, cwd: string, home: string): string {
+  const commandName = command[0]?.split('/').pop()?.trim() || 'shell'
+  const displayCwd = cwd === home ? '~' : cwd.startsWith(`${home}/`) ? `~/${cwd.slice(home.length + 1)}` : cwd
+  const folder = displayCwd === '~' ? '~' : displayCwd.split('/').filter(Boolean).pop() || displayCwd
+  return `${commandName} · ${folder}`.slice(0, 80)
 }
 
 export function closeTerminalSession(id: string): void {
