@@ -10,7 +10,10 @@ $desktop = [Environment]::GetFolderPath("Desktop")
 $shortcutPath = Join-Path $desktop "$ShortcutName.lnk"
 $target = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
 $scriptPath = Join-Path $root "scripts\start-windows-desktop.ps1"
-$iconPath = Join-Path $root "assets\icon.png"
+$iconPath = Join-Path $root "assets\99pages-agentic-os-logo.png"
+if (-not (Test-Path $iconPath)) {
+  $iconPath = Join-Path $root "assets\icon.png"
+}
 
 $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut($shortcutPath)
