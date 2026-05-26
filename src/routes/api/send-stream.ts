@@ -298,6 +298,9 @@ export const Route = createFileRoute('/api/send-stream')({
         try {
           const rawBody = await request.text()
           body = JSON.parse(rawBody) as Record<string, unknown>
+          if (request.signal.aborted) {
+            process.stderr.write(`[signal-already-aborted-after-body] session=??? signal=${request.signal.aborted}\n`)
+          }
         } catch {
           // Fall through — body stays empty, will hit 'message required' below
         }
@@ -384,7 +387,8 @@ export const Route = createFileRoute('/api/send-stream')({
         let persistedRunReady: Promise<unknown> | null = null
         let unregisterTimer: ReturnType<typeof setTimeout> | null = null
         let streamTimeoutTimer: ReturnType<typeof setTimeout> | null = null
-        let heartbeatTimer: ReturnType<typeof setInterval> | null = null
+        let streamHasData = false
+        const START_TIME = Date.now()
         const abortController = new AbortController()
         // Close out the SSE stream — stop enqueueing, clear timers, and
         // abort the upstream Hermes gateway request so the agent stops
@@ -413,6 +417,11 @@ export const Route = createFileRoute('/api/send-stream')({
         // and clean up run tracking so we don't burn API credits on an orphan.
         function handleAbort() {
           if (activeRunId && !streamClosed) {
+            // If no assistant data was sent yet, don't mark handoff —
+            // the framework may trigger request.signal abort during
+            // stream setup. The ReadableStream cancel() handles real
+            // client disconnects.
+            if (!streamHasData) return
             persistActiveRun((runSessionKey, activeId) =>
               markRunStatus(runSessionKey, activeId, 'handoff'),
             )
@@ -421,7 +430,10 @@ export const Route = createFileRoute('/api/send-stream')({
           }
           closeStream()
         }
-        request.signal.addEventListener('abort', () => handleAbort(), { once: true })
+        // NOTE: request.signal abort is registered inside start() below,
+        // not here, because the ReadableStream start() is where the stream
+        // lifecycle begins and where we want to attach the abort handler.
+        // See the start() controller callback for the addEventListener.
 
         const persistRunStarted = (
           runId: string | undefined,
@@ -450,6 +462,7 @@ export const Route = createFileRoute('/api/send-stream')({
 
         const stream = new ReadableStream({
           async start(controller) {
+            const START_TIME = Date.now()
             let heartbeatTimer: ReturnType<typeof setInterval> | null = null
             let lastClientEventAt = Date.now()
             // Track the last human-readable activity so the heartbeat can
@@ -457,12 +470,14 @@ export const Route = createFileRoute('/api/send-stream')({
             // static "Thinking…" for minutes when the agent is reasoning
             // without tool calls, making it look hung.
             let lastActivity: string | null = null
+            let streamHasData = false
             const enqueueRaw = (payload: string) => {
               if (streamClosed) return
               controller.enqueue(encoder.encode(payload))
             }
             const sendEvent = (event: string, data: unknown) => {
               if (streamClosed) return
+              streamHasData = true
               lastClientEventAt = Date.now()
               const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`
               enqueueRaw(payload)
@@ -473,7 +488,19 @@ export const Route = createFileRoute('/api/send-stream')({
             // assistant chunks arrive. Send an initial padding comment and a
             // lightweight recognized event periodically so public Workspace chats
             // do not sit at "Thinking…" until the frontend reports failure.
-            enqueueRaw(`: ${' '.repeat(2048)}\n\n`)
+            // NOTE: no initial padding here — TanStack Start runtime treats
+            // the first chunk as "stream is complete" and cancels the
+            // ReadableStream. Data is sent progressively as it arrives.
+            // Register request.signal abort handler AFTER the initial stream
+            // setup so a premature signal abort (triggered by the framework)
+            // doesn't kill the stream before it starts. The cancel() method
+            // on the ReadableStream handles genuine client disconnects.
+            // Delay registration by 500ms to prevent premature signal abort
+            // triggered by the framework during stream startup.
+            setTimeout(() => {
+              if (streamClosed) return
+              request.signal.addEventListener('abort', () => handleAbort(), { once: true })
+            }, 500)
             heartbeatTimer = setInterval(() => {
               if (streamClosed) return
               if (Date.now() - lastClientEventAt < 10_000) return
@@ -1521,11 +1548,16 @@ export const Route = createFileRoute('/api/send-stream')({
             }
           },
           cancel() {
-            // User clicked Stop, navigated away, or browser closed the tab.
-            // Mark the stream complete, persist the run as 'handoff' so
-            // session history reflects the interruption, then delegate to
-            // closeStream() for timer/controller cleanup.  Delegate instead
-            // of duplicating cleanup logic to keep the two paths in sync.
+            // Ignore early cancel calls within the first 1s — the framework
+            // may trigger cancel() on the ReadableStream immediately after
+            // the first data chunk is written. Real client disconnects
+            // (tab close, navigation) persist beyond 1s.
+            // BUT: mark streamClosed so the async start() code doesn't try
+            // to enqueue() on a cancelled stream (throws ERR_INVALID_STATE).
+            if (Date.now() - START_TIME < 1000) {
+              streamClosed = true
+              return
+            }
             if (activeRunId && !streamClosed) {
               persistActiveRun((runSessionKey, activeId) =>
                 markRunStatus(runSessionKey, activeId, 'handoff'),

@@ -1283,16 +1283,23 @@ export function ChatScreen({
   // wanted in either session).
   const navCancelKeyRef = useRef<string | null>(null)
   useEffect(() => {
-    const navKey = `${activeCanonicalKey ?? ''}::${isNewChat ? 'new' : activeFriendlyId}`
+    const navKey = activeCanonicalKey ?? ''
     if (navCancelKeyRef.current === null) {
       navCancelKeyRef.current = navKey
       return
     }
     if (navCancelKeyRef.current !== navKey) {
+      // Navigating from a new chat to the resolved session (/chat/new →
+      // /chat/{uuid}) is the normal send flow — don't cancel the in-flight
+      // stream. Only cancel for genuine session switches.
+      if (navCancelKeyRef.current === 'new' && navKey !== 'new') {
+        navCancelKeyRef.current = navKey
+        return
+      }
       navCancelKeyRef.current = navKey
       cancelStreaming()
     }
-  }, [activeCanonicalKey, activeFriendlyId, isNewChat, cancelStreaming])
+  }, [activeCanonicalKey, cancelStreaming])
 
   const activeIsRealtimeStreaming = isPortableMode
     ? localIsStreaming
