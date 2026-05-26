@@ -43,7 +43,6 @@ import { ChatHeader } from './components/chat-header'
 import { ChatMessageList } from './components/chat-message-list'
 import { ChatEmptyState } from './components/chat-empty-state'
 import { ChatComposer } from './components/chat-composer'
-import { DesktopSessionsPanel } from './components/sidebar/desktop-sessions-panel'
 import { ConnectionStatusMessage } from './components/connection-status-message'
 import {
   consumePendingSend,
@@ -538,9 +537,8 @@ export function ChatScreen({
   const setChatFocusMode = useWorkspaceStore((s) => s.setChatFocusMode)
   const queryClient = useQueryClient()
   const [sending, setSending] = useState(false)
-  const [_creatingSession, setCreatingSession] = useState(false)
   const [desktopDetailMode, setDesktopDetailMode] =
-    useState<DesktopDetailMode>('transcript')
+    useState<DesktopDetailMode>('chat')
   const [sessionsOpen, setSessionsOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -657,9 +655,6 @@ export function ChatScreen({
     activeSessionKey,
     activeTitle,
     sessionsError,
-    sessionsLoading: _sessionsLoading,
-    sessionsFetching: _sessionsFetching,
-    refetchSessions: _refetchSessions,
   } = useChatSessions({ activeFriendlyId, isNewChat, forcedSessionKey })
   const { pinnedSessionKeys, togglePinnedSession } = usePinnedSessions()
   const {
@@ -2812,13 +2807,6 @@ export function ChatScreen({
     activeSession?.key && pinnedSessionKeys.includes(activeSession.key),
   )
 
-  const handleCreateDesktopSession = useCallback(() => {
-    void navigate({
-      to: '/chat/$sessionKey',
-      params: { sessionKey: 'new' },
-    })
-  }, [navigate])
-
   const handleToggleSessionPin = useCallback(
     (session: SessionMeta) => {
       if (!session.key) return
@@ -2902,22 +2890,9 @@ export function ChatScreen({
       >
         {hideUi ||
         compact ||
-        isFocusMode ? null : isMobile ? null : desktopChatLayout ? (
-          <DesktopSessionsPanel
-            sessions={sessions}
-            activeFriendlyId={activeFriendlyId}
-            creatingSession={_creatingSession}
-            loading={_sessionsLoading}
-            fetching={_sessionsFetching}
-            error={sessionsError}
-            onCreateSession={handleCreateDesktopSession}
-            onSelectSession={() => {}}
-            onRetry={() => void sessionsQuery.refetch()}
-            onTogglePin={handleToggleSessionPin}
-            onDeleteSession={handleDeleteDesktopSession}
-            deletingSessionKey={deletingSessionKey}
-          />
-        ) : (
+        isFocusMode ||
+        isMobile ||
+        desktopChatLayout ? null : (
           <FileExplorerSidebar
             collapsed={fileExplorerCollapsed}
             onToggle={handleToggleFileExplorer}

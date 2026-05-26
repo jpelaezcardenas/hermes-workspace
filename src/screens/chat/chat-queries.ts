@@ -62,7 +62,11 @@ async function fetchWithTimeout(
   const controller = new AbortController()
   const timeout = window.setTimeout(() => controller.abort(), timeoutMs)
   try {
-    return await fetch(path, { signal: controller.signal })
+    return await fetch(path, {
+      signal: controller.signal,
+      cache: 'no-store',
+      headers: { accept: 'application/json' },
+    })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw new Error(`${path} timed out after ${timeoutMs}ms`)

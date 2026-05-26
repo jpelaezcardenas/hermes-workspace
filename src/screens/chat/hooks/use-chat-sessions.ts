@@ -72,6 +72,17 @@ export function useChatSessions({
     queryKey: chatQueryKeys.sessions,
     queryFn: fetchSessions,
     refetchInterval: 5000,
+    refetchOnMount: 'always',
+    refetchOnReconnect: 'always',
+    refetchOnWindowFocus: true,
+    networkMode: 'always',
+    retry: (failureCount, error) => {
+      const message = error instanceof Error ? error.message : String(error)
+      if (/unauthorized/i.test(message)) return false
+      return failureCount < 8
+    },
+    retryDelay: (attemptIndex) => Math.min(500 * 2 ** attemptIndex, 5_000),
+    staleTime: 5_000,
   })
   const storedTitles = useSessionTitles()
 
