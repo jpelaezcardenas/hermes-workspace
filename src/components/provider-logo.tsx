@@ -40,6 +40,7 @@ export function ProviderLogo({
 
   // Map provider IDs to file names
   const fileMap: Record<string, string> = {
+    'ai-workforce': '',
     nous: 'nous.png',
     'openai-codex': 'openai.png',
     openai: 'openai.png',

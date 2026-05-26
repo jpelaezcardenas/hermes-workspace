@@ -22,7 +22,7 @@ import type { AccentColor, SettingsThemeMode } from '@/hooks/use-settings'
 import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
 import type { ThemeId } from '@/lib/theme'
-import type {LocaleId} from '@/lib/i18n';
+import type { LocaleId } from '@/lib/i18n'
 import { GROQ_STT_MODELS, STT_PROVIDER_OPTIONS } from '@/lib/stt-config'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -50,6 +50,10 @@ import { getUnavailableReason } from '@/lib/feature-gates'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
 import { ProviderLogo } from '@/components/provider-logo'
 import {
+  AI_WORKFORCE_PROVIDER_ID,
+  isAiWorkforceLockedConfig,
+} from '@/lib/provider-catalog'
+import {
   DialogClose,
   DialogContent,
   DialogDescription,
@@ -59,7 +63,7 @@ import {
 
 // ── Language ────────────────────────────────────────────────────────────
 
-import { LOCALE_LABELS,  getLocale, setLocale } from '@/lib/i18n'
+import { LOCALE_LABELS, getLocale, setLocale } from '@/lib/i18n'
 
 // ── Types ───────────────────────────────────────────────────────────────
 
@@ -160,6 +164,13 @@ const PROVIDER_CARDS: Array<{
   authType: 'oauth' | 'api_key' | 'none'
   envKey?: string
 }> = [
+  {
+    id: AI_WORKFORCE_PROVIDER_ID,
+    name: 'AI Workforce',
+    logo: '',
+    models: ['main_orchestrator'],
+    authType: 'oauth',
+  },
   // Local providers first — zero setup
   {
     id: 'ollama',
@@ -243,26 +254,38 @@ const PROVIDER_CARDS: Array<{
     authType: 'api_key',
     envKey: 'XIAOMI_API_KEY',
   },
-  { id: 'custom', name: 'Custom', logo: '', models: [], authType: 'api_key', envKey: 'CUSTOM_API_KEY' },
+  {
+    id: 'custom',
+    name: 'Custom',
+    logo: '',
+    models: [],
+    authType: 'api_key',
+    envKey: 'CUSTOM_API_KEY',
+  },
 ]
 
-export type ProviderClickAction = 'select' | 'oauth' | 'local' | 'custom' | 'ignore'
+export type ProviderClickAction =
+  | 'select'
+  | 'oauth'
+  | 'local'
+  | 'custom'
+  | 'ignore'
 
 export function getProviderClickAction(input: {
   providerId?: string
   authType: 'oauth' | 'api_key' | 'none'
   hasKey: boolean
 }): ProviderClickAction {
+  if (input.providerId === AI_WORKFORCE_PROVIDER_ID) return 'select'
   if (input.providerId === 'custom') return 'custom'
   if (input.authType === 'oauth') return 'oauth'
   if (input.authType === 'none') return 'local'
   return input.hasKey ? 'select' : 'ignore'
 }
 
-const LOCAL_PROVIDER_SETUP: Partial<Record<
-  string,
-  { baseUrl: string; unavailableMessage: string }
->> = {
+const LOCAL_PROVIDER_SETUP: Partial<
+  Record<string, { baseUrl: string; unavailableMessage: string }>
+> = {
   ollama: {
     baseUrl: 'http://127.0.0.1:11434/v1',
     unavailableMessage:
@@ -318,6 +341,7 @@ function HermesContent() {
   const [userProfileEnabled, setUserProfileEnabled] = useState(true)
   const [customBaseUrl, setCustomBaseUrl] = useState('')
   const [customModel, setCustomModel] = useState('')
+  const [workforceLocked, setWorkforceLocked] = useState(false)
   const [oauthProviderId, setOauthProviderId] = useState<string | null>(null)
   const [oauthStatus, setOauthStatus] = useState<OAuthStatus>('idle')
   const [oauthMessage, setOauthMessage] = useState('')
@@ -378,10 +402,18 @@ function HermesContent() {
     fetch('/api/hermes-config')
       .then((r) => r.json())
       .then((d: any) => {
-        setActiveProvider(d.activeProvider || '')
-        setActiveModel(d.activeModel || '')
-        setDefaultProvider(d.activeProvider || '')
-        setDefaultModelId(d.activeModel || '')
+        const locked = isAiWorkforceLockedConfig(d.config)
+        setWorkforceLocked(locked)
+        const providerId = locked
+          ? AI_WORKFORCE_PROVIDER_ID
+          : d.activeProvider || ''
+        const modelId = locked
+          ? d.activeModel || 'main_orchestrator'
+          : d.activeModel || ''
+        setActiveProvider(providerId)
+        setActiveModel(modelId)
+        setDefaultProvider(providerId)
+        setDefaultModelId(modelId)
         if (d.activeProvider) fetchModelsForProvider(d.activeProvider)
         const mem = (d.config?.memory as Record<string, unknown>) || {}
         setMemEnabled(mem.memory_enabled !== false)
@@ -396,7 +428,8 @@ function HermesContent() {
         setConfiguredKeys(keys)
         // Load custom provider config (may be stored as 'custom' or legacy 'manifest')
         const cfgProviders = (d.config?.providers as Record<string, any>) || {}
-        const customCfg = cfgProviders['custom'] || cfgProviders['manifest'] || {}
+        const customCfg =
+          cfgProviders['custom'] || cfgProviders['manifest'] || {}
         if (customCfg.base_url) setCustomBaseUrl(customCfg.base_url)
         if (d.activeProvider === 'custom' && d.activeModel) {
           setCustomModel(d.activeModel)
@@ -408,8 +441,14 @@ function HermesContent() {
   const refreshConfig = async () => {
     const ref = await fetch('/api/hermes-config')
     const d = await ref.json()
-    setDefaultProvider(d.activeProvider || '')
-    setDefaultModelId(d.activeModel || '')
+    const locked = isAiWorkforceLockedConfig(d.config)
+    setWorkforceLocked(locked)
+    setDefaultProvider(
+      locked ? AI_WORKFORCE_PROVIDER_ID : d.activeProvider || '',
+    )
+    setDefaultModelId(
+      locked ? d.activeModel || 'main_orchestrator' : d.activeModel || '',
+    )
     if (
       (d.activeProvider === 'custom' || d.activeProvider === 'manifest') &&
       d.activeModel
@@ -562,7 +601,8 @@ function HermesContent() {
         window.open(verificationUri, '_blank', 'noopener,noreferrer')
       }
 
-      const expiresInSeconds = codeData.expires_in || DEFAULT_OAUTH_EXPIRES_SECONDS
+      const expiresInSeconds =
+        codeData.expires_in || DEFAULT_OAUTH_EXPIRES_SECONDS
       const intervalSeconds = Math.max(
         1,
         codeData.interval || DEFAULT_OAUTH_POLL_INTERVAL_SECONDS,
@@ -623,6 +663,9 @@ function HermesContent() {
     color: 'var(--theme-text)',
   }
   const mutedStyle: React.CSSProperties = { color: 'var(--theme-muted)' }
+  const visibleProviderCards = workforceLocked
+    ? PROVIDER_CARDS.filter((p) => p.id === AI_WORKFORCE_PROVIDER_ID)
+    : PROVIDER_CARDS
 
   return (
     <div className="space-y-5">
@@ -651,9 +694,11 @@ function HermesContent() {
           Select your AI provider. OAuth providers authenticate via browser.
         </p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {PROVIDER_CARDS.map((p) => {
+          {visibleProviderCards.map((p) => {
             const isActive =
-              (oauthProviderId || localProviderId || activeProvider) === p.id
+              (workforceLocked
+                ? AI_WORKFORCE_PROVIDER_ID
+                : oauthProviderId || localProviderId || activeProvider) === p.id
             const localOnline =
               localDiscovery?.providers.find((lp) => lp.id === p.id)?.online ===
               true
@@ -721,6 +766,7 @@ function HermesContent() {
                 <span className="text-xs font-semibold mt-1">{p.name}</span>
                 <span className="text-[9px]" style={mutedStyle}>
                   {(() => {
+                    if (p.id === AI_WORKFORCE_PROVIDER_ID) return 'Magic Link'
                     const disc = localDiscovery?.providers.find(
                       (lp) => lp.id === p.id,
                     )
@@ -739,18 +785,24 @@ function HermesContent() {
       {oauthProviderId ? (
         <div className="rounded-xl px-3 py-2.5" style={cardStyle}>
           {(() => {
-            const provider = PROVIDER_CARDS.find((p) => p.id === oauthProviderId)
+            const provider = PROVIDER_CARDS.find(
+              (p) => p.id === oauthProviderId,
+            )
             if (!provider) return null
 
             return (
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold">{provider.name} OAuth</p>
+                    <p className="text-sm font-semibold">
+                      {provider.name} OAuth
+                    </p>
                   </div>
                   <Button
                     size="sm"
-                    disabled={oauthStatus === 'starting' || oauthStatus === 'pending'}
+                    disabled={
+                      oauthStatus === 'starting' || oauthStatus === 'pending'
+                    }
                     onClick={() => {
                       void startOAuthFlow()
                     }}
@@ -789,14 +841,17 @@ function HermesContent() {
       {localProviderId ? (
         <div className="rounded-xl px-3 py-2.5" style={cardStyle}>
           {(() => {
-            const provider = PROVIDER_CARDS.find((p) => p.id === localProviderId)
+            const provider = PROVIDER_CARDS.find(
+              (p) => p.id === localProviderId,
+            )
             if (!provider) return null
             const disc = localDiscovery?.providers.find(
               (lp) => lp.id === provider.id,
             )
             const models =
-              localDiscovery?.models.filter((m) => m.provider === provider.id) ||
-              []
+              localDiscovery?.models.filter(
+                (m) => m.provider === provider.id,
+              ) || []
             const setup = LOCAL_PROVIDER_SETUP[provider.id] || {
               baseUrl: 'local OpenAI-compatible endpoint',
               unavailableMessage: 'No local endpoint detected.',
@@ -825,15 +880,18 @@ function HermesContent() {
                   )}
                   {disc?.needsRestart ? (
                     <div className="mt-2 text-yellow-700 dark:text-yellow-200">
-                      Gateway restart may be needed after adding this provider to
-                      config.
+                      Gateway restart may be needed after adding this provider
+                      to config.
                     </div>
                   ) : null}
                 </div>
 
                 {models.length > 0 ? (
                   <div>
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>
+                    <p
+                      className="mb-2 text-xs font-semibold uppercase tracking-wider"
+                      style={mutedStyle}
+                    >
                       Detected Models
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -873,7 +931,9 @@ function HermesContent() {
                       <div className="mt-2 flex items-center gap-2">
                         <Button
                           size="sm"
-                          onClick={() => setDefaultModel(provider.id, activeModel)}
+                          onClick={() =>
+                            setDefaultModel(provider.id, activeModel)
+                          }
                         >
                           Set as default: {provider.id} · {activeModel}
                         </Button>
@@ -888,68 +948,78 @@ function HermesContent() {
       ) : null}
 
       {/* Model Selection for active provider */}
-      {!oauthProviderId && !localProviderId && activeProvider && activeProvider !== 'custom' && (
+      {!oauthProviderId &&
+        !localProviderId &&
+        activeProvider &&
+        activeProvider !== 'custom' && (
+          <div>
+            <p
+              className="mb-1 text-xs font-semibold uppercase tracking-wider"
+              style={mutedStyle}
+            >
+              Model — pick one, then confirm below
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(() => {
+                if (availableModels.length > 0) return availableModels
+                // Use auto-discovered models for local providers
+                const discovered = localDiscovery?.models
+                  .filter((m) => m.provider === activeProvider)
+                  .map((m) => m.id)
+                if (discovered && discovered.length > 0) return discovered
+                return (
+                  PROVIDER_CARDS.find((p) => p.id === activeProvider)?.models ||
+                  []
+                )
+              })().map((model) => (
+                <button
+                  key={model}
+                  type="button"
+                  aria-pressed={activeModel === model}
+                  onClick={() => setActiveModel(model)}
+                  className={cn(
+                    'rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
+                    activeModel === model
+                      ? 'ring-2 ring-accent-500'
+                      : 'hover:brightness-110',
+                    defaultProvider === activeProvider &&
+                      defaultModelId === model
+                      ? 'border border-accent-500/40'
+                      : '',
+                  )}
+                  style={cardStyle}
+                >
+                  {model}
+                  {defaultProvider === activeProvider &&
+                  defaultModelId === model
+                    ? ' · default'
+                    : ''}
+                </button>
+              ))}
+            </div>
+            {activeModel &&
+            !workforceLocked &&
+            (activeProvider !== defaultProvider ||
+              activeModel !== defaultModelId) ? (
+              <div className="mt-2 flex items-center gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => setDefaultModel(activeProvider, activeModel)}
+                >
+                  Set as default: {activeProvider} · {activeModel}
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        )}
+
+      {/* Custom OpenAI-compatible endpoint fields — Base URL only; API key lives in API Keys section */}
+      {!workforceLocked && activeProvider === 'custom' && (
         <div>
           <p
             className="mb-1 text-xs font-semibold uppercase tracking-wider"
             style={mutedStyle}
           >
-            Model — pick one, then confirm below
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {(() => {
-              if (availableModels.length > 0) return availableModels
-              // Use auto-discovered models for local providers
-              const discovered = localDiscovery?.models
-                .filter((m) => m.provider === activeProvider)
-                .map((m) => m.id)
-              if (discovered && discovered.length > 0) return discovered
-              return (
-                PROVIDER_CARDS.find((p) => p.id === activeProvider)?.models ||
-                []
-              )
-            })().map((model) => (
-              <button
-                key={model}
-                type="button"
-                aria-pressed={activeModel === model}
-                onClick={() => setActiveModel(model)}
-                className={cn(
-                  'rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
-                  activeModel === model
-                    ? 'ring-2 ring-accent-500'
-                    : 'hover:brightness-110',
-                  defaultProvider === activeProvider && defaultModelId === model
-                    ? 'border border-accent-500/40'
-                    : '',
-                )}
-                style={cardStyle}
-              >
-                {model}
-                {defaultProvider === activeProvider && defaultModelId === model
-                  ? ' · default'
-                  : ''}
-              </button>
-            ))}
-          </div>
-          {activeModel &&
-          (activeProvider !== defaultProvider || activeModel !== defaultModelId) ? (
-            <div className="mt-2 flex items-center gap-2">
-              <Button
-                size="sm"
-                onClick={() => setDefaultModel(activeProvider, activeModel)}
-              >
-                Set as default: {activeProvider} · {activeModel}
-              </Button>
-            </div>
-          ) : null}
-        </div>
-      )}
-
-      {/* Custom OpenAI-compatible endpoint fields — Base URL only; API key lives in API Keys section */}
-      {activeProvider === 'custom' && (
-        <div>
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wider" style={mutedStyle}>
             Custom Endpoint
           </p>
           <div className="space-y-1.5">
@@ -957,7 +1027,10 @@ function HermesContent() {
               const isEditing = editingKey === 'custom_base_url'
               const hasValue = !!customBaseUrl
               return (
-                <div className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={cardStyle}>
+                <div
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+                  style={cardStyle}
+                >
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium">Base URL</div>
                     <div className="text-[11px] font-mono" style={mutedStyle}>
@@ -972,24 +1045,74 @@ function HermesContent() {
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                              save({ config: { model: { provider: 'manifest' }, providers: { manifest: { type: 'openai', base_url: customBaseUrl, key_env: 'CUSTOM_API_KEY' } } } })
-                                .then(() => setEditingKey(null))
+                              save({
+                                config: {
+                                  model: { provider: 'manifest' },
+                                  providers: {
+                                    manifest: {
+                                      type: 'openai',
+                                      base_url: customBaseUrl,
+                                      key_env: 'CUSTOM_API_KEY',
+                                    },
+                                  },
+                                },
+                              }).then(() => setEditingKey(null))
                             }
                             if (e.key === 'Escape') setEditingKey(null)
                           }}
                         />
-                      ) : hasValue ? customBaseUrl : 'Not configured'}
+                      ) : hasValue ? (
+                        customBaseUrl
+                      ) : (
+                        'Not configured'
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={cn('size-2 rounded-full', hasValue ? 'bg-green-500' : 'bg-neutral-500')} />
+                    <span
+                      className={cn(
+                        'size-2 rounded-full',
+                        hasValue ? 'bg-green-500' : 'bg-neutral-500',
+                      )}
+                    />
                     {isEditing ? (
                       <>
-                        <button type="button" onClick={() => { save({ config: { model: { provider: 'manifest' }, providers: { manifest: { type: 'openai', base_url: customBaseUrl, key_env: 'CUSTOM_API_KEY' } } } }).then(() => setEditingKey(null)) }} className="text-xs font-medium text-green-400">Save</button>
-                        <button type="button" onClick={() => setEditingKey(null)} className="text-xs" style={mutedStyle}>Cancel</button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            save({
+                              config: {
+                                model: { provider: 'manifest' },
+                                providers: {
+                                  manifest: {
+                                    type: 'openai',
+                                    base_url: customBaseUrl,
+                                    key_env: 'CUSTOM_API_KEY',
+                                  },
+                                },
+                              },
+                            }).then(() => setEditingKey(null))
+                          }}
+                          className="text-xs font-medium text-green-400"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingKey(null)}
+                          className="text-xs"
+                          style={mutedStyle}
+                        >
+                          Cancel
+                        </button>
                       </>
                     ) : (
-                      <button type="button" onClick={() => setEditingKey('custom_base_url')} className="text-xs font-medium" style={{ color: 'var(--theme-accent)' }}>
+                      <button
+                        type="button"
+                        onClick={() => setEditingKey('custom_base_url')}
+                        className="text-xs font-medium"
+                        style={{ color: 'var(--theme-accent)' }}
+                      >
                         {hasValue ? 'Edit' : 'Add'}
                       </button>
                     )}
@@ -1007,10 +1130,7 @@ function HermesContent() {
                 >
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium">Model</div>
-                    <div
-                      className="text-[11px] font-mono"
-                      style={mutedStyle}
-                    >
+                    <div className="text-[11px] font-mono" style={mutedStyle}>
                       {isEditing ? (
                         <input
                           type="text"
@@ -1094,115 +1214,119 @@ function HermesContent() {
       })()}
 
       {/* API Keys */}
-      <div>
-        <p
-          className="mb-1 text-xs font-semibold uppercase tracking-wider"
-          style={mutedStyle}
-        >
-          API Keys
-        </p>
-        <div className="space-y-1.5">
-          {PROVIDER_CARDS.filter((p) => p.envKey).map((p) => {
-            const key = p.envKey!
-            const hasKey = !!configuredKeys[key]
-            const isEditing = editingKey === key
-            return (
-              <div
-                key={p.id}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5"
-                style={cardStyle}
-              >
-                <ProviderLogo
-                  provider={p.id}
-                  size={28}
-                  className="rounded-md"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium">{p.name}</div>
-                  <div className="text-[11px] font-mono" style={mutedStyle}>
-                    {isEditing ? (
-                      <input
-                        type="password"
-                        value={keyInput}
-                        onChange={(e) => setKeyInput(e.target.value)}
-                        placeholder={`Paste ${key}`}
-                        className="w-full rounded border-0 bg-transparent py-0.5 text-[11px] outline-none"
-                        style={{ color: 'var(--theme-text)' }}
-                        autoFocus
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && keyInput) {
-                            save({ env: { [key]: keyInput } })
-                            setEditingKey(null)
-                            setKeyInput('')
-                          }
-                          if (e.key === 'Escape') {
-                            setEditingKey(null)
-                            setKeyInput('')
-                          }
-                        }}
+      {!workforceLocked && (
+        <div>
+          <p
+            className="mb-1 text-xs font-semibold uppercase tracking-wider"
+            style={mutedStyle}
+          >
+            API Keys
+          </p>
+          <div className="space-y-1.5">
+            {visibleProviderCards
+              .filter((p) => p.envKey)
+              .map((p) => {
+                const key = p.envKey!
+                const hasKey = !!configuredKeys[key]
+                const isEditing = editingKey === key
+                return (
+                  <div
+                    key={p.id}
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+                    style={cardStyle}
+                  >
+                    <ProviderLogo
+                      provider={p.id}
+                      size={28}
+                      className="rounded-md"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium">{p.name}</div>
+                      <div className="text-[11px] font-mono" style={mutedStyle}>
+                        {isEditing ? (
+                          <input
+                            type="password"
+                            value={keyInput}
+                            onChange={(e) => setKeyInput(e.target.value)}
+                            placeholder={`Paste ${key}`}
+                            className="w-full rounded border-0 bg-transparent py-0.5 text-[11px] outline-none"
+                            style={{ color: 'var(--theme-text)' }}
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && keyInput) {
+                                save({ env: { [key]: keyInput } })
+                                setEditingKey(null)
+                                setKeyInput('')
+                              }
+                              if (e.key === 'Escape') {
+                                setEditingKey(null)
+                                setKeyInput('')
+                              }
+                            }}
+                          />
+                        ) : hasKey ? (
+                          configuredKeys[key]
+                        ) : (
+                          'Not configured'
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={cn(
+                          'size-2 rounded-full',
+                          hasKey ? 'bg-green-500' : 'bg-neutral-500',
+                        )}
                       />
-                    ) : hasKey ? (
-                      configuredKeys[key]
-                    ) : (
-                      'Not configured'
-                    )}
+                      {isEditing ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (keyInput) {
+                                save({ env: { [key]: keyInput } })
+                              }
+                              setEditingKey(null)
+                              setKeyInput('')
+                            }}
+                            className="rounded-lg px-2 py-1 text-[11px] font-medium bg-accent-500 text-white"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingKey(null)
+                              setKeyInput('')
+                            }}
+                            className="rounded-lg px-2 py-1 text-[11px] font-medium"
+                            style={{ color: 'var(--theme-muted)' }}
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingKey(key)
+                            setKeyInput('')
+                          }}
+                          className="rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors hover:bg-accent-500/10"
+                          style={{
+                            color: 'var(--theme-accent, var(--theme-text))',
+                          }}
+                        >
+                          {hasKey ? 'Update' : 'Add'}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={cn(
-                      'size-2 rounded-full',
-                      hasKey ? 'bg-green-500' : 'bg-neutral-500',
-                    )}
-                  />
-                  {isEditing ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (keyInput) {
-                            save({ env: { [key]: keyInput } })
-                          }
-                          setEditingKey(null)
-                          setKeyInput('')
-                        }}
-                        className="rounded-lg px-2 py-1 text-[11px] font-medium bg-accent-500 text-white"
-                      >
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingKey(null)
-                          setKeyInput('')
-                        }}
-                        className="rounded-lg px-2 py-1 text-[11px] font-medium"
-                        style={{ color: 'var(--theme-muted)' }}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingKey(key)
-                        setKeyInput('')
-                      }}
-                      className="rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors hover:bg-accent-500/10"
-                      style={{
-                        color: 'var(--theme-accent, var(--theme-text))',
-                      }}
-                    >
-                      {hasKey ? 'Update' : 'Add'}
-                    </button>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+                )
+              })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Memory */}
       <div>
@@ -1567,36 +1691,36 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
                     text: '#16315F',
                   }
                 : theme.id === 'claude-classic'
-              ? {
-                  bg: '#0d0f12',
-                  panel: '#1a1f26',
-                  border: '#2a313b',
-                  accent: '#b98a44',
-                  text: '#eceff4',
-                }
-              : theme.id === 'claude-classic-light'
-                ? {
-                    bg: '#F5F2ED',
-                    panel: '#FCFAF7',
-                    border: '#D8CCBC',
-                    accent: '#b98a44',
-                    text: '#1a1f26',
-                  }
-                : theme.id === 'claude-slate'
                   ? {
-                      bg: '#0d1117',
-                      panel: '#1c2128',
-                      border: '#30363d',
-                      accent: '#7eb8f6',
-                      text: '#c9d1d9',
+                      bg: '#0d0f12',
+                      panel: '#1a1f26',
+                      border: '#2a313b',
+                      accent: '#b98a44',
+                      text: '#eceff4',
                     }
-                  : {
-                      bg: '#F6F8FA',
-                      panel: '#FFFFFF',
-                      border: '#D0D7DE',
-                      accent: '#3b82f6',
-                      text: '#24292f',
-                    },
+                  : theme.id === 'claude-classic-light'
+                    ? {
+                        bg: '#F5F2ED',
+                        panel: '#FCFAF7',
+                        border: '#D8CCBC',
+                        accent: '#b98a44',
+                        text: '#1a1f26',
+                      }
+                    : theme.id === 'claude-slate'
+                      ? {
+                          bg: '#0d1117',
+                          panel: '#1c2128',
+                          border: '#30363d',
+                          accent: '#7eb8f6',
+                          text: '#c9d1d9',
+                        }
+                      : {
+                          bg: '#F6F8FA',
+                          panel: '#FFFFFF',
+                          border: '#D0D7DE',
+                          accent: '#3b82f6',
+                          text: '#24292f',
+                        },
 }))
 
 function ThemeSwatch({
@@ -2225,8 +2349,7 @@ function VoiceContent() {
 
   const ttsProvider = String(tts.provider || 'edge')
   const sttProvider = String(stt.provider || 'local')
-  const sttGroq =
-    (stt.groq as Record<string, unknown> | undefined) || {}
+  const sttGroq = (stt.groq as Record<string, unknown> | undefined) || {}
 
   return (
     <div className="space-y-4">
@@ -2330,7 +2453,10 @@ function VoiceContent() {
                 ))}
               </select>
             </Row>
-            <Row label="Language" description="Optional BCP-47 code, e.g. en or en-US.">
+            <Row
+              label="Language"
+              description="Optional BCP-47 code, e.g. en or en-US."
+            >
               <Input
                 value={String(stt.language || '')}
                 onChange={(e) => saveStt('language', e.target.value)}
@@ -2600,7 +2726,8 @@ export function SettingsDialog({
           </SettingsErrorBoundary>
 
           <div className="sticky bottom-0 z-10 border-t border-primary-200 bg-primary-50/60 px-4 py-3 text-xs text-primary-500 dark:text-neutral-400 md:rounded-b-2xl md:px-5">
-            Most changes save automatically; the default model commits only when you click Set as default.{' '}
+            Most changes save automatically; the default model commits only when
+            you click Set as default.{' '}
             <a
               href="/settings"
               className="ml-2 font-medium underline underline-offset-2 hover:text-primary-700 dark:hover:text-neutral-200"

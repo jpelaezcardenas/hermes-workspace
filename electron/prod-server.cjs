@@ -6,6 +6,8 @@ const portArg = process.argv.find(
   (value, index, arr) => arr[index - 1] === '--port',
 )
 const PORT = Number.parseInt(process.env.PORT || portArg || '3847', 10)
+const HOST =
+  process.env.HERMES_WORKSPACE_BIND_HOST || process.env.HOST || '127.0.0.1'
 const DIST_CLIENT = path.join(__dirname, '..', 'dist', 'client')
 const BUNDLED_SERVER = path.join(__dirname, 'server-bundle.cjs')
 const UNBUNDLED_SERVER = path.join(
@@ -48,9 +50,13 @@ async function main() {
   process.env.HERMES_WORKSPACE_DESKTOP =
     process.env.HERMES_WORKSPACE_DESKTOP || '1'
   process.env.HERMES_API_URL =
-    process.env.HERMES_API_URL || 'http://127.0.0.1:8642'
+    process.env.HERMES_API_URL ||
+    process.env.CLAUDE_API_URL ||
+    'http://127.0.0.1:8642'
   process.env.HERMES_DASHBOARD_URL =
-    process.env.HERMES_DASHBOARD_URL || 'http://127.0.0.1:9119'
+    process.env.HERMES_DASHBOARD_URL ||
+    process.env.CLAUDE_DASHBOARD_URL ||
+    'http://127.0.0.1:9119'
 
   const serverBuild = await loadServerBuild()
 
@@ -82,7 +88,7 @@ async function main() {
           headers.set(key, Array.isArray(value) ? value.join(', ') : value)
       }
       const protocol = req.headers['x-forwarded-proto'] || 'http'
-      const host = req.headers.host || `127.0.0.1:${PORT}`
+      const host = req.headers.host || `${HOST}:${PORT}`
       const fullUrl = `${protocol}://${host}${url}`
       const webRequest = new Request(fullUrl, {
         method: req.method,
@@ -123,9 +129,9 @@ async function main() {
     }
   })
 
-  server.listen(PORT, '127.0.0.1', () => {
+  server.listen(PORT, HOST, () => {
     console.log(
-      `[Hermes Workspace desktop] server listening on http://127.0.0.1:${PORT}`,
+      `[Hermes Workspace desktop] server listening on http://${HOST}:${PORT}`,
     )
     if (process.send) process.send({ type: 'ready', port: PORT })
   })

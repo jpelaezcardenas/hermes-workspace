@@ -1,10 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import { fetchClaudeAuthStatus } from '../../lib/claude-auth'
 
 export function LoginScreen() {
+  const [authMode, setAuthMode] = useState<'magic_link' | 'password' | 'none'>(
+    'magic_link',
+  )
+  const [email, setEmail] = useState('')
+  const [token, setToken] = useState('')
+  const [step, setStep] = useState<'email' | 'token'>('email')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    fetchClaudeAuthStatus()
+      .then((status) => {
+        if (status.authMode) setAuthMode(status.authMode)
+      })
+      .catch(() => {
+        setAuthMode('magic_link')
+      })
+  }, [])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -12,19 +29,29 @@ export function LoginScreen() {
     setLoading(true)
 
     try {
+      const body =
+        authMode === 'magic_link'
+          ? step === 'email'
+            ? { mode: 'request_magic_link', email }
+            : { mode: 'verify_magic_link', email, token }
+          : { password }
+
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify(body),
       })
 
       const data = await res.json()
 
-      if (data.ok) {
+      if (data.ok && authMode === 'magic_link' && step === 'email') {
+        setStep('token')
+        setLoading(false)
+      } else if (data.ok) {
         // Success! Reload to trigger auth check
         window.location.reload()
       } else {
-        setError(data.error || 'Invalid password')
+        setError(data.error || 'Authentication failed')
         setLoading(false)
       }
     } catch (err) {
@@ -61,32 +88,65 @@ export function LoginScreen() {
                 <circle cx="50" cy="50" r="15" fill="currentColor" />
               </svg>
               <h1 className="text-2xl font-bold tracking-tight text-primary-900">
-                Hermes Workspace
+                99Pages Agentic OS
               </h1>
             </div>
           </div>
 
           {/* Title */}
           <h2 className="mb-2 text-center text-lg font-semibold text-primary-900">
-            Enter Password
+            {authMode === 'magic_link' ? 'Magic Link Login' : 'Enter Password'}
           </h2>
           <p className="mb-6 text-center text-sm text-primary-600">
-            This workspace is password-protected
+            {authMode === 'magic_link'
+              ? step === 'email'
+                ? 'Use your 99Pages account to unlock AI Workforce'
+                : 'Enter the code from your Magic Link email'
+              : 'This workspace is password-protected'}
           </p>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="w-full rounded-lg border border-primary-200 bg-primary-50 px-4 py-2.5 text-primary-900 placeholder-primary-400 outline-none transition-all focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
-                disabled={loading}
-                autoFocus
-              />
-            </div>
+            {authMode === 'magic_link' ? (
+              <>
+                <div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    className="w-full rounded-lg border border-primary-200 bg-primary-50 px-4 py-2.5 text-primary-900 placeholder-primary-400 outline-none transition-all focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
+                    disabled={loading || step === 'token'}
+                    autoFocus
+                  />
+                </div>
+                {step === 'token' && (
+                  <div>
+                    <input
+                      type="text"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value.trim())}
+                      placeholder="Magic Link code"
+                      className="w-full rounded-lg border border-primary-200 bg-primary-50 px-4 py-2.5 text-primary-900 placeholder-primary-400 outline-none transition-all focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
+                      disabled={loading}
+                      autoFocus
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  className="w-full rounded-lg border border-primary-200 bg-primary-50 px-4 py-2.5 text-primary-900 placeholder-primary-400 outline-none transition-all focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
+                  disabled={loading}
+                  autoFocus
+                />
+              </div>
+            )}
 
             {error && (
               <div className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-950/40 dark:text-red-200 dark:ring-red-800/60">
@@ -96,10 +156,21 @@ export function LoginScreen() {
 
             <button
               type="submit"
-              disabled={loading || !password}
+              disabled={
+                loading ||
+                (authMode === 'magic_link'
+                  ? step === 'email'
+                    ? !email
+                    : !token
+                  : !password)
+              }
               className="w-full rounded-lg bg-accent-500 px-4 py-2.5 font-medium text-white transition-all hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-500/50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'Authenticating...' : 'Continue'}
+              {loading
+                ? 'Authenticating...'
+                : authMode === 'magic_link' && step === 'email'
+                  ? 'Send Magic Link'
+                  : 'Continue'}
             </button>
           </form>
         </div>

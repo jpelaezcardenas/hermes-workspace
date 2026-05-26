@@ -155,7 +155,27 @@ function getConfiguredPassword(): string {
  * Check if password protection is enabled.
  */
 export function isPasswordProtectionEnabled(): boolean {
-  return getConfiguredPassword().length > 0
+  return getWorkspaceAuthMode() !== 'none'
+}
+
+export function getWorkspaceAuthMode(): 'magic_link' | 'password' | 'none' {
+  const configured = (
+    process.env.HERMES_AUTH_MODE ||
+    process.env.P99_AUTH_MODE ||
+    ''
+  )
+    .trim()
+    .toLowerCase()
+
+  if (configured === 'magic_link' || configured === 'magic-link') {
+    return 'magic_link'
+  }
+
+  if (getConfiguredPassword().length > 0) {
+    return 'password'
+  }
+
+  return 'none'
 }
 
 /**

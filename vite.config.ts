@@ -511,6 +511,7 @@ const config = defineConfig(({ mode, command }) => {
           '**/.vscode/**',
           '**/.claude/**',
           '**/.cursor/**',
+          '**/.venv-hermes/**',
           // Loose log files.
           '**/*.log',
         ],

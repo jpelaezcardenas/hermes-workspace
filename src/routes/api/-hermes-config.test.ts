@@ -95,9 +95,9 @@ describe('canonical /api/hermes-config route', () => {
     const body = await res.json()
 
     expect(body).toMatchObject({ ok: true, message: 'Default model updated.' })
-    expect(
-      fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8'),
-    ).toMatch(/provider: openrouter/)
+    expect(fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8')).toMatch(
+      /provider: openrouter/,
+    )
   })
 
   it('PATCH legacy { config } body deep-merges and preserves siblings', async () => {
@@ -120,6 +120,70 @@ describe('canonical /api/hermes-config route', () => {
     expect(onDisk).toContain('user_profile_enabled: true')
   })
 
+  it('PATCH rejects provider changes when AI Workforce is locked', async () => {
+    fs.writeFileSync(
+      path.join(tmpHome, 'config.yaml'),
+      [
+        'model:',
+        '  provider: ai-workforce',
+        '  default: main_orchestrator',
+        '  base_url: https://portal.99pages.uk/credit/v1',
+        '',
+      ].join('\n'),
+      'utf-8',
+    )
+    fs.writeFileSync(
+      path.join(tmpHome, '.env'),
+      'P99_PROVIDER_LOCK=ai-workforce\n',
+      'utf-8',
+    )
+
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          config: { provider: 'openrouter', model: 'auto' },
+        }),
+      }),
+    })
+    const body = await res.json()
+
+    expect(res.status).toBe(423)
+    expect(body.ok).toBe(false)
+    expect(
+      fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8'),
+    ).toContain('provider: ai-workforce')
+  })
+
+  it('PATCH still allows unrelated settings when AI Workforce is locked', async () => {
+    fs.writeFileSync(
+      path.join(tmpHome, 'config.yaml'),
+      'model:\n  provider: ai-workforce\n  default: main_orchestrator\n',
+      'utf-8',
+    )
+    fs.writeFileSync(
+      path.join(tmpHome, '.env'),
+      'P99_PROVIDER_LOCK=ai-workforce\n',
+      'utf-8',
+    )
+
+    const handlers = await loadHandlers('./hermes-config')
+    const res = await handlers.PATCH({
+      request: new Request('http://localhost/api/hermes-config', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          config: { display: { compact: true } },
+        }),
+      }),
+    })
+
+    expect(res.status).toBe(200)
+    expect(
+      fs.readFileSync(path.join(tmpHome, 'config.yaml'), 'utf-8'),
+    ).toContain('compact: true')
+  })
+
   it('PATCH rejects malformed action bodies with 400', async () => {
     const handlers = await loadHandlers('./hermes-config')
     const res = await handlers.PATCH({
@@ -140,11 +204,19 @@ describe('canonical /api/hermes-config route', () => {
     const res = await handlers.PATCH({
       request: new Request('http://localhost/api/hermes-config', {
         method: 'PATCH',
-        body: JSON.stringify({ action: 'set-api-key', envKey: 'X', value: 'y' }),
+        body: JSON.stringify({
+          action: 'set-api-key',
+          envKey: 'X',
+          value: 'y',
+        }),
       }),
     })
     expect(res.status).toBe(503)
-    vi.doUnmock('../../server/gateway-capabilities')
+    vi.doMock('../../server/gateway-capabilities', () => ({
+      ensureGatewayProbed: vi.fn(),
+      getCapabilities: () => ({ config: true }),
+    }))
+    vi.resetModules()
   })
 })
 

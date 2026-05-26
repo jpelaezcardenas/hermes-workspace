@@ -1,6 +1,7 @@
 export interface AuthStatus {
   authenticated: boolean
   authRequired: boolean
+  authMode?: 'magic_link' | 'password' | 'none'
   error?: string
 }
 

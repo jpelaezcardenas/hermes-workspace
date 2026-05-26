@@ -5,6 +5,8 @@ result-*
 
 # Dependencies
 node_modules
+.venv-hermes/
+.oracle-extract/
 .pnp
 .pnp.js
 
