@@ -62,6 +62,22 @@ describe('requireLocalOrAuth', () => {
   })
 })
 
+describe('isAuthenticated', () => {
+  it('matches auth-check by trusting Tailscale mesh requests', async () => {
+    process.env.HERMES_PASSWORD = 'configured-test-password'
+    const { isAuthenticated } = await import('./auth-middleware')
+    const request = Object.assign(makeRequest({}), { remoteAddress: '100.97.216.111' })
+    expect(isAuthenticated(request)).toBe(true)
+  })
+
+  it('rejects public requests without a session cookie', async () => {
+    process.env.HERMES_PASSWORD = 'configured-test-password'
+    process.env.TRUST_PROXY = '1'
+    const { isAuthenticated } = await import('./auth-middleware')
+    expect(isAuthenticated(makeRequest({ 'x-real-ip': '203.0.113.77' }))).toBe(false)
+  })
+})
+
 describe('createSessionCookie (#123)', () => {
   it('omits Secure in development by default', async () => {
     process.env.NODE_ENV = 'development'

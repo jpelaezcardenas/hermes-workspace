@@ -263,11 +263,19 @@ function isLocalRequest(request: Request): boolean {
  * Check if the request is authenticated.
  * Returns true if:
  * - Password protection is disabled, OR
+ * - Request comes from the trusted local/personal mesh boundary, OR
  * - Request has a valid session token
  */
 export function isAuthenticated(request: Request): boolean {
   // No password configured? No auth needed
   if (!isPasswordProtectionEnabled()) {
+    return true
+  }
+
+  // Keep API gates aligned with /api/auth-check.  The Workspace is bound to
+  // the personal Tailscale/LAN boundary, so those clients should not render an
+  // authenticated shell and then hit 401s for feature APIs.
+  if (isLocalRequest(request)) {
     return true
   }
 
@@ -283,7 +291,7 @@ export function isAuthenticated(request: Request): boolean {
 }
 
 export function requireLocalOrAuth(request: Request): boolean {
-  return isLocalRequest(request) || isAuthenticated(request)
+  return isAuthenticated(request)
 }
 
 /**
