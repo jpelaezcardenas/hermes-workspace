@@ -1,5 +1,7 @@
 export type ProviderAuthType = 'api-key' | 'oauth' | 'local' | 'cli-token'
 
+import { WORKFORCE_MODEL_IDS } from './workforce-models'
+
 export type ProviderInfo = {
   id: string
   name: string
@@ -8,14 +10,34 @@ export type ProviderInfo = {
   docsUrl: string
   configExample: string
 }
-
 export const CLAUDE_CONFIG_PATH = '~/.hermes/config.yaml'
+export const AI_WORKFORCE_PROVIDER_ID = 'ai-workforce'
 
 export const PROVIDER_CATALOG: Array<ProviderInfo> = [
   {
+    id: AI_WORKFORCE_PROVIDER_ID,
+    name: 'AI Workforce',
+    description: '99Pages managed routing through your Magic Link account.',
+    authTypes: ['oauth'],
+    docsUrl: 'https://app.99pages.uk',
+    configExample: JSON.stringify(
+      {
+        model: {
+          provider: AI_WORKFORCE_PROVIDER_ID,
+          default: '99pages/fast',
+          base_url: 'https://app.99pages.uk/ai/v1',
+          api_mode: 'chat_completions',
+        },
+        models: WORKFORCE_MODEL_IDS,
+      },
+      null,
+      2,
+    ),
+  },
+  {
     id: 'anthropic',
     name: 'Anthropic',
-    description: 'Claude models — Haiku, Sonnet, and Opus.',
+    description: 'Claude models â€” Haiku, Sonnet, and Opus.',
     authTypes: ['api-key', 'cli-token'],
     docsUrl: 'https://console.anthropic.com/settings/keys',
     configExample: JSON.stringify(
@@ -140,7 +162,8 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
   {
     id: 'atomic-chat',
     name: 'Atomic Chat',
-    description: 'Local LLMs via Atomic Chat — run Llama, Gemma, Qwen and more on your machine.',
+    description:
+      'Local LLMs via Atomic Chat â€” run Llama, Gemma, Qwen and more on your machine.',
     authTypes: ['local'],
     docsUrl: 'https://atomic.chat',
     configExample: JSON.stringify(
@@ -185,6 +208,36 @@ export function getProviderDisplayName(providerId: string): string {
       return chunk.slice(0, 1).toUpperCase() + chunk.slice(1)
     })
     .join(' ')
+}
+
+function readRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null
+}
+
+export function isAiWorkforceProviderId(value: unknown): boolean {
+  return (
+    typeof value === 'string' &&
+    normalizeProviderId(value).replace(/[\s_]+/g, '-') ===
+      AI_WORKFORCE_PROVIDER_ID
+  )
+}
+
+export function isAiWorkforceLockedConfig(config: unknown): boolean {
+  const root = readRecord(config)
+  if (!root) return false
+
+  if (isAiWorkforceProviderId(root.provider)) return true
+
+  const model = readRecord(root.model)
+  if (isAiWorkforceProviderId(model?.provider)) return true
+
+  const lock =
+    root.HERMES_99PAGES_PROVIDER_LOCK ??
+    root.P99_PROVIDER_LOCK ??
+    model?.provider_lock
+  return isAiWorkforceProviderId(lock)
 }
 
 export function getAuthTypeLabel(authType: ProviderAuthType): string {

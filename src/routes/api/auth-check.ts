@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import {
+  getWorkspaceAuthMode,
   isAuthenticated,
   isPasswordProtectionEnabled,
 } from '../../server/auth-middleware'
@@ -49,6 +50,7 @@ export const Route = createFileRoute('/api/auth-check')({
         return json({
           authenticated,
           authRequired,
+          authMode: getWorkspaceAuthMode(),
         })
       },
     },

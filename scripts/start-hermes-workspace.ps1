@@ -44,6 +44,9 @@ if ($whoamiResult.ExitCode -ne 0 -or $whoamiResult.Output.Count -eq 0) {
 }
 $wslUser = ($whoamiResult.Output[-1]).Trim()
 if ([string]::IsNullOrWhiteSpace($WorkspacePath)) {
+  $WorkspacePath = $env:HERMES_WSL_WORKSPACE_PATH
+}
+if ([string]::IsNullOrWhiteSpace($WorkspacePath)) {
   $WorkspacePath = "/home/$wslUser/hermes-workspace"
 }
 

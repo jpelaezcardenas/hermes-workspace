@@ -34,7 +34,9 @@ function readOverrides(): WorkspaceOverrides {
   try {
     const raw = fs.readFileSync(overridesPath(), 'utf-8')
     const parsed = JSON.parse(raw) as unknown
-    return parsed !== null && typeof parsed === 'object' ? (parsed as WorkspaceOverrides) : {}
+    return parsed !== null && typeof parsed === 'object'
+      ? (parsed as WorkspaceOverrides)
+      : {}
   } catch {
     return {}
   }
@@ -57,19 +59,37 @@ function normalizeUrl(u: string): string {
   return u.trim().replace(/\/+$/, '')
 }
 
+function configuredUrlCandidates(
+  envName: string,
+  fallbacks: string[],
+): string[] {
+  const configured = process.env[envName]
+    ?.split(',')
+    .map((value) => normalizeUrl(value))
+    .filter(Boolean)
+  return configured?.length ? configured : fallbacks
+}
+
+const DEFAULT_GATEWAY_URL = normalizeUrl(
+  process.env.HERMES_DEFAULT_API_URL || 'http://127.0.0.1:8642',
+)
+const DEFAULT_DASHBOARD_URL = normalizeUrl(
+  process.env.HERMES_DEFAULT_DASHBOARD_URL || 'http://127.0.0.1:9119',
+)
+
 const _initialOverrides = readOverrides()
 
 export let CLAUDE_API = normalizeUrl(
   _initialOverrides.claudeApiUrl ||
     process.env.HERMES_API_URL ||
     process.env.CLAUDE_API_URL ||
-    'http://127.0.0.1:8642',
+    DEFAULT_GATEWAY_URL,
 )
 export let CLAUDE_DASHBOARD_URL = normalizeUrl(
   _initialOverrides.claudeDashboardUrl ||
     process.env.HERMES_DASHBOARD_URL ||
     process.env.CLAUDE_DASHBOARD_URL ||
-    'http://127.0.0.1:9119',
+    DEFAULT_DASHBOARD_URL,
 )
 
 /**
@@ -87,7 +107,9 @@ export function setGatewayUrl(input: string | null | undefined): string {
   } else {
     delete overrides.claudeApiUrl
     CLAUDE_API = normalizeUrl(
-      process.env.HERMES_API_URL || process.env.CLAUDE_API_URL || 'http://127.0.0.1:8642',
+      process.env.HERMES_API_URL ||
+        process.env.CLAUDE_API_URL ||
+        DEFAULT_GATEWAY_URL,
     )
   }
   writeOverrides(overrides)
@@ -109,7 +131,9 @@ export function setDashboardUrl(input: string | null | undefined): string {
   } else {
     delete overrides.claudeDashboardUrl
     CLAUDE_DASHBOARD_URL = normalizeUrl(
-      process.env.HERMES_DASHBOARD_URL || process.env.CLAUDE_DASHBOARD_URL || 'http://127.0.0.1:9119',
+      process.env.HERMES_DASHBOARD_URL ||
+        process.env.CLAUDE_DASHBOARD_URL ||
+        DEFAULT_DASHBOARD_URL,
     )
   }
   writeOverrides(overrides)
@@ -127,7 +151,7 @@ export function getResolvedUrls(): {
   const overrides = readOverrides()
   const source = overrides.claudeApiUrl
     ? 'override'
-    : (process.env.HERMES_API_URL || process.env.CLAUDE_API_URL)
+    : process.env.HERMES_API_URL || process.env.CLAUDE_API_URL
       ? 'env'
       : 'default'
   return { gateway: CLAUDE_API, dashboard: CLAUDE_DASHBOARD_URL, source }
@@ -150,7 +174,10 @@ const PROBE_TIMEOUT_MS = 3_000
 const PROBE_TTL_MS = 120_000
 const PROBE_TTL_DISCONNECTED_MS = 15_000
 
-function effectiveProbeTtl(caps: { health: boolean; chatCompletions: boolean }): number {
+function effectiveProbeTtl(caps: {
+  health: boolean
+  chatCompletions: boolean
+}): number {
   if (caps.health || caps.chatCompletions) return PROBE_TTL_MS
   return PROBE_TTL_DISCONNECTED_MS
 }
@@ -209,8 +236,7 @@ export type DashboardCapabilities = {
 }
 
 /** Full capabilities — backward compat with existing code */
-export type GatewayCapabilities =
-  CoreCapabilities &
+export type GatewayCapabilities = CoreCapabilities &
   EnhancedCapabilities &
   DashboardCapabilities
 
@@ -259,7 +285,8 @@ let dashboardTokenPromise: Promise<string> | null = null
 let dashboardTokenCache = ''
 
 /** Optional bearer token for authenticated gateway endpoints. */
-export const BEARER_TOKEN = process.env.HERMES_API_TOKEN || process.env.CLAUDE_API_TOKEN || ''
+export const BEARER_TOKEN =
+  process.env.HERMES_API_TOKEN || process.env.CLAUDE_API_TOKEN || ''
 
 /**
  * Dashboard API auth uses the ephemeral session token injected into the
@@ -422,12 +449,15 @@ async function probe(path: string): Promise<boolean> {
  */
 async function probeEnhancedChatStream(): Promise<boolean> {
   try {
-    const res = await fetch(`${CLAUDE_API}/api/sessions/__probe__/chat/stream`, {
-      method: 'POST',
-      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
-      body: '{}',
-      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-    })
+    const res = await fetch(
+      `${CLAUDE_API}/api/sessions/__probe__/chat/stream`,
+      {
+        method: 'POST',
+        headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+        body: '{}',
+        signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+      },
+    )
     // Vanilla hermes-agent has no such endpoint — dashboard layer 404s,
     // gateway 404s, anything in between 404s. Enhanced fork accepts POST
     // and returns either a 4xx structured error (validation) or starts a
@@ -520,7 +550,9 @@ export function isLocalhostDeployment(): boolean {
   const isLoopbackHost = (host: string): boolean => {
     const h = host.trim().toLowerCase()
     if (!h) return false
-    return h === '127.0.0.1' || h === '::1' || h === 'localhost' || h === '[::1]'
+    return (
+      h === '127.0.0.1' || h === '::1' || h === 'localhost' || h === '[::1]'
+    )
   }
   const isLoopbackUrl = (raw: string): boolean => {
     try {
@@ -626,7 +658,6 @@ async function probeKanban(dashboardAvailable: boolean): Promise<boolean> {
   }
 }
 
-
 // Vanilla hermes-agent 0.10.0 satisfies: health, chatCompletions, models, streaming,
 // sessions, skills, config, jobs. Dashboard-only endpoints (themes/plugins) and the
 // legacy enhanced-fork chat stream are optional — their absence should not emit the
@@ -657,7 +688,10 @@ export function getCapabilityWarningMessage(
   next: GatewayCapabilities,
   criticalMissing: string[],
 ): string | null {
-  if (criticalMissing.length === 0 || (!next.health && !next.dashboard.available)) {
+  if (
+    criticalMissing.length === 0 ||
+    (!next.health && !next.dashboard.available)
+  ) {
     return null
   }
 
@@ -722,11 +756,11 @@ function logCapabilities(next: GatewayCapabilities): void {
 async function autoDetectGatewayUrl(): Promise<void> {
   if (process.env.HERMES_API_URL || process.env.CLAUDE_API_URL) return
 
-  const candidates = [
-    'http://127.0.0.1:8642',
+  const candidates = configuredUrlCandidates('HERMES_GATEWAY_CANDIDATES', [
+    DEFAULT_GATEWAY_URL,
     'http://127.0.0.1:8643',
     'http://127.0.0.1:8645',
-  ]
+  ])
 
   for (const candidate of candidates) {
     try {
@@ -752,9 +786,12 @@ async function autoDetectGatewayUrl(): Promise<void> {
 }
 
 async function autoDetectDashboardUrl(): Promise<void> {
-  if (process.env.CLAUDE_DASHBOARD_URL) return
+  if (process.env.HERMES_DASHBOARD_URL || process.env.CLAUDE_DASHBOARD_URL)
+    return
 
-  const candidates = ['http://127.0.0.1:9119']
+  const candidates = configuredUrlCandidates('HERMES_DASHBOARD_CANDIDATES', [
+    DEFAULT_DASHBOARD_URL,
+  ])
   for (const candidate of candidates) {
     try {
       const res = await fetch(`${candidate}/api/status`, {
@@ -860,8 +897,7 @@ export async function probeGateway(options?: {
 }
 
 export async function ensureGatewayProbed(): Promise<GatewayCapabilities> {
-  const isStale =
-    Date.now() - lastProbeAt > effectiveProbeTtl(capabilities)
+  const isStale = Date.now() - lastProbeAt > effectiveProbeTtl(capabilities)
   if (!capabilities.probed || isStale) {
     return probeGateway({ force: isStale })
   }

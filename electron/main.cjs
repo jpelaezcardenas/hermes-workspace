@@ -14,8 +14,8 @@ try {
 }
 
 const APP_PORT = 3847
-const HERMES_GATEWAY_URL = 'http://127.0.0.1:8642/health'
-const HERMES_DASHBOARD_URL = 'http://127.0.0.1:9119/api/status'
+const DEFAULT_HERMES_API_URL = 'http://127.0.0.1:8642'
+const DEFAULT_HERMES_DASHBOARD_URL = 'http://127.0.0.1:9119'
 const HERMES_INSTALL_SCRIPT =
   'curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash -s -- --skip-setup'
 
@@ -24,6 +24,53 @@ let localServer = null
 let localServerPort = APP_PORT
 let localServerReady = false
 let installProcess = null
+
+function normalizeBaseUrl(value, fallback) {
+  const raw = String(value || fallback || '').trim()
+  return raw.replace(/\/+$/, '')
+}
+
+function joinUrl(baseUrl, path) {
+  const base = normalizeBaseUrl(baseUrl, '')
+  const suffix = String(path || '').replace(/^\/+/, '')
+  return `${base}/${suffix}`
+}
+
+function desktopBrowserHost(value) {
+  const raw = String(value || '').trim()
+  if (!raw || raw === '0.0.0.0' || raw === '::') return '127.0.0.1'
+  return raw
+}
+
+function getHermesApiBaseUrl() {
+  return normalizeBaseUrl(
+    process.env.HERMES_API_URL || process.env.CLAUDE_API_URL,
+    DEFAULT_HERMES_API_URL,
+  )
+}
+
+function getHermesDashboardBaseUrl() {
+  return normalizeBaseUrl(
+    process.env.HERMES_DASHBOARD_URL || process.env.CLAUDE_DASHBOARD_URL,
+    DEFAULT_HERMES_DASHBOARD_URL,
+  )
+}
+
+function getHermesGatewayHealthUrl() {
+  return (
+    process.env.HERMES_GATEWAY_HEALTH_URL ||
+    process.env.CLAUDE_GATEWAY_HEALTH_URL ||
+    joinUrl(getHermesApiBaseUrl(), '/health')
+  )
+}
+
+function getHermesDashboardStatusUrl() {
+  return (
+    process.env.HERMES_DASHBOARD_STATUS_URL ||
+    process.env.CLAUDE_DASHBOARD_STATUS_URL ||
+    joinUrl(getHermesDashboardBaseUrl(), '/api/status')
+  )
+}
 
 const gotLock = app.requestSingleInstanceLock()
 if (!gotLock) app.quit()
@@ -162,7 +209,7 @@ function checkHttp(url, timeoutMs = 2500) {
 
 function isHermesInstalled() {
   try {
-    execSync('which hermes || where hermes', {
+    execSync(process.platform === 'win32' ? 'where hermes' : 'which hermes', {
       timeout: 5000,
       stdio: 'ignore',
       shell: true,
@@ -173,26 +220,60 @@ function isHermesInstalled() {
   }
 }
 
+function resolveHermesExecutable() {
+  const candidates = [
+    process.env.HERMES_CLI_BIN,
+    process.platform === 'win32'
+      ? join(__dirname, '..', '.venv-hermes', 'Scripts', 'hermes.exe')
+      : join(__dirname, '..', '.venv-hermes', 'bin', 'hermes'),
+    'hermes',
+  ].filter(Boolean)
+
+  for (const candidate of candidates) {
+    if (candidate === 'hermes' || existsSync(candidate)) return candidate
+  }
+  return 'hermes'
+}
+
 async function getBootstrapStatus() {
   return {
     hermesInstalled: isHermesInstalled(),
-    gatewayReachable: await checkHttp(HERMES_GATEWAY_URL),
-    dashboardReachable: await checkHttp(HERMES_DASHBOARD_URL),
+    gatewayReachable: await checkHttp(getHermesGatewayHealthUrl()),
+    dashboardReachable: await checkHttp(getHermesDashboardStatusUrl()),
     installerRunning: Boolean(installProcess && !installProcess.killed),
     localServerReady,
     localServerPort,
   }
 }
 
-function spawnDetached(command) {
-  const child = spawn('bash', ['-lc', command], {
+function spawnHermesDetached(args, logName) {
+  const hermesBin = resolveHermesExecutable()
+  const logPath =
+    process.platform === 'win32'
+      ? join(app.getPath('userData'), `${logName}.log`)
+      : `/tmp/${logName}.log`
+  const child = spawn(hermesBin, args, {
     detached: true,
     stdio: 'ignore',
     env: {
       ...process.env,
+      PATH:
+        process.platform === 'win32'
+          ? `${join(__dirname, '..', '.venv-hermes', 'Scripts')};${process.env.PATH || ''}`
+          : `${join(__dirname, '..', '.venv-hermes', 'bin')}:${process.env.PATH || ''}`,
       HERMES_WORKSPACE_DESKTOP: '1',
       API_SERVER_ENABLED: process.env.API_SERVER_ENABLED || 'true',
+      HERMES_AUTH_MODE: process.env.HERMES_AUTH_MODE || 'none',
+      P99_AUTH_MODE: process.env.P99_AUTH_MODE || 'none',
+      AGENTIC_OS_PORTAL_URL:
+        process.env.AGENTIC_OS_PORTAL_URL || 'https://app.99pages.uk',
+      AGENTIC_OS_HOST_HOME:
+        process.env.AGENTIC_OS_HOST_HOME ||
+        join(app.getPath('home'), '.agentic-os'),
+      COOKIE_SECURE: process.env.COOKIE_SECURE || '0',
+      HERMES_LOG_FILE: process.env.HERMES_LOG_FILE || logPath,
     },
+    windowsHide: true,
   })
   child.unref()
   return child
@@ -215,8 +296,8 @@ async function installHermesInBackground() {
 }
 
 async function ensureHermesBackend() {
-  const gatewayReachable = await checkHttp(HERMES_GATEWAY_URL)
-  const dashboardReachable = await checkHttp(HERMES_DASHBOARD_URL)
+  const gatewayReachable = await checkHttp(getHermesGatewayHealthUrl())
+  const dashboardReachable = await checkHttp(getHermesDashboardStatusUrl())
 
   if (!isHermesInstalled()) {
     await installHermesInBackground()
@@ -224,26 +305,35 @@ async function ensureHermesBackend() {
   }
 
   if (!gatewayReachable) {
-    spawnDetached('hermes gateway run >/tmp/hermes-workspace-gateway.log 2>&1')
+    spawnHermesDetached(
+      ['gateway', 'run', '--replace', '--accept-hooks'],
+      'hermes-workspace-gateway',
+    )
   }
   if (!dashboardReachable) {
-    spawnDetached(
-      'hermes dashboard --no-open >/tmp/hermes-workspace-dashboard.log 2>&1',
+    spawnHermesDetached(
+      ['dashboard', '--no-open', '--skip-build'],
+      'hermes-workspace-dashboard',
     )
   }
 
   return {
     installed: true,
-    gatewayReachable: await checkHttp(HERMES_GATEWAY_URL, 4000),
-    dashboardReachable: await checkHttp(HERMES_DASHBOARD_URL, 4000),
+    gatewayReachable: await checkHttp(getHermesGatewayHealthUrl(), 4000),
+    dashboardReachable: await checkHttp(getHermesDashboardStatusUrl(), 4000),
   }
 }
 
 function getAppUrl() {
+  const host = desktopBrowserHost(
+    process.env.HERMES_WORKSPACE_BROWSER_HOST ||
+      process.env.HERMES_WORKSPACE_BIND_HOST ||
+      process.env.HOST,
+  )
   if (process.env.NODE_ENV === 'development') {
-    return 'http://127.0.0.1:3002/?desktop=1'
+    return `http://${host}:${process.env.PORT || '3000'}/chat?desktop=1`
   }
-  return `http://127.0.0.1:${localServerPort}/?desktop=1`
+  return `http://${host}:${localServerPort}/chat?desktop=1`
 }
 
 function startLocalServer() {
@@ -266,9 +356,27 @@ function startLocalServer() {
           NODE_ENV: 'production',
           PORT: String(APP_PORT),
           HERMES_WORKSPACE_DESKTOP: '1',
-          HERMES_API_URL: process.env.HERMES_API_URL || 'http://127.0.0.1:8642',
-          HERMES_DASHBOARD_URL:
-            process.env.HERMES_DASHBOARD_URL || 'http://127.0.0.1:9119',
+          HERMES_API_URL: getHermesApiBaseUrl(),
+          HERMES_DASHBOARD_URL: getHermesDashboardBaseUrl(),
+          HERMES_GATEWAY_HEALTH_URL: getHermesGatewayHealthUrl(),
+          HERMES_DASHBOARD_STATUS_URL: getHermesDashboardStatusUrl(),
+          HERMES_WORKSPACE_BIND_HOST:
+            process.env.HERMES_WORKSPACE_BIND_HOST ||
+            process.env.HOST ||
+            '127.0.0.1',
+          HERMES_WORKSPACE_BROWSER_HOST:
+            process.env.HERMES_WORKSPACE_BROWSER_HOST ||
+            desktopBrowserHost(
+              process.env.HERMES_WORKSPACE_BIND_HOST || process.env.HOST,
+            ),
+          HERMES_AUTH_MODE: process.env.HERMES_AUTH_MODE || 'none',
+          P99_AUTH_MODE: process.env.P99_AUTH_MODE || 'none',
+          AGENTIC_OS_PORTAL_URL:
+            process.env.AGENTIC_OS_PORTAL_URL || 'https://app.99pages.uk',
+          AGENTIC_OS_HOST_HOME:
+            process.env.AGENTIC_OS_HOST_HOME ||
+            join(app.getPath('home'), '.agentic-os'),
+          COOKIE_SECURE: process.env.COOKIE_SECURE || '0',
         },
         stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
       },

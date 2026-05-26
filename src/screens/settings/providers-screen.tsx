@@ -21,8 +21,10 @@ import { toast } from '@/components/ui/toast'
 import { getUnavailableReason } from '@/lib/feature-gates'
 import { useFeatureAvailable } from '@/hooks/use-feature-available'
 import {
+  AI_WORKFORCE_PROVIDER_ID,
   getProviderDisplayName,
   getProviderInfo,
+  isAiWorkforceLockedConfig,
   normalizeProviderId,
 } from '@/lib/provider-catalog'
 import { cn } from '@/lib/utils'
@@ -32,11 +34,13 @@ import { cn } from '@/lib/utils'
 async function getConfig(): Promise<Record<string, unknown>> {
   const res = await fetch('/api/claude-config')
   if (!res.ok) throw new Error(`Failed to load config: HTTP ${res.status}`)
-  const data = await res.json() as { config?: Record<string, unknown> }
+  const data = (await res.json()) as { config?: Record<string, unknown> }
   return data.config ?? {}
 }
 
-async function patchConfig(patch: Record<string, unknown>): Promise<Record<string, unknown>> {
+async function patchConfig(
+  patch: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
   const res = await fetch('/api/claude-config', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -767,7 +771,12 @@ function SettingCard(props: {
   )
 }
 
-type ModelProviderOption = 'custom' | 'openrouter' | 'anthropic' | 'openai'
+type ModelProviderOption =
+  | 'ai-workforce'
+  | 'custom'
+  | 'openrouter'
+  | 'anthropic'
+  | 'openai'
 
 type ModelConfigDraft = {
   provider: ModelProviderOption
@@ -781,10 +790,14 @@ type PerformanceDraft = {
 }
 
 const MODEL_PROVIDER_OPTIONS: Array<SelectOption> = [
+  { label: 'AI Workforce', value: AI_WORKFORCE_PROVIDER_ID },
   { label: 'Custom', value: 'custom' },
   { label: 'OpenRouter', value: 'openrouter' },
   { label: 'Anthropic', value: 'anthropic' },
   { label: 'OpenAI', value: 'openai' },
+]
+const WORKFORCE_PROVIDER_OPTIONS: Array<SelectOption> = [
+  { label: 'AI Workforce', value: AI_WORKFORCE_PROVIDER_ID },
 ]
 
 const MODEL_PRESETS = [
@@ -888,6 +901,8 @@ function ModelConfigSection(props: {
   value: ModelConfigDraft
   onChange: (nextValue: ModelConfigDraft) => void
   modelOptions: Array<SelectOption>
+  providerOptions?: Array<SelectOption>
+  readOnly?: boolean
   showPresets?: boolean
   datalistId: string
 }) {
@@ -897,6 +912,8 @@ function ModelConfigSection(props: {
     value,
     onChange,
     modelOptions,
+    providerOptions = MODEL_PROVIDER_OPTIONS,
+    readOnly = false,
     showPresets = false,
     datalistId,
   } = props
@@ -916,6 +933,7 @@ function ModelConfigSection(props: {
           <select
             className="h-10 w-full rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 text-sm text-primary-900 outline-none"
             value={value.provider}
+            disabled={readOnly}
             onChange={(event) => {
               onChange({
                 ...value,
@@ -923,7 +941,7 @@ function ModelConfigSection(props: {
               })
             }}
           >
-            {MODEL_PROVIDER_OPTIONS.map((option) => (
+            {providerOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -940,6 +958,7 @@ function ModelConfigSection(props: {
             list={datalistId}
             placeholder="gpt-4.1, claude-sonnet-4-5, qwen2.5:32b"
             className="border-[var(--theme-border)] bg-[var(--theme-card)] font-mono text-sm"
+            readOnly={readOnly}
             onChange={(event) => {
               onChange({
                 ...value,
@@ -958,6 +977,7 @@ function ModelConfigSection(props: {
           value={value.baseUrl}
           placeholder="http://127.0.0.1:11434/v1"
           className="border-[var(--theme-border)] bg-[var(--theme-card)] font-mono text-sm"
+          readOnly={readOnly}
           onChange={(event) => {
             onChange({
               ...value,
@@ -967,7 +987,7 @@ function ModelConfigSection(props: {
         />
       </label>
 
-      {showPresets ? (
+      {showPresets && !readOnly ? (
         <div className="mt-4 flex flex-wrap gap-2">
           {MODEL_PRESETS.map((preset) => (
             <Button
@@ -1027,6 +1047,7 @@ function ActiveModelCard({
     queryKey: ['claude', 'active-config'],
     queryFn: getConfig,
   })
+  const workforceLocked = isAiWorkforceLockedConfig(configQuery.data)
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -1092,6 +1113,7 @@ function ActiveModelCard({
     setPrimaryConfig(readPrimaryModelConfig(configQuery.data))
     setFallbackConfig(readFallbackModelConfig(configQuery.data))
     setPerformanceConfig(readPerformanceConfig(configQuery.data))
+    if (isAiWorkforceLockedConfig(configQuery.data)) setShowFallback(false)
   }, [configQuery.data])
 
   return (
@@ -1109,7 +1131,9 @@ function ActiveModelCard({
         <Button
           size="sm"
           onClick={() => void saveMutation.mutateAsync()}
-          disabled={configQuery.isPending || saveMutation.isPending}
+          disabled={
+            workforceLocked || configQuery.isPending || saveMutation.isPending
+          }
         >
           {saveMutation.isPending ? 'Saving...' : 'Save'}
         </Button>
@@ -1131,47 +1155,55 @@ function ActiveModelCard({
             value={primaryConfig}
             onChange={setPrimaryConfig}
             modelOptions={modelOptions}
+            providerOptions={
+              workforceLocked
+                ? WORKFORCE_PROVIDER_OPTIONS
+                : MODEL_PROVIDER_OPTIONS
+            }
+            readOnly={workforceLocked}
             showPresets
             datalistId="settings-primary-model-options"
           />
 
-          <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4 shadow-sm">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div className="space-y-1">
-                <h3 className="text-sm font-semibold text-primary-900">
-                  Fallback Model
-                </h3>
-                <p className="text-sm text-primary-600">
-                  Optional secondary model Hermes Agent can use if the primary path
-                  fails.
-                </p>
+          {!workforceLocked ? (
+            <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4 shadow-sm">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold text-primary-900">
+                    Fallback Model
+                  </h3>
+                  <p className="text-sm text-primary-600">
+                    Optional secondary model Hermes Agent can use if the primary
+                    path fails.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="border-[var(--theme-border)] bg-[var(--theme-card)]"
+                  onClick={() => {
+                    setShowFallback((current) => !current)
+                  }}
+                >
+                  {showFallback ? 'Hide Fallback' : 'Show Fallback'}
+                </Button>
               </div>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="border-[var(--theme-border)] bg-[var(--theme-card)]"
-                onClick={() => {
-                  setShowFallback((current) => !current)
-                }}
-              >
-                {showFallback ? 'Hide Fallback' : 'Show Fallback'}
-              </Button>
-            </div>
 
-            {showFallback ? (
-              <div className="mt-4">
-                <ModelConfigSection
-                  title="Fallback Settings"
-                  description="Keep these fields empty if you do not want a fallback model configured."
-                  value={fallbackConfig}
-                  onChange={setFallbackConfig}
-                  modelOptions={modelOptions}
-                  datalistId="settings-fallback-model-options"
-                />
-              </div>
-            ) : null}
-          </section>
+              {showFallback ? (
+                <div className="mt-4">
+                  <ModelConfigSection
+                    title="Fallback Settings"
+                    description="Keep these fields empty if you do not want a fallback model configured."
+                    value={fallbackConfig}
+                    onChange={setFallbackConfig}
+                    modelOptions={modelOptions}
+                    datalistId="settings-fallback-model-options"
+                  />
+                </div>
+              ) : null}
+            </section>
+          ) : null}
 
           <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4 shadow-sm">
             <div className="space-y-1">
@@ -1237,6 +1269,7 @@ function ActiveModelCard({
 
 function ProviderManagementSection(props: {
   embedded: boolean
+  workforceLocked: boolean
   providerSummaries: Array<ProviderSummary>
   modelsQuery: ReturnType<
     typeof useQuery<{
@@ -1252,6 +1285,7 @@ function ProviderManagementSection(props: {
 }) {
   const {
     embedded,
+    workforceLocked,
     providerSummaries,
     modelsQuery,
     deletingId,
@@ -1272,10 +1306,12 @@ function ProviderManagementSection(props: {
             for new providers.
           </p>
         </div>
-        <Button size="sm" onClick={onAddProvider}>
-          <HugeiconsIcon icon={Add01Icon} size={20} strokeWidth={1.5} />
-          Add Provider
-        </Button>
+        {!workforceLocked ? (
+          <Button size="sm" onClick={onAddProvider}>
+            <HugeiconsIcon icon={Add01Icon} size={20} strokeWidth={1.5} />
+            Add Provider
+          </Button>
+        ) : null}
       </header>
 
       <section className="rounded-2xl border border-primary-200 bg-primary-50/80 p-4 shadow-sm md:p-5">
@@ -1304,7 +1340,8 @@ function ProviderManagementSection(props: {
         {modelsQuery.error ? (
           <div className="rounded-xl border border-primary-200 bg-white px-4 py-3">
             <p className="mb-2 text-sm text-primary-700">
-              Unable to load providers right now. Check your Hermes Agent connection.
+              Unable to load providers right now. Check your Hermes Agent
+              connection.
             </p>
             <Button
               variant="outline"
@@ -1363,42 +1400,44 @@ function ProviderManagementSection(props: {
                     </span>
                   </div>
 
-                  <div className="mt-2 flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 gap-1.5"
-                      onClick={function onProviderEdit() {
-                        onEdit(provider)
-                      }}
-                      disabled={isDeleting}
-                      aria-label={`Edit ${provider.name}`}
-                    >
-                      <HugeiconsIcon
-                        icon={Edit01Icon}
-                        size={14}
-                        strokeWidth={1.5}
-                      />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 gap-1.5"
-                      onClick={function onProviderDelete() {
-                        onDelete(provider)
-                      }}
-                      disabled={isDeleting}
-                      aria-label={`Delete ${provider.name}`}
-                    >
-                      <HugeiconsIcon
-                        icon={Delete02Icon}
-                        size={14}
-                        strokeWidth={1.5}
-                      />
-                      {isDeleting ? 'Removing…' : 'Delete'}
-                    </Button>
-                  </div>
+                  {!workforceLocked ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 gap-1.5"
+                        onClick={function onProviderEdit() {
+                          onEdit(provider)
+                        }}
+                        disabled={isDeleting}
+                        aria-label={`Edit ${provider.name}`}
+                      >
+                        <HugeiconsIcon
+                          icon={Edit01Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                        />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 gap-1.5"
+                        onClick={function onProviderDelete() {
+                          onDelete(provider)
+                        }}
+                        disabled={isDeleting}
+                        aria-label={`Delete ${provider.name}`}
+                      >
+                        <HugeiconsIcon
+                          icon={Delete02Icon}
+                          size={14}
+                          strokeWidth={1.5}
+                        />
+                        {isDeleting ? 'Removing…' : 'Delete'}
+                      </Button>
+                    </div>
+                  ) : null}
                 </article>
               )
             })}
@@ -1443,6 +1482,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
     retry: 1,
     enabled: configAvailable,
   })
+  const workforceLocked = isAiWorkforceLockedConfig(configQuery.data)
 
   const saveMutation = useMutation({
     mutationFn: async ({ path, value }: SaveSettingPayload) => {
@@ -1492,6 +1532,26 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
       )
     },
     [modelsQuery.data?.models],
+  )
+
+  const visibleProviderSummaries = useMemo(
+    function resolveVisibleProviderSummaries() {
+      if (!workforceLocked) return providerSummaries
+      const existing = providerSummaries.find(
+        (provider) => provider.id === AI_WORKFORCE_PROVIDER_ID,
+      )
+      return [
+        existing ?? {
+          id: AI_WORKFORCE_PROVIDER_ID,
+          name: getProviderDisplayName(AI_WORKFORCE_PROVIDER_ID),
+          description:
+            '99Pages managed routing through your Magic Link account.',
+          modelCount: 1,
+          status: 'active' as const,
+        },
+      ]
+    },
+    [providerSummaries, workforceLocked],
   )
 
   const searchQuery = search.trim().toLowerCase()
@@ -1656,7 +1716,7 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
               {TAB_ORDER.map((tab) => {
                 const count =
                   tab.id === 'providers'
-                    ? providerSummaries.length
+                    ? visibleProviderSummaries.length
                     : settingsByTab[tab.id].length
                 return (
                   <TabsTrigger
@@ -1677,10 +1737,12 @@ export function ProvidersScreen({ embedded = false }: ProvidersScreenProps) {
               <ActiveModelCard modelOptions={modelOptions} />
               <ProviderManagementSection
                 embedded={embedded}
-                providerSummaries={providerSummaries}
+                workforceLocked={workforceLocked}
+                providerSummaries={visibleProviderSummaries}
                 modelsQuery={modelsQuery}
                 deletingId={deletingId}
                 onAddProvider={() => {
+                  if (workforceLocked) return
                   setEditingProvider(null)
                   setWizardOpen(true)
                 }}

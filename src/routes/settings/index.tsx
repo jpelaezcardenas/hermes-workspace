@@ -21,7 +21,7 @@ import type { LoaderStyle } from '@/hooks/use-chat-settings'
 import type { BrailleSpinnerPreset } from '@/components/ui/braille-spinner'
 import type { ThemeId } from '@/lib/theme'
 import type { SettingsNavId } from '@/components/settings/settings-sidebar'
-import type {LocaleId} from '@/lib/i18n';
+import type { LocaleId } from '@/lib/i18n'
 import { GROQ_STT_MODELS, STT_PROVIDER_OPTIONS } from '@/lib/stt-config'
 import {
   SETTINGS_NAV_ITEMS,
@@ -32,9 +32,13 @@ import { usePageTitle } from '@/hooks/use-page-title'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { useSettings } from '@/hooks/use-settings'
-import { LOCALE_LABELS,  getLocale, setLocale } from '@/lib/i18n'
+import { LOCALE_LABELS, getLocale, setLocale } from '@/lib/i18n'
 import { THEMES, getTheme, isDarkTheme, setTheme } from '@/lib/theme'
 import { cn } from '@/lib/utils'
+import {
+  AI_WORKFORCE_PROVIDER_ID,
+  isAiWorkforceLockedConfig,
+} from '@/lib/provider-catalog'
 import {
   getChatProfileDisplayName,
   useChatSettingsStore,
@@ -163,7 +167,7 @@ const THEME_PREVIEWS: Record<
     accent: '#b98a44',
     text: '#1a1f26',
   },
-  'matrix': {
+  matrix: {
     bg: '#020804',
     panel: '#07130A',
     border: 'rgba(0,255,65,0.28)',
@@ -184,7 +188,7 @@ const THEME_PREVIEWS: Record<
     accent: '#3b82f6',
     text: '#1F2328',
   },
-  'scifi': {
+  scifi: {
     bg: '#060b18',
     panel: '#0a1628',
     border: '#1a3a5c',
@@ -1022,17 +1026,22 @@ function resolveCustomBaseUrlFromConfig(
   config: Record<string, unknown>,
   activeProvider: string,
 ): string {
-  const providersConfig = config.providers as Record<string, unknown> | undefined
+  const providersConfig = config.providers as
+    | Record<string, unknown>
+    | undefined
   const customBlock = (providersConfig?.manifest || providersConfig?.custom) as
     | Record<string, unknown>
     | undefined
-  let url = typeof customBlock?.base_url === 'string' ? customBlock.base_url.trim() : ''
+  let url =
+    typeof customBlock?.base_url === 'string' ? customBlock.base_url.trim() : ''
   if (!url && Array.isArray(config.custom_providers)) {
     const aid = activeProvider.trim().toLowerCase()
     for (const e of config.custom_providers) {
       if (!e || typeof e !== 'object' || Array.isArray(e)) continue
       const rec = e as Record<string, unknown>
-      const name = String(rec.name ?? '').trim().toLowerCase()
+      const name = String(rec.name ?? '')
+        .trim()
+        .toLowerCase()
       if (name && name === aid && typeof rec.base_url === 'string') {
         url = rec.base_url.trim()
         break
@@ -1063,9 +1072,7 @@ function readFallbackInputsFromConfig(config: Record<string, unknown>): {
   }
 }
 
-function normalizeCustomProviderEntry(
-  entry: Record<string, unknown>,
-): {
+function normalizeCustomProviderEntry(entry: Record<string, unknown>): {
   name: string
   title: string
   base_url: string
@@ -1074,9 +1081,11 @@ function normalizeCustomProviderEntry(
 } {
   const name = typeof entry.name === 'string' ? entry.name.trim() : ''
   const title = typeof entry.title === 'string' ? entry.title.trim() : ''
-  const base_url = typeof entry.base_url === 'string' ? entry.base_url.trim() : ''
+  const base_url =
+    typeof entry.base_url === 'string' ? entry.base_url.trim() : ''
   const api_key = typeof entry.api_key === 'string' ? entry.api_key : undefined
-  const api_mode = typeof entry.api_mode === 'string' ? entry.api_mode : undefined
+  const api_mode =
+    typeof entry.api_mode === 'string' ? entry.api_mode : undefined
   return { name, title, base_url, api_key, api_mode }
 }
 
@@ -1103,11 +1112,15 @@ function entryCoveredByCustomProviderList(
 }
 
 function readManifestBlockBaseUrl(config: Record<string, unknown>): string {
-  const providersConfig = config.providers as Record<string, unknown> | undefined
+  const providersConfig = config.providers as
+    | Record<string, unknown>
+    | undefined
   const customBlock = (providersConfig?.manifest || providersConfig?.custom) as
     | Record<string, unknown>
     | undefined
-  return typeof customBlock?.base_url === 'string' ? customBlock.base_url.trim() : ''
+  return typeof customBlock?.base_url === 'string'
+    ? customBlock.base_url.trim()
+    : ''
 }
 
 function deriveCustomProviderNameFromBaseUrl(url: string): string {
@@ -1123,7 +1136,9 @@ function deriveCustomProviderNameFromBaseUrl(url: string): string {
 /** e.g. Qwen3.6.Eclipse from model filename + URL hostname first label */
 function suggestCustomProviderTitle(model: string, baseUrl: string): string {
   let modelPart = (model || '').trim()
-  const lastSeg = modelPart.includes('/') ? modelPart.split('/').pop() || modelPart : modelPart
+  const lastSeg = modelPart.includes('/')
+    ? modelPart.split('/').pop() || modelPart
+    : modelPart
   modelPart = (lastSeg || 'model').replace(/\.gguf$/i, '')
   const dashIdx = modelPart.indexOf('-')
   if (dashIdx > 0) modelPart = modelPart.slice(0, dashIdx)
@@ -1161,7 +1176,11 @@ function mergeModelForManifestSave(
   modelInputTrimmed: string,
 ): Record<string, unknown> {
   const existing = config.model
-  if (typeof existing === 'object' && existing !== null && !Array.isArray(existing)) {
+  if (
+    typeof existing === 'object' &&
+    existing !== null &&
+    !Array.isArray(existing)
+  ) {
     const o = { ...(existing as Record<string, unknown>) }
     o.provider = 'manifest'
     if (typeof o.default !== 'string' || !o.default.trim()) {
@@ -1362,7 +1381,9 @@ function ClaudeConfigSection({
     data.config,
     data.activeProvider,
   )
-  const customProviderCatalogEntry = data.providers.find((p) => p.id === 'custom')
+  const customProviderCatalogEntry = data.providers.find(
+    (p) => p.id === 'custom',
+  )
   const customApiKeyConfigured = Boolean(customProviderCatalogEntry?.configured)
   const customEndpointConfigured =
     customApiKeyConfigured || Boolean(resolvedCustomBaseUrl)
@@ -1385,7 +1406,11 @@ function ClaudeConfigSection({
 
   const extraManifestNotInList =
     manifestBlockOnlyUrl &&
-    !entryCoveredByCustomProviderList('', manifestBlockOnlyUrl, customProviders) &&
+    !entryCoveredByCustomProviderList(
+      '',
+      manifestBlockOnlyUrl,
+      customProviders,
+    ) &&
     urlNormForDedupe(manifestBlockOnlyUrl) !==
       urlNormForDedupe(primaryConfigBaseUrl || '') &&
     !(
@@ -1404,11 +1429,15 @@ function ClaudeConfigSection({
     const n = name.trim()
     const u = base_url.trim()
     if (!n || !u) {
-      setSaveMessage('Provider id and base URL are both required to save a row.')
+      setSaveMessage(
+        'Provider id and base URL are both required to save a row.',
+      )
       setTimeout(() => setSaveMessage(null), 4000)
       return
     }
-    const others = customProviders.filter((e) => String(e.name ?? '').trim() !== n)
+    const others = customProviders.filter(
+      (e) => String(e.name ?? '').trim() !== n,
+    )
     const prev = customProviders.find((e) => String(e.name ?? '').trim() === n)
     const api_mode =
       prev && typeof prev.api_mode === 'string' && prev.api_mode
@@ -1443,7 +1472,9 @@ function ClaudeConfigSection({
     const title = addCpTitle.trim()
     const url = addCpBaseUrl.trim()
     if (!title) {
-      setSaveMessage('Add a title so you can recognize this endpoint (e.g. Qwen3.6.Eclipse).')
+      setSaveMessage(
+        'Add a title so you can recognize this endpoint (e.g. Qwen3.6.Eclipse).',
+      )
       setTimeout(() => setSaveMessage(null), 4000)
       return
     }
@@ -1465,7 +1496,9 @@ function ClaudeConfigSection({
 
   function saveCurrentToCustomProvidersList() {
     if (!providerInput.trim() || !baseUrlInput.trim()) {
-      setSaveMessage('Enter both provider and base URL in Model & Provider, then try again.')
+      setSaveMessage(
+        'Enter both provider and base URL in Model & Provider, then try again.',
+      )
       setTimeout(() => setSaveMessage(null), 4000)
       return
     }
@@ -1495,512 +1528,627 @@ function ClaudeConfigSection({
   const sttProvider = (sttConfig.provider as string) || 'local'
   const sttLocal = asRecord(sttConfig.local)
   const sttGroq = asRecord(sttConfig.groq)
+  const workforceLocked = isAiWorkforceLockedConfig(data.config)
 
   const manifestBaseUrlOnly = readManifestBlockBaseUrl(data.config)
 
-  const renderClaudeOverview = () => (
-    <>
-      <SettingsSection
-        title="Model & Provider"
-        description="Configure the default AI model for Hermes Agent."
-        icon={SourceCodeSquareIcon}
-      >
-        <SettingsRow
-          label="Provider"
-          description="Select the inference provider."
+  const renderClaudeOverview = () => {
+    if (workforceLocked) {
+      return (
+        <SettingsSection
+          title="AI Workforce"
+          description="This installation is managed by 99Pages Magic Link."
+          icon={SourceCodeSquareIcon}
         >
-          <div className="flex w-full max-w-sm gap-2">
-            {availableProviders.length > 0 ? (
-              <select
-                value={providerInput}
-                onChange={(e) => {
-                  const newProvider = e.target.value
-                  setProviderInput(newProvider)
-                  setModelInput('')
-                  void fetchModelsForProvider(newProvider)
-                }}
-                className={selectClassName}
-              >
-                {availableProviders.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.label}
-                    {p.authenticated ? ' ✓' : ''}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <Input
-                value={providerInput}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setProviderInput(e.target.value)
-                }
-                placeholder="e.g. ollama, anthropic, openai-codex"
-                className="flex-1"
-              />
-            )}
-          </div>
-        </SettingsRow>
-        <SettingsRow
-          label="Model"
-          description="The model Claude uses for conversations."
-        >
-          <div className="flex w-full max-w-sm gap-2">
-            {availableModels.length > 0 ? (
-              <select
-                value={modelInput}
-                onChange={(e) => setModelInput(e.target.value)}
-                className={`${selectClassName} font-mono`}
-              >
-                {!availableModels.some((m) => m.id === modelInput) &&
-                  modelInput && (
-                    <option value={modelInput}>{modelInput} (current)</option>
-                  )}
-                {availableModels.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.id}
-                    {m.description ? ` — ${m.description}` : ''}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <Input
-                value={modelInput}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setModelInput(e.target.value)
-                }
-                placeholder={
-                  loadingModels ? 'Loading models...' : 'e.g. qwen3.5:35b'
-                }
-                className="flex-1 font-mono"
-              />
-            )}
-          </div>
-        </SettingsRow>
-        <SettingsRow
-          label="Base URL"
-          description="For local providers (Ollama, LM Studio, MLX). Leave blank for cloud."
-        >
-          <div className="flex w-full max-w-sm gap-2">
-            <Input
-              value={baseUrlInput}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setBaseUrlInput(e.target.value)
-              }
-              placeholder="e.g. http://localhost:11434/v1"
-              className="flex-1 font-mono text-sm"
-            />
-          </div>
-        </SettingsRow>
+          <SettingsRow
+            label="Provider"
+            description="Provider selection is locked for customer installs."
+          >
+            <span className="font-mono text-sm text-primary-700">
+              {AI_WORKFORCE_PROVIDER_ID}
+            </span>
+          </SettingsRow>
+          <SettingsRow
+            label="Route"
+            description="Model routing is refreshed through Magic Link."
+          >
+            <span className="font-mono text-sm text-primary-700">
+              {modelInput || '99pages/fast'}
+            </span>
+          </SettingsRow>
+          <SettingsRow
+            label="Endpoint"
+            description="Requests are routed through 99Pages AI Workforce."
+          >
+            <span className="max-w-sm break-all font-mono text-sm text-primary-700">
+              {baseUrlInput || 'https://app.99pages.uk/ai/v1'}
+            </span>
+          </SettingsRow>
+        </SettingsSection>
+      )
+    }
 
-        <div className="rounded-xl border border-primary-200 bg-white/80 px-3 py-3">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-0.5">
-              <p className="text-sm font-medium text-primary-900">
-                Fallback model (optional)
-              </p>
-              <p className="text-xs text-primary-600">
-                Used only if the primary model fails. Keep empty to disable — avoids mixing this
-                up with your main provider (for example OpenRouter only here, local primary above).
-              </p>
+    return (
+      <>
+        <SettingsSection
+          title="Model & Provider"
+          description="Configure the default AI model for Hermes Agent."
+          icon={SourceCodeSquareIcon}
+        >
+          <SettingsRow
+            label="Provider"
+            description="Select the inference provider."
+          >
+            <div className="flex w-full max-w-sm gap-2">
+              {availableProviders.length > 0 ? (
+                <select
+                  value={providerInput}
+                  onChange={(e) => {
+                    const newProvider = e.target.value
+                    setProviderInput(newProvider)
+                    setModelInput('')
+                    void fetchModelsForProvider(newProvider)
+                  }}
+                  className={selectClassName}
+                >
+                  {availableProviders.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}
+                      {p.authenticated ? ' ✓' : ''}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  value={providerInput}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setProviderInput(e.target.value)
+                  }
+                  placeholder="e.g. ollama, anthropic, openai-codex"
+                  className="flex-1"
+                />
+              )}
             </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              className="shrink-0"
-              onClick={() => setShowFallbackRow((v) => !v)}
-            >
-              {showFallbackRow ? 'Hide fallback fields' : 'Show fallback fields'}
-            </Button>
-          </div>
-          {showFallbackRow ? (
-            <div className="mt-3 space-y-3 border-t border-primary-200 pt-3">
-              <div className="grid gap-3 md:grid-cols-2">
-                <label className="space-y-1">
-                  <span className="text-xs font-medium text-primary-600">Fallback provider</span>
+          </SettingsRow>
+          <SettingsRow
+            label="Model"
+            description="The model Claude uses for conversations."
+          >
+            <div className="flex w-full max-w-sm gap-2">
+              {availableModels.length > 0 ? (
+                <select
+                  value={modelInput}
+                  onChange={(e) => setModelInput(e.target.value)}
+                  className={`${selectClassName} font-mono`}
+                >
+                  {!availableModels.some((m) => m.id === modelInput) &&
+                    modelInput && (
+                      <option value={modelInput}>{modelInput} (current)</option>
+                    )}
+                  {availableModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.id}
+                      {m.description ? ` — ${m.description}` : ''}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  value={modelInput}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setModelInput(e.target.value)
+                  }
+                  placeholder={
+                    loadingModels ? 'Loading models...' : 'e.g. qwen3.5:35b'
+                  }
+                  className="flex-1 font-mono"
+                />
+              )}
+            </div>
+          </SettingsRow>
+          <SettingsRow
+            label="Base URL"
+            description="For local providers (Ollama, LM Studio, MLX). Leave blank for cloud."
+          >
+            <div className="flex w-full max-w-sm gap-2">
+              <Input
+                value={baseUrlInput}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setBaseUrlInput(e.target.value)
+                }
+                placeholder="e.g. http://localhost:11434/v1"
+                className="flex-1 font-mono text-sm"
+              />
+            </div>
+          </SettingsRow>
+
+          <div className="rounded-xl border border-primary-200 bg-white/80 px-3 py-3">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium text-primary-900">
+                  Fallback model (optional)
+                </p>
+                <p className="text-xs text-primary-600">
+                  Used only if the primary model fails. Keep empty to disable —
+                  avoids mixing this up with your main provider (for example
+                  OpenRouter only here, local primary above).
+                </p>
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="shrink-0"
+                onClick={() => setShowFallbackRow((v) => !v)}
+              >
+                {showFallbackRow
+                  ? 'Hide fallback fields'
+                  : 'Show fallback fields'}
+              </Button>
+            </div>
+            {showFallbackRow ? (
+              <div className="mt-3 space-y-3 border-t border-primary-200 pt-3">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <label className="space-y-1">
+                    <span className="text-xs font-medium text-primary-600">
+                      Fallback provider
+                    </span>
+                    <Input
+                      value={fallbackProviderInput}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFallbackProviderInput(e.target.value)
+                      }
+                      placeholder="e.g. openrouter"
+                      className="font-mono text-sm"
+                    />
+                  </label>
+                  <label className="space-y-1">
+                    <span className="text-xs font-medium text-primary-600">
+                      Fallback model id
+                    </span>
+                    <Input
+                      value={fallbackModelInput}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFallbackModelInput(e.target.value)
+                      }
+                      placeholder="provider/model or model id"
+                      className="font-mono text-sm"
+                    />
+                  </label>
+                </div>
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-primary-600">
+                    Fallback base URL
+                  </span>
                   <Input
-                    value={fallbackProviderInput}
+                    value={fallbackBaseUrlInput}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setFallbackProviderInput(e.target.value)
+                      setFallbackBaseUrlInput(e.target.value)
                     }
-                    placeholder="e.g. openrouter"
-                    className="font-mono text-sm"
-                  />
-                </label>
-                <label className="space-y-1">
-                  <span className="text-xs font-medium text-primary-600">Fallback model id</span>
-                  <Input
-                    value={fallbackModelInput}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setFallbackModelInput(e.target.value)
-                    }
-                    placeholder="provider/model or model id"
+                    placeholder="Leave blank for hosted APIs"
                     className="font-mono text-sm"
                   />
                 </label>
               </div>
-              <label className="block space-y-1">
-                <span className="text-xs font-medium text-primary-600">Fallback base URL</span>
-                <Input
-                  value={fallbackBaseUrlInput}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFallbackBaseUrlInput(e.target.value)
+            ) : null}
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <Button
+              size="sm"
+              disabled={saving}
+              onClick={() => {
+                const hasFallback =
+                  fallbackProviderInput.trim() ||
+                  fallbackModelInput.trim() ||
+                  fallbackBaseUrlInput.trim()
+                const configUpdate: Record<string, unknown> = {
+                  model: modelInput.trim(),
+                  provider: providerInput.trim(),
+                  base_url: baseUrlInput.trim() || null,
+                }
+                if (hasFallback) {
+                  configUpdate.fallback_model = {
+                    provider: fallbackProviderInput.trim(),
+                    model: fallbackModelInput.trim(),
+                    base_url: fallbackBaseUrlInput.trim() || null,
                   }
-                  placeholder="Leave blank for hosted APIs"
+                } else {
+                  configUpdate.fallback_model = null
+                }
+                void saveConfig({ config: configUpdate })
+              }}
+            >
+              {saving ? 'Saving...' : 'Save Model'}
+            </Button>
+          </div>
+        </SettingsSection>
+
+        <SettingsSection
+          title="API Keys"
+          description="Manage provider API keys stored in ~/.hermes/.env"
+          icon={CloudIcon}
+        >
+          {data.providers
+            .filter((p) => p.envKeys.length > 0 && p.id !== 'custom')
+            .map((provider) => (
+              <SettingsRow
+                key={provider.id}
+                label={provider.name}
+                description={
+                  provider.configured ? '✅ Configured' : '❌ Not configured'
+                }
+              >
+                <div className="flex w-full max-w-sm items-center gap-2">
+                  {provider.envKeys.map((envKey) => (
+                    <div key={envKey} className="flex-1">
+                      {editingKey === envKey ? (
+                        <div className="flex gap-2">
+                          <Input
+                            type="password"
+                            value={keyInput}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) => setKeyInput(e.target.value)}
+                            placeholder={`Enter ${envKey}`}
+                            className="flex-1"
+                          />
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              void saveConfig({ env: { [envKey]: keyInput } })
+                              setEditingKey(null)
+                              setKeyInput('')
+                            }}
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              setEditingKey(null)
+                              setKeyInput('')
+                            }}
+                          >
+                            ✕
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-xs font-mono"
+                            style={{ color: 'var(--theme-muted)' }}
+                          >
+                            {provider.maskedKeys[envKey] || 'Not set'}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              setEditingKey(envKey)
+                              setKeyInput('')
+                            }}
+                          >
+                            {provider.configured ? 'Change' : 'Add'}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </SettingsRow>
+            ))}
+        </SettingsSection>
+
+        <SettingsSection
+          title="Memory"
+          description="Configure Hermes Agent memory and user profiles."
+          icon={UserIcon}
+        >
+          <SettingsRow
+            label="Memory enabled"
+            description="Store and recall memories across sessions."
+          >
+            <Switch
+              checked={memoryConfig.memory_enabled !== false}
+              onCheckedChange={(checked: boolean) =>
+                void saveConfig({
+                  config: { memory: { memory_enabled: checked } },
+                })
+              }
+            />
+          </SettingsRow>
+          <SettingsRow
+            label="User profile"
+            description="Remember user preferences and context."
+          >
+            <Switch
+              checked={memoryConfig.user_profile_enabled !== false}
+              onCheckedChange={(checked: boolean) =>
+                void saveConfig({
+                  config: { memory: { user_profile_enabled: checked } },
+                })
+              }
+            />
+          </SettingsRow>
+        </SettingsSection>
+
+        <SettingsSection
+          title="Terminal"
+          description="Shell execution settings."
+          icon={SourceCodeSquareIcon}
+        >
+          <SettingsRow
+            label="Backend"
+            description="Terminal execution backend."
+          >
+            <span
+              className="text-sm font-mono"
+              style={{ color: 'var(--theme-muted)' }}
+            >
+              {(terminalConfig.backend as string) || 'local'}
+            </span>
+          </SettingsRow>
+          <SettingsRow
+            label="Timeout"
+            description="Max seconds for terminal commands."
+          >
+            <Input
+              type="number"
+              min={10}
+              value={readNumber(terminalConfig.timeout, 180)}
+              onChange={(e) =>
+                saveNumberField('terminal', 'timeout', e.target.value, 180)
+              }
+              className="md:w-28"
+            />
+          </SettingsRow>
+        </SettingsSection>
+
+        <SettingsSection
+          title="Custom Providers"
+          description="Configure a custom OpenAI-compatible endpoint. Add named rows (with a title like Qwen3.6.Eclipse) to custom_providers; optional manifest env key and URL below only apply if you use that path."
+          icon={CloudIcon}
+        >
+          <div className="space-y-4 rounded-xl border border-primary-200 bg-primary-50/80 p-4">
+            <div>
+              <p className="text-sm font-medium text-primary-900">
+                Add custom provider
+              </p>
+              <p className="mt-1 text-xs text-primary-600">
+                <span className="font-medium">Title</span> is for your list only
+                (e.g. <span className="font-mono">Qwen3.6.Eclipse</span> = model
+                + host). <span className="font-medium">Provider id</span> is the
+                config name Hermes uses — leave blank to derive a safe id from
+                the title. Optional row API key is stored on this provider
+                entry, not in .env.
+              </p>
+            </div>
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="space-y-1 md:col-span-2">
+                <span className="text-xs font-medium text-primary-600">
+                  Title
+                </span>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Input
+                    value={addCpTitle}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setAddCpTitle(e.target.value)
+                    }
+                    placeholder="e.g. Qwen3.6.Eclipse"
+                    className="font-mono text-sm sm:flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="shrink-0"
+                    onClick={() =>
+                      setAddCpTitle(
+                        suggestCustomProviderTitle(
+                          modelInput,
+                          addCpBaseUrl.trim() || baseUrlInput,
+                        ),
+                      )
+                    }
+                  >
+                    Suggest from model + URL
+                  </Button>
+                </div>
+              </label>
+              <label className="space-y-1">
+                <span className="text-xs font-medium text-primary-600">
+                  Provider id (optional)
+                </span>
+                <Input
+                  value={addCpProviderId}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setAddCpProviderId(e.target.value)
+                  }
+                  placeholder="e.g. ECLIPSE"
+                  className="font-mono text-sm"
+                />
+              </label>
+              <label className="space-y-1">
+                <span className="text-xs font-medium text-primary-600">
+                  Base URL
+                </span>
+                <Input
+                  value={addCpBaseUrl}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setAddCpBaseUrl(e.target.value)
+                  }
+                  placeholder="http://host:11434/v1"
+                  className="font-mono text-sm"
+                />
+              </label>
+              <div className="md:col-span-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto px-0 py-0 text-xs text-primary-700 underline"
+                  onClick={() => {
+                    setAddCpBaseUrl(baseUrlInput.trim())
+                    setAddCpTitle((t) =>
+                      t.trim()
+                        ? t
+                        : suggestCustomProviderTitle(
+                            modelInput,
+                            baseUrlInput.trim(),
+                          ),
+                    )
+                  }}
+                >
+                  Prefill from Model &amp; Provider above
+                </Button>
+              </div>
+              <label className="space-y-1 md:col-span-2">
+                <span className="text-xs font-medium text-primary-600">
+                  Optional API key (this row only)
+                </span>
+                <Input
+                  type="password"
+                  value={addCpYamlKey}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setAddCpYamlKey(e.target.value)
+                  }
+                  placeholder="Leave blank if the server needs no key"
                   className="font-mono text-sm"
                 />
               </label>
             </div>
-          ) : null}
-        </div>
-
-        <div className="flex justify-end pt-2">
-          <Button
-            size="sm"
-            disabled={saving}
-            onClick={() => {
-              const hasFallback =
-                fallbackProviderInput.trim() ||
-                fallbackModelInput.trim() ||
-                fallbackBaseUrlInput.trim()
-              const configUpdate: Record<string, unknown> = {
-                model: modelInput.trim(),
-                provider: providerInput.trim(),
-                base_url: baseUrlInput.trim() || null,
-              }
-              if (hasFallback) {
-                configUpdate.fallback_model = {
-                  provider: fallbackProviderInput.trim(),
-                  model: fallbackModelInput.trim(),
-                  base_url: fallbackBaseUrlInput.trim() || null,
-                }
-              } else {
-                configUpdate.fallback_model = null
-              }
-              void saveConfig({ config: configUpdate })
-            }}
-          >
-            {saving ? 'Saving...' : 'Save Model'}
-          </Button>
-        </div>
-      </SettingsSection>
-
-      <SettingsSection
-        title="API Keys"
-        description="Manage provider API keys stored in ~/.hermes/.env"
-        icon={CloudIcon}
-      >
-        {data.providers
-          .filter((p) => p.envKeys.length > 0 && p.id !== 'custom')
-          .map((provider) => (
-            <SettingsRow
-              key={provider.id}
-              label={provider.name}
-              description={
-                provider.configured ? '✅ Configured' : '❌ Not configured'
-              }
-            >
-              <div className="flex w-full max-w-sm items-center gap-2">
-                {provider.envKeys.map((envKey) => (
-                  <div key={envKey} className="flex-1">
-                    {editingKey === envKey ? (
-                      <div className="flex gap-2">
-                        <Input
-                          type="password"
-                          value={keyInput}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setKeyInput(e.target.value)
-                          }
-                          placeholder={`Enter ${envKey}`}
-                          className="flex-1"
-                        />
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            void saveConfig({ env: { [envKey]: keyInput } })
-                            setEditingKey(null)
-                            setKeyInput('')
-                          }}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => {
-                            setEditingKey(null)
-                            setKeyInput('')
-                          }}
-                        >
-                          ✕
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="text-xs font-mono"
-                          style={{ color: 'var(--theme-muted)' }}
-                        >
-                          {provider.maskedKeys[envKey] || 'Not set'}
-                        </span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => {
-                            setEditingKey(envKey)
-                            setKeyInput('')
-                          }}
-                        >
-                          {provider.configured ? 'Change' : 'Add'}
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </SettingsRow>
-          ))}
-      </SettingsSection>
-
-      <SettingsSection
-        title="Memory"
-        description="Configure Hermes Agent memory and user profiles."
-        icon={UserIcon}
-      >
-        <SettingsRow
-          label="Memory enabled"
-          description="Store and recall memories across sessions."
-        >
-          <Switch
-            checked={memoryConfig.memory_enabled !== false}
-            onCheckedChange={(checked: boolean) =>
-              void saveConfig({
-                config: { memory: { memory_enabled: checked } },
-              })
-            }
-          />
-        </SettingsRow>
-        <SettingsRow
-          label="User profile"
-          description="Remember user preferences and context."
-        >
-          <Switch
-            checked={memoryConfig.user_profile_enabled !== false}
-            onCheckedChange={(checked: boolean) =>
-              void saveConfig({
-                config: { memory: { user_profile_enabled: checked } },
-              })
-            }
-          />
-        </SettingsRow>
-      </SettingsSection>
-
-      <SettingsSection
-        title="Terminal"
-        description="Shell execution settings."
-        icon={SourceCodeSquareIcon}
-      >
-        <SettingsRow label="Backend" description="Terminal execution backend.">
-          <span
-            className="text-sm font-mono"
-            style={{ color: 'var(--theme-muted)' }}
-          >
-            {(terminalConfig.backend as string) || 'local'}
-          </span>
-        </SettingsRow>
-        <SettingsRow
-          label="Timeout"
-          description="Max seconds for terminal commands."
-        >
-          <Input
-            type="number"
-            min={10}
-            value={readNumber(terminalConfig.timeout, 180)}
-            onChange={(e) =>
-              saveNumberField('terminal', 'timeout', e.target.value, 180)
-            }
-            className="md:w-28"
-          />
-        </SettingsRow>
-      </SettingsSection>
-
-      <SettingsSection
-        title="Custom Providers"
-        description="Configure a custom OpenAI-compatible endpoint. Add named rows (with a title like Qwen3.6.Eclipse) to custom_providers; optional manifest env key and URL below only apply if you use that path."
-        icon={CloudIcon}
-      >
-        <div className="space-y-4 rounded-xl border border-primary-200 bg-primary-50/80 p-4">
-          <div>
-            <p className="text-sm font-medium text-primary-900">Add custom provider</p>
-            <p className="mt-1 text-xs text-primary-600">
-              <span className="font-medium">Title</span> is for your list only (e.g.{' '}
-              <span className="font-mono">Qwen3.6.Eclipse</span> = model + host).{' '}
-              <span className="font-medium">Provider id</span> is the config name Hermes uses — leave
-              blank to derive a safe id from the title. Optional row API key is stored on this
-              provider entry, not in .env.
-            </p>
-          </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            <label className="space-y-1 md:col-span-2">
-              <span className="text-xs font-medium text-primary-600">Title</span>
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <Input
-                  value={addCpTitle}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setAddCpTitle(e.target.value)
-                  }
-                  placeholder="e.g. Qwen3.6.Eclipse"
-                  className="font-mono text-sm sm:flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="shrink-0"
-                  onClick={() =>
-                    setAddCpTitle(
-                      suggestCustomProviderTitle(
-                        modelInput,
-                        addCpBaseUrl.trim() || baseUrlInput,
-                      ),
-                    )
-                  }
-                >
-                  Suggest from model + URL
-                </Button>
-              </div>
-            </label>
-            <label className="space-y-1">
-              <span className="text-xs font-medium text-primary-600">Provider id (optional)</span>
-              <Input
-                value={addCpProviderId}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setAddCpProviderId(e.target.value)
-                }
-                placeholder="e.g. ECLIPSE"
-                className="font-mono text-sm"
-              />
-            </label>
-            <label className="space-y-1">
-              <span className="text-xs font-medium text-primary-600">Base URL</span>
-              <Input
-                value={addCpBaseUrl}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setAddCpBaseUrl(e.target.value)
-                }
-                placeholder="http://host:11434/v1"
-                className="font-mono text-sm"
-              />
-            </label>
-            <div className="md:col-span-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-auto px-0 py-0 text-xs text-primary-700 underline"
-                onClick={() => {
-                  setAddCpBaseUrl(baseUrlInput.trim())
-                  setAddCpTitle((t) =>
-                    t.trim()
-                      ? t
-                      : suggestCustomProviderTitle(modelInput, baseUrlInput.trim()),
-                  )
-                }}
-              >
-                Prefill from Model &amp; Provider above
-              </Button>
-            </div>
-            <label className="space-y-1 md:col-span-2">
-              <span className="text-xs font-medium text-primary-600">
-                Optional API key (this row only)
-              </span>
-              <Input
-                type="password"
-                value={addCpYamlKey}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setAddCpYamlKey(e.target.value)
-                }
-                placeholder="Leave blank if the server needs no key"
-                className="font-mono text-sm"
-              />
-            </label>
-          </div>
-          <Button
-            type="button"
-            size="sm"
-            disabled={saving}
-            onClick={() => submitAddCustomProviderForm()}
-          >
-            Add to custom providers list
-          </Button>
-        </div>
-
-        <div className="overflow-x-auto rounded-xl border border-primary-200 bg-white/90">
-          <div className="flex flex-col gap-2 border-b border-primary-200 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-primary-700">
-              <span className="font-medium text-primary-900">Saved &amp; detected endpoints</span>
-              <span className="text-primary-600">
-                {' '}
-                (
-                {customProviders.length +
-                  (extraPrimaryNotInList ? 1 : 0) +
-                  (extraManifestNotInList ? 1 : 0)}
-                )
-              </span>
-            </p>
             <Button
               type="button"
               size="sm"
-              variant="outline"
               disabled={saving}
-              onClick={() => saveCurrentToCustomProvidersList()}
+              onClick={() => submitAddCustomProviderForm()}
             >
-              Save current model setup to list
+              Add to custom providers list
             </Button>
           </div>
-          <table className="w-full min-w-[720px] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-primary-200 bg-primary-100/70 text-left text-[11px] font-semibold uppercase tracking-wide text-primary-600">
-                <th className="px-3 py-2">Source</th>
-                <th className="px-3 py-2">Title</th>
-                <th className="px-3 py-2">Provider id</th>
-                <th className="px-3 py-2">Base URL</th>
-                <th className="px-3 py-2 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customProviders.length === 0 &&
-              !extraPrimaryNotInList &&
-              !extraManifestNotInList ? (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="px-3 py-4 text-xs leading-relaxed text-primary-600"
-                  >
-                    No rows in <span className="font-mono">custom_providers</span> yet, and no
-                    primary base URL or manifest URL was detected. Use{' '}
-                    <span className="font-medium">Add custom provider</span>, or set Model &amp;
-                    Provider and click &quot;Save current model setup to list&quot;.
-                  </td>
+
+          <div className="overflow-x-auto rounded-xl border border-primary-200 bg-white/90">
+            <div className="flex flex-col gap-2 border-b border-primary-200 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-primary-700">
+                <span className="font-medium text-primary-900">
+                  Saved &amp; detected endpoints
+                </span>
+                <span className="text-primary-600">
+                  {' '}
+                  (
+                  {customProviders.length +
+                    (extraPrimaryNotInList ? 1 : 0) +
+                    (extraManifestNotInList ? 1 : 0)}
+                  )
+                </span>
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={saving}
+                onClick={() => saveCurrentToCustomProvidersList()}
+              >
+                Save current model setup to list
+              </Button>
+            </div>
+            <table className="w-full min-w-[720px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-primary-200 bg-primary-100/70 text-left text-[11px] font-semibold uppercase tracking-wide text-primary-600">
+                  <th className="px-3 py-2">Source</th>
+                  <th className="px-3 py-2">Title</th>
+                  <th className="px-3 py-2">Provider id</th>
+                  <th className="px-3 py-2">Base URL</th>
+                  <th className="px-3 py-2 text-right">Actions</th>
                 </tr>
-              ) : null}
-              {customProviders.map((raw, index) => {
-                const entry = normalizeCustomProviderEntry(raw)
-                const key = entry.name || `idx-${index}`
-                return (
-                  <tr
-                    key={`saved-${key}-${index}`}
-                    className="border-b border-primary-100 odd:bg-primary-50/40"
-                  >
-                    <td className="px-3 py-2 align-top text-xs text-primary-600">Saved</td>
-                    <td className="max-w-[160px] px-3 py-2 align-top text-xs font-medium text-primary-900 break-words">
-                      {entry.title || '—'}
+              </thead>
+              <tbody>
+                {customProviders.length === 0 &&
+                !extraPrimaryNotInList &&
+                !extraManifestNotInList ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-3 py-4 text-xs leading-relaxed text-primary-600"
+                    >
+                      No rows in{' '}
+                      <span className="font-mono">custom_providers</span> yet,
+                      and no primary base URL or manifest URL was detected. Use{' '}
+                      <span className="font-medium">Add custom provider</span>,
+                      or set Model &amp; Provider and click &quot;Save current
+                      model setup to list&quot;.
                     </td>
-                    <td className="px-3 py-2 align-top font-mono text-xs text-primary-800">
-                      {entry.name || '—'}
+                  </tr>
+                ) : null}
+                {customProviders.map((raw, index) => {
+                  const entry = normalizeCustomProviderEntry(raw)
+                  const key = entry.name || `idx-${index}`
+                  return (
+                    <tr
+                      key={`saved-${key}-${index}`}
+                      className="border-b border-primary-100 odd:bg-primary-50/40"
+                    >
+                      <td className="px-3 py-2 align-top text-xs text-primary-600">
+                        Saved
+                      </td>
+                      <td className="max-w-[160px] px-3 py-2 align-top text-xs font-medium text-primary-900 break-words">
+                        {entry.title || '—'}
+                      </td>
+                      <td className="px-3 py-2 align-top font-mono text-xs text-primary-800">
+                        {entry.name || '—'}
+                      </td>
+                      <td className="max-w-[240px] px-3 py-2 align-top font-mono text-xs text-primary-700 break-all">
+                        {entry.base_url || '—'}
+                      </td>
+                      <td className="px-3 py-2 align-top text-right">
+                        <div className="flex flex-wrap justify-end gap-1.5">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={saving || !entry.name}
+                            onClick={() => applyCustomProviderFromList(raw)}
+                          >
+                            Apply
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-700 hover:text-red-800"
+                            disabled={saving}
+                            onClick={() => removeCustomProviderAt(index)}
+                            aria-label={`Remove ${entry.name || 'custom provider'}`}
+                          >
+                            <HugeiconsIcon
+                              icon={Delete02Icon}
+                              size={16}
+                              strokeWidth={1.5}
+                            />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+                {extraPrimaryNotInList ? (
+                  <tr className="border-b border-primary-100 bg-amber-50/50">
+                    <td className="px-3 py-2 align-top text-xs text-amber-900">
+                      Active (not in list)
+                    </td>
+                    <td className="max-w-[160px] px-3 py-2 align-top text-xs text-primary-800 break-words">
+                      {suggestCustomProviderTitle(
+                        modelInput,
+                        extraPrimaryNotInList.base_url,
+                      )}
+                    </td>
+                    <td className="px-3 py-2 align-top font-mono text-xs font-medium text-primary-900">
+                      {extraPrimaryNotInList.name}
                     </td>
                     <td className="max-w-[240px] px-3 py-2 align-top font-mono text-xs text-primary-700 break-all">
-                      {entry.base_url || '—'}
+                      {extraPrimaryNotInList.base_url}
                     </td>
                     <td className="px-3 py-2 align-top text-right">
                       <div className="flex flex-wrap justify-end gap-1.5">
@@ -2008,321 +2156,303 @@ function ClaudeConfigSection({
                           type="button"
                           size="sm"
                           variant="outline"
-                          disabled={saving || !entry.name}
-                          onClick={() => applyCustomProviderFromList(raw)}
+                          disabled={saving}
+                          onClick={() => {
+                            setProviderInput(extraPrimaryNotInList.name)
+                            setBaseUrlInput(extraPrimaryNotInList.base_url)
+                            void fetchModelsForProvider(
+                              extraPrimaryNotInList.name,
+                            )
+                          }}
                         >
                           Apply
                         </Button>
                         <Button
                           type="button"
                           size="sm"
-                          variant="ghost"
-                          className="text-red-700 hover:text-red-800"
+                          variant="outline"
                           disabled={saving}
-                          onClick={() => removeCustomProviderAt(index)}
-                          aria-label={`Remove ${entry.name || 'custom provider'}`}
+                          onClick={() =>
+                            persistCustomProviderRow(
+                              extraPrimaryNotInList.name,
+                              extraPrimaryNotInList.base_url,
+                              {
+                                title: suggestCustomProviderTitle(
+                                  modelInput,
+                                  extraPrimaryNotInList.base_url,
+                                ),
+                              },
+                            )
+                          }
                         >
-                          <HugeiconsIcon icon={Delete02Icon} size={16} strokeWidth={1.5} />
+                          Add to list
                         </Button>
                       </div>
                     </td>
                   </tr>
-                )
-              })}
-              {extraPrimaryNotInList ? (
-                <tr className="border-b border-primary-100 bg-amber-50/50">
-                  <td className="px-3 py-2 align-top text-xs text-amber-900">Active (not in list)</td>
-                  <td className="max-w-[160px] px-3 py-2 align-top text-xs text-primary-800 break-words">
-                    {suggestCustomProviderTitle(modelInput, extraPrimaryNotInList.base_url)}
-                  </td>
-                  <td className="px-3 py-2 align-top font-mono text-xs font-medium text-primary-900">
-                    {extraPrimaryNotInList.name}
-                  </td>
-                  <td className="max-w-[240px] px-3 py-2 align-top font-mono text-xs text-primary-700 break-all">
-                    {extraPrimaryNotInList.base_url}
-                  </td>
-                  <td className="px-3 py-2 align-top text-right">
-                    <div className="flex flex-wrap justify-end gap-1.5">
+                ) : null}
+                {extraManifestNotInList ? (
+                  <tr className="border-b border-primary-100 bg-sky-50/50">
+                    <td className="px-3 py-2 align-top text-xs text-sky-900">
+                      Manifest block
+                    </td>
+                    <td className="max-w-[160px] px-3 py-2 align-top text-xs text-primary-800 break-words">
+                      {(() => {
+                        try {
+                          const h = new URL(extraManifestNotInList.base_url)
+                            .hostname
+                          const short = h.split('.')[0] || h
+                          return `Manifest.${short.charAt(0).toUpperCase()}${short.slice(1).toLowerCase()}`
+                        } catch {
+                          return 'Manifest'
+                        }
+                      })()}
+                    </td>
+                    <td className="px-3 py-2 align-top font-mono text-xs text-primary-600">
+                      (env key path)
+                    </td>
+                    <td className="max-w-[240px] px-3 py-2 align-top font-mono text-xs text-primary-700 break-all">
+                      {extraManifestNotInList.base_url}
+                    </td>
+                    <td className="px-3 py-2 align-top text-right">
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
                         disabled={saving}
                         onClick={() => {
-                          setProviderInput(extraPrimaryNotInList.name)
-                          setBaseUrlInput(extraPrimaryNotInList.base_url)
-                          void fetchModelsForProvider(extraPrimaryNotInList.name)
-                        }}
-                      >
-                        Apply
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={saving}
-                        onClick={() =>
+                          const u = extraManifestNotInList.base_url
                           persistCustomProviderRow(
-                            extraPrimaryNotInList.name,
-                            extraPrimaryNotInList.base_url,
+                            deriveCustomProviderNameFromBaseUrl(u),
+                            u,
                             {
-                              title: suggestCustomProviderTitle(
-                                modelInput,
-                                extraPrimaryNotInList.base_url,
-                              ),
+                              title: (() => {
+                                try {
+                                  const h = new URL(u).hostname
+                                  const short = h.split('.')[0] || h
+                                  return `Manifest.${short.charAt(0).toUpperCase()}${short.slice(1).toLowerCase()}`
+                                } catch {
+                                  return 'Manifest'
+                                }
+                              })(),
                             },
                           )
-                        }
+                        }}
                       >
                         Add to list
                       </Button>
-                    </div>
-                  </td>
-                </tr>
-              ) : null}
-              {extraManifestNotInList ? (
-                <tr className="border-b border-primary-100 bg-sky-50/50">
-                  <td className="px-3 py-2 align-top text-xs text-sky-900">Manifest block</td>
-                  <td className="max-w-[160px] px-3 py-2 align-top text-xs text-primary-800 break-words">
-                    {(() => {
-                      try {
-                        const h = new URL(extraManifestNotInList.base_url).hostname
-                        const short = h.split('.')[0] || h
-                        return `Manifest.${short.charAt(0).toUpperCase()}${short.slice(1).toLowerCase()}`
-                      } catch {
-                        return 'Manifest'
-                      }
-                    })()}
-                  </td>
-                  <td className="px-3 py-2 align-top font-mono text-xs text-primary-600">
-                    (env key path)
-                  </td>
-                  <td className="max-w-[240px] px-3 py-2 align-top font-mono text-xs text-primary-700 break-all">
-                    {extraManifestNotInList.base_url}
-                  </td>
-                  <td className="px-3 py-2 align-top text-right">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      disabled={saving}
-                      onClick={() => {
-                        const u = extraManifestNotInList.base_url
-                        persistCustomProviderRow(deriveCustomProviderNameFromBaseUrl(u), u, {
-                          title: (() => {
-                            try {
-                              const h = new URL(u).hostname
-                              const short = h.split('.')[0] || h
-                              return `Manifest.${short.charAt(0).toUpperCase()}${short.slice(1).toLowerCase()}`
-                            } catch {
-                              return 'Manifest'
-                            }
-                          })(),
-                        })
-                      }}
-                    >
-                      Add to list
-                    </Button>
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
+          </div>
 
-        <SettingsRow
-          label="Manifest: CUSTOM_API_KEY"
-          description={
-            customApiKeyConfigured
-              ? '✅ Saved in ~/.hermes/.env for the manifest OpenAI provider.'
-              : customEndpointConfigured
-                ? '○ Not set — optional when your endpoint is local or needs no env key.'
-                : '○ Optional. Leave blank if you do not use providers.manifest + CUSTOM_API_KEY.'
-          }
-        >
-          <div className="flex w-full max-w-sm flex-col gap-1">
-            <p className="text-[11px] text-primary-500">
-              Leave blank if unused. Add only when your manifest integration requires this key.
-            </p>
-            <div className="flex items-center gap-2">
-              <div className="flex-1">
-                {editingCustomKey ? (
-                  <div className="flex flex-wrap gap-2">
-                    <Input
-                      type="password"
-                      value={customApiKey}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setCustomApiKey(e.target.value)
-                      }
-                      placeholder="Leave blank to clear saved key"
-                      className="min-w-[12rem] flex-1"
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        void saveConfig({
-                          env: {
-                            CUSTOM_API_KEY: customApiKey.trim() ? customApiKey.trim() : null,
-                          },
-                        })
-                        setEditingCustomKey(false)
-                      }}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setEditingCustomKey(false)}
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="text-xs font-mono"
-                      style={{ color: 'var(--theme-muted)' }}
-                    >
-                      {customApiKeyConfigured
-                        ? customProviderCatalogEntry.maskedKeys['CUSTOM_API_KEY'] || 'Set'
-                        : 'Not set'}
-                    </span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setEditingCustomKey(true)
-                        setCustomApiKey('')
-                      }}
-                    >
-                      {customApiKeyConfigured ? 'Change' : 'Add'}
-                    </Button>
-                  </div>
-                )}
+          <SettingsRow
+            label="Manifest: CUSTOM_API_KEY"
+            description={
+              customApiKeyConfigured
+                ? '✅ Saved in ~/.hermes/.env for the manifest OpenAI provider.'
+                : customEndpointConfigured
+                  ? '○ Not set — optional when your endpoint is local or needs no env key.'
+                  : '○ Optional. Leave blank if you do not use providers.manifest + CUSTOM_API_KEY.'
+            }
+          >
+            <div className="flex w-full max-w-sm flex-col gap-1">
+              <p className="text-[11px] text-primary-500">
+                Leave blank if unused. Add only when your manifest integration
+                requires this key.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  {editingCustomKey ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Input
+                        type="password"
+                        value={customApiKey}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setCustomApiKey(e.target.value)
+                        }
+                        placeholder="Leave blank to clear saved key"
+                        className="min-w-[12rem] flex-1"
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          void saveConfig({
+                            env: {
+                              CUSTOM_API_KEY: customApiKey.trim()
+                                ? customApiKey.trim()
+                                : null,
+                            },
+                          })
+                          setEditingCustomKey(false)
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setEditingCustomKey(false)}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-xs font-mono"
+                        style={{ color: 'var(--theme-muted)' }}
+                      >
+                        {customApiKeyConfigured
+                          ? customProviderCatalogEntry.maskedKeys[
+                              'CUSTOM_API_KEY'
+                            ] || 'Set'
+                          : 'Not set'}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingCustomKey(true)
+                          setCustomApiKey('')
+                        }}
+                      >
+                        {customApiKeyConfigured ? 'Change' : 'Add'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </SettingsRow>
-        <SettingsRow
-          label="Manifest: base URL"
-          description={
-            manifestBaseUrlOnly
-              ? `✅ ${manifestBaseUrlOnly}`
-              : '○ Optional — only if you use providers.manifest (separate from primary base URL).'
-          }
-        >
-          <div className="flex w-full max-w-sm flex-col gap-1">
-            <p className="text-[11px] text-primary-500">
-              This updates <span className="font-mono">providers.manifest</span> only. Primary model
-              base URL stays under Model &amp; Provider.
-            </p>
-            <div className="flex items-center gap-2">
-              <div className="flex-1">
-                {editingCustomBaseUrl ? (
-                  <div className="flex flex-wrap gap-2">
-                    <Input
-                      value={customBaseUrl}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setCustomBaseUrl(e.target.value)
-                      }
-                      placeholder="http://127.0.0.1:8080/v1"
-                      className="min-w-[12rem] flex-1 font-mono text-sm"
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        const u = customBaseUrl.trim()
-                        if (!u) {
-                          setSaveMessage('Enter a manifest base URL, or cancel.')
-                          setTimeout(() => setSaveMessage(null), 3000)
-                          return
+          </SettingsRow>
+          <SettingsRow
+            label="Manifest: base URL"
+            description={
+              manifestBaseUrlOnly
+                ? `✅ ${manifestBaseUrlOnly}`
+                : '○ Optional — only if you use providers.manifest (separate from primary base URL).'
+            }
+          >
+            <div className="flex w-full max-w-sm flex-col gap-1">
+              <p className="text-[11px] text-primary-500">
+                This updates{' '}
+                <span className="font-mono">providers.manifest</span> only.
+                Primary model base URL stays under Model &amp; Provider.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  {editingCustomBaseUrl ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Input
+                        value={customBaseUrl}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setCustomBaseUrl(e.target.value)
                         }
-                        void saveConfig({
-                          config: {
-                            model: mergeModelForManifestSave(data.config, modelInput.trim()),
-                            providers: {
-                              manifest: {
-                                type: 'openai',
-                                base_url: u,
-                                key_env: 'CUSTOM_API_KEY',
+                        placeholder="http://127.0.0.1:8080/v1"
+                        className="min-w-[12rem] flex-1 font-mono text-sm"
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          const u = customBaseUrl.trim()
+                          if (!u) {
+                            setSaveMessage(
+                              'Enter a manifest base URL, or cancel.',
+                            )
+                            setTimeout(() => setSaveMessage(null), 3000)
+                            return
+                          }
+                          void saveConfig({
+                            config: {
+                              model: mergeModelForManifestSave(
+                                data.config,
+                                modelInput.trim(),
+                              ),
+                              providers: {
+                                manifest: {
+                                  type: 'openai',
+                                  base_url: u,
+                                  key_env: 'CUSTOM_API_KEY',
+                                },
                               },
                             },
-                          },
-                        })
-                        setEditingCustomBaseUrl(false)
-                      }}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setEditingCustomBaseUrl(false)
-                        setCustomBaseUrl(manifestBaseUrlOnly)
-                      }}
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="text-xs font-mono"
-                      style={{ color: 'var(--theme-muted)' }}
-                    >
-                      {manifestBaseUrlOnly || 'Not set'}
-                    </span>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setCustomBaseUrl(manifestBaseUrlOnly)
-                        setEditingCustomBaseUrl(true)
-                      }}
-                    >
-                      {manifestBaseUrlOnly ? 'Edit' : 'Add'}
-                    </Button>
-                  </div>
-                )}
+                          })
+                          setEditingCustomBaseUrl(false)
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingCustomBaseUrl(false)
+                          setCustomBaseUrl(manifestBaseUrlOnly)
+                        }}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-xs font-mono"
+                        style={{ color: 'var(--theme-muted)' }}
+                      >
+                        {manifestBaseUrlOnly || 'Not set'}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setCustomBaseUrl(manifestBaseUrlOnly)
+                          setEditingCustomBaseUrl(true)
+                        }}
+                      >
+                        {manifestBaseUrlOnly ? 'Edit' : 'Add'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </SettingsRow>
-      </SettingsSection>
+          </SettingsRow>
+        </SettingsSection>
 
-      <SettingsSection
-        title="About"
-        description="Hermes Agent runtime information."
-        icon={Notification03Icon}
-      >
-        <SettingsRow
-          label="Config location"
-          description="Where Claude stores its configuration."
+        <SettingsSection
+          title="About"
+          description="Hermes Agent runtime information."
+          icon={Notification03Icon}
         >
-          <span
-            className="text-xs font-mono"
-            style={{ color: 'var(--theme-muted)' }}
+          <SettingsRow
+            label="Config location"
+            description="Where Claude stores its configuration."
           >
-            {data.claudeHome}
-          </span>
-        </SettingsRow>
-        <SettingsRow
-          label="Active provider"
-          description="Current inference provider."
-        >
-          <span
-            className="text-sm font-medium"
-            style={{ color: 'var(--theme-accent)' }}
+            <span
+              className="text-xs font-mono"
+              style={{ color: 'var(--theme-muted)' }}
+            >
+              {data.claudeHome}
+            </span>
+          </SettingsRow>
+          <SettingsRow
+            label="Active provider"
+            description="Current inference provider."
           >
-            {data.providers.find((p) => p.id === data.activeProvider)?.name ||
-              data.activeProvider}
-          </span>
-        </SettingsRow>
-      </SettingsSection>
-    </>
-  )
+            <span
+              className="text-sm font-medium"
+              style={{ color: 'var(--theme-accent)' }}
+            >
+              {data.providers.find((p) => p.id === data.activeProvider)?.name ||
+                data.activeProvider}
+            </span>
+          </SettingsRow>
+        </SettingsSection>
+      </>
+    )
+  }
 
   const renderAgentBehavior = () => (
     <SettingsSection
@@ -2381,86 +2511,109 @@ function ClaudeConfigSection({
     </SettingsSection>
   )
 
-  const renderSmartRouting = () => (
-    <SettingsSection
-      title="Smart Model Routing"
-      description="Automatically route simple queries to cheaper models."
-      icon={SparklesIcon}
-    >
-      <SettingsRow
-        label="Enable smart routing"
-        description="Route simple queries to a cheaper model automatically."
-      >
-        <Switch
-          checked={readBoolean(smartRouting.enabled, false)}
-          onCheckedChange={(checked) =>
-            void saveConfig({
-              config: { smart_model_routing: { enabled: checked } },
-            })
-          }
-        />
-      </SettingsRow>
-      <SettingsRow
-        label="Cheap model"
-        description="Model to use for simple queries."
-      >
-        <select
-          value={(smartRouting.cheap_model as string) || ''}
-          onChange={(e) =>
-            void saveConfig({
-              config: { smart_model_routing: { cheap_model: e.target.value } },
-            })
-          }
-          className={selectClassName}
+  const renderSmartRouting = () => {
+    if (workforceLocked) {
+      return (
+        <SettingsSection
+          title="AI Workforce Routing"
+          description="Routing rules are managed by 99Pages AI Workforce."
+          icon={SparklesIcon}
         >
-          <option value="">Select model</option>
-          {availableModels.map((model) => (
-            <option key={model.id} value={model.id}>
-              {model.id}
-            </option>
-          ))}
-        </select>
-      </SettingsRow>
-      <SettingsRow
-        label="Max simple chars"
-        description="Messages shorter than this use the cheap model."
+          <SettingsRow
+            label="Managed route"
+            description="Customer installs keep model routing inside the 99Pages endpoint."
+          >
+            <span className="font-mono text-sm text-primary-700">
+              {modelInput || '99pages/fast'}
+            </span>
+          </SettingsRow>
+        </SettingsSection>
+      )
+    }
+
+    return (
+      <SettingsSection
+        title="Smart Model Routing"
+        description="Automatically route simple queries to cheaper models."
+        icon={SparklesIcon}
       >
-        <Input
-          type="number"
-          min={1}
-          value={readNumber(smartRouting.max_simple_chars, 500)}
-          onChange={(e) =>
-            saveNumberField(
-              'smart_model_routing',
-              'max_simple_chars',
-              e.target.value,
-              500,
-            )
-          }
-          className="md:w-32"
-        />
-      </SettingsRow>
-      <SettingsRow
-        label="Max simple words"
-        description="Messages with fewer words use the cheap model."
-      >
-        <Input
-          type="number"
-          min={1}
-          value={readNumber(smartRouting.max_simple_words, 80)}
-          onChange={(e) =>
-            saveNumberField(
-              'smart_model_routing',
-              'max_simple_words',
-              e.target.value,
-              80,
-            )
-          }
-          className="md:w-32"
-        />
-      </SettingsRow>
-    </SettingsSection>
-  )
+        <SettingsRow
+          label="Enable smart routing"
+          description="Route simple queries to a cheaper model automatically."
+        >
+          <Switch
+            checked={readBoolean(smartRouting.enabled, false)}
+            onCheckedChange={(checked) =>
+              void saveConfig({
+                config: { smart_model_routing: { enabled: checked } },
+              })
+            }
+          />
+        </SettingsRow>
+        <SettingsRow
+          label="Cheap model"
+          description="Model to use for simple queries."
+        >
+          <select
+            value={(smartRouting.cheap_model as string) || ''}
+            onChange={(e) =>
+              void saveConfig({
+                config: {
+                  smart_model_routing: { cheap_model: e.target.value },
+                },
+              })
+            }
+            className={selectClassName}
+          >
+            <option value="">Select model</option>
+            {availableModels.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.id}
+              </option>
+            ))}
+          </select>
+        </SettingsRow>
+        <SettingsRow
+          label="Max simple chars"
+          description="Messages shorter than this use the cheap model."
+        >
+          <Input
+            type="number"
+            min={1}
+            value={readNumber(smartRouting.max_simple_chars, 500)}
+            onChange={(e) =>
+              saveNumberField(
+                'smart_model_routing',
+                'max_simple_chars',
+                e.target.value,
+                500,
+              )
+            }
+            className="md:w-32"
+          />
+        </SettingsRow>
+        <SettingsRow
+          label="Max simple words"
+          description="Messages with fewer words use the cheap model."
+        >
+          <Input
+            type="number"
+            min={1}
+            value={readNumber(smartRouting.max_simple_words, 80)}
+            onChange={(e) =>
+              saveNumberField(
+                'smart_model_routing',
+                'max_simple_words',
+                e.target.value,
+                80,
+              )
+            }
+            className="md:w-32"
+          />
+        </SettingsRow>
+      </SettingsSection>
+    )
+  }
 
   const renderVoice = () => (
     <div className="space-y-4">
@@ -2634,7 +2787,9 @@ function ClaudeConfigSection({
                 value={(sttGroq.model as string) || GROQ_STT_MODELS[0]}
                 onChange={(e) =>
                   void saveConfig({
-                    config: { stt: { groq: { ...sttGroq, model: e.target.value } } },
+                    config: {
+                      stt: { groq: { ...sttGroq, model: e.target.value } },
+                    },
                   })
                 }
                 className={selectClassName}
