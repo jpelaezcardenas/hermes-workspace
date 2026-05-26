@@ -48,6 +48,13 @@ type ProfileDetail = {
   skillsDir?: string
 }
 
+type StartAgentResponse = {
+  ok: boolean
+  message?: string
+  pid?: number
+  error?: string
+}
+
 async function readJson<T>(url: string): Promise<T> {
   const response = await fetch(url)
   if (!response.ok) {
@@ -68,6 +75,33 @@ function formatDate(value?: string): string {
     hour: 'numeric',
     minute: '2-digit',
   }).format(parsed)
+}
+
+function configString(config: Record<string, unknown>, key: string): string {
+  const value = config[key]
+  return typeof value === 'string' ? value : ''
+}
+
+function resolveProfileModel(config: Record<string, unknown>): string {
+  const flatModel = configString(config, 'model')
+  if (flatModel) return flatModel
+  const model = config.model
+  if (model && typeof model === 'object' && !Array.isArray(model)) {
+    const nestedDefault = (model as Record<string, unknown>).default
+    return typeof nestedDefault === 'string' ? nestedDefault : ''
+  }
+  return ''
+}
+
+function resolveProfileProvider(config: Record<string, unknown>): string {
+  const flatProvider = configString(config, 'provider')
+  if (flatProvider) return flatProvider
+  const model = config.model
+  if (model && typeof model === 'object' && !Array.isArray(model)) {
+    const nestedProvider = (model as Record<string, unknown>).provider
+    return typeof nestedProvider === 'string' ? nestedProvider : ''
+  }
+  return ''
 }
 
 function StatChip({ label, value }: { label: string; value: string | number }) {
@@ -122,6 +156,13 @@ export function ProfilesScreen() {
   const [busyName, setBusyName] = useState<string | null>(null)
   const [descriptionDraft, setDescriptionDraft] = useState('')
   const [savingDescription, setSavingDescription] = useState(false)
+  const [operationsModelDraft, setOperationsModelDraft] = useState('')
+  const [operationsProviderDraft, setOperationsProviderDraft] = useState('')
+  const [operationsSystemPromptDraft, setOperationsSystemPromptDraft] =
+    useState('')
+  const [savingOperations, setSavingOperations] = useState(false)
+  const [startingRuntime, setStartingRuntime] = useState(false)
+  const [runtimeMessage, setRuntimeMessage] = useState<string | null>(null)
 
   const profilesQuery = useQuery({
     queryKey: ['profiles', 'list'],
@@ -185,8 +226,22 @@ export function ProfilesScreen() {
   }, [createOpen, wizardStep, allModels.length, fetchAllModels])
 
   useEffect(() => {
+    if (detailsName && allModels.length === 0 && !loadingModels) {
+      void fetchAllModels()
+    }
+  }, [allModels.length, detailsName, fetchAllModels, loadingModels])
+
+  useEffect(() => {
     setDescriptionDraft(detailQuery.data?.profile?.description ?? '')
   }, [detailQuery.data?.profile?.description, detailsName])
+
+  useEffect(() => {
+    const profile = detailQuery.data?.profile
+    const config = profile?.config ?? {}
+    setOperationsModelDraft(resolveProfileModel(config))
+    setOperationsProviderDraft(resolveProfileProvider(config))
+    setOperationsSystemPromptDraft(configString(config, 'system_prompt'))
+  }, [detailQuery.data?.profile, detailsName])
 
   const nameValid =
     /^[A-Za-z0-9_-]+$/.test(newProfileName.trim()) &&
@@ -309,6 +364,69 @@ export function ProfilesScreen() {
       )
     } finally {
       setSavingDescription(false)
+    }
+  }
+
+  async function handleSaveOperationsConfig() {
+    if (!detailsName) return
+    setSavingOperations(true)
+    try {
+      await postJson('/api/profiles/update', {
+        name: detailsName,
+        patch: {
+          model: operationsModelDraft.trim() || null,
+          provider: operationsProviderDraft.trim() || null,
+          system_prompt: operationsSystemPromptDraft.trim() || null,
+          description: descriptionDraft.trim() || null,
+        },
+      })
+      toast(`Saved operations config for ${detailsName}`, { type: 'success' })
+      await Promise.all([
+        refreshProfiles(),
+        queryClient.invalidateQueries({
+          queryKey: ['profiles', 'read', detailsName],
+        }),
+      ])
+      await detailQuery.refetch()
+    } catch (error) {
+      toast(
+        error instanceof Error
+          ? error.message
+          : 'Failed to save operations config',
+        { type: 'error' },
+      )
+    } finally {
+      setSavingOperations(false)
+    }
+  }
+
+  async function handleStartRuntime() {
+    setStartingRuntime(true)
+    setRuntimeMessage(null)
+    try {
+      const response = await fetch('/api/start-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      })
+      const payload = (await response
+        .json()
+        .catch(() => ({}))) as StartAgentResponse
+      if (!response.ok || payload.ok === false) {
+        throw new Error(payload.error || `Request failed (${response.status})`)
+      }
+      const message = payload.pid
+        ? `${payload.message || 'started'} · pid ${payload.pid}`
+        : payload.message || 'already running'
+      setRuntimeMessage(message)
+      toast(`Agent runtime ${message}`, { type: 'success' })
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to start runtime'
+      setRuntimeMessage(message)
+      toast(message, { type: 'error' })
+    } finally {
+      setStartingRuntime(false)
     }
   }
 
@@ -888,14 +1006,24 @@ export function ProfilesScreen() {
                   </p>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void detailQuery.refetch()}
-                disabled={detailQuery.isFetching}
-              >
-                {detailQuery.isFetching ? 'Refreshing…' : 'Refresh'}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => void handleStartRuntime()}
+                  disabled={startingRuntime}
+                >
+                  {startingRuntime ? 'Starting…' : 'Start Runtime'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => void detailQuery.refetch()}
+                  disabled={detailQuery.isFetching}
+                >
+                  {detailQuery.isFetching ? 'Refreshing…' : 'Refresh'}
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -926,6 +1054,11 @@ export function ProfilesScreen() {
                   value={detailQuery.data.profile.path}
                   mono
                 />
+                {runtimeMessage ? (
+                  <div className="rounded-xl border border-primary-200 bg-primary-50/80 p-3 text-sm text-primary-700 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-300">
+                    Runtime: {runtimeMessage}
+                  </div>
+                ) : null}
                 <div className="grid gap-3 sm:grid-cols-3">
                   <DetailField
                     label="Env file"
@@ -971,6 +1104,71 @@ export function ProfilesScreen() {
                     Saved into the profile config, so manual file edits show up
                     here after refresh.
                   </p>
+                </div>
+                <div className="rounded-xl border border-primary-200 bg-primary-50/80 p-4 dark:border-neutral-800 dark:bg-neutral-900/60">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-primary-500 dark:text-neutral-400">
+                      Operations config
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => void handleSaveOperationsConfig()}
+                      disabled={savingOperations}
+                    >
+                      {savingOperations ? 'Saving…' : 'Save Operations'}
+                    </Button>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-semibold uppercase tracking-wider text-primary-400 dark:text-neutral-500">
+                        Model
+                      </label>
+                      <Input
+                        value={operationsModelDraft}
+                        onChange={(event) =>
+                          setOperationsModelDraft(event.target.value)
+                        }
+                        list="profile-model-options"
+                        placeholder="gpt-5.5"
+                        className="h-10 text-sm"
+                      />
+                      {allModels.length > 0 ? (
+                        <datalist id="profile-model-options">
+                          {allModels.map((model) => (
+                            <option key={model.id} value={model.id}>
+                              {model.name || model.id}
+                            </option>
+                          ))}
+                        </datalist>
+                      ) : null}
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-semibold uppercase tracking-wider text-primary-400 dark:text-neutral-500">
+                        Provider
+                      </label>
+                      <Input
+                        value={operationsProviderDraft}
+                        onChange={(event) =>
+                          setOperationsProviderDraft(event.target.value)
+                        }
+                        placeholder="openai-codex"
+                        className="h-10 text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1.5">
+                    <label className="text-[10px] font-semibold uppercase tracking-wider text-primary-400 dark:text-neutral-500">
+                      System prompt
+                    </label>
+                    <textarea
+                      value={operationsSystemPromptDraft}
+                      onChange={(event) =>
+                        setOperationsSystemPromptDraft(event.target.value)
+                      }
+                      placeholder="Profile-specific runtime instructions"
+                      className="min-h-[108px] w-full rounded-lg border border-primary-200 bg-primary-100/70 p-3 text-sm text-primary-900 outline-none transition-colors focus:border-accent-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                    />
+                  </div>
                 </div>
                 <div className="rounded-xl border border-primary-200 bg-primary-50/80 p-4 dark:border-neutral-800 dark:bg-neutral-900/60">
                   <div className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary-500 dark:text-neutral-400">
