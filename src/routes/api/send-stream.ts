@@ -386,9 +386,42 @@ export const Route = createFileRoute('/api/send-stream')({
         let streamTimeoutTimer: ReturnType<typeof setTimeout> | null = null
         let heartbeatTimer: ReturnType<typeof setInterval> | null = null
         const abortController = new AbortController()
+        // Close out the SSE stream — stop enqueueing, clear timers, and
+        // abort the upstream Hermes gateway request so the agent stops
+        // processing.  Does NOT touch run status (persistActiveRun etc.).
+        // The abort path (request.signal / handleAbort) owns run cleanup.
         let closeStream = () => {
+          if (streamClosed) return
           streamClosed = true
+          if (heartbeatTimer) {
+            clearInterval(heartbeatTimer)
+            heartbeatTimer = null
+          }
+          if (unregisterTimer) {
+            clearTimeout(unregisterTimer)
+            unregisterTimer = null
+          }
+          if (streamTimeoutTimer) {
+            clearTimeout(streamTimeoutTimer)
+            streamTimeoutTimer = null
+          }
+          abortController.abort()
         }
+
+        // When the client hits Stop / navigates away / closes the tab, the
+        // request.signal fires abort.  Stop the upstream agent (closeStream)
+        // and clean up run tracking so we don't burn API credits on an orphan.
+        function handleAbort() {
+          if (activeRunId && !streamClosed) {
+            persistActiveRun((runSessionKey, activeId) =>
+              markRunStatus(runSessionKey, activeId, 'handoff'),
+            )
+            unregisterActiveSendRun(activeRunId)
+            activeRunId = null
+          }
+          closeStream()
+        }
+        request.signal.addEventListener('abort', () => handleAbort())
 
         const persistRunStarted = (
           runId: string | undefined,
@@ -1492,12 +1525,12 @@ export const Route = createFileRoute('/api/send-stream')({
             }
           },
           cancel() {
-            // Browser navigation/unmount cancels the response reader. That
-            // must not cancel the Hermes run itself: the chat/conductor should
-            // keep thinking server-side so the user can return and recover the
-            // answer from session history. Mark this client stream closed so we
-            // stop enqueueing SSE chunks, but deliberately leave the upstream
-            // abortController alone.
+            // User clicked Stop, navigated away, or browser closed the tab.
+            // Mark the local stream closed so we stop enqueueing SSE chunks,
+            // and abort the upstream Hermes gateway request so the agent
+            // stops processing (saves API credits and respects the Stop
+            // button). The Hermes gateway handles client disconnection by
+            // calling agent.interrupt() on ConnectionResetError.
             streamClosed = true
             if (unregisterTimer) {
               clearTimeout(unregisterTimer)
@@ -1514,6 +1547,7 @@ export const Route = createFileRoute('/api/send-stream')({
               unregisterActiveSendRun(activeRunId)
               activeRunId = null
             }
+            abortController.abort()
           },
         })
 

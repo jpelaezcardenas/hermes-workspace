@@ -103,6 +103,7 @@ import { ContextAlertModal } from '@/components/usage-meter/context-alert-modal'
 import { ErrorToastContainer, showErrorToast } from '@/components/error-toast'
 // ContextMeter removed — ContextBar (PR #32) replaces it
 import { useChatStore, persistRecoveryMessage } from '@/stores/chat-store'
+import { useSessionModelStore } from '@/stores/session-model-store'
 import { useResearchCard } from '@/hooks/use-research-card'
 // MOBILE_TAB_BAR_OFFSET removed — tab bar always hidden in chat
 import { useTapDebug } from '@/hooks/use-tap-debug'
@@ -502,10 +503,18 @@ export function ChatScreen({
     if (typeof window === 'undefined') return 'low'
     const key = `claude-thinking-${activeFriendlyId || 'new'}`
     const stored = window.sessionStorage.getItem(key)
-    if (stored === 'off' || stored === 'low' || stored === 'adaptive')
+    if (stored === 'off' || stored === 'low' || stored === 'medium' || stored === 'high' || stored === 'adaptive')
       return stored
     return 'low'
   })
+  // Tracks whether the user has explicitly picked a thinking level for this session.
+  // A missing/absent sessionStorage key means we should fall back to the Hermes config default.
+  const thinkingInitializedByUserRef = useRef(false)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const key = `claude-thinking-${activeFriendlyId || 'new'}`
+    thinkingInitializedByUserRef.current = window.sessionStorage.getItem(key) !== null
+  }, [activeFriendlyId])
   const { alertOpen, alertThreshold, alertPercent, dismissAlert } =
     useContextAlert()
 
@@ -1014,6 +1023,29 @@ export function ChatScreen({
     retry: false,
   })
 
+  // Fetch the configured reasoning effort so the Chat Controls default matches
+  // what Hermes actually uses instead of hardcoding 'low'.
+  const reasoningEffortQuery = useQuery({
+    queryKey: ['hermes-config', 'reasoning-effort'],
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/hermes-config')
+        if (!res.ok) return 'low'
+        const data = await res.json() as { config?: Record<string, unknown> }
+        const agentSection = data?.config?.agent
+        if (agentSection && typeof agentSection === 'object' && !Array.isArray(agentSection)) {
+          const effort = (agentSection as Record<string, unknown>).reasoning_effort
+          if (effort === 'off' || effort === 'low' || effort === 'medium' || effort === 'high') return effort
+        }
+        return 'low'
+      } catch {
+        return 'low'
+      }
+    },
+    staleTime: 10 * 60 * 1000,
+    retry: false,
+  })
+
   const availableModelIds = useMemo(() => {
     const models = modelsQuery.data?.models || []
     return models.map((m: any) => m.id).filter((id: string) => id)
@@ -1049,6 +1081,16 @@ export function ChatScreen({
       }
     }
   }, [currentModel, activeFriendlyId])
+
+  // If no per-session thinking level override exists, inherit from Hermes config
+  useEffect(() => {
+    if (thinkingInitializedByUserRef.current) return
+    const configEffort = reasoningEffortQuery.data
+    if (!configEffort) return
+    if (configEffort === 'off' || configEffort === 'low' || configEffort === 'medium' || configEffort === 'high') {
+      setThinkingLevel(configEffort)
+    }
+  }, [reasoningEffortQuery.data])
 
   // Persist thinking level changes to sessionStorage
   const handleThinkingLevelChange = useCallback(
