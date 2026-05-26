@@ -907,6 +907,12 @@ export function ChatScreen({
     }, 2000)
   }, [activeFriendlyId, isNewChat])
 
+  const schedulePostSendHistoryRefresh = useCallback(() => {
+    for (const delay of [1200, 3000, 6000, 10000, 20000]) {
+      window.setTimeout(() => refreshHistoryRef.current(), delay)
+    }
+  }, [])
+
   refreshHistoryRef.current = function refreshHistory() {
     if (historyQuery.isFetching) return
 
@@ -2065,7 +2071,7 @@ export function ChatScreen({
         // accepted send; realtime events and history refreshes will render the
         // answer when it arrives.
         setWaitingForResponse(false)
-        window.setTimeout(() => refreshHistoryRef.current(), 1200)
+        schedulePostSendHistoryRefresh()
       })().catch((err: unknown) => {
         const messageText = err instanceof Error ? err.message : String(err)
         if (idempotencyKey) {
@@ -2095,6 +2101,7 @@ export function ChatScreen({
       queryClient,
       setLocalActivity,
       setWaitingForResponse,
+      schedulePostSendHistoryRefresh,
       streamStart,
       currentModel,
     ],
