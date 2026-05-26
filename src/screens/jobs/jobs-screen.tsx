@@ -35,6 +35,13 @@ import {
 
 const QUERY_KEY = ['claude', 'jobs'] as const
 const PROFILES_QUERY_KEY = ['claude', 'job-profiles'] as const
+type JobFilterMode = 'all' | 'active' | 'paused'
+
+const JOB_FILTERS: Array<{ id: JobFilterMode; label: string }> = [
+  { id: 'all', label: 'All' },
+  { id: 'active', label: 'Active' },
+  { id: 'paused', label: 'Paused' },
+]
 
 function formatNextRun(nextRun?: string | null): string {
   if (!nextRun) return '—'
@@ -303,6 +310,7 @@ function JobCard({
 export function JobsScreen() {
   const queryClient = useQueryClient()
   const [search, setSearch] = useState('')
+  const [filterMode, setFilterMode] = useState<JobFilterMode>('all')
   const [showCreate, setShowCreate] = useState(false)
   const [editingJob, setEditingJob] = useState<ClaudeJob | null>(null)
 
@@ -392,15 +400,19 @@ export function JobsScreen() {
 
   const filteredJobs = useMemo(() => {
     const jobs = jobsQuery.data ?? []
-    if (!search.trim()) return jobs
-    const q = search.toLowerCase()
-    return jobs.filter(
-      (j) =>
-        j.name.toLowerCase().includes(q) ||
-        j.prompt.toLowerCase().includes(q) ||
-        j.profile?.toLowerCase().includes(q),
-    )
-  }, [jobsQuery.data, search])
+    const q = search.trim().toLowerCase()
+    return jobs.filter((job) => {
+      const isPaused = job.state === 'paused' || !job.enabled
+      if (filterMode === 'active' && isPaused) return false
+      if (filterMode === 'paused' && !isPaused) return false
+      if (!q) return true
+      return (
+        job.name.toLowerCase().includes(q) ||
+        job.prompt.toLowerCase().includes(q) ||
+        job.profile?.toLowerCase().includes(q)
+      )
+    })
+  }, [filterMode, jobsQuery.data, search])
 
   const handleCreate = useCallback(
     async (input: {
@@ -464,19 +476,38 @@ export function JobsScreen() {
         </header>
 
         <div className="rounded-2xl border border-primary-200 bg-primary-50/85 p-4 backdrop-blur-xl">
-          <div className="relative">
-            <HugeiconsIcon
-              icon={Search01Icon}
-              size={14}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--theme-muted)]"
-            />
-            <input
-              type="text"
-              placeholder="Search jobs..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-[var(--theme-border)] bg-[var(--theme-input)] py-1.5 pl-8 pr-3 text-xs text-[var(--theme-text)] placeholder:text-[var(--theme-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-accent)]"
-            />
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="relative min-w-0 flex-1">
+              <HugeiconsIcon
+                icon={Search01Icon}
+                size={14}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--theme-muted)]"
+              />
+              <input
+                type="text"
+                placeholder="Search jobs..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full rounded-lg border border-[var(--theme-border)] bg-[var(--theme-input)] py-1.5 pl-8 pr-3 text-xs text-[var(--theme-text)] placeholder:text-[var(--theme-muted)] focus:outline-none focus:ring-1 focus:ring-[var(--theme-accent)]"
+              />
+            </div>
+            <div className="inline-flex shrink-0 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-input)] p-0.5" aria-label="Job status filter">
+              {JOB_FILTERS.map((filter) => (
+                <button
+                  key={filter.id}
+                  type="button"
+                  onClick={() => setFilterMode(filter.id)}
+                  className={cn(
+                    'rounded-md px-3 py-1 text-xs font-medium transition-colors',
+                    filterMode === filter.id
+                      ? 'bg-[var(--theme-hover)] text-[var(--theme-text)]'
+                      : 'text-[var(--theme-muted)] hover:text-[var(--theme-text)]',
+                  )}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
           </div>
           {profilesQuery.isError ? (
             <p
