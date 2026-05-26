@@ -63,6 +63,35 @@ type TerminalSessionResponse = {
   label?: string
 }
 
+type WorkspaceTerminalSessionSummary = {
+  id: string
+  label?: string | null
+  command?: Array<string>
+  cwd?: string | null
+  cols?: number | null
+  rows?: number | null
+  createdAt?: number
+}
+
+function workspaceTerminalTitle(
+  session: WorkspaceTerminalSessionSummary,
+): string {
+  const label = session.label?.trim()
+  if (label) return label
+  return session.id.length > 12
+    ? `${session.id.slice(0, 8)}...${session.id.slice(-4)}`
+    : session.id
+}
+
+function workspaceTerminalSubtitle(
+  session: WorkspaceTerminalSessionSummary,
+): string {
+  const command = session.command?.join(' ').trim() || 'shell'
+  const cwd = session.cwd?.trim() || 'unknown cwd'
+  const size = `${session.cols ?? 0}x${session.rows ?? 0}`
+  return `${command} - ${cwd} - ${size}`
+}
+
 // See terminal-panel.tsx — ~/.hermes is not guaranteed to exist in the workspace image.
 const DEFAULT_TERMINAL_CWD = '~'
 const TERMINAL_BG = '#0d0d0d'
@@ -123,6 +152,9 @@ export function TerminalWorkspace({
   const tabs = useTerminalPanelStore((state) => state.tabs)
   const activeTabId = useTerminalPanelStore((state) => state.activeTabId)
   const createTab = useTerminalPanelStore((state) => state.createTab)
+  const createAttachedTab = useTerminalPanelStore(
+    (state) => state.createAttachedTab,
+  )
   const closeTab = useTerminalPanelStore((state) => state.closeTab)
   const closeAllTabs = useTerminalPanelStore((state) => state.closeAllTabs)
   const setActiveTab = useTerminalPanelStore((state) => state.setActiveTab)
@@ -137,6 +169,13 @@ export function TerminalWorkspace({
   const [debugAnalysis, setDebugAnalysis] = useState<DebugAnalysis | null>(null)
   const [debugLoading, setDebugLoading] = useState(false)
   const [showDebugPanel, setShowDebugPanel] = useState(false)
+  const [showAttachPanel, setShowAttachPanel] = useState(false)
+  const [attachSessions, setAttachSessions] = useState<
+    Array<WorkspaceTerminalSessionSummary>
+  >([])
+  const [attachLoading, setAttachLoading] = useState(false)
+  const [attachError, setAttachError] = useState<string | null>(null)
+  const [manualSessionId, setManualSessionId] = useState('')
 
   const containerMapRef = useRef(new Map<string, HTMLDivElement>())
   const terminalMapRef = useRef(new Map<string, Terminal>())
@@ -585,6 +624,92 @@ export function TerminalWorkspace({
     [createTab, ensureTerminalForTab, focusActiveTerminal],
   )
 
+  const loadAttachableSessions = useCallback(
+    async function loadAttachableSessions() {
+      setAttachLoading(true)
+      setAttachError(null)
+      try {
+        const response = await fetch('/api/terminal-sessions', {
+          headers: { Accept: 'application/json' },
+        })
+        const payload = (await response.json().catch(function fallback() {
+          return null
+        })) as {
+          ok?: boolean
+          error?: string
+          sessions?: Array<WorkspaceTerminalSessionSummary>
+        } | null
+        if (!response.ok || payload?.ok === false) {
+          throw new Error(payload?.error || `HTTP ${response.status}`)
+        }
+        setAttachSessions(
+          Array.isArray(payload?.sessions) ? payload.sessions : [],
+        )
+      } catch (error) {
+        setAttachSessions([])
+        setAttachError(error instanceof Error ? error.message : String(error))
+      } finally {
+        setAttachLoading(false)
+      }
+    },
+    [],
+  )
+
+  const openAttachPanel = useCallback(
+    function openAttachPanel() {
+      setShowAttachPanel(true)
+      void loadAttachableSessions()
+    },
+    [loadAttachableSessions],
+  )
+
+  const attachWorkspaceSession = useCallback(
+    function attachWorkspaceSession(sessionId: string, title?: string) {
+      const trimmedSessionId = sessionId.trim()
+      if (!trimmedSessionId) return
+      const nextTitle = title?.trim() || trimmedSessionId
+      const tabId = createAttachedTab(
+        trimmedSessionId,
+        nextTitle,
+        DEFAULT_TERMINAL_CWD,
+      )
+      setShowAttachPanel(false)
+      setManualSessionId('')
+      window.setTimeout(function focusAttachedTab() {
+        const tab = useTerminalPanelStore
+          .getState()
+          .tabs.find((item) => item.id === tabId)
+        if (!tab) return
+        ensureTerminalForTab(tab)
+        focusActiveTerminal()
+      }, 0)
+    },
+    [createAttachedTab, ensureTerminalForTab, focusActiveTerminal],
+  )
+
+  const renameWorkspaceSession = useCallback(
+    async function renameWorkspaceSession(
+      session: WorkspaceTerminalSessionSummary,
+    ) {
+      const currentTitle = workspaceTerminalTitle(session)
+      const nextTitle = window.prompt('Rename shared PTY', currentTitle)
+      if (!nextTitle?.trim()) return
+      await fetch('/api/terminal-sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'rename',
+          sessionId: session.id,
+          label: nextTitle.trim(),
+        }),
+      }).catch(function ignore() {
+        return undefined
+      })
+      await loadAttachableSessions()
+    },
+    [loadAttachableSessions],
+  )
+
   const persistTerminalLabel = useCallback(async function persistTerminalLabel(
     sessionId: string | null,
     label: string,
@@ -838,6 +963,15 @@ export function TerminalWorkspace({
           >
             <HugeiconsIcon icon={Add01Icon} size={20} strokeWidth={1.5} />
           </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={openAttachPanel}
+            aria-label="Attach shared PTY"
+            title="Attach shared PTY"
+          >
+            Attach
+          </Button>
           {mode === 'panel' ? (
             <>
               <Button
@@ -922,6 +1056,127 @@ export function TerminalWorkspace({
           onRunCommand={handleRunDebugCommand}
           onClose={handleCloseDebugPanel}
         />
+      ) : null}
+
+      {showAttachPanel ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4">
+          <div className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-xl border border-primary-300 bg-primary-100 p-4 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-base font-semibold text-primary-950">
+                  Attach Shared PTY
+                </h2>
+                <p className="mt-1 text-xs text-primary-600">
+                  Attach to a live Workspace terminal session from desktop, web,
+                  or mobile.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={loadAttachableSessions}
+                  disabled={attachLoading}
+                >
+                  Refresh
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={() => setShowAttachPanel(false)}
+                  aria-label="Close attach shared PTY"
+                >
+                  <HugeiconsIcon
+                    icon={Cancel01Icon}
+                    size={18}
+                    strokeWidth={1.5}
+                  />
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-4 flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+              <div className="flex items-center gap-2">
+                <input
+                  value={manualSessionId}
+                  onChange={(event) => setManualSessionId(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      attachWorkspaceSession(manualSessionId)
+                    }
+                  }}
+                  placeholder="Manual session ID"
+                  className="h-9 min-w-0 flex-1 rounded-lg border border-primary-300 bg-primary-50 px-3 text-sm text-primary-950 outline-none focus:border-accent-500"
+                />
+                <Button
+                  size="sm"
+                  onClick={() => attachWorkspaceSession(manualSessionId)}
+                  disabled={!manualSessionId.trim()}
+                >
+                  Attach
+                </Button>
+              </div>
+
+              <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-primary-300 bg-primary-50 p-2">
+                {attachLoading ? (
+                  <div className="flex min-h-40 items-center justify-center text-sm text-primary-600">
+                    Loading sessions...
+                  </div>
+                ) : attachError ? (
+                  <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+                    {attachError}
+                  </div>
+                ) : attachSessions.length === 0 ? (
+                  <div className="flex min-h-40 items-center justify-center text-sm text-primary-600">
+                    No live Workspace PTYs.
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {attachSessions.map((session) => (
+                      <div
+                        key={session.id}
+                        className="flex items-center gap-3 rounded-lg border border-primary-300 bg-primary-100 px-3 py-2"
+                      >
+                        <HugeiconsIcon
+                          icon={ComputerTerminal01Icon}
+                          size={18}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-accent-500"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-semibold text-primary-950">
+                            {workspaceTerminalTitle(session)}
+                          </div>
+                          <div className="truncate text-xs text-primary-600">
+                            {session.id} - {workspaceTerminalSubtitle(session)}
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void renameWorkspaceSession(session)}
+                        >
+                          Rename
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            attachWorkspaceSession(
+                              session.id,
+                              workspaceTerminalTitle(session),
+                            )
+                          }
+                        >
+                          Attach
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       ) : null}
 
       {contextMenu ? (

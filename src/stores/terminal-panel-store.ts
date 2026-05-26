@@ -24,6 +24,7 @@ type TerminalPanelState = {
   togglePanel: () => void
   setPanelHeight: (height: number) => void
   createTab: (cwd?: string) => string
+  createAttachedTab: (sessionId: string, title: string, cwd?: string) => string
   closeTab: (tabId: string) => void
   closeAllTabs: () => void
   setActiveTab: (tabId: string) => void
@@ -64,6 +65,26 @@ export const useTerminalPanelStore = create<TerminalPanelState>()(
         const { terminalCounter } = get()
         const nextCounter = terminalCounter + 1
         const tab = createDefaultTab(nextCounter, cwd)
+        set((state) => ({
+          tabs: [...state.tabs, tab],
+          activeTabId: tab.id,
+          terminalCounter: nextCounter,
+          isPanelOpen: true,
+        }))
+        return tab.id
+      },
+      createAttachedTab: function createAttachedTab(
+        sessionId: string,
+        title: string,
+        cwd = '~',
+      ) {
+        const { terminalCounter } = get()
+        const nextCounter = terminalCounter + 1
+        const tab = {
+          ...createDefaultTab(nextCounter, cwd),
+          title: title.trim() || `Terminal ${nextCounter}`,
+          sessionId,
+        }
         set((state) => ({
           tabs: [...state.tabs, tab],
           activeTabId: tab.id,
