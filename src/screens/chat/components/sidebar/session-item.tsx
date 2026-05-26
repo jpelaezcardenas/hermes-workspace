@@ -59,6 +59,9 @@ function normalizeTitleValue(value: string | undefined): string | null {
   const trimmed = value.trim()
   if (trimmed.length === 0) return null
   if (isUuidLike(trimmed)) return null
+  if (trimmed.startsWith('<workspace_context')) return null
+  if (trimmed.startsWith('<environment_context')) return null
+  if (trimmed.startsWith('<image')) return null
   return trimmed
 }
 

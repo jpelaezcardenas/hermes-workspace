@@ -39,6 +39,49 @@ function localSessionEntry(session: ReturnType<typeof ensureLocalSession>) {
   }
 }
 
+function parseBoundedInt(
+  raw: string | null,
+  fallback: number,
+  min: number,
+  max: number,
+): number {
+  if (!raw) return fallback
+  const parsed = Number.parseInt(raw, 10)
+  if (!Number.isFinite(parsed)) return fallback
+  return Math.min(max, Math.max(min, parsed))
+}
+
+function isValidationProbeSession(session: Record<string, unknown>): boolean {
+  const keys = [session.id, session.key, session.friendlyId]
+    .filter((value): value is string => typeof value === 'string')
+    .map((value) => value.trim())
+
+  return keys.some(
+    (key) =>
+      key.startsWith('codex_parity_validation_') ||
+      key.startsWith('codex_validation_chat_') ||
+      key.startsWith('codex_phone_probe_') ||
+      key.startsWith('codex_monitor_validation_') ||
+      key.startsWith('codex_ui_active_run_') ||
+      key.startsWith('codex_e2e_chat_'),
+  )
+}
+
+function sessionsJson(body: Record<string, unknown>, init?: ResponseInit) {
+  return json(body, {
+    ...init,
+    headers: {
+      'Cache-Control': 'no-store, max-age=0',
+      ...init?.headers,
+    },
+  })
+}
+
+function readUpdatedAt(session: Record<string, unknown>): number {
+  const value = session.updatedAt
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
 function isDashboardSessionCreateUnsupported(err: unknown): boolean {
   const message = err instanceof Error ? err.message : String(err)
   return (
@@ -67,8 +110,32 @@ export const Route = createFileRoute('/api/sessions')({
         }
 
         try {
-          const sessions = await listSessions(50, 0)
-          const gatewaySessions = sessions.map(toSessionSummary)
+          const url = new URL(request.url)
+          const limit = parseBoundedInt(
+            url.searchParams.get('limit'),
+            50,
+            1,
+            100,
+          )
+          const offset = parseBoundedInt(
+            url.searchParams.get('offset'),
+            0,
+            0,
+            10_000,
+          )
+          const includeValidation =
+            url.searchParams.get('includeValidation') === '1' ||
+            url.searchParams.get('includeValidation') === 'true'
+
+          const gatewayFetchLimit = Math.min(100, limit + 25)
+          const sessions = await listSessions(gatewayFetchLimit, offset)
+          const gatewaySessions = sessions
+            .map(toSessionSummary)
+            .filter(
+              (session) =>
+                includeValidation ||
+                !isValidationProbeSession(session as Record<string, unknown>),
+            )
 
           // The dashboard can be list-capable while refusing POST /api/sessions.
           // Keep locally-created fallback chats visible without duplicating
@@ -83,9 +150,22 @@ export const Route = createFileRoute('/api/sessions')({
             }
           }
 
-          return json({ sessions: gatewaySessions })
+          const visibleSessions = gatewaySessions
+            .filter(
+              (session) =>
+                includeValidation ||
+                !isValidationProbeSession(session as Record<string, unknown>),
+            )
+            .sort(
+              (a, b) =>
+                readUpdatedAt(b as Record<string, unknown>) -
+                readUpdatedAt(a as Record<string, unknown>),
+            )
+            .slice(0, limit)
+
+          return sessionsJson({ sessions: visibleSessions })
         } catch (err) {
-          return json(
+          return sessionsJson(
             {
               error: err instanceof Error ? err.message : String(err),
             },

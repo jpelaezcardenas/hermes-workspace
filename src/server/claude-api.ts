@@ -316,6 +316,7 @@ export function toSessionSummary(
 ): Record<string, unknown> {
   return {
     key: session.id,
+    id: session.id,
     friendlyId: session.id,
     kind: 'chat',
     status: session.ended_at ? 'ended' : 'idle',

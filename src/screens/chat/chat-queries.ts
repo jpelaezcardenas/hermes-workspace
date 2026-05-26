@@ -74,7 +74,7 @@ async function fetchWithTimeout(
 }
 
 export async function fetchSessions(): Promise<Array<SessionMeta>> {
-  const res = await fetchWithTimeout('/api/sessions', 7000)
+  const res = await fetchWithTimeout('/api/sessions?limit=50&offset=0', 7000)
   if (!res.ok) throw new Error(await readError(res))
   const data = (await res.json()) as SessionListResponse
   return normalizeSessions(data.sessions)
@@ -488,7 +488,9 @@ export function moveHistoryMessages(
 ) {
   const fromKey = chatQueryKeys.history(fromFriendlyId, fromSessionKey)
   const toKey = chatQueryKeys.history(toFriendlyId, toSessionKey)
-  const fromData = queryClient.getQueryData(fromKey) as Record<string, unknown> | undefined
+  const fromData = queryClient.getQueryData(fromKey) as
+    | Record<string, unknown>
+    | undefined
   if (!fromData) return
   const messages = Array.isArray(fromData.messages) ? fromData.messages : []
   queryClient.setQueryData(toKey, {
@@ -553,14 +555,17 @@ export function reconcileSessionDraft(
             key: toSessionKey,
             friendlyId: toFriendlyId,
             lastMessage: source.lastMessage ?? session.lastMessage,
-            updatedAt: Math.max(source.updatedAt ?? 0, session.updatedAt ?? 0) ||
+            updatedAt:
+              Math.max(source.updatedAt ?? 0, session.updatedAt ?? 0) ||
               session.updatedAt ||
               source.updatedAt,
             label: session.label ?? source.label,
             title: session.title ?? source.title,
             derivedTitle: session.derivedTitle ?? source.derivedTitle,
             titleStatus:
-              session.titleStatus === 'idle' ? source.titleStatus : session.titleStatus,
+              session.titleStatus === 'idle'
+                ? source.titleStatus
+                : session.titleStatus,
             titleSource: session.titleSource ?? source.titleSource,
             titleError: session.titleError ?? source.titleError,
           },
