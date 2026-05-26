@@ -128,7 +128,7 @@ export function TasksScreen() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTask,
-    onSuccess: () => { invalidate(); toast('Task deleted') },
+    onSuccess: () => { invalidate(); toast('Task deleted'); setEditingTask(null) },
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to delete task', { type: 'error' }),
   })
 
@@ -407,7 +407,7 @@ export function TasksScreen() {
         onOpenChange={(open) => { if (!open) setEditingTask(null) }}
         task={editingTask}
         assignees={assignees}
-        isSubmitting={updateMutation.isPending}
+        isSubmitting={updateMutation.isPending || deleteMutation.isPending}
         isSessionActionPending={launchTaskSessionMutation.isPending || linkSessionMutation.isPending}
         onSubmit={async (input) => {
           if (!editingTask) return
@@ -421,6 +421,9 @@ export function TasksScreen() {
         }}
         onLinkSession={async (task, sessionId) => {
           await linkSessionMutation.mutateAsync({ task, sessionId })
+        }}
+        onDelete={async (task) => {
+          await deleteMutation.mutateAsync(task.id)
         }}
       />
     </div>

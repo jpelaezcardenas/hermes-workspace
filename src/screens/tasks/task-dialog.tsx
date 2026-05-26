@@ -22,6 +22,7 @@ type Props = {
   onLaunchSession?: (task: ClaudeTask) => Promise<void>
   onOpenSession?: (sessionId: string) => void
   onLinkSession?: (task: ClaudeTask, sessionId: string | null) => Promise<void>
+  onDelete?: (task: ClaudeTask) => Promise<void>
 }
 
 export function TaskDialog({
@@ -36,6 +37,7 @@ export function TaskDialog({
   onLaunchSession,
   onOpenSession,
   onLinkSession,
+  onDelete,
 }: Props) {
   const isEdit = Boolean(task)
 
@@ -94,6 +96,7 @@ export function TaskDialog({
   const labelClass = 'block text-xs font-medium text-[var(--theme-muted)] mb-1'
   const normalizedSessionId = sessionId.trim()
   const linkedSessionId = task?.session_id?.trim() || ''
+  const actionsDisabled = isSubmitting || isSessionActionPending
 
   return (
     <DialogRoot open={open} onOpenChange={onOpenChange}>
@@ -264,9 +267,23 @@ export function TaskDialog({
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-2">
-              <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>
-              <div className="flex gap-2">
+            <div className="flex items-center justify-between gap-3 pt-2">
+              <div className="flex min-w-0 items-center gap-2">
+                {isEdit && task && onDelete ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => void onDelete(task)}
+                    disabled={actionsDisabled}
+                    className="text-red-400 hover:text-red-300"
+                  >
+                    Delete
+                  </Button>
+                ) : null}
+                <p className="text-[10px] text-[var(--theme-muted)]">Press Esc to cancel</p>
+              </div>
+              <div className="flex shrink-0 gap-2">
                 <Button
                   type="button"
                   variant="ghost"
