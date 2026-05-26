@@ -421,7 +421,7 @@ export const Route = createFileRoute('/api/send-stream')({
           }
           closeStream()
         }
-        request.signal.addEventListener('abort', () => handleAbort())
+        request.signal.addEventListener('abort', () => handleAbort(), { once: true })
 
         const persistRunStarted = (
           runId: string | undefined,
@@ -499,10 +499,6 @@ export const Route = createFileRoute('/api/send-stream')({
               if (streamTimeoutTimer) {
                 clearTimeout(streamTimeoutTimer)
                 streamTimeoutTimer = null
-              }
-              if (heartbeatTimer) {
-                clearInterval(heartbeatTimer)
-                heartbeatTimer = null
               }
               if (activeRunId) {
                 unregisterActiveSendRun(activeRunId)
@@ -1526,28 +1522,16 @@ export const Route = createFileRoute('/api/send-stream')({
           },
           cancel() {
             // User clicked Stop, navigated away, or browser closed the tab.
-            // Mark the local stream closed so we stop enqueueing SSE chunks,
-            // and abort the upstream Hermes gateway request so the agent
-            // stops processing (saves API credits and respects the Stop
-            // button). The Hermes gateway handles client disconnection by
-            // calling agent.interrupt() on ConnectionResetError.
-            streamClosed = true
-            if (unregisterTimer) {
-              clearTimeout(unregisterTimer)
-              unregisterTimer = null
-            }
-            if (streamTimeoutTimer) {
-              clearTimeout(streamTimeoutTimer)
-              streamTimeoutTimer = null
-            }
-            if (activeRunId) {
+            // Mark the stream complete, persist the run as 'handoff' so
+            // session history reflects the interruption, then delegate to
+            // closeStream() for timer/controller cleanup.  Delegate instead
+            // of duplicating cleanup logic to keep the two paths in sync.
+            if (activeRunId && !streamClosed) {
               persistActiveRun((runSessionKey, activeId) =>
                 markRunStatus(runSessionKey, activeId, 'handoff'),
               )
-              unregisterActiveSendRun(activeRunId)
-              activeRunId = null
             }
-            abortController.abort()
+            closeStream()
           },
         })
 
