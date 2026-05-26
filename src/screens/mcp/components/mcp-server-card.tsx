@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { McpLogsDrawer } from './mcp-logs-drawer'
 import {
   useConfigureMcpServer,
   useDeleteMcpServer,
+  useDiscoverMcpTools,
   useTestMcpServer,
 } from '../hooks/use-mcp-mutations'
 import { useMcpCapabilityMode } from '../hooks/use-mcp-capability-mode'
 import { useMcpOauth } from '../hooks/use-mcp-oauth'
 import { isArgPlaceholder, isUrlPlaceholder } from '../lib/placeholder-detect'
-import type { McpServer, McpTestResult } from '@/types/mcp'
+import type { McpClientInput, McpDiscoveredTool, McpServer, McpTestResult } from '@/types/mcp'
 
 interface Props {
   server: McpServer
@@ -24,6 +26,21 @@ const STATUS_COLORS: Record<McpServer['status'], string> = {
     'border border-red-300 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/40 dark:text-red-200',
   unknown:
     'border border-primary-200 bg-primary-100/60 text-primary-500',
+}
+
+function toDiscoverInput(server: McpServer): McpClientInput {
+  return {
+    name: server.name,
+    enabled: server.enabled,
+    transportType: server.transportType,
+    url: server.url,
+    command: server.command,
+    args: server.args,
+    authType: server.authType,
+    toolMode: server.toolMode,
+    includeTools: server.includeTools,
+    excludeTools: server.excludeTools,
+  }
 }
 
 function Badge({
@@ -44,6 +61,7 @@ function Badge({
 
 export function McpServerCard({ server, onEdit }: Props) {
   const test = useTestMcpServer()
+  const discover = useDiscoverMcpTools()
   const configure = useConfigureMcpServer()
   const remove = useDeleteMcpServer()
   const oauth = useMcpOauth()
@@ -57,10 +75,13 @@ export function McpServerCard({ server, onEdit }: Props) {
     : ''
   const qc = useQueryClient()
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [logsOpen, setLogsOpen] = useState(false)
   const [testResult, setTestResult] = useState<McpTestResult | null>(null)
+  const [discoverResult, setDiscoverResult] = useState<Array<McpDiscoveredTool> | null>(null)
 
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-primary-200 bg-primary-50/85 p-4">
+    <>
+      <article className="flex flex-col gap-3 rounded-xl border border-primary-200 bg-primary-50/85 p-4">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -118,6 +139,28 @@ export function McpServerCard({ server, onEdit }: Props) {
         >
           {test.isPending ? 'Testing…' : 'Test'}
         </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={discover.isPending || fallbackMode || !server.enabled}
+          title={fallbackMode ? liveOnlyTitle : !server.enabled ? 'Enable the server before discovery.' : ''}
+          onClick={async () => {
+            const result = await discover.mutateAsync(toDiscoverInput(server))
+            setDiscoverResult(result.tools)
+            qc.invalidateQueries({ queryKey: ['mcp', 'servers'] })
+          }}
+        >
+          {discover.isPending ? 'Discovering…' : 'Discover'}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={fallbackMode}
+          title={liveOnlyTitle}
+          onClick={() => setLogsOpen(true)}
+        >
+          Logs
+        </Button>
         {server.authType === 'oauth' ? (
           <Button
             variant="outline"
@@ -131,10 +174,6 @@ export function McpServerCard({ server, onEdit }: Props) {
             {oauth.isPending ? 'Reauth…' : 'Reauth'}
           </Button>
         ) : null}
-        {/* Logs button hidden until hermes-agent dashboard exposes the
-            /api/mcp/{name}/logs SSE endpoint. Re-enable when the runtime
-            endpoint is available; the McpLogsDrawer component is still
-            available at ./mcp-logs-drawer. */}
         <Button variant="outline" size="sm" onClick={() => onEdit(server)}>
           Edit
         </Button>
@@ -175,6 +214,19 @@ export function McpServerCard({ server, onEdit }: Props) {
             : `Failed: ${testResult.error || 'unknown error'}`}
         </p>
       ) : null}
+      {discoverResult ? (
+        <p className="text-xs text-primary-500">
+          Discovered {discoverResult.length} tools
+          {discoverResult.length > 0
+            ? `: ${discoverResult.slice(0, 6).map((tool) => tool.name).join(', ')}`
+            : '.'}
+        </p>
+      ) : null}
+      {discover.isError && discover.error ? (
+        <p className="text-xs text-red-700 dark:text-red-300">
+          Discover failed: {discover.error.message}
+        </p>
+      ) : null}
       {testResult && !testResult.ok && testResult.error ? (
         (() => {
           const stdioErrorRe = /Connection closed|EACCES|ENOENT|exited unexpectedly/i
@@ -206,6 +258,8 @@ export function McpServerCard({ server, onEdit }: Props) {
           Reauth succeeded.
         </p>
       ) : null}
-    </article>
+      </article>
+      <McpLogsDrawer server={server} open={logsOpen} onClose={() => setLogsOpen(false)} />
+    </>
   )
 }
