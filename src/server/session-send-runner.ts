@@ -1,6 +1,7 @@
 type SessionSendPayload = Record<string, unknown> & {
   sessionKey: string
   message: string
+  idempotencyKey?: string
 }
 
 export type ServerSideSessionSendInput = {
@@ -87,6 +88,22 @@ export function startServerSideSessionSend(
   input: ServerSideSessionSendInput,
 ): void {
   void drainServerSideSessionSend(input).catch((error: unknown) => {
+    const runId =
+      typeof input.payload.idempotencyKey === 'string'
+        ? input.payload.idempotencyKey.trim()
+        : ''
+    if (runId) {
+      void import('./run-store')
+        .then(({ markRunStatus }) =>
+          markRunStatus(
+            input.payload.sessionKey,
+            runId,
+            'error',
+            truncateErrorPreview(errorMessageFromUnknown(error)),
+          ),
+        )
+        .catch(() => undefined)
+    }
     console.warn(
       '[session-send] background send failed:',
       truncateErrorPreview(errorMessageFromUnknown(error)),

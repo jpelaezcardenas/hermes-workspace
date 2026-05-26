@@ -323,6 +323,8 @@ export const Route = createFileRoute('/api/send-stream')({
         const attachments = normalizeAttachments(body.attachments)
         const history = normalizePortableHistory(body.history)
         const shouldPublishServerSideEvents = body.serverSide === true
+        const requestedRunId =
+          readString(body.idempotencyKey) || crypto.randomUUID()
         if (!message.trim() && (!attachments || attachments.length === 0)) {
           return new Response(
             JSON.stringify({ ok: false, error: 'message required' }),
@@ -513,7 +515,7 @@ export const Route = createFileRoute('/api/send-stream')({
 
             try {
               if (chatMode === 'portable') {
-                const runId = crypto.randomUUID()
+                const runId = requestedRunId
                 const portableSessionKey = sessionKey
 
                 // Ensure session exists (user message appended after building history)
@@ -939,6 +941,15 @@ export const Route = createFileRoute('/api/send-stream')({
               }
 
               let startedSent = false
+              if (shouldPublishServerSideEvents) {
+                activeRunId = requestedRunId
+                activeRunSessionKey = sessionKey
+                persistRunStarted(
+                  requestedRunId,
+                  sessionKey,
+                  resolvedFriendlyId,
+                )
+              }
               // In enhanced mode, the HTTP stream response delivers all events
               // directly to useStreamingMessage. Skip publishChatEvent to prevent
               // useRealtimeChatHistory from creating duplicate message bubbles.
@@ -1034,9 +1045,10 @@ export const Route = createFileRoute('/api/send-stream')({
                           ? data.session_id
                           : sessionKey
                       const runId =
-                        typeof data.run_id === 'string' && data.run_id.trim()
+                        activeRunId ||
+                        (typeof data.run_id === 'string' && data.run_id.trim()
                           ? data.run_id
-                          : (activeRunId ?? undefined)
+                          : requestedRunId)
 
                       if (runId && !activeRunId) {
                         activeRunId = runId

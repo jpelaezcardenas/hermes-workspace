@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { drainServerSideSessionSend } from './session-send-runner'
+import {
+  drainServerSideSessionSend,
+  startServerSideSessionSend,
+} from './session-send-runner'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -33,7 +36,11 @@ describe('session-send server runner', () => {
     await drainServerSideSessionSend({
       requestUrl: 'http://workspace.local/api/session-send',
       cookie: 'claude-auth=redacted',
-      payload: { sessionKey: 'session-1', message: 'hello' },
+      payload: {
+        sessionKey: 'session-1',
+        message: 'hello',
+        idempotencyKey: 'run-client-1',
+      },
     })
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
@@ -43,6 +50,7 @@ describe('session-send server runner', () => {
     expect(JSON.parse(String(init?.body))).toEqual({
       sessionKey: 'session-1',
       message: 'hello',
+      idempotencyKey: 'run-client-1',
     })
   })
 
@@ -62,5 +70,39 @@ describe('session-send server runner', () => {
         payload: { sessionKey: 'session-1', message: 'hello' },
       }),
     ).rejects.toThrow('model unavailable')
+  })
+
+  it('marks queued runs as error when the background drain fails', async () => {
+    vi.useFakeTimers()
+    const markRunStatus = vi.fn(async () => null)
+    vi.doMock('./run-store', () => ({ markRunStatus }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        streamResponse(
+          'event: error\ndata: {"message":"model unavailable"}\n\n',
+        ),
+      ),
+    )
+
+    startServerSideSessionSend({
+      requestUrl: 'http://workspace.local/api/session-send',
+      payload: {
+        sessionKey: 'session-1',
+        message: 'hello',
+        idempotencyKey: 'run-client-1',
+      },
+    })
+
+    await vi.runAllTimersAsync()
+    await vi.waitFor(() => {
+      expect(markRunStatus).toHaveBeenCalledWith(
+        'session-1',
+        'run-client-1',
+        'error',
+        'model unavailable',
+      )
+    })
+    vi.useRealTimers()
   })
 })

@@ -11,6 +11,7 @@ import { json } from '@tanstack/react-start'
 import { requireLocalOrAuth } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
 import { startServerSideSessionSend } from '../../server/session-send-runner'
+import { createPersistedRun } from '../../server/run-store'
 
 export const Route = createFileRoute('/api/session-send')({
   server: {
@@ -40,6 +41,22 @@ export const Route = createFileRoute('/api/session-send')({
               { status: 400 },
             )
           }
+          const idempotencyKey =
+            typeof body.idempotencyKey === 'string' &&
+            body.idempotencyKey.trim().length > 0
+              ? body.idempotencyKey.trim()
+              : crypto.randomUUID()
+
+          await createPersistedRun({
+            runId: idempotencyKey,
+            sessionKey,
+            friendlyId:
+              typeof body.friendlyId === 'string' &&
+              body.friendlyId.trim().length > 0
+                ? body.friendlyId.trim()
+                : sessionKey,
+          })
+
           // Fire-and-forget from the browser's perspective, but keep the
           // /api/send-stream response drained on the server so mobile/browser
           // focus loss cannot stall the underlying Hermes run.
@@ -52,13 +69,16 @@ export const Route = createFileRoute('/api/session-send')({
               sessionKey,
               message,
               serverSide: true,
-              idempotencyKey:
-                typeof body.idempotencyKey === 'string'
-                  ? body.idempotencyKey
-                  : crypto.randomUUID(),
+              idempotencyKey,
             },
           })
-          return json({ ok: true, sessionKey, queued: true, serverSide: true })
+          return json({
+            ok: true,
+            sessionKey,
+            runId: idempotencyKey,
+            queued: true,
+            serverSide: true,
+          })
         } catch (error) {
           return json(
             {
