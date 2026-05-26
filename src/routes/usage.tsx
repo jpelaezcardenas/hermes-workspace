@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
 import { usePageTitle } from '@/hooks/use-page-title'
 
 type UsageWindow = {
@@ -40,10 +41,84 @@ type UsageLimitsResponse = {
   providers: UsageProviderCard[]
 }
 
+type ModelCatalogEntry = {
+  id?: string
+  name?: string
+  provider?: string
+}
+
+type ModelsResponse = {
+  ok?: boolean
+  source?: string
+  models?: ModelCatalogEntry[]
+  data?: ModelCatalogEntry[]
+  configuredProviders?: string[]
+  error?: string
+}
+
+type HermesProviderState = {
+  id: string
+  name?: string
+  configured?: boolean
+  isDefault?: boolean
+  models?: Array<{ id?: string; name?: string }>
+}
+
+type HermesConfigResponse = {
+  ok?: boolean
+  activeProvider?: string
+  activeModel?: string
+  providers?: HermesProviderState[]
+  error?: string
+  message?: string
+}
+
+type ModelInfoResponse = {
+  model?: string
+  provider?: string
+  auto_context_length?: number
+  config_context_length?: number
+  effective_context_length?: number
+  capabilities?: Record<string, unknown>
+  supportsRuntimeSwitching?: boolean
+  mode?: string
+  gatewayMode?: string
+  error?: string
+}
+
+type ContextUsageResponse = {
+  ok?: boolean
+  contextPercent?: number
+  maxTokens?: number
+  usedTokens?: number
+  model?: string
+  staticTokens?: number
+  conversationTokens?: number
+  error?: string
+}
+
 async function fetchUsageLimits(force = false): Promise<UsageLimitsResponse> {
   const response = await fetch(`/api/usage/limits${force ? '?force=1' : ''}`, { cache: 'no-store' })
   if (!response.ok) throw new Error(`Usage limits failed: HTTP ${response.status}`)
   return response.json()
+}
+
+async function fetchJson<T>(path: string): Promise<T> {
+  const response = await fetch(path, { cache: 'no-store' })
+  const payload = (await response.json().catch(() => ({}))) as T & { error?: string }
+  if (!response.ok) throw new Error(payload.error || `${path} failed: HTTP ${response.status}`)
+  return payload as T
+}
+
+async function patchDefaultModel(providerId: string, modelId: string): Promise<HermesConfigResponse> {
+  const response = await fetch('/api/hermes-config', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'set-default-model', providerId, modelId }),
+  })
+  const payload = (await response.json().catch(() => ({}))) as HermesConfigResponse
+  if (!response.ok || payload.ok === false) throw new Error(payload.error || `Model config update failed: HTTP ${response.status}`)
+  return payload
 }
 
 export const Route = createFileRoute('/usage')({
@@ -98,6 +173,11 @@ function UsageRoute() {
 
             <CaelRosterPanel providers={sortedProviders(data.providers)} />
 
+            <section className="grid gap-4 xl:grid-cols-2">
+              <ModelConfigPanel onApplied={() => void refetch()} />
+              <RuntimeModelPanel />
+            </section>
+
             <section className="grid gap-4 lg:grid-cols-2">
               {sortedProviders(data.providers).map((provider) => (
                 <ProviderCard key={provider.id} provider={provider} />
@@ -108,6 +188,178 @@ function UsageRoute() {
       </div>
     </main>
   )
+}
+
+
+function ModelConfigPanel({ onApplied }: { onApplied: () => void }) {
+  const configQuery = useQuery({
+    queryKey: ['usage', 'hermes-config'],
+    queryFn: () => fetchJson<HermesConfigResponse>('/api/hermes-config'),
+  })
+  const modelsQuery = useQuery({
+    queryKey: ['usage', 'models'],
+    queryFn: () => fetchJson<ModelsResponse>('/api/models'),
+  })
+  const [providerId, setProviderId] = useState('')
+  const [modelId, setModelId] = useState('')
+  const [manual, setManual] = useState(false)
+  const [notice, setNotice] = useState<string | null>(null)
+
+  const catalogModels = useMemo(() => modelsQuery.data?.models ?? modelsQuery.data?.data ?? [], [modelsQuery.data])
+  const providerOptions = useMemo(() => {
+    const values = new Set<string>()
+    for (const model of catalogModels) if (model.provider) values.add(model.provider)
+    for (const provider of configQuery.data?.providers ?? []) {
+      if (provider.isDefault || provider.configured || (provider.models?.length ?? 0) > 0) values.add(provider.id)
+    }
+    for (const provider of modelsQuery.data?.configuredProviders ?? []) values.add(provider)
+    if (configQuery.data?.activeProvider) values.add(configQuery.data.activeProvider)
+    return Array.from(values).filter(Boolean).sort()
+  }, [catalogModels, configQuery.data, modelsQuery.data])
+  const modelOptions = useMemo(() => {
+    if (!providerId) return []
+    const values = new Set<string>()
+    for (const model of catalogModels) if ((model.provider || 'unknown') === providerId && model.id) values.add(model.id)
+    const configProvider = configQuery.data?.providers?.find((provider) => provider.id === providerId)
+    for (const model of configProvider?.models ?? []) if (model.id) values.add(model.id)
+    if (configQuery.data?.activeProvider === providerId && configQuery.data.activeModel) values.add(configQuery.data.activeModel)
+    return Array.from(values).filter(Boolean).sort()
+  }, [catalogModels, configQuery.data, providerId])
+
+  useEffect(() => {
+    if (!configQuery.data) return
+    setProviderId((current) => current || configQuery.data?.activeProvider || providerOptions[0] || '')
+    setModelId((current) => current || configQuery.data?.activeModel || modelOptions[0] || '')
+  }, [configQuery.data, modelOptions, providerOptions])
+
+  useEffect(() => {
+    if (!providerId || modelOptions.includes(modelId)) return
+    setModelId(modelOptions[0] || '')
+  }, [modelId, modelOptions, providerId])
+
+  const mutation = useMutation({
+    mutationFn: () => patchDefaultModel(providerId, modelId),
+    onSuccess: (payload) => {
+      setNotice(payload.message || 'Default model updated.')
+      void configQuery.refetch()
+      onApplied()
+    },
+    onError: (error) => setNotice(error instanceof Error ? error.message : 'Default model update failed.'),
+  })
+
+  return (
+    <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">Active Cael model config</p>
+          <h2 className="mt-2 text-xl font-semibold">{configQuery.data?.activeProvider || 'unknown'} / {configQuery.data?.activeModel || 'unknown'}</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--theme-muted)]">Hydrated from /api/hermes-config and /api/models; applies through the same server-side config patch as desktop.</p>
+        </div>
+        <button className="rounded-xl border border-[var(--theme-border)] px-3 py-2 text-sm hover:bg-white/5 disabled:opacity-50" disabled={configQuery.isFetching || modelsQuery.isFetching || mutation.isPending} onClick={() => { void configQuery.refetch(); void modelsQuery.refetch() }}>
+          {configQuery.isFetching || modelsQuery.isFetching ? 'Loading...' : 'Reload'}
+        </button>
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+        {manual || providerOptions.length === 0 ? (
+          <>
+            <input value={providerId} onChange={(event) => setProviderId(event.target.value)} placeholder="provider" className="rounded-xl border border-[var(--theme-border)] bg-black/10 px-3 py-2 text-sm outline-none" />
+            <input value={modelId} onChange={(event) => setModelId(event.target.value)} placeholder="model" className="rounded-xl border border-[var(--theme-border)] bg-black/10 px-3 py-2 text-sm outline-none" />
+          </>
+        ) : (
+          <>
+            <select value={providerId} onChange={(event) => setProviderId(event.target.value)} className="rounded-xl border border-[var(--theme-border)] bg-black/10 px-3 py-2 text-sm outline-none">
+              {providerOptions.map((provider) => <option key={provider} value={provider}>{providerLabel(provider, configQuery.data)}</option>)}
+            </select>
+            <select value={modelId} onChange={(event) => setModelId(event.target.value)} className="rounded-xl border border-[var(--theme-border)] bg-black/10 px-3 py-2 text-sm outline-none">
+              {modelOptions.map((model) => <option key={model} value={model}>{modelLabel(model, catalogModels)}</option>)}
+            </select>
+          </>
+        )}
+        <button className="rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-sky-950 disabled:opacity-50" disabled={mutation.isPending || !providerId.trim() || !modelId.trim()} onClick={() => mutation.mutate()}>
+          {mutation.isPending ? 'Applying...' : 'Apply'}
+        </button>
+      </div>
+
+      <label className="mt-3 flex items-center gap-2 text-xs text-[var(--theme-muted)]">
+        <input type="checkbox" checked={manual} onChange={(event) => setManual(event.target.checked)} />
+        Manual provider/model override
+      </label>
+      <p className="mt-2 text-xs text-[var(--theme-muted)]">{(catalogModels.length || 0).toLocaleString()} models across {providerOptions.length} providers from {modelsQuery.data?.source || 'unknown source'}.</p>
+      {notice || configQuery.error || modelsQuery.error ? (
+        <p className="mt-3 rounded-xl border border-[var(--theme-border)] bg-black/10 p-3 text-xs text-[var(--theme-muted)]">
+          {notice || (configQuery.error instanceof Error ? configQuery.error.message : '') || (modelsQuery.error instanceof Error ? modelsQuery.error.message : '')}
+        </p>
+      ) : null}
+    </section>
+  )
+}
+
+function RuntimeModelPanel() {
+  const modelInfoQuery = useQuery({
+    queryKey: ['usage', 'model-info'],
+    queryFn: () => fetchJson<ModelInfoResponse>('/api/model/info'),
+    refetchInterval: 60_000,
+  })
+  const contextQuery = useQuery({
+    queryKey: ['usage', 'context-usage'],
+    queryFn: () => fetchJson<ContextUsageResponse>('/api/context-usage'),
+    refetchInterval: 30_000,
+  })
+  const modelInfo = modelInfoQuery.data
+  const context = contextQuery.data
+  const contextPercent = Math.max(0, Math.min(100, context?.contextPercent ?? 0))
+  const capabilities = Object.entries(modelInfo?.capabilities ?? {}).slice(0, 8)
+
+  return (
+    <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">Runtime model + context</p>
+          <h2 className="mt-2 text-xl font-semibold">{modelInfo?.provider || 'unknown'} / {modelInfo?.model || context?.model || 'unknown'}</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--theme-muted)]">Active model capabilities and current context usage from /api/model/info and /api/context-usage.</p>
+        </div>
+        <button className="rounded-xl border border-[var(--theme-border)] px-3 py-2 text-sm hover:bg-white/5 disabled:opacity-50" disabled={modelInfoQuery.isFetching || contextQuery.isFetching} onClick={() => { void modelInfoQuery.refetch(); void contextQuery.refetch() }}>
+          {modelInfoQuery.isFetching || contextQuery.isFetching ? 'Loading...' : 'Refresh'}
+        </button>
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <MiniMetric label="Active runtime" value={`${modelInfo?.mode || 'unknown'} / ${modelInfo?.gatewayMode || 'unknown'}`} />
+        <MiniMetric label="Context window" value={formatNumber(modelInfo?.effective_context_length ?? context?.maxTokens ?? 0)} />
+        <MiniMetric label="Current context" value={`${Math.round(contextPercent)}%`} />
+      </div>
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
+        <div className="h-full rounded-full bg-emerald-400" style={{ width: `${contextPercent}%` }} />
+      </div>
+      <div className="mt-2 flex justify-between gap-3 text-xs text-[var(--theme-muted)]">
+        <span>Conversation {formatNumber(context?.conversationTokens ?? 0)}</span>
+        <span>Static {formatNumber(context?.staticTokens ?? 0)}</span>
+      </div>
+      {capabilities.length > 0 ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {capabilities.map(([key, value]) => (
+            <span key={key} className="rounded-full border border-[var(--theme-border)] px-3 py-1 text-xs text-[var(--theme-muted)]">{key}: {String(value)}</span>
+          ))}
+        </div>
+      ) : null}
+      {modelInfoQuery.error || contextQuery.error ? (
+        <p className="mt-3 rounded-xl border border-[var(--theme-border)] bg-black/10 p-3 text-xs text-[var(--theme-muted)]">
+          {(modelInfoQuery.error instanceof Error ? modelInfoQuery.error.message : '') || (contextQuery.error instanceof Error ? contextQuery.error.message : '')}
+        </p>
+      ) : null}
+    </section>
+  )
+}
+
+function providerLabel(providerId: string, config?: HermesConfigResponse): string {
+  const provider = config?.providers?.find((entry) => entry.id === providerId)
+  const name = provider?.name || providerId
+  return provider?.isDefault ? `Default: ${name}` : name
+}
+
+function modelLabel(modelId: string, models: ModelCatalogEntry[]): string {
+  return models.find((model) => model.id === modelId)?.name || modelId
 }
 
 
