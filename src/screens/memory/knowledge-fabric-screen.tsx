@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 
 type MemoryScopeChoice = 'both' | 'business' | 'personal'
 type SearchMode = 'knowledge' | 'agent'
+type SessionStateScope = 'business' | 'personal'
 
 type FabricHealth = {
   ok?: boolean
@@ -32,6 +33,10 @@ type FabricSearchResponse = {
     personal?: unknown
   }
   error?: string
+}
+
+type FabricSessionStateResponse = FabricSearchResponse & {
+  data?: string
 }
 
 type SearchItem = {
@@ -157,6 +162,11 @@ export function KnowledgeFabricScreen() {
   const [mode, setMode] = useState<SearchMode>('knowledge')
   const [agentSource, setAgentSource] = useState('')
   const [docId, setDocId] = useState('93c511d84bac0137bea74aa5c0c87de7')
+  const [sessionSummary, setSessionSummary] = useState('')
+  const [sessionScope, setSessionScope] = useState<SessionStateScope>('business')
+  const [sessionAgentSource, setSessionAgentSource] = useState('Cael Web')
+  const [sessionId, setSessionId] = useState('')
+  const [sessionProject, setSessionProject] = useState('Hermes/Cael')
 
   const healthQuery = useQuery({
     queryKey: ['knowledge-fabric', 'health'],
@@ -192,6 +202,17 @@ export function KnowledgeFabricScreen() {
       }
       return await postJson<FabricSearchResponse>('/api/knowledge/fabric/document-record', { docId, memoryScope: scope })
     },
+  })
+
+  const sessionStateMutation = useMutation({
+    mutationFn: async () => postJson<FabricSessionStateResponse>('/api/knowledge/fabric/session-state', {
+      summary: sessionSummary,
+      memoryScope: sessionScope,
+      agentSource: sessionAgentSource || undefined,
+      sessionId: sessionId || undefined,
+      project: sessionProject || undefined,
+    }),
+    onSuccess: () => setSessionSummary(''),
   })
 
   const items = useMemo(() => collectItems(searchMutation.data), [searchMutation.data])
@@ -295,6 +316,50 @@ export function KnowledgeFabricScreen() {
         </section>
 
         {documentItems.length > 0 ? <ResultGrid title="Document" icon={File01Icon} items={documentItems} /> : null}
+
+        <section className="rounded-2xl border border-primary-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+            <HugeiconsIcon icon={Message01Icon} size={18} /> Record session state
+          </div>
+          <textarea
+            value={sessionSummary}
+            onChange={(event) => setSessionSummary(event.target.value)}
+            rows={4}
+            placeholder="Summarize the agent/session state to persist for future Cael, Codex, Claude, or Gemini work..."
+            className="w-full rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-900"
+          />
+          <div className="mt-3 grid gap-3 lg:grid-cols-[160px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="font-medium">Scope</span>
+              <select value={sessionScope} onChange={(event) => setSessionScope(event.target.value as SessionStateScope)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900">
+                <option value="business">Business</option>
+                <option value="personal">Personal</option>
+              </select>
+            </label>
+            <label className="flex min-w-0 flex-col gap-1 text-sm">
+              <span className="font-medium">Agent source</span>
+              <input value={sessionAgentSource} onChange={(event) => setSessionAgentSource(event.target.value)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900" />
+            </label>
+            <label className="flex min-w-0 flex-col gap-1 text-sm">
+              <span className="font-medium">Session id</span>
+              <input value={sessionId} onChange={(event) => setSessionId(event.target.value)} placeholder="optional" className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900" />
+            </label>
+            <label className="flex min-w-0 flex-col gap-1 text-sm">
+              <span className="font-medium">Project</span>
+              <input value={sessionProject} onChange={(event) => setSessionProject(event.target.value)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900" />
+            </label>
+            <button type="button" disabled={!sessionSummary.trim() || sessionStateMutation.isPending} onClick={() => sessionStateMutation.mutate()} className="self-end rounded-lg bg-primary-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40 dark:bg-primary-100 dark:text-primary-950">
+              {sessionStateMutation.isPending ? 'Recording...' : 'Record'}
+            </button>
+          </div>
+          {sessionStateMutation.data || sessionStateMutation.isError ? (
+            <div className={`mt-3 rounded-xl border p-3 text-sm ${sessionStateMutation.data?.ok === false || sessionStateMutation.isError ? 'border-amber-300/50 bg-amber-100/30 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200' : 'border-emerald-300/50 bg-emerald-100/30 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200'}`}>
+              {sessionStateMutation.isError
+                ? sessionStateMutation.error instanceof Error ? sessionStateMutation.error.message : 'Session state write failed'
+                : sessionStateMutation.data?.data || sessionStateMutation.data?.error || 'Knowledge Fabric accepted the session-state receipt.'}
+            </div>
+          ) : null}
+        </section>
       </div>
     </div>
   )
