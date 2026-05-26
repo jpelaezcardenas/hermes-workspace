@@ -6,14 +6,11 @@ param(
   [string]$Hotkey = "CTRL+ALT+H",
   [string]$InstallDir = (Join-Path $env:LOCALAPPDATA "99Pages\AgenticOS\hermes-workspace"),
   [string]$RepoUrl = "https://github.com/outsourc-e/hermes-workspace.git",
+  [switch]$ConfigureToken,
   [switch]$SkipInstall
 )
 
 $ErrorActionPreference = "Stop"
-
-if (-not $WorkforceToken) {
-  throw "Workforce token is required. Pass -WorkforceToken or set P99_WORKFORCE_API_KEY."
-}
 
 $candidateRoot = if ($PSScriptRoot) { Join-Path $PSScriptRoot ".." } else { "" }
 if ($candidateRoot -and (Test-Path (Join-Path $candidateRoot "package.json"))) {
@@ -35,26 +32,37 @@ else {
 Set-Location $root
 $scriptRoot = Join-Path $root "scripts"
 
-if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) {
-  throw "pnpm is required. Install Node.js and pnpm first."
+if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+  if (-not $SkipInstall -and -not (Test-Path (Join-Path $root "node_modules"))) {
+    pnpm install
+  }
+}
+else {
+  Write-Warning "pnpm is not installed. The shortcut was created, but dependencies must be installed before first launch."
 }
 
-if (-not $SkipInstall -and -not (Test-Path (Join-Path $root "node_modules"))) {
-  pnpm install
+if ($WorkforceToken) {
+  & "$scriptRoot\configure-ai-workforce.ps1" `
+    -BaseUrl $BaseUrl `
+    -Model $Model `
+    -ApiKey $WorkforceToken `
+    -Provider "custom"
 }
-
-& "$scriptRoot\configure-ai-workforce.ps1" `
-  -BaseUrl $BaseUrl `
-  -Model $Model `
-  -ApiKey $WorkforceToken `
-  -Provider "custom"
+elseif ($ConfigureToken) {
+  throw "Workforce token is required when -ConfigureToken is used. Pass -WorkforceToken or set P99_WORKFORCE_API_KEY."
+}
 
 & "$scriptRoot\create-desktop-shortcut.ps1" `
   -ShortcutName $ShortcutName `
   -Hotkey $Hotkey
 
 Write-Host "99Pages Agentic OS Windows deployment is configured."
-Write-Host "Custom endpoint: $BaseUrl"
-Write-Host "Model route:      $Model"
+if ($WorkforceToken) {
+  Write-Host "Custom endpoint: $BaseUrl"
+  Write-Host "Model route:      $Model"
+}
+else {
+  Write-Host "Custom endpoint will be configured after first Magic Link login."
+}
 Write-Host "Shortcut:         $ShortcutName ($Hotkey)"
 Write-Host "Launch:           powershell -ExecutionPolicy Bypass -File scripts\start-windows-desktop.ps1"

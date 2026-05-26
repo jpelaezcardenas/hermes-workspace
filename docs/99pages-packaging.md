@@ -4,7 +4,15 @@
 
 ## Token rule
 
-Do not bake a shared API key into the installer binary, source tree, or public release artifact. The installer must receive the user's Workforce token at install time, then write it to the local Hermes custom endpoint config:
+Do not bake a shared API key into the installer binary, source tree, or public release artifact.
+
+Default customer flow:
+
+1. Installer lays down the app, launcher, and Magic Link mode.
+2. User starts the app from the desktop shortcut.
+3. User signs in with 99Pages Magic Link.
+4. The portal registers the device/account and returns that user's Workforce token plus proxy model route.
+5. The app writes the token to the local Hermes custom endpoint config:
 
 - `~/.hermes/.env`
 - `~/.hermes/config.yaml`
@@ -16,27 +24,33 @@ The installed provider is locked to `custom` and points at:
 ## Windows one-line install
 
 ```powershell
-$env:P99_WORKFORCE_API_KEY="USER_WORKFORCE_TOKEN"; irm https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/scripts/install-windows.ps1 | iex
+irm https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/scripts/install-windows.ps1 | iex
 ```
 
 Local source install:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\install-windows.ps1 -WorkforceToken "USER_WORKFORCE_TOKEN"
+powershell -ExecutionPolicy Bypass -File scripts\install-windows.ps1
 ```
 
 The Windows installer also creates a desktop shortcut with `CTRL+ALT+H`.
 
+Support/pre-provisioned install:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install-windows.ps1 -WorkforceToken "USER_WORKFORCE_TOKEN"
+```
+
 ## macOS one-line install
 
 ```bash
-P99_WORKFORCE_API_KEY="USER_WORKFORCE_TOKEN" bash -c "$(curl -fsSL https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/scripts/install-macos.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/scripts/install-macos.sh)"
 ```
 
 Local source install:
 
 ```bash
-P99_WORKFORCE_API_KEY="USER_WORKFORCE_TOKEN" bash scripts/install-macos.sh
+bash scripts/install-macos.sh
 ```
 
 The macOS installer creates:
@@ -45,6 +59,12 @@ The macOS installer creates:
 - `~/Desktop/99Pages Agentic OS.command`
 
 macOS global hotkeys are controlled by System Settings or Shortcuts; assign the generated Desktop command there when a global keyboard shortcut is required.
+
+Support/pre-provisioned install:
+
+```bash
+P99_WORKFORCE_API_KEY="USER_WORKFORCE_TOKEN" bash scripts/install-macos.sh
+```
 
 ## Model catalog
 

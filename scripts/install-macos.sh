@@ -7,6 +7,7 @@ MODEL="${P99_WORKFORCE_MODEL:-99pages/fast}"
 APP_NAME="${P99_APP_NAME:-99Pages Agentic OS}"
 INSTALL_DIR="${P99_INSTALL_DIR:-$HOME/.99pages/agentic-os/hermes-workspace}"
 REPO_URL="${P99_REPO_URL:-https://github.com/outsourc-e/hermes-workspace.git}"
+CONFIGURE_TOKEN="0"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -22,17 +23,16 @@ while [ "$#" -gt 0 ]; do
       MODEL="${2:-}"
       shift 2
       ;;
+    --configure-token)
+      CONFIGURE_TOKEN="1"
+      shift
+      ;;
     *)
       echo "Unknown argument: $1" >&2
       exit 2
       ;;
   esac
 done
-
-if [ -z "$WORKFORCE_TOKEN" ]; then
-  echo "Workforce token is required. Set P99_WORKFORCE_API_KEY or pass --token." >&2
-  exit 1
-fi
 
 if [ "$(uname -s)" != "Darwin" ]; then
   echo "This installer is for macOS. Use scripts/install-windows.ps1 on Windows." >&2
@@ -65,6 +65,7 @@ DESKTOP_LAUNCHER="$HOME/Desktop/$APP_NAME.command"
 
 mkdir -p "$HERMES_HOME" "$BIN_DIR"
 
+if [ -n "$WORKFORCE_TOKEN" ]; then
 cat > "$ENV_PATH" <<EOF
 API_SERVER_ENABLED=true
 OPENAI_API_KEY=$WORKFORCE_TOKEN
@@ -138,6 +139,23 @@ custom_providers:
 EOF
 
 chmod 600 "$ENV_PATH" "$CONFIG_PATH"
+elif [ "$CONFIGURE_TOKEN" = "1" ]; then
+  echo "Workforce token is required when --configure-token is used. Set P99_WORKFORCE_API_KEY or pass --token." >&2
+  exit 1
+else
+  cat > "$ENV_PATH" <<EOF
+API_SERVER_ENABLED=true
+P99_PORTAL_URL=https://app.99pages.uk
+AGENTIC_OS_PORTAL_URL=https://app.99pages.uk
+AGENTIC_OS_WORKFORCE_BASE_URL=$BASE_URL
+P99_LOGIN_METHOD=magic_link
+P99_PROVIDER_LOCK=custom
+P99_FORCE_WORKFORCE=true
+P99_HIDE_EXTERNAL_PROVIDERS=true
+P99_LOCK_PROVIDER=true
+EOF
+  chmod 600 "$ENV_PATH"
+fi
 
 if ! command -v pnpm >/dev/null 2>&1; then
   echo "pnpm is required. Install Node.js and pnpm first." >&2
@@ -167,8 +185,12 @@ EOF
 chmod +x "$DESKTOP_LAUNCHER"
 
 echo "99Pages Agentic OS macOS deployment is configured."
-echo "Custom endpoint: $BASE_URL"
-echo "Model route:      $MODEL"
+if [ -n "$WORKFORCE_TOKEN" ]; then
+  echo "Custom endpoint: $BASE_URL"
+  echo "Model route:      $MODEL"
+else
+  echo "Custom endpoint will be configured after first Magic Link login."
+fi
 echo "Launcher:         $LAUNCHER"
 echo "Desktop launcher: $DESKTOP_LAUNCHER"
 echo "Optional hotkey: assign the Desktop .command file in macOS Shortcuts or Keyboard settings."
