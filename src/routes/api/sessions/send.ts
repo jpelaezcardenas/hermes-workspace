@@ -6,9 +6,9 @@ import { requireJsonContentType } from '../../../server/rate-limit'
 import {
   SESSIONS_API_UNAVAILABLE_MESSAGE,
   ensureGatewayProbed,
-  getGatewayCapabilities,
   sendChat,
 } from '../../../server/claude-api'
+import { startServerSideSessionSend } from '../../../server/session-send-runner'
 import { resolveSessionKey } from '../../../server/session-utils'
 
 export const Route = createFileRoute('/api/sessions/send')({
@@ -21,17 +21,6 @@ export const Route = createFileRoute('/api/sessions/send')({
         const csrfCheck = requireJsonContentType(request)
         if (csrfCheck) return csrfCheck
         const capabilities = await ensureGatewayProbed()
-        if (!capabilities.enhancedChat) {
-          return json(
-            {
-              ok: false,
-              error: capabilities.dashboard.available
-                ? 'Legacy session send is not supported in zero-fork mode. Use /api/send-stream.'
-                : SESSIONS_API_UNAVAILABLE_MESSAGE,
-            },
-            { status: 503 },
-          )
-        }
 
         try {
           const body = (await request.json().catch(() => ({}))) as Record<
@@ -63,6 +52,39 @@ export const Route = createFileRoute('/api/sessions/send')({
             body.idempotencyKey.trim().length > 0
               ? body.idempotencyKey.trim()
               : randomUUID()
+
+          if (!capabilities.enhancedChat && capabilities.dashboard.available) {
+            startServerSideSessionSend({
+              requestUrl: request.url,
+              cookie: request.headers.get('cookie') ?? undefined,
+              payload: {
+                sessionKey,
+                message,
+                idempotencyKey,
+                serverSide: true,
+                model:
+                  typeof body.model === 'string' && body.model.trim().length > 0
+                    ? body.model
+                    : undefined,
+                friendlyId: friendlyId || undefined,
+              },
+            })
+            return json({
+              ok: true,
+              sessionKey,
+              runId: idempotencyKey,
+            })
+          }
+
+          if (!capabilities.enhancedChat) {
+            return json(
+              {
+                ok: false,
+                error: SESSIONS_API_UNAVAILABLE_MESSAGE,
+              },
+              { status: 503 },
+            )
+          }
 
           const result = await sendChat(sessionKey, {
             message,

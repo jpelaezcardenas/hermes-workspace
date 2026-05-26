@@ -102,7 +102,7 @@ export function AgentChatModal({
   )
 
   const loadHistory = useCallback(
-    async function loadHistory() {
+    async function loadAgentChatHistory() {
       if (!open || isDemoModeRef.current) return
 
       try {
@@ -294,6 +294,7 @@ export function AgentChatModal({
       setIsDemoMode(true)
       typingExpectedAgentCountRef.current = null
       sendDemoReply(message)
+      setIsSending(false)
       return
     }
 
