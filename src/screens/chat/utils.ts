@@ -257,6 +257,12 @@ export function normalizeSessions(
       label,
       updatedAt:
         typeof session.updatedAt === 'number' ? session.updatedAt : undefined,
+      messageCount:
+        typeof session.messageCount === 'number'
+          ? session.messageCount
+          : typeof session.message_count === 'number'
+            ? session.message_count
+            : undefined,
       lastMessage: session.lastMessage ?? null,
       titleStatus,
       titleSource,

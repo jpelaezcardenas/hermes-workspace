@@ -25,6 +25,7 @@ import { fetchClaudeAuthStatus, type AuthStatus } from '@/lib/claude-auth'
 import { cn } from '@/lib/utils'
 import { ConnectionStartupScreen } from '@/components/connection-startup-screen'
 import { ChatSidebar } from '@/screens/chat/components/chat-sidebar'
+import { DesktopSessionsPanel } from '@/screens/chat/components/sidebar/desktop-sessions-panel'
 import { useChatSessions } from '@/screens/chat/hooks/use-chat-sessions'
 import { useWorkspaceStore } from '@/stores/workspace-store'
 import { SIDEBAR_TOGGLE_EVENT } from '@/hooks/use-global-shortcuts'
@@ -199,6 +200,8 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     search?.embed === '1' || search?.embed === 'true' || search?.mode === 'embed'
   const isChromeFreeSurface = isEmbeddedSurface || isOnHermesWorldLandingRoute
   const hideChatSidebar = isOnChatRoute && chatFocusMode
+  const showDesktopSessionsPanel =
+    !isChromeFreeSurface && !isMobile && isOnChatRoute && !chatFocusMode
   const showDesktopSidebarBackdrop =
     !isChromeFreeSurface && !isMobile && !isOnChatRoute && !sidebarCollapsed
 
@@ -348,7 +351,11 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         <div
           className={cn(
             'grid h-full grid-cols-1 grid-rows-[minmax(0,1fr)] overflow-hidden',
-            hideChatSidebar || isChromeFreeSurface ? 'md:grid-cols-1' : 'md:grid-cols-[auto_1fr]',
+            hideChatSidebar || isChromeFreeSurface
+              ? 'md:grid-cols-1'
+              : showDesktopSessionsPanel
+                ? 'md:grid-cols-[auto_auto_minmax(0,1fr)]'
+                : 'md:grid-cols-[auto_1fr]',
           )}
         >
           {/* Activity ticker bar */}
@@ -368,9 +375,24 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
                 sessionsFetching={sessionsFetching}
                 sessionsError={sessionsError}
                 onRetrySessions={refetchSessions}
+                showEmbeddedSessions={!showDesktopSessionsPanel}
               />
             </div>
           )}
+
+          {showDesktopSessionsPanel ? (
+            <DesktopSessionsPanel
+              sessions={sessions}
+              activeFriendlyId={activeFriendlyId}
+              creatingSession={creatingSession}
+              loading={sessionsLoading}
+              fetching={sessionsFetching}
+              error={sessionsError}
+              onCreateSession={startNewChat}
+              onSelectSession={handleSelectSession}
+              onRetry={refetchSessions}
+            />
+          ) : null}
 
           {/* Main content area — renders the matched route */}
           <main

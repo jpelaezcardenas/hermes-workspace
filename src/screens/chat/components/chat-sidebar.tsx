@@ -134,6 +134,7 @@ type ChatSidebarProps = {
   sessionsFetching: boolean
   sessionsError: string | null
   onRetrySessions: () => void
+  showEmbeddedSessions?: boolean
 }
 
 // ── Reusable nav item ───────────────────────────────────────────────────
@@ -527,6 +528,7 @@ function ChatSidebarComponent({
   sessionsFetching,
   sessionsError,
   onRetrySessions,
+  showEmbeddedSessions = true,
 }: ChatSidebarProps) {
   const { settingsOpen, settingsSection, setSettingsOpen, handleOpenSettings } =
     useSidebarSettings()
@@ -1177,34 +1179,36 @@ function ChatSidebarComponent({
         </div>
 
         {/* Sessions list */}
-        <div className={cn('shrink-0 mt-1', isMobile && 'order-1')}>
-          <AnimatePresence initial={false}>
-            {!isVisuallyCollapsed && (
-              <motion.div
-                key="content"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={transition}
-                className="flex flex-col w-full min-h-0 h-full"
-              >
-                <div className="flex-1 min-h-0">
-                  <SidebarSessions
-                    sessions={sessions}
-                    activeFriendlyId={activeFriendlyId}
-                    onSelect={onSelectSession}
-                    onRename={handleOpenRename}
-                    onDelete={handleOpenDelete}
-                    loading={sessionsLoading}
-                    fetching={sessionsFetching}
-                    error={sessionsError}
-                    onRetry={onRetrySessions}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {showEmbeddedSessions ? (
+          <div className={cn('shrink-0 mt-1', isMobile && 'order-1')}>
+            <AnimatePresence initial={false}>
+              {!isVisuallyCollapsed && (
+                <motion.div
+                  key="content"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={transition}
+                  className="flex flex-col w-full min-h-0 h-full"
+                >
+                  <div className="flex-1 min-h-0">
+                    <SidebarSessions
+                      sessions={sessions}
+                      activeFriendlyId={activeFriendlyId}
+                      onSelect={onSelectSession}
+                      onRename={handleOpenRename}
+                      onDelete={handleOpenDelete}
+                      loading={sessionsLoading}
+                      fetching={sessionsFetching}
+                      error={sessionsError}
+                      onRetry={onRetrySessions}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : null}
       </div>
       {/* end scrollable body */}
 
@@ -1361,6 +1365,8 @@ function areSidebarPropsEqual(
   if (prevProps.sessionsFetching !== nextProps.sessionsFetching) return false
   if (prevProps.sessionsError !== nextProps.sessionsError) return false
   if (prevProps.onRetrySessions !== nextProps.onRetrySessions) return false
+  if (prevProps.showEmbeddedSessions !== nextProps.showEmbeddedSessions)
+    return false
   if (!areSessionsEqual(prevProps.sessions, nextProps.sessions)) return false
   return true
 }

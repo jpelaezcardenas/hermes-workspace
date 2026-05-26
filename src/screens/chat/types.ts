@@ -68,6 +68,8 @@ export type SessionSummary = {
   title?: string
   derivedTitle?: string
   updatedAt?: number
+  messageCount?: number
+  message_count?: number
   lastMessage?: ChatMessage | null
   friendlyId?: string
   titleStatus?: SessionTitleStatus
@@ -93,6 +95,7 @@ export type SessionMeta = {
   derivedTitle?: string
   label?: string
   updatedAt?: number
+  messageCount?: number
   lastMessage?: ChatMessage | null
   titleStatus?: SessionTitleStatus
   titleSource?: SessionTitleSource
