@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Add01Icon,
+  Delete01Icon,
   PinIcon,
   Search01Icon,
 } from '@hugeicons/core-free-icons'
@@ -22,6 +23,9 @@ type DesktopSessionsPanelProps = {
   onCreateSession: () => void
   onSelectSession?: () => void
   onRetry: () => void
+  onTogglePin?: (session: SessionMeta) => void
+  onDeleteSession?: (session: SessionMeta) => void
+  deletingSessionKey?: string | null
 }
 
 const UUID_PATTERN =
@@ -85,11 +89,17 @@ function SessionCard({
   active,
   pinned,
   onSelectSession,
+  onTogglePin,
+  onDeleteSession,
+  deleting,
 }: {
   session: SessionMeta
   active: boolean
   pinned: boolean
   onSelectSession?: () => void
+  onTogglePin?: (session: SessionMeta) => void
+  onDeleteSession?: (session: SessionMeta) => void
+  deleting?: boolean
 }) {
   const title = sessionTitle(session)
   const preview = sessionPreview(session)
@@ -98,50 +108,70 @@ function SessionCard({
     typeof session.messageCount === 'number' ? session.messageCount : null
 
   return (
-    <Link
-      to="/chat/$sessionKey"
-      params={{ sessionKey: session.friendlyId }}
-      onClick={() => {
-        try {
-          localStorage.setItem('claude-last-session', session.friendlyId)
-        } catch {}
-        onSelectSession?.()
-      }}
+    <div
       className={cn(
-        'group block rounded-lg border px-4 py-3 text-left transition-colors',
+        'group flex rounded-lg border text-left transition-colors',
         active
           ? 'border-accent-500/50 bg-accent-500/15 text-primary-950'
           : 'border-primary-200/70 bg-primary-100/35 text-primary-950 hover:border-accent-500/40 hover:bg-primary-100/60',
       )}
     >
-      <div className="flex min-w-0 items-center gap-2">
-        <div className="min-w-0 flex-1 truncate text-sm font-semibold">
-          {title}
+      <Link
+        to="/chat/$sessionKey"
+        params={{ sessionKey: session.friendlyId }}
+        onClick={() => {
+          try {
+            localStorage.setItem('claude-last-session', session.friendlyId)
+          } catch {}
+          onSelectSession?.()
+        }}
+        className="min-w-0 flex-1 px-4 py-3"
+      >
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="min-w-0 flex-1 truncate text-sm font-semibold">
+            {title}
+          </div>
+          {count !== null ? (
+            <span className="shrink-0 rounded-full bg-primary-200 px-2 py-0.5 text-[11px] font-semibold text-primary-700">
+              {count} messages
+            </span>
+          ) : null}
         </div>
-        {count !== null ? (
-          <span className="shrink-0 rounded-full bg-primary-200 px-2 py-0.5 text-[11px] font-semibold text-primary-700">
-            {count} messages
-          </span>
-        ) : null}
-        {pinned ? (
-          <HugeiconsIcon
-            icon={PinIcon}
-            size={14}
-            strokeWidth={1.7}
-            className="shrink-0 text-amber-500"
-          />
-        ) : null}
+        <div className="mt-1 truncate text-[11px] font-semibold text-primary-500">
+          {session.friendlyId}
+        </div>
+        <div className="mt-2 line-clamp-2 text-xs leading-5 text-primary-600">
+          {preview}
+        </div>
+        <div className="mt-2 flex items-center gap-3 text-[11px] text-primary-500">
+          {age ? <span>Active {age}</span> : null}
+        </div>
+      </Link>
+      <div className="flex shrink-0 flex-col items-center gap-2 border-l border-primary-200/60 px-2 py-3 opacity-70 transition group-hover:opacity-100">
+        <button
+          type="button"
+          onClick={() => onTogglePin?.(session)}
+          className={cn(
+            'inline-flex size-7 items-center justify-center rounded-full text-primary-500 hover:bg-primary-200 hover:text-primary-900',
+            pinned && 'bg-amber-500/15 text-amber-500',
+          )}
+          aria-label={pinned ? 'Unpin session' : 'Pin session'}
+          title={pinned ? 'Unpin session' : 'Pin session'}
+        >
+          <HugeiconsIcon icon={PinIcon} size={14} strokeWidth={1.7} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onDeleteSession?.(session)}
+          disabled={deleting}
+          className="inline-flex size-7 items-center justify-center rounded-full text-red-400 hover:bg-red-500/15 hover:text-red-300 disabled:opacity-40"
+          aria-label="Delete session"
+          title="Delete session"
+        >
+          <HugeiconsIcon icon={Delete01Icon} size={14} strokeWidth={1.7} />
+        </button>
       </div>
-      <div className="mt-1 truncate text-[11px] font-semibold text-primary-500">
-        {session.friendlyId}
-      </div>
-      <div className="mt-2 line-clamp-2 text-xs leading-5 text-primary-600">
-        {preview}
-      </div>
-      <div className="mt-2 flex items-center gap-3 text-[11px] text-primary-500">
-        {age ? <span>Active {age}</span> : null}
-      </div>
-    </Link>
+    </div>
   )
 }
 
@@ -155,6 +185,9 @@ export function DesktopSessionsPanel({
   onCreateSession,
   onSelectSession,
   onRetry,
+  onTogglePin,
+  onDeleteSession,
+  deletingSessionKey = null,
 }: DesktopSessionsPanelProps) {
   const [query, setQuery] = useState('')
   const { pinnedSessionKeys } = usePinnedSessions()
@@ -285,6 +318,12 @@ export function DesktopSessionsPanel({
                         active={session.friendlyId === activeFriendlyId}
                         pinned
                         onSelectSession={onSelectSession}
+                        onTogglePin={onTogglePin}
+                        onDeleteSession={onDeleteSession}
+                        deleting={
+                          deletingSessionKey === session.key ||
+                          deletingSessionKey === session.friendlyId
+                        }
                       />
                     ))}
                   </div>
@@ -303,6 +342,12 @@ export function DesktopSessionsPanel({
                       active={session.friendlyId === activeFriendlyId}
                       pinned={false}
                       onSelectSession={onSelectSession}
+                      onTogglePin={onTogglePin}
+                      onDeleteSession={onDeleteSession}
+                      deleting={
+                        deletingSessionKey === session.key ||
+                        deletingSessionKey === session.friendlyId
+                      }
                     />
                   ))}
                 </div>

@@ -13,7 +13,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import {
@@ -43,6 +43,7 @@ import { ChatHeader } from './components/chat-header'
 import { ChatMessageList } from './components/chat-message-list'
 import { ChatEmptyState } from './components/chat-empty-state'
 import { ChatComposer } from './components/chat-composer'
+import { DesktopSessionsPanel } from './components/sidebar/desktop-sessions-panel'
 import { ConnectionStatusMessage } from './components/connection-status-message'
 import {
   consumePendingSend,
@@ -62,6 +63,7 @@ import { useChatSettingsStore } from '@/hooks/use-chat-settings'
 import { useActiveRunCheck } from './hooks/use-active-run-check'
 import { useChatMobile } from './hooks/use-chat-mobile'
 import { useChatSessions } from './hooks/use-chat-sessions'
+import { useDeleteSession } from './hooks/use-delete-session'
 import { useAutoSessionTitle } from './hooks/use-auto-session-title'
 import { useRenameSession } from './hooks/use-rename-session'
 import { useContextAlert } from './hooks/use-context-alert'
@@ -99,6 +101,7 @@ import { useTerminalPanelStore } from '@/stores/terminal-panel-store'
 import { useModelSuggestions } from '@/hooks/use-model-suggestions'
 import { ModelSuggestionToast } from '@/components/model-suggestion-toast'
 import { MobileSessionsPanel } from '@/components/mobile-sessions-panel'
+import { usePinnedSessions } from '@/hooks/use-pinned-sessions'
 import { ContextAlertModal } from '@/components/usage-meter/context-alert-modal'
 import { ErrorToastContainer, showErrorToast } from '@/components/error-toast'
 // ContextMeter removed — ContextBar (PR #32) replaces it
@@ -137,6 +140,45 @@ type PortableHistoryMessage = {
 
 const CHAT_ACCEPT_TIMEOUT_MS = 10_000
 const ACTIVE_RUN_CHECK_TIMEOUT_MS = 5_000
+
+type DesktopDetailMode = 'transcript' | 'chat'
+
+const desktopDateFormatter = new Intl.DateTimeFormat(undefined, {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+})
+
+function formatDesktopSessionTime(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 'Unknown'
+  return desktopDateFormatter.format(new Date(value))
+}
+
+function getDesktopSessionTitle(
+  session: SessionMeta | undefined,
+  fallback: string,
+): string {
+  const candidates = [
+    session?.label,
+    session?.derivedTitle,
+    session?.title,
+    fallback,
+  ]
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string') continue
+    const trimmed = candidate.trim()
+    if (!trimmed) continue
+    if (trimmed.toLowerCase().startsWith('<workspace_context')) continue
+    return trimmed
+  }
+  return 'New Chat'
+}
+
+function getDesktopSessionId(
+  session: SessionMeta | undefined,
+  fallback: string,
+): string {
+  return session?.friendlyId || session?.key || fallback || 'new'
+}
 
 async function fetchWithTimeout(
   input: RequestInfo | URL,
@@ -497,6 +539,8 @@ export function ChatScreen({
   const queryClient = useQueryClient()
   const [sending, setSending] = useState(false)
   const [_creatingSession, setCreatingSession] = useState(false)
+  const [desktopDetailMode, setDesktopDetailMode] =
+    useState<DesktopDetailMode>('transcript')
   const [sessionsOpen, setSessionsOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -617,6 +661,15 @@ export function ChatScreen({
     sessionsFetching: _sessionsFetching,
     refetchSessions: _refetchSessions,
   } = useChatSessions({ activeFriendlyId, isNewChat, forcedSessionKey })
+  const { pinnedSessionKeys, togglePinnedSession } = usePinnedSessions()
+  const {
+    deleteSession,
+    deleting: isDeletingSession,
+    error: deleteSessionError,
+  } = useDeleteSession()
+  const [deletingSessionKey, setDeletingSessionKey] = useState<string | null>(
+    null,
+  )
   const {
     historyQuery,
     historyMessages,
@@ -2018,27 +2071,34 @@ export function ChatScreen({
 
       const idempotencyKey = optimisticClientId || crypto.randomUUID()
       void (async () => {
-        const response = await fetchWithTimeout('/api/session-send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionKey,
-            friendlyId,
-            message: enrichedBody,
-            history,
-            attachments:
-              payloadAttachments.length > 0 ? payloadAttachments : undefined,
-            thinking:
-              currentThinkingLevel === 'off' ? undefined : currentThinkingLevel,
-            fastMode,
-            model: currentModel || undefined,
-            idempotencyKey,
-            locale:
-              typeof window !== 'undefined'
-                ? localStorage.getItem('hermes-workspace-locale') || 'en'
-                : 'en',
-          }),
-        }, CHAT_ACCEPT_TIMEOUT_MS, 'session-send accept')
+        const response = await fetchWithTimeout(
+          '/api/session-send',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionKey,
+              friendlyId,
+              message: enrichedBody,
+              history,
+              attachments:
+                payloadAttachments.length > 0 ? payloadAttachments : undefined,
+              thinking:
+                currentThinkingLevel === 'off'
+                  ? undefined
+                  : currentThinkingLevel,
+              fastMode,
+              model: currentModel || undefined,
+              idempotencyKey,
+              locale:
+                typeof window !== 'undefined'
+                  ? localStorage.getItem('hermes-workspace-locale') || 'en'
+                  : 'en',
+            }),
+          },
+          CHAT_ACCEPT_TIMEOUT_MS,
+          'session-send accept',
+        )
         const responseText = await response.text()
         let result: { ok?: boolean; error?: string } = {}
         try {
@@ -2050,7 +2110,9 @@ export function ChatScreen({
         }
         if (!response.ok || result.ok === false) {
           throw new Error(
-            result.error || responseText || `session-send failed (${response.status})`,
+            result.error ||
+              responseText ||
+              `session-send failed (${response.status})`,
           )
         }
 
@@ -2730,6 +2792,84 @@ export function ChatScreen({
     ],
   )
 
+  const desktopChatLayout = !compact && !isMobile && !isFocusMode
+  const desktopActiveTitle = getDesktopSessionTitle(
+    activeSession,
+    activeTitle || activeFriendlyId,
+  )
+  const desktopActiveSessionId = getDesktopSessionId(
+    activeSession,
+    resolvedSessionKey ||
+      activeCanonicalKey ||
+      activeSessionKey ||
+      activeFriendlyId,
+  )
+  const desktopMessageCount =
+    typeof activeSession?.messageCount === 'number'
+      ? activeSession.messageCount
+      : messageCount
+  const activeSessionPinned = Boolean(
+    activeSession?.key && pinnedSessionKeys.includes(activeSession.key),
+  )
+
+  const handleCreateDesktopSession = useCallback(() => {
+    void navigate({
+      to: '/chat/$sessionKey',
+      params: { sessionKey: 'new' },
+    })
+  }, [navigate])
+
+  const handleToggleSessionPin = useCallback(
+    (session: SessionMeta) => {
+      if (!session.key) return
+      togglePinnedSession(session.key)
+    },
+    [togglePinnedSession],
+  )
+
+  const handleDeleteDesktopSession = useCallback(
+    async (session: SessionMeta) => {
+      const sessionKey = session.key || ''
+      const friendlyId = session.friendlyId || session.key || ''
+      if (!sessionKey && !friendlyId) return
+      const title = getDesktopSessionTitle(session, friendlyId || sessionKey)
+      if (!window.confirm(`Delete "${title}"?`)) return
+
+      const isActive =
+        session.friendlyId === activeFriendlyId ||
+        session.key === activeSessionKey ||
+        session.key === resolvedSessionKey
+      setDeletingSessionKey(sessionKey || friendlyId)
+      try {
+        await deleteSession(sessionKey, friendlyId, isActive)
+        toast('Session deleted', { type: 'success' })
+        if (isActive) {
+          void navigate({
+            to: '/chat/$sessionKey',
+            params: { sessionKey: 'new' },
+            replace: true,
+          })
+        }
+      } catch {
+        // useDeleteSession exposes the concrete error; a watcher below renders it.
+      } finally {
+        setDeletingSessionKey(null)
+      }
+    },
+    [
+      activeFriendlyId,
+      activeSessionKey,
+      deleteSession,
+      navigate,
+      resolvedSessionKey,
+    ],
+  )
+
+  useEffect(() => {
+    if (!deleteSessionError) return
+    toast(`Failed to delete session. ${deleteSessionError}`, { type: 'error' })
+  }, [deleteSessionError])
+
   // Listen for mobile header agent-details tap
   useEffect(() => {
     const handler = () => {
@@ -2755,10 +2895,29 @@ export function ChatScreen({
             ? 'flex min-h-0 w-full flex-col'
             : isMobile
               ? 'flex flex-col'
-              : 'grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[minmax(0,1fr)]',
+              : desktopChatLayout
+                ? 'flex min-h-0'
+                : 'grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[minmax(0,1fr)]',
         )}
       >
-        {hideUi || compact || isFocusMode ? null : isMobile ? null : (
+        {hideUi ||
+        compact ||
+        isFocusMode ? null : isMobile ? null : desktopChatLayout ? (
+          <DesktopSessionsPanel
+            sessions={sessions}
+            activeFriendlyId={activeFriendlyId}
+            creatingSession={_creatingSession}
+            loading={_sessionsLoading}
+            fetching={_sessionsFetching}
+            error={sessionsError}
+            onCreateSession={handleCreateDesktopSession}
+            onSelectSession={() => {}}
+            onRetry={() => void sessionsQuery.refetch()}
+            onTogglePin={handleToggleSessionPin}
+            onDeleteSession={handleDeleteDesktopSession}
+            deletingSessionKey={deletingSessionKey}
+          />
+        ) : (
           <FileExplorerSidebar
             collapsed={fileExplorerCollapsed}
             onToggle={handleToggleFileExplorer}
@@ -2778,7 +2937,100 @@ export function ChatScreen({
           }}
           ref={mainRef}
         >
-          {!compact && (
+          {!compact && desktopChatLayout ? (
+            <div
+              ref={headerRef}
+              className="shrink-0 border-b border-primary-200 bg-primary-100/35 px-6 py-4"
+            >
+              <section className="rounded-xl border border-primary-200 bg-primary-100/45 px-5 py-4 shadow-sm">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <h2 className="min-w-0 truncate text-lg font-semibold text-primary-950">
+                        {desktopActiveTitle}
+                      </h2>
+                      {currentModel ? (
+                        <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] font-semibold text-amber-500">
+                          {currentModel}
+                        </span>
+                      ) : null}
+                      <span className="shrink-0 rounded-full bg-accent-500/15 px-2 py-0.5 text-[11px] font-semibold text-accent-500">
+                        {desktopMessageCount} messages
+                      </span>
+                    </div>
+                    <p className="mt-1 truncate text-xs font-semibold text-primary-500">
+                      {desktopActiveSessionId}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleRefreshHistory}
+                      className="inline-flex h-8 items-center rounded-md bg-primary-200 px-3 text-xs font-semibold text-primary-950 hover:bg-primary-300"
+                    >
+                      Refresh
+                    </button>
+                    {activeSession ? (
+                      <button
+                        type="button"
+                        onClick={() => handleToggleSessionPin(activeSession)}
+                        className="inline-flex h-8 items-center rounded-md bg-primary-200 px-3 text-xs font-semibold text-primary-950 hover:bg-primary-300"
+                      >
+                        {activeSessionPinned ? 'Unpin' : 'Pin'}
+                      </button>
+                    ) : null}
+                    {activeSession ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          void handleDeleteDesktopSession(activeSession)
+                        }
+                        disabled={isDeletingSession}
+                        className="inline-flex h-8 items-center rounded-md bg-red-500/15 px-3 text-xs font-semibold text-red-300 hover:bg-red-500/25 disabled:opacity-50"
+                      >
+                        Delete
+                      </button>
+                    ) : null}
+                    <Link
+                      to="/terminal"
+                      className="inline-flex h-8 items-center rounded-md bg-primary-200 px-3 text-xs font-semibold text-primary-950 hover:bg-primary-300"
+                    >
+                      Open Terminal
+                    </Link>
+                  </div>
+                </div>
+                <dl className="mt-4 grid gap-2 rounded-lg border border-primary-200 bg-primary-100/35 px-3 py-2 text-xs sm:grid-cols-[120px_minmax(0,1fr)]">
+                  <dt className="font-semibold text-primary-500">Started</dt>
+                  <dd className="text-primary-700">
+                    {formatDesktopSessionTime(activeSession?.updatedAt)}
+                  </dd>
+                  <dt className="font-semibold text-primary-500">
+                    Last active
+                  </dt>
+                  <dd className="text-primary-700">
+                    {formatDesktopSessionTime(activeSession?.updatedAt)}
+                  </dd>
+                </dl>
+              </section>
+              <div className="mt-3 inline-flex rounded-md bg-primary-200 p-0.5">
+                {(['transcript', 'chat'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setDesktopDetailMode(mode)}
+                    className={cn(
+                      'h-7 rounded px-5 text-xs font-semibold capitalize transition',
+                      desktopDetailMode === mode
+                        ? 'bg-primary-400 text-primary-950 shadow-sm'
+                        : 'text-primary-600 hover:text-primary-950',
+                    )}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : !compact ? (
             <ChatHeader
               activeTitle={activeTitle}
               onRenameTitle={handleRenameActiveSessionTitle}
@@ -2810,7 +3062,7 @@ export function ChatScreen({
               onUndo={undefined}
               onClear={undefined}
             />
-          )}
+          ) : null}
 
           {errorNotice && (
             <div className="sticky top-0 z-20 px-4 py-2">{errorNotice}</div>
@@ -2863,7 +3115,8 @@ export function ChatScreen({
             </div>
           )}
 
-          {hideUi ? null : (
+          {hideUi ||
+          (desktopChatLayout && desktopDetailMode === 'transcript') ? null : (
             <ContextBar
               sessionId={
                 resolvedSessionKey ||
@@ -2921,7 +3174,8 @@ export function ChatScreen({
               sending={sending}
             />
           )}
-          {showComposer ? (
+          {showComposer &&
+          (!desktopChatLayout || desktopDetailMode === 'chat') ? (
             <ChatComposer
               onSubmit={send}
               onAbort={handleAbortStreaming}
@@ -2945,9 +3199,13 @@ export function ChatScreen({
             />
           ) : null}
         </main>
-        {!compact && !isFocusMode && <AgentViewPanel />}
+        {!compact && !isFocusMode && !desktopChatLayout && <AgentViewPanel />}
       </div>
-      {!compact && !hideUi && !isMobile && !isFocusMode && <TerminalPanel />}
+      {!compact &&
+        !hideUi &&
+        !isMobile &&
+        !isFocusMode &&
+        !desktopChatLayout && <TerminalPanel />}
 
       {suggestion && (
         <ModelSuggestionToast

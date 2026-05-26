@@ -74,7 +74,7 @@ async function fetchWithTimeout(
 }
 
 export async function fetchSessions(): Promise<Array<SessionMeta>> {
-  const res = await fetchWithTimeout('/api/sessions?limit=50&offset=0', 7000)
+  const res = await fetchWithTimeout('/api/sessions?limit=50&offset=0', 30000)
   if (!res.ok) throw new Error(await readError(res))
   const data = (await res.json()) as SessionListResponse
   return normalizeSessions(data.sessions)
@@ -94,7 +94,7 @@ export async function fetchHistory(payload: {
 
 export async function fetchStatus(): Promise<StatusResponse> {
   const controller = new AbortController()
-  const timeout = window.setTimeout(() => controller.abort(), 5000)
+  const timeout = window.setTimeout(() => controller.abort(), 15000)
 
   try {
     const res = await fetch('/api/ping', { signal: controller.signal })
