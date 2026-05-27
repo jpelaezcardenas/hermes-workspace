@@ -57,6 +57,16 @@ function normalizeUrl(u: string): string {
   return u.trim().replace(/\/+$/, '')
 }
 
+function isLoopbackOrigin(raw: string): boolean {
+  try {
+    const { hostname } = new URL(raw)
+    const normalized = hostname.trim().toLowerCase()
+    return normalized === '127.0.0.1' || normalized === 'localhost' || normalized === '::1' || normalized === '[::1]'
+  } catch {
+    return false
+  }
+}
+
 const _initialOverrides = readOverrides()
 
 export let CLAUDE_API = normalizeUrl(
@@ -655,7 +665,7 @@ const DASHBOARD_BACKED_APIS = new Set([
 
 export function getCapabilityWarningMessage(
   next: GatewayCapabilities,
-  criticalMissing: string[],
+  criticalMissing: Array<string>,
 ): string | null {
   if (criticalMissing.length === 0 || (!next.health && !next.dashboard.available)) {
     return null
@@ -751,21 +761,41 @@ async function autoDetectGatewayUrl(): Promise<void> {
   )
 }
 
+async function dashboardStatusOk(baseUrl: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${baseUrl}/api/status`, {
+      signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
+    })
+    if (!res.ok) return false
+    const body = (await res.json()) as { version?: string }
+    return Boolean(body.version)
+  } catch {
+    return false
+  }
+}
+
 async function autoDetectDashboardUrl(): Promise<void> {
-  if (process.env.CLAUDE_DASHBOARD_URL) return
+  if (_initialOverrides.claudeDashboardUrl) return
+
+  const hasEnvDashboard = Boolean(
+    process.env.CLAUDE_DASHBOARD_URL || process.env.HERMES_DASHBOARD_URL,
+  )
+
+  if (hasEnvDashboard) {
+    if (await dashboardStatusOk(CLAUDE_DASHBOARD_URL)) return
+    // Common attach-to-existing-agent footgun: users copy the gateway/API
+    // port into HERMES_DASHBOARD_URL (for example 8642/6789). If that stale
+    // value is loopback-only, safely fall back to the vanilla dashboard port.
+    // Do not override remote/Tailscale URLs; those are intentional and may be
+    // temporarily unavailable during startup.
+    if (!isLoopbackOrigin(CLAUDE_DASHBOARD_URL)) return
+  }
 
   const candidates = ['http://127.0.0.1:9119']
   for (const candidate of candidates) {
-    try {
-      const res = await fetch(`${candidate}/api/status`, {
-        signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
-      })
-      if (res.ok) {
-        CLAUDE_DASHBOARD_URL = candidate
-        return
-      }
-    } catch {
-      // continue
+    if (await dashboardStatusOk(candidate)) {
+      CLAUDE_DASHBOARD_URL = candidate
+      return
     }
   }
 }

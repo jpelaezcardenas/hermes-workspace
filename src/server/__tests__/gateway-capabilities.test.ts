@@ -138,6 +138,57 @@ describe('gateway-capabilities', () => {
     expect(mod.CLAUDE_API).toBe('http://localhost:9000')
   })
 
+  it('falls back from a stale loopback dashboard env URL to the vanilla dashboard port', async () => {
+    process.env.HERMES_API_URL = 'http://gateway.test'
+    process.env.HERMES_DASHBOARD_URL = 'http://127.0.0.1:8642'
+
+    fetchMock.mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input)
+      if (url === 'http://127.0.0.1:8642/api/status') {
+        return new Response('not found', { status: 404 })
+      }
+      if (url === 'http://127.0.0.1:9119/api/status') {
+        return new Response(JSON.stringify({ version: '0.14.0' }), {
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://127.0.0.1:9119/') {
+        return new Response("<script>window.__HERMES_SESSION_TOKEN__ = 'test-token'</script>", {
+          headers: { 'content-type': 'text/html' },
+        })
+      }
+      if (url === 'http://127.0.0.1:9119/api/conductor/missions') {
+        return new Response('not found', { status: 404 })
+      }
+      if (url === 'http://127.0.0.1:9119/api/plugins/kanban/board') {
+        return new Response(JSON.stringify({ columns: [] }), {
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://127.0.0.1:9119/api/mcp') {
+        return new Response('not found', { status: 404 })
+      }
+      if (url === 'http://127.0.0.1:9119/api/config') {
+        return new Response(JSON.stringify({ config: { mcp_servers: {} } }), {
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://gateway.test/v1/chat/completions') return new Response('', { status: 405 })
+      if (url === 'http://gateway.test/api/sessions/__probe__/chat/stream') return new Response('', { status: 404 })
+      if (url === 'http://gateway.test/api/mcp') return new Response('', { status: 404 })
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { 'content-type': 'application/json' },
+      })
+    })
+
+    const mod = await loadMod()
+    const caps = await mod.probeGateway({ force: true })
+
+    expect(mod.CLAUDE_DASHBOARD_URL).toBe('http://127.0.0.1:9119')
+    expect(caps.dashboard.available).toBe(true)
+    expect(caps.kanban).toBe(true)
+  })
+
   it('getResolvedUrls reports default source when no env or file override', async () => {
     const mod = await loadMod()
     const resolved = mod.getResolvedUrls()
