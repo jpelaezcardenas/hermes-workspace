@@ -5,6 +5,7 @@ import {
   openaiChat,
   parseOpenAIStream,
 } from './openai-compat-api'
+import { appendAssistantStreamDelta } from './assistant-stream-text'
 
 function createStreamResponse(chunks: string[]): Response {
   const encoder = new TextEncoder()
@@ -161,5 +162,20 @@ describe('parseOpenAIStream', () => {
       },
       { type: 'content', text: 'done' },
     ])
+  })
+})
+
+describe('appendAssistantStreamDelta', () => {
+  it('replaces a completed partial reply when the gateway restarts on fallback', () => {
+    const first =
+      'Yo, Cael here and online. Testing channel works on my end. What do you want me to run first?'
+
+    expect(appendAssistantStreamDelta(first, 'Hey', 1_000, 2_000)).toBe('Hey')
+  })
+
+  it('keeps ordinary adjacent deltas in the same stream', () => {
+    expect(appendAssistantStreamDelta('Hello', ' world', 1_000, 1_050)).toBe(
+      'Hello world',
+    )
   })
 })

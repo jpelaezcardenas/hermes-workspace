@@ -355,11 +355,10 @@ export const Route = createFileRoute('/api/sessions')({
           )
         }
 
-        // Local sessions live in the workspace portable store, not the
-        // gateway. Delete them locally without hitting the gateway.
+        let deletedLocal = false
         if (getLocalSession(sessionKey)) {
           deleteLocalSession(sessionKey)
-          return json({ ok: true, sessionKey, source: 'local' })
+          deletedLocal = true
         }
 
         const capabilities = await ensureGatewayProbed()
@@ -368,14 +367,28 @@ export const Route = createFileRoute('/api/sessions')({
             ...createCapabilityUnavailablePayload('sessions'),
             ok: true,
             sessionKey,
-            deleted: false,
+            deleted: deletedLocal,
+            source: deletedLocal ? 'local' : 'unavailable',
           })
         }
         try {
           await deleteSession(sessionKey)
 
-          return json({ ok: true, sessionKey })
+          return json({
+            ok: true,
+            sessionKey,
+            source: deletedLocal ? 'local+gateway' : 'gateway',
+          })
         } catch (err) {
+          if (deletedLocal) {
+            return json({
+              ok: true,
+              sessionKey,
+              source: 'local',
+              remoteDeleted: false,
+              remoteError: err instanceof Error ? err.message : String(err),
+            })
+          }
           return json(
             {
               ok: false,

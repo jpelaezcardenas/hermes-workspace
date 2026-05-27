@@ -37,6 +37,7 @@ import {
   getDiscoveredModels,
 } from '../../server/local-provider-discovery'
 import { openaiChat } from '../../server/openai-compat-api'
+import { appendAssistantStreamDelta } from '../../server/assistant-stream-text'
 import { streamResponses } from '../../server/responses-api'
 import { selectPortableConversationHistory } from '../../server/portable-history'
 import {
@@ -569,6 +570,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   rawSessionKey ||
                   portableSessionKey
                 let accumulated = ''
+                let lastContentAt = 0
 
                 activeRunId = runId
                 if (!shouldPublishServerSideEvents) {
@@ -670,7 +672,14 @@ export const Route = createFileRoute('/api/send-stream')({
                       })
                       for await (const ev of responsesStream) {
                         if (ev.kind === 'text.delta') {
-                          accumulated += ev.delta
+                          const now = Date.now()
+                          accumulated = appendAssistantStreamDelta(
+                            accumulated,
+                            ev.delta,
+                            lastContentAt,
+                            now,
+                          )
+                          lastContentAt = now
                           persistActiveRun((runSessionKey, activeId) =>
                             appendRunText(
                               runSessionKey,
@@ -818,66 +827,81 @@ export const Route = createFileRoute('/api/send-stream')({
 
                   let thinking = ''
                   let toolEventCount = 0
-                  for await (const chunk of stream) {
-                    if (chunk.type === 'reasoning') {
-                      thinking += chunk.text
-                      persistActiveRun((runSessionKey, activeId) =>
-                        setRunThinking(runSessionKey, activeId, thinking),
-                      )
-                      sendEvent('thinking', {
-                        text: thinking,
-                        sessionKey: portableSessionKey,
-                        runId,
-                      })
-                    } else if (chunk.type === 'tool') {
-                      // Prefer the gateway's stable tool_call_id so 'running'
-                      // and 'completed' events for the same call collapse to
-                      // one card row. Fall back to a synthetic id only when
-                      // the upstream payload lacks one (older Hermes builds).
-                      toolEventCount += 1
-                      const toolCallId =
-                        chunk.toolCallId ||
-                        `${runId}:${chunk.name}:${toolEventCount}`
-                      // Map upstream status -> internal phase. 'running'
-                      // arrives at tool start; 'completed' at finish.
-                      // Missing status (back-compat path) is treated as a
-                      // one-shot 'calling' to mirror the previous behavior.
-                      const phase =
-                        chunk.status === 'completed'
-                          ? 'complete'
-                          : chunk.status === 'running'
-                            ? 'calling'
-                            : 'start'
-                      persistActiveRun((runSessionKey, activeId) =>
-                        upsertRunToolCall(runSessionKey, activeId, {
-                          id: toolCallId,
-                          name: chunk.name || 'tool',
+                  try {
+                    for await (const chunk of stream) {
+                      if (chunk.type === 'reasoning') {
+                        thinking += chunk.text
+                        persistActiveRun((runSessionKey, activeId) =>
+                          setRunThinking(runSessionKey, activeId, thinking),
+                        )
+                        sendEvent('thinking', {
+                          text: thinking,
+                          sessionKey: portableSessionKey,
+                          runId,
+                        })
+                      } else if (chunk.type === 'tool') {
+                        // Prefer the gateway's stable tool_call_id so 'running'
+                        // and 'completed' events for the same call collapse to
+                        // one card row. Fall back to a synthetic id only when
+                        // the upstream payload lacks one (older Hermes builds).
+                        toolEventCount += 1
+                        const toolCallId =
+                          chunk.toolCallId ||
+                          `${runId}:${chunk.name}:${toolEventCount}`
+                        // Map upstream status -> internal phase. 'running'
+                        // arrives at tool start; 'completed' at finish.
+                        // Missing status (back-compat path) is treated as a
+                        // one-shot 'calling' to mirror the previous behavior.
+                        const phase =
+                          chunk.status === 'completed'
+                            ? 'complete'
+                            : chunk.status === 'running'
+                              ? 'calling'
+                              : 'start'
+                        persistActiveRun((runSessionKey, activeId) =>
+                          upsertRunToolCall(runSessionKey, activeId, {
+                            id: toolCallId,
+                            name: chunk.name || 'tool',
+                            phase,
+                            preview: chunk.label,
+                          }),
+                        )
+                        sendEvent('tool', {
                           phase,
+                          name: chunk.name,
+                          toolCallId,
                           preview: chunk.label,
-                        }),
-                      )
-                      sendEvent('tool', {
-                        phase,
-                        name: chunk.name,
-                        toolCallId,
-                        preview: chunk.label,
-                        sessionKey: portableSessionKey,
-                        runId,
-                      })
-                    } else {
-                      accumulated += chunk.text
-                      persistActiveRun((runSessionKey, activeId) =>
-                        appendRunText(runSessionKey, activeId, accumulated, {
-                          replace: true,
-                        }),
-                      )
-                      sendEvent('chunk', {
-                        text: accumulated,
-                        fullReplace: true,
-                        sessionKey: portableSessionKey,
-                        runId,
-                      })
+                          sessionKey: portableSessionKey,
+                          runId,
+                        })
+                      } else {
+                        const now = Date.now()
+                        accumulated = appendAssistantStreamDelta(
+                          accumulated,
+                          chunk.text,
+                          lastContentAt,
+                          now,
+                        )
+                        lastContentAt = now
+                        persistActiveRun((runSessionKey, activeId) =>
+                          appendRunText(runSessionKey, activeId, accumulated, {
+                            replace: true,
+                          }),
+                        )
+                        sendEvent('chunk', {
+                          text: accumulated,
+                          fullReplace: true,
+                          sessionKey: portableSessionKey,
+                          runId,
+                        })
+                      }
                     }
+                  } catch (err) {
+                    if (!accumulated.trim()) throw err
+                    console.warn(
+                      '[send-stream] upstream stream ended after text with an error; finalizing accumulated assistant text:',
+                      err,
+                    )
                   }
 
                   if (!accumulated.trim()) {

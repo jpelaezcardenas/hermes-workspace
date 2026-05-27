@@ -491,6 +491,13 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
             sessionKey: activeSessionKeyRef.current,
             transport: 'send-stream',
           })
+          processStoreEvent({
+            type: 'lifecycle',
+            text: 'Working',
+            runId: runId ?? undefined,
+            sessionKey: activeSessionKeyRef.current,
+            transport: 'send-stream',
+          })
           onStarted?.({ runId: runId ?? null })
           break
         }
