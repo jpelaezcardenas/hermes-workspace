@@ -18,20 +18,15 @@ type Suggestion = {
 
 // Provider-specific model tiers (fallback when cost metadata unavailable)
 const MODEL_TIERS: Record<string, Record<ModelTier, Array<string>>> = {
-  anthropic: {
-    budget: ['claude-3-5-haiku', 'claude-haiku'],
-    balanced: ['claude-3-5-sonnet', 'claude-sonnet-4-5'],
-    premium: ['claude-opus-4', 'claude-opus-4-5', 'claude-opus-4-6'],
-  },
   openai: {
-    budget: ['gpt-4o-mini'],
-    balanced: ['gpt-4o', 'gpt-5.2-codex'],
-    premium: ['o1', 'o1-preview'],
+    budget: ['gpt-5.3-codex-spark'],
+    balanced: ['gpt-5.4', 'gpt-5.2-codex'],
+    premium: ['gpt-5.5'],
   },
   google: {
-    budget: ['gemini-2.5-flash', 'gemini-1.5-flash'],
-    balanced: ['gemini-2.5-pro', 'gemini-1.5-pro'],
-    premium: ['gemini-2.0-flash-thinking'],
+    budget: ['gemini-3.5-flash', 'gemini-3-flash-preview'],
+    balanced: ['gemini-3.1-pro-preview'],
+    premium: ['gemini-3.1-pro-preview'],
   },
 }
 
@@ -66,7 +61,6 @@ function getModelTier(modelId: string): ModelTier {
 
 function getProvider(modelId: string): string | null {
   const normalized = modelId.toLowerCase()
-  if (normalized.includes('claude')) return 'anthropic'
   if (normalized.includes('gpt') || normalized.includes('o1')) return 'openai'
   if (normalized.includes('gemini')) return 'google'
   return null

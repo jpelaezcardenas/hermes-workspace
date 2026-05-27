@@ -30,21 +30,25 @@ export function resolveSwarmModelLabel(
   const normalized = label.trim().toLowerCase().replace(/\s+/g, ' ')
   if (!normalized || normalized === 'worker') return null
 
-  // Anthropic Claude family
+  // Premium model labels now route to Codex/Gemini, not Anthropic.
   if (/^opus\s*4\.7$|^claude\s*opus\s*4\.7$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-opus-4-7' }
+    return { provider: 'openai-codex', default: 'gpt-5.5' }
   }
   if (/^opus\s*4\.6$|^claude\s*opus\s*4\.6$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-opus-4-6' }
+    return { provider: 'openai-codex', default: 'gpt-5.5' }
   }
   if (/^opus\s*4\.5$|^claude\s*opus\s*4\.5$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-opus-4-5' }
+    return { provider: 'openai-codex', default: 'gpt-5.5' }
   }
   if (/^sonnet\s*4\.6$|^claude\s*sonnet\s*4\.6$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-sonnet-4-6' }
+    return { provider: 'openai-codex', default: 'gpt-5.4' }
   }
   if (/^sonnet\s*4\.5$|^claude\s*sonnet\s*4\.5$/.test(normalized)) {
-    return { provider: 'anthropic', default: 'claude-sonnet-4-5' }
+    return {
+      provider: 'google-gemini-cli',
+      default: 'gemini-3.1-pro-preview',
+      base_url: 'cloudcode-pa://google',
+    }
   }
 
   // OpenAI Codex family
@@ -125,6 +129,16 @@ export function resolveSwarmModelLabel(
   // Provider-prefixed full id (already in canonical form). Pass through.
   const slashMatch = label.trim().match(/^([\w.-]+)\/(.+)$/)
   if (slashMatch) {
+    const provider = slashMatch[1]
+    const model = slashMatch[2]
+    const canonical = `${provider}/${model}`.toLowerCase()
+    if (
+      canonical.includes('anthropic') ||
+      canonical.includes('claude-') ||
+      /\b(opus|sonnet)\b/.test(canonical)
+    ) {
+      return { provider: 'openai-codex', default: 'gpt-5.3-codex-spark' }
+    }
     return { provider: slashMatch[1], default: slashMatch[2] }
   }
 

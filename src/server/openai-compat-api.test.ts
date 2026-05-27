@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { openaiChat, parseOpenAIStream } from './openai-compat-api'
+import {
+  buildRequestBody,
+  openaiChat,
+  parseOpenAIStream,
+} from './openai-compat-api'
 
 function createStreamResponse(chunks: string[]): Response {
   const encoder = new TextEncoder()
@@ -27,8 +31,23 @@ afterEach(() => {
   vi.restoreAllMocks()
   delete process.env.HERMES_API_TOKEN
   delete process.env.CLAUDE_API_TOKEN
+  delete process.env.HERMES_DEFAULT_MODEL
+  delete process.env.CLAUDE_DEFAULT_MODEL
   if (ORIGINAL_HOME === undefined) delete process.env.HOME
   else process.env.HOME = ORIGINAL_HOME
+})
+
+describe('buildRequestBody', () => {
+  it('rewrites stale Anthropic and Claude model requests to the Hermes default', async () => {
+    process.env.HERMES_DEFAULT_MODEL = 'gpt-5.3-codex-spark'
+
+    const body = await buildRequestBody([{ role: 'user', content: 'hello' }], {
+      model: 'anthropic-oauth/claude-opus-4-7',
+      stream: true,
+    })
+
+    expect(body.model).toBe('gpt-5.3-codex-spark')
+  })
 })
 
 describe('openaiChat', () => {

@@ -36,6 +36,7 @@ import {
   shouldAutoExpandHermesActivityCard,
 } from './streaming-activity-ui'
 import { TuiActivityCard } from './tui-activity-card'
+import { sanitizeWorkspaceVisibleText } from '@/lib/workspace-message-scope'
 
 const WORDS_PER_TICK = 4
 const TICK_INTERVAL_MS = 50
@@ -2012,9 +2013,12 @@ function MessageItemComponent({
   // Ignore stale __streamingStatus from history
   const remoteStreamingActive = isStreaming === true
 
-  const fullText = useMemo(() => textFromMessage(message), [message])
+  const fullText = useMemo(
+    () => sanitizeWorkspaceVisibleText(textFromMessage(message)) ?? '',
+    [message],
+  )
   const initialDisplayText = remoteStreamingActive
-    ? (remoteStreamingText ?? fullText)
+    ? (sanitizeWorkspaceVisibleText(remoteStreamingText) ?? fullText)
     : fullText
   const [displayText, setDisplayText] = useState(() => initialDisplayText)
   const [revealedWordCount, setRevealedWordCount] = useState(() =>
@@ -2042,7 +2046,9 @@ function MessageItemComponent({
 
   useEffect(() => {
     if (remoteStreamingActive) {
-      setDisplayText(remoteStreamingText ?? fullText)
+      setDisplayText(
+        sanitizeWorkspaceVisibleText(remoteStreamingText) ?? fullText,
+      )
       return
     }
 

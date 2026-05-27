@@ -43,10 +43,27 @@ function getBearerToken(): string {
 /** Cached first available model from /v1/models — used as fallback when no model is specified. */
 let _cachedDefaultModel: string | null = null
 
+function normalizeChatModel(value: string | undefined): string | undefined {
+  const model = value?.trim()
+  if (!model) return undefined
+  const normalized = model.toLowerCase()
+  if (
+    normalized.includes('anthropic') ||
+    normalized.includes('claude-') ||
+    /\b(claude|opus|sonnet)\b/.test(normalized)
+  ) {
+    return process.env.HERMES_DEFAULT_MODEL || 'gpt-5.3-codex-spark'
+  }
+  return model
+}
+
 async function getDefaultModel(): Promise<string> {
   if (_cachedDefaultModel) return _cachedDefaultModel
-  if (process.env.CLAUDE_DEFAULT_MODEL) {
-    _cachedDefaultModel = process.env.CLAUDE_DEFAULT_MODEL
+  const configuredDefault = normalizeChatModel(
+    process.env.HERMES_DEFAULT_MODEL || process.env.CLAUDE_DEFAULT_MODEL,
+  )
+  if (configuredDefault) {
+    _cachedDefaultModel = configuredDefault
     return _cachedDefaultModel
   }
   try {
@@ -117,7 +134,7 @@ export async function buildRequestBody(
 ): Promise<OpenAIChatRequest> {
   const model =
     options.model && options.model !== 'default'
-      ? options.model
+      ? normalizeChatModel(options.model) || 'gpt-5.3-codex-spark'
       : await getDefaultModel()
   return {
     model,

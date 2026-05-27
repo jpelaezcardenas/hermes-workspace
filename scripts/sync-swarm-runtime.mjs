@@ -23,13 +23,13 @@ function resolveModel(label) {
   if (!normalized || normalized === 'worker') return null
 
   if (/^opus\s*4\.7$|^claude\s*opus\s*4\.7$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-opus-4-7' }
+    return { provider: 'openai-codex', default: 'gpt-5.5' }
   }
   if (/^opus\s*4\.6$|^claude\s*opus\s*4\.6$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-opus-4-6' }
+    return { provider: 'openai-codex', default: 'gpt-5.5' }
   }
   if (/^sonnet\s*4\.6$|^claude\s*sonnet\s*4\.6$/.test(normalized)) {
-    return { provider: 'anthropic-oauth', default: 'claude-sonnet-4-6' }
+    return { provider: 'openai-codex', default: 'gpt-5.4' }
   }
   if (/^gpt[- ]?5\.5$|^codex\s*\(?gpt[- ]?5\.5\)?$/.test(normalized)) {
     return { provider: 'openai-codex', default: 'gpt-5.5' }
@@ -51,7 +51,19 @@ function resolveModel(label) {
   }
 
   const passthrough = String(label).trim().match(/^([\w.-]+)\/(.+)$/)
-  if (passthrough) return { provider: passthrough[1], default: passthrough[2] }
+  if (passthrough) {
+    const provider = passthrough[1]
+    const model = passthrough[2]
+    const canonical = `${provider}/${model}`.toLowerCase()
+    if (
+      canonical.includes('anthropic') ||
+      canonical.includes('claude-') ||
+      /\b(opus|sonnet)\b/.test(canonical)
+    ) {
+      return { provider: 'openai-codex', default: 'gpt-5.3-codex-spark' }
+    }
+    return { provider, default: model }
+  }
   return null
 }
 

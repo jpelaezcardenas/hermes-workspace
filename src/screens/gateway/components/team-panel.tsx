@@ -17,8 +17,8 @@ function formatRelativeTime(ts: number): string {
 // Additional models from gateway providers show in the chat model switcher.
 export const MODEL_PRESETS = [
   { id: 'auto', label: 'Auto (Gateway Default)', desc: 'Uses your configured default model' },
-  { id: 'opus', label: 'Claude Opus 4.6', desc: 'Deep reasoning — Anthropic' },
-  { id: 'sonnet', label: 'Claude Sonnet 4.6', desc: 'Fast & capable — Anthropic' },
+  { id: 'opus', label: 'Codex GPT-5.5', desc: 'Deep reasoning - ChatGPT/Codex' },
+  { id: 'sonnet', label: 'Codex GPT-5.4', desc: 'Fast capable ChatGPT/Codex lane' },
   { id: 'codex', label: 'GPT-5 Codex', desc: 'Code specialist — OpenAI' },
   { id: 'flash', label: 'Gemini 2.5 Flash', desc: 'Quick & cheap — Google' },
   { id: 'minimax', label: 'MiniMax M2.7', desc: 'Cost efficient — MiniMax' },

@@ -109,6 +109,7 @@ import { useResearchCard } from '@/hooks/use-research-card'
 // MOBILE_TAB_BAR_OFFSET removed — tab bar always hidden in chat
 import { useTapDebug } from '@/hooks/use-tap-debug'
 import { useChatMode } from '@/hooks/use-chat-mode'
+import { sanitizeWorkspaceVisibleText } from '@/lib/workspace-message-scope'
 import {
   useChatActivityStore,
   type AgentActivity,
@@ -257,7 +258,8 @@ function buildPortableHistory(
     )
     .filter((message) => (message as any).__streamingStatus !== 'streaming')
     .map((message) => {
-      const content = getPortableHistoryContent(message)
+      const content =
+        sanitizeWorkspaceVisibleText(getPortableHistoryContent(message)) ?? ''
       if (!content) return null
       return {
         role: message.role,

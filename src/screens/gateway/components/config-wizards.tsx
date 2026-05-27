@@ -179,11 +179,6 @@ export function ProviderLogo({ provider, size = 28 }: { provider: string; size?:
 // ─── Common models per provider (shown when gateway hasn't loaded models yet) ─
 
 export const PROVIDER_COMMON_MODELS: Record<string, Array<{ value: string; label: string }>> = {
-  anthropic: [
-    { value: 'anthropic/claude-opus-4-6', label: 'Claude Opus 4.6' },
-    { value: 'anthropic/claude-sonnet-4-6', label: 'Claude Sonnet 4.6' },
-    { value: 'anthropic/claude-haiku-3-5', label: 'Claude Haiku 3.5' },
-  ],
   openai: [
     { value: 'openai/gpt-5-codex', label: 'GPT-5 Codex' },
     { value: 'openai/gpt-4o', label: 'GPT-4o' },
@@ -252,14 +247,12 @@ export const PROVIDER_COMMON_MODELS: Record<string, Array<{ value: string; label
     { value: 'xai/grok-2-mini', label: 'Grok 2 Mini' },
   ],
   openrouter: [
-    { value: 'openrouter/anthropic/claude-opus-4-6', label: 'Claude Opus 4.6 (OR)' },
     { value: 'openrouter/openai/gpt-4o', label: 'GPT-4o (OR)' },
     { value: 'openrouter/google/gemini-2.0-flash-001', label: 'Gemini 2.0 Flash (OR)' },
   ],
   'github-copilot': [
     { value: 'github-copilot/gpt-4o', label: 'GPT-4o (Copilot)' },
     { value: 'github-copilot/o3-mini', label: 'o3-mini (Copilot)' },
-    { value: 'github-copilot/claude-sonnet-4-5', label: 'Claude Sonnet (Copilot)' },
   ],
 }
 

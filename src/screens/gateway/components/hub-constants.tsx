@@ -49,8 +49,8 @@ export const TEMPLATE_MODEL_SUGGESTIONS: Record<TeamTemplateId, Array<ModelPrese
 
 export const MODEL_PRESET_MAP: Record<string, string> = {
   auto: '',
-  opus: 'anthropic/claude-opus-4-6',
-  sonnet: 'anthropic/claude-sonnet-4-6',
+  opus: 'openai-codex/gpt-5.5',
+  sonnet: 'openai-codex/gpt-5.4',
   codex: 'openai/gpt-5.3-codex',
   flash: 'google/gemini-2.5-flash',
   minimax: 'minimax/MiniMax-M2.7',
@@ -256,7 +256,6 @@ Format rules:
 export const CUSTOM_PROVIDER_OPTION = '__custom__'
 export const KNOWN_GATEWAY_PROVIDERS = [
   'openai',
-  'anthropic',
   'google-antigravity',
   'google',
   'deepseek',

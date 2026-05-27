@@ -9,29 +9,30 @@ describe('resolveSwarmModelLabel', () => {
     expect(resolveSwarmModelLabel('Worker')).toBeNull()
   })
 
-  it('resolves Anthropic Opus labels', () => {
+  it('maps legacy Opus labels to Codex', () => {
     expect(resolveSwarmModelLabel('Opus 4.7')).toEqual({
-      provider: 'anthropic-oauth',
-      default: 'claude-opus-4-7',
+      provider: 'openai-codex',
+      default: 'gpt-5.5',
     })
     expect(resolveSwarmModelLabel('Claude Opus 4.6')).toEqual({
-      provider: 'anthropic-oauth',
-      default: 'claude-opus-4-6',
+      provider: 'openai-codex',
+      default: 'gpt-5.5',
     })
     expect(resolveSwarmModelLabel('opus 4.5')).toEqual({
-      provider: 'anthropic-oauth',
-      default: 'claude-opus-4-5',
+      provider: 'openai-codex',
+      default: 'gpt-5.5',
     })
   })
 
-  it('resolves Claude Sonnet labels', () => {
+  it('maps legacy Sonnet labels to Codex or Gemini', () => {
     expect(resolveSwarmModelLabel('Sonnet 4.6')).toEqual({
-      provider: 'anthropic-oauth',
-      default: 'claude-sonnet-4-6',
+      provider: 'openai-codex',
+      default: 'gpt-5.4',
     })
     expect(resolveSwarmModelLabel('Sonnet 4.5')).toEqual({
-      provider: 'anthropic',
-      default: 'claude-sonnet-4-5',
+      provider: 'google-gemini-cli',
+      default: 'gemini-3.1-pro-preview',
+      base_url: 'cloudcode-pa://google',
     })
   })
 
@@ -112,8 +113,8 @@ describe('resolveSwarmModelLabel', () => {
       default: 'gpt-5.5',
     })
     expect(resolveSwarmModelLabel('anthropic-oauth/claude-opus-4-7')).toEqual({
-      provider: 'anthropic-oauth',
-      default: 'claude-opus-4-7',
+      provider: 'openai-codex',
+      default: 'gpt-5.3-codex-spark',
     })
   })
 

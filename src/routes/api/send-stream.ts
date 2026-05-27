@@ -1,6 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { buildResolvedSessionHeaders } from '../../lib/send-stream-session-headers'
-import { buildWorkspaceScopedTextMessage } from '../../lib/workspace-message-scope'
+import {
+  buildWorkspaceScopedTextMessage,
+  sanitizeWorkspaceVisibleText,
+} from '../../lib/workspace-message-scope'
 import {
   collectSyntheticLiveToolEvents,
   createSyntheticLiveToolTracker,
@@ -199,7 +202,8 @@ function normalizePortableHistory(
     if (!entry || typeof entry !== 'object') continue
     const record = entry as Record<string, unknown>
     const role = readString(record.role)
-    const content = readString(record.content)
+    const content =
+      sanitizeWorkspaceVisibleText(readString(record.content)) ?? ''
     if (!role || !content) continue
     if (role !== 'user' && role !== 'assistant' && role !== 'system') continue
     normalized.push({ role, content })
@@ -211,8 +215,26 @@ function normalizePortableHistory(
 function normalizeClaudeErrorMessage(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error)
   const message = raw.trim()
-  if (!message) return 'Claude request failed'
-  return message.replace(/\bserver\b/gi, 'Claude')
+  if (!message) return 'Hermes request failed'
+  return message.replace(/\bClaude\b/gi, 'Hermes')
+}
+
+function normalizeRequestedChatModel(value: unknown): string | undefined {
+  const model = typeof value === 'string' ? value.trim() : ''
+  if (!model) return undefined
+
+  const normalized = model.toLowerCase()
+  if (
+    normalized.includes('anthropic') ||
+    normalized.includes('claude-') ||
+    /\bclaude\b/.test(normalized) ||
+    /\bopus\b/.test(normalized) ||
+    /\bsonnet\b/.test(normalized)
+  ) {
+    return process.env.HERMES_DEFAULT_MODEL || 'gpt-5.3-codex-spark'
+  }
+
+  return model
 }
 
 function readRecord(value: unknown): Record<string, unknown> | undefined {
@@ -367,7 +389,7 @@ export const Route = createFileRoute('/api/send-stream')({
         // Check if the selected model is a local provider model — force portable + direct routing
         let chatMode = getChatMode()
         let localBaseUrl: string | undefined
-        const requestModel = typeof body.model === 'string' ? body.model : ''
+        const requestModel = normalizeRequestedChatModel(body.model) ?? ''
         const bareModel = requestModel.includes('/')
           ? requestModel.split('/').slice(1).join('/')
           : requestModel
@@ -539,7 +561,7 @@ export const Route = createFileRoute('/api/send-stream')({
                 // Ensure session exists (user message appended after building history)
                 ensureLocalSession(
                   portableSessionKey,
-                  typeof body.model === 'string' ? body.model : undefined,
+                  requestModel || undefined,
                 )
                 const portableFriendlyId =
                   resolvedFriendlyId ||
@@ -590,7 +612,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   const persistedMessages = getLocalMessages(portableSessionKey)
                   const persistedHistory = persistedMessages.map((m) => ({
                     role: m.role as 'user' | 'assistant' | 'system',
-                    content: m.content,
+                    content: sanitizeWorkspaceVisibleText(m.content) ?? '',
                   }))
                   // Persist user message AFTER reading history to avoid duplication
                   appendLocalMessage(portableSessionKey, {
@@ -642,10 +664,7 @@ export const Route = createFileRoute('/api/send-stream')({
                       const responsesStream = streamResponses({
                         input: scopedMessage,
                         conversationHistory: effectiveHistory,
-                        model:
-                          typeof body.model === 'string'
-                            ? body.model
-                            : undefined,
+                        model: requestModel || undefined,
                         sessionId: portableSessionKey,
                         signal: abortController.signal,
                       })
@@ -741,6 +760,9 @@ export const Route = createFileRoute('/api/send-stream')({
                           throw new Error(ev.error)
                         }
                       }
+                      if (!accumulated.trim()) {
+                        throw new Error('Hermes returned no assistant text')
+                      }
                       appendLocalMessage(portableSessionKey, {
                         id: crypto.randomUUID(),
                         role: 'assistant',
@@ -783,9 +805,7 @@ export const Route = createFileRoute('/api/send-stream')({
                   const stream = await openaiChat(portableMessages, {
                     model: localBaseUrl
                       ? bareModel
-                      : typeof body.model === 'string'
-                        ? body.model
-                        : undefined,
+                      : requestModel || undefined,
                     temperature:
                       typeof body.temperature === 'number'
                         ? body.temperature
@@ -858,6 +878,10 @@ export const Route = createFileRoute('/api/send-stream')({
                         runId,
                       })
                     }
+                  }
+
+                  if (!accumulated.trim()) {
+                    throw new Error('Hermes returned no assistant text')
                   }
 
                   // Persist assistant response to local session store
