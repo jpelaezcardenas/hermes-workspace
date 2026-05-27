@@ -1605,7 +1605,7 @@ function LeadReplyDesk({
         ...current,
         [packet.item.id]: {
           status: 'sent',
-          message: `Sent as ${senderName(sender)} to ${reply.recipients.to.join(', ')}`,
+          message: `Sent as ${senderShortName(sender)} to ${reply.recipients.to.join(', ')}`,
         },
       }))
     } catch (error) {
@@ -1822,7 +1822,7 @@ function LeadCommandSurface({
                     ? 'Sending...'
                     : sendState?.status === 'sent'
                       ? 'Sent'
-                      : `Send as ${senderName(sender)}`}
+                      : `Send as ${senderShortName(sender)}`}
               </button>
               <button
                 type="button"
