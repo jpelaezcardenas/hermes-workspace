@@ -7,6 +7,7 @@ import {
   ArrowDown01Icon,
   ArrowUp01Icon,
   BrainIcon,
+  Building02Icon,
   Chat01Icon,
   CommandLineIcon,
   File01Icon,
@@ -185,6 +186,15 @@ export function CommandPalette({ pathname, sessions }: CommandPaletteProps) {
         shortcut: 'Go',
         icon: CommandLineIcon,
         onSelect: () => void navigate({ to: '/terminal' }),
+      },
+      {
+        id: 'screen-company-os-beta',
+        group: 'Screens',
+        label: 'Company OS Beta',
+        keywords: 'company operator business founder workspace tasks docs site beta',
+        shortcut: 'Go',
+        icon: Building02Icon,
+        onSelect: () => void navigate({ to: '/company-os-beta' }),
       },
       {
         id: 'screen-memory',

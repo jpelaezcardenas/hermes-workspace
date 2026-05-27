@@ -20,6 +20,8 @@ import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
+import { Route as CompanyOsBetaRouteImport } from './routes/company-os-beta'
+import { Route as CompanyOsRouteImport } from './routes/company-os'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -64,6 +66,7 @@ import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection
 import { Route as ApiConnectionSettingsRouteImport } from './routes/api/connection-settings'
 import { Route as ApiConductorStopRouteImport } from './routes/api/conductor-stop'
 import { Route as ApiConductorSpawnRouteImport } from './routes/api/conductor-spawn'
+import { Route as ApiCompanyOsRouteImport } from './routes/api/company-os'
 import { Route as ApiChatEventsRouteImport } from './routes/api/chat-events'
 import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
@@ -97,6 +100,8 @@ import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/c
 import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiHermesProxySplatRouteImport } from './routes/api/hermes-proxy/$'
 import { Route as ApiHermesJobsJobIdRouteImport } from './routes/api/hermes-jobs.$jobId'
+import { Route as ApiCompanyOsSendRouteImport } from './routes/api/company-os.send'
+import { Route as ApiCompanyOsGmailRefreshRouteImport } from './routes/api/company-os.gmail-refresh'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 
@@ -153,6 +158,16 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConductorRoute = ConductorRouteImport.update({
   id: '/conductor',
   path: '/conductor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyOsBetaRoute = CompanyOsBetaRouteImport.update({
+  id: '/company-os-beta',
+  path: '/company-os-beta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyOsRoute = CompanyOsRouteImport.update({
+  id: '/company-os',
+  path: '/company-os',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -375,6 +390,11 @@ const ApiConductorSpawnRoute = ApiConductorSpawnRouteImport.update({
   path: '/api/conductor-spawn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCompanyOsRoute = ApiCompanyOsRouteImport.update({
+  id: '/api/company-os',
+  path: '/api/company-os',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatEventsRoute = ApiChatEventsRouteImport.update({
   id: '/api/chat-events',
   path: '/api/chat-events',
@@ -540,6 +560,17 @@ const ApiHermesJobsJobIdRoute = ApiHermesJobsJobIdRouteImport.update({
   path: '/$jobId',
   getParentRoute: () => ApiHermesJobsRoute,
 } as any)
+const ApiCompanyOsSendRoute = ApiCompanyOsSendRouteImport.update({
+  id: '/send',
+  path: '/send',
+  getParentRoute: () => ApiCompanyOsRoute,
+} as any)
+const ApiCompanyOsGmailRefreshRoute =
+  ApiCompanyOsGmailRefreshRouteImport.update({
+    id: '/gmail-refresh',
+    path: '/gmail-refresh',
+    getParentRoute: () => ApiCompanyOsRoute,
+  } as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
     id: '/$sessionKey/status',
@@ -556,6 +587,8 @@ const ApiSessionsSessionKeyActiveRunRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/company-os': typeof CompanyOsRoute
+  '/company-os-beta': typeof CompanyOsBetaRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -570,6 +603,7 @@ export interface FileRoutesByFullPath {
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
+  '/api/company-os': typeof ApiCompanyOsRouteWithChildren
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -612,6 +646,8 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/company-os/gmail-refresh': typeof ApiCompanyOsGmailRefreshRoute
+  '/api/company-os/send': typeof ApiCompanyOsSendRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
@@ -648,6 +684,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/company-os': typeof CompanyOsRoute
+  '/company-os-beta': typeof CompanyOsBetaRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -661,6 +699,7 @@ export interface FileRoutesByTo {
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
+  '/api/company-os': typeof ApiCompanyOsRouteWithChildren
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -703,6 +742,8 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/api/company-os/gmail-refresh': typeof ApiCompanyOsGmailRefreshRoute
+  '/api/company-os/send': typeof ApiCompanyOsSendRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
@@ -740,6 +781,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/company-os': typeof CompanyOsRoute
+  '/company-os-beta': typeof CompanyOsBetaRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/files': typeof FilesRoute
@@ -754,6 +797,7 @@ export interface FileRoutesById {
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
   '/api/chat-events': typeof ApiChatEventsRoute
+  '/api/company-os': typeof ApiCompanyOsRouteWithChildren
   '/api/conductor-spawn': typeof ApiConductorSpawnRoute
   '/api/conductor-stop': typeof ApiConductorStopRoute
   '/api/connection-settings': typeof ApiConnectionSettingsRoute
@@ -796,6 +840,8 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/company-os/gmail-refresh': typeof ApiCompanyOsGmailRefreshRoute
+  '/api/company-os/send': typeof ApiCompanyOsSendRoute
   '/api/hermes-jobs/$jobId': typeof ApiHermesJobsJobIdRoute
   '/api/hermes-proxy/$': typeof ApiHermesProxySplatRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
@@ -834,6 +880,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/company-os'
+    | '/company-os-beta'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -848,6 +896,7 @@ export interface FileRouteTypes {
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
+    | '/api/company-os'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -890,6 +939,8 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/company-os/gmail-refresh'
+    | '/api/company-os/send'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
     | '/api/hermes-tasks/$taskId'
@@ -926,6 +977,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/company-os'
+    | '/company-os-beta'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -939,6 +992,7 @@ export interface FileRouteTypes {
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
+    | '/api/company-os'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -981,6 +1035,8 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/api/company-os/gmail-refresh'
+    | '/api/company-os/send'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
     | '/api/hermes-tasks/$taskId'
@@ -1017,6 +1073,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/company-os'
+    | '/company-os-beta'
     | '/conductor'
     | '/dashboard'
     | '/files'
@@ -1031,6 +1089,7 @@ export interface FileRouteTypes {
     | '/api/auth'
     | '/api/auth-check'
     | '/api/chat-events'
+    | '/api/company-os'
     | '/api/conductor-spawn'
     | '/api/conductor-stop'
     | '/api/connection-settings'
@@ -1073,6 +1132,8 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/company-os/gmail-refresh'
+    | '/api/company-os/send'
     | '/api/hermes-jobs/$jobId'
     | '/api/hermes-proxy/$'
     | '/api/hermes-tasks/$taskId'
@@ -1110,6 +1171,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  CompanyOsRoute: typeof CompanyOsRoute
+  CompanyOsBetaRoute: typeof CompanyOsBetaRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   FilesRoute: typeof FilesRoute
@@ -1124,6 +1187,7 @@ export interface RootRouteChildren {
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
   ApiChatEventsRoute: typeof ApiChatEventsRoute
+  ApiCompanyOsRoute: typeof ApiCompanyOsRouteWithChildren
   ApiConductorSpawnRoute: typeof ApiConductorSpawnRoute
   ApiConductorStopRoute: typeof ApiConductorStopRoute
   ApiConnectionSettingsRoute: typeof ApiConnectionSettingsRoute
@@ -1261,6 +1325,20 @@ declare module '@tanstack/react-router' {
       path: '/conductor'
       fullPath: '/conductor'
       preLoaderRoute: typeof ConductorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company-os-beta': {
+      id: '/company-os-beta'
+      path: '/company-os-beta'
+      fullPath: '/company-os-beta'
+      preLoaderRoute: typeof CompanyOsBetaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company-os': {
+      id: '/company-os'
+      path: '/company-os'
+      fullPath: '/company-os'
+      preLoaderRoute: typeof CompanyOsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -1571,6 +1649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiConductorSpawnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/company-os': {
+      id: '/api/company-os'
+      path: '/api/company-os'
+      fullPath: '/api/company-os'
+      preLoaderRoute: typeof ApiCompanyOsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat-events': {
       id: '/api/chat-events'
       path: '/api/chat-events'
@@ -1802,6 +1887,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesJobsJobIdRouteImport
       parentRoute: typeof ApiHermesJobsRoute
     }
+    '/api/company-os/send': {
+      id: '/api/company-os/send'
+      path: '/send'
+      fullPath: '/api/company-os/send'
+      preLoaderRoute: typeof ApiCompanyOsSendRouteImport
+      parentRoute: typeof ApiCompanyOsRoute
+    }
+    '/api/company-os/gmail-refresh': {
+      id: '/api/company-os/gmail-refresh'
+      path: '/gmail-refresh'
+      fullPath: '/api/company-os/gmail-refresh'
+      preLoaderRoute: typeof ApiCompanyOsGmailRefreshRouteImport
+      parentRoute: typeof ApiCompanyOsRoute
+    }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
       path: '/$sessionKey/status'
@@ -1833,6 +1932,20 @@ const SettingsRouteChildren: SettingsRouteChildren = {
 
 const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
+)
+
+interface ApiCompanyOsRouteChildren {
+  ApiCompanyOsGmailRefreshRoute: typeof ApiCompanyOsGmailRefreshRoute
+  ApiCompanyOsSendRoute: typeof ApiCompanyOsSendRoute
+}
+
+const ApiCompanyOsRouteChildren: ApiCompanyOsRouteChildren = {
+  ApiCompanyOsGmailRefreshRoute: ApiCompanyOsGmailRefreshRoute,
+  ApiCompanyOsSendRoute: ApiCompanyOsSendRoute,
+}
+
+const ApiCompanyOsRouteWithChildren = ApiCompanyOsRoute._addFileChildren(
+  ApiCompanyOsRouteChildren,
 )
 
 interface ApiHermesJobsRouteChildren {
@@ -1914,6 +2027,8 @@ const ApiSkillsRouteWithChildren = ApiSkillsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  CompanyOsRoute: CompanyOsRoute,
+  CompanyOsBetaRoute: CompanyOsBetaRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   FilesRoute: FilesRoute,
@@ -1928,6 +2043,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
   ApiChatEventsRoute: ApiChatEventsRoute,
+  ApiCompanyOsRoute: ApiCompanyOsRouteWithChildren,
   ApiConductorSpawnRoute: ApiConductorSpawnRoute,
   ApiConductorStopRoute: ApiConductorStopRoute,
   ApiConnectionSettingsRoute: ApiConnectionSettingsRoute,

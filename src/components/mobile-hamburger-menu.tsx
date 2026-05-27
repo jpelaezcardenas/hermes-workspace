@@ -2,6 +2,7 @@ import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   BrainIcon,
+  Building02Icon,
   Cancel01Icon,
   Chat01Icon,
   Clock01Icon,
@@ -65,6 +66,13 @@ const NAV_ITEMS = [
     icon: UserGroupIcon,
     to: '/operations',
     match: (p: string) => p.startsWith('/operations'),
+  },
+  {
+    id: 'company-os-beta',
+    label: 'Company OS Beta',
+    icon: Building02Icon,
+    to: '/company-os-beta',
+    match: (p: string) => p.startsWith('/company-os-beta'),
   },
   {
     id: 'memory',

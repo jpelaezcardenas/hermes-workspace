@@ -105,10 +105,12 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (path.startsWith('/jobs')) return 4
     if (path.startsWith('/conductor')) return 5
     if (path.startsWith('/operations')) return 6
-    if (path.startsWith('/memory')) return 7
-    if (path.startsWith('/skills')) return 8
-    if (path.startsWith('/profiles')) return 9
-    if (path.startsWith('/settings')) return 10
+    if (path.startsWith('/company-os-beta')) return 7
+    if (path.startsWith('/company-os')) return 7
+    if (path.startsWith('/memory')) return 8
+    if (path.startsWith('/skills')) return 9
+    if (path.startsWith('/profiles')) return 10
+    if (path.startsWith('/settings')) return 11
     return -1
   }, [])
 
@@ -136,6 +138,8 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (pathname.startsWith('/jobs')) return 'Jobs'
     if (pathname.startsWith('/conductor')) return 'Conductor'
     if (pathname.startsWith('/operations')) return 'Operations'
+    if (pathname.startsWith('/company-os-beta')) return 'Company OS Beta'
+    if (pathname.startsWith('/company-os')) return 'Company OS'
     if (pathname.startsWith('/memory')) return 'Memory'
     if (pathname.startsWith('/skills')) return 'Skills'
     if (pathname.startsWith('/profiles')) return 'Profiles'

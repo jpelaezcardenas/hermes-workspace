@@ -4,6 +4,7 @@ import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   BrainIcon,
+  Building02Icon,
   Chat01Icon,
   CheckListIcon,
   Clock01Icon,
@@ -561,6 +562,7 @@ function ChatSidebarComponent({
   const isTasksActive = pathname === '/tasks'
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
+  const isCompanyOsBetaActive = pathname.startsWith('/company-os-beta')
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
@@ -810,6 +812,13 @@ function ChatSidebarComponent({
       icon: UserGroupIcon,
       label: 'Operations',
       active: isOperationsActive,
+    },
+    {
+      kind: 'link',
+      to: '/company-os-beta',
+      icon: Building02Icon,
+      label: 'Company OS Beta',
+      active: isCompanyOsBetaActive,
     },
   ]
 
