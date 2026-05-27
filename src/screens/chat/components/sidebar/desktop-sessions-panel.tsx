@@ -275,8 +275,8 @@ export function DesktopSessionsPanel({
             Sessions Library ({filteredSessions.length})
           </div>
           <p className="mt-1 text-[11px] text-primary-500">
-            Select a session to inspect its transcript, metadata and last
-            activity.
+            Select a session to continue the chat and inspect its metadata and
+            last activity.
           </p>
         </div>
 

@@ -140,8 +140,6 @@ type PortableHistoryMessage = {
 const CHAT_ACCEPT_TIMEOUT_MS = 10_000
 const ACTIVE_RUN_CHECK_TIMEOUT_MS = 5_000
 
-type DesktopDetailMode = 'transcript' | 'chat'
-
 const desktopDateFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: 'medium',
   timeStyle: 'short',
@@ -537,8 +535,6 @@ export function ChatScreen({
   const setChatFocusMode = useWorkspaceStore((s) => s.setChatFocusMode)
   const queryClient = useQueryClient()
   const [sending, setSending] = useState(false)
-  const [desktopDetailMode, setDesktopDetailMode] =
-    useState<DesktopDetailMode>('chat')
   const [sessionsOpen, setSessionsOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -3018,23 +3014,6 @@ export function ChatScreen({
                   </dd>
                 </dl>
               </section>
-              <div className="mt-3 inline-flex rounded-md bg-primary-200 p-0.5">
-                {(['transcript', 'chat'] as const).map((mode) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={() => setDesktopDetailMode(mode)}
-                    className={cn(
-                      'h-7 rounded px-5 text-xs font-semibold capitalize transition',
-                      desktopDetailMode === mode
-                        ? 'bg-primary-400 text-primary-950 shadow-sm'
-                        : 'text-primary-600 hover:text-primary-950',
-                    )}
-                  >
-                    {mode}
-                  </button>
-                ))}
-              </div>
             </div>
           ) : !compact ? (
             <ChatHeader
@@ -3121,8 +3100,7 @@ export function ChatScreen({
             </div>
           )}
 
-          {hideUi ||
-          (desktopChatLayout && desktopDetailMode === 'transcript') ? null : (
+          {hideUi ? null : (
             <ContextBar
               sessionId={
                 resolvedSessionKey ||
@@ -3180,8 +3158,7 @@ export function ChatScreen({
               sending={sending}
             />
           )}
-          {showComposer &&
-          (!desktopChatLayout || desktopDetailMode === 'chat') ? (
+          {showComposer ? (
             <ChatComposer
               onSubmit={send}
               onAbort={handleAbortStreaming}

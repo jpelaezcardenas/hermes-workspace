@@ -315,7 +315,7 @@ export function CommandPalette({ pathname, sessions }: CommandPaletteProps) {
         id: 'slash-save',
         group: 'Slash Commands',
         label: '/save',
-        keywords: 'export current conversation transcript',
+        keywords: 'export current conversation chat history',
         shortcut: 'Run',
         icon: CommandLineIcon,
         onSelect: () => runSlashCommand('/save'),
