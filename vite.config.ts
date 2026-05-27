@@ -3,8 +3,14 @@ import { execSync, spawn } from 'node:child_process'
 import type { ChildProcess } from 'node:child_process'
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
 import net from 'node:net'
-import { resolve, dirname } from 'node:path'
+import { resolve } from 'node:path'
 import os from 'node:os'
+import {
+  buildHermesAgentLaunchPlan,
+  hermesGatewayEnv,
+  resolveClaudeAgentDir,
+  resolveClaudeBinary,
+} from './src/server/hermes-agent-startup'
 
 // devtools removed
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
@@ -17,62 +23,6 @@ import viteTsConfigPaths from 'vite-tsconfig-paths'
 // ---------------------------------------------------------------------------
 // Hermes Agent auto-start helpers
 // ---------------------------------------------------------------------------
-
-/** Resolve the hermes-agent directory using a priority-ordered fallback chain:
- *  1. HERMES_AGENT_PATH env var (explicit override)
- *  2. CLAUDE_AGENT_PATH env var (legacy override)
- *  3. ../hermes-agent  — sibling clone (standard README setup)
- *  4. ../../hermes-agent — one level up (monorepo / nested workspace)
- *  Returns null if none found.
- */
-function resolveClaudeAgentDir(env: Record<string, string>): string | null {
-  const candidates: string[] = []
-
-  const explicitAgentPath = env.HERMES_AGENT_PATH?.trim() || env.CLAUDE_AGENT_PATH?.trim()
-  if (explicitAgentPath) {
-    candidates.push(explicitAgentPath)
-  }
-
-  // Resolve relative to the workspace root (parent of hermes-workspace/)
-  const workspaceRoot = dirname(resolve('.'))
-  candidates.push(
-    resolve(workspaceRoot, 'hermes-agent'), // sibling (old README)
-    resolve(workspaceRoot, '..', 'hermes-agent'), // one level up
-    resolve(os.homedir(), '.claude', 'hermes-agent'), // Nous installer default
-    resolve(os.homedir(), 'hermes-agent'), // ~/hermes-agent
-  )
-
-  for (const candidate of candidates) {
-    if (existsSync(resolve(candidate, 'webapi'))) return candidate
-  }
-  return null
-}
-
-/** Find the Hermes CLI binary used to start the local gateway. */
-function resolveClaudeBinary(): string | null {
-  const candidates = [
-    process.env.HERMES_CLI_BIN || '',
-    resolve(os.homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
-    resolve(os.homedir(), '.claude', 'bin', 'claude'),
-    resolve(os.homedir(), '.local', 'bin', 'claude'),
-  ]
-  for (const c of candidates) {
-    if (existsSync(c)) return c
-  }
-  return null
-}
-
-/** Resolve the Python executable to use for Hermes backend startup.
- *  Prefers .venv/bin/python inside agentDir, falls back to system python3.
- */
-function resolveClaudePython(agentDir: string): string {
-  const venvPython = resolve(agentDir, '.venv', 'bin', 'python')
-  if (existsSync(venvPython)) return venvPython
-  // uv creates 'venv' not '.venv' sometimes
-  const uvVenv = resolve(agentDir, 'venv', 'bin', 'python')
-  if (existsSync(uvVenv)) return uvVenv
-  return 'python3'
-}
 
 /** Check if hermes-agent health endpoint is responding */
 async function isClaudeAgentHealthy(port = 8642): Promise<boolean> {
@@ -122,37 +72,8 @@ const config = defineConfig(({ mode, command }) => {
     const claudeBin = resolveClaudeBinary()
     const agentDir = resolveClaudeAgentDir(env)
 
-    // Prefer the `hermes gateway run` binary path (Nous installer's canonical
-    // entrypoint). Fall back to launching uvicorn against the source tree if
-    // only a directory is present (dev / cloned-in-place setups).
-    let launchCmd: string
-    let commandArgs: string[]
-    let launchCwd: string | undefined
-
-    if (claudeBin) {
-      launchCmd = claudeBin
-      commandArgs = ['gateway', 'run']
-      launchCwd = agentDir ?? undefined
-      console.log(`[hermes-agent] Starting ${claudeBin} gateway run`)
-    } else if (agentDir) {
-      launchCmd = resolveClaudePython(agentDir)
-      const useGatewayRun = existsSync(resolve(agentDir, 'gateway', 'run.py'))
-      commandArgs = useGatewayRun
-        ? ['-m', 'gateway.run']
-        : [
-            '-m',
-            'uvicorn',
-            'webapi.app:app',
-            '--host',
-            '0.0.0.0',
-            '--port',
-            '8642',
-          ]
-      launchCwd = agentDir
-      console.log(
-        `[hermes-agent] Starting from ${agentDir} using ${launchCmd} (${useGatewayRun ? 'gateway.run' : 'uvicorn'})`,
-      )
-    } else {
+    const plan = buildHermesAgentLaunchPlan({ agentDir, binary: claudeBin })
+    if (!plan) {
       console.warn(
         '[hermes-agent] Could not find hermes-agent installation.\n' +
           '  Run the installer:\n' +
@@ -161,13 +82,14 @@ const config = defineConfig(({ mode, command }) => {
       )
       return
     }
+    console.log(`[hermes-agent] Starting ${plan.command} ${plan.args.join(' ')}`)
 
-    const child = spawn(launchCmd, commandArgs, {
-      cwd: launchCwd,
+    const child = spawn(plan.command, plan.args, {
+      cwd: plan.cwd,
       detached: false, // keep tied to vite process — stops when dev server stops
       stdio: 'pipe',
       env: {
-        ...process.env,
+        ...hermesGatewayEnv(process.env, {}, '8642'),
         PATH: [
           resolve(os.homedir(), '.claude', 'bin'),
           resolve(os.homedir(), '.local', 'bin'),

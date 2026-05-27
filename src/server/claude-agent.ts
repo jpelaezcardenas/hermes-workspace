@@ -1,10 +1,17 @@
 import { spawn } from 'node:child_process'
-import { existsSync, readFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
 import { homedir } from 'node:os'
+import {
+  buildHermesAgentLaunchPlan,
+  HERMES_GATEWAY_PORT,
+  hermesGatewayEnv,
+  resolveClaudeAgentDir,
+  resolveClaudeBinary,
+} from './hermes-agent-startup'
 
 const CLAUDE_HEALTH_TIMEOUT_MS = 2_000
-const CLAUDE_START_PORT = 8642
+const CLAUDE_START_PORT = HERMES_GATEWAY_PORT
 
 let startPromise: Promise<StartClaudeAgentResult> | null = null
 
@@ -52,55 +59,6 @@ function readClaudeEnv(): Record<string, string> {
   }
 }
 
-/** Same directory resolution logic as vite.config.ts. Kept in sync. */
-export function resolveClaudeAgentDir(
-  env: Record<string, string | undefined> = process.env,
-): string | null {
-  const candidates: Array<string> = []
-
-  const explicitAgentPath = env.HERMES_AGENT_PATH?.trim() || env.CLAUDE_AGENT_PATH?.trim()
-  if (explicitAgentPath) {
-    candidates.push(explicitAgentPath)
-  }
-
-  const workspaceRoot = dirname(resolve('.'))
-  candidates.push(
-    resolve(workspaceRoot, 'hermes-agent'),          // sibling (old README)
-    resolve(workspaceRoot, '..', 'hermes-agent'),    // one level up
-    resolve(homedir(), '.hermes', 'hermes-agent'),   // Nous installer default
-    resolve(homedir(), 'hermes-agent'),              // ~/hermes-agent
-  )
-
-  for (const candidate of candidates) {
-    if (existsSync(resolve(candidate, 'webapi'))) return candidate
-  }
-
-  return null
-}
-
-/** Find the `claude` CLI binary installed by Nous's installer (or on PATH). */
-export function resolveClaudeBinary(): string | null {
-  const candidates = [
-    resolve(homedir(), '.claude', 'bin', 'claude'),
-    resolve(homedir(), '.local', 'bin', 'claude'),
-  ]
-  for (const c of candidates) {
-    if (existsSync(c)) return c
-  }
-  return null
-}
-
-export function resolveClaudePython(agentDir: string): string {
-  const venvPython = resolve(agentDir, '.venv', 'bin', 'python')
-  if (existsSync(venvPython)) return venvPython
-  const uvVenv = resolve(agentDir, 'venv', 'bin', 'python')
-  if (existsSync(uvVenv)) return uvVenv
-  // Nous installer ships its own uv-managed python alongside the binary
-  const nousPython = resolve(homedir(), '.claude', 'venv', 'bin', 'python')
-  if (existsSync(nousPython)) return nousPython
-  return 'python3'
-}
-
 export async function isClaudeAgentHealthy(
   port = CLAUDE_START_PORT,
 ): Promise<boolean> {
@@ -129,30 +87,8 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
       const claudeBin = resolveClaudeBinary()
       const agentDir = resolveClaudeAgentDir()
 
-      // Prefer the `hermes gateway run` binary path (the Nous installer's
-      // canonical entrypoint). Fall back to launching uvicorn against the
-      // source tree if we only have a directory.
-      let command: string
-      let commandArgs: Array<string>
-      let cwd: string | undefined
-
-      if (claudeBin) {
-        command = claudeBin
-        commandArgs = ['gateway', 'run']
-        cwd = agentDir ?? undefined
-      } else if (agentDir) {
-        command = resolveClaudePython(agentDir)
-        commandArgs = [
-          '-m',
-          'uvicorn',
-          'webapi.app:app',
-          '--host',
-          '0.0.0.0',
-          '--port',
-          String(CLAUDE_START_PORT),
-        ]
-        cwd = agentDir
-      } else {
+      const plan = buildHermesAgentLaunchPlan({ agentDir, binary: claudeBin })
+      if (!plan) {
         return {
           ok: false,
           error:
@@ -161,15 +97,14 @@ export async function startClaudeAgent(): Promise<StartClaudeAgentResult> {
       }
 
       const child = spawn(
-        command,
-        commandArgs,
+        plan.command,
+        plan.args,
         {
-          cwd,
+          cwd: plan.cwd,
           detached: true,
           stdio: 'ignore',
           env: {
-            ...process.env,
-            ...claudeEnv,
+            ...hermesGatewayEnv(process.env, claudeEnv, CLAUDE_START_PORT),
             PATH: [
               resolve(homedir(), '.claude', 'bin'),
               resolve(homedir(), '.local', 'bin'),
