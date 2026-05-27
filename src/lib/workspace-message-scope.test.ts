@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildWorkspaceScopedTextMessage } from './workspace-message-scope'
+import {
+  buildWorkspaceScopedTextMessage,
+  sanitizeWorkspaceVisibleText,
+  stripWorkspaceDirectiveFromText,
+} from './workspace-message-scope'
 
 describe('buildWorkspaceScopedTextMessage', () => {
   it('prepends an explicit active workspace directive to plain text chat messages', () => {
@@ -38,5 +42,29 @@ describe('buildWorkspaceScopedTextMessage', () => {
         isValid: false,
       }),
     ).toBe('hello')
+  })
+
+  it('strips a leading workspace directive before rendering visible text', () => {
+    expect(
+      stripWorkspaceDirectiveFromText(
+        '<workspace_context active="true" name="app" path="/tmp/app" />\n\nWhat changed?',
+      ),
+    ).toBe('What changed?')
+  })
+
+  it('returns undefined when a title only contains a workspace directive', () => {
+    expect(
+      sanitizeWorkspaceVisibleText(
+        '<workspace_context active="true" name="app" path="/tmp/app" />',
+      ),
+    ).toBeUndefined()
+  })
+
+  it('returns undefined for truncated workspace directive previews', () => {
+    expect(
+      sanitizeWorkspaceVisibleText(
+        '<workspace_context active="true" name="Home" path="/Users/cd...',
+      ),
+    ).toBeUndefined()
   })
 })

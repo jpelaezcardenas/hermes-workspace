@@ -22,6 +22,17 @@ type PortableMainBindingOptions = {
 }
 
 const SYNTHETIC_SESSION_KEYS = new Set(['main', 'new'])
+const DEFAULT_CHAT_SESSION_ALIASES = new Set([
+  'dashboard-chat',
+  'agent:main',
+  'agent:main:main',
+  'agent:main:dashboard-chat',
+])
+
+export function normalizeDefaultChatSessionKey(value: string): string {
+  const trimmed = value.trim()
+  return DEFAULT_CHAT_SESSION_ALIASES.has(trimmed) ? 'main' : trimmed
+}
 
 export function isInternalSessionKey(id: string): boolean {
   return (
@@ -66,9 +77,7 @@ export function shouldBindMainToPortableSession({
   enhancedChat,
 }: PortableMainBindingOptions): boolean {
   return (
-    (sessionKey ?? '').trim() === 'main' &&
-    dashboardAvailable &&
-    !enhancedChat
+    (sessionKey ?? '').trim() === 'main' && dashboardAvailable && !enhancedChat
   )
 }
 
@@ -79,13 +88,22 @@ export async function resolveSessionKey({
 }: ResolveSessionKeyInput): Promise<ResolveSessionResult> {
   const trimmedRaw = rawSessionKey?.trim() ?? ''
   if (trimmedRaw.length > 0) {
-    return { sessionKey: trimmedRaw, resolvedVia: 'raw' }
+    return {
+      sessionKey: normalizeDefaultChatSessionKey(trimmedRaw),
+      resolvedVia: 'raw',
+    }
   }
 
   const trimmedFriendly = friendlyId?.trim() ?? ''
   if (trimmedFriendly.length > 0) {
-    return { sessionKey: trimmedFriendly, resolvedVia: 'friendly' }
+    return {
+      sessionKey: normalizeDefaultChatSessionKey(trimmedFriendly),
+      resolvedVia: 'friendly',
+    }
   }
 
-  return { sessionKey: defaultKey, resolvedVia: 'default' }
+  return {
+    sessionKey: normalizeDefaultChatSessionKey(defaultKey),
+    resolvedVia: 'default',
+  }
 }

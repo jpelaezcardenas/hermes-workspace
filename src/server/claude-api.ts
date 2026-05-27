@@ -24,6 +24,7 @@ import {
   searchSessions as searchDashboardSessions,
   updateSession as updateDashboardSession,
 } from './claude-dashboard-api'
+import { sanitizeWorkspaceVisibleText } from '../lib/workspace-message-scope'
 
 const _authHeaders = (): Record<string, string> =>
   BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
@@ -314,6 +315,9 @@ export function toChatMessage(
 export function toSessionSummary(
   session: ClaudeSession,
 ): Record<string, unknown> {
+  const title = sanitizeWorkspaceVisibleText(session.title)
+  const preview = sanitizeWorkspaceVisibleText(session.preview)
+  const derivedTitle = title || preview
   return {
     key: session.id,
     id: session.id,
@@ -321,10 +325,10 @@ export function toSessionSummary(
     kind: 'chat',
     status: session.ended_at ? 'ended' : 'idle',
     model: session.model || '',
-    label: session.title || undefined,
-    title: session.title || undefined,
-    derivedTitle: session.title || session.preview || undefined,
-    preview: session.preview || undefined,
+    label: title,
+    title,
+    derivedTitle,
+    preview,
     tokenCount: (session.input_tokens ?? 0) + (session.output_tokens ?? 0),
     totalTokens: (session.input_tokens ?? 0) + (session.output_tokens ?? 0),
     message_count: session.message_count ?? 0,

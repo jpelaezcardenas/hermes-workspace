@@ -1195,6 +1195,7 @@ export function ChatScreen({
     isStreaming: localIsStreaming,
     streamingText: localStreamingText,
     streamingMessageId: localStreamingMessageId,
+    startStreaming,
     cancelStreaming,
   } = useStreamingMessage({
     pinMainSession:
@@ -1928,8 +1929,9 @@ export function ChatScreen({
   }, [activeFriendlyId, isNewChat, streamStop])
 
   /**
-   * Simplified sendMessage - fire and forget.
-   * Response arrives via SSE stream, not via this function.
+   * Foreground sends use the original direct stream so chat feels immediate.
+   * If the tab is already hidden, fall back to the server-owned queued send
+   * path so mobile backgrounding still completes.
    */
   const sendMessage = useCallback(
     function sendMessage(
@@ -2065,7 +2067,7 @@ export function ChatScreen({
       }
 
       const idempotencyKey = optimisticClientId || crypto.randomUUID()
-      void (async () => {
+      const runQueuedSend = async () => {
         const response = await fetchWithTimeout(
           '/api/session-send',
           {
@@ -2129,6 +2131,34 @@ export function ChatScreen({
         // answer when it arrives.
         setWaitingForResponse(false)
         schedulePostSendHistoryRefresh()
+      }
+
+      const runStreamingSend = async () => {
+        await startStreaming({
+          sessionKey,
+          friendlyId,
+          message: enrichedBody,
+          history,
+          attachments:
+            payloadAttachments.length > 0 ? payloadAttachments : undefined,
+          thinking:
+            currentThinkingLevel === 'off' ? undefined : currentThinkingLevel,
+          fastMode,
+          model: currentModel || undefined,
+          idempotencyKey,
+        })
+        schedulePostSendHistoryRefresh()
+      }
+
+      void (async () => {
+        if (
+          typeof document !== 'undefined' &&
+          document.visibilityState === 'hidden'
+        ) {
+          await runQueuedSend()
+          return
+        }
+        await runStreamingSend()
       })().catch((err: unknown) => {
         const messageText = err instanceof Error ? err.message : String(err)
         if (idempotencyKey) {
@@ -2159,6 +2189,7 @@ export function ChatScreen({
       setLocalActivity,
       setWaitingForResponse,
       schedulePostSendHistoryRefresh,
+      startStreaming,
       streamStart,
       currentModel,
     ],

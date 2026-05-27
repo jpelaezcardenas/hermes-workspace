@@ -38,32 +38,38 @@ export const Route = createFileRoute('/api/session-history')({
         if (!key) {
           return json({ ok: false, messages: [], error: 'key is required' })
         }
+        const resolved = await resolveSessionKey({
+          rawSessionKey: key,
+          defaultKey: 'main',
+        })
+        const resolvedKey = resolved.sessionKey
         // Try local store first (in-memory sessions)
-        const local = getLocalSession(key)
+        const local = getLocalSession(resolvedKey)
         if (local) {
-          const messages = getLocalMessages(key).slice(-limit)
-          return json({ ok: true, messages, sessionKey: key, source: 'local' })
+          const messages = getLocalMessages(resolvedKey).slice(-limit)
+          return json({
+            ok: true,
+            messages,
+            sessionKey: resolvedKey,
+            source: 'local',
+          })
         }
         if (!getGatewayCapabilities().sessions) {
           return json({
             ok: false,
             messages: [],
-            sessionKey: key,
+            sessionKey: resolvedKey,
             error: SESSIONS_API_UNAVAILABLE_MESSAGE,
           })
         }
         try {
-          const resolved = await resolveSessionKey({
-            rawSessionKey: key,
-            defaultKey: 'main',
-          })
           void includeTools
-          const rows = await getMessages(resolved.sessionKey)
+          const rows = await getMessages(resolvedKey)
           const trimmed = rows.slice(-limit)
           return json({
             ok: true,
             messages: trimmed.map((row) => toChatMessage(row)),
-            sessionKey: resolved.sessionKey,
+            sessionKey: resolvedKey,
             source: 'gateway',
           })
         } catch (error) {
