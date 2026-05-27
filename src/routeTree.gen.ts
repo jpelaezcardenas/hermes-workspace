@@ -179,6 +179,7 @@ import { Route as ApiCommandCenterActionGatesRouteImport } from './routes/api/co
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
+import { Route as ApiChatThreadsRouteImport } from './routes/api/chat/threads'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
 import { Route as ApiKnowledgeFabricRouteRouteImport } from './routes/api/knowledge/fabric/route'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
@@ -192,6 +193,10 @@ import { Route as ApiKnowledgeFabricHealthRouteImport } from './routes/api/knowl
 import { Route as ApiKnowledgeFabricDocumentRecordRouteImport } from './routes/api/knowledge/fabric/document-record'
 import { Route as ApiKnowledgeFabricAgentSearchRouteImport } from './routes/api/knowledge/fabric/agent-search'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
+import { Route as ApiChatThreadsThreadIdRouteImport } from './routes/api/chat/threads/$threadId'
+import { Route as ApiChatThreadsThreadIdTurnsRouteImport } from './routes/api/chat/threads/$threadId.turns'
+import { Route as ApiChatThreadsThreadIdSnapshotRouteImport } from './routes/api/chat/threads/$threadId.snapshot'
+import { Route as ApiChatThreadsThreadIdEventsRouteImport } from './routes/api/chat/threads/$threadId.events'
 
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
@@ -1052,6 +1057,11 @@ const ApiClaudeJobsJobIdRoute = ApiClaudeJobsJobIdRouteImport.update({
   path: '/$jobId',
   getParentRoute: () => ApiClaudeJobsRoute,
 } as any)
+const ApiChatThreadsRoute = ApiChatThreadsRouteImport.update({
+  id: '/api/chat/threads',
+  path: '/api/chat/threads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   id: '/$artifactId',
   path: '/$artifactId',
@@ -1125,6 +1135,29 @@ const ApiHermesworldReservationsConfirmRoute =
     id: '/confirm',
     path: '/confirm',
     getParentRoute: () => ApiHermesworldReservationsRoute,
+  } as any)
+const ApiChatThreadsThreadIdRoute = ApiChatThreadsThreadIdRouteImport.update({
+  id: '/$threadId',
+  path: '/$threadId',
+  getParentRoute: () => ApiChatThreadsRoute,
+} as any)
+const ApiChatThreadsThreadIdTurnsRoute =
+  ApiChatThreadsThreadIdTurnsRouteImport.update({
+    id: '/turns',
+    path: '/turns',
+    getParentRoute: () => ApiChatThreadsThreadIdRoute,
+  } as any)
+const ApiChatThreadsThreadIdSnapshotRoute =
+  ApiChatThreadsThreadIdSnapshotRouteImport.update({
+    id: '/snapshot',
+    path: '/snapshot',
+    getParentRoute: () => ApiChatThreadsThreadIdRoute,
+  } as any)
+const ApiChatThreadsThreadIdEventsRoute =
+  ApiChatThreadsThreadIdEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => ApiChatThreadsThreadIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -1240,6 +1273,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof SettingsIndexRoute
   '/api/knowledge/fabric': typeof ApiKnowledgeFabricRouteRouteWithChildren
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
+  '/api/chat/threads': typeof ApiChatThreadsRouteWithChildren
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
@@ -1300,6 +1334,7 @@ export interface FileRoutesByFullPath {
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/usage/limits': typeof ApiUsageLimitsRoute
+  '/api/chat/threads/$threadId': typeof ApiChatThreadsThreadIdRouteWithChildren
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/knowledge/fabric/agent-search': typeof ApiKnowledgeFabricAgentSearchRoute
   '/api/knowledge/fabric/document-record': typeof ApiKnowledgeFabricDocumentRecordRoute
@@ -1311,6 +1346,9 @@ export interface FileRoutesByFullPath {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/chat/threads/$threadId/events': typeof ApiChatThreadsThreadIdEventsRoute
+  '/api/chat/threads/$threadId/snapshot': typeof ApiChatThreadsThreadIdSnapshotRoute
+  '/api/chat/threads/$threadId/turns': typeof ApiChatThreadsThreadIdTurnsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1424,6 +1462,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsIndexRoute
   '/api/knowledge/fabric': typeof ApiKnowledgeFabricRouteRouteWithChildren
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
+  '/api/chat/threads': typeof ApiChatThreadsRouteWithChildren
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
@@ -1484,6 +1523,7 @@ export interface FileRoutesByTo {
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/usage/limits': typeof ApiUsageLimitsRoute
+  '/api/chat/threads/$threadId': typeof ApiChatThreadsThreadIdRouteWithChildren
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/knowledge/fabric/agent-search': typeof ApiKnowledgeFabricAgentSearchRoute
   '/api/knowledge/fabric/document-record': typeof ApiKnowledgeFabricDocumentRecordRoute
@@ -1495,6 +1535,9 @@ export interface FileRoutesByTo {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/chat/threads/$threadId/events': typeof ApiChatThreadsThreadIdEventsRoute
+  '/api/chat/threads/$threadId/snapshot': typeof ApiChatThreadsThreadIdSnapshotRoute
+  '/api/chat/threads/$threadId/turns': typeof ApiChatThreadsThreadIdTurnsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1610,6 +1653,7 @@ export interface FileRoutesById {
   '/settings/': typeof SettingsIndexRoute
   '/api/knowledge/fabric': typeof ApiKnowledgeFabricRouteRouteWithChildren
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
+  '/api/chat/threads': typeof ApiChatThreadsRouteWithChildren
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
@@ -1670,6 +1714,7 @@ export interface FileRoutesById {
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/usage/limits': typeof ApiUsageLimitsRoute
+  '/api/chat/threads/$threadId': typeof ApiChatThreadsThreadIdRouteWithChildren
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/knowledge/fabric/agent-search': typeof ApiKnowledgeFabricAgentSearchRoute
   '/api/knowledge/fabric/document-record': typeof ApiKnowledgeFabricDocumentRecordRoute
@@ -1681,6 +1726,9 @@ export interface FileRoutesById {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/chat/threads/$threadId/events': typeof ApiChatThreadsThreadIdEventsRoute
+  '/api/chat/threads/$threadId/snapshot': typeof ApiChatThreadsThreadIdSnapshotRoute
+  '/api/chat/threads/$threadId/turns': typeof ApiChatThreadsThreadIdTurnsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1797,6 +1845,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/api/knowledge/fabric'
     | '/api/artifacts/$artifactId'
+    | '/api/chat/threads'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
@@ -1857,6 +1906,7 @@ export interface FileRouteTypes {
     | '/api/update/status'
     | '/api/update/workspace'
     | '/api/usage/limits'
+    | '/api/chat/threads/$threadId'
     | '/api/hermesworld/reservations/confirm'
     | '/api/knowledge/fabric/agent-search'
     | '/api/knowledge/fabric/document-record'
@@ -1868,6 +1918,9 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/chat/threads/$threadId/events'
+    | '/api/chat/threads/$threadId/snapshot'
+    | '/api/chat/threads/$threadId/turns'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1981,6 +2034,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/api/knowledge/fabric'
     | '/api/artifacts/$artifactId'
+    | '/api/chat/threads'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
@@ -2041,6 +2095,7 @@ export interface FileRouteTypes {
     | '/api/update/status'
     | '/api/update/workspace'
     | '/api/usage/limits'
+    | '/api/chat/threads/$threadId'
     | '/api/hermesworld/reservations/confirm'
     | '/api/knowledge/fabric/agent-search'
     | '/api/knowledge/fabric/document-record'
@@ -2052,6 +2107,9 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/chat/threads/$threadId/events'
+    | '/api/chat/threads/$threadId/snapshot'
+    | '/api/chat/threads/$threadId/turns'
   id:
     | '__root__'
     | '/'
@@ -2166,6 +2224,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/api/knowledge/fabric'
     | '/api/artifacts/$artifactId'
+    | '/api/chat/threads'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
@@ -2226,6 +2285,7 @@ export interface FileRouteTypes {
     | '/api/update/status'
     | '/api/update/workspace'
     | '/api/usage/limits'
+    | '/api/chat/threads/$threadId'
     | '/api/hermesworld/reservations/confirm'
     | '/api/knowledge/fabric/agent-search'
     | '/api/knowledge/fabric/document-record'
@@ -2237,6 +2297,9 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/chat/threads/$threadId/events'
+    | '/api/chat/threads/$threadId/snapshot'
+    | '/api/chat/threads/$threadId/turns'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -2348,6 +2411,7 @@ export interface RootRouteChildren {
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiKnowledgeFabricRouteRoute: typeof ApiKnowledgeFabricRouteRouteWithChildren
+  ApiChatThreadsRoute: typeof ApiChatThreadsRouteWithChildren
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiCommandCenterActionGatesRoute: typeof ApiCommandCenterActionGatesRoute
   ApiCommandCenterAgentRunsRoute: typeof ApiCommandCenterAgentRunsRoute
@@ -3580,6 +3644,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiClaudeJobsJobIdRouteImport
       parentRoute: typeof ApiClaudeJobsRoute
     }
+    '/api/chat/threads': {
+      id: '/api/chat/threads'
+      path: '/api/chat/threads'
+      fullPath: '/api/chat/threads'
+      preLoaderRoute: typeof ApiChatThreadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/artifacts/$artifactId': {
       id: '/api/artifacts/$artifactId'
       path: '/$artifactId'
@@ -3670,6 +3741,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/hermesworld/reservations/confirm'
       preLoaderRoute: typeof ApiHermesworldReservationsConfirmRouteImport
       parentRoute: typeof ApiHermesworldReservationsRoute
+    }
+    '/api/chat/threads/$threadId': {
+      id: '/api/chat/threads/$threadId'
+      path: '/$threadId'
+      fullPath: '/api/chat/threads/$threadId'
+      preLoaderRoute: typeof ApiChatThreadsThreadIdRouteImport
+      parentRoute: typeof ApiChatThreadsRoute
+    }
+    '/api/chat/threads/$threadId/turns': {
+      id: '/api/chat/threads/$threadId/turns'
+      path: '/turns'
+      fullPath: '/api/chat/threads/$threadId/turns'
+      preLoaderRoute: typeof ApiChatThreadsThreadIdTurnsRouteImport
+      parentRoute: typeof ApiChatThreadsThreadIdRoute
+    }
+    '/api/chat/threads/$threadId/snapshot': {
+      id: '/api/chat/threads/$threadId/snapshot'
+      path: '/snapshot'
+      fullPath: '/api/chat/threads/$threadId/snapshot'
+      preLoaderRoute: typeof ApiChatThreadsThreadIdSnapshotRouteImport
+      parentRoute: typeof ApiChatThreadsThreadIdRoute
+    }
+    '/api/chat/threads/$threadId/events': {
+      id: '/api/chat/threads/$threadId/events'
+      path: '/events'
+      fullPath: '/api/chat/threads/$threadId/events'
+      preLoaderRoute: typeof ApiChatThreadsThreadIdEventsRouteImport
+      parentRoute: typeof ApiChatThreadsThreadIdRoute
     }
   }
 }
@@ -3906,6 +4005,36 @@ const ApiKnowledgeFabricRouteRouteWithChildren =
     ApiKnowledgeFabricRouteRouteChildren,
   )
 
+interface ApiChatThreadsThreadIdRouteChildren {
+  ApiChatThreadsThreadIdEventsRoute: typeof ApiChatThreadsThreadIdEventsRoute
+  ApiChatThreadsThreadIdSnapshotRoute: typeof ApiChatThreadsThreadIdSnapshotRoute
+  ApiChatThreadsThreadIdTurnsRoute: typeof ApiChatThreadsThreadIdTurnsRoute
+}
+
+const ApiChatThreadsThreadIdRouteChildren: ApiChatThreadsThreadIdRouteChildren =
+  {
+    ApiChatThreadsThreadIdEventsRoute: ApiChatThreadsThreadIdEventsRoute,
+    ApiChatThreadsThreadIdSnapshotRoute: ApiChatThreadsThreadIdSnapshotRoute,
+    ApiChatThreadsThreadIdTurnsRoute: ApiChatThreadsThreadIdTurnsRoute,
+  }
+
+const ApiChatThreadsThreadIdRouteWithChildren =
+  ApiChatThreadsThreadIdRoute._addFileChildren(
+    ApiChatThreadsThreadIdRouteChildren,
+  )
+
+interface ApiChatThreadsRouteChildren {
+  ApiChatThreadsThreadIdRoute: typeof ApiChatThreadsThreadIdRouteWithChildren
+}
+
+const ApiChatThreadsRouteChildren: ApiChatThreadsRouteChildren = {
+  ApiChatThreadsThreadIdRoute: ApiChatThreadsThreadIdRouteWithChildren,
+}
+
+const ApiChatThreadsRouteWithChildren = ApiChatThreadsRoute._addFileChildren(
+  ApiChatThreadsRouteChildren,
+)
+
 interface ApiHermesworldReservationsRouteChildren {
   ApiHermesworldReservationsConfirmRoute: typeof ApiHermesworldReservationsConfirmRoute
 }
@@ -4030,6 +4159,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiKnowledgeFabricRouteRoute: ApiKnowledgeFabricRouteRouteWithChildren,
+  ApiChatThreadsRoute: ApiChatThreadsRouteWithChildren,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiCommandCenterActionGatesRoute: ApiCommandCenterActionGatesRoute,
   ApiCommandCenterAgentRunsRoute: ApiCommandCenterAgentRunsRoute,

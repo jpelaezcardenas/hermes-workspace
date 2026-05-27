@@ -2064,13 +2064,15 @@ export function ChatScreen({
 
       const idempotencyKey = optimisticClientId || crypto.randomUUID()
       const runQueuedSend = async () => {
+        const queuedSendPath = `/api/chat/threads/${encodeURIComponent(
+          sessionKey,
+        )}/turns`
         const response = await fetchWithTimeout(
-          '/api/session-send',
+          queuedSendPath,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              sessionKey,
               friendlyId,
               message: enrichedBody,
               history,
@@ -2090,7 +2092,7 @@ export function ChatScreen({
             }),
           },
           CHAT_ACCEPT_TIMEOUT_MS,
-          'session-send accept',
+          'chat turn accept',
         )
         const responseText = await response.text()
         let result: { ok?: boolean; error?: string } = {}
@@ -2103,9 +2105,9 @@ export function ChatScreen({
         }
         if (!response.ok || result.ok === false) {
           throw new Error(
-            result.error ||
-              responseText ||
-              `session-send failed (${response.status})`,
+              result.error ||
+                responseText ||
+              `chat turn failed (${response.status})`,
           )
         }
 

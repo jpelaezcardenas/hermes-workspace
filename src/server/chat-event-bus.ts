@@ -1,4 +1,5 @@
 import { hasActiveSendRun } from './send-run-tracker'
+import { appendChatRuntimeEvent } from './chat-runtime-store'
 
 export interface ChatSSEEvent {
   event: string
@@ -42,6 +43,12 @@ export function publishChatEvent(
   event: string,
   data: Record<string, unknown>,
 ): void {
+  void appendChatRuntimeEvent(event, data).catch((error: unknown) => {
+    console.warn(
+      '[chat-runtime] failed to persist published chat event:',
+      error instanceof Error ? error.message : String(error),
+    )
+  })
   const runId = typeof data.runId === 'string' ? data.runId : undefined
   if (hasActiveSendRun(runId)) return
   broadcast(event, data)

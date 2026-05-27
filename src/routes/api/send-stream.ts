@@ -9,6 +9,7 @@ import { resolveSessionKey } from '../../server/session-utils'
 import { requireLocalOrAuth } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
 import { publishChatEvent } from '../../server/chat-event-bus'
+import { appendChatRuntimeEvent } from '../../server/chat-runtime-store'
 import { loadWorkspaceCatalog } from './workspace'
 import {
   registerActiveSendRun,
@@ -446,6 +447,23 @@ export const Route = createFileRoute('/api/send-stream')({
               lastClientEventAt = Date.now()
               const payload = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`
               enqueueRaw(payload)
+              if (
+                !shouldPublishServerSideEvents &&
+                event !== 'heartbeat' &&
+                event !== 'hb_signal' &&
+                data &&
+                typeof data === 'object'
+              ) {
+                void appendChatRuntimeEvent(
+                  event,
+                  data as Record<string, unknown>,
+                ).catch((error: unknown) => {
+                  console.warn(
+                    '[chat-runtime] failed to persist foreground stream event:',
+                    error instanceof Error ? error.message : String(error),
+                  )
+                })
+              }
               if (
                 shouldPublishServerSideEvents &&
                 event !== 'heartbeat' &&
