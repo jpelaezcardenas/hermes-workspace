@@ -1,6 +1,8 @@
 'use client'
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import type { Terminal } from 'xterm'
 import type * as XtermModule from 'xterm'
 import type { FitAddon } from 'xterm-addon-fit'
@@ -336,7 +338,7 @@ export const SwarmTerminal = memo(function SwarmTerminal({
             {state === 'error' && 'error'}
             {state === 'idle' && 'idle'}
           </span>
-          {error ? <span className="text-red-300">attach error</span> : null}
+          {error ? <span className="text-red-300">{t('attach_error')}</span> : null}
         </div>
       ) : null}
       <div

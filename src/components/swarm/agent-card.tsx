@@ -1,6 +1,8 @@
 'use client'
 
 import { HugeiconsIcon } from '@hugeicons/react'
+
+import { t } from '@/lib/i18n'
 import {
   Add01Icon,
   CheckListIcon,
@@ -251,7 +253,7 @@ export function AgentCard({
       {compactSignalOnly ? (
         <div className="min-h-[12rem] flex-1 rounded-2xl border border-emerald-400/10 bg-black/18 p-3 text-[11px] text-emerald-100/55">
           <div className="mb-2 flex items-center justify-between gap-2 text-[10px] uppercase tracking-[0.18em] text-emerald-200/45">
-            <span>Signal</span>
+            <span>{t('signal')}</span>
             <span>{selected ? 'focused' : 'click card to focus'}</span>
           </div>
           {recentLines.length > 0 ? (

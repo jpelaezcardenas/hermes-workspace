@@ -1,4 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+
+import { t } from '@/lib/i18n'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { ArrowLeft01Icon, Home01Icon } from '@hugeicons/core-free-icons'
 import { usePageTitle } from '@/hooks/use-page-title'
@@ -56,7 +58,7 @@ function NotFoundPage() {
 
         {/* Helpful Links */}
         <div className="mt-12 pt-8 border-t border-primary-200">
-          <p className="text-sm text-primary-500 mb-3">Quick Links</p>
+          <p className="text-sm text-primary-500 mb-3">{t('quick_links')}</p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
             <Link
               to={'/chat' as string}

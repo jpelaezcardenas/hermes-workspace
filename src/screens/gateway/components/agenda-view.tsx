@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
@@ -284,9 +286,9 @@ export function AgendaView({
   return (
     <div className="space-y-3">
       <header className="rounded-xl border border-primary-800 bg-primary-900 p-4">
-        <p className="text-xs uppercase tracking-wide text-primary-400">Today overview</p>
+        <p className="text-xs uppercase tracking-wide text-primary-400">{t('today_overview')}</p>
         <h2 className="mt-1 text-lg font-semibold text-primary-100">{greeting}</h2>
-        <p className="text-xs text-primary-300">Here is your daily briefing.</p>
+        <p className="text-xs text-primary-300">{t('here_is_your_daily_briefing')}</p>
       </header>
 
       <SectionCard

@@ -1,6 +1,8 @@
 'use client'
 
 import { HugeiconsIcon } from '@hugeicons/react'
+
+import { t } from '@/lib/i18n'
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -28,7 +30,7 @@ function Thinking({ content }: ThinkingProps) {
             />
           }
         >
-          <span className="text-sm font-medium text-primary-900">Thinking</span>
+          <span className="text-sm font-medium text-primary-900">{t('thinking')}</span>
           <HugeiconsIcon
             icon={ArrowDown01Icon}
             size={14}

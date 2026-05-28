@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Rocket01Icon, CheckmarkCircle02Icon, AlertCircleIcon, Clock01Icon } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
@@ -66,13 +68,13 @@ export function SwarmCompose({ members, roomIds, className }: SwarmComposeProps)
     <div className={cn('rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5', className)}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="text-sm font-semibold text-[var(--theme-text)]">Compose orchestration</div>
+          <div className="text-sm font-semibold text-[var(--theme-text)]">{t('compose_orchestration')}</div>
           <div className="mt-1 text-xs text-[var(--theme-muted)]">
             Dispatched in parallel against each agent profile with the configured worker runtime.
           </div>
         </div>
         <div className="flex items-center gap-2 text-xs text-[var(--theme-muted)]">
-          <label htmlFor="swarm-timeout" className="uppercase tracking-[0.18em] text-[10px]">timeout</label>
+          <label htmlFor="swarm-timeout" className="uppercase tracking-[0.18em] text-[10px]">{t('timeout')}</label>
           <input
             id="swarm-timeout"
             type="number"
@@ -82,14 +84,14 @@ export function SwarmCompose({ members, roomIds, className }: SwarmComposeProps)
             onChange={(event) => setTimeoutSeconds(Math.max(10, Math.min(600, Number(event.target.value) || 240)))}
             className="w-16 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-hover)] px-2 py-1 text-right text-xs text-[var(--theme-text)]"
           />
-          <span className="text-[10px] uppercase tracking-[0.18em]">sec</span>
+          <span className="text-[10px] uppercase tracking-[0.18em]">{t('sec')}</span>
         </div>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-[var(--theme-muted)]">
-        <span className="text-[10px] uppercase tracking-[0.18em]">Targets</span>
+        <span className="text-[10px] uppercase tracking-[0.18em]">{t('targets')}</span>
         {roomMembers.length === 0 ? (
-          <span className="italic">No agents selected. Tap "+" on a node to add.</span>
+          <span className="italic">{t('no_agents_selected_tap_on_a_node_to_add')}</span>
         ) : (
           roomMembers.map((member) => (
             <span

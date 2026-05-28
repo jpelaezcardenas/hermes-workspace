@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-const POLL_INTERVAL_MS = 10_000
+
+import { t } from '@/lib/i18n'const POLL_INTERVAL_MS = 10_000
 const FLASH_DURATION_MS = 1_800
 
 type ClaudeReconnectBannerProps = {
@@ -42,7 +43,7 @@ export function ClaudeReconnectBanner({
   const mountedRef = useRef(true)
   const inFlightProbeRef = useRef<Promise<boolean> | null>(null)
   const probeNowRef = useRef<
-    ((showSpinner: boolean) => Promise<boolean>) | null
+    ((showSpinner: boolean) =>{t('promise')}<boolean>) | null
   >(null)
   const wasDisconnectedRef = useRef(false)
   const flashTimerRef = useRef<number | null>(null)

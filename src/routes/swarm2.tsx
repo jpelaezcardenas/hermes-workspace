@@ -1,4 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+
+import { t } from '@/lib/i18n'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { Swarm2Screen } from '@/screens/swarm2/swarm2-screen'
 
@@ -34,7 +36,7 @@ export const Route = createFileRoute('/swarm2')({
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <div className="mb-3 inline-block h-8 w-8 animate-spin rounded-full border-4 border-accent-500 border-r-transparent" />
-          <p className="text-sm text-primary-500">Loading Swarm...</p>
+          <p className="text-sm text-primary-500">{t('loading_swarm')}</p>
         </div>
       </div>
     )

@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   AlertCircleIcon,
@@ -142,7 +144,7 @@ function MessageBubble({
       </div>
         {todoSummary ? (
           <div className="space-y-2">
-            <div className="text-[11px] font-medium text-[var(--theme-text)]">Task snapshot</div>
+            <div className="text-[11px] font-medium text-[var(--theme-text)]">{t('task_snapshot')}</div>
             <div className="flex flex-wrap gap-1.5 text-[10px] text-[var(--theme-muted-2)]">
               <span className="rounded-full border border-[var(--theme-border)] px-1.5 py-0.5">{todoSummary.total} total</span>
               <span className="rounded-full border border-[var(--theme-border)] px-1.5 py-0.5">{todoSummary.pending} pending</span>
@@ -329,7 +331,7 @@ export function Swarm2LiveChat({
     >
       {!nativeStyle ? (
         <header className="flex items-center justify-between gap-2 border-b border-[var(--theme-border)]/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]/85">
-          <span>Chat</span>
+          <span>{t('chat')}</span>
           <span className="text-[9px] normal-case tracking-normal">{source === 'state.db' ? 'live' : 'no session'}</span>
         </header>
       ) : null}

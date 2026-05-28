@@ -1,4 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
+
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import type { DashboardOverview } from '@/server/dashboard-aggregator'
 
@@ -240,7 +242,7 @@ export function OpsStrip({
                   : 'Open cron jobs'
               }
             >
-              <span>cron</span>
+              <span>{t('cron')}</span>
               <span style={{ color: 'var(--theme-text)' }}>{cron.total}</span>
               {cron.paused > 0 ? (
                 <span style={{ color: 'var(--theme-warning)' }}>

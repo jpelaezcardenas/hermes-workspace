@@ -1,4 +1,6 @@
 import { useEffect, useState, type CSSProperties } from 'react'
+
+import { t } from '@/lib/i18n'
 import { motion } from 'motion/react'
 import { seedAgentPresets } from './agent-presets'
 import {
@@ -86,7 +88,7 @@ export function OperationsScreen() {
               <HugeiconsIcon icon={AiBrain03Icon} size={22} strokeWidth={1.8} />
             </div>
             <div>
-              <h1 className="text-base font-semibold text-primary-900">Operations</h1>
+              <h1 className="text-base font-semibold text-primary-900">{t('operations')}</h1>
               <p className="mt-1 text-sm text-primary-600">
                 Your persistent agent team
               </p>
@@ -187,7 +189,7 @@ export function OperationsScreen() {
                   strokeWidth={1.7}
                   className="text-[var(--theme-muted)]"
                 />
-                <span className="mt-3 text-sm text-[var(--theme-muted)]">Add Agent</span>
+                <span className="mt-3 text-sm text-[var(--theme-muted)]">{t('add_agent')}</span>
               </motion.button>
             </section>
 

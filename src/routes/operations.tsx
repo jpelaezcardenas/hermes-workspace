@@ -1,4 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+
+import { t } from '@/lib/i18n'
 import { usePageTitle } from '@/hooks/use-page-title'
 import { OperationsScreen } from '@/screens/agents/operations-screen'
 
@@ -33,7 +35,7 @@ export const Route = createFileRoute('/operations')({
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-accent-500 border-r-transparent mb-3" />
-          <p className="text-sm text-primary-500">Loading operations...</p>
+          <p className="text-sm text-primary-500">{t('loading_operations')}</p>
         </div>
       </div>
     )

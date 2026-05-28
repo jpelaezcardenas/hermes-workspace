@@ -1,4 +1,6 @@
 import { useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -88,13 +90,13 @@ export function McpServerCard({ server, onEdit }: Props) {
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-primary-500">
         <div className="flex items-center gap-1.5">
-          <dt>Tools:</dt>
+          <dt>{t('tools')}</dt>
           <dd className="font-medium text-ink tabular-nums">
             {server.discoveredToolsCount}
           </dd>
         </div>
         <div className="flex items-center gap-1.5">
-          <dt>Auth:</dt>
+          <dt>{t('auth')}</dt>
           <dd className="font-medium text-ink">{server.authType}</dd>
         </div>
       </dl>

@@ -1,4 +1,6 @@
 import { cn } from '@/lib/utils'
+
+import { t } from '@/lib/i18n'
 import type { ClaudeTask } from '@/lib/tasks-api'
 import { PRIORITY_COLORS, isOverdue } from '@/lib/tasks-api'
 
@@ -80,7 +82,7 @@ export function TaskCard({ task, assigneeLabels = {}, onClick, onDragStart, isDr
             {overdue && (
               <>
                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-                <span className="text-red-400 font-semibold">Overdue</span>
+                <span className="text-red-400 font-semibold">{t('overdue')}</span>
                 <span className="text-[var(--theme-muted)] mx-0.5">·</span>
               </>
             )}

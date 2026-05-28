@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -457,7 +459,7 @@ function ReleaseNotes({
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-base font-semibold">Hermes updated</p>
+              <p className="text-base font-semibold">{t('hermes_updated')}</p>
               <p className="text-sm" style={{ color: 'var(--theme-muted)' }}>
                 What changed in this update.
               </p>

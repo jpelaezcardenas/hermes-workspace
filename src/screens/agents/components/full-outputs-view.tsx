@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import {
   ArrowDown01Icon,
   ArrowUp01Icon,
@@ -386,7 +388,7 @@ export function FullOutputsView() {
 
       <div className="mt-4 flex items-center justify-between px-1">
         <div>
-          <h2 className="text-lg font-semibold text-[var(--theme-text)]">Outputs</h2>
+          <h2 className="text-lg font-semibold text-[var(--theme-text)]">{t('outputs')}</h2>
           <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
             {outputs.length} recent {outputs.length === 1 ? 'run' : 'runs'} across the team
           </p>

@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { formatModelName } from '@/lib/format-model-name'
 import { cn } from '@/lib/utils'
 import { fetchSessions, type GatewaySession } from '@/lib/gateway-api'
@@ -91,7 +93,7 @@ export function RemoteAgentsPanel({ localSessionKeys }: RemoteAgentsPanelProps) 
   if (sessions.length === 0 && !loading && !error) {
     return (
       <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-slate-900 p-6 text-center">
-        <p className="text-sm text-neutral-600 dark:text-neutral-300">No remote agents found</p>
+        <p className="text-sm text-neutral-600 dark:text-neutral-300">{t('no_remote_agents_found')}</p>
       </div>
     )
   }

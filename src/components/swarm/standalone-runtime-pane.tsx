@@ -1,6 +1,8 @@
 'use client'
 
 import type { CrewMember } from '@/hooks/use-crew-status'
+
+import { t } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { SwarmTerminal } from '@/components/swarm/swarm-terminal'
 
@@ -81,7 +83,7 @@ export function StandaloneRuntimePane({
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <TuiPill tone="live">Live TUI</TuiPill>
+                <TuiPill tone="live">{t('live_tui')}</TuiPill>
                 <TuiPill>{terminalTargets.length} terminal{terminalTargets.length === 1 ? '' : 's'}</TuiPill>
                 {roomIds.length > 0 ? <TuiPill tone="warn">room {roomIds.join(', ')}</TuiPill> : null}
               </div>
@@ -93,9 +95,9 @@ export function StandaloneRuntimePane({
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <TuiPill>Auto</TuiPill>
-              <TuiPill>Chat</TuiPill>
-              <TuiPill>Logs</TuiPill>
+              <TuiPill>{t('auto')}</TuiPill>
+              <TuiPill>{t('chat')}</TuiPill>
+              <TuiPill>{t('logs')}</TuiPill>
             </div>
           </div>
         </div>

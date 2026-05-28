@@ -1,6 +1,8 @@
 'use client'
 
 import { useMemo } from 'react'
+
+import { t } from '@/lib/i18n'
 import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/lib/utils'
 
@@ -68,7 +70,7 @@ export function Swarm2MemoryPanel({ workerId, className }: Swarm2MemoryPanelProp
   if (!profileQuery.data && profileQuery.isPending) {
     return (
       <section className={cn('rounded-[1.25rem] border border-[var(--theme-border)] bg-[color:rgba(255,255,255,0.02)] px-3 py-2', className)}>
-        <div className="text-[10px] uppercase tracking-[0.18em] text-[var(--theme-muted)]/80">Memory</div>
+        <div className="text-[10px] uppercase tracking-[0.18em] text-[var(--theme-muted)]/80">{t('memory')}</div>
         <div className="mt-1 text-[11px] text-[var(--theme-muted)]">Loading…</div>
       </section>
     )
@@ -77,7 +79,7 @@ export function Swarm2MemoryPanel({ workerId, className }: Swarm2MemoryPanelProp
   return (
     <section className={cn('rounded-[1.25rem] border border-[var(--theme-border)] bg-[color:rgba(255,255,255,0.02)] px-3 py-2', className)}>
       <header className="mb-1 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-[var(--theme-muted)]/85">
-        <span>Memory</span>
+        <span>{t('memory')}</span>
         <span className="text-[9px] normal-case tracking-normal text-[var(--theme-muted)]/70">
           {profileQuery.data?.root?.replace('/Users/aurora', '~') ?? '—'}
         </span>
@@ -85,7 +87,7 @@ export function Swarm2MemoryPanel({ workerId, className }: Swarm2MemoryPanelProp
 
       {identity ? (
         <details className="mb-1.5 text-[11px] text-[var(--theme-muted-2)]" open>
-          <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]/85">Identity</summary>
+          <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]/85">{t('identity')}</summary>
           <pre className="mt-1 max-h-[6rem] overflow-y-auto whitespace-pre-wrap break-words font-sans text-[11px] leading-snug">
             {tail(identity, 600)}
           </pre>
@@ -94,7 +96,7 @@ export function Swarm2MemoryPanel({ workerId, className }: Swarm2MemoryPanelProp
 
       {memory ? (
         <details className="mb-1.5 text-[11px] text-[var(--theme-muted-2)]">
-          <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]/85">MEMORY.md</summary>
+          <summary className="cursor-pointer text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]/85">{t('memory_md')}</summary>
           <pre className="mt-1 max-h-[10rem] overflow-y-auto whitespace-pre-wrap break-words font-sans text-[11px] leading-snug">
             {tail(memory, 1200)}
           </pre>
