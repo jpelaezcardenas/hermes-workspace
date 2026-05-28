@@ -75,8 +75,9 @@ function ThemeToggleMini() {
 
   // Map between dark and light counterparts — must include all theme families
   const LIGHT_DARK_PAIRS: Record<string, string> = {
+    'hermes-codex': 'hermes-nous-light',
     'hermes-nous': 'hermes-nous-light',
-    'hermes-nous-light': 'hermes-nous',
+    'hermes-nous-light': 'hermes-codex',
     'hermes-official': 'hermes-official-light',
     'hermes-official-light': 'hermes-official',
     'hermes-classic': 'hermes-classic-light',

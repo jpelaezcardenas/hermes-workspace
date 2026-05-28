@@ -1101,7 +1101,11 @@ code {
 [data-theme='hermes-slate'] html,
 [data-theme='hermes-slate'] body,
 [data-theme='hermes-slate'] #root,
-[data-theme='hermes-slate'] .dark {
+[data-theme='hermes-slate'] .dark,
+[data-theme='hermes-codex'] html,
+[data-theme='hermes-codex'] body,
+[data-theme='hermes-codex'] #root,
+[data-theme='hermes-codex'] .dark {
   background-color: var(--theme-bg);
   color: var(--theme-text);
 }
@@ -1126,6 +1130,329 @@ code {
   color: var(--theme-text);
 }
 
+/* ============================================================
+   Hermes Codex — Codex / Claude Code terminal aesthetic
+   Near-black background, JetBrains Mono everywhere, orange accent
+   ============================================================ */
+
+[data-theme='hermes-codex'] {
+  --theme-bg: #0d0d0d;
+  --theme-sidebar: #111111;
+  --theme-panel: #141414;
+  --theme-card: #1a1a1a;
+  --theme-card2: #1e1e1e;
+  --theme-border: #2d2d2d;
+  --theme-border-subtle: #222222;
+  --theme-text: #e5e5e5;
+  --theme-muted: #737373;
+  --theme-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --theme-shadow-2: 0 6px 16px rgba(0, 0, 0, 0.7);
+  --theme-shadow-3: 0 16px 36px rgba(0, 0, 0, 0.8);
+  --theme-glass: rgba(13, 13, 13, 0.92);
+  --theme-focus: #f97316;
+  --theme-accent: #f97316;
+  --theme-accent-secondary: #fb923c;
+  --theme-accent-subtle: rgba(249, 115, 22, 0.1);
+  --theme-accent-border: rgba(249, 115, 22, 0.25);
+  --theme-active: #f97316;
+  --theme-link: #fb923c;
+  --theme-success: #4ade80;
+  --theme-warning: #fbbf24;
+  --theme-danger: #f87171;
+  --theme-stripe: rgba(45, 45, 45, 0.5);
+  --theme-header-bg: #0d0d0d;
+  --theme-header-border: #1f1f1f;
+  /* Messages render without colored bubbles — transparent bg, monospace feel */
+  --chat-user-bg: transparent;
+  --chat-user-border: #2d2d2d;
+  --chat-user-foreground: #e5e5e5;
+  --chat-assistant-bg: transparent;
+  --chat-assistant-border: transparent;
+  --chat-assistant-foreground: #e5e5e5;
+  --composer-bg: #1a1a1a;
+  --composer-border: #2d2d2d;
+  --composer-placeholder: #4a4a4a;
+  --tool-card-bg: #141414;
+  --tool-card-border: #2d2d2d;
+  --tool-card-title: #d4d4d4;
+  --tool-card-muted: #737373;
+  --code-bg: #0d0d0d;
+  --code-border: #2d2d2d;
+  --code-foreground: #d4d4d4;
+  --theme-input: #1a1a1a;
+  /* Monospace font throughout — the Codex/Claude Code feel */
+  --font-chat: 'JetBrains Mono', ui-monospace, 'Cascadia Code', 'Fira Code', Menlo, Consolas, monospace;
+}
+
+/* Codex: override body/html bg */
+[data-theme='hermes-codex'] html,
+[data-theme='hermes-codex'] body,
+[data-theme='hermes-codex'] #root,
+[data-theme='hermes-codex'] .dark {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+/* Codex: monospace everywhere in the chat feed */
+[data-theme='hermes-codex'] .chat-feed-area,
+[data-theme='hermes-codex'] .chat-feed-area * {
+  font-family: var(--font-chat) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+/* Codex: message item — flat linear feed, no bubble */
+[data-theme='hermes-codex'] .codex-message-user {
+  border-top: 1px solid #1f1f1f;
+  border-bottom: none;
+  padding: 16px 0;
+  background: transparent;
+}
+
+[data-theme='hermes-codex'] .codex-message-assistant {
+  padding: 16px 0;
+  background: transparent;
+}
+
+/* Codex: role prefix labels */
+[data-theme='hermes-codex'] .codex-role-label {
+  font-family: var(--font-chat) !important;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Codex: tool card — minimal border-left stripe style */
+[data-theme='hermes-codex'] .tool-card {
+  border-left: 2px solid #2d2d2d;
+  border-radius: 0;
+  background: #111111;
+  padding: 8px 12px;
+  margin: 4px 0;
+  font-family: var(--font-chat) !important;
+  font-size: 12px !important;
+}
+
+[data-theme='hermes-codex'] .tool-card:hover {
+  border-left-color: #f97316;
+}
+
+/* Codex: thinking block — orange left border */
+[data-theme='hermes-codex'] .thinking-block {
+  border-left: 2px solid rgba(249, 115, 22, 0.4);
+  padding-left: 12px;
+  color: #737373;
+  font-style: italic;
+}
+
+/* Codex: composer input — full-width, terminal style, no pill shape */
+[data-theme='hermes-codex'] .composer-input,
+[data-theme='hermes-codex'] [class*='rounded-3xl'][style*='--composer-border'] {
+  font-family: var(--font-chat) !important;
+  font-size: 13px !important;
+  border-radius: 4px !important;
+  background: var(--composer-bg) !important;
+}
+
+[data-theme='hermes-codex'] textarea[class*='placeholder'] {
+  font-family: var(--font-chat) !important;
+  font-size: 13px !important;
+}
+
+/* Codex: sidebar — ultra minimal */
+[data-theme='hermes-codex'] .sidebar-session-item {
+  font-family: var(--font-chat) !important;
+  font-size: 12px !important;
+  border-radius: 0 !important;
+  padding: 6px 12px !important;
+}
+
+[data-theme='hermes-codex'] .sidebar-session-item.active {
+  background: #1a1a1a !important;
+  border-left: 2px solid #f97316 !important;
+}
+
+/* Codex: scrollbar — near-invisible */
+[data-theme='hermes-codex'] *:hover {
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
+}
+
+/* Codex: code blocks — no border, pure terminal */
+[data-theme='hermes-codex'] .code-block {
+  border: 1px solid #1f1f1f !important;
+  border-radius: 2px !important;
+  background: #0d0d0d !important;
+}
+
+/* Codex: hide avatars — terminal UIs don't have profile pics */
+[data-theme='hermes-codex'] img[alt='Hermes'],
+[data-theme='hermes-codex'] img[alt='User avatar'],
+[data-theme='hermes-codex'] [data-chat-message-role] svg[viewBox='0 0 100 100'] {
+  display: none !important;
+}
+
+/* Codex: left-align ALL messages (even user), Codex-style */
+[data-theme='hermes-codex'] [data-chat-message-role='user'] {
+  align-items: flex-start !important;
+}
+
+/* Codex: undo flex-row-reverse on user message rows */
+[data-theme='hermes-codex'] [data-chat-message-role='user'] .flex-row-reverse {
+  flex-direction: row !important;
+}
+
+/* Codex: user bubble — flat, orange left-border accent */
+[data-theme='hermes-codex'] [data-chat-message-bubble='user'] {
+  background: transparent !important;
+  border: none !important;
+  border-left: 2px solid var(--theme-accent) !important;
+  border-radius: 0 !important;
+  padding: 4px 12px !important;
+  color: var(--theme-text) !important;
+  max-width: 100% !important;
+  font-family: var(--font-chat) !important;
+  font-size: 13px !important;
+}
+
+/* Codex: assistant bubble — no background, no border, full width */
+[data-theme='hermes-codex'] [data-chat-message-bubble='assistant'] {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  font-family: var(--font-chat) !important;
+  font-size: 13px !important;
+}
+
+/* Codex: tool call inline cards — terminal left-border style */
+[data-theme='hermes-codex'] [class*='rounded-xl'][class*='border-primary'] {
+  border-radius: 2px !important;
+  border-left-width: 3px !important;
+}
+
+/* Codex: separator between messages */
+[data-theme='hermes-codex'] [data-chat-message-role] + [data-chat-message-role='user'] {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #1a1a1a;
+}
+
+/* Codex: message text — monospace */
+[data-theme='hermes-codex'] [data-chat-message-bubble] p,
+[data-theme='hermes-codex'] [data-chat-message-bubble] li,
+[data-theme='hermes-codex'] [data-chat-message-bubble] span {
+  font-family: var(--font-chat) !important;
+}
+
+/* Codex: status bar at bottom of chat */
+[data-theme='hermes-codex'] .chat-status-bar {
+  background: #111111;
+  border-top: 1px solid #1f1f1f;
+  font-family: var(--font-chat) !important;
+  font-size: 11px;
+  color: #4a4a4a;
+  padding: 4px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Codex: role label prefix via pseudo-element */
+[data-theme='hermes-codex'] [data-chat-message-role='user']::before {
+  content: 'you';
+  display: block;
+  font-family: var(--font-chat) !important;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--theme-accent);
+  padding: 0 0 4px 0;
+  margin-bottom: 2px;
+}
+
+[data-theme='hermes-codex'] [data-chat-message-role='assistant']::before {
+  content: 'hermes';
+  display: block;
+  font-family: var(--font-chat) !important;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #737373;
+  padding: 0 0 4px 0;
+  margin-bottom: 2px;
+}
+
+/* Codex: cursor blink on active generation */
+@keyframes codex-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+[data-theme='hermes-codex'] .codex-cursor::after {
+  content: '▋';
+  display: inline;
+  animation: codex-cursor 1s step-end infinite;
+  color: #f97316;
+  margin-left: 1px;
+}
+
+/* Codex: header — flush, no gradient */
+[data-theme='hermes-codex'] header,
+[data-theme='hermes-codex'] .chat-header {
+  background: #0d0d0d !important;
+  border-bottom: 1px solid #1f1f1f !important;
+  box-shadow: none !important;
+}
+
+/* Codex: sidebar nav links — monospace, flat */
+[data-theme='hermes-codex'] nav a,
+[data-theme='hermes-codex'] .nav-link {
+  font-family: var(--font-chat) !important;
+  font-size: 12px !important;
+  border-radius: 2px !important;
+}
+
+/* Codex: kill pill shape on composer, make it sharp-cornered */
+[data-theme='hermes-codex'] .rounded-3xl {
+  border-radius: 4px !important;
+}
+
+[data-theme='hermes-codex'] .rounded-2xl {
+  border-radius: 3px !important;
+}
+
+/* Codex: make the composer textarea monospace */
+[data-theme='hermes-codex'] textarea {
+  font-family: var(--font-chat) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+/* Codex: primary token remap */
+[data-theme='hermes-codex'] {
+  --color-primary-50: #111111;
+  --color-primary-100: #1a1a1a;
+  --color-primary-200: #2d2d2d;
+  --color-primary-300: #3d3d3d;
+  --color-primary-400: #737373;
+  --color-primary-500: #737373;
+  --color-primary-600: #a3a3a3;
+  --color-primary-700: #d4d4d4;
+  --color-primary-800: #e5e5e5;
+  --color-primary-900: #f5f5f5;
+  --color-primary-950: #fafafa;
+  --color-surface: #0d0d0d;
+  --color-surface-deep: #0a0a0a;
+  --color-ink: #e5e5e5;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+}
+
 /* ── Tailwind primary token remaps for dark themes ─────────────────────
    Maps bg-primary-50, text-primary-900, border-primary-200 etc.
    to theme-appropriate values so ALL existing Tailwind classes work.
@@ -1134,7 +1461,8 @@ code {
 [data-theme='hermes-nous'],
 [data-theme='hermes-official'],
 [data-theme='hermes-classic'],
-[data-theme='hermes-slate'] {
+[data-theme='hermes-slate'],
+[data-theme='hermes-codex'] {
   --color-primary-50: var(--theme-panel);
   --color-primary-100: var(--theme-card);
   --color-primary-200: var(--theme-border);

@@ -82,6 +82,7 @@ const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
 ]
 
 const DARK_ENTERPRISE_THEMES = new Set<ThemeId>([
+  'hermes-codex',
   'hermes-nous',
   'hermes-official',
   'hermes-classic',
@@ -908,6 +909,7 @@ function AppearanceContent() {
 }
 
 const ENTERPRISE_THEME_FAMILIES: Array<ThemeId> = [
+  'hermes-codex',
   'hermes-nous',
   'hermes-official',
   'hermes-classic',
@@ -918,7 +920,15 @@ const ENTERPRISE_THEMES = THEMES.map((theme) => ({
   ...theme,
   desc: theme.description,
   preview:
-    theme.id === 'hermes-nous'
+    theme.id === 'hermes-codex'
+      ? {
+          bg: '#0d0d0d',
+          panel: '#1a1a1a',
+          border: '#2d2d2d',
+          accent: '#f97316',
+          text: '#e5e5e5',
+        }
+      : theme.id === 'hermes-nous'
       ? {
           bg: '#041C1C',
           panel: '#06282A',

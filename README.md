@@ -25,6 +25,7 @@
 
 - 🤖 **Hermes Agent Integration** — Direct gateway connection with real-time SSE streaming
 - 🎨 **8-Theme System** — Official, Classic, Slate, Mono — each with light and dark variants
+- 🧬 **DESIGN.md Visual System** — Shared design memory for agents building Hermes UI
 - 🔒 **Security Hardened** — Auth middleware on all API routes, CSP headers, exec approval prompts
 - 📱 **Mobile-First PWA** — Full feature parity on any device via Tailscale
 - ⚡ **Live SSE Streaming** — Real-time agent output with tool call rendering

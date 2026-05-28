@@ -1713,7 +1713,7 @@ function ChatMessageListComponent({
             </div>
           )}
           <ChatContainerContent
-            className="pt-2.5 md:pt-6 flex min-h-full flex-col"
+            className="chat-feed-area pt-2.5 md:pt-6 flex min-h-full flex-col"
             style={chatContentStyle}
           >
             {notice && noticePosition === 'start' ? notice : null}

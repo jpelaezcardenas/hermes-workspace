@@ -111,6 +111,13 @@ const THEME_PREVIEWS: Record<
   ThemeId,
   { bg: string; panel: string; border: string; accent: string; text: string }
 > = {
+  'hermes-codex': {
+    bg: '#0d0d0d',
+    panel: '#1a1a1a',
+    border: '#2d2d2d',
+    accent: '#f97316',
+    text: '#e5e5e5',
+  },
   'hermes-nous': {
     bg: '#031a1a',
     panel: '#082224',

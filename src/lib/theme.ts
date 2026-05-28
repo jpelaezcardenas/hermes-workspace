@@ -1,4 +1,5 @@
 export type ThemeId =
+  | 'hermes-codex'
   | 'hermes-nous'
   | 'hermes-nous-light'
   | 'hermes-official'
@@ -14,6 +15,12 @@ export const THEMES: Array<{
   description: string
   icon: string
 }> = [
+  {
+    id: 'hermes-codex',
+    label: 'Codex',
+    description: 'Pure black terminal aesthetic — Codex / Claude Code look and feel',
+    icon: '⬛',
+  },
   {
     id: 'hermes-nous',
     label: 'Hermes Nous',
@@ -65,12 +72,13 @@ export const THEMES: Array<{
 ]
 
 const STORAGE_KEY = 'hermes-theme'
-const DEFAULT_THEME: ThemeId = 'hermes-nous'
+const DEFAULT_THEME: ThemeId = 'hermes-codex'
 const THEME_SET = new Set<ThemeId>(THEMES.map((theme) => theme.id))
 const LIGHT_THEME_MAP: Record<
   Exclude<ThemeId, `${string}-light`>,
   Extract<ThemeId, `${string}-light`>
 > = {
+  'hermes-codex': 'hermes-nous-light',
   'hermes-nous': 'hermes-nous-light',
   'hermes-official': 'hermes-official-light',
   'hermes-classic': 'hermes-classic-light',
@@ -80,7 +88,7 @@ const DARK_THEME_MAP: Record<
   Extract<ThemeId, `${string}-light`>,
   Exclude<ThemeId, `${string}-light`>
 > = {
-  'hermes-nous-light': 'hermes-nous',
+  'hermes-nous-light': 'hermes-codex',
   'hermes-official-light': 'hermes-official',
   'hermes-classic-light': 'hermes-classic',
   'hermes-slate-light': 'hermes-slate',

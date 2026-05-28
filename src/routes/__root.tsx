@@ -45,8 +45,9 @@ const APP_CSP = [
 ].join('; ')
 
 const THEME_STORAGE_KEY = 'hermes-theme'
-const DEFAULT_THEME = 'hermes-nous'
+const DEFAULT_THEME = 'hermes-codex'
 const VALID_THEMES = [
+  'hermes-codex',
   'hermes-nous',
   'hermes-nous-light',
   'hermes-official',
@@ -88,6 +89,7 @@ const themeColorScript = `
     const root = document.documentElement
     const theme = root.getAttribute('data-theme') || '${DEFAULT_THEME}'
     const colors = {
+      'hermes-codex': '#0d0d0d',
       'hermes-nous': '#031A1A',
       'hermes-nous-light': '#F8FAF8',
       'hermes-official': '#0A0E1A',
@@ -382,10 +384,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             __html: wrapInlineScript(`
           (function(){
             if (document.getElementById('splash-screen')) return;
-            var bg = '#031A1A', txt = '#F8F1E3', muted = '#9CB2AE', accent = '#FFAC02';
+            var bg = '#0d0d0d', txt = '#e5e5e5', muted = '#737373', accent = '#f97316';
             try {
               var theme = localStorage.getItem('${THEME_STORAGE_KEY}') || '${DEFAULT_THEME}';
-              if (theme === 'hermes-nous') {
+              if (theme === 'hermes-codex') {
+                bg = '#0d0d0d';
+                txt = '#e5e5e5';
+                muted = '#737373';
+                accent = '#f97316';
+              } else if (theme === 'hermes-nous') {
                 bg = '#031A1A';
                 txt = '#F8F1E3';
                 muted = '#9CB2AE';
