@@ -451,8 +451,12 @@ export const Route = createFileRoute('/api/send-stream')({
                     content: typeof body.message === 'string' ? body.message : '',
                     timestamp: Date.now(),
                   })
-                  // Use persisted history if available, otherwise fall back to client-sent history
-                  const effectiveHistory = persistedHistory.length > 0 ? persistedHistory : history
+                  // For gateway models (no localBaseUrl), the gateway manages its own session
+                  // history — sending local history causes duplication and context bloat.
+                  // For direct Ollama models, history is required since Ollama is stateless.
+                  const effectiveHistory = localBaseUrl
+                    ? (persistedHistory.length > 0 ? persistedHistory : history)
+                    : []
                   const portableMessages: Array<OpenAICompatMessage> = [
                     ...localeSystemMsg,
                     ...effectiveHistory,
