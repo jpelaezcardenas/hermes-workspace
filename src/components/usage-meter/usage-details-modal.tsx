@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import {
   DialogClose,
   DialogDescription,
@@ -62,7 +64,7 @@ type UsageDetailsModalProps = {
   providerUsage: Array<ProviderUsage>
   providerError: string | null
   providerUpdatedAt: number | null
-  onRefreshProviders?: () => Promise<void>
+  onRefreshProviders?: () =>{t('promise')}<void>
   preferredProvider?: string | null
   onSetPreferredProvider?: (provider: string) => void
 }
@@ -319,12 +321,12 @@ export function UsageDetailsModal({
     <div className="flex max-h-[80vh] flex-col gap-4 overflow-hidden p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <DialogTitle>Usage Overview</DialogTitle>
+          <DialogTitle>{t('usage_overview')}</DialogTitle>
           <DialogDescription>
             Live usage from your gateway session and connected providers.
           </DialogDescription>
         </div>
-        <DialogClose className="text-primary-700">Close</DialogClose>
+        <DialogClose className="text-primary-700">{t('close')}</DialogClose>
       </div>
 
       <div className="flex w-fit items-center gap-1 rounded-full border border-primary-100 bg-primary-50 p-1 text-xs">

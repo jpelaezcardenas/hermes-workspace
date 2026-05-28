@@ -3,6 +3,8 @@
 // ApprovalsPanel is a sidebar-style panel variant — consider wiring it to replace
 // or complement ApprovalsBell for a richer approvals experience.
 import { useCallback, useEffect, useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import {
   fetchGatewayApprovals,
   resolveGatewayApproval,
@@ -216,7 +218,7 @@ export function ApprovalsPanel({
         <div className="min-h-0 flex-1 overflow-y-auto">
           {loading && pending.length === 0 ? (
             <div className="flex h-full items-center justify-center p-8">
-              <p className="text-sm text-neutral-500">Loading approvals...</p>
+              <p className="text-sm text-neutral-500">{t('loading_approvals')}</p>
             </div>
           ) : null}
 

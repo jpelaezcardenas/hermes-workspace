@@ -1,4 +1,6 @@
 import { Component } from 'react'
+
+import { t } from '@/lib/i18n'
 import type { ErrorInfo, ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -65,7 +67,7 @@ export class ErrorBoundary extends Component<
             </pre>
           ) : null}
           <div className="mt-5 flex justify-center">
-            <Button onClick={() => this.reloadPage()}>Reload</Button>
+            <Button onClick={() => this.reloadPage()}>{t('reload')}</Button>
           </div>
         </div>
       </div>

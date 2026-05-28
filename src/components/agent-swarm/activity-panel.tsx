@@ -2,6 +2,8 @@
  * ActivityPanel — Right sidebar showing live agent activity feed, roster, and stats.
  */
 import { useMemo } from 'react'
+
+import { t } from '@/lib/i18n'
 import { motion, AnimatePresence } from 'motion/react'
 import { assignPersona } from '@/lib/agent-personas'
 import { PERSONA_COLORS } from './pixel-avatar'
@@ -191,25 +193,25 @@ export function ActivityPanel({ sessions, className }: ActivityPanelProps) {
       <div className="grid grid-cols-2 gap-2">
         <div className="rounded-lg border border-blue-500/20 bg-blue-500/10 px-3 py-2 text-center">
           <div className="text-lg font-bold text-blue-400">{active.length}</div>
-          <div className="text-[10px] text-blue-300/70">Active</div>
+          <div className="text-[10px] text-blue-300/70">{t('active')}</div>
         </div>
         <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-center">
           <div className="text-lg font-bold text-emerald-400">
             {completed.length}
           </div>
-          <div className="text-[10px] text-emerald-300/70">Done</div>
+          <div className="text-[10px] text-emerald-300/70">{t('done')}</div>
         </div>
         <div className="rounded-lg border border-accent-500/20 bg-accent-500/10 px-3 py-2 text-center">
           <div className="text-lg font-bold text-accent-400">
             {formatTokens(totalTokens)}
           </div>
-          <div className="text-[10px] text-accent-300/70">Tokens</div>
+          <div className="text-[10px] text-accent-300/70">{t('tokens')}</div>
         </div>
         <div className="rounded-lg border border-slate-500/20 bg-slate-500/10 px-3 py-2 text-center">
           <div className="text-lg font-bold text-slate-300">
             {formatCost(totalCost)}
           </div>
-          <div className="text-[10px] text-slate-400">Cost</div>
+          <div className="text-[10px] text-slate-400">{t('cost')}</div>
         </div>
       </div>
 

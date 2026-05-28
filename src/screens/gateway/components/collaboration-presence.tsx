@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-type PresenceHeartbeat = {
+
+import { t } from '@/lib/i18n'type PresenceHeartbeat = {
   type: 'heartbeat'
   userId: string
   color: string
@@ -168,7 +169,7 @@ export function CollaborationPresence() {
   const users = useMemo(() => {
     const now = Date.now()
     return Object.values(usersById)
-      .filter((user) => now - user.timestamp <= STALE_AFTER_MS)
+      .filter((user) =>{t('now_user_timestamp')}<= STALE_AFTER_MS)
       .sort((a, b) => {
         if (a.userId === identityRef.current.userId) return -1
         if (b.userId === identityRef.current.userId) return 1

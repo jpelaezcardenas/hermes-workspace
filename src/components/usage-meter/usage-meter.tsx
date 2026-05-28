@@ -1,6 +1,8 @@
 'use client'
 
 import { useRouterState } from '@tanstack/react-router'
+
+import { t } from '@/lib/i18n'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { UsageDetailsModal } from './usage-details-modal'
 import { ContextAlertModal } from './context-alert-modal'
@@ -806,7 +808,7 @@ export function UsageMeter({ visible = true }: { visible?: boolean }) {
           )
         }
         return (
-          <span className="text-[10px] text-primary-500">No provider data</span>
+          <span className="text-[10px] text-primary-500">{t('no_provider_data')}</span>
         )
       }
 

@@ -1,6 +1,7 @@
 import { PLAYGROUND_WORLDS, type PlaygroundWorldId } from '../lib/playground-rpg'
 
-type Props = {
+
+import { t } from '@/lib/i18n'type Props = {
   open: boolean
   onClose: () => void
   currentWorld: PlaygroundWorldId
@@ -49,7 +50,7 @@ export function PlaygroundMap({ open, onClose, currentWorld, unlocked, onTravel 
             <div className="text-base font-bold text-cyan-300" style={{ textShadow: '0 0 10px rgba(56,189,248,.6)' }}>
               World Map · Hermes Realm
             </div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200/55">Press M to close</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200/55">{t('press_m_to_close')}</div>
           </div>
           <button
             onClick={onClose}

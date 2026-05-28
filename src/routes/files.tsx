@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { Editor } from '@monaco-editor/react'
 import { createFileRoute } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -44,7 +46,7 @@ export const Route = createFileRoute('/files')({
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-accent-500 border-r-transparent mb-3" />
-          <p className="text-sm text-primary-500">Loading file explorer...</p>
+          <p className="text-sm text-primary-500">{t('loading_file_explorer')}</p>
         </div>
       </div>
     )

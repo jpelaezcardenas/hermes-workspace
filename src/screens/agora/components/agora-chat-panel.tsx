@@ -2,6 +2,8 @@
  * AgoraChatPanel — room chat composer + scrollback.
  */
 import { useEffect, useRef, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import type { AgoraMessage, AgoraUser } from '../lib/agora-types'
 
 interface AgoraChatPanelProps {
@@ -40,7 +42,7 @@ export function AgoraChatPanel({ self, others, messages, onSend }: AgoraChatPane
       }}
     >
       <div className="flex items-center justify-between px-3 py-2 border-b" style={{ borderColor: 'var(--theme-border)' }}>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] opacity-70">Room Chat</span>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] opacity-70">{t('room_chat')}</span>
         <span className="text-[10px] opacity-50">{messages.length} msg</span>
       </div>
       <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-3 py-2 text-[12px] leading-snug">

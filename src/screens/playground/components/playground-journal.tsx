@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import { itemById, PLAYGROUND_QUESTS } from '../lib/playground-rpg'
 import type { PlaygroundRpgState } from '../hooks/use-playground-rpg'
 
@@ -57,8 +59,8 @@ export function PlaygroundJournal({
         <div className="border-b border-white/10 bg-black/25 p-4 md:border-b-0 md:border-r">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-lg font-bold">Quest Journal</div>
-              <div className="text-[11px] uppercase tracking-[0.16em] text-white/45">Press J to toggle</div>
+              <div className="text-lg font-bold">{t('quest_journal')}</div>
+              <div className="text-[11px] uppercase tracking-[0.16em] text-white/45">{t('press_j_to_toggle')}</div>
             </div>
             <button onClick={onClose} className="rounded px-2 py-1 text-[11px] uppercase tracking-[0.12em] text-white/55 hover:bg-white/10">
               Close
@@ -128,13 +130,13 @@ export function PlaygroundJournal({
                     <div className="mt-3 grid gap-2 rounded-xl border border-cyan-300/15 bg-cyan-300/5 p-3 text-[12px] md:grid-cols-2">
                       {quest.lesson && (
                         <div>
-                          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200/80">Hermes lesson</div>
+                          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200/80">{t('hermes_lesson')}</div>
                           <div className="mt-1 text-white/72">{quest.lesson}</div>
                         </div>
                       )}
                       {quest.payoff && (
                         <div>
-                          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200/80">Why it matters</div>
+                          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200/80">{t('why_it_matters')}</div>
                           <div className="mt-1 text-white/72">{quest.payoff}</div>
                         </div>
                       )}

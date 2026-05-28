@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+
+import { t } from '@/lib/i18n'
 import { AnimatePresence, motion } from 'motion/react'
 import { MessageTimestamp } from '@/screens/chat/components/message-timestamp'
 import { MessageContent } from '@/components/prompt-kit/message'
@@ -101,7 +103,7 @@ export function AgentChatMessages({
                 >
                   <MessageTimestamp timestamp={message.timestamp} />
                   {message.status === 'sending' ? <span>sending…</span> : null}
-                  {message.status === 'error' ? <span>failed</span> : null}
+                  {message.status === 'error' ? <span>{t('failed')}</span> : null}
                 </div>
               </div>
             </motion.div>

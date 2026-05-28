@@ -1,7 +1,7 @@
 // Stub — connection overlay (not used in Hermes Workspace)
 export function useConnectionRestart() {
   return {
-    triggerRestart: async (fn: () => Promise<void>) => {
+    triggerRestart: async (fn: () =>{t('promise')}<void>) => {
       await fn()
     },
   }

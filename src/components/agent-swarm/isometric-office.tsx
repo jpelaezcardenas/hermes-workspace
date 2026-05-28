@@ -4,6 +4,8 @@
  * Inspired by Gather.town / @RoundtableSpace.
  */
 import { motion, AnimatePresence } from 'motion/react'
+
+import { t } from '@/lib/i18n'
 import { useMemo } from 'react'
 import { PERSONA_COLORS, PixelAvatar } from './pixel-avatar'
 import { DESK_POSITIONS, LOCATIONS } from './agent-behaviors'
@@ -101,7 +103,7 @@ function MeetingTable() {
           )
         })}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[8px] text-slate-500/60">Meeting</span>
+          <span className="text-[8px] text-slate-500/60">{t('meeting')}</span>
         </div>
       </div>
     </div>
@@ -323,7 +325,7 @@ function EmptyOffice() {
         >
           🏢
         </motion.span>
-        <p className="mt-2 text-sm text-slate-400">Virtual office is empty</p>
+        <p className="mt-2 text-sm text-slate-400">{t('virtual_office_is_empty')}</p>
         <p className="text-xs text-slate-500">
           Spawn agents to see them work here
         </p>

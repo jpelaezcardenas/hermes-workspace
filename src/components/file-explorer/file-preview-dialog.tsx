@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+
+import { t } from '@/lib/i18n'
 import {
   DialogClose,
   DialogContent,
@@ -124,7 +126,7 @@ export default function FilePreviewDialog({
                 Save
               </Button>
             ) : null}
-            <DialogClose render={<Button variant="outline">Close</Button>} />
+            <DialogClose render={<Button variant="outline">{t('close')}</Button>} />
           </div>
         </div>
 

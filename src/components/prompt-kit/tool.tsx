@@ -1,6 +1,8 @@
 'use client'
 
 import { HugeiconsIcon } from '@hugeicons/react'
+
+import { t } from '@/lib/i18n'
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons'
 import {
   Collapsible,
@@ -111,13 +113,13 @@ function Tool({ toolPart, defaultOpen = false }: ToolProps) {
 
             {state === 'output-error' && toolPart.errorText && (
               <div className="rounded-md bg-red-50 p-2">
-                <h4 className="mb-1 text-xs font-medium text-red-600">Error</h4>
+                <h4 className="mb-1 text-xs font-medium text-red-600">{t('error')}</h4>
                 <div className="text-xs text-red-700">{toolPart.errorText}</div>
               </div>
             )}
 
             {state === 'input-streaming' && (
-              <div className="text-primary-500 text-xs">Processing...</div>
+              <div className="text-primary-500 text-xs">{t('processing')}</div>
             )}
 
             {toolCallId && (
