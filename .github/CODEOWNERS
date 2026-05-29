@@ -9,6 +9,10 @@
 # ── Auth & authentication middleware ──────────────────────────────────────
 /src/server/auth-middleware.ts       @outsourc-e
 /src/server/auth-middleware.test.ts  @outsourc-e
+/src/routes/api/auth.ts              @outsourc-e
+/src/routes/api/auth-check.ts        @outsourc-e
+/src/routes/api/oauth.device-code.ts @outsourc-e
+/src/routes/api/oauth.poll-token.ts  @outsourc-e
 
 # ── Security: rate limiter, security policy, security CI ─────────────────
 /src/server/rate-limit.ts            @outsourc-e
