@@ -11,6 +11,9 @@ import { useMemo, useState } from 'react'
 type MemoryScopeChoice = 'both' | 'business' | 'personal'
 type SearchMode = 'knowledge' | 'agent'
 type SessionStateScope = 'business' | 'personal'
+type CompiledTruthChoice = '' | 'candidate' | 'current' | 'stale' | 'conflict' | 'rejected' | 'superseded'
+type CompiledExportChoice = '' | 'pending' | 'exported' | 'failed' | 'blocked' | 'skipped'
+type CompiledAction = 'promote' | 'stale' | 'conflict' | 'reject' | 'exported'
 
 type FabricHealth = {
   ok?: boolean
@@ -37,6 +40,19 @@ type FabricSearchResponse = {
 
 type FabricSessionStateResponse = FabricSearchResponse & {
   data?: string
+}
+
+type CompiledMemoryArtifact = Record<string, unknown> & {
+  compiled_artifact_id?: string
+  title?: string
+  memory_scope?: string
+  workspace?: string
+  truth_status?: string
+  freshness_state?: string
+  gbrain_export_state?: string
+  updated_at?: string
+  content?: string
+  sources?: unknown[]
 }
 
 type SearchItem = {
@@ -150,6 +166,24 @@ function collectItems(response: FabricSearchResponse | undefined): SearchItem[] 
   return items
 }
 
+function collectCompiledArtifacts(response: FabricSearchResponse | undefined): CompiledMemoryArtifact[] {
+  if (!response) return []
+  const values = response.scopes
+    ? [response.scopes.business, response.scopes.personal]
+    : [response]
+  const artifacts: CompiledMemoryArtifact[] = []
+  for (const value of values) {
+    const envelope = asRecord(value)
+    if (!envelope || envelope.error) continue
+    const data = asRecord(envelope.data ?? value)
+    const rows = Array.isArray(data?.artifacts) ? data.artifacts : []
+    for (const row of rows) {
+      if (asRecord(row)) artifacts.push(row as CompiledMemoryArtifact)
+    }
+  }
+  return artifacts
+}
+
 function scopeLabel(scope: string): string {
   if (scope === 'business') return 'Business / Dev Server'
   if (scope === 'personal') return 'Personal / BigMac'
@@ -167,6 +201,9 @@ export function KnowledgeFabricScreen() {
   const [sessionAgentSource, setSessionAgentSource] = useState('Cael Web')
   const [sessionId, setSessionId] = useState('')
   const [sessionProject, setSessionProject] = useState('Hermes/Cael')
+  const [compiledScope, setCompiledScope] = useState<MemoryScopeChoice>('business')
+  const [compiledTruthStatus, setCompiledTruthStatus] = useState<CompiledTruthChoice>('candidate')
+  const [compiledExportState, setCompiledExportState] = useState<CompiledExportChoice>('')
 
   const healthQuery = useQuery({
     queryKey: ['knowledge-fabric', 'health'],
@@ -215,8 +252,66 @@ export function KnowledgeFabricScreen() {
     onSuccess: () => setSessionSummary(''),
   })
 
+  const compiledQuery = useQuery({
+    queryKey: ['knowledge-fabric', 'compiled-memory', compiledScope, compiledTruthStatus, compiledExportState],
+    queryFn: async () => {
+      const body = {
+        action: 'listCompiledMemoryArtifacts',
+        truthStatus: compiledTruthStatus || undefined,
+        gbrainExportState: compiledExportState || undefined,
+        limit: 25,
+      }
+      if (compiledScope === 'both') {
+        const [business, personal] = await Promise.allSettled([
+          postJson<FabricSearchResponse>('/api/knowledge/fabric', { ...body, memoryScope: 'business' }),
+          postJson<FabricSearchResponse>('/api/knowledge/fabric', { ...body, memoryScope: 'personal' }),
+        ])
+        return {
+          ok: business.status === 'fulfilled' || personal.status === 'fulfilled',
+          scopes: {
+            business: business.status === 'fulfilled' ? business.value : { error: business.reason instanceof Error ? business.reason.message : String(business.reason) },
+            personal: personal.status === 'fulfilled' ? personal.value : { error: personal.reason instanceof Error ? personal.reason.message : String(personal.reason) },
+          },
+        } satisfies FabricSearchResponse
+      }
+      return await postJson<FabricSearchResponse>('/api/knowledge/fabric', { ...body, memoryScope: compiledScope })
+    },
+    refetchInterval: 45_000,
+  })
+
+  const compiledActionMutation = useMutation({
+    mutationFn: async ({ artifact, action }: { artifact: CompiledMemoryArtifact; action: CompiledAction }) => {
+      const compiledArtifactId = asString(artifact.compiled_artifact_id)
+      const memoryScope = asString(artifact.memory_scope) || (compiledScope === 'both' ? 'business' : compiledScope)
+      if (!compiledArtifactId) throw new Error('compiled artifact id is missing')
+      if (action === 'exported') {
+        return await postJson<FabricSearchResponse>('/api/knowledge/fabric', {
+          action: 'markCompiledMemoryGbrainExported',
+          compiledArtifactId,
+          memoryScope,
+          exportState: 'exported',
+        })
+      }
+      const updates: Record<CompiledAction, Record<string, string>> = {
+        promote: { truthStatus: 'current', freshnessState: 'fresh', gbrainExportState: 'pending', reviewNote: 'Promoted by Cael memory-steward for gbrain indexing.' },
+        stale: { truthStatus: 'stale', freshnessState: 'stale', gbrainExportState: 'blocked', reviewNote: 'Marked stale by Cael memory-steward.' },
+        conflict: { truthStatus: 'conflict', freshnessState: 'conflict', gbrainExportState: 'blocked', reviewNote: 'Marked conflict by Cael memory-steward.' },
+        reject: { truthStatus: 'rejected', freshnessState: 'obsolete', gbrainExportState: 'skipped', reviewNote: 'Rejected by Cael memory-steward.' },
+        exported: {},
+      }
+      return await postJson<FabricSearchResponse>('/api/knowledge/fabric', {
+        action: 'updateCompiledMemoryArtifactState',
+        compiledArtifactId,
+        memoryScope,
+        ...updates[action],
+      })
+    },
+    onSuccess: () => void compiledQuery.refetch(),
+  })
+
   const items = useMemo(() => collectItems(searchMutation.data), [searchMutation.data])
   const documentItems = useMemo(() => collectItems(documentMutation.data), [documentMutation.data])
+  const compiledArtifacts = useMemo(() => collectCompiledArtifacts(compiledQuery.data), [compiledQuery.data])
   const routeScopes = healthQuery.data?.scopes ?? {}
 
   return (
@@ -251,6 +346,55 @@ export function KnowledgeFabricScreen() {
               {healthQuery.data?.warning || (healthQuery.error instanceof Error ? healthQuery.error.message : 'Memory Fabric health unavailable')}
             </div>
           ) : null}
+        </section>
+
+        <section className="rounded-2xl border border-primary-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <HugeiconsIcon icon={BrainIcon} size={18} /> Compiled memory queue
+              </div>
+              <p className="max-w-2xl text-sm text-primary-600 dark:text-neutral-300">
+                Review-gated current-truth artifacts for Cael and gbrain, backed by Knowledge Vault source evidence.
+              </p>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-3">
+              <select value={compiledScope} onChange={(event) => setCompiledScope(event.target.value as MemoryScopeChoice)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900">
+                <option value="business">Business</option>
+                <option value="personal">Personal</option>
+                <option value="both">Both</option>
+              </select>
+              <select value={compiledTruthStatus} onChange={(event) => setCompiledTruthStatus(event.target.value as CompiledTruthChoice)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900">
+                <option value="candidate">Candidates</option>
+                <option value="current">Current</option>
+                <option value="stale">Stale</option>
+                <option value="conflict">Conflict</option>
+                <option value="rejected">Rejected</option>
+                <option value="superseded">Superseded</option>
+                <option value="">Any truth</option>
+              </select>
+              <select value={compiledExportState} onChange={(event) => setCompiledExportState(event.target.value as CompiledExportChoice)} className="rounded-xl border border-primary-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900">
+                <option value="">Any export</option>
+                <option value="pending">Pending</option>
+                <option value="exported">Exported</option>
+                <option value="failed">Failed</option>
+                <option value="blocked">Blocked</option>
+                <option value="skipped">Skipped</option>
+              </select>
+            </div>
+          </div>
+          {compiledQuery.isError ? (
+            <div className="mt-3 rounded-xl border border-amber-300/50 bg-amber-100/30 p-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+              {compiledQuery.error instanceof Error ? compiledQuery.error.message : 'Compiled memory queue unavailable'}
+            </div>
+          ) : null}
+          <CompiledMemoryQueue
+            artifacts={compiledArtifacts}
+            loading={compiledQuery.isFetching}
+            actionPending={compiledActionMutation.isPending}
+            onRefresh={() => void compiledQuery.refetch()}
+            onAction={(artifact, action) => compiledActionMutation.mutate({ artifact, action })}
+          />
         </section>
 
         <section className="rounded-2xl border border-primary-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
@@ -404,5 +548,87 @@ function ResultGrid({ title, icon, items }: { title: string; icon: typeof Messag
         ))}
       </div>
     </section>
+  )
+}
+
+function statusPill(value: string, fallback: string) {
+  return value || fallback
+}
+
+function CompiledMemoryQueue({
+  artifacts,
+  loading,
+  actionPending,
+  onRefresh,
+  onAction,
+}: {
+  artifacts: CompiledMemoryArtifact[]
+  loading: boolean
+  actionPending: boolean
+  onRefresh: () => void
+  onAction: (artifact: CompiledMemoryArtifact, action: CompiledAction) => void
+}) {
+  return (
+    <div className="mt-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="text-sm text-primary-600 dark:text-neutral-400">
+          {loading ? 'Refreshing...' : `${artifacts.length} artifacts`}
+        </div>
+        <button type="button" onClick={onRefresh} className="rounded-lg border border-primary-200 px-3 py-2 text-sm hover:bg-primary-50 dark:border-neutral-700 dark:hover:bg-neutral-900">
+          Refresh
+        </button>
+      </div>
+      {artifacts.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-primary-200 p-4 text-sm text-primary-500 dark:border-neutral-800 dark:text-neutral-400">
+          No compiled memory artifacts match this filter.
+        </div>
+      ) : (
+        <div className="grid gap-3 lg:grid-cols-2">
+          {artifacts.map((artifact) => {
+            const id = asString(artifact.compiled_artifact_id)
+            const sourceCount = Array.isArray(artifact.sources) ? artifact.sources.length : 0
+            return (
+              <details key={id || `${artifact.title}:${artifact.updated_at}`} className="rounded-xl border border-primary-200 bg-primary-50 p-3 dark:border-neutral-800 dark:bg-neutral-900/70">
+                <summary className="cursor-pointer list-none">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-xs font-medium uppercase tracking-[0.14em] text-primary-500 dark:text-neutral-500">
+                        {scopeLabel(asString(artifact.memory_scope))} · {asString(artifact.workspace) || 'workspace'}
+                      </div>
+                      <div className="mt-1 line-clamp-2 text-sm font-semibold">{asString(artifact.title) || id || 'Compiled memory'}</div>
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                        <span className="rounded-full bg-white px-2 py-1 text-primary-700 dark:bg-neutral-950 dark:text-neutral-300">{statusPill(asString(artifact.truth_status), 'truth')}</span>
+                        <span className="rounded-full bg-white px-2 py-1 text-primary-700 dark:bg-neutral-950 dark:text-neutral-300">{statusPill(asString(artifact.freshness_state), 'freshness')}</span>
+                        <span className="rounded-full bg-white px-2 py-1 text-primary-700 dark:bg-neutral-950 dark:text-neutral-300">{statusPill(asString(artifact.gbrain_export_state), 'gbrain')}</span>
+                        <span className="rounded-full bg-white px-2 py-1 text-primary-700 dark:bg-neutral-950 dark:text-neutral-300">{sourceCount} sources</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="mt-2 line-clamp-4 text-sm text-primary-600 dark:text-neutral-300">{preview(artifact.content, 320)}</p>
+                </summary>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" disabled={actionPending} onClick={() => onAction(artifact, 'promote')} className="rounded-lg bg-primary-900 px-3 py-2 text-xs font-medium text-white disabled:opacity-40 dark:bg-primary-100 dark:text-primary-950">
+                    Promote
+                  </button>
+                  <button type="button" disabled={actionPending} onClick={() => onAction(artifact, 'stale')} className="rounded-lg border border-primary-200 px-3 py-2 text-xs font-medium hover:bg-primary-100 disabled:opacity-40 dark:border-neutral-700 dark:hover:bg-neutral-800">
+                    Stale
+                  </button>
+                  <button type="button" disabled={actionPending} onClick={() => onAction(artifact, 'conflict')} className="rounded-lg border border-primary-200 px-3 py-2 text-xs font-medium hover:bg-primary-100 disabled:opacity-40 dark:border-neutral-700 dark:hover:bg-neutral-800">
+                    Conflict
+                  </button>
+                  <button type="button" disabled={actionPending} onClick={() => onAction(artifact, 'reject')} className="rounded-lg border border-primary-200 px-3 py-2 text-xs font-medium hover:bg-primary-100 disabled:opacity-40 dark:border-neutral-700 dark:hover:bg-neutral-800">
+                    Reject
+                  </button>
+                  <button type="button" disabled={actionPending} onClick={() => onAction(artifact, 'exported')} className="rounded-lg border border-emerald-300 px-3 py-2 text-xs font-medium text-emerald-700 hover:bg-emerald-50 disabled:opacity-40 dark:border-emerald-700 dark:text-emerald-300 dark:hover:bg-emerald-950/40">
+                    Mark exported
+                  </button>
+                </div>
+                <pre className="mt-3 max-h-72 overflow-auto rounded-lg bg-white p-3 text-xs dark:bg-neutral-950">{preview(artifact, 2400)}</pre>
+              </details>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }

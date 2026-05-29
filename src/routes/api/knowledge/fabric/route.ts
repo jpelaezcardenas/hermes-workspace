@@ -1,7 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { requireLocalOrAuth } from '../../../../server/auth-middleware'
-import { routeMemoryRequest } from '../../../../server/knowledge-memory-fabric'
+import {
+  listCompiledMemoryArtifacts,
+  markCompiledMemoryGbrainExported,
+  routeMemoryRequest,
+  updateCompiledMemoryArtifactState,
+} from '../../../../server/knowledge-memory-fabric'
 import { requireJsonContentType } from '../../../../server/rate-limit'
 
 export const Route = createFileRoute('/api/knowledge/fabric')({
@@ -15,6 +20,33 @@ export const Route = createFileRoute('/api/knowledge/fabric')({
         if (contentTypeCheck) return contentTypeCheck
         try {
           const body = (await request.json()) as Record<string, unknown>
+          const action = typeof body.action === 'string' ? body.action : 'route'
+          if (action === 'listCompiledMemoryArtifacts') {
+            return json(await listCompiledMemoryArtifacts({
+              memoryScope: body.memoryScope ?? body.memory_scope,
+              workspace: body.workspace,
+              truthStatus: body.truthStatus ?? body.truth_status,
+              gbrainExportState: body.gbrainExportState ?? body.gbrain_export_state,
+              limit: body.limit,
+            }))
+          }
+          if (action === 'updateCompiledMemoryArtifactState') {
+            return json(await updateCompiledMemoryArtifactState({
+              compiledArtifactId: body.compiledArtifactId ?? body.compiled_artifact_id,
+              memoryScope: body.memoryScope ?? body.memory_scope,
+              truthStatus: body.truthStatus ?? body.truth_status,
+              freshnessState: body.freshnessState ?? body.freshness_state,
+              gbrainExportState: body.gbrainExportState ?? body.gbrain_export_state,
+              reviewNote: body.reviewNote ?? body.review_note,
+            }))
+          }
+          if (action === 'markCompiledMemoryGbrainExported') {
+            return json(await markCompiledMemoryGbrainExported({
+              compiledArtifactId: body.compiledArtifactId ?? body.compiled_artifact_id,
+              memoryScope: body.memoryScope ?? body.memory_scope,
+              exportState: body.exportState ?? body.export_state,
+            }))
+          }
           return json(await routeMemoryRequest({
             memoryScope: body.memoryScope ?? body.memory_scope,
             operation: typeof body.operation === 'string' ? body.operation : 'query',

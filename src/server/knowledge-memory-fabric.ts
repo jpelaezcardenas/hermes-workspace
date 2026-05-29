@@ -346,6 +346,90 @@ export async function recordAgentSessionState({
   return { ...result, memoryScope: scope, route: route.data }
 }
 
+function optionalString(input: unknown): string | undefined {
+  const value = String(input || '').trim()
+  return value || undefined
+}
+
+export async function listCompiledMemoryArtifacts({
+  memoryScope,
+  workspace,
+  truthStatus,
+  gbrainExportState,
+  limit,
+}: {
+  memoryScope: unknown
+  workspace?: unknown
+  truthStatus?: unknown
+  gbrainExportState?: unknown
+  limit?: unknown
+}): Promise<RoutedMemoryFabricResult> {
+  const scope = normalizeMemoryScope(memoryScope)
+  const route = await routeMemoryRequest({ memoryScope: scope, operation: 'query' })
+  const args: JsonRecord = {
+    memory_scope: scope,
+    limit: Math.min(Math.max(Number(limit) || 25, 1), 100),
+  }
+  const cleanWorkspace = optionalString(workspace)
+  const cleanTruthStatus = optionalString(truthStatus)
+  const cleanExportState = optionalString(gbrainExportState)
+  if (cleanWorkspace) args.workspace = cleanWorkspace
+  if (cleanTruthStatus) args.truth_status = cleanTruthStatus
+  if (cleanExportState) args.gbrain_export_state = cleanExportState
+  const result = await callMemoryFabricTool('list_compiled_memory_artifacts', args)
+  return { ...result, memoryScope: scope, route: route.data }
+}
+
+export async function updateCompiledMemoryArtifactState({
+  compiledArtifactId,
+  memoryScope,
+  truthStatus,
+  freshnessState,
+  gbrainExportState,
+  reviewNote,
+}: {
+  compiledArtifactId: unknown
+  memoryScope: unknown
+  truthStatus?: unknown
+  freshnessState?: unknown
+  gbrainExportState?: unknown
+  reviewNote?: unknown
+}): Promise<RoutedMemoryFabricResult> {
+  const scope = normalizeMemoryScope(memoryScope)
+  const id = String(compiledArtifactId || '').trim()
+  if (!id) throw new Error('compiledArtifactId is required')
+  const route = await routeMemoryRequest({ memoryScope: scope, operation: 'maintenance' })
+  const result = await callMemoryFabricTool('update_compiled_memory_artifact_state', {
+    compiled_artifact_id: id,
+    truth_status: optionalString(truthStatus) || '',
+    freshness_state: optionalString(freshnessState) || '',
+    gbrain_export_state: optionalString(gbrainExportState) || '',
+    review_note: optionalString(reviewNote) || '',
+    reviewer: 'cael-memory-steward',
+  })
+  return { ...result, memoryScope: scope, route: route.data }
+}
+
+export async function markCompiledMemoryGbrainExported({
+  compiledArtifactId,
+  memoryScope,
+  exportState,
+}: {
+  compiledArtifactId: unknown
+  memoryScope: unknown
+  exportState?: unknown
+}): Promise<RoutedMemoryFabricResult> {
+  const scope = normalizeMemoryScope(memoryScope)
+  const id = String(compiledArtifactId || '').trim()
+  if (!id) throw new Error('compiledArtifactId is required')
+  const route = await routeMemoryRequest({ memoryScope: scope, operation: 'maintenance' })
+  const result = await callMemoryFabricTool('mark_compiled_memory_gbrain_exported', {
+    compiled_artifact_id: id,
+    export_state: optionalString(exportState) || 'exported',
+  })
+  return { ...result, memoryScope: scope, route: route.data }
+}
+
 export async function getMemoryFabricHealth() {
   const endpoint = getMemoryFabricBaseUrl()
   let health: unknown = null
