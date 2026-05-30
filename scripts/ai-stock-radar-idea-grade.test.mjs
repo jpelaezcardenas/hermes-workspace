@@ -20,6 +20,10 @@ function candidate(overrides = {}) {
       volume_ratio_20d: 2.4,
       return_20d_pct: 24,
     },
+    evidence_firewall: {
+      verdict: "pass",
+      risk_flags: [],
+    },
     ...overrides,
   };
 }
@@ -43,6 +47,12 @@ describe("AI stock radar idea grade", () => {
     expect(assignIdeaGrade(candidate({ quality_notes: ["name-only AI evidence; needs manual substance check"] })).grade).toBe("X");
     expect(assignIdeaGrade(candidate({ themes: ["ai_keyword_match"] })).grade).toBe("X");
     expect(assignIdeaGrade(candidate({ top_risks: ["going concern watch"] })).grade).toBe("X");
+    expect(assignIdeaGrade(candidate({ evidence_firewall: { verdict: "reject", risk_flags: ["delisting_watch"] } })).grade).toBe("X");
+  });
+
+  it("blocks S and A when the evidence firewall is not pass", () => {
+    expect(assignIdeaGrade(candidate({ score: 88, evidence_firewall: { verdict: "caution", risk_flags: ["offering_watch"] } })).grade).toBe("B");
+    expect(assignIdeaGrade(candidate({ evidence_firewall: { verdict: "caution", risk_flags: ["cash_runway_watch"] } })).grade).toBe("B");
   });
 
   it("sorts grades from S to X", () => {

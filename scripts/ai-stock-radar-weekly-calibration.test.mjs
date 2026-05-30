@@ -28,6 +28,7 @@ const watchlist = {
       score: 74,
       data_quality: "A",
       status: "watching",
+      evidence_firewall: { verdict: "pass" },
       quality_notes: ["seed overlay and SEC evidence"],
     },
     {
@@ -38,6 +39,7 @@ const watchlist = {
       score: 44,
       data_quality: "C",
       status: "stale",
+      evidence_firewall: { verdict: "caution" },
       quality_notes: ["name-only AI evidence; needs manual substance check"],
     },
     {
@@ -48,6 +50,7 @@ const watchlist = {
       score: 38,
       data_quality: "D",
       status: "stale",
+      evidence_firewall: { verdict: "reject" },
       quality_notes: ["single public source only"],
     },
   ],
@@ -73,6 +76,10 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("## Grade Summary");
     expect(report).toContain("- A: 1");
     expect(report).toContain("- X: 2");
+    expect(report).toContain("## Firewall Summary");
+    expect(report).toContain("- pass: 1");
+    expect(report).toContain("- caution: 1");
+    expect(report).toContain("- reject: 1");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");

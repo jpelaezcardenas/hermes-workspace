@@ -12,6 +12,7 @@ Required files:
 - Spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-design.md
 - Free signal spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-free-signal-engine-design.md
 - S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
+- Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
@@ -19,6 +20,7 @@ Required files:
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Price/volume sensor: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-price-volume.mjs
 - Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
+- Evidence firewall: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-evidence-firewall.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -42,6 +44,10 @@ Safety:
 - Price/volume confirmation is only a quality check, never a trade trigger; it can improve rank confidence but cannot override weak evidence or RiskGate.
 - Every candidate must have an `idea_grade` in S/A/B/C/X: S means best research quality today, A strong research candidate, B plausible watch, C low-confidence/noisy, X reject/avoid.
 - S requires high score, A/B data quality, hard current catalyst, positive price/volume confirmation, and no severe quality flags.
+- Evidence Firewall verdict must be `pass` for S/A promotion; `caution` caps conviction and `reject` must become X/Avoid.
+- Concrete recommendations are review actions only: VERIFY_CATALYST, CHECK_DILUTION, WAIT_FOR_CONFIRMATION, DOWNGRADE_REVIEW, or ARCHIVE_REVIEW.
+- SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
+- Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
 - Deep Dive requires A/B data quality plus a hard current catalyst, not seed breadth alone.
 - If live discovery falls back to seeds, state the fallback reason under Kurzfazit and Datenqualitaet Und Luecken.
@@ -57,6 +63,7 @@ Required report sections:
 ## Neue Auffaelligkeiten
 ## Idea Grade
 ## Price/Volume Confirmation
+## Evidence Firewall
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid

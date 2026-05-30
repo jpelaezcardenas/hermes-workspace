@@ -36,10 +36,32 @@ export function summarizeIdeaGrades(candidates) {
   return counts;
 }
 
+export function summarizeFirewallVerdicts(candidates) {
+  const counts = { pass: 0, caution: 0, reject: 0, unknown: 0 };
+
+  for (const candidate of candidates || []) {
+    const verdict = candidate.evidence_firewall?.verdict;
+    if (["pass", "caution", "reject"].includes(verdict)) {
+      counts[verdict] += 1;
+    } else {
+      counts.unknown += 1;
+    }
+  }
+
+  return counts;
+}
+
 function formatGradeSummary(counts) {
   return ["S", "A", "B", "C", "X", "?"]
     .filter((grade) => counts[grade] > 0 || grade !== "?")
     .map((grade) => `- ${grade}: ${counts[grade]}`)
+    .join("\n");
+}
+
+function formatFirewallSummary(counts) {
+  return ["pass", "caution", "reject", "unknown"]
+    .filter((verdict) => counts[verdict] > 0 || verdict !== "unknown")
+    .map((verdict) => `- ${verdict}: ${counts[verdict]}`)
     .join("\n");
 }
 
@@ -56,6 +78,7 @@ export function bucketWatchlistCandidates(candidates) {
 export function renderWeeklyCalibrationReport({ date, watchlist, reportPath }) {
   const buckets = bucketWatchlistCandidates(watchlist.candidates || []);
   const gradeSummary = summarizeIdeaGrades(watchlist.candidates || []);
+  const firewallSummary = summarizeFirewallVerdicts(watchlist.candidates || []);
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -66,6 +89,9 @@ export function renderWeeklyCalibrationReport({ date, watchlist, reportPath }) {
 
 ## Grade Summary
 ${formatGradeSummary(gradeSummary)}
+
+## Firewall Summary
+${formatFirewallSummary(firewallSummary)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}

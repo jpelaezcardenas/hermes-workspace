@@ -38,6 +38,11 @@ const submissionsByCik = {
       recent: {
         form: ["10-Q", "8-K", "4"],
         filingDate: ["2026-05-10", "2026-05-20", "2026-05-21"],
+        items: ["1.01", "2.02"],
+        primaryDocDescription: [
+          "Entry into a material definitive agreement with a major customer",
+          "Results of operations and financial condition",
+        ],
       },
     },
   },
@@ -51,10 +56,46 @@ const submissionsByCik = {
   },
 };
 
+const companyFactsByCik = {
+  "0000783412": {
+    facts: {
+      "us-gaap": {
+        RevenueFromContractWithCustomerExcludingAssessedTax: {
+          units: {
+            USD: [
+              { form: "10-Q", fy: 2025, fp: "Q1", end: "2025-03-31", filed: "2025-05-05", val: 10_000_000 },
+              { form: "10-Q", fy: 2026, fp: "Q1", end: "2026-03-31", filed: "2026-05-05", val: 13_000_000 },
+            ],
+          },
+        },
+        CashAndCashEquivalentsAtCarryingValue: {
+          units: {
+            USD: [{ form: "10-Q", fy: 2026, fp: "Q1", end: "2026-03-31", filed: "2026-05-05", val: 8_000_000 }],
+          },
+        },
+        NetCashProvidedByUsedInOperatingActivities: {
+          units: {
+            USD: [{ form: "10-Q", fy: 2026, fp: "Q1", end: "2026-03-31", filed: "2026-05-05", val: -1_000_000 }],
+          },
+        },
+      },
+    },
+  },
+  "0001321655": {
+    facts: {
+      "us-gaap": {},
+    },
+  },
+};
+
 function fetcherForFixtures(url) {
   if (url.includes("nasdaqlisted.txt")) return Promise.resolve(nasdaqListedText);
   if (url.includes("otherlisted.txt")) return Promise.resolve(otherListedText);
   if (url.includes("company_tickers.json")) return Promise.resolve(secCompanyTickers);
+  if (url.includes("/api/xbrl/companyfacts/")) {
+    const cikMatch = url.match(/CIK(\d{10})\.json$/);
+    return Promise.resolve(companyFactsByCik[cikMatch[1]]);
+  }
   const cikMatch = url.match(/CIK(\d{10})\.json$/);
   if (cikMatch) return Promise.resolve(submissionsByCik[cikMatch[1]]);
   throw new Error(`unexpected url ${url}`);
@@ -148,7 +189,20 @@ describe("AI stock radar live discovery", () => {
     expect(summarizeSubmissions(submissionsByCik["0000783412"])).toEqual({
       recent_filings: ["10-Q", "8-K"],
       has_company_facts: true,
-      catalyst_labels: ["recent_public_company_filings", "recent_8k"],
+      catalyst_labels: [
+        "recent_public_company_filings",
+        "recent_8k",
+        "hard_catalyst",
+        "material_agreement",
+        "major_customer",
+        "earnings_or_guidance_context",
+      ],
+      filing_events: {
+        positive_labels: ["material_agreement", "major_customer", "earnings_or_guidance_context"],
+        risk_labels: [],
+        hard_catalyst: true,
+        hard_blocker: false,
+      },
     });
   });
 
@@ -182,6 +236,7 @@ describe("AI stock radar live discovery", () => {
       otherListedText,
       secCompanyTickers,
       submissionsByCik,
+      companyFactsByCik,
       seedRecords: [
         {
           ticker: "PLTR",
@@ -199,9 +254,20 @@ describe("AI stock radar live discovery", () => {
       source_types: ["nasdaq_symbol_directory", "sec_company_tickers", "sec_submissions", "sec_companyfacts"],
       recent_filings: ["10-Q", "8-K"],
       ai_exposure: "core",
+      has_company_facts: true,
+      fundamental_snapshot: {
+        status: "available",
+        revenue_growth_yoy_pct: 30,
+      },
+      evidence_firewall: {
+        verdict: "caution",
+      },
     });
+    expect(records[0].filing_events.positive_labels).toContain("material_agreement");
     expect(records[0].risk_flags).toContain("name_only_ai_watch");
     expect(records[0].quality_notes).toContain("name-only AI evidence; needs manual substance check");
+    expect(records[1].source_types).not.toContain("sec_companyfacts");
+    expect(records[1].fundamental_snapshot.status).toBe("unavailable");
     expect(records[1].themes).toContain("defense_ai");
     expect(records[1].risk_flags).toContain("overheated_watch");
   });

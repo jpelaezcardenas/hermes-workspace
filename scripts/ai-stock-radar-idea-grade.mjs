@@ -66,25 +66,30 @@ function hasHardCatalyst(candidate) {
   );
 }
 
+function firewallVerdict(candidate) {
+  return candidate.evidence_firewall?.verdict || "caution";
+}
+
 export function assignIdeaGrade(candidate) {
   const reasons = [];
   const usableData = candidate.data_quality === "A" || candidate.data_quality === "B";
   const positivePriceVolume = hasPositivePriceVolume(candidate);
   const hardCatalyst = hasHardCatalyst(candidate);
+  const firewall = firewallVerdict(candidate);
 
-  if (candidate.category === "Avoid" || textIncludesSevereRisk(candidate) || hasOnlyGenericAiTheme(candidate) || candidate.score < 45) {
+  if (firewall === "reject" || candidate.category === "Avoid" || textIncludesSevereRisk(candidate) || hasOnlyGenericAiTheme(candidate) || candidate.score < 45) {
     return {
       grade: "X",
       reasons: ["reject/avoid quality gate triggered"],
     };
   }
 
-  if (candidate.score >= 85 && usableData && hasSubstanceTheme(candidate) && hardCatalyst && positivePriceVolume) {
+  if (candidate.score >= 85 && usableData && firewall === "pass" && hasSubstanceTheme(candidate) && hardCatalyst && positivePriceVolume) {
     reasons.push("high score", "usable data quality", "hard catalyst", "price/volume confirmation");
     return { grade: "S", reasons };
   }
 
-  if (candidate.score >= 75 && usableData && hasSubstanceTheme(candidate) && (hardCatalyst || positivePriceVolume)) {
+  if (candidate.score >= 75 && usableData && firewall === "pass" && hasSubstanceTheme(candidate) && (hardCatalyst || positivePriceVolume)) {
     reasons.push("strong score", "usable data quality", hardCatalyst ? "catalyst strength" : "price/volume confirmation");
     return { grade: "A", reasons };
   }

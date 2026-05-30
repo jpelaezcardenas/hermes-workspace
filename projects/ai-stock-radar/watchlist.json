@@ -8,236 +8,6 @@
   },
   "candidates": [
     {
-      "ticker": "KITT",
-      "company": "Nauticus Robotics, Inc.",
-      "category": "Breakout Watch",
-      "score": 77,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "robotics"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 20,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Nauticus Robotics, Inc. shows public AI exposure in robotics; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "free-source evidence still needs manual review"
-      ],
-      "quality_notes": [],
-      "score_penalty": 0,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001849820.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 3 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "no late-cycle risk flag in seed evidence",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "A",
-      "grade_reasons": [
-        "strong score",
-        "usable data quality",
-        "catalyst strength"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=kitt.us&i=d"
-      }
-    },
-    {
-      "ticker": "AMCI",
-      "company": "AMC Robotics Corporation",
-      "category": "Breakout Watch",
-      "score": 73,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "robotics"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "AMC Robotics Corporation shows public AI exposure in robotics; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "free-source evidence still needs manual review"
-      ],
-      "quality_notes": [],
-      "score_penalty": 0,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001937891.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "no late-cycle risk flag in seed evidence",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "B",
-      "grade_reasons": [
-        "watchable score with evidence gaps"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=amci.us&i=d"
-      }
-    },
-    {
-      "ticker": "DUKR",
-      "company": "DUKE Robotics Corp.",
-      "category": "Breakout Watch",
-      "score": 73,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "robotics"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "DUKE Robotics Corp. shows public AI exposure in robotics; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "free-source evidence still needs manual review"
-      ],
-      "quality_notes": [],
-      "score_penalty": 0,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001638911.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "no late-cycle risk flag in seed evidence",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "B",
-      "grade_reasons": [
-        "watchable score with evidence gaps"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=dukr.us&i=d"
-      }
-    },
-    {
-      "ticker": "ARBE",
-      "company": "Arbe Robotics Ltd.",
-      "category": "Early Watch",
-      "score": 65,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "robotics"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 12,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 9,
-      "signal_breadth": 10,
-      "thesis": "Arbe Robotics Ltd. shows public AI exposure in robotics; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "free-source evidence still needs manual review"
-      ],
-      "quality_notes": [],
-      "score_penalty": 0,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001861841.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "2 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "no late-cycle risk flag in seed evidence",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "B",
-      "grade_reasons": [
-        "watchable score with evidence gaps"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=arbe.us&i=d"
-      }
-    },
-    {
       "ticker": "GMEX",
       "company": "GMEX ROBOTICS CORPORATION",
       "category": "Early Watch",
@@ -247,6 +17,36 @@
       "themes": [
         "robotics"
       ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 16.42,
+        "latest_cash": 2890822,
+        "latest_operating_cash_flow": -1016390,
+        "cash_runway_quarters": 11.38,
+        "share_count_growth_yoy_pct": -90.89,
+        "risks": [],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "pass",
+        "risk_flags": [],
+        "positive_labels": [],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 0,
+        "max_category": null,
+        "notes": []
+      },
+      "review_action": "WAIT_FOR_CONFIRMATION",
       "ai_relevance": 16,
       "catalyst": 12,
       "market_momentum": 6,
@@ -260,7 +60,7 @@
       "quality_notes": [],
       "score_penalty": 0,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "WAIT_FOR_CONFIRMATION: Wait for stronger evidence or price/volume context; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -269,7 +69,8 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001928581.json"
+        "https://data.sec.gov/submissions/CIK0001928581.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001928581.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
@@ -295,31 +96,73 @@
       }
     },
     {
-      "ticker": "AIFC",
-      "company": "AI Financial Corporation",
-      "category": "Avoid",
-      "score": 52,
+      "ticker": "DUKR",
+      "company": "DUKE Robotics Corp.",
+      "category": "Early Watch",
+      "score": 63,
       "previous_score": 0,
       "data_quality": "A",
       "themes": [
-        "ai_keyword_match"
+        "robotics"
       ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [],
+        "hard_catalyst": true,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 249.07,
+        "latest_cash": 510000,
+        "latest_operating_cash_flow": -517000,
+        "cash_runway_quarters": 0.99,
+        "share_count_growth_yoy_pct": -95.84,
+        "risks": [
+          "cash_runway_watch"
+        ],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "cash_runway_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 14,
+        "max_category": "Early Watch",
+        "notes": [
+          "cash runway watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
       "ai_relevance": 16,
       "catalyst": 20,
       "market_momentum": 6,
       "earliness": 12,
       "fundamental_quality": 13,
       "signal_breadth": 10,
-      "thesis": "AI Financial Corporation shows public AI exposure in ai_keyword_match; score 52 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "thesis": "DUKE Robotics Corp. shows public AI exposure in robotics; score 63 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
-        "name only ai watch"
+        "cash runway watch"
       ],
       "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
+        "cash runway watch"
       ],
-      "score_penalty": 25,
+      "score_penalty": 14,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -328,116 +171,95 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0000862861.json"
+        "https://data.sec.gov/submissions/CIK0001638911.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001638911.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 3 catalyst labels",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
+        "earliness": "risk flags: cash_runway_watch",
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
       "first_seen": "2026-05-30",
       "age_days": 0,
       "status": "fresh",
-      "idea_grade": "X",
+      "idea_grade": "C",
       "grade_reasons": [
-        "reject/avoid quality gate triggered"
+        "low-confidence watch only"
       ],
       "price_volume": {
         "status": "unavailable",
         "source": "stooq",
         "confirmation": "unavailable",
         "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=aifc.us&i=d"
-      }
-    },
-    {
-      "ticker": "JTAI",
-      "company": "Jet.AI Inc.",
-      "category": "Avoid",
-      "score": 52,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 20,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 52 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001861622.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 3 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=jtai.us&i=d"
+        "url": "https://stooq.com/q/d/l/?s=dukr.us&i=d"
       }
     },
     {
       "ticker": "AISP",
       "company": "Airship AI Holdings, Inc",
       "category": "Avoid",
-      "score": 48,
+      "score": 52,
       "previous_score": 0,
       "data_quality": "A",
       "themes": [
         "ai_keyword_match"
       ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [],
+        "hard_catalyst": true,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 15.45,
+        "latest_cash": 12567574,
+        "latest_operating_cash_flow": 814484,
+        "cash_runway_quarters": null,
+        "share_count_growth_yoy_pct": 8.45,
+        "risks": [],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [],
+        "score_penalty": 0,
+        "max_category": null,
+        "notes": [
+          "name only ai watch"
+        ]
+      },
+      "review_action": "DOWNGRADE_REVIEW",
       "ai_relevance": 16,
-      "catalyst": 16,
+      "catalyst": 20,
       "market_momentum": 6,
       "earliness": 12,
       "fundamental_quality": 13,
       "signal_breadth": 10,
-      "thesis": "Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "thesis": "Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 52 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
         "name only ai watch"
       ],
       "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch"
       ],
       "score_penalty": 25,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -446,11 +268,12 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001842566.json"
+        "https://data.sec.gov/submissions/CIK0001842566.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001842566.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
         "earliness": "risk flags: name_only_ai_watch",
         "fundamental_quality": "SEC companyfacts available",
@@ -472,31 +295,71 @@
       }
     },
     {
-      "ticker": "ARAI",
-      "company": "Arrive AI Inc.",
+      "ticker": "AMCI",
+      "company": "AMC Robotics Corporation",
       "category": "Avoid",
-      "score": 48,
+      "score": 47,
       "previous_score": 0,
       "data_quality": "A",
       "themes": [
-        "ai_keyword_match"
+        "robotics"
       ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": null,
+        "latest_cash": 6632619,
+        "latest_operating_cash_flow": -391580,
+        "cash_runway_quarters": 16.94,
+        "share_count_growth_yoy_pct": null,
+        "risks": [],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "delisting_watch"
+        ],
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 30,
+        "max_category": "Avoid",
+        "notes": [
+          "delisting watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
       "ai_relevance": 16,
-      "catalyst": 16,
+      "catalyst": 20,
       "market_momentum": 6,
       "earliness": 12,
       "fundamental_quality": 13,
       "signal_breadth": 10,
-      "thesis": "Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "thesis": "AMC Robotics Corporation shows public AI exposure in robotics; score 47 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
-        "name only ai watch"
+        "delisting watch"
       ],
       "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
+        "delisting watch"
       ],
-      "score_penalty": 25,
+      "score_penalty": 30,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -505,13 +368,14 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001818274.json"
+        "https://data.sec.gov/submissions/CIK0001937891.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001937891.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "catalyst": "3 recent filing types and 4 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
+        "earliness": "risk flags: delisting_watch",
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
@@ -527,479 +391,7 @@
         "source": "stooq",
         "confirmation": "unavailable",
         "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=arai.us&i=d"
-      }
-    },
-    {
-      "ticker": "BFRG",
-      "company": "Bullfrog AI Holdings, Inc.",
-      "category": "Avoid",
-      "score": 48,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001829247.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=bfrg.us&i=d"
-      }
-    },
-    {
-      "ticker": "DVLT",
-      "company": "Datavault AI Inc.",
-      "category": "Avoid",
-      "score": 48,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001682149.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=dvlt.us&i=d"
-      }
-    },
-    {
-      "ticker": "FABC",
-      "company": "Fabric.AI, Inc.",
-      "category": "Avoid",
-      "score": 48,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001086745.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=fabc.us&i=d"
-      }
-    },
-    {
-      "ticker": "GXAI",
-      "company": "Gaxos.ai Inc.",
-      "category": "Avoid",
-      "score": 48,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001895618.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=gxai.us&i=d"
-      }
-    },
-    {
-      "ticker": "KDK",
-      "company": "Kodiak AI, Inc.",
-      "category": "Avoid",
-      "score": 48,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Kodiak AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001853138.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=kdk.us&i=d"
-      }
-    },
-    {
-      "ticker": "MDAI",
-      "company": "Spectral AI, Inc.",
-      "category": "Avoid",
-      "score": 48,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Spectral AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001833498.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=mdai.us&i=d"
-      }
-    },
-    {
-      "ticker": "AIIO",
-      "company": "Robo.ai Inc.",
-      "category": "Avoid",
-      "score": 40,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 12,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 9,
-      "signal_breadth": 10,
-      "thesis": "Robo.ai Inc. shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001932737.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "2 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=aiio.us&i=d"
-      }
-    },
-    {
-      "ticker": "GFAI",
-      "company": "Guardforce AI Co., Limited",
-      "category": "Avoid",
-      "score": 40,
-      "previous_score": 0,
-      "data_quality": "A",
-      "themes": [
-        "ai_keyword_match"
-      ],
-      "ai_relevance": 16,
-      "catalyst": 12,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 9,
-      "signal_breadth": 10,
-      "thesis": "Guardforce AI Co., Limited shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "name only ai watch"
-      ],
-      "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
-      ],
-      "score_penalty": 25,
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC company tickers",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
-        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
-        "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001804469.json"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "2 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "4 independent public source types"
-      },
-      "first_seen": "2026-05-30",
-      "age_days": 0,
-      "status": "fresh",
-      "idea_grade": "X",
-      "grade_reasons": [
-        "reject/avoid quality gate triggered"
-      ],
-      "price_volume": {
-        "status": "unavailable",
-        "source": "stooq",
-        "confirmation": "unavailable",
-        "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=gfai.us&i=d"
+        "url": "https://stooq.com/q/d/l/?s=amci.us&i=d"
       }
     },
     {
@@ -1012,6 +404,40 @@
       "themes": [
         "ai_keyword_match"
       ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 35.25,
+        "latest_cash": 4172732,
+        "latest_operating_cash_flow": 22110019,
+        "cash_runway_quarters": null,
+        "share_count_growth_yoy_pct": -84.83,
+        "risks": [],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 0,
+        "max_category": null,
+        "notes": [
+          "name only ai watch"
+        ]
+      },
+      "review_action": "DOWNGRADE_REVIEW",
       "ai_relevance": 16,
       "catalyst": 12,
       "market_momentum": 6,
@@ -1023,11 +449,12 @@
         "name only ai watch"
       ],
       "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch"
       ],
       "score_penalty": 25,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -1036,7 +463,8 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001913749.json"
+        "https://data.sec.gov/submissions/CIK0001913749.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001913749.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
@@ -1062,31 +490,74 @@
       }
     },
     {
-      "ticker": "HCAI",
-      "company": "Huachen AI Parking Management Technology Holding Co., Ltd.",
+      "ticker": "KDK",
+      "company": "Kodiak AI, Inc.",
       "category": "Avoid",
-      "score": 40,
+      "score": 37,
       "previous_score": 0,
       "data_quality": "A",
       "themes": [
         "ai_keyword_match"
       ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": null,
+        "latest_cash": 66400000,
+        "latest_operating_cash_flow": -29494000,
+        "cash_runway_quarters": 2.25,
+        "share_count_growth_yoy_pct": null,
+        "risks": [],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "offering_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [],
+        "score_penalty": 15,
+        "max_category": "Early Watch",
+        "notes": [
+          "name only ai watch",
+          "offering watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
       "ai_relevance": 16,
-      "catalyst": 12,
+      "catalyst": 20,
       "market_momentum": 6,
       "earliness": 12,
-      "fundamental_quality": 9,
+      "fundamental_quality": 13,
       "signal_breadth": 10,
-      "thesis": "Huachen AI Parking Management Technology Holding Co., Ltd. shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "thesis": "Kodiak AI, Inc. shows public AI exposure in ai_keyword_match; score 37 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
-        "name only ai watch"
+        "name only ai watch",
+        "offering watch"
       ],
       "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "offering watch"
       ],
-      "score_penalty": 25,
+      "score_penalty": 40,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -1095,13 +566,503 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0001958399.json"
+        "https://data.sec.gov/submissions/CIK0001853138.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001853138.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, offering_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=kdk.us&i=d"
+      }
+    },
+    {
+      "ticker": "GFAI",
+      "company": "Guardforce AI Co., Limited",
+      "category": "Avoid",
+      "score": 35,
+      "previous_score": 0,
+      "data_quality": "B",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "unavailable",
+        "risks": [],
+        "supports": [],
+        "reason": "no comparable SEC companyfacts metrics"
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [],
+        "score_penalty": 0,
+        "max_category": null,
+        "notes": [
+          "name only ai watch",
+          "SEC companyfacts fundamentals unavailable"
+        ]
+      },
+      "review_action": "DOWNGRADE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 4,
+      "signal_breadth": 10,
+      "thesis": "Guardforce AI Co., Limited shows public AI exposure in ai_keyword_match; score 35 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions. Data quality B.",
+      "top_risks": [
+        "name only ai watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "SEC companyfacts fundamentals unavailable"
+      ],
+      "score_penalty": 25,
+      "last_checked": "2026-05-30",
+      "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001804469.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
         "catalyst": "2 recent filing types and 2 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
         "earliness": "risk flags: name_only_ai_watch",
+        "fundamental_quality": "limited public fact coverage",
+        "signal_breadth": "3 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=gfai.us&i=d"
+      }
+    },
+    {
+      "ticker": "AIIO",
+      "company": "Robo.ai Inc.",
+      "category": "Avoid",
+      "score": 32,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -92.08,
+        "latest_cash": 5327000,
+        "latest_operating_cash_flow": -5066000,
+        "cash_runway_quarters": 4.21,
+        "share_count_growth_yoy_pct": -94.59,
+        "risks": [
+          "revenue_decline_watch"
+        ],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 8,
+        "max_category": "Breakout Watch",
+        "notes": [
+          "name only ai watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "DOWNGRADE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Robo.ai Inc. shows public AI exposure in ai_keyword_match; score 32 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 33,
+      "last_checked": "2026-05-30",
+      "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001932737.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001932737.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=aiio.us&i=d"
+      }
+    },
+    {
+      "ticker": "ARBE",
+      "company": "Arbe Robotics Ltd.",
+      "category": "Avoid",
+      "score": 31,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "robotics"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -40.36,
+        "latest_cash": 4308000,
+        "latest_operating_cash_flow": -9015000,
+        "cash_runway_quarters": 1.91,
+        "share_count_growth_yoy_pct": 39.48,
+        "risks": [
+          "cash_runway_watch",
+          "dilution_trend_watch",
+          "revenue_decline_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "cash_runway_watch",
+          "dilution_trend_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [],
+        "score_penalty": 34,
+        "max_category": "Early Watch",
+        "notes": [
+          "cash runway watch",
+          "dilution trend watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Arbe Robotics Ltd. shows public AI exposure in robotics; score 31 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "cash runway watch",
+        "dilution trend watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "cash runway watch",
+        "dilution trend watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 34,
+      "last_checked": "2026-05-30",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001861841.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001861841.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: cash_runway_watch, dilution_trend_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=arbe.us&i=d"
+      }
+    },
+    {
+      "ticker": "HPAI",
+      "company": "Helport AI Limited",
+      "category": "Avoid",
+      "score": 28,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 17.86,
+        "latest_cash": 152051,
+        "latest_operating_cash_flow": 9067013,
+        "cash_runway_quarters": null,
+        "share_count_growth_yoy_pct": 23994110.26,
+        "risks": [
+          "dilution_trend_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [],
+        "score_penalty": 12,
+        "max_category": "Early Watch",
+        "notes": [
+          "name only ai watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Helport AI Limited shows public AI exposure in ai_keyword_match; score 28 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 37,
+      "last_checked": "2026-05-30",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0002001699.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0002001699.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=hpai.us&i=d"
+      }
+    },
+    {
+      "ticker": "HCAI",
+      "company": "Huachen AI Parking Management Technology Holding Co., Ltd.",
+      "category": "Avoid",
+      "score": 18,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -83.94,
+        "latest_cash": 389,
+        "latest_operating_cash_flow": -882781,
+        "cash_runway_quarters": 0,
+        "share_count_growth_yoy_pct": -96.25,
+        "risks": [
+          "cash_runway_watch",
+          "revenue_decline_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "cash_runway_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [],
+        "score_penalty": 22,
+        "max_category": "Early Watch",
+        "notes": [
+          "name only ai watch",
+          "cash runway watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Huachen AI Parking Management Technology Holding Co., Ltd. shows public AI exposure in ai_keyword_match; score 18 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "cash runway watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "cash runway watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 47,
+      "last_checked": "2026-05-30",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001958399.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001958399.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, cash_runway_watch, revenue_decline_watch",
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
@@ -1121,31 +1082,82 @@
       }
     },
     {
-      "ticker": "HPAI",
-      "company": "Helport AI Limited",
+      "ticker": "KITT",
+      "company": "Nauticus Robotics, Inc.",
       "category": "Avoid",
-      "score": 40,
+      "score": 18,
       "previous_score": 0,
       "data_quality": "A",
       "themes": [
-        "ai_keyword_match"
+        "robotics"
       ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "risk_labels": [
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -3.44,
+        "latest_cash": 5888026,
+        "latest_operating_cash_flow": -7005769,
+        "cash_runway_quarters": 0.84,
+        "share_count_growth_yoy_pct": -86.01,
+        "risks": [
+          "cash_runway_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "delisting_watch",
+          "offering_watch",
+          "cash_runway_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "support_labels": [],
+        "score_penalty": 59,
+        "max_category": "Avoid",
+        "notes": [
+          "delisting watch",
+          "offering watch",
+          "cash runway watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
       "ai_relevance": 16,
-      "catalyst": 12,
+      "catalyst": 20,
       "market_momentum": 6,
       "earliness": 12,
-      "fundamental_quality": 9,
+      "fundamental_quality": 13,
       "signal_breadth": 10,
-      "thesis": "Helport AI Limited shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "thesis": "Nauticus Robotics, Inc. shows public AI exposure in robotics; score 18 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
-        "name only ai watch"
+        "delisting watch",
+        "offering watch",
+        "cash runway watch"
       ],
       "quality_notes": [
-        "name-only AI evidence; needs manual substance check"
+        "delisting watch",
+        "offering watch",
+        "cash runway watch"
       ],
-      "score_penalty": 25,
+      "score_penalty": 59,
       "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
         "SEC company tickers",
@@ -1154,13 +1166,14 @@
         "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
         "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
         "https://www.sec.gov/files/company_tickers.json",
-        "https://data.sec.gov/submissions/CIK0002001699.json"
+        "https://data.sec.gov/submissions/CIK0001849820.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001849820.json"
       ],
       "score_reasons": {
         "ai_relevance": "core exposure across 1 AI themes",
-        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "catalyst": "3 recent filing types and 6 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: name_only_ai_watch",
+        "earliness": "risk flags: delisting_watch, offering_watch, cash_runway_watch",
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
@@ -1176,7 +1189,921 @@
         "source": "stooq",
         "confirmation": "unavailable",
         "reason": "not enough candles",
-        "url": "https://stooq.com/q/d/l/?s=hpai.us&i=d"
+        "url": "https://stooq.com/q/d/l/?s=kitt.us&i=d"
+      }
+    },
+    {
+      "ticker": "JTAI",
+      "company": "Jet.AI Inc.",
+      "category": "Avoid",
+      "score": 14,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -51.61,
+        "latest_cash": 13497732,
+        "latest_operating_cash_flow": -3038616,
+        "cash_runway_quarters": 4.44,
+        "share_count_growth_yoy_pct": -76.55,
+        "risks": [
+          "revenue_decline_watch"
+        ],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 38,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 14 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 63,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001861622.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001861622.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 6 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=jtai.us&i=d"
+      }
+    },
+    {
+      "ticker": "ARAI",
+      "company": "Arrive AI Inc.",
+      "category": "Avoid",
+      "score": 10,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": null,
+        "latest_cash": 8200000000,
+        "latest_operating_cash_flow": -2930286,
+        "cash_runway_quarters": 2798.36,
+        "share_count_growth_yoy_pct": 21.69,
+        "risks": [
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 42,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 10 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 67,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001818274.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001818274.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 4 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=arai.us&i=d"
+      }
+    },
+    {
+      "ticker": "BFRG",
+      "company": "Bullfrog AI Holdings, Inc.",
+      "category": "Avoid",
+      "score": 10,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 79.49,
+        "latest_cash": 5185463,
+        "latest_operating_cash_flow": -1694088,
+        "cash_runway_quarters": 3.06,
+        "share_count_growth_yoy_pct": 33.63,
+        "risks": [
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 42,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 10 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 67,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001829247.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001829247.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 4 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=bfrg.us&i=d"
+      }
+    },
+    {
+      "ticker": "FABC",
+      "company": "Fabric.AI, Inc.",
+      "category": "Avoid",
+      "score": 7,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 0,
+        "latest_cash": 3374102,
+        "latest_operating_cash_flow": -1095447,
+        "cash_runway_quarters": 3.08,
+        "share_count_growth_yoy_pct": -82.95,
+        "risks": [],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [],
+        "score_penalty": 45,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "offering watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 7 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "offering watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "offering watch"
+      ],
+      "score_penalty": 70,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001086745.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001086745.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, offering_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=fabc.us&i=d"
+      }
+    },
+    {
+      "ticker": "MDAI",
+      "company": "Spectral AI, Inc.",
+      "category": "Avoid",
+      "score": 2,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -40.5,
+        "latest_cash": 11655000,
+        "latest_operating_cash_flow": -3728000,
+        "cash_runway_quarters": 3.13,
+        "share_count_growth_yoy_pct": 38.15,
+        "risks": [
+          "dilution_trend_watch",
+          "revenue_decline_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "dilution_trend_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [],
+        "score_penalty": 50,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "dilution trend watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Spectral AI, Inc. shows public AI exposure in ai_keyword_match; score 2 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "dilution trend watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "dilution trend watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 75,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001833498.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001833498.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, dilution_trend_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=mdai.us&i=d"
+      }
+    },
+    {
+      "ticker": "AIFC",
+      "company": "AI Financial Corporation",
+      "category": "Avoid",
+      "score": 0,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "risk_labels": [
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -14.54,
+        "latest_cash": 10522000,
+        "latest_operating_cash_flow": -12293000,
+        "cash_runway_quarters": 0.86,
+        "share_count_growth_yoy_pct": 715.52,
+        "risks": [
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "offering_watch",
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "support_labels": [],
+        "score_penalty": 71,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "offering watch",
+          "cash runway watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "AI Financial Corporation shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "offering watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "offering watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 96,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0000862861.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0000862861.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 6 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, offering_watch, cash_runway_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=aifc.us&i=d"
+      }
+    },
+    {
+      "ticker": "DVLT",
+      "company": "Datavault AI Inc.",
+      "category": "Avoid",
+      "score": 0,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 443.08,
+        "latest_cash": 2205000,
+        "latest_operating_cash_flow": -8727000,
+        "cash_runway_quarters": 0.25,
+        "share_count_growth_yoy_pct": 969.67,
+        "risks": [
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 56,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "cash runway watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 81,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001682149.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001682149.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, cash_runway_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=dvlt.us&i=d"
+      }
+    },
+    {
+      "ticker": "GXAI",
+      "company": "Gaxos.ai Inc.",
+      "category": "Avoid",
+      "score": 0,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 7524.17,
+        "latest_cash": 1513550,
+        "latest_operating_cash_flow": -2493586,
+        "cash_runway_quarters": 0.61,
+        "share_count_growth_yoy_pct": 23.54,
+        "risks": [
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 56,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "cash runway watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 81,
+      "last_checked": "2026-05-30",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001895618.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001895618.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 4 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, cash_runway_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-05-30",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=gxai.us&i=d"
       }
     }
   ]

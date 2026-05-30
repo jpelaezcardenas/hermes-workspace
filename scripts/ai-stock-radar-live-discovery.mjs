@@ -2,6 +2,12 @@ import {
   evaluateEvidenceQuality,
   extractFilingQualityLabels,
 } from "./ai-stock-radar-quality-rules.mjs";
+import {
+  applyEvidenceFirewall,
+  chooseReviewAction,
+  decodeFilingEvents,
+  evaluateFundamentalSnapshot,
+} from "./ai-stock-radar-evidence-firewall.mjs";
 
 export const AI_KEYWORDS = [
   "artificial intelligence",
@@ -38,6 +44,7 @@ const NASDAQ_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlis
 const OTHER_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt";
 const SEC_COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json";
 const SEC_SUBMISSIONS_ROOT = "https://data.sec.gov/submissions";
+const SEC_COMPANYFACTS_ROOT = "https://data.sec.gov/api/xbrl/companyfacts";
 const SEC_USER_AGENT =
   process.env.AI_STOCK_RADAR_SEC_USER_AGENT ||
   "HermesAIStockRadar/1.0 contact=local-research@example.invalid";
@@ -76,6 +83,24 @@ function cleanCompanyName(securityName) {
     .replace(/\s+Common Stock.*$/i, "")
     .replace(/\s+Ordinary Shares.*$/i, "")
     .trim();
+}
+
+function unique(values) {
+  return [...new Set((values || []).filter(Boolean))];
+}
+
+function stricterCategory(left, right) {
+  const rank = {
+    Avoid: 0,
+    Overheated: 1,
+    "Early Watch": 2,
+    "Breakout Watch": 3,
+    "Deep Dive": 4,
+  };
+
+  if (!left) return right;
+  if (!right) return left;
+  return rank[left] <= rank[right] ? left : right;
 }
 
 function splitPipeRows(text) {
@@ -166,23 +191,34 @@ export function inferAiProfile({ ticker, company, security_name, seedByTicker })
 export function summarizeSubmissions(submissions) {
   const recent = submissions?.filings?.recent || {};
   const forms = recent.form || [];
+  const items = recent.items || [];
   const relevantForms = [...new Set(forms.filter((form) => ["10-K", "10-Q", "8-K", "20-F", "6-K"].includes(form)))]
     .slice(0, 5);
   const filingDescriptions = [
-    ...(recent.items || []),
+    ...items,
     ...(recent.primaryDocDescription || []),
   ];
+  const filingEvents = decodeFilingEvents({
+    forms,
+    items,
+    descriptions: filingDescriptions,
+  });
   const catalystLabels = ["recent_public_company_filings"];
 
   if (relevantForms.includes("8-K") || relevantForms.includes("6-K")) {
     catalystLabels.push("recent_8k");
   }
+  if (filingEvents.hard_catalyst) {
+    catalystLabels.push("hard_catalyst");
+  }
+  catalystLabels.push(...filingEvents.positive_labels);
   catalystLabels.push(...extractFilingQualityLabels(filingDescriptions));
 
   return {
     recent_filings: relevantForms,
     has_company_facts: relevantForms.some((form) => ["10-K", "10-Q", "20-F", "6-K"].includes(form)),
-    catalyst_labels: catalystLabels,
+    catalyst_labels: unique(catalystLabels),
+    filing_events: filingEvents,
   };
 }
 
@@ -195,11 +231,21 @@ async function resolveSubmission({ cik, submissionsByCik, fetcher }) {
   return fetcher(`${SEC_SUBMISSIONS_ROOT}/CIK${cik}.json`);
 }
 
+async function resolveCompanyFacts({ cik, companyFactsByCik, fetcher }) {
+  if (companyFactsByCik && companyFactsByCik[cik]) return companyFactsByCik[cik];
+  try {
+    return await fetcher(`${SEC_COMPANYFACTS_ROOT}/CIK${cik}.json`);
+  } catch {
+    return null;
+  }
+}
+
 export async function buildLiveEvidenceRecords({
   nasdaqListedText,
   otherListedText,
   secCompanyTickers,
   submissionsByCik = {},
+  companyFactsByCik = {},
   seedRecords = [],
   fetcher = defaultTextOrJsonFetcher,
   maxSubmissionFetches = 25,
@@ -229,8 +275,28 @@ export async function buildLiveEvidenceRecords({
       submissionsByCik,
       fetcher,
     });
+    const companyFacts = await resolveCompanyFacts({
+      cik: record.sec.cik,
+      companyFactsByCik,
+      fetcher,
+    });
     const submissionSummary = summarizeSubmissions(submissions);
+    const fundamentalSnapshot = evaluateFundamentalSnapshot(companyFacts);
     const seed = seedByTicker[record.ticker] || {};
+    const sourceTypes = [
+      "nasdaq_symbol_directory",
+      "sec_company_tickers",
+      "sec_submissions",
+      ...(fundamentalSnapshot.status === "available" ? ["sec_companyfacts"] : []),
+    ];
+    const sourceUrls = [
+      NASDAQ_LISTED_URL,
+      OTHER_LISTED_URL,
+      SEC_COMPANY_TICKERS_URL,
+      `${SEC_SUBMISSIONS_ROOT}/CIK${record.sec.cik}.json`,
+      ...(fundamentalSnapshot.status === "available" ? [`${SEC_COMPANYFACTS_ROOT}/CIK${record.sec.cik}.json`] : []),
+      ...(seed.source_urls || []),
+    ];
 
     const baseEvidence = {
       ticker: record.ticker,
@@ -239,29 +305,32 @@ export async function buildLiveEvidenceRecords({
       listed: true,
       themes: record.aiProfile.themes,
       ai_exposure: record.aiProfile.ai_exposure,
-      source_types: ["nasdaq_symbol_directory", "sec_company_tickers", "sec_submissions", "sec_companyfacts"],
+      source_types: sourceTypes,
       recent_filings: submissionSummary.recent_filings,
       catalyst_labels: submissionSummary.catalyst_labels,
-      has_company_facts: submissionSummary.has_company_facts,
+      has_company_facts: fundamentalSnapshot.status === "available",
+      filing_events: submissionSummary.filing_events,
+      fundamental_snapshot: fundamentalSnapshot,
       finra_context: "not_checked",
       risk_flags: record.aiProfile.risk_flags,
-      source_urls: [
-        NASDAQ_LISTED_URL,
-        OTHER_LISTED_URL,
-        SEC_COMPANY_TICKERS_URL,
-        `${SEC_SUBMISSIONS_ROOT}/CIK${record.sec.cik}.json`,
-        ...(seed.source_urls || []),
-      ],
+      source_urls: sourceUrls,
       security_name: record.security_name,
     };
     const quality = evaluateEvidenceQuality(baseEvidence);
+    const firewall = applyEvidenceFirewall({
+      filingEvents: submissionSummary.filing_events,
+      fundamentalSnapshot,
+      existingRiskFlags: quality.riskFlags,
+    });
 
     evidence.push({
       ...baseEvidence,
-      risk_flags: quality.riskFlags,
-      quality_notes: quality.qualityNotes,
-      score_penalty: quality.scorePenalty,
-      max_category: quality.maxCategory,
+      risk_flags: firewall.risk_flags,
+      quality_notes: unique([...quality.qualityNotes, ...firewall.notes]),
+      score_penalty: quality.scorePenalty + firewall.score_penalty,
+      max_category: stricterCategory(quality.maxCategory, firewall.max_category),
+      evidence_firewall: firewall,
+      review_action: chooseReviewAction(firewall),
     });
   }
 

@@ -16,6 +16,12 @@ import {
 } from "./ai-stock-radar-quality-rules.mjs";
 import { assignIdeaGrade, gradeSortRank } from "./ai-stock-radar-idea-grade.mjs";
 import { fetchStooqPriceVolume } from "./ai-stock-radar-price-volume.mjs";
+import {
+  applyEvidenceFirewall,
+  chooseReviewAction,
+  decodeFilingEvents,
+  evaluateFundamentalSnapshot,
+} from "./ai-stock-radar-evidence-firewall.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -45,6 +51,20 @@ function unique(values) {
 
 function sourceLabel(sourceType) {
   return SOURCE_LABELS[sourceType] || sourceType;
+}
+
+function stricterCategory(left, right) {
+  const rank = {
+    Avoid: 0,
+    Overheated: 1,
+    "Early Watch": 2,
+    "Breakout Watch": 3,
+    "Deep Dive": 4,
+  };
+
+  if (!left) return right;
+  if (!right) return left;
+  return rank[left] <= rank[right] ? left : right;
 }
 
 export function loadFreeSourceSeeds({ root = process.cwd() } = {}) {
@@ -182,6 +202,32 @@ function buildSources(record) {
   return [...sourceTypes, ...urls];
 }
 
+function resolveRecordFirewall(record) {
+  if (record.evidence_firewall) return record.evidence_firewall;
+
+  const filingEvents = record.filing_events || decodeFilingEvents({
+    forms: record.recent_filings || [],
+    descriptions: record.quality_notes || [],
+  });
+  const fundamentalSnapshot = record.fundamental_snapshot || evaluateFundamentalSnapshot(null);
+
+  return applyEvidenceFirewall({
+    filingEvents,
+    fundamentalSnapshot,
+    existingRiskFlags: unique(record.risk_flags),
+  });
+}
+
+function reviewActionText(action) {
+  return {
+    VERIFY_CATALYST: "VERIFY_CATALYST: Check filing catalyst and source quality; no trade action.",
+    CHECK_DILUTION: "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+    WAIT_FOR_CONFIRMATION: "WAIT_FOR_CONFIRMATION: Wait for stronger evidence or price/volume context; no trade action.",
+    DOWNGRADE_REVIEW: "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
+    ARCHIVE_REVIEW: "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+  }[action] || "WAIT_FOR_CONFIRMATION: Wait for stronger evidence; no trade action.";
+}
+
 export function buildCandidatesFromEvidence({ date, records }) {
   return records
     .filter((record) => record.listed === true)
@@ -190,9 +236,15 @@ export function buildCandidatesFromEvidence({ date, records }) {
       assertSafeText(record.company, "record.company");
 
       const score = scoreFreeSourceEvidence(record);
+      const evidenceFirewall = resolveRecordFirewall(record);
+      const reviewAction = record.review_action || chooseReviewAction(evidenceFirewall);
+      const totalPenalty =
+        record.score_penalty === undefined
+          ? evidenceFirewall.score_penalty || 0
+          : record.score_penalty || 0;
       const adjustedTotal = applyQualityPenalty({
         score: score.total,
-        penalty: record.score_penalty || 0,
+        penalty: totalPenalty,
       });
       const adjustedScore = {
         ...score,
@@ -200,9 +252,10 @@ export function buildCandidatesFromEvidence({ date, records }) {
       };
       const dataQuality = computeDataQuality(record);
       const rawCategory = classifyFreeSourceCandidate({ record, score: adjustedScore, dataQuality });
+      const maxCategory = stricterCategory(record.max_category, evidenceFirewall.max_category);
       const category = limitCategoryByQuality({
         category: rawCategory,
-        maxCategory: record.max_category,
+        maxCategory,
       });
 
       const agedCandidate = updateCandidateAging({
@@ -215,6 +268,10 @@ export function buildCandidatesFromEvidence({ date, records }) {
           previous_score: 0,
           data_quality: dataQuality.grade,
           themes: unique(record.themes),
+          filing_events: record.filing_events || null,
+          fundamental_snapshot: record.fundamental_snapshot || { status: "unavailable" },
+          evidence_firewall: evidenceFirewall,
+          review_action: reviewAction,
           ai_relevance: score.ai_relevance,
           catalyst: score.catalyst,
           market_momentum: score.market_momentum,
@@ -223,10 +280,10 @@ export function buildCandidatesFromEvidence({ date, records }) {
           signal_breadth: score.signal_breadth,
           thesis: buildThesis(record, adjustedScore, dataQuality),
           top_risks: buildRisks(record),
-          quality_notes: unique(record.quality_notes || []),
-          score_penalty: record.score_penalty || 0,
+          quality_notes: unique([...(record.quality_notes || []), ...(evidenceFirewall.notes || [])]),
+          score_penalty: totalPenalty,
           last_checked: date,
-          next_action: "Public-source evidence review only; no trade action.",
+          next_action: reviewActionText(reviewAction),
           sources: buildSources(record),
           score_reasons: score.reasons,
         },
@@ -255,6 +312,16 @@ function formatScoreReasons(candidate) {
     `  - Fundamental quality: ${candidate.fundamental_quality}/15 - ${reasons.fundamental_quality || "not available"}`,
     `  - Signal breadth: ${candidate.signal_breadth}/10 - ${reasons.signal_breadth || "not available"}`,
   ].join("\n");
+}
+
+function formatFirewallCandidate(candidate) {
+  const firewall = candidate.evidence_firewall || {};
+  const risks = (firewall.risk_flags || []).join(", ") || "none";
+  const supports = (firewall.support_labels || []).join(", ") || "none";
+  const snapshot = candidate.fundamental_snapshot || {};
+  const revenue = Number.isFinite(snapshot.revenue_growth_yoy_pct) ? `${snapshot.revenue_growth_yoy_pct}% revenue YoY` : "revenue n/a";
+  const runway = Number.isFinite(snapshot.cash_runway_quarters) ? `${snapshot.cash_runway_quarters}q cash runway` : "cash runway n/a";
+  return `- ${candidate.ticker}: ${firewall.verdict || "caution"} / ${candidate.review_action || "WAIT_FOR_CONFIRMATION"}; risks: ${risks}; supports: ${supports}; fundamentals: ${revenue}, ${runway}`;
 }
 
 export function renderFreeSourceReport({
@@ -303,6 +370,9 @@ ${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.tic
 
 ## Price/Volume Confirmation
 ${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.price_volume?.status || "unavailable"} / ${candidate.price_volume?.confirmation || "unavailable"}${candidate.price_volume?.volume_ratio_20d ? `, volume ratio 20d ${candidate.price_volume.volume_ratio_20d}` : ""}${candidate.price_volume?.return_20d_pct ? `, return 20d ${candidate.price_volume.return_20d_pct}%` : ""}`).join("\n") : "- Keine Price/Volume-Daten."}
+
+## Evidence Firewall
+${gradeCandidates.length ? gradeCandidates.map(formatFirewallCandidate).join("\n") : "- Keine Evidence-Firewall-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.

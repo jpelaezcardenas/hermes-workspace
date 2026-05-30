@@ -31,6 +31,30 @@ function evidence(overrides = {}) {
     recent_filings: ["10-K", "10-Q", "8-K"],
     catalyst_labels: ["ai_infrastructure_capacity", "customer_expansion_watch"],
     has_company_facts: true,
+    filing_events: {
+      positive_labels: ["material_agreement"],
+      risk_labels: [],
+      hard_catalyst: true,
+      hard_blocker: false,
+    },
+    fundamental_snapshot: {
+      status: "available",
+      revenue_growth_yoy_pct: 25,
+      cash_runway_quarters: 4,
+      share_count_growth_yoy_pct: 5,
+      risks: [],
+      supports: ["revenue_growth_support"],
+    },
+    evidence_firewall: {
+      verdict: "pass",
+      risk_flags: [],
+      positive_labels: ["material_agreement"],
+      support_labels: ["revenue_growth_support"],
+      score_penalty: 0,
+      max_category: null,
+      notes: [],
+    },
+    review_action: "VERIFY_CATALYST",
     finra_context: "not_checked",
     risk_flags: [],
     source_urls: [
@@ -83,6 +107,10 @@ describe("AI stock radar free signal engine", () => {
       ticker: "AICORE",
       category: "Breakout Watch",
       data_quality: "A",
+      evidence_firewall: {
+        verdict: "pass",
+      },
+      review_action: "VERIFY_CATALYST",
       last_checked: "2026-05-30",
     });
     expect(() =>
@@ -154,12 +182,49 @@ describe("AI stock radar free signal engine", () => {
     });
 
     expect(report).toContain("## Top Kandidaten Heute");
+    expect(report).toContain("## Evidence Firewall");
+    expect(report).toContain("SAFEAI: pass");
+    expect(report).toContain("VERIFY_CATALYST");
     expect(report).toContain("SAFEAI");
     expect(report).toContain("free_price_data_unavailable");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
     expect(report).toContain("Keine automatischen Trades");
     expect(countSofortMachenItems(report)).toBe(0);
     expect(report.toLowerCase()).not.toMatch(/buy now|sell now|will explode|jetzt kaufen|jetzt verkaufen/);
+  });
+
+  it("applies firewall penalties and safe review actions to high-risk records", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [
+        evidence({
+          ticker: "RISKAI",
+          company: "Risk AI Inc.",
+          catalyst_labels: ["hard_catalyst"],
+          evidence_firewall: {
+            verdict: "reject",
+            risk_flags: ["delisting_watch", "reverse_split_watch"],
+            positive_labels: [],
+            support_labels: [],
+            score_penalty: 30,
+            max_category: "Avoid",
+            notes: ["delisting watch", "reverse split watch"],
+          },
+          review_action: "ARCHIVE_REVIEW",
+        }),
+      ],
+    });
+
+    expect(candidates[0]).toMatchObject({
+      ticker: "RISKAI",
+      category: "Avoid",
+      idea_grade: "X",
+      review_action: "ARCHIVE_REVIEW",
+      evidence_firewall: {
+        verdict: "reject",
+      },
+    });
+    expect(candidates[0].score).toBeLessThan(60);
   });
 
   it("keeps reject-grade candidates out of the top-candidate section", () => {
