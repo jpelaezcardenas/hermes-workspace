@@ -36,6 +36,60 @@ describe('buildDashboardOverview', () => {
     expect(overview.analytics).toBeNull()
   })
 
+  it('does not let slow analytics block the rest of the overview', async () => {
+    let analyticsRequested = false
+    const fetcher: DashboardFetcher = async (path) => {
+      if (path.startsWith('/api/status')) {
+        return jsonResponse({
+          gateway_state: 'running',
+          active_agents: 0,
+          platforms: {},
+        })
+      }
+      if (path.startsWith('/api/analytics/usage')) {
+        analyticsRequested = true
+        return new Promise<Response>(() => undefined)
+      }
+      return new Response('not found', { status: 404 })
+    }
+
+    const overview = await buildDashboardOverview({
+      fetcher,
+      requestTimeoutMs: 5,
+    })
+
+    expect(overview.status?.gatewayState).toBe('running')
+    expect(overview.analytics).toBeNull()
+    expect(analyticsRequested).toBe(true)
+  })
+
+  it('can skip analytics entirely for latency-sensitive callers', async () => {
+    let analyticsRequested = false
+    const fetcher: DashboardFetcher = async (path) => {
+      if (path.startsWith('/api/status')) {
+        return jsonResponse({
+          gateway_state: 'running',
+          active_agents: 0,
+          platforms: {},
+        })
+      }
+      if (path.startsWith('/api/analytics/usage')) {
+        analyticsRequested = true
+        return jsonResponse({ totals: { total_sessions: 999 } })
+      }
+      return new Response('not found', { status: 404 })
+    }
+
+    const overview = await buildDashboardOverview({
+      fetcher,
+      includeAnalytics: false,
+    })
+
+    expect(overview.status?.gatewayState).toBe('running')
+    expect(overview.analytics).toBeNull()
+    expect(analyticsRequested).toBe(false)
+  })
+
   it('parses /api/status into status + platforms', async () => {
     const fetcher = makeFetcher({
       '/api/status': {
@@ -131,9 +185,7 @@ describe('buildDashboardOverview', () => {
       name: 'Daily roll-up',
       lastError: 'connection refused',
     })
-    const cronIncident = overview.incidents.find(
-      (i) => i.id === 'cron-fail-a',
-    )
+    const cronIncident = overview.incidents.find((i) => i.id === 'cron-fail-a')
     expect(cronIncident?.severity).toBe('error')
     expect(cronIncident?.detail).toBe('connection refused')
   })
