@@ -144,6 +144,30 @@ describe("AI stock radar live discovery", () => {
     });
   });
 
+  it("adds filing risk labels from SEC item descriptions", () => {
+    expect(
+      summarizeSubmissions({
+        filings: {
+          recent: {
+            form: ["8-K", "10-Q"],
+            items: ["2.02", "3.02", "5.03"],
+            primaryDocDescription: [
+              "Results of operations and financial condition",
+              "Registered direct offering of common stock and warrants",
+              "Reverse stock split",
+            ],
+          },
+        },
+      }).catalyst_labels,
+    ).toEqual([
+      "recent_public_company_filings",
+      "recent_8k",
+      "earnings_or_guidance_context",
+      "offering_watch",
+      "reverse_split_watch",
+    ]);
+  });
+
   it("builds live evidence records by joining Nasdaq and SEC records", async () => {
     const records = await buildLiveEvidenceRecords({
       nasdaqListedText,
@@ -168,6 +192,8 @@ describe("AI stock radar live discovery", () => {
       recent_filings: ["10-Q", "8-K"],
       ai_exposure: "core",
     });
+    expect(records[0].risk_flags).toContain("name_only_ai_watch");
+    expect(records[0].quality_notes).toContain("name-only AI evidence; needs manual substance check");
     expect(records[1].themes).toContain("defense_ai");
     expect(records[1].risk_flags).toContain("overheated_watch");
   });

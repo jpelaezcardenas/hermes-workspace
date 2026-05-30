@@ -9,6 +9,11 @@ import {
   renderDossier,
 } from "./ai-stock-radar-dry-run.mjs";
 import { discoverLiveEvidence } from "./ai-stock-radar-live-discovery.mjs";
+import {
+  applyQualityPenalty,
+  limitCategoryByQuality,
+  updateCandidateAging,
+} from "./ai-stock-radar-quality-rules.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -183,29 +188,46 @@ export function buildCandidatesFromEvidence({ date, records }) {
       assertSafeText(record.company, "record.company");
 
       const score = scoreFreeSourceEvidence(record);
-      const dataQuality = computeDataQuality(record);
-      const category = classifyFreeSourceCandidate({ record, score, dataQuality });
-
-      return {
-        ticker: record.ticker,
-        company: record.company,
-        category,
+      const adjustedTotal = applyQualityPenalty({
         score: score.total,
-        previous_score: 0,
-        data_quality: dataQuality.grade,
-        ai_relevance: score.ai_relevance,
-        catalyst: score.catalyst,
-        market_momentum: score.market_momentum,
-        earliness: score.earliness,
-        fundamental_quality: score.fundamental_quality,
-        signal_breadth: score.signal_breadth,
-        thesis: buildThesis(record, score, dataQuality),
-        top_risks: buildRisks(record),
-        last_checked: date,
-        next_action: "Public-source evidence review only; no trade action.",
-        sources: buildSources(record),
-        score_reasons: score.reasons,
+        penalty: record.score_penalty || 0,
+      });
+      const adjustedScore = {
+        ...score,
+        total: adjustedTotal,
       };
+      const dataQuality = computeDataQuality(record);
+      const rawCategory = classifyFreeSourceCandidate({ record, score: adjustedScore, dataQuality });
+      const category = limitCategoryByQuality({
+        category: rawCategory,
+        maxCategory: record.max_category,
+      });
+
+      return updateCandidateAging({
+        date,
+        candidate: {
+          ticker: record.ticker,
+          company: record.company,
+          category,
+          score: adjustedScore.total,
+          previous_score: 0,
+          data_quality: dataQuality.grade,
+          ai_relevance: score.ai_relevance,
+          catalyst: score.catalyst,
+          market_momentum: score.market_momentum,
+          earliness: score.earliness,
+          fundamental_quality: score.fundamental_quality,
+          signal_breadth: score.signal_breadth,
+          thesis: buildThesis(record, adjustedScore, dataQuality),
+          top_risks: buildRisks(record),
+          quality_notes: unique(record.quality_notes || []),
+          score_penalty: record.score_penalty || 0,
+          last_checked: date,
+          next_action: "Public-source evidence review only; no trade action.",
+          sources: buildSources(record),
+          score_reasons: score.reasons,
+        },
+      });
     })
     .sort((left, right) => right.score - left.score || left.ticker.localeCompare(right.ticker));
 }

@@ -11,16 +11,20 @@ Use these skills:
 Required files:
 - Spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
+- Weekly calibration engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
+- Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
 Tasks:
+0. Run weekly calibration first: AI_STOCK_RADAR_DATE=YYYY-MM-DD node /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
 1. Review the top 3 to 5 candidates by score and data quality.
 2. Confirm, downgrade, or remove stale candidates.
 3. Check whether each Deep Dive still has thesis, catalyst, risks, and sources.
 4. Record false positives and why the signal failed.
 5. Recommend at most one scoring adjustment, with evidence.
 6. Keep the watchlist from growing without pruning.
+7. Summarize false_positive_review, archive_review, downgrade_review, and keep_review buckets.
 
 Archive boundary:
 - Do not silently delete watchlist entries.

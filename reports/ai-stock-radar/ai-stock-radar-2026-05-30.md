@@ -16,86 +16,86 @@
 - Paid market data: not_configured
 
 ## Top Kandidaten Heute
-- AIFC (AI Financial Corporation): Breakout Watch, Score 73, Datenqualitaet A. AI Financial Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- AISP (Airship AI Holdings, Inc): Breakout Watch, Score 73, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- AMCI (AMC Robotics Corporation): Breakout Watch, Score 73, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- ARAI (Arrive AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- BFRG (Bullfrog AI Holdings, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- DUKR (DUKE Robotics Corp.): Breakout Watch, Score 73, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- DVLT (Datavault AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- FABC (Fabric.AI, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- GXAI (Gaxos.ai Inc.): Breakout Watch, Score 73, Datenqualitaet A. Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
-- JTAI (Jet.AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AIFC (AI Financial Corporation): Breakout Watch, Score 77, Datenqualitaet A. AI Financial Corporation shows public AI exposure in ai_keyword_match; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- JTAI (Jet.AI Inc.): Breakout Watch, Score 77, Datenqualitaet A. Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- KITT (Nauticus Robotics, Inc.): Breakout Watch, Score 77, Datenqualitaet A. Nauticus Robotics, Inc. shows public AI exposure in ai_keyword_match; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AISP (Airship AI Holdings, Inc): Avoid, Score 48, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AMCI (AMC Robotics Corporation): Avoid, Score 48, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- ARAI (Arrive AI Inc.): Avoid, Score 48, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- BFRG (Bullfrog AI Holdings, Inc.): Avoid, Score 48, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DUKR (DUKE Robotics Corp.): Avoid, Score 48, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DVLT (Datavault AI Inc.): Avoid, Score 48, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- FABC (Fabric.AI, Inc.): Avoid, Score 48, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
 
 ## Neue Auffaelligkeiten
-- AIFC (AI Financial Corporation): Breakout Watch, Score 73, Datenqualitaet A. AI Financial Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AIFC (AI Financial Corporation): Breakout Watch, Score 77, Datenqualitaet A. AI Financial Corporation shows public AI exposure in ai_keyword_match; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
-  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Catalyst: 20/20 - 3 recent filing types and 3 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
   - Earliness: 12/15 - no late-cycle risk flag in seed evidence
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- AISP (Airship AI Holdings, Inc): Breakout Watch, Score 73, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- JTAI (Jet.AI Inc.): Breakout Watch, Score 77, Datenqualitaet A. Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
-  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Catalyst: 20/20 - 3 recent filing types and 3 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
   - Earliness: 12/15 - no late-cycle risk flag in seed evidence
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- AMCI (AMC Robotics Corporation): Breakout Watch, Score 73, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- KITT (Nauticus Robotics, Inc.): Breakout Watch, Score 77, Datenqualitaet A. Nauticus Robotics, Inc. shows public AI exposure in ai_keyword_match; score 77 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
-  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Catalyst: 20/20 - 3 recent filing types and 3 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
   - Earliness: 12/15 - no late-cycle risk flag in seed evidence
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- ARAI (Arrive AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AISP (Airship AI Holdings, Inc): Avoid, Score 48, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- BFRG (Bullfrog AI Holdings, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AMCI (AMC Robotics Corporation): Avoid, Score 48, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- DUKR (DUKE Robotics Corp.): Breakout Watch, Score 73, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- ARAI (Arrive AI Inc.): Avoid, Score 48, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- DVLT (Datavault AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- BFRG (Bullfrog AI Holdings, Inc.): Avoid, Score 48, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- FABC (Fabric.AI, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DUKR (DUKE Robotics Corp.): Avoid, Score 48, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- GXAI (Gaxos.ai Inc.): Breakout Watch, Score 73, Datenqualitaet A. Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DVLT (Datavault AI Inc.): Avoid, Score 48, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
-- JTAI (Jet.AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- FABC (Fabric.AI, Inc.): Avoid, Score 48, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
   - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Earliness: 12/15 - risk flags: name_only_ai_watch
   - Fundamental quality: 13/15 - SEC companyfacts available
   - Signal breadth: 10/10 - 4 independent public source types
 
@@ -108,7 +108,23 @@
 - Keine Deep-Dive-Kandidaten aus kostenlosen Quellen.
 
 ## Overheated / Avoid
-- Keine ueberhitzten oder zu meidenden Kandidaten markiert.
+- AISP (Airship AI Holdings, Inc): Avoid, Score 48, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AMCI (AMC Robotics Corporation): Avoid, Score 48, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- ARAI (Arrive AI Inc.): Avoid, Score 48, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- BFRG (Bullfrog AI Holdings, Inc.): Avoid, Score 48, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DUKR (DUKE Robotics Corp.): Avoid, Score 48, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DVLT (Datavault AI Inc.): Avoid, Score 48, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- FABC (Fabric.AI, Inc.): Avoid, Score 48, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- GXAI (Gaxos.ai Inc.): Avoid, Score 48, Datenqualitaet A. Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- KDK (Kodiak AI, Inc.): Avoid, Score 48, Datenqualitaet A. Kodiak AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- MDAI (Spectral AI, Inc.): Avoid, Score 48, Datenqualitaet A. Spectral AI, Inc. shows public AI exposure in ai_keyword_match; score 48 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AIIO (Robo.ai Inc.): Avoid, Score 40, Datenqualitaet A. Robo.ai Inc. shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- ARBE (Arbe Robotics Ltd.): Avoid, Score 40, Datenqualitaet A. Arbe Robotics Ltd. shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- GFAI (Guardforce AI Co., Limited): Avoid, Score 40, Datenqualitaet A. Guardforce AI Co., Limited shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- GMEX (GMEX ROBOTICS CORPORATION): Avoid, Score 40, Datenqualitaet A. GMEX ROBOTICS CORPORATION shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- GMM (Global Mofy AI Limited): Avoid, Score 40, Datenqualitaet A. Global Mofy AI Limited shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- HCAI (Huachen AI Parking Management Technology Holding Co., Ltd.): Avoid, Score 40, Datenqualitaet A. Huachen AI Parking Management Technology Holding Co., Ltd. shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- HPAI (Helport AI Limited): Avoid, Score 40, Datenqualitaet A. Helport AI Limited shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
 
 ## Datenqualitaet Und Luecken
 - free_price_data_unavailable: kein bezahlter oder API-key-basierter Preisprovider aktiv.

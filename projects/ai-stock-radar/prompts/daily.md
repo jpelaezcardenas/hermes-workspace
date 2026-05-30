@@ -15,6 +15,7 @@ Required files:
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Live discovery engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-live-discovery.mjs
+- Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -38,6 +39,9 @@ Safety:
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
 - Deep Dive requires A/B data quality plus a hard current catalyst, not seed breadth alone.
 - If live discovery falls back to seeds, state the fallback reason under Kurzfazit and Datenqualitaet Und Luecken.
+- Name-only AI evidence cannot become Breakout Watch or Deep Dive.
+- Apply quality filters for name_only_ai_watch, offering_watch, going_concern_watch, reverse_split_watch, shell_or_spac_watch, security_structure_watch, and stale candidates.
+- Record quality_notes, score_penalty, status, first_seen, and age_days in watchlist candidates when available.
 
 Required report sections:
 # AI Stock Radar - YYYY-MM-DD

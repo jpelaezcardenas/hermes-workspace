@@ -1,3 +1,8 @@
+import {
+  evaluateEvidenceQuality,
+  extractFilingQualityLabels,
+} from "./ai-stock-radar-quality-rules.mjs";
+
 export const AI_KEYWORDS = [
   "artificial intelligence",
   "ai",
@@ -159,14 +164,20 @@ export function inferAiProfile({ ticker, company, security_name, seedByTicker })
 }
 
 export function summarizeSubmissions(submissions) {
-  const forms = submissions?.filings?.recent?.form || [];
+  const recent = submissions?.filings?.recent || {};
+  const forms = recent.form || [];
   const relevantForms = [...new Set(forms.filter((form) => ["10-K", "10-Q", "8-K", "20-F", "6-K"].includes(form)))]
     .slice(0, 5);
+  const filingDescriptions = [
+    ...(recent.items || []),
+    ...(recent.primaryDocDescription || []),
+  ];
   const catalystLabels = ["recent_public_company_filings"];
 
   if (relevantForms.includes("8-K") || relevantForms.includes("6-K")) {
     catalystLabels.push("recent_8k");
   }
+  catalystLabels.push(...extractFilingQualityLabels(filingDescriptions));
 
   return {
     recent_filings: relevantForms,
@@ -221,7 +232,7 @@ export async function buildLiveEvidenceRecords({
     const submissionSummary = summarizeSubmissions(submissions);
     const seed = seedByTicker[record.ticker] || {};
 
-    evidence.push({
+    const baseEvidence = {
       ticker: record.ticker,
       company: record.company || record.sec.title,
       exchange: record.exchange,
@@ -241,6 +252,16 @@ export async function buildLiveEvidenceRecords({
         `${SEC_SUBMISSIONS_ROOT}/CIK${record.sec.cik}.json`,
         ...(seed.source_urls || []),
       ],
+      security_name: record.security_name,
+    };
+    const quality = evaluateEvidenceQuality(baseEvidence);
+
+    evidence.push({
+      ...baseEvidence,
+      risk_flags: quality.riskFlags,
+      quality_notes: quality.qualityNotes,
+      score_penalty: quality.scorePenalty,
+      max_category: quality.maxCategory,
     });
   }
 

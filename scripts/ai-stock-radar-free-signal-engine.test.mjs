@@ -97,6 +97,29 @@ describe("AI stock radar free signal engine", () => {
     ).not.toThrow();
   });
 
+  it("prevents name-only AI evidence from becoming Breakout Watch", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [
+        evidence({
+          ticker: "NOISE",
+          company: "Noisy AI Name Inc.",
+          themes: ["ai_keyword_match"],
+          catalyst_labels: ["recent_public_company_filings", "recent_8k"],
+          risk_flags: ["name_only_ai_watch"],
+          quality_notes: ["name-only AI evidence; needs manual substance check"],
+          score_penalty: 25,
+          max_category: "Early Watch",
+        }),
+      ],
+    });
+
+    expect(candidates[0].category).toBe("Avoid");
+    expect(candidates[0].score).toBeLessThan(55);
+    expect(candidates[0].top_risks).toContain("name only ai watch");
+    expect(candidates[0].quality_notes).toContain("name-only AI evidence; needs manual substance check");
+  });
+
   it("blocks Deep Dive classification when source breadth is weak", () => {
     const weak = evidence({
       source_types: ["nasdaq_symbol_directory"],
