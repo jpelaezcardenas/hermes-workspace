@@ -139,6 +139,24 @@ function git(args: Array<string>, cwd: string, timeout = 8_000): string | null {
   return exec('git', args, { cwd, timeout })
 }
 
+function gitRaw(
+  args: Array<string>,
+  cwd: string,
+  timeout = 8_000,
+): string | null {
+  try {
+    const output = execFileSync('git', args, {
+      cwd,
+      encoding: 'utf8',
+      timeout,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }).replace(/\s+$/, '')
+    return output || null
+  } catch {
+    return null
+  }
+}
+
 function realGitRepoPath(path: string | null | undefined): string | null {
   if (!path) return null
   try {
@@ -189,19 +207,25 @@ function isDirty(repoPath: string): boolean {
   return Boolean(git(['status', '--porcelain'], repoPath))
 }
 
+export function parseGitPorcelainPath(line: string): string | null {
+  if (!line.trim()) return null
+  if (line.length >= 4 && line[2] === ' ') {
+    return line.slice(3).trim() || null
+  }
+  return line.replace(/^[^\s]+\s+/, '').trim() || null
+}
+
 /**
  * Return up to `limit` paths from `git status --porcelain` so the UI can
  * tell the user exactly which files are blocking an update. The shape of
  * each entry is the relative path inside the repo (XY status code stripped).
  */
 function listDirtyFiles(repoPath: string, limit = 24): Array<string> {
-  const raw = git(['status', '--porcelain'], repoPath)
+  const raw = gitRaw(['status', '--porcelain'], repoPath)
   if (!raw) return []
   const out: Array<string> = []
   for (const line of raw.split('\n')) {
-    if (!line.trim()) continue
-    // porcelain format: XY <space> path  (path may be quoted with renames)
-    const path = line.slice(3).trim()
+    const path = parseGitPorcelainPath(line)
     if (path) out.push(path)
     if (out.length >= limit) break
   }
@@ -219,6 +243,29 @@ function canFastForward(repoPath: string, remoteRef: string): boolean {
 
 function canResetToRemote(repoPath: string, remoteRef: string): boolean {
   return Boolean(git(['rev-parse', '--verify', remoteRef], repoPath, 10_000))
+}
+
+export function parseGitAheadBehind(
+  raw: string | null,
+): { ahead: number; behind: number } | null {
+  if (!raw) return null
+  const [aheadRaw, behindRaw] = raw.trim().split(/\s+/)
+  const ahead = Number.parseInt(aheadRaw ?? '', 10)
+  const behind = Number.parseInt(behindRaw ?? '', 10)
+  if (!Number.isFinite(ahead) || !Number.isFinite(behind)) return null
+  return { ahead, behind }
+}
+
+function readAheadBehind(
+  repoPath: string,
+  remoteRef: string,
+): { ahead: number; behind: number } | null {
+  return parseGitAheadBehind(
+    git(
+      ['rev-list', '--left-right', '--count', `HEAD...${remoteRef}`],
+      repoPath,
+    ),
+  )
 }
 
 function syncRepoToRemote(repoPath: string, remoteRef: string): string {
@@ -338,14 +385,28 @@ export function readWorkspaceUpdateStatus(
   const latestHead =
     repoMatches && supportedBranch ? remoteHead(gitRepo, 'origin') : null
   const dirty = isDirty(gitRepo)
-  const updateAvailable = Boolean(
-    supportedBranch && currentHead && latestHead && currentHead !== latestHead,
-  )
   const remoteRef = `origin/${branch || 'main'}`
+  const aheadBehind =
+    repoMatches && supportedBranch ? readAheadBehind(gitRepo, remoteRef) : null
+  const ahead = aheadBehind?.ahead ?? 0
+  const behind = aheadBehind?.behind ?? 0
+  const localAheadOnly = ahead > 0 && behind === 0
+  const diverged = ahead > 0 && behind > 0
+  const updateAvailable = Boolean(
+    supportedBranch &&
+    currentHead &&
+    latestHead &&
+    (aheadBehind ? behind > 0 : currentHead !== latestHead),
+  )
   const canSync = updateAvailable ? canResetToRemote(gitRepo, remoteRef) : true
   const ff = updateAvailable ? canFastForward(gitRepo, remoteRef) : true
   const canUpdate = Boolean(
-    repoMatches && supportedBranch && updateAvailable && !dirty && canSync,
+    repoMatches &&
+    supportedBranch &&
+    updateAvailable &&
+    !dirty &&
+    canSync &&
+    ff,
   )
 
   return {
@@ -366,22 +427,26 @@ export function readWorkspaceUpdateStatus(
         ? 'unsupported'
         : dirty
           ? 'blocked'
-          : updateAvailable
-            ? canSync
-              ? 'available'
-              : 'blocked'
-            : 'current',
+          : updateAvailable && !ff
+            ? 'blocked'
+            : updateAvailable
+              ? canSync
+                ? 'available'
+                : 'blocked'
+              : 'current',
     reason: !repoMatches
       ? 'Workspace origin remote does not look like hermes-workspace.'
       : !supportedBranch
         ? 'Workspace one-click updates are only enabled on main/master branches.'
         : dirty
           ? 'Workspace checkout has local changes. Commit, stash, or remove the listed files before updating.'
-          : updateAvailable && !canSync
-            ? 'Workspace update could not verify the remote branch ref.'
-            : updateAvailable && !ff
-              ? 'Workspace branch diverged from origin. One-click update will realign to the remote branch.'
-              : null,
+          : diverged
+            ? 'Workspace branch diverged from origin. Rebase or merge local commits before using one-click update.'
+            : updateAvailable && !canSync
+              ? 'Workspace update could not verify the remote branch ref.'
+              : localAheadOnly
+                ? `Workspace has ${ahead} local commit${ahead === 1 ? '' : 's'} ahead of origin; no remote update is pending.`
+                : null,
     blockingFiles: dirty ? listDirtyFiles(gitRepo) : undefined,
     updateMode: 'git-ff',
   }
@@ -405,7 +470,9 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
   const repoPath = agentRepoPath()
   const repoHermes = repoPath ? join(repoPath, 'venv', 'bin', 'hermes') : null
   const path =
-    repoHermes && existsSync(repoHermes) ? repoHermes : exec('which', ['hermes'])
+    repoHermes && existsSync(repoHermes)
+      ? repoHermes
+      : exec('which', ['hermes'])
   const version =
     (path ? exec(path, ['--version'], { timeout: 10_000 }) : null)?.split(
       '\n',
@@ -443,12 +510,22 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
   const latestHead = repoMatches ? remoteHead(repoPath, 'origin') : null
   const remoteRef = repoMatches ? `origin/${branch || 'main'}` : null
   const dirty = isDirty(repoPath)
+  const aheadBehind = remoteRef ? readAheadBehind(repoPath, remoteRef) : null
+  const ahead = aheadBehind?.ahead ?? 0
+  const behind = aheadBehind?.behind ?? 0
+  const localAheadOnly = ahead > 0 && behind === 0
+  const diverged = ahead > 0 && behind > 0
   const updateAvailable = Boolean(
-    currentHead && latestHead && currentHead !== latestHead && remoteRef,
+    currentHead &&
+    latestHead &&
+    remoteRef &&
+    (aheadBehind ? behind > 0 : currentHead !== latestHead),
   )
   const canSync = remoteRef ? canResetToRemote(repoPath, remoteRef) : false
   const ff = remoteRef ? canFastForward(repoPath, remoteRef) : false
-  const canUpdate = Boolean(repoMatches && updateAvailable && !dirty && canSync)
+  const canUpdate = Boolean(
+    repoMatches && updateAvailable && !dirty && canSync && ff,
+  )
 
   return {
     id: 'agent',
@@ -466,20 +543,24 @@ export function readAgentUpdateStatus(): ProductUpdateStatus {
       ? 'unsupported'
       : dirty
         ? 'blocked'
-        : updateAvailable && canSync
-          ? 'available'
-          : updateAvailable
-            ? 'blocked'
-            : 'current',
+        : updateAvailable && !ff
+          ? 'blocked'
+          : updateAvailable && canSync
+            ? 'available'
+            : updateAvailable
+              ? 'blocked'
+              : 'current',
     reason: !repoMatches
       ? 'Hermes Agent origin remote does not look like hermes-agent.'
       : dirty
         ? 'Hermes Agent checkout has local changes. Commit, stash, or remove the listed files before updating.'
-        : updateAvailable && !canSync
-          ? 'Hermes Agent update could not verify the remote branch ref.'
-          : updateAvailable && !ff
-            ? 'Hermes Agent branch diverged from origin. One-click update will realign to the remote branch.'
-            : null,
+        : diverged
+          ? 'Hermes Agent branch diverged from origin. Rebase or merge local commits before using one-click update.'
+          : updateAvailable && !canSync
+            ? 'Hermes Agent update could not verify the remote branch ref.'
+            : localAheadOnly
+              ? `Hermes Agent has ${ahead} local commit${ahead === 1 ? '' : 's'} ahead of origin; no remote update is pending.`
+              : null,
     blockingFiles: dirty ? listDirtyFiles(repoPath) : undefined,
     updateMode: 'hermes-update',
   }
