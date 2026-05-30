@@ -8,11 +8,13 @@ import {
   validateWatchlist,
   renderDossier,
 } from "./ai-stock-radar-dry-run.mjs";
+import { discoverLiveEvidence } from "./ai-stock-radar-live-discovery.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
   sec_submissions: "available_without_api_key",
   sec_companyfacts: "available_without_api_key",
+  sec_company_tickers: "not_checked",
   nasdaq_symbol_directory: "available_without_api_key",
   finra_public_data: "not_checked",
   paid_market_data: "not_configured",
@@ -20,6 +22,7 @@ const DEFAULT_SOURCE_STATUS = {
 
 const SOURCE_LABELS = {
   nasdaq_symbol_directory: "Nasdaq Symbol Directory",
+  sec_company_tickers: "SEC company tickers",
   sec_submissions: "SEC submissions",
   sec_companyfacts: "SEC companyfacts",
   finra_public_data: "FINRA public data",
@@ -228,6 +231,8 @@ export function renderFreeSourceReport({
   candidates,
   reportPath,
   sourceStatus = DEFAULT_SOURCE_STATUS,
+  discoveryMode = "seed",
+  fallbackReason = "",
 }) {
   const topCandidates = candidates.slice(0, 10);
   const deepDiveCandidates = candidates.filter((candidate) => candidate.category === "Deep Dive");
@@ -239,12 +244,14 @@ export function renderFreeSourceReport({
 
 ## Kurzfazit
 - Kostenloser Public-Source-Lauf: SEC/Nasdaq sind als Baseline vorgesehen, FINRA bleibt optionale Risikokontextquelle.
-- Kurs-Momentum ist ohne verlaessliche kostenlose Preisquelle auf 8/20 gedeckelt.
+- Discovery mode: ${discoveryMode}
+${fallbackReason ? `- Fallback reason: ${fallbackReason}\n` : ""}- Kurs-Momentum ist ohne verlaessliche kostenlose Preisquelle auf 8/20 gedeckelt.
 - Dieser Report ist Research-Infrastruktur, keine Anlageempfehlung.
 
 ## Marktumfeld
 - SEC submissions: ${sourceStatus.sec_submissions}
 - SEC companyfacts: ${sourceStatus.sec_companyfacts || "available_without_api_key"}
+- SEC company tickers: ${sourceStatus.sec_company_tickers || "not_checked"}
 - Nasdaq symbol directory: ${sourceStatus.nasdaq_symbol_directory}
 - FINRA public data: ${sourceStatus.finra_public_data}
 - Market data: free_price_data_unavailable
@@ -257,7 +264,7 @@ ${topCandidates.length ? topCandidates.map(formatCandidate).join("\n") : "- Kein
 ${topCandidates.length ? topCandidates.map((candidate) => `${formatCandidate(candidate)}\n${formatScoreReasons(candidate)}`).join("\n") : "- Keine neuen Auffaelligkeiten."}
 
 ## Watchlist Aenderungen
-- Watchlist wurde aus kostenlosen Seed-/Public-Source-Belegen neu berechnet.
+- Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
 - Kandidaten im Lauf: ${candidates.length}
 - Deep-Dive bleibt an A/B-Datenqualitaet und belegbare These gebunden.
 
@@ -289,16 +296,66 @@ ${overheatedOrAvoid.length ? overheatedOrAvoid.map(formatCandidate).join("\n") :
 `;
 }
 
-export function writeFreeSignalRun({ root = DEFAULT_ROOT, date = process.env.AI_STOCK_RADAR_DATE } = {}) {
+export async function resolveDiscoveryRecords({
+  root,
+  seeds,
+  discoveryMode = process.env.AI_STOCK_RADAR_DISCOVERY_MODE || "seed",
+  liveDiscovery = discoverLiveEvidence,
+}) {
+  if (discoveryMode === "seed") {
+    return {
+      discoveryMode: "seed",
+      records: seeds.records || [],
+      fallbackReason: "",
+      sourceStatus: {
+        ...DEFAULT_SOURCE_STATUS,
+        ...(seeds.free_source_status || {}),
+      },
+    };
+  }
+
+  if (discoveryMode !== "auto" && discoveryMode !== "live") {
+    throw new Error(`unsupported discovery mode: ${discoveryMode}`);
+  }
+
+  const result = await liveDiscovery({
+    seedRecords: seeds.records || [],
+    root,
+  });
+
+  if (discoveryMode === "live" && result.mode !== "live") {
+    throw new Error(`live discovery failed: ${result.fallbackReason || "unknown reason"}`);
+  }
+
+  return {
+    discoveryMode: result.mode,
+    records: result.records || [],
+    fallbackReason: result.fallbackReason || "",
+    sourceStatus: {
+      ...DEFAULT_SOURCE_STATUS,
+      ...(seeds.free_source_status || {}),
+      ...(result.sourceStatus || {}),
+    },
+  };
+}
+
+export async function writeFreeSignalRun({
+  root = DEFAULT_ROOT,
+  date = process.env.AI_STOCK_RADAR_DATE,
+  discoveryMode = process.env.AI_STOCK_RADAR_DISCOVERY_MODE || "seed",
+  liveDiscovery = discoverLiveEvidence,
+} = {}) {
   const resolvedDate = date || new Date().toISOString().slice(0, 10);
   const seeds = loadFreeSourceSeeds({ root });
-  const sourceStatus = {
-    ...DEFAULT_SOURCE_STATUS,
-    ...(seeds.free_source_status || {}),
-  };
+  const discovery = await resolveDiscoveryRecords({
+    root,
+    seeds,
+    discoveryMode,
+    liveDiscovery,
+  });
   const candidates = buildCandidatesFromEvidence({
     date: resolvedDate,
-    records: seeds.records || [],
+    records: discovery.records,
   });
   const watchlist = validateWatchlist({
     version: 1,
@@ -323,7 +380,9 @@ export function writeFreeSignalRun({ root = DEFAULT_ROOT, date = process.env.AI_
       date: resolvedDate,
       candidates,
       reportPath,
-      sourceStatus,
+      sourceStatus: discovery.sourceStatus,
+      discoveryMode: discovery.discoveryMode,
+      fallbackReason: discovery.fallbackReason,
     }),
   );
 
@@ -341,6 +400,8 @@ export function writeFreeSignalRun({ root = DEFAULT_ROOT, date = process.env.AI_
     watchlistPath,
     dossierPaths,
     candidateCount: candidates.length,
+    discoveryMode: discovery.discoveryMode,
+    fallbackReason: discovery.fallbackReason,
   };
 }
 
@@ -349,8 +410,9 @@ function isCliRun() {
 }
 
 if (isCliRun()) {
-  const result = writeFreeSignalRun({ root: process.cwd() });
+  const result = await writeFreeSignalRun({ root: process.cwd() });
   console.log(`AI_STOCK_RADAR_FREE_REPORT=${result.reportPath}`);
   console.log(`AI_STOCK_RADAR_FREE_CANDIDATES=${result.candidateCount}`);
   console.log(`AI_STOCK_RADAR_FREE_DOSSIERS=${result.dossierPaths.length}`);
+  console.log(`AI_STOCK_RADAR_DISCOVERY_MODE=${result.discoveryMode}`);
 }

@@ -2,71 +2,113 @@
 
 ## Kurzfazit
 - Kostenloser Public-Source-Lauf: SEC/Nasdaq sind als Baseline vorgesehen, FINRA bleibt optionale Risikokontextquelle.
+- Discovery mode: live
 - Kurs-Momentum ist ohne verlaessliche kostenlose Preisquelle auf 8/20 gedeckelt.
 - Dieser Report ist Research-Infrastruktur, keine Anlageempfehlung.
 
 ## Marktumfeld
-- SEC submissions: available_without_api_key
+- SEC submissions: live_available
 - SEC companyfacts: available_without_api_key
-- Nasdaq symbol directory: available_without_api_key
-- FINRA public data: optional_public_context
+- SEC company tickers: live_available
+- Nasdaq symbol directory: live_available
+- FINRA public data: not_checked
 - Market data: free_price_data_unavailable
 - Paid market data: not_configured
 
 ## Top Kandidaten Heute
-- TEM (Tempus AI, Inc.): Breakout Watch, Score 77, Datenqualitaet B. Tempus AI, Inc. shows public AI exposure in ai_healthcare, data_platform, precision_medicine; score 77 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.
-- RXRX (Recursion Pharmaceuticals, Inc.): Breakout Watch, Score 75, Datenqualitaet A. Recursion Pharmaceuticals, Inc. shows public AI exposure in ai_biotech, drug_discovery, data_platform; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.
-- SOUN (SoundHound AI, Inc.): Breakout Watch, Score 75, Datenqualitaet B. SoundHound AI, Inc. shows public AI exposure in voice_ai, enterprise_ai_software, automotive_ai; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.
-- PLTR (Palantir Technologies Inc.): Overheated, Score 66, Datenqualitaet A. Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 66 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.
-- NBIS (Nebius Group N.V.): Early Watch, Score 61, Datenqualitaet B. Nebius Group N.V. shows public AI exposure in ai_infrastructure, cloud_compute, gpu_capacity; score 61 is based on Nasdaq Symbol Directory, SEC submissions. Data quality B.
+- AIFC (AI Financial Corporation): Breakout Watch, Score 73, Datenqualitaet A. AI Financial Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AISP (Airship AI Holdings, Inc): Breakout Watch, Score 73, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- AMCI (AMC Robotics Corporation): Breakout Watch, Score 73, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- ARAI (Arrive AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- BFRG (Bullfrog AI Holdings, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DUKR (DUKE Robotics Corp.): Breakout Watch, Score 73, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- DVLT (Datavault AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- FABC (Fabric.AI, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- GXAI (Gaxos.ai Inc.): Breakout Watch, Score 73, Datenqualitaet A. Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+- JTAI (Jet.AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
 
 ## Neue Auffaelligkeiten
-- TEM (Tempus AI, Inc.): Breakout Watch, Score 77, Datenqualitaet B. Tempus AI, Inc. shows public AI exposure in ai_healthcare, data_platform, precision_medicine; score 77 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.
-  - AI relevance: 20/20 - core exposure across 3 AI themes
+- AIFC (AI Financial Corporation): Breakout Watch, Score 73, Datenqualitaet A. AI Financial Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - risk flags: recent_ipo, valuation_sensitive
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
   - Fundamental quality: 13/15 - SEC companyfacts available
-  - Signal breadth: 10/10 - 3 independent public source types
-- RXRX (Recursion Pharmaceuticals, Inc.): Breakout Watch, Score 75, Datenqualitaet A. Recursion Pharmaceuticals, Inc. shows public AI exposure in ai_biotech, drug_discovery, data_platform; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.
-  - AI relevance: 20/20 - core exposure across 3 AI themes
+  - Signal breadth: 10/10 - 4 independent public source types
+- AISP (Airship AI Holdings, Inc): Breakout Watch, Score 73, Datenqualitaet A. Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - risk flags: clinical_risk, cash_burn_watch
-  - Fundamental quality: 11/15 - SEC companyfacts available
-  - Signal breadth: 10/10 - 3 independent public source types
-- SOUN (SoundHound AI, Inc.): Breakout Watch, Score 75, Datenqualitaet B. SoundHound AI, Inc. shows public AI exposure in voice_ai, enterprise_ai_software, automotive_ai; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.
-  - AI relevance: 20/20 - core exposure across 3 AI themes
-  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
-  - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 10/15 - risk flags: hype_sensitive, dilution_watch
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
   - Fundamental quality: 13/15 - SEC companyfacts available
-  - Signal breadth: 10/10 - 3 independent public source types
-- PLTR (Palantir Technologies Inc.): Overheated, Score 66, Datenqualitaet A. Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 66 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.
-  - AI relevance: 16/20 - material exposure across 3 AI themes
+  - Signal breadth: 10/10 - 4 independent public source types
+- AMCI (AMC Robotics Corporation): Breakout Watch, Score 73, Datenqualitaet A. AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
   - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
-  - Market momentum: 4/20 - capped because reliable free price data is unavailable
-  - Earliness: 7/15 - risk flags: crowded_large_cap, overheated_watch
-  - Fundamental quality: 13/15 - SEC companyfacts available
-  - Signal breadth: 10/10 - 3 independent public source types
-- NBIS (Nebius Group N.V.): Early Watch, Score 61, Datenqualitaet B. Nebius Group N.V. shows public AI exposure in ai_infrastructure, cloud_compute, gpu_capacity; score 61 is based on Nasdaq Symbol Directory, SEC submissions. Data quality B.
-  - AI relevance: 20/20 - core exposure across 3 AI themes
-  - Catalyst: 12/20 - 2 recent filing types and 2 catalyst labels
   - Market momentum: 6/20 - capped because reliable free price data is unavailable
-  - Earliness: 12/15 - risk flags: foreign_issuer, limited_us_gaap_facts
-  - Fundamental quality: 4/15 - limited public fact coverage
-  - Signal breadth: 7/10 - 2 independent public source types
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- ARAI (Arrive AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- BFRG (Bullfrog AI Holdings, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- DUKR (DUKE Robotics Corp.): Breakout Watch, Score 73, Datenqualitaet A. DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- DVLT (Datavault AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- FABC (Fabric.AI, Inc.): Breakout Watch, Score 73, Datenqualitaet A. Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- GXAI (Gaxos.ai Inc.): Breakout Watch, Score 73, Datenqualitaet A. Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
+- JTAI (Jet.AI Inc.): Breakout Watch, Score 73, Datenqualitaet A. Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.
+  - AI relevance: 16/20 - core exposure across 1 AI themes
+  - Catalyst: 16/20 - 3 recent filing types and 2 catalyst labels
+  - Market momentum: 6/20 - capped because reliable free price data is unavailable
+  - Earliness: 12/15 - no late-cycle risk flag in seed evidence
+  - Fundamental quality: 13/15 - SEC companyfacts available
+  - Signal breadth: 10/10 - 4 independent public source types
 
 ## Watchlist Aenderungen
-- Watchlist wurde aus kostenlosen Seed-/Public-Source-Belegen neu berechnet.
-- Kandidaten im Lauf: 5
+- Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
+- Kandidaten im Lauf: 20
 - Deep-Dive bleibt an A/B-Datenqualitaet und belegbare These gebunden.
 
 ## Deep-Dive Kandidaten
 - Keine Deep-Dive-Kandidaten aus kostenlosen Quellen.
 
 ## Overheated / Avoid
-- PLTR (Palantir Technologies Inc.): Overheated, Score 66, Datenqualitaet A. Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 66 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.
+- Keine ueberhitzten oder zu meidenden Kandidaten markiert.
 
 ## Datenqualitaet Und Luecken
 - free_price_data_unavailable: kein bezahlter oder API-key-basierter Preisprovider aktiv.

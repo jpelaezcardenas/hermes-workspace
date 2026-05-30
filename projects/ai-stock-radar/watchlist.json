@@ -8,186 +8,763 @@
   },
   "candidates": [
     {
-      "ticker": "TEM",
-      "company": "Tempus AI, Inc.",
+      "ticker": "AIFC",
+      "company": "AI Financial Corporation",
       "category": "Breakout Watch",
-      "score": 77,
-      "previous_score": 0,
-      "data_quality": "B",
-      "ai_relevance": 20,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "Tempus AI, Inc. shows public AI exposure in ai_healthcare, data_platform, precision_medicine; score 77 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.",
-      "top_risks": [
-        "recent ipo",
-        "valuation sensitive"
-      ],
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
-        "https://data.sec.gov/submissions/",
-        "https://data.sec.gov/api/xbrl/companyfacts/"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 3 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: recent_ipo, valuation_sensitive",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "3 independent public source types"
-      }
-    },
-    {
-      "ticker": "RXRX",
-      "company": "Recursion Pharmaceuticals, Inc.",
-      "category": "Breakout Watch",
-      "score": 75,
-      "previous_score": 0,
-      "data_quality": "A",
-      "ai_relevance": 20,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 12,
-      "fundamental_quality": 11,
-      "signal_breadth": 10,
-      "thesis": "Recursion Pharmaceuticals, Inc. shows public AI exposure in ai_biotech, drug_discovery, data_platform; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.",
-      "top_risks": [
-        "clinical risk",
-        "cash burn watch"
-      ],
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
-        "https://data.sec.gov/submissions/",
-        "https://data.sec.gov/api/xbrl/companyfacts/"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 3 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: clinical_risk, cash_burn_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "3 independent public source types"
-      }
-    },
-    {
-      "ticker": "SOUN",
-      "company": "SoundHound AI, Inc.",
-      "category": "Breakout Watch",
-      "score": 75,
-      "previous_score": 0,
-      "data_quality": "B",
-      "ai_relevance": 20,
-      "catalyst": 16,
-      "market_momentum": 6,
-      "earliness": 10,
-      "fundamental_quality": 13,
-      "signal_breadth": 10,
-      "thesis": "SoundHound AI, Inc. shows public AI exposure in voice_ai, enterprise_ai_software, automotive_ai; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.",
-      "top_risks": [
-        "hype sensitive",
-        "dilution watch"
-      ],
-      "last_checked": "2026-05-30",
-      "next_action": "Public-source evidence review only; no trade action.",
-      "sources": [
-        "Nasdaq Symbol Directory",
-        "SEC submissions",
-        "SEC companyfacts",
-        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
-        "https://data.sec.gov/submissions/",
-        "https://data.sec.gov/api/xbrl/companyfacts/"
-      ],
-      "score_reasons": {
-        "ai_relevance": "core exposure across 3 AI themes",
-        "catalyst": "3 recent filing types and 2 catalyst labels",
-        "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: hype_sensitive, dilution_watch",
-        "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "3 independent public source types"
-      }
-    },
-    {
-      "ticker": "PLTR",
-      "company": "Palantir Technologies Inc.",
-      "category": "Overheated",
-      "score": 66,
+      "score": 73,
       "previous_score": 0,
       "data_quality": "A",
       "ai_relevance": 16,
       "catalyst": 16,
-      "market_momentum": 4,
-      "earliness": 7,
+      "market_momentum": 6,
+      "earliness": 12,
       "fundamental_quality": 13,
       "signal_breadth": 10,
-      "thesis": "Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 66 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.",
+      "thesis": "AI Financial Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
-        "crowded large cap",
-        "overheated watch"
+        "free-source evidence still needs manual review"
       ],
       "last_checked": "2026-05-30",
       "next_action": "Public-source evidence review only; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
+        "SEC company tickers",
         "SEC submissions",
         "SEC companyfacts",
-        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
-        "https://data.sec.gov/submissions/",
-        "https://data.sec.gov/api/xbrl/companyfacts/"
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0000862861.json"
       ],
       "score_reasons": {
-        "ai_relevance": "material exposure across 3 AI themes",
+        "ai_relevance": "core exposure across 1 AI themes",
         "catalyst": "3 recent filing types and 2 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: crowded_large_cap, overheated_watch",
+        "earliness": "no late-cycle risk flag in seed evidence",
         "fundamental_quality": "SEC companyfacts available",
-        "signal_breadth": "3 independent public source types"
+        "signal_breadth": "4 independent public source types"
       }
     },
     {
-      "ticker": "NBIS",
-      "company": "Nebius Group N.V.",
-      "category": "Early Watch",
-      "score": 61,
+      "ticker": "AISP",
+      "company": "Airship AI Holdings, Inc",
+      "category": "Breakout Watch",
+      "score": 73,
       "previous_score": 0,
-      "data_quality": "B",
-      "ai_relevance": 20,
-      "catalyst": 12,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
       "market_momentum": 6,
       "earliness": 12,
-      "fundamental_quality": 4,
-      "signal_breadth": 7,
-      "thesis": "Nebius Group N.V. shows public AI exposure in ai_infrastructure, cloud_compute, gpu_capacity; score 61 is based on Nasdaq Symbol Directory, SEC submissions. Data quality B.",
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
       "top_risks": [
-        "foreign issuer",
-        "limited us gaap facts"
+        "free-source evidence still needs manual review"
       ],
       "last_checked": "2026-05-30",
       "next_action": "Public-source evidence review only; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
+        "SEC company tickers",
         "SEC submissions",
-        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
-        "https://data.sec.gov/submissions/"
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001842566.json"
       ],
       "score_reasons": {
-        "ai_relevance": "core exposure across 3 AI themes",
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "AMCI",
+      "company": "AMC Robotics Corporation",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "AMC Robotics Corporation shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001937891.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "ARAI",
+      "company": "Arrive AI Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001818274.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "BFRG",
+      "company": "Bullfrog AI Holdings, Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001829247.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "DUKR",
+      "company": "DUKE Robotics Corp.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "DUKE Robotics Corp. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001638911.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "DVLT",
+      "company": "Datavault AI Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001682149.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "FABC",
+      "company": "Fabric.AI, Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001086745.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "GXAI",
+      "company": "Gaxos.ai Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001895618.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "JTAI",
+      "company": "Jet.AI Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001861622.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "KDK",
+      "company": "Kodiak AI, Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Kodiak AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001853138.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "KITT",
+      "company": "Nauticus Robotics, Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Nauticus Robotics, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001849820.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "MDAI",
+      "company": "Spectral AI, Inc.",
+      "category": "Breakout Watch",
+      "score": 73,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Spectral AI, Inc. shows public AI exposure in ai_keyword_match; score 73 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001833498.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "AIIO",
+      "company": "Robo.ai Inc.",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Robo.ai Inc. shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001932737.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
         "catalyst": "2 recent filing types and 2 catalyst labels",
         "market_momentum": "capped because reliable free price data is unavailable",
-        "earliness": "risk flags: foreign_issuer, limited_us_gaap_facts",
-        "fundamental_quality": "limited public fact coverage",
-        "signal_breadth": "2 independent public source types"
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "ARBE",
+      "company": "Arbe Robotics Ltd.",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Arbe Robotics Ltd. shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001861841.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "GFAI",
+      "company": "Guardforce AI Co., Limited",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Guardforce AI Co., Limited shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001804469.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "GMEX",
+      "company": "GMEX ROBOTICS CORPORATION",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "GMEX ROBOTICS CORPORATION shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001928581.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "GMM",
+      "company": "Global Mofy AI Limited",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Global Mofy AI Limited shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001913749.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "HCAI",
+      "company": "Huachen AI Parking Management Technology Holding Co., Ltd.",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Huachen AI Parking Management Technology Holding Co., Ltd. shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001958399.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      }
+    },
+    {
+      "ticker": "HPAI",
+      "company": "Helport AI Limited",
+      "category": "Early Watch",
+      "score": 65,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Helport AI Limited shows public AI exposure in ai_keyword_match; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "free-source evidence still needs manual review"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0002001699.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "no late-cycle risk flag in seed evidence",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
       }
     }
   ]

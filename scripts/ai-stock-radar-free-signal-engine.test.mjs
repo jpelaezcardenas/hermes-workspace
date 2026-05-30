@@ -137,7 +137,7 @@ describe("AI stock radar free signal engine", () => {
     expect(report.toLowerCase()).not.toMatch(/buy now|sell now|will explode|jetzt kaufen|jetzt verkaufen/);
   });
 
-  it("writes a free-source report and watchlist without API keys", () => {
+  it("writes a free-source report and watchlist without API keys", async () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-radar-free-"));
     fs.mkdirSync(path.join(tempRoot, "projects/ai-stock-radar"), { recursive: true });
     fs.copyFileSync(
@@ -145,7 +145,7 @@ describe("AI stock radar free signal engine", () => {
       path.join(tempRoot, "projects/ai-stock-radar/free-source-seeds.json"),
     );
 
-    const result = writeFreeSignalRun({ root: tempRoot, date: "2026-05-30" });
+    const result = await writeFreeSignalRun({ root: tempRoot, date: "2026-05-30" });
     const watchlist = JSON.parse(
       fs.readFileSync(path.join(tempRoot, "projects/ai-stock-radar/watchlist.json"), "utf8"),
     );
@@ -154,5 +154,71 @@ describe("AI stock radar free signal engine", () => {
     expect(result.candidateCount).toBeGreaterThan(0);
     expect(watchlist.provider_status.market_data).toBe("free_price_data_unavailable");
     expect(() => validateWatchlist(watchlist)).not.toThrow();
+  });
+
+  it("prefers live discovery in auto mode when injected discovery returns records", async () => {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-radar-live-auto-"));
+    fs.mkdirSync(path.join(tempRoot, "projects/ai-stock-radar"), { recursive: true });
+    fs.copyFileSync(
+      path.join(root, "projects/ai-stock-radar/free-source-seeds.json"),
+      path.join(tempRoot, "projects/ai-stock-radar/free-source-seeds.json"),
+    );
+
+    const result = await writeFreeSignalRun({
+      root: tempRoot,
+      date: "2026-05-30",
+      discoveryMode: "auto",
+      liveDiscovery: async () => ({
+        mode: "live",
+        fallbackReason: "",
+        sourceStatus: {
+          nasdaq_symbol_directory: "live_available",
+          sec_company_tickers: "live_available",
+          sec_submissions: "live_available",
+          sec_companyfacts: "available_without_api_key",
+          finra_public_data: "not_checked",
+          paid_market_data: "not_configured",
+        },
+        records: [evidence({ ticker: "LIVEAI", company: "Live AI Discovery Inc." })],
+      }),
+    });
+    const report = fs.readFileSync(result.reportPath, "utf8");
+
+    expect(result.discoveryMode).toBe("live");
+    expect(report).toContain("Discovery mode: live");
+    expect(report).toContain("LIVEAI");
+  });
+
+  it("reports seed fallback reason in auto mode when live discovery fails", async () => {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-radar-seed-auto-"));
+    fs.mkdirSync(path.join(tempRoot, "projects/ai-stock-radar"), { recursive: true });
+    fs.copyFileSync(
+      path.join(root, "projects/ai-stock-radar/free-source-seeds.json"),
+      path.join(tempRoot, "projects/ai-stock-radar/free-source-seeds.json"),
+    );
+
+    const result = await writeFreeSignalRun({
+      root: tempRoot,
+      date: "2026-05-30",
+      discoveryMode: "auto",
+      liveDiscovery: async ({ seedRecords }) => ({
+        mode: "seed_fallback",
+        fallbackReason: "fixture live failure",
+        sourceStatus: {
+          nasdaq_symbol_directory: "live_failed_seed_fallback",
+          sec_company_tickers: "live_failed_seed_fallback",
+          sec_submissions: "live_failed_seed_fallback",
+          sec_companyfacts: "available_without_api_key",
+          finra_public_data: "not_checked",
+          paid_market_data: "not_configured",
+        },
+        records: seedRecords,
+      }),
+    });
+    const report = fs.readFileSync(result.reportPath, "utf8");
+
+    expect(result.discoveryMode).toBe("seed_fallback");
+    expect(report).toContain("Discovery mode: seed_fallback");
+    expect(report).toContain("Fallback reason: fixture live failure");
   });
 });
