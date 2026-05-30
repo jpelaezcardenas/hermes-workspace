@@ -10,13 +10,17 @@ Use these skills:
 
 Required files:
 - Spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-design.md
+- Free signal spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-free-signal-engine-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
+- Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
+- Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
 Allowed behavior:
 - Read public sources and existing local files.
 - Use SEC EDGAR, Nasdaq symbol directory, and FINRA public data when available.
+- Run the free signal engine first: AI_STOCK_RADAR_DATE=YYYY-MM-DD node /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Use configured provider state from watchlist.json.
 - Write a report to /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-radar-YYYY-MM-DD.md.
 - Update watchlist.json only when the update can be justified from the report.
@@ -29,6 +33,9 @@ Safety:
 - No paid provider or API key setup without CHRIS_ENTSCHEIDET.
 - No certainty language.
 - Missing market or news data must make the report Yellow and must be listed under Datenqualitaet Und Luecken.
+- Without a reliable free price source, keep market_momentum capped and report free_price_data_unavailable.
+- Free-source seed candidates are not recommendations; they are starting points for source review.
+- Deep Dive requires A/B data quality plus a hard current catalyst, not seed breadth alone.
 
 Required report sections:
 # AI Stock Radar - YYYY-MM-DD

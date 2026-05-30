@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-30",
+  "purpose": "Deterministic public-source seed universe for AI_STOCK_RADAR Phase 2. This is research plumbing, not a recommendation list.",
+  "free_source_status": {
+    "sec_submissions": "available_without_api_key",
+    "sec_companyfacts": "available_without_api_key",
+    "nasdaq_symbol_directory": "available_without_api_key",
+    "finra_public_data": "optional_public_context",
+    "paid_market_data": "not_configured"
+  },
+  "records": [
+    {
+      "ticker": "NBIS",
+      "company": "Nebius Group N.V.",
+      "exchange": "Nasdaq",
+      "listed": true,
+      "themes": ["ai_infrastructure", "cloud_compute", "gpu_capacity"],
+      "ai_exposure": "core",
+      "source_types": ["nasdaq_symbol_directory", "sec_submissions"],
+      "recent_filings": ["20-F", "6-K"],
+      "catalyst_labels": ["ai_infrastructure_capacity", "international_cloud_ai"],
+      "has_company_facts": false,
+      "finra_context": "not_checked",
+      "risk_flags": ["foreign_issuer", "limited_us_gaap_facts"],
+      "source_urls": [
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/"
+      ]
+    },
+    {
+      "ticker": "TEM",
+      "company": "Tempus AI, Inc.",
+      "exchange": "Nasdaq",
+      "listed": true,
+      "themes": ["ai_healthcare", "data_platform", "precision_medicine"],
+      "ai_exposure": "core",
+      "source_types": ["nasdaq_symbol_directory", "sec_submissions", "sec_companyfacts"],
+      "recent_filings": ["10-K", "10-Q", "8-K"],
+      "catalyst_labels": ["ai_healthcare_platform", "recent_public_company_filings"],
+      "has_company_facts": true,
+      "finra_context": "not_checked",
+      "risk_flags": ["recent_ipo", "valuation_sensitive"],
+      "source_urls": [
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ]
+    },
+    {
+      "ticker": "SOUN",
+      "company": "SoundHound AI, Inc.",
+      "exchange": "Nasdaq",
+      "listed": true,
+      "themes": ["voice_ai", "enterprise_ai_software", "automotive_ai"],
+      "ai_exposure": "core",
+      "source_types": ["nasdaq_symbol_directory", "sec_submissions", "sec_companyfacts"],
+      "recent_filings": ["10-K", "10-Q", "8-K"],
+      "catalyst_labels": ["enterprise_voice_ai", "customer_expansion_watch"],
+      "has_company_facts": true,
+      "finra_context": "not_checked",
+      "risk_flags": ["hype_sensitive", "dilution_watch"],
+      "source_urls": [
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ]
+    },
+    {
+      "ticker": "RXRX",
+      "company": "Recursion Pharmaceuticals, Inc.",
+      "exchange": "Nasdaq",
+      "listed": true,
+      "themes": ["ai_biotech", "drug_discovery", "data_platform"],
+      "ai_exposure": "core",
+      "source_types": ["nasdaq_symbol_directory", "sec_submissions", "sec_companyfacts"],
+      "recent_filings": ["10-K", "10-Q", "8-K"],
+      "catalyst_labels": ["ai_drug_discovery_pipeline", "platform_partnership_watch"],
+      "has_company_facts": true,
+      "finra_context": "not_checked",
+      "risk_flags": ["clinical_risk", "cash_burn_watch"],
+      "source_urls": [
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "company": "Palantir Technologies Inc.",
+      "exchange": "NYSE",
+      "listed": true,
+      "themes": ["enterprise_ai_software", "defense_ai", "data_platform"],
+      "ai_exposure": "material",
+      "source_types": ["nasdaq_symbol_directory", "sec_submissions", "sec_companyfacts"],
+      "recent_filings": ["10-K", "10-Q", "8-K"],
+      "catalyst_labels": ["enterprise_ai_platform", "government_ai_demand"],
+      "has_company_facts": true,
+      "finra_context": "not_checked",
+      "risk_flags": ["crowded_large_cap", "overheated_watch"],
+      "source_urls": [
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ]
+    }
+  ]
+}

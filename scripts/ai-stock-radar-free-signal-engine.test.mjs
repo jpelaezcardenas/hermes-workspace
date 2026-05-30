@@ -1,0 +1,158 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+import { describe, expect, it } from "vitest";
+
+import {
+  buildCandidatesFromEvidence,
+  classifyFreeSourceCandidate,
+  computeDataQuality,
+  loadFreeSourceSeeds,
+  renderFreeSourceReport,
+  scoreFreeSourceEvidence,
+  writeFreeSignalRun,
+} from "./ai-stock-radar-free-signal-engine.mjs";
+import { countSofortMachenItems, validateWatchlist } from "./ai-stock-radar-dry-run.mjs";
+
+const root = process.cwd();
+
+function evidence(overrides = {}) {
+  return {
+    ticker: "TEST",
+    company: "Test AI Infrastructure Inc.",
+    exchange: "Nasdaq",
+    listed: true,
+    themes: ["ai_infrastructure", "gpu_capacity", "cloud_compute"],
+    ai_exposure: "core",
+    source_types: ["nasdaq_symbol_directory", "sec_submissions", "sec_companyfacts"],
+    recent_filings: ["10-K", "10-Q", "8-K"],
+    catalyst_labels: ["ai_infrastructure_capacity", "customer_expansion_watch"],
+    has_company_facts: true,
+    finra_context: "not_checked",
+    risk_flags: [],
+    source_urls: [
+      "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+      "https://data.sec.gov/submissions/",
+      "https://data.sec.gov/api/xbrl/companyfacts/",
+    ],
+    ...overrides,
+  };
+}
+
+describe("AI stock radar free signal engine", () => {
+  it("loads the deterministic free-source seed universe without paid providers", () => {
+    const seeds = loadFreeSourceSeeds({ root });
+
+    expect(seeds.version).toBe(1);
+    expect(seeds.free_source_status.paid_market_data).toBe("not_configured");
+    expect(seeds.records.length).toBeGreaterThanOrEqual(3);
+    expect(seeds.records.every((record) => record.listed === true)).toBe(true);
+  });
+
+  it("computes data quality from independent public source breadth", () => {
+    expect(computeDataQuality(evidence()).grade).toBe("A");
+    expect(
+      computeDataQuality(
+        evidence({
+          source_types: ["nasdaq_symbol_directory"],
+          recent_filings: [],
+          has_company_facts: false,
+        }),
+      ).grade,
+    ).toBe("C");
+  });
+
+  it("caps market momentum when no reliable free price data is present", () => {
+    const score = scoreFreeSourceEvidence(evidence());
+
+    expect(score.market_momentum).toBeLessThanOrEqual(8);
+    expect(score.reasons.market_momentum).toMatch(/capped/i);
+  });
+
+  it("turns public evidence into Phase-1-compatible candidates", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [evidence({ ticker: "AICORE" })],
+    });
+
+    expect(candidates).toHaveLength(1);
+    expect(candidates[0]).toMatchObject({
+      ticker: "AICORE",
+      category: "Breakout Watch",
+      data_quality: "A",
+      last_checked: "2026-05-30",
+    });
+    expect(() =>
+      validateWatchlist({
+        version: 1,
+        updated_at: "2026-05-30",
+        provider_status: {
+          market_data: "free_price_data_unavailable",
+          filings: "available",
+          news: "public_sources_only",
+        },
+        candidates,
+      }),
+    ).not.toThrow();
+  });
+
+  it("blocks Deep Dive classification when source breadth is weak", () => {
+    const weak = evidence({
+      source_types: ["nasdaq_symbol_directory"],
+      recent_filings: [],
+      has_company_facts: false,
+      catalyst_labels: ["single_source_ai_claim"],
+    });
+    const score = { total: 90 };
+
+    expect(classifyFreeSourceCandidate({ record: weak, score, dataQuality: computeDataQuality(weak) })).toBe(
+      "Early Watch",
+    );
+  });
+
+  it("renders a safe report with public-source gaps and no immediate action", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [evidence({ ticker: "SAFEAI" })],
+    });
+    const report = renderFreeSourceReport({
+      date: "2026-05-30",
+      candidates,
+      reportPath: "/tmp/ai-stock-radar-free.md",
+      sourceStatus: {
+        sec_submissions: "available_without_api_key",
+        nasdaq_symbol_directory: "available_without_api_key",
+        finra_public_data: "not_checked",
+        paid_market_data: "not_configured",
+      },
+    });
+
+    expect(report).toContain("## Top Kandidaten Heute");
+    expect(report).toContain("SAFEAI");
+    expect(report).toContain("free_price_data_unavailable");
+    expect(report).toContain("- SOFORT_MACHEN: nichts");
+    expect(report).toContain("Keine automatischen Trades");
+    expect(countSofortMachenItems(report)).toBe(0);
+    expect(report.toLowerCase()).not.toMatch(/buy now|sell now|will explode|jetzt kaufen|jetzt verkaufen/);
+  });
+
+  it("writes a free-source report and watchlist without API keys", () => {
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-radar-free-"));
+    fs.mkdirSync(path.join(tempRoot, "projects/ai-stock-radar"), { recursive: true });
+    fs.copyFileSync(
+      path.join(root, "projects/ai-stock-radar/free-source-seeds.json"),
+      path.join(tempRoot, "projects/ai-stock-radar/free-source-seeds.json"),
+    );
+
+    const result = writeFreeSignalRun({ root: tempRoot, date: "2026-05-30" });
+    const watchlist = JSON.parse(
+      fs.readFileSync(path.join(tempRoot, "projects/ai-stock-radar/watchlist.json"), "utf8"),
+    );
+
+    expect(fs.existsSync(result.reportPath)).toBe(true);
+    expect(result.candidateCount).toBeGreaterThan(0);
+    expect(watchlist.provider_status.market_data).toBe("free_price_data_unavailable");
+    expect(() => validateWatchlist(watchlist)).not.toThrow();
+  });
+});

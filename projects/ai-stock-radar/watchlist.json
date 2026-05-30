@@ -2,9 +2,193 @@
   "version": 1,
   "updated_at": "2026-05-30",
   "provider_status": {
-    "market_data": "not_configured",
+    "market_data": "free_price_data_unavailable",
     "filings": "available",
-    "news": "not_configured"
+    "news": "public_sources_only"
   },
-  "candidates": []
+  "candidates": [
+    {
+      "ticker": "TEM",
+      "company": "Tempus AI, Inc.",
+      "category": "Breakout Watch",
+      "score": 77,
+      "previous_score": 0,
+      "data_quality": "B",
+      "ai_relevance": 20,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Tempus AI, Inc. shows public AI exposure in ai_healthcare, data_platform, precision_medicine; score 77 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.",
+      "top_risks": [
+        "recent ipo",
+        "valuation sensitive"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 3 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: recent_ipo, valuation_sensitive",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "3 independent public source types"
+      }
+    },
+    {
+      "ticker": "RXRX",
+      "company": "Recursion Pharmaceuticals, Inc.",
+      "category": "Breakout Watch",
+      "score": 75,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 20,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 11,
+      "signal_breadth": 10,
+      "thesis": "Recursion Pharmaceuticals, Inc. shows public AI exposure in ai_biotech, drug_discovery, data_platform; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "clinical risk",
+        "cash burn watch"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 3 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: clinical_risk, cash_burn_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "3 independent public source types"
+      }
+    },
+    {
+      "ticker": "SOUN",
+      "company": "SoundHound AI, Inc.",
+      "category": "Breakout Watch",
+      "score": 75,
+      "previous_score": 0,
+      "data_quality": "B",
+      "ai_relevance": 20,
+      "catalyst": 16,
+      "market_momentum": 6,
+      "earliness": 10,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "SoundHound AI, Inc. shows public AI exposure in voice_ai, enterprise_ai_software, automotive_ai; score 75 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality B.",
+      "top_risks": [
+        "hype sensitive",
+        "dilution watch"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 3 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: hype_sensitive, dilution_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "3 independent public source types"
+      }
+    },
+    {
+      "ticker": "PLTR",
+      "company": "Palantir Technologies Inc.",
+      "category": "Overheated",
+      "score": 66,
+      "previous_score": 0,
+      "data_quality": "A",
+      "ai_relevance": 16,
+      "catalyst": 16,
+      "market_momentum": 4,
+      "earliness": 7,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 66 is based on Nasdaq Symbol Directory, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "crowded large cap",
+        "overheated watch"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "material exposure across 3 AI themes",
+        "catalyst": "3 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: crowded_large_cap, overheated_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "3 independent public source types"
+      }
+    },
+    {
+      "ticker": "NBIS",
+      "company": "Nebius Group N.V.",
+      "category": "Early Watch",
+      "score": 61,
+      "previous_score": 0,
+      "data_quality": "B",
+      "ai_relevance": 20,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 4,
+      "signal_breadth": 7,
+      "thesis": "Nebius Group N.V. shows public AI exposure in ai_infrastructure, cloud_compute, gpu_capacity; score 61 is based on Nasdaq Symbol Directory, SEC submissions. Data quality B.",
+      "top_risks": [
+        "foreign issuer",
+        "limited us gaap facts"
+      ],
+      "last_checked": "2026-05-30",
+      "next_action": "Public-source evidence review only; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC submissions",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 3 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: foreign_issuer, limited_us_gaap_facts",
+        "fundamental_quality": "limited public fact coverage",
+        "signal_breadth": "2 independent public source types"
+      }
+    }
+  ]
 }
