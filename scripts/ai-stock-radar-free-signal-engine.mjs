@@ -28,6 +28,7 @@ import {
   loadRiskProfile,
   writeIntegrationAudit,
 } from "./ai-stock-radar-ceo-control.mjs";
+import { writeShadowBacktestRun } from "./ai-stock-radar-shadow-backtest.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -550,6 +551,11 @@ export async function writeFreeSignalRun({
     return dossierPath;
   });
 
+  const shadowBacktestResult = writeShadowBacktestRun({
+    root,
+    date: resolvedDate,
+    watchlist,
+  });
   const auditResult = writeIntegrationAudit({ root, date: resolvedDate });
 
   return {
@@ -557,6 +563,8 @@ export async function writeFreeSignalRun({
     watchlistPath,
     falsePositiveMemoryPath,
     auditReportPath: auditResult.reportPath,
+    shadowBacktestLedgerPath: shadowBacktestResult.ledgerPath,
+    shadowBacktestReportPath: shadowBacktestResult.reportPath,
     dossierPaths,
     candidateCount: candidates.length,
     discoveryMode: discovery.discoveryMode,

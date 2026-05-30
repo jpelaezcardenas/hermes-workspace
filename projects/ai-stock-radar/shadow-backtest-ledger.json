@@ -1,0 +1,635 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T21:54:39.607Z",
+  "horizon_days": 30,
+  "snapshots": [
+    {
+      "id": "2026-05-30:GMEX",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "GMEX",
+      "company": "GMEX ROBOTICS CORPORATION",
+      "idea_grade": "B",
+      "category": "Early Watch",
+      "score": 65,
+      "data_quality": "A",
+      "ceo_lane": "monitor",
+      "ceo_action": "CEO_MONITOR",
+      "firewall_verdict": "pass",
+      "risk_flags": [],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:DUKR",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "DUKR",
+      "company": "DUKE Robotics Corp.",
+      "idea_grade": "C",
+      "category": "Early Watch",
+      "score": 63,
+      "data_quality": "A",
+      "ceo_lane": "manual_review",
+      "ceo_action": "CEO_REVIEW_RISK",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "cash_runway_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:AISP",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "AISP",
+      "company": "Airship AI Holdings, Inc",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 52,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:AMCI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "AMCI",
+      "company": "AMC Robotics Corporation",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 47,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "delisting_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:GMM",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "GMM",
+      "company": "Global Mofy AI Limited",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 40,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:KDK",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "KDK",
+      "company": "Kodiak AI, Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 37,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "offering_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:GFAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "GFAI",
+      "company": "Guardforce AI Co., Limited",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 35,
+      "data_quality": "B",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch"
+      ],
+      "source_confidence": {
+        "facts": 2,
+        "interpretations": 2,
+        "missing": 2
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:AIIO",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "AIIO",
+      "company": "Robo.ai Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 32,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "revenue_decline_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:ARBE",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "ARBE",
+      "company": "Arbe Robotics Ltd.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 31,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "cash_runway_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:HPAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "HPAI",
+      "company": "Helport AI Limited",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 28,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "dilution_trend_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:HCAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "HCAI",
+      "company": "Huachen AI Parking Management Technology Holding Co., Ltd.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 18,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "caution",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "cash_runway_watch",
+        "revenue_decline_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:KITT",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "KITT",
+      "company": "Nauticus Robotics, Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 18,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:JTAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "JTAI",
+      "company": "Jet.AI Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 14,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "revenue_decline_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:ARAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "ARAI",
+      "company": "Arrive AI Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 10,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:BFRG",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "BFRG",
+      "company": "Bullfrog AI Holdings, Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 10,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:FABC",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "FABC",
+      "company": "Fabric.AI, Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 7,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:MDAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "MDAI",
+      "company": "Spectral AI, Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 2,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:AIFC",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "AIFC",
+      "company": "AI Financial Corporation",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 0,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:DVLT",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "DVLT",
+      "company": "Datavault AI Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 0,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    },
+    {
+      "id": "2026-05-30:GXAI",
+      "observed_at": "2026-05-30",
+      "due_at": "2026-06-29",
+      "ticker": "GXAI",
+      "company": "Gaxos.ai Inc.",
+      "idea_grade": "X",
+      "category": "Avoid",
+      "score": 0,
+      "data_quality": "A",
+      "ceo_lane": "reject",
+      "ceo_action": "CEO_ARCHIVE_REVIEW",
+      "firewall_verdict": "reject",
+      "risk_flags": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "source_confidence": {
+        "facts": 3,
+        "interpretations": 2,
+        "missing": 1
+      },
+      "entry_price": {
+        "status": "unavailable",
+        "close": null,
+        "date": null,
+        "confirmation": "unavailable"
+      },
+      "status": "pending",
+      "outcome_label": null
+    }
+  ]
+}

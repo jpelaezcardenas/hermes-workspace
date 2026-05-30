@@ -73,6 +73,12 @@ describe("AI stock radar weekly calibration", () => {
       date: "2026-06-07",
       watchlist,
       reportPath: "/tmp/weekly.md",
+      shadowBacktestLedger: {
+        version: 1,
+        snapshots: [
+          { status: "assessed", outcome_label: "constructive", idea_grade: "A", ceo_lane: "monitor" },
+        ],
+      },
     });
 
     expect(report).toContain("# AI Stock Radar Weekly Calibration - 2026-06-07");
@@ -89,6 +95,8 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("- reject: 1");
     expect(report).toContain("## False Positive Memory");
     expect(report).toContain("name-only AI evidence");
+    expect(report).toContain("## Shadow Backtest Summary");
+    expect(report).toContain("constructive: 1");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
@@ -103,10 +111,20 @@ describe("AI stock radar weekly calibration", () => {
       path.join(root, "projects/ai-stock-radar/watchlist.json"),
       `${JSON.stringify(watchlist, null, 2)}\n`,
     );
+    fs.writeFileSync(
+      path.join(root, "projects/ai-stock-radar/shadow-backtest-ledger.json"),
+      `${JSON.stringify({
+        version: 1,
+        snapshots: [
+          { status: "assessed", outcome_label: "constructive", idea_grade: "A", ceo_lane: "monitor" },
+        ],
+      }, null, 2)}\n`,
+    );
 
     const result = writeWeeklyCalibration({ root, date: "2026-06-07" });
 
     expect(fs.existsSync(result.reportPath)).toBe(true);
+    expect(fs.existsSync(result.shadowBacktestLedgerPath)).toBe(true);
     expect(result.buckets.false_positive_review).toBe(1);
     expect(result.buckets.archive_review).toBe(1);
     expect(JSON.parse(fs.readFileSync(path.join(root, "projects/ai-stock-radar/watchlist.json"), "utf8"))).toEqual(

@@ -9,6 +9,8 @@ Status: pass
 - weekly_report_sections: pass
 - idea_grade_module: pass
 - firewall_module: pass
+- shadow_backtest_module: pass
+- shadow_backtest_artifacts: pass
 - watchlist_candidate_fields: pass
 
 ## Decision Inbox

@@ -278,6 +278,8 @@ describe("AI stock radar free signal engine", () => {
     expect(watchlist.candidates[0].source_confidence).toBeDefined();
     expect(fs.existsSync(path.join(tempRoot, "projects/ai-stock-radar/false-positive-memory.json"))).toBe(true);
     expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-radar-ceo-audit-2026-05-30.md"))).toBe(true);
+    expect(fs.existsSync(path.join(tempRoot, "projects/ai-stock-radar/shadow-backtest-ledger.json"))).toBe(true);
+    expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"))).toBe(true);
     expect(() => validateWatchlist(watchlist)).not.toThrow();
   });
 

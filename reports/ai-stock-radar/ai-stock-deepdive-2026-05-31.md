@@ -31,6 +31,15 @@
 - revenue-decline-watch: 5
 - offering-watch: 4
 
+## Shadow Backtest Summary
+- total_snapshots: 20
+- assessed: 0
+- pending: 20
+- unavailable: 0
+- constructive: 0
+- risk_confirmed: 0
+- inconclusive: 0
+
 ## Keep Review
 - GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
 - DUKR (DUKE Robotics Corp.): Grade C, Early Watch, Score 63, Datenqualitaet A, Status fresh. Notes: cash runway watch

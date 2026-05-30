@@ -18,6 +18,7 @@ Required files:
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
+- Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Live discovery engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-live-discovery.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
@@ -25,6 +26,7 @@ Required files:
 - Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
 - Evidence firewall: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-evidence-firewall.mjs
 - CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
+- Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -55,6 +57,8 @@ Safety:
 - Every candidate must carry source_confidence with separate facts, interpretations, and missing data.
 - False-positive memory must be updated after every daily run and used to make repeated weak patterns more visible.
 - The CEO audit report must be written to /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-radar-ceo-audit-YYYY-MM-DD.md.
+- The Shadow Backtest ledger and report must be updated after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-shadow-backtest-YYYY-MM-DD.md.
+- Shadow Backtest outcomes are calibration labels only: constructive, risk_confirmed, inconclusive, unavailable.
 - SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
 - Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
@@ -80,6 +84,14 @@ Required report sections:
 ## Overheated / Avoid
 ## Datenqualitaet Und Luecken
 ## Naechste Aktion
+## Decision Inbox
+
+Separate required companion report:
+# AI Stock Radar Shadow Backtest - YYYY-MM-DD
+## 30-Day Calibration
+## Grade Calibration
+## CEO Lane Calibration
+## Risk Pattern Calibration
 ## Decision Inbox
 
 Decision Inbox requirement:

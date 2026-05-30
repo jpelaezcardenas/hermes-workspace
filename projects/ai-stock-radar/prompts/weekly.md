@@ -16,11 +16,13 @@ Required files:
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
+- Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
 - Weekly calibration engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
 - Evidence firewall: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-evidence-firewall.mjs
 - CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
+- Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -37,6 +39,7 @@ Tasks:
 9. Summarize pass/caution/reject Evidence Firewall verdicts and identify the most common reject/caution causes.
 10. Summarize CEO Control lanes: focus, monitor, manual_review, reject.
 11. Update False Positive Memory and name recurring risk patterns before any scoring adjustment.
+12. Summarize Shadow Backtest outcomes and name whether any rules need calibration review.
 
 Archive boundary:
 - Do not silently delete watchlist entries.
@@ -54,6 +57,7 @@ Required report sections:
 ## Firewall Summary
 ## CEO Control Summary
 ## False Positive Memory
+## Shadow Backtest Summary
 ## Keep Review
 ## Downgrade Review
 ## Archive Review
@@ -73,6 +77,7 @@ Safety:
 - Evidence Firewall review actions are workflow labels only, never trading instructions.
 - CEO Control actions are workflow labels only and never trading instructions.
 - False-positive memory is a risk-control input, not a blacklist or a trade trigger.
+- Shadow Backtest outcomes are calibration labels only, never trading instructions or price targets.
 
 Decision Inbox requirement:
 - Signal: Green / Yellow / Red
