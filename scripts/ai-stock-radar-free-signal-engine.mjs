@@ -14,6 +14,8 @@ import {
   limitCategoryByQuality,
   updateCandidateAging,
 } from "./ai-stock-radar-quality-rules.mjs";
+import { assignIdeaGrade, gradeSortRank } from "./ai-stock-radar-idea-grade.mjs";
+import { fetchStooqPriceVolume } from "./ai-stock-radar-price-volume.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -203,7 +205,7 @@ export function buildCandidatesFromEvidence({ date, records }) {
         maxCategory: record.max_category,
       });
 
-      return updateCandidateAging({
+      const agedCandidate = updateCandidateAging({
         date,
         candidate: {
           ticker: record.ticker,
@@ -212,6 +214,7 @@ export function buildCandidatesFromEvidence({ date, records }) {
           score: adjustedScore.total,
           previous_score: 0,
           data_quality: dataQuality.grade,
+          themes: unique(record.themes),
           ai_relevance: score.ai_relevance,
           catalyst: score.catalyst,
           market_momentum: score.market_momentum,
@@ -228,12 +231,18 @@ export function buildCandidatesFromEvidence({ date, records }) {
           score_reasons: score.reasons,
         },
       });
+      const grade = assignIdeaGrade(agedCandidate);
+      return {
+        ...agedCandidate,
+        idea_grade: grade.grade,
+        grade_reasons: grade.reasons,
+      };
     })
-    .sort((left, right) => right.score - left.score || left.ticker.localeCompare(right.ticker));
+    .sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || right.score - left.score || left.ticker.localeCompare(right.ticker));
 }
 
 function formatCandidate(candidate) {
-  return `- ${candidate.ticker} (${candidate.company}): ${candidate.category}, Score ${candidate.score}, Datenqualitaet ${candidate.data_quality}. ${candidate.thesis}`;
+  return `- ${candidate.ticker} (${candidate.company}): Grade ${candidate.idea_grade || "?"}, ${candidate.category}, Score ${candidate.score}, Datenqualitaet ${candidate.data_quality}. ${candidate.thesis}`;
 }
 
 function formatScoreReasons(candidate) {
@@ -256,7 +265,10 @@ export function renderFreeSourceReport({
   discoveryMode = "seed",
   fallbackReason = "",
 }) {
-  const topCandidates = candidates.slice(0, 10);
+  const topCandidates = candidates
+    .filter((candidate) => candidate.idea_grade !== "X" && candidate.category !== "Avoid")
+    .slice(0, 10);
+  const gradeCandidates = candidates.slice(0, 10);
   const deepDiveCandidates = candidates.filter((candidate) => candidate.category === "Deep Dive");
   const overheatedOrAvoid = candidates.filter((candidate) =>
     candidate.category === "Overheated" || candidate.category === "Avoid"
@@ -267,7 +279,7 @@ export function renderFreeSourceReport({
 ## Kurzfazit
 - Kostenloser Public-Source-Lauf: SEC/Nasdaq sind als Baseline vorgesehen, FINRA bleibt optionale Risikokontextquelle.
 - Discovery mode: ${discoveryMode}
-${fallbackReason ? `- Fallback reason: ${fallbackReason}\n` : ""}- Kurs-Momentum ist ohne verlaessliche kostenlose Preisquelle auf 8/20 gedeckelt.
+${fallbackReason ? `- Fallback reason: ${fallbackReason}\n` : ""}- Kurs-Momentum bleibt ohne verfuegbare kostenlose Price/Volume-Bestaetigung gedeckelt; optionale Stooq-Daten sind nur Kontext.
 - Dieser Report ist Research-Infrastruktur, keine Anlageempfehlung.
 
 ## Marktumfeld
@@ -277,6 +289,7 @@ ${fallbackReason ? `- Fallback reason: ${fallbackReason}\n` : ""}- Kurs-Momentum
 - Nasdaq symbol directory: ${sourceStatus.nasdaq_symbol_directory}
 - FINRA public data: ${sourceStatus.finra_public_data}
 - Market data: free_price_data_unavailable
+- Price/volume source: ${sourceStatus.price_volume || "not_checked"} (confirmation only, kein Trading-Signal)
 - Paid market data: ${sourceStatus.paid_market_data}
 
 ## Top Kandidaten Heute
@@ -284,6 +297,12 @@ ${topCandidates.length ? topCandidates.map(formatCandidate).join("\n") : "- Kein
 
 ## Neue Auffaelligkeiten
 ${topCandidates.length ? topCandidates.map((candidate) => `${formatCandidate(candidate)}\n${formatScoreReasons(candidate)}`).join("\n") : "- Keine neuen Auffaelligkeiten."}
+
+## Idea Grade
+${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.idea_grade || "?"} (${(candidate.grade_reasons || []).join("; ") || "no grade reasons"})`).join("\n") : "- Keine Grades berechnet."}
+
+## Price/Volume Confirmation
+${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.price_volume?.status || "unavailable"} / ${candidate.price_volume?.confirmation || "unavailable"}${candidate.price_volume?.volume_ratio_20d ? `, volume ratio 20d ${candidate.price_volume.volume_ratio_20d}` : ""}${candidate.price_volume?.return_20d_pct ? `, return 20d ${candidate.price_volume.return_20d_pct}%` : ""}`).join("\n") : "- Keine Price/Volume-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
@@ -297,7 +316,7 @@ ${deepDiveCandidates.length ? deepDiveCandidates.map(formatCandidate).join("\n")
 ${overheatedOrAvoid.length ? overheatedOrAvoid.map(formatCandidate).join("\n") : "- Keine ueberhitzten oder zu meidenden Kandidaten markiert."}
 
 ## Datenqualitaet Und Luecken
-- free_price_data_unavailable: kein bezahlter oder API-key-basierter Preisprovider aktiv.
+- free_price_data_unavailable: kein bezahlter oder API-key-basierter Preisprovider aktiv; Stooq-Kontext kann je Ticker fehlen.
 - FINRA-Kontext kann fehlen oder einzelne Endpunkte koennen Authentifizierung verlangen.
 - SEC-Filings und Symbolverzeichnisse sind Belege fuer Existenz, Filing-Aktivitaet und AI-Bezug, aber kein Kurs-Signal.
 - Keine Schaetzwerte wurden als harte Daten eingesetzt.
@@ -311,7 +330,7 @@ ${overheatedOrAvoid.length ? overheatedOrAvoid.map(formatCandidate).join("\n") :
 - CHRIS_ENTSCHEIDET: Ob spaeter ein kostenloser, terms-konformer Preisdatensatz ergaenzt werden soll; keine bezahlten Provider ohne Freigabe.
 - BEOBACHTEN: Kandidaten mit A/B-Datenqualitaet, mehreren oeffentlichen Quellen und frischem Filing-Kontext.
 - SPAETER: Backtesting und UI erst nach stabilen Free-Source-Laeufen.
-- BLOCKIERT: Verlaessliches Kurs-Momentum ohne bezahlte oder freigegebene kostenlose Preisquelle.
+- BLOCKIERT: Vollstaendig verlaessliches Kurs-Momentum ohne geprueften, stabilen Datenprovider.
 - NICHT_TUN: Keine automatischen Trades; keine Hype-Hochstufung aus nur einer Quelle.
 - Naechste kleinste Aktion: Free-Source-Report lesen und einen Kandidaten fuer manuelle Quellenpruefung auswaehlen.
 - Beleg / Datei: ${reportPath}
@@ -366,6 +385,8 @@ export async function writeFreeSignalRun({
   date = process.env.AI_STOCK_RADAR_DATE,
   discoveryMode = process.env.AI_STOCK_RADAR_DISCOVERY_MODE || "seed",
   liveDiscovery = discoverLiveEvidence,
+  priceMode = process.env.AI_STOCK_RADAR_PRICE_MODE || "stooq_optional",
+  priceProvider = fetchStooqPriceVolume,
 } = {}) {
   const resolvedDate = date || new Date().toISOString().slice(0, 10);
   const seeds = loadFreeSourceSeeds({ root });
@@ -375,10 +396,16 @@ export async function writeFreeSignalRun({
     discoveryMode,
     liveDiscovery,
   });
-  const candidates = buildCandidatesFromEvidence({
+  let candidates = buildCandidatesFromEvidence({
     date: resolvedDate,
     records: discovery.records,
   });
+  candidates = await enrichCandidatesWithPriceVolume({
+    candidates,
+    priceMode,
+    priceProvider,
+  });
+  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || right.score - left.score || left.ticker.localeCompare(right.ticker));
   const watchlist = validateWatchlist({
     version: 1,
     updated_at: resolvedDate,
@@ -402,7 +429,10 @@ export async function writeFreeSignalRun({
       date: resolvedDate,
       candidates,
       reportPath,
-      sourceStatus: discovery.sourceStatus,
+      sourceStatus: {
+        ...discovery.sourceStatus,
+        price_volume: priceMode === "off" ? "off" : "stooq_optional",
+      },
       discoveryMode: discovery.discoveryMode,
       fallbackReason: discovery.fallbackReason,
     }),
@@ -411,7 +441,7 @@ export async function writeFreeSignalRun({
   const watchlistPath = path.join(root, "projects/ai-stock-radar/watchlist.json");
   fs.writeFileSync(watchlistPath, `${JSON.stringify(watchlist, null, 2)}\n`);
 
-  const dossierPaths = selectDossierCandidates(candidates).map((candidate) => {
+  const dossierPaths = selectFreeSignalDossierCandidates(candidates).map((candidate) => {
     const dossierPath = path.join(dossierDir, `${candidate.ticker}-${resolvedDate}.md`);
     fs.writeFileSync(dossierPath, renderDossier({ date: resolvedDate, candidate }));
     return dossierPath;
@@ -425,6 +455,51 @@ export async function writeFreeSignalRun({
     discoveryMode: discovery.discoveryMode,
     fallbackReason: discovery.fallbackReason,
   };
+}
+
+export async function enrichCandidatesWithPriceVolume({ candidates, priceMode = "stooq_optional", priceProvider = fetchStooqPriceVolume }) {
+  if (priceMode === "off") return candidates;
+
+  const enriched = [];
+  for (const candidate of candidates) {
+    const priceVolume = await priceProvider({ ticker: candidate.ticker });
+    const momentumBonus =
+      priceVolume.status === "available" && priceVolume.confirmation === "positive"
+        ? Math.min(4, 20 - candidate.market_momentum)
+        : 0;
+    const withPrice = {
+      ...candidate,
+      price_volume: priceVolume,
+      score: Math.min(100, candidate.score + momentumBonus),
+      market_momentum: candidate.market_momentum + momentumBonus,
+    };
+    const grade = assignIdeaGrade(withPrice);
+    enriched.push({
+      ...withPrice,
+      idea_grade: grade.grade,
+      grade_reasons: grade.reasons,
+    });
+  }
+  return enriched;
+}
+
+export function selectFreeSignalDossierCandidates(candidates) {
+  const selected = [];
+  const seen = new Set();
+  const addCandidate = (candidate) => {
+    if (!candidate || seen.has(candidate.ticker) || selected.length >= 3) return;
+    seen.add(candidate.ticker);
+    selected.push(candidate);
+  };
+
+  const researchCandidates = [...candidates]
+    .filter((candidate) => candidate.idea_grade !== "X" && candidate.category !== "Avoid")
+    .sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || right.score - left.score || left.ticker.localeCompare(right.ticker));
+
+  researchCandidates.forEach(addCandidate);
+  selectDossierCandidates(candidates).forEach(addCandidate);
+
+  return selected;
 }
 
 function isCliRun() {

@@ -8,8 +8,10 @@ import {
   buildCandidatesFromEvidence,
   classifyFreeSourceCandidate,
   computeDataQuality,
+  enrichCandidatesWithPriceVolume,
   loadFreeSourceSeeds,
   renderFreeSourceReport,
+  selectFreeSignalDossierCandidates,
   scoreFreeSourceEvidence,
   writeFreeSignalRun,
 } from "./ai-stock-radar-free-signal-engine.mjs";
@@ -160,6 +162,35 @@ describe("AI stock radar free signal engine", () => {
     expect(report.toLowerCase()).not.toMatch(/buy now|sell now|will explode|jetzt kaufen|jetzt verkaufen/);
   });
 
+  it("keeps reject-grade candidates out of the top-candidate section", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [
+        evidence({ ticker: "ROBOT", company: "Robot AI Systems Inc.", themes: ["robotics"] }),
+        evidence({
+          ticker: "NOISE",
+          company: "Noisy AI Name Inc.",
+          themes: ["ai_keyword_match"],
+          risk_flags: ["name_only_ai_watch"],
+          quality_notes: ["name-only AI evidence; needs manual substance check"],
+          score_penalty: 25,
+          max_category: "Early Watch",
+        }),
+      ],
+    });
+    const report = renderFreeSourceReport({
+      date: "2026-05-30",
+      candidates,
+      reportPath: "/tmp/ai-stock-radar-free.md",
+    });
+    const topSection = report.match(/## Top Kandidaten Heute\n([\s\S]*?)\n\n## Neue Auffaelligkeiten/)?.[1] || "";
+
+    expect(topSection).toContain("ROBOT");
+    expect(topSection).not.toContain("NOISE");
+    expect(report).toContain("## Overheated / Avoid");
+    expect(report).toContain("NOISE");
+  });
+
   it("writes a free-source report and watchlist without API keys", async () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-radar-free-"));
     fs.mkdirSync(path.join(tempRoot, "projects/ai-stock-radar"), { recursive: true });
@@ -168,7 +199,7 @@ describe("AI stock radar free signal engine", () => {
       path.join(tempRoot, "projects/ai-stock-radar/free-source-seeds.json"),
     );
 
-    const result = await writeFreeSignalRun({ root: tempRoot, date: "2026-05-30" });
+    const result = await writeFreeSignalRun({ root: tempRoot, date: "2026-05-30", priceMode: "off" });
     const watchlist = JSON.parse(
       fs.readFileSync(path.join(tempRoot, "projects/ai-stock-radar/watchlist.json"), "utf8"),
     );
@@ -177,6 +208,53 @@ describe("AI stock radar free signal engine", () => {
     expect(result.candidateCount).toBeGreaterThan(0);
     expect(watchlist.provider_status.market_data).toBe("free_price_data_unavailable");
     expect(() => validateWatchlist(watchlist)).not.toThrow();
+  });
+
+  it("uses positive price/volume as a bounded score confirmation", async () => {
+    const [candidate] = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [evidence({ ticker: "PRICEAI", themes: ["robotics", "ai_keyword_match"] })],
+    });
+
+    const [enriched] = await enrichCandidatesWithPriceVolume({
+      candidates: [candidate],
+      priceProvider: async () => ({
+        status: "available",
+        source: "stooq",
+        confirmation: "positive",
+        latest_close: 12,
+        return_20d_pct: 22,
+        volume_ratio_20d: 2.3,
+      }),
+    });
+
+    expect(enriched.price_volume.confirmation).toBe("positive");
+    expect(enriched.market_momentum).toBe(candidate.market_momentum + 4);
+    expect(enriched.score).toBe(candidate.score + 4);
+  });
+
+  it("prioritizes research-grade dossiers before reject-risk dossiers", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [
+        evidence({ ticker: "BEST", company: "Best Robotics Inc.", themes: ["robotics"], catalyst_labels: ["hard_catalyst"] }),
+        evidence({ ticker: "GOOD", company: "Good Robotics Inc.", themes: ["robotics"] }),
+        evidence({
+          ticker: "BADAI",
+          company: "Bad AI Name Inc.",
+          themes: ["ai_keyword_match"],
+          risk_flags: ["name_only_ai_watch"],
+          quality_notes: ["name-only AI evidence; needs manual substance check"],
+          score_penalty: 25,
+          max_category: "Early Watch",
+        }),
+      ],
+    });
+
+    const selectedTickers = selectFreeSignalDossierCandidates(candidates).map((candidate) => candidate.ticker);
+
+    expect(selectedTickers.slice(0, 2).sort()).toEqual(["BEST", "GOOD"]);
+    expect(selectedTickers[2]).toBe("BADAI");
   });
 
   it("prefers live discovery in auto mode when injected discovery returns records", async () => {
@@ -191,6 +269,15 @@ describe("AI stock radar free signal engine", () => {
       root: tempRoot,
       date: "2026-05-30",
       discoveryMode: "auto",
+      priceMode: "stooq",
+      priceProvider: async () => ({
+        status: "available",
+        source: "stooq",
+        confirmation: "positive",
+        latest_close: 12,
+        return_20d_pct: 22,
+        volume_ratio_20d: 2.3,
+      }),
       liveDiscovery: async () => ({
         mode: "live",
         fallbackReason: "",
@@ -209,6 +296,8 @@ describe("AI stock radar free signal engine", () => {
 
     expect(result.discoveryMode).toBe("live");
     expect(report).toContain("Discovery mode: live");
+    expect(report).toContain("Idea Grade");
+    expect(report).toContain("Price/Volume Confirmation");
     expect(report).toContain("LIVEAI");
   });
 
@@ -224,6 +313,7 @@ describe("AI stock radar free signal engine", () => {
       root: tempRoot,
       date: "2026-05-30",
       discoveryMode: "auto",
+      priceMode: "off",
       liveDiscovery: async ({ seedRecords }) => ({
         mode: "seed_fallback",
         fallbackReason: "fixture live failure",

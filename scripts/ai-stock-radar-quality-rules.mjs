@@ -24,15 +24,6 @@ const SEED_OR_SUBSTANCE_THEMES = [
   "automation",
 ];
 
-const HARD_CATALYST_LABELS = [
-  "hard_catalyst",
-  "contract_award",
-  "material_guidance_change",
-  "major_customer",
-  "ma_catalyst",
-  "earnings_or_guidance_context",
-];
-
 function unique(values) {
   return [...new Set((values || []).filter(Boolean))];
 }
@@ -82,9 +73,8 @@ export function evaluateEvidenceQuality(record) {
 
   const hasOnlyAiKeywordTheme = themes.length > 0 && themes.every((theme) => theme === "ai_keyword_match");
   const hasSubstanceTheme = themes.some((theme) => SEED_OR_SUBSTANCE_THEMES.includes(theme));
-  const hasHardCatalyst = catalystLabels.some((label) => HARD_CATALYST_LABELS.includes(label));
 
-  if (hasOnlyAiKeywordTheme && !hasSubstanceTheme && !hasHardCatalyst) {
+  if (hasOnlyAiKeywordTheme && !hasSubstanceTheme) {
     riskFlags.push("name_only_ai_watch");
     qualityNotes.push("name-only AI evidence; needs manual substance check");
     scorePenalty += 25;

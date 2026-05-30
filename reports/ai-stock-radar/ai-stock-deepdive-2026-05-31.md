@@ -5,10 +5,19 @@
 - Watchlist candidates reviewed: 20
 - This report does not modify the watchlist automatically.
 
+## Grade Summary
+- S: 0
+- A: 1
+- B: 4
+- C: 0
+- X: 15
+
 ## Keep Review
-- AIFC (AI Financial Corporation): Breakout Watch, Score 77, Datenqualitaet A, Status fresh. Notes: no quality notes
-- JTAI (Jet.AI Inc.): Breakout Watch, Score 77, Datenqualitaet A, Status fresh. Notes: no quality notes
-- KITT (Nauticus Robotics, Inc.): Breakout Watch, Score 77, Datenqualitaet A, Status fresh. Notes: no quality notes
+- KITT (Nauticus Robotics, Inc.): Grade A, Breakout Watch, Score 77, Datenqualitaet A, Status fresh. Notes: no quality notes
+- AMCI (AMC Robotics Corporation): Grade B, Breakout Watch, Score 73, Datenqualitaet A, Status fresh. Notes: no quality notes
+- DUKR (DUKE Robotics Corp.): Grade B, Breakout Watch, Score 73, Datenqualitaet A, Status fresh. Notes: no quality notes
+- ARBE (Arbe Robotics Ltd.): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
+- GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
 
 ## Downgrade Review
 - Keine Kandidaten im Downgrade Review.
@@ -17,23 +26,21 @@
 - Keine Kandidaten im Archive Review.
 
 ## False Positive Review
-- AISP (Airship AI Holdings, Inc): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- AMCI (AMC Robotics Corporation): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- ARAI (Arrive AI Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- BFRG (Bullfrog AI Holdings, Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- DUKR (DUKE Robotics Corp.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- DVLT (Datavault AI Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- FABC (Fabric.AI, Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- GXAI (Gaxos.ai Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- KDK (Kodiak AI, Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- MDAI (Spectral AI, Inc.): Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- AIIO (Robo.ai Inc.): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- ARBE (Arbe Robotics Ltd.): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- GFAI (Guardforce AI Co., Limited): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- GMEX (GMEX ROBOTICS CORPORATION): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- GMM (Global Mofy AI Limited): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- HCAI (Huachen AI Parking Management Technology Holding Co., Ltd.): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
-- HPAI (Helport AI Limited): Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- AIFC (AI Financial Corporation): Grade X, Avoid, Score 52, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- JTAI (Jet.AI Inc.): Grade X, Avoid, Score 52, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- AISP (Airship AI Holdings, Inc): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- ARAI (Arrive AI Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- BFRG (Bullfrog AI Holdings, Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- DVLT (Datavault AI Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- FABC (Fabric.AI, Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- GXAI (Gaxos.ai Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- KDK (Kodiak AI, Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- MDAI (Spectral AI, Inc.): Grade X, Avoid, Score 48, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- AIIO (Robo.ai Inc.): Grade X, Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- GFAI (Guardforce AI Co., Limited): Grade X, Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- GMM (Global Mofy AI Limited): Grade X, Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- HCAI (Huachen AI Parking Management Technology Holding Co., Ltd.): Grade X, Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
+- HPAI (Helport AI Limited): Grade X, Avoid, Score 40, Datenqualitaet A, Status fresh. Notes: name-only AI evidence; needs manual substance check
 
 ## Scoring Adjustment Candidate
 - Wenn mehr als 30 Prozent der Kandidaten im False Positive Review landen, name_only_ai_watch Penalty weiter erhoehen.

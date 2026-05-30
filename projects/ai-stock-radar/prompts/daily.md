@@ -11,18 +11,21 @@ Use these skills:
 Required files:
 - Spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-design.md
 - Free signal spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-free-signal-engine-design.md
+- S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Live discovery engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-live-discovery.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
+- Price/volume sensor: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-price-volume.mjs
+- Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
 Allowed behavior:
 - Read public sources and existing local files.
 - Use SEC EDGAR, Nasdaq symbol directory, and FINRA public data when available.
-- Run live discovery in auto mode first: AI_STOCK_RADAR_DISCOVERY_MODE=auto AI_STOCK_RADAR_DATE=YYYY-MM-DD node /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
+- Run live discovery in auto mode first with optional free price/volume confirmation: AI_STOCK_RADAR_DISCOVERY_MODE=auto AI_STOCK_RADAR_PRICE_MODE=stooq_optional AI_STOCK_RADAR_DATE=YYYY-MM-DD node /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Use configured provider state from watchlist.json.
 - Write a report to /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-radar-YYYY-MM-DD.md.
 - Update watchlist.json only when the update can be justified from the report.
@@ -36,6 +39,9 @@ Safety:
 - No certainty language.
 - Missing market or news data must make the report Yellow and must be listed under Datenqualitaet Und Luecken.
 - Without a reliable free price source, keep market_momentum capped and report free_price_data_unavailable.
+- Price/volume confirmation is only a quality check, never a trade trigger; it can improve rank confidence but cannot override weak evidence or RiskGate.
+- Every candidate must have an `idea_grade` in S/A/B/C/X: S means best research quality today, A strong research candidate, B plausible watch, C low-confidence/noisy, X reject/avoid.
+- S requires high score, A/B data quality, hard current catalyst, positive price/volume confirmation, and no severe quality flags.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
 - Deep Dive requires A/B data quality plus a hard current catalyst, not seed breadth alone.
 - If live discovery falls back to seeds, state the fallback reason under Kurzfazit and Datenqualitaet Und Luecken.
@@ -49,6 +55,8 @@ Required report sections:
 ## Marktumfeld
 ## Top Kandidaten Heute
 ## Neue Auffaelligkeiten
+## Idea Grade
+## Price/Volume Confirmation
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid

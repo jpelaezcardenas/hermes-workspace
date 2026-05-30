@@ -10,9 +10,11 @@ Use these skills:
 
 Required files:
 - Spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-design.md
+- S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Weekly calibration engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
+- Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -25,6 +27,7 @@ Tasks:
 5. Recommend at most one scoring adjustment, with evidence.
 6. Keep the watchlist from growing without pruning.
 7. Summarize false_positive_review, archive_review, downgrade_review, and keep_review buckets.
+8. Summarize S/A/B/C/X idea grades and manually inspect every S or X item for evidence quality.
 
 Archive boundary:
 - Do not silently delete watchlist entries.
@@ -41,6 +44,8 @@ Safety:
 - No options, leverage, margin, or real-money workflow.
 - No paid provider or API key setup without CHRIS_ENTSCHEIDET.
 - No certainty language.
+- Idea grades are research-quality labels, not trade instructions.
+- Price/volume confirmation is context only and cannot override weak evidence, severe risk flags, or missing filings.
 
 Decision Inbox requirement:
 - Signal: Green / Yellow / Red

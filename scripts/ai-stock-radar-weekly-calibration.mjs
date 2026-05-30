@@ -17,12 +17,30 @@ function emptyBuckets() {
 
 function formatCandidate(candidate) {
   const notes = (candidate.quality_notes || []).join("; ") || "no quality notes";
-  return `- ${candidate.ticker} (${candidate.company || "unknown"}): ${candidate.category}, Score ${candidate.score}, Datenqualitaet ${candidate.data_quality}, Status ${candidate.status || "unknown"}. Notes: ${notes}`;
+  return `- ${candidate.ticker} (${candidate.company || "unknown"}): Grade ${candidate.idea_grade || "?"}, ${candidate.category}, Score ${candidate.score}, Datenqualitaet ${candidate.data_quality}, Status ${candidate.status || "unknown"}. Notes: ${notes}`;
 }
 
 function formatBucket(candidates, emptyText) {
   if (!candidates.length) return `- ${emptyText}`;
   return candidates.map(formatCandidate).join("\n");
+}
+
+export function summarizeIdeaGrades(candidates) {
+  const counts = { S: 0, A: 0, B: 0, C: 0, X: 0, "?": 0 };
+
+  for (const candidate of candidates || []) {
+    const grade = ["S", "A", "B", "C", "X"].includes(candidate.idea_grade) ? candidate.idea_grade : "?";
+    counts[grade] += 1;
+  }
+
+  return counts;
+}
+
+function formatGradeSummary(counts) {
+  return ["S", "A", "B", "C", "X", "?"]
+    .filter((grade) => counts[grade] > 0 || grade !== "?")
+    .map((grade) => `- ${grade}: ${counts[grade]}`)
+    .join("\n");
 }
 
 export function bucketWatchlistCandidates(candidates) {
@@ -37,6 +55,7 @@ export function bucketWatchlistCandidates(candidates) {
 
 export function renderWeeklyCalibrationReport({ date, watchlist, reportPath }) {
   const buckets = bucketWatchlistCandidates(watchlist.candidates || []);
+  const gradeSummary = summarizeIdeaGrades(watchlist.candidates || []);
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -44,6 +63,9 @@ export function renderWeeklyCalibrationReport({ date, watchlist, reportPath }) {
 - Weekly calibration reviews false positives, stale candidates, and quality-rule effects.
 - Watchlist candidates reviewed: ${(watchlist.candidates || []).length}
 - This report does not modify the watchlist automatically.
+
+## Grade Summary
+${formatGradeSummary(gradeSummary)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}

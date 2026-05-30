@@ -24,6 +24,7 @@ const watchlist = {
       ticker: "KEEP",
       company: "Keep AI Inc.",
       category: "Breakout Watch",
+      idea_grade: "A",
       score: 74,
       data_quality: "A",
       status: "watching",
@@ -33,6 +34,7 @@ const watchlist = {
       ticker: "FALSE",
       company: "False AI Name Inc.",
       category: "Avoid",
+      idea_grade: "X",
       score: 44,
       data_quality: "C",
       status: "stale",
@@ -42,6 +44,7 @@ const watchlist = {
       ticker: "ARCH",
       company: "Archive Corp.",
       category: "Avoid",
+      idea_grade: "X",
       score: 38,
       data_quality: "D",
       status: "stale",
@@ -67,6 +70,9 @@ describe("AI stock radar weekly calibration", () => {
     });
 
     expect(report).toContain("# AI Stock Radar Weekly Calibration - 2026-06-07");
+    expect(report).toContain("## Grade Summary");
+    expect(report).toContain("- A: 1");
+    expect(report).toContain("- X: 2");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");

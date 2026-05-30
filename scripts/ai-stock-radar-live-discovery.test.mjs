@@ -122,6 +122,14 @@ describe("AI stock radar live discovery", () => {
     expect(AI_KEYWORDS).toContain("artificial intelligence");
     expect(profileFromName.isAiRelevant).toBe(true);
     expect(profileFromName.themes).toContain("ai_keyword_match");
+    expect(
+      inferAiProfile({
+        ticker: "ROBO",
+        company: "Focused Robotics Inc.",
+        security_name: "Focused Robotics Inc. Common Stock",
+        seedByTicker: {},
+      }).themes,
+    ).toContain("robotics");
     expect(profileFromSeed.isAiRelevant).toBe(true);
     expect(profileFromSeed.themes).toContain("defense_ai");
     expect(profileFromSeed.ai_exposure).toBe("material");

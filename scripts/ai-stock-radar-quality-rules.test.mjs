@@ -32,7 +32,7 @@ describe("AI stock radar quality rules", () => {
     expect(quality.maxCategory).toBe("Early Watch");
   });
 
-  it("does not apply name-only penalty when seed themes or hard catalysts support the evidence", () => {
+  it("does not apply name-only penalty when seed or substance themes support the evidence", () => {
     const quality = evaluateEvidenceQuality(
       record({
         themes: ["enterprise_ai_software", "ai_keyword_match"],
@@ -42,6 +42,18 @@ describe("AI stock radar quality rules", () => {
 
     expect(quality.riskFlags).not.toContain("name_only_ai_watch");
     expect(quality.maxCategory).toBe("Deep Dive");
+  });
+
+  it("does not let filing catalysts alone bypass name-only AI evidence", () => {
+    const quality = evaluateEvidenceQuality(
+      record({
+        themes: ["ai_keyword_match"],
+        catalyst_labels: ["hard_catalyst", "recent_8k"],
+      }),
+    );
+
+    expect(quality.riskFlags).toContain("name_only_ai_watch");
+    expect(quality.maxCategory).toBe("Early Watch");
   });
 
   it("labels weak security structures as avoid risks", () => {

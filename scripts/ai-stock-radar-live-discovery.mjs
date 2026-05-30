@@ -19,19 +19,19 @@ export const AI_KEYWORDS = [
   "generative ai",
 ];
 
-const AI_KEYWORD_PATTERNS = [
-  /\bartificial intelligence\b/i,
-  /\bai\b/i,
-  /\bmachine learning\b/i,
-  /\bdeep learning\b/i,
-  /\bneural\b/i,
-  /\bgpu\b/i,
-  /\baccelerated computing\b/i,
-  /\bdata[- ]?center\b/i,
-  /\brobotics\b/i,
-  /\bautomation\b/i,
-  /\bvoice ai\b/i,
-  /\bgenerative ai\b/i,
+const AI_THEME_PATTERNS = [
+  { pattern: /\bartificial intelligence\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bai\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bmachine learning\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bdeep learning\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bneural\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bgpu\b/i, theme: "gpu_capacity" },
+  { pattern: /\baccelerated computing\b/i, theme: "gpu_capacity" },
+  { pattern: /\bdata[- ]?center\b/i, theme: "ai_infrastructure" },
+  { pattern: /\brobotics\b/i, theme: "robotics" },
+  { pattern: /\bautomation\b/i, theme: "automation" },
+  { pattern: /\bvoice ai\b/i, theme: "voice_ai" },
+  { pattern: /\bgenerative ai\b/i, theme: "ai_keyword_match" },
 ];
 
 const NASDAQ_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt";
@@ -150,9 +150,9 @@ export function normalizeSecCompanyTickers(companyTickers) {
 export function inferAiProfile({ ticker, company, security_name, seedByTicker }) {
   const seed = seedByTicker[ticker] || {};
   const haystack = `${company || ""} ${security_name || ""}`.toLowerCase();
-  const keywordMatches = AI_KEYWORD_PATTERNS.filter((pattern) => pattern.test(haystack));
+  const keywordMatches = AI_THEME_PATTERNS.filter(({ pattern }) => pattern.test(haystack));
   const seedThemes = seed.themes || [];
-  const themes = [...new Set([...seedThemes, ...keywordMatches.map(() => "ai_keyword_match")])];
+  const themes = [...new Set([...seedThemes, ...keywordMatches.map((match) => match.theme)])];
   const isAiRelevant = themes.length > 0;
 
   return {
