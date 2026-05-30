@@ -72,6 +72,30 @@
 - ARBE: caution / CHECK_DILUTION; risks: cash_runway_watch, dilution_trend_watch, revenue_decline_watch; supports: none; fundamentals: -40.36% revenue YoY, 1.91q cash runway
 - HPAI: caution / CHECK_DILUTION; risks: name_only_ai_watch, dilution_trend_watch; supports: none; fundamentals: 17.86% revenue YoY, cash runway n/a
 
+## CEO Control
+- GMEX: monitor / CEO_MONITOR; reasons: not enough confirmation for focus
+- DUKR: manual_review / CEO_REVIEW_RISK; reasons: manual risk review; cash_runway_watch
+- AISP: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+- AMCI: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate; delisting_watch
+- GMM: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+- KDK: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+- GFAI: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+- AIIO: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+- ARBE: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+- HPAI: reject / CEO_ARCHIVE_REVIEW; reasons: reject quality gate
+
+## Source Confidence Ledger
+- GMEX: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- DUKR: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- AISP: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- AMCI: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- GMM: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- KDK: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- GFAI: facts 2, interpretations 2, missing 2; missing: SEC companyfacts fundamentals, Price/volume confirmation
+- AIIO: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- ARBE: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+- HPAI: facts 3, interpretations 2, missing 1; missing: Price/volume confirmation
+
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
 - Kandidaten im Lauf: 20

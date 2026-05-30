@@ -22,6 +22,12 @@ import {
   decodeFilingEvents,
   evaluateFundamentalSnapshot,
 } from "./ai-stock-radar-evidence-firewall.mjs";
+import {
+  applyCeoControl,
+  buildFalsePositiveMemory,
+  loadRiskProfile,
+  writeIntegrationAudit,
+} from "./ai-stock-radar-ceo-control.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -324,6 +330,22 @@ function formatFirewallCandidate(candidate) {
   return `- ${candidate.ticker}: ${firewall.verdict || "caution"} / ${candidate.review_action || "WAIT_FOR_CONFIRMATION"}; risks: ${risks}; supports: ${supports}; fundamentals: ${revenue}, ${runway}`;
 }
 
+function formatCeoControlCandidate(candidate) {
+  const control = candidate.ceo_control || {};
+  const reasons = (control.reasons || []).join("; ") || "no CEO-control reason";
+  return `- ${candidate.ticker}: ${control.lane || "monitor"} / ${control.action || "CEO_MONITOR"}; reasons: ${reasons}`;
+}
+
+function formatSourceConfidenceCandidate(candidate) {
+  const confidence = candidate.source_confidence || {};
+  const summary = confidence.summary || {};
+  const missing = (confidence.entries || [])
+    .filter((entry) => entry.kind === "missing")
+    .map((entry) => entry.label)
+    .join(", ") || "none";
+  return `- ${candidate.ticker}: facts ${summary.facts || 0}, interpretations ${summary.interpretations || 0}, missing ${summary.missing || 0}; missing: ${missing}`;
+}
+
 export function renderFreeSourceReport({
   date,
   candidates,
@@ -373,6 +395,12 @@ ${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.tic
 
 ## Evidence Firewall
 ${gradeCandidates.length ? gradeCandidates.map(formatFirewallCandidate).join("\n") : "- Keine Evidence-Firewall-Daten."}
+
+## CEO Control
+${gradeCandidates.length ? gradeCandidates.map(formatCeoControlCandidate).join("\n") : "- Keine CEO-Control-Daten."}
+
+## Source Confidence Ledger
+${gradeCandidates.length ? gradeCandidates.map(formatSourceConfidenceCandidate).join("\n") : "- Keine Source-Confidence-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
@@ -475,6 +503,8 @@ export async function writeFreeSignalRun({
     priceMode,
     priceProvider,
   });
+  const riskProfile = loadRiskProfile({ root });
+  candidates = candidates.map((candidate) => applyCeoControl(candidate, riskProfile));
   candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || right.score - left.score || left.ticker.localeCompare(right.ticker));
   const watchlist = validateWatchlist({
     version: 1,
@@ -511,15 +541,22 @@ export async function writeFreeSignalRun({
   const watchlistPath = path.join(root, "projects/ai-stock-radar/watchlist.json");
   fs.writeFileSync(watchlistPath, `${JSON.stringify(watchlist, null, 2)}\n`);
 
+  const falsePositiveMemoryPath = path.join(root, "projects/ai-stock-radar/false-positive-memory.json");
+  fs.writeFileSync(falsePositiveMemoryPath, `${JSON.stringify(buildFalsePositiveMemory(candidates), null, 2)}\n`);
+
   const dossierPaths = selectFreeSignalDossierCandidates(candidates).map((candidate) => {
     const dossierPath = path.join(dossierDir, `${candidate.ticker}-${resolvedDate}.md`);
     fs.writeFileSync(dossierPath, renderDossier({ date: resolvedDate, candidate }));
     return dossierPath;
   });
 
+  const auditResult = writeIntegrationAudit({ root, date: resolvedDate });
+
   return {
     reportPath,
     watchlistPath,
+    falsePositiveMemoryPath,
+    auditReportPath: auditResult.reportPath,
     dossierPaths,
     candidateCount: candidates.length,
     discoveryMode: discovery.discoveryMode,

@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "name": "CEO Conservative Research Control",
+  "mode": "research_only",
+  "allow_trading_actions": false,
+  "focus_requires": {
+    "grades": ["S", "A"],
+    "firewall_verdict": "pass",
+    "price_volume_confirmation": "positive"
+  },
+  "blocking_risk_flags": [
+    "delisting_watch",
+    "going_concern_watch",
+    "reverse_split_watch",
+    "shell_or_spac_watch",
+    "security_structure_watch"
+  ],
+  "manual_review_risk_flags": [
+    "offering_watch",
+    "warrant_watch",
+    "cash_runway_watch",
+    "dilution_trend_watch",
+    "revenue_decline_watch",
+    "name_only_ai_watch"
+  ],
+  "allowed_review_actions": [
+    "CEO_VERIFY",
+    "CEO_MONITOR",
+    "CEO_REVIEW_RISK",
+    "CEO_ARCHIVE_REVIEW"
+  ]
+}

@@ -29,6 +29,7 @@ const watchlist = {
       data_quality: "A",
       status: "watching",
       evidence_firewall: { verdict: "pass" },
+      ceo_control: { lane: "monitor", action: "CEO_MONITOR" },
       quality_notes: ["seed overlay and SEC evidence"],
     },
     {
@@ -40,6 +41,7 @@ const watchlist = {
       data_quality: "C",
       status: "stale",
       evidence_firewall: { verdict: "caution" },
+      ceo_control: { lane: "manual_review", action: "CEO_REVIEW_RISK" },
       quality_notes: ["name-only AI evidence; needs manual substance check"],
     },
     {
@@ -51,6 +53,7 @@ const watchlist = {
       data_quality: "D",
       status: "stale",
       evidence_firewall: { verdict: "reject" },
+      ceo_control: { lane: "reject", action: "CEO_ARCHIVE_REVIEW" },
       quality_notes: ["single public source only"],
     },
   ],
@@ -80,6 +83,12 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("- pass: 1");
     expect(report).toContain("- caution: 1");
     expect(report).toContain("- reject: 1");
+    expect(report).toContain("## CEO Control Summary");
+    expect(report).toContain("- monitor: 1");
+    expect(report).toContain("- manual_review: 1");
+    expect(report).toContain("- reject: 1");
+    expect(report).toContain("## False Positive Memory");
+    expect(report).toContain("name-only AI evidence");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");

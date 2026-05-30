@@ -17,6 +17,20 @@
 - caution: 9
 - reject: 10
 
+## CEO Control Summary
+- focus: 0
+- monitor: 1
+- manual_review: 1
+- reject: 18
+
+## False Positive Memory
+- name-only-ai-watch: 15
+- delisting-watch: 10
+- dilution-trend-watch: 8
+- cash-runway-watch: 7
+- revenue-decline-watch: 5
+- offering-watch: 4
+
 ## Keep Review
 - GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
 - DUKR (DUKE Robotics Corp.): Grade C, Early Watch, Score 63, Datenqualitaet A, Status fresh. Notes: cash runway watch

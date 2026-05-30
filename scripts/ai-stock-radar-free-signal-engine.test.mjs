@@ -185,6 +185,8 @@ describe("AI stock radar free signal engine", () => {
     expect(report).toContain("## Evidence Firewall");
     expect(report).toContain("SAFEAI: pass");
     expect(report).toContain("VERIFY_CATALYST");
+    expect(report).toContain("## CEO Control");
+    expect(report).toContain("## Source Confidence Ledger");
     expect(report).toContain("SAFEAI");
     expect(report).toContain("free_price_data_unavailable");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
@@ -272,6 +274,10 @@ describe("AI stock radar free signal engine", () => {
     expect(fs.existsSync(result.reportPath)).toBe(true);
     expect(result.candidateCount).toBeGreaterThan(0);
     expect(watchlist.provider_status.market_data).toBe("free_price_data_unavailable");
+    expect(watchlist.candidates[0].ceo_control).toBeDefined();
+    expect(watchlist.candidates[0].source_confidence).toBeDefined();
+    expect(fs.existsSync(path.join(tempRoot, "projects/ai-stock-radar/false-positive-memory.json"))).toBe(true);
+    expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-radar-ceo-audit-2026-05-30.md"))).toBe(true);
     expect(() => validateWatchlist(watchlist)).not.toThrow();
   });
 

@@ -12,11 +12,15 @@ Required files:
 - Spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-design.md
 - S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
 - Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
+- CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
+- Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
+- False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Weekly calibration engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
 - Evidence firewall: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-evidence-firewall.mjs
+- CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -31,6 +35,8 @@ Tasks:
 7. Summarize false_positive_review, archive_review, downgrade_review, and keep_review buckets.
 8. Summarize S/A/B/C/X idea grades and manually inspect every S or X item for evidence quality.
 9. Summarize pass/caution/reject Evidence Firewall verdicts and identify the most common reject/caution causes.
+10. Summarize CEO Control lanes: focus, monitor, manual_review, reject.
+11. Update False Positive Memory and name recurring risk patterns before any scoring adjustment.
 
 Archive boundary:
 - Do not silently delete watchlist entries.
@@ -41,6 +47,21 @@ Archive boundary:
 Output:
 Write /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-deepdive-YYYY-MM-DD.md.
 
+Required report sections:
+# AI Stock Radar Weekly Calibration - YYYY-MM-DD
+## Kurzfazit
+## Grade Summary
+## Firewall Summary
+## CEO Control Summary
+## False Positive Memory
+## Keep Review
+## Downgrade Review
+## Archive Review
+## False Positive Review
+## Scoring Adjustment Candidate
+## Datenqualitaet Und Luecken
+## Decision Inbox
+
 Safety:
 - No broker access.
 - No automatic trades.
@@ -50,6 +71,8 @@ Safety:
 - Idea grades are research-quality labels, not trade instructions.
 - Price/volume confirmation is context only and cannot override weak evidence, severe risk flags, or missing filings.
 - Evidence Firewall review actions are workflow labels only, never trading instructions.
+- CEO Control actions are workflow labels only and never trading instructions.
+- False-positive memory is a risk-control input, not a blacklist or a trade trigger.
 
 Decision Inbox requirement:
 - Signal: Green / Yellow / Red

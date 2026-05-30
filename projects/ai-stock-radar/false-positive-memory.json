@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T21:41:34.207Z",
+  "candidate_count": 20,
+  "risky_candidate_count": 19,
+  "pattern_counts": {
+    "cash_runway_watch": 7,
+    "name_only_ai_watch": 15,
+    "delisting_watch": 10,
+    "offering_watch": 4,
+    "revenue_decline_watch": 5,
+    "dilution_trend_watch": 8
+  },
+  "verdict_counts": {
+    "pass": 1,
+    "caution": 9,
+    "reject": 10
+  },
+  "action_counts": {
+    "WAIT_FOR_CONFIRMATION": 1,
+    "CHECK_DILUTION": 5,
+    "DOWNGRADE_REVIEW": 4,
+    "ARCHIVE_REVIEW": 10
+  },
+  "calibration_notes": [
+    "name_only_ai_watch: 15 candidates",
+    "delisting_watch: 10 candidates",
+    "dilution_trend_watch: 8 candidates",
+    "cash_runway_watch: 7 candidates",
+    "revenue_decline_watch: 5 candidates",
+    "offering_watch: 4 candidates"
+  ]
+}

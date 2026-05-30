@@ -13,14 +13,18 @@ Required files:
 - Free signal spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-free-signal-engine-design.md
 - S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
 - Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
+- CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
+- Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
+- False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Live discovery engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-live-discovery.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Price/volume sensor: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-price-volume.mjs
 - Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
 - Evidence firewall: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-evidence-firewall.mjs
+- CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -46,6 +50,11 @@ Safety:
 - S requires high score, A/B data quality, hard current catalyst, positive price/volume confirmation, and no severe quality flags.
 - Evidence Firewall verdict must be `pass` for S/A promotion; `caution` caps conviction and `reject` must become X/Avoid.
 - Concrete recommendations are review actions only: VERIFY_CATALYST, CHECK_DILUTION, WAIT_FOR_CONFIRMATION, DOWNGRADE_REVIEW, or ARCHIVE_REVIEW.
+- CEO Control lanes are research workflow labels only: focus, monitor, manual_review, reject.
+- CEO Control actions are workflow labels only: CEO_VERIFY, CEO_MONITOR, CEO_REVIEW_RISK, CEO_ARCHIVE_REVIEW.
+- Every candidate must carry source_confidence with separate facts, interpretations, and missing data.
+- False-positive memory must be updated after every daily run and used to make repeated weak patterns more visible.
+- The CEO audit report must be written to /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-radar-ceo-audit-YYYY-MM-DD.md.
 - SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
 - Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
@@ -64,6 +73,8 @@ Required report sections:
 ## Idea Grade
 ## Price/Volume Confirmation
 ## Evidence Firewall
+## CEO Control
+## Source Confidence Ledger
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid

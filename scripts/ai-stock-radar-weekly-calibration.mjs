@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { classifyCalibrationBucket } from "./ai-stock-radar-quality-rules.mjs";
+import { buildFalsePositiveMemory } from "./ai-stock-radar-ceo-control.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 
@@ -51,6 +52,21 @@ export function summarizeFirewallVerdicts(candidates) {
   return counts;
 }
 
+export function summarizeCeoControlLanes(candidates) {
+  const counts = { focus: 0, monitor: 0, manual_review: 0, reject: 0, unknown: 0 };
+
+  for (const candidate of candidates || []) {
+    const lane = candidate.ceo_control?.lane;
+    if (["focus", "monitor", "manual_review", "reject"].includes(lane)) {
+      counts[lane] += 1;
+    } else {
+      counts.unknown += 1;
+    }
+  }
+
+  return counts;
+}
+
 function formatGradeSummary(counts) {
   return ["S", "A", "B", "C", "X", "?"]
     .filter((grade) => counts[grade] > 0 || grade !== "?")
@@ -62,6 +78,24 @@ function formatFirewallSummary(counts) {
   return ["pass", "caution", "reject", "unknown"]
     .filter((verdict) => counts[verdict] > 0 || verdict !== "unknown")
     .map((verdict) => `- ${verdict}: ${counts[verdict]}`)
+    .join("\n");
+}
+
+function formatCeoControlSummary(counts) {
+  return ["focus", "monitor", "manual_review", "reject", "unknown"]
+    .filter((lane) => counts[lane] > 0 || lane !== "unknown")
+    .map((lane) => `- ${lane}: ${counts[lane]}`)
+    .join("\n");
+}
+
+function formatFalsePositiveMemory(memory) {
+  const patterns = Object.entries(memory.pattern_counts || {})
+    .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+    .slice(0, 8);
+  if (!patterns.length) return "- Keine wiederkehrenden False-Positive-Muster.";
+
+  return patterns
+    .map(([pattern, count]) => `- ${pattern.replaceAll("_", "-")}: ${count}`)
     .join("\n");
 }
 
@@ -79,6 +113,8 @@ export function renderWeeklyCalibrationReport({ date, watchlist, reportPath }) {
   const buckets = bucketWatchlistCandidates(watchlist.candidates || []);
   const gradeSummary = summarizeIdeaGrades(watchlist.candidates || []);
   const firewallSummary = summarizeFirewallVerdicts(watchlist.candidates || []);
+  const ceoControlSummary = summarizeCeoControlLanes(watchlist.candidates || []);
+  const falsePositiveMemory = buildFalsePositiveMemory(watchlist.candidates || []);
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -92,6 +128,12 @@ ${formatGradeSummary(gradeSummary)}
 
 ## Firewall Summary
 ${formatFirewallSummary(firewallSummary)}
+
+## CEO Control Summary
+${formatCeoControlSummary(ceoControlSummary)}
+
+## False Positive Memory
+${formatFalsePositiveMemory(falsePositiveMemory)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}
@@ -135,11 +177,14 @@ export function writeWeeklyCalibration({ root = DEFAULT_ROOT, date = process.env
   const reportPath = path.join(reportDir, `ai-stock-deepdive-${resolvedDate}.md`);
   const report = renderWeeklyCalibrationReport({ date: resolvedDate, watchlist, reportPath });
   fs.writeFileSync(reportPath, report);
+  const memoryPath = path.join(root, "projects/ai-stock-radar/false-positive-memory.json");
+  fs.writeFileSync(memoryPath, `${JSON.stringify(buildFalsePositiveMemory(watchlist.candidates || []), null, 2)}\n`);
 
   const buckets = bucketWatchlistCandidates(watchlist.candidates || []);
 
   return {
     reportPath,
+    memoryPath,
     buckets: Object.fromEntries(Object.entries(buckets).map(([key, value]) => [key, value.length])),
   };
 }
