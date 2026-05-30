@@ -20,6 +20,28 @@ import {
   listLocalSessions,
   updateLocalSessionTitle,
 } from '../../server/local-session-store'
+import { shouldShowInChatSessionList } from '../../server/session-utils'
+
+const SESSION_LIST_TIMEOUT_MS = 1200
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(
+      () => reject(new Error(`Timed out after ${timeoutMs}ms`)),
+      timeoutMs,
+    )
+    promise.then(
+      (value) => {
+        clearTimeout(timeout)
+        resolve(value)
+      },
+      (error) => {
+        clearTimeout(timeout)
+        reject(error)
+      },
+    )
+  })
+}
 
 export const Route = createFileRoute('/api/sessions')({
   server: {
@@ -40,12 +62,24 @@ export const Route = createFileRoute('/api/sessions')({
         }
 
         try {
-          const sessions = await listSessions(50, 0)
-          const gatewaySessions = sessions.map(toSessionSummary)
+          const url = new URL(request.url)
+          const includeInternal =
+            url.searchParams.get('includeInternal') === 'true'
+          const sessions = await withTimeout(
+            listSessions(50, 0),
+            SESSION_LIST_TIMEOUT_MS,
+          ).catch(() => [])
+          const gatewaySessions = sessions
+            .filter((session) =>
+              includeInternal ? true : shouldShowInChatSessionList(session),
+            )
+            .map(toSessionSummary)
 
           // Merge local portable sessions (Ollama, Atomic Chat, etc.)
           const localSessions = listLocalSessions()
-          const gatewayIds = new Set(gatewaySessions.map((s: any) => s.key || s.id))
+          const gatewayIds = new Set(
+            gatewaySessions.map((s: any) => s.key || s.id),
+          )
           for (const ls of localSessions) {
             if (!gatewayIds.has(ls.id)) {
               gatewaySessions.push({

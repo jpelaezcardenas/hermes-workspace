@@ -12,6 +12,8 @@ type ResolveSessionResult = {
 type SessionLike = {
   id: string
   title?: string | null
+  preview?: string | null
+  source?: string | null
   message_count?: number | null
 }
 
@@ -22,13 +24,48 @@ type PortableMainBindingOptions = {
 }
 
 const SYNTHETIC_SESSION_KEYS = new Set(['main', 'new'])
+const INTERNAL_SESSION_TITLE_PREFIXES = [
+  '[IMPORTANT: The user has invoked the "',
+  'Distill the key insights from this MCTS exploration',
+  'You are running a mental simulation',
+  'You are exploring different reasoning approaches',
+  'PLAN — decide next action:',
+  'MONITOR — assess current dream state:',
+  'EVALUATE — compare current approach vs alternatives:',
+  'Return exactly: HERMES_UPDATE_OK',
+]
 
 export function isInternalSessionKey(id: string): boolean {
   return (
     id.startsWith('cron_') ||
     id.startsWith('cron:') ||
+    id.startsWith('agent:') ||
     id.startsWith('agent:main:ops-')
   )
+}
+
+export function isInternalSessionTitle(
+  value: string | null | undefined,
+): boolean {
+  const text = (value ?? '').trim()
+  if (!text) return false
+  return INTERNAL_SESSION_TITLE_PREFIXES.some((prefix) =>
+    text.startsWith(prefix),
+  )
+}
+
+export function isInternalSession(session: SessionLike): boolean {
+  return (
+    isInternalSessionKey(session.id) ||
+    isInternalSessionTitle(session.title) ||
+    isInternalSessionTitle(session.preview) ||
+    session.source === 'cron' ||
+    session.source === 'ops'
+  )
+}
+
+export function shouldShowInChatSessionList(session: SessionLike): boolean {
+  return !isInternalSession(session)
 }
 
 export function hasRealTitle(session: SessionLike): boolean {
@@ -40,13 +77,13 @@ export function resolveMainChatSessionId(
   sessions: Array<SessionLike>,
 ): string | null {
   const titled = sessions.find(
-    (session) => !isInternalSessionKey(session.id) && hasRealTitle(session),
+    (session) => shouldShowInChatSessionList(session) && hasRealTitle(session),
   )
   const fallback = titled
     ? null
     : sessions.find(
         (session) =>
-          !isInternalSessionKey(session.id) &&
+          shouldShowInChatSessionList(session) &&
           typeof session.message_count === 'number' &&
           session.message_count > 0,
       )
@@ -66,9 +103,7 @@ export function shouldBindMainToPortableSession({
   enhancedChat,
 }: PortableMainBindingOptions): boolean {
   return (
-    (sessionKey ?? '').trim() === 'main' &&
-    dashboardAvailable &&
-    !enhancedChat
+    (sessionKey ?? '').trim() === 'main' && dashboardAvailable && !enhancedChat
   )
 }
 

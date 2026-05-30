@@ -26,11 +26,13 @@ import {
   type DashboardFetcher,
 } from '../../../server/dashboard-aggregator'
 
-const overviewFetcher: DashboardFetcher = (path) => dashboardFetch(path)
+const overviewFetcher: DashboardFetcher = (path, init) =>
+  dashboardFetch(path, init)
 // Gateway fetcher hits the gateway URL (8645/8642), which is where
 // `/health/detailed` lives. The Hermes Agent confirmed `active_agents`
 // from this endpoint is the canonical “currently running” count.
-const overviewGatewayFetcher: DashboardFetcher = (path) => gatewayFetch(path)
+const overviewGatewayFetcher: DashboardFetcher = (path, init) =>
+  gatewayFetch(path, init)
 
 export const Route = createFileRoute('/api/dashboard/overview')({
   server: {
@@ -44,6 +46,7 @@ export const Route = createFileRoute('/api/dashboard/overview')({
           const days = Number(url.searchParams.get('days') ?? '30')
           const limit = Number(url.searchParams.get('achievements') ?? '3')
           const logsLimit = Number(url.searchParams.get('logs') ?? '24')
+          const includeAnalytics = url.searchParams.get('analytics') === 'true'
           const overview = await buildDashboardOverview({
             fetcher: overviewFetcher,
             gatewayFetcher: overviewGatewayFetcher,
@@ -54,6 +57,7 @@ export const Route = createFileRoute('/api/dashboard/overview')({
               Number.isFinite(logsLimit) && logsLimit > 0
                 ? Math.min(logsLimit, 100)
                 : 24,
+            includeAnalytics,
           })
           return json(overview, {
             headers: {
@@ -61,8 +65,7 @@ export const Route = createFileRoute('/api/dashboard/overview')({
               // upstream), but cache for a few seconds so a noisy client
               // doesn't hammer the dashboard. Stale-while-revalidate keeps
               // the UI snappy while fresh data lands.
-              'Cache-Control':
-                'private, max-age=5, stale-while-revalidate=20',
+              'Cache-Control': 'private, max-age=5, stale-while-revalidate=20',
             },
           })
         } catch (err) {

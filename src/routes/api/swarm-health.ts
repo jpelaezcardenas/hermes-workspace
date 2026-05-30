@@ -54,13 +54,24 @@ export function resolveWorkerWrapperName(workerId: string, worker?: Pick<SwarmRo
 }
 
 function listSwarmIds(): Array<string> {
+  const ids = new Set<string>()
+
+  // Canonical roster workers are the primary swarm source of truth. Include
+  // semantic workers such as `orchestrator`, `builder`, and `ops-watch` even
+  // though older installs only exposed numbered `swarmN` profiles here.
+  for (const worker of rosterByWorkerId().values()) {
+    const id = (worker.profile || worker.id || '').trim()
+    if (id && isSwarmWorkerId(id)) ids.add(id)
+  }
+
   const dir = getProfilesDir()
-  if (!existsSync(dir)) return []
-  return readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .filter((name) => isSwarmWorkerId(name))
-    .sort()
+  if (existsSync(dir)) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory() && isSwarmWorkerId(entry.name)) ids.add(entry.name)
+    }
+  }
+
+  return [...ids].sort()
 }
 
 function readWorkerConfig(profilePath: string): { model: string; provider: string } {

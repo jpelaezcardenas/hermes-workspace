@@ -157,7 +157,13 @@ export type DashboardAnalyticsSection = {
   totalSessions: number
   /** API call count over the window. */
   totalApiCalls: number
-  topModels: Array<{ id: string; tokens: number; calls: number; cost: number; sessions: number }>
+  topModels: Array<{
+    id: string
+    tokens: number
+    calls: number
+    cost: number
+    sessions: number
+  }>
   /**
    * Per-day rollup for sparklines. ISO date string + tokens + sessions
    * + cost per day. Always returned, even when empty.
@@ -195,7 +201,10 @@ export type DashboardAnalyticsSection = {
   source: 'analytics' | 'fallback' | 'unavailable'
 }
 
-export type DashboardFetcher = (path: string) => Promise<Response>
+export type DashboardFetcher = (
+  path: string,
+  init?: RequestInit,
+) => Promise<Response>
 
 export type BuildOverviewOptions = {
   /**
@@ -210,6 +219,10 @@ export type BuildOverviewOptions = {
   achievementsLimit?: number
   /** How many log tail lines to surface. Default 24. */
   logsLimit?: number
+  /** Whether to query the expensive dashboard analytics endpoint. Default true. */
+  includeAnalytics?: boolean
+  /** Per-upstream timeout in milliseconds. Default 2500. */
+  requestTimeoutMs?: number
 }
 
 const DEFAULT_OPTIONS = {
@@ -218,18 +231,34 @@ const DEFAULT_OPTIONS = {
   analyticsWindowDays: 30,
   achievementsLimit: 3,
   logsLimit: 24,
+  includeAnalytics: true,
+  requestTimeoutMs: 2500,
 }
 
 async function safeJson<T>(
   fetcher: DashboardFetcher,
   path: string,
+  timeoutMs: number,
 ): Promise<T | null> {
+  const controller = new AbortController()
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const timeout = new Promise<Response>((_, reject) => {
+    timer = setTimeout(() => {
+      controller.abort()
+      reject(new Error(`dashboard request timed out: ${path}`))
+    }, timeoutMs)
+  })
   try {
-    const res = await fetcher(path)
+    const res = await Promise.race([
+      fetcher(path, { signal: controller.signal }),
+      timeout,
+    ])
     if (!res.ok) return null
     return (await res.json()) as T
   } catch {
     return null
+  } finally {
+    if (timer) clearTimeout(timer)
   }
 }
 
@@ -359,8 +388,7 @@ function normalizeCron(raw: unknown): DashboardCronSection | null {
       failed += 1
       const id = readString(j.id) || readString(j.name) || 'unknown'
       const name = readString(j.name) || id
-      const lastRunAt =
-        typeof j.last_run_at === 'string' ? j.last_run_at : null
+      const lastRunAt = typeof j.last_run_at === 'string' ? j.last_run_at : null
       recentFailures.push({ id, name, lastError, lastRunAt })
     }
     const candidates = [
@@ -413,9 +441,7 @@ function normalizeAchievements(
   if (recentArr.length === 0 && (!all || typeof all !== 'object')) return null
   const recentUnlocks = recentArr
     .map(normalizeAchievementUnlock)
-    .filter(
-      (entry): entry is DashboardAchievementUnlock => entry !== null,
-    )
+    .filter((entry): entry is DashboardAchievementUnlock => entry !== null)
     .slice(0, limit)
 
   let totalUnlocked = 0
@@ -480,7 +506,9 @@ function normalizeSkillsUsage(
       }
     })
     .filter(
-      (e): e is {
+      (
+        e,
+      ): e is {
         skill: string
         totalCount: number
         percentage: number
@@ -489,10 +517,7 @@ function normalizeSkillsUsage(
     )
     .sort((a, b) => b.totalCount - a.totalCount)
     .slice(0, 5)
-  if (
-    !summary &&
-    topSkills.length === 0
-  ) {
+  if (!summary && topSkills.length === 0) {
     return null
   }
   return {
@@ -525,9 +550,7 @@ function normalizeAnalytics(
     totalsRaw?.total_output ?? r.total_output ?? r.output_tokens,
   )
   const cacheReadTokens = readNumber(
-    totalsRaw?.total_cache_read ??
-      r.total_cache_read ??
-      r.cache_read_tokens,
+    totalsRaw?.total_cache_read ?? r.total_cache_read ?? r.cache_read_tokens,
   )
   const reasoningTokens = readNumber(
     totalsRaw?.total_reasoning ?? r.total_reasoning ?? r.reasoning_tokens,
@@ -555,9 +578,7 @@ function normalizeAnalytics(
   // reasoning are exposed separately for the rich UI.
   const fallbackTotal = readNumber(r.total_tokens)
   const totalTokens =
-    inputTokens + outputTokens > 0
-      ? inputTokens + outputTokens
-      : fallbackTotal
+    inputTokens + outputTokens > 0 ? inputTokens + outputTokens : fallbackTotal
 
   const modelsRaw = Array.isArray(r.by_model)
     ? r.by_model
@@ -576,14 +597,19 @@ function normalizeAnalytics(
       const tokensOut = readNumber(e.output_tokens)
       return {
         id,
-        tokens: tokensIn + tokensOut > 0 ? tokensIn + tokensOut : readNumber(e.tokens),
+        tokens:
+          tokensIn + tokensOut > 0
+            ? tokensIn + tokensOut
+            : readNumber(e.tokens),
         calls: readNumber(e.api_calls ?? e.calls ?? e.requests),
         cost: readNumber(e.estimated_cost ?? e.cost),
         sessions: readNumber(e.sessions),
       }
     })
     .filter(
-      (entry): entry is {
+      (
+        entry,
+      ): entry is {
         id: string
         tokens: number
         calls: number
@@ -613,7 +639,9 @@ function normalizeAnalytics(
       }
     })
     .filter(
-      (entry): entry is {
+      (
+        entry,
+      ): entry is {
         day: string
         inputTokens: number
         outputTokens: number
@@ -797,16 +825,12 @@ function computeInsights(
   // glance.
   const ops: Array<string> = []
   if (cron && cron.failed > 0) {
-    ops.push(
-      `${cron.failed} failed cron job${cron.failed === 1 ? '' : 's'}`,
-    )
+    ops.push(`${cron.failed} failed cron job${cron.failed === 1 ? '' : 's'}`)
   }
   if (cron && cron.nextRunAt) {
     const nextMs = Date.parse(cron.nextRunAt)
     if (Number.isFinite(nextMs) && nextMs - Date.now() < -7 * 86_400_000) {
-      ops.push(
-        `${cron.total} stale cron job${cron.total === 1 ? '' : 's'}`,
-      )
+      ops.push(`${cron.total} stale cron job${cron.total === 1 ? '' : 's'}`)
     }
   }
   if (
@@ -998,7 +1022,18 @@ export async function buildDashboardOverview(
   options: BuildOverviewOptions & BuildOverviewExtraFetchers,
 ): Promise<DashboardOverview> {
   const opts = { ...DEFAULT_OPTIONS, ...options }
-  const { fetcher, analyticsWindowDays, achievementsLimit, logsLimit } = opts
+  const {
+    fetcher,
+    analyticsWindowDays,
+    achievementsLimit,
+    logsLimit,
+    includeAnalytics,
+    requestTimeoutMs: rawRequestTimeoutMs,
+  } = opts
+  const requestTimeoutMs =
+    rawRequestTimeoutMs && rawRequestTimeoutMs > 0
+      ? rawRequestTimeoutMs
+      : DEFAULT_OPTIONS.requestTimeoutMs
 
   const [
     statusRaw,
@@ -1010,22 +1045,38 @@ export async function buildDashboardOverview(
     analyticsRaw,
     logsRaw,
   ] = await Promise.all([
-    safeJson<unknown>(fetcher, '/api/status'),
+    safeJson<unknown>(fetcher, '/api/status', requestTimeoutMs),
     options.gatewayFetcher
-      ? safeJson<unknown>(options.gatewayFetcher, '/health/detailed')
+      ? safeJson<unknown>(
+          options.gatewayFetcher,
+          '/health/detailed',
+          requestTimeoutMs,
+        )
       : Promise.resolve(null),
-    safeJson<unknown>(fetcher, '/api/cron/jobs'),
+    safeJson<unknown>(fetcher, '/api/cron/jobs', requestTimeoutMs),
     safeJson<unknown>(
       fetcher,
       `/api/plugins/hermes-achievements/recent-unlocks?limit=${achievementsLimit}`,
+      requestTimeoutMs,
     ),
-    safeJson<unknown>(fetcher, '/api/plugins/hermes-achievements/achievements'),
-    safeJson<unknown>(fetcher, '/api/model/info'),
     safeJson<unknown>(
       fetcher,
-      `/api/analytics/usage?days=${analyticsWindowDays}`,
+      '/api/plugins/hermes-achievements/achievements',
+      requestTimeoutMs,
     ),
-    safeJson<unknown>(fetcher, `/api/logs?lines=${logsLimit}`),
+    safeJson<unknown>(fetcher, '/api/model/info', requestTimeoutMs),
+    includeAnalytics
+      ? safeJson<unknown>(
+          fetcher,
+          `/api/analytics/usage?days=${analyticsWindowDays}`,
+          requestTimeoutMs,
+        )
+      : Promise.resolve(null),
+    safeJson<unknown>(
+      fetcher,
+      `/api/logs?lines=${logsLimit}`,
+      requestTimeoutMs,
+    ),
   ])
 
   const status = normalizeStatus(statusRaw, healthRaw)
