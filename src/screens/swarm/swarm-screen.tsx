@@ -7,6 +7,7 @@ import {
   Activity01Icon,
   ChartLineData02Icon,
   ComputerTerminal01Icon,
+  CpuIcon,
   FlashIcon,
   RefreshIcon,
   ViewIcon,
@@ -123,11 +124,19 @@ export function SwarmScreen() {
 
   const swarmMembers = useMemo(() => {
     return [...crew]
-      .filter((member) => isWorkerId(member.id))
+      .filter((member) => {
+        if (!isWorkerId(member.id)) return false
+        const legacyNumberedWorker = /^swarm\d+$/i.test(member.id)
+        // Hide stale numbered swarm profiles by default. The current workspace
+        // roster is semantic (builder/reviewer/ops-watch/etc.); old swarm4/5/7/11
+        // runtime.json files can be weeks old and otherwise pollute Active Swarm.
+        if (legacyNumberedWorker && !roomIds.includes(member.id) && getOnlineStatus(member) !== 'online') return false
+        return true
+      })
       .sort((a, b) => {
         const aSwarm = /^swarm\d+$/i.test(a.id)
         const bSwarm = /^swarm\d+$/i.test(b.id)
-        if (aSwarm !== bSwarm) return aSwarm ? -1 : 1
+        if (aSwarm !== bSwarm) return aSwarm ? 1 : -1
         const rank = (member: CrewMember) => {
           if (roomIds.includes(member.id)) return 0
           const status = getOnlineStatus(member)
