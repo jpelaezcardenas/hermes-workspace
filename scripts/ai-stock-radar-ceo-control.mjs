@@ -257,6 +257,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
   const shadowLedgerPath = path.join(root, "projects/ai-stock-radar/shadow-backtest-ledger.json");
   const paperReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-paper-portfolio-${date}.md`);
   const paperPortfolioPath = path.join(root, "projects/ai-stock-radar/paper-portfolio.json");
+  const advancedReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-advanced-signals-${date}.md`);
   const watchlistPath = path.join(root, "projects/ai-stock-radar/watchlist.json");
   const shadowArtifactCheck = checkContains({
     id: "shadow_backtest_artifacts",
@@ -270,30 +271,36 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
     text: readIfExists(paperReportPath),
     required: ["# AI Stock Radar Paper Portfolio", "## Entry Readiness"],
   });
+  const advancedArtifactCheck = checkContains({
+    id: "advanced_signals_artifacts",
+    filePath: advancedReportPath,
+    text: readIfExists(advancedReportPath),
+    required: ["# AI Stock Radar Advanced Signals", "## Banger Score"],
+  });
   const checks = [
     checkContains({
       id: "daily_prompt_sections",
       filePath: dailyPromptPath,
       text: readIfExists(dailyPromptPath),
-      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio"],
+      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio", "Advanced Signal Stack"],
     }),
     checkContains({
       id: "weekly_prompt_sections",
       filePath: weeklyPromptPath,
       text: readIfExists(weeklyPromptPath),
-      required: ["Grade Summary", "Firewall Summary", "CEO Control Summary", "False Positive Memory", "Shadow Backtest Summary", "Paper Portfolio Summary"],
+      required: ["Grade Summary", "Firewall Summary", "CEO Control Summary", "False Positive Memory", "Shadow Backtest Summary", "Paper Portfolio Summary", "Advanced Signal Summary"],
     }),
     checkContains({
       id: "daily_report_sections",
       filePath: dailyReportPath,
       text: readIfExists(dailyReportPath),
-      required: ["## Idea Grade", "## Price/Volume Confirmation", "## Evidence Firewall", "## CEO Control"],
+      required: ["## Idea Grade", "## Price/Volume Confirmation", "## Evidence Firewall", "## CEO Control", "## Advanced Signal Stack"],
     }),
     checkContains({
       id: "weekly_report_sections",
       filePath: weeklyReportPath,
       text: readIfExists(weeklyReportPath),
-      required: ["## Grade Summary", "## Firewall Summary", "## CEO Control Summary", "## False Positive Memory", "## Shadow Backtest Summary", "## Paper Portfolio Summary"],
+      required: ["## Grade Summary", "## Firewall Summary", "## CEO Control Summary", "## False Positive Memory", "## Shadow Backtest Summary", "## Paper Portfolio Summary", "## Advanced Signal Summary"],
     }),
     checkContains({
       id: "idea_grade_module",
@@ -319,6 +326,12 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       text: readIfExists(path.join(root, "scripts/ai-stock-radar-paper-portfolio.mjs")),
       required: ["writePaperPortfolioRun"],
     }),
+    checkContains({
+      id: "advanced_signals_module",
+      filePath: path.join(root, "scripts/ai-stock-radar-advanced-signals.mjs"),
+      text: readIfExists(path.join(root, "scripts/ai-stock-radar-advanced-signals.mjs")),
+      required: ["writeAdvancedSignalsRun"],
+    }),
     {
       ...shadowArtifactCheck,
       status: fs.existsSync(shadowLedgerPath) && shadowArtifactCheck.status === "pass" ? "pass" : "fail",
@@ -327,6 +340,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       ...paperArtifactCheck,
       status: fs.existsSync(paperPortfolioPath) && paperArtifactCheck.status === "pass" ? "pass" : "fail",
     },
+    advancedArtifactCheck,
   ];
 
   try {
@@ -340,7 +354,8 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
         candidate.evidence_firewall &&
         candidate.ceo_control &&
         candidate.source_confidence &&
-        candidate.entry_readiness
+        candidate.entry_readiness &&
+        candidate.advanced_signals
       ) ? "pass" : "fail",
       missing: [],
     });

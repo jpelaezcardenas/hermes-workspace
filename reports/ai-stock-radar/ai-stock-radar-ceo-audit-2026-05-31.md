@@ -11,8 +11,10 @@ Status: pass
 - firewall_module: pass
 - shadow_backtest_module: pass
 - paper_portfolio_module: pass
+- advanced_signals_module: pass
 - shadow_backtest_artifacts: pass
 - paper_portfolio_artifacts: pass
+- advanced_signals_artifacts: pass
 - watchlist_candidate_fields: pass
 
 ## Decision Inbox

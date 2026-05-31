@@ -33,6 +33,11 @@ import {
   applyEntryReadiness,
   writePaperPortfolioRun,
 } from "./ai-stock-radar-paper-portfolio.mjs";
+import {
+  applyAdvancedSignals,
+  loadAdvancedSignalContext,
+  writeAdvancedSignalsRun,
+} from "./ai-stock-radar-advanced-signals.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -357,6 +362,12 @@ function formatEntryReadinessCandidate(candidate) {
   return `- ${candidate.ticker}: ${readiness.label || "WAIT_FOR_CONFIRMATION"} / ${readiness.action || "PAPER_HOLD_REVIEW"}; reasons: ${reasons}`;
 }
 
+function formatAdvancedSignalCandidate(candidate) {
+  const signals = candidate.advanced_signals || {};
+  const components = signals.components || {};
+  return `- ${candidate.ticker}: ${signals.banger_label || "WAIT"} / ${signals.review_action || "ADVANCED_WAIT"}; score ${signals.banger_score ?? 0}; SEC ${components.sec_catalyst?.label || "none"}; proof ${components.customer_proof?.label || "none"}; strength ${components.relative_strength?.label || "unavailable"}; liquidity ${components.liquidity?.label || "unavailable"}`;
+}
+
 export function renderFreeSourceReport({
   date,
   candidates,
@@ -415,6 +426,9 @@ ${gradeCandidates.length ? gradeCandidates.map(formatSourceConfidenceCandidate).
 
 ## Entry Readiness
 ${gradeCandidates.length ? gradeCandidates.map(formatEntryReadinessCandidate).join("\n") : "- Keine Entry-Readiness-Daten."}
+
+## Advanced Signal Stack
+${gradeCandidates.length ? gradeCandidates.map(formatAdvancedSignalCandidate).join("\n") : "- Keine Advanced-Signal-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
@@ -520,7 +534,9 @@ export async function writeFreeSignalRun({
   const riskProfile = loadRiskProfile({ root });
   candidates = candidates.map((candidate) => applyCeoControl(candidate, riskProfile));
   candidates = candidates.map(applyEntryReadiness);
-  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || right.score - left.score || left.ticker.localeCompare(right.ticker));
+  const advancedSignalContext = loadAdvancedSignalContext({ root });
+  candidates = candidates.map((candidate) => applyAdvancedSignals(candidate, advancedSignalContext));
+  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || (right.advanced_signals?.banger_score || 0) - (left.advanced_signals?.banger_score || 0) || right.score - left.score || left.ticker.localeCompare(right.ticker));
   const watchlist = validateWatchlist({
     version: 1,
     updated_at: resolvedDate,
@@ -575,6 +591,11 @@ export async function writeFreeSignalRun({
     date: resolvedDate,
     watchlist,
   });
+  const advancedSignalsResult = writeAdvancedSignalsRun({
+    root,
+    date: resolvedDate,
+    watchlist,
+  });
   const auditResult = writeIntegrationAudit({ root, date: resolvedDate });
 
   return {
@@ -586,6 +607,7 @@ export async function writeFreeSignalRun({
     shadowBacktestReportPath: shadowBacktestResult.reportPath,
     paperPortfolioPath: paperPortfolioResult.portfolioPath,
     paperPortfolioReportPath: paperPortfolioResult.reportPath,
+    advancedSignalsReportPath: advancedSignalsResult.reportPath,
     dossierPaths,
     candidateCount: candidates.length,
     discoveryMode: discovery.discoveryMode,

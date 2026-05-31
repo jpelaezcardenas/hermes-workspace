@@ -13,11 +13,14 @@ Required files:
 - S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
 - Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
 - CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
+- Advanced Signal Stack spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-advanced-signal-stack-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
 - Paper portfolio: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/paper-portfolio.json
+- Optional AI basket context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ai-basket-context.json
+- Optional ownership context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ownership-context.json
 - Weekly calibration engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
 - Idea grade engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-idea-grade.mjs
@@ -25,6 +28,7 @@ Required files:
 - CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
 - Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
 - Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
+- Advanced signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-advanced-signals.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -43,6 +47,7 @@ Tasks:
 11. Update False Positive Memory and name recurring risk patterns before any scoring adjustment.
 12. Summarize Shadow Backtest outcomes and name whether any rules need calibration review.
 13. Summarize Paper Portfolio entry/exit review state and compare it against risk clusters.
+14. Summarize Advanced Signal labels, review queue, risk traps, and data gaps.
 
 Archive boundary:
 - Do not silently delete watchlist entries.
@@ -62,6 +67,7 @@ Required report sections:
 ## False Positive Memory
 ## Shadow Backtest Summary
 ## Paper Portfolio Summary
+## Advanced Signal Summary
 ## Keep Review
 ## Downgrade Review
 ## Archive Review
@@ -81,8 +87,12 @@ Safety:
 - Evidence Firewall review actions are workflow labels only, never trading instructions.
 - CEO Control actions are workflow labels only and never trading instructions.
 - False-positive memory is a risk-control input, not a blacklist or a trade trigger.
-- Shadow Backtest outcomes are calibration labels only, never trading instructions or price targets.
+- Shadow Backtest outcomes are calibration labels only, never trading instructions or numeric target levels.
 - Paper Portfolio labels are research-only simulations, never real buy/sell/hold instructions.
+- Advanced Signal labels are research-only review labels, never real buy/sell/hold instructions.
+- BANGER_CANDIDATE_REVIEW is a highest-priority research review label, not a trade instruction.
+- Advanced Signal Summary must name BANGER_CANDIDATE_REVIEW, EARLY_BUT_THIN, WAIT, RISK_TRAP, review_queue, and data gaps.
+- Missing basket or ownership context is a gap and must not improve conviction.
 
 Decision Inbox requirement:
 - Signal: Green / Yellow / Red

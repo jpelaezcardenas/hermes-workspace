@@ -153,6 +153,75 @@
         "reasons": [
           "not enough confirmation for paper entry review"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 38,
+        "banger_label": "WAIT",
+        "review_action": "ADVANCED_WAIT",
+        "components": {
+          "sec_catalyst": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "no specific SEC catalyst decoded"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "no customer or contract proof found"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "none",
+            "score_penalty": 0,
+            "hard_gate": false,
+            "reasons": [
+              "no thesis invalidation signal detected"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "no specific SEC catalyst decoded",
+          "no customer or contract proof found",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "no thesis invalidation signal detected"
+        ]
       }
     },
     {
@@ -317,6 +386,75 @@
           "risk gate active",
           "cash_runway_watch"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "material_agreement",
+            "score": 18,
+            "reasons": [
+              "SEC catalyst includes material agreement evidence"
+            ]
+          },
+          "customer_proof": {
+            "label": "hard_customer_or_contract",
+            "score": 14,
+            "reasons": [
+              "customer, contract, or material agreement label is present"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: TOO_RISKY"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "SEC catalyst includes material agreement evidence",
+          "customer, contract, or material agreement label is present",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: TOO_RISKY"
+        ]
       }
     },
     {
@@ -473,6 +611,81 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -636,6 +849,83 @@
           "risk gate active",
           "delisting_watch"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "hard_customer_or_contract",
+            "score": 14,
+            "reasons": [
+              "customer, contract, or material agreement label is present"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: TOO_RISKY",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "customer, contract, or material agreement label is present",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: TOO_RISKY",
+          "hard risk gate: delisting_watch"
+        ]
       }
     },
     {
@@ -790,6 +1080,81 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -954,6 +1319,81 @@
         "reasons": [
           "name-only AI evidence"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
       }
     },
     {
@@ -1100,6 +1540,81 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -1261,6 +1776,81 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -1426,6 +2016,79 @@
           "cash_runway_watch",
           "dilution_trend_watch"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "no customer or contract proof found"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: TOO_RISKY"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "no customer or contract proof found",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: TOO_RISKY"
+        ]
       }
     },
     {
@@ -1582,6 +2245,81 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -1744,6 +2482,81 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-10",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -1919,6 +2732,83 @@
           "delisting_watch",
           "offering_watch",
           "cash_runway_watch"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "hard_customer_or_contract",
+            "score": 14,
+            "reasons": [
+              "customer, contract, or material agreement label is present"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: TOO_RISKY",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "customer, contract, or material agreement label is present",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: TOO_RISKY",
+          "hard risk gate: delisting_watch"
         ]
       }
     },
@@ -2096,6 +2986,84 @@
         "reasons": [
           "name-only AI evidence"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
       }
     },
     {
@@ -2267,6 +3235,84 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -2440,6 +3486,84 @@
         "reasons": [
           "name-only AI evidence"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
       }
     },
     {
@@ -2608,6 +3732,84 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -2783,6 +3985,84 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     },
@@ -2966,6 +4246,84 @@
         "reasons": [
           "name-only AI evidence"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
       }
     },
     {
@@ -3145,6 +4503,84 @@
         "reasons": [
           "name-only AI evidence"
         ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
       }
     },
     {
@@ -3321,6 +4757,84 @@
         "action": "PAPER_ARCHIVE_REVIEW",
         "reasons": [
           "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-05",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
         ]
       }
     }

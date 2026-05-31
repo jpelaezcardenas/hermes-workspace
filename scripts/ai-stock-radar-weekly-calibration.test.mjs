@@ -31,6 +31,11 @@ const watchlist = {
       evidence_firewall: { verdict: "pass" },
       ceo_control: { lane: "monitor", action: "CEO_MONITOR" },
       quality_notes: ["seed overlay and SEC evidence"],
+      advanced_signals: {
+        banger_score: 74,
+        banger_label: "BANGER_CANDIDATE_REVIEW",
+        review_action: "ADVANCED_REVIEW",
+      },
     },
     {
       ticker: "FALSE",
@@ -43,6 +48,11 @@ const watchlist = {
       evidence_firewall: { verdict: "caution" },
       ceo_control: { lane: "manual_review", action: "CEO_REVIEW_RISK" },
       quality_notes: ["name-only AI evidence; needs manual substance check"],
+      advanced_signals: {
+        banger_score: 18,
+        banger_label: "RISK_TRAP",
+        review_action: "ADVANCED_ARCHIVE_REVIEW",
+      },
     },
     {
       ticker: "ARCH",
@@ -55,6 +65,11 @@ const watchlist = {
       evidence_firewall: { verdict: "reject" },
       ceo_control: { lane: "reject", action: "CEO_ARCHIVE_REVIEW" },
       quality_notes: ["single public source only"],
+      advanced_signals: {
+        banger_score: 12,
+        banger_label: "RISK_TRAP",
+        review_action: "ADVANCED_ARCHIVE_REVIEW",
+      },
     },
   ],
 };
@@ -105,6 +120,9 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("constructive: 1");
     expect(report).toContain("## Paper Portfolio Summary");
     expect(report).toContain("open_positions: 1");
+    expect(report).toContain("## Advanced Signal Summary");
+    expect(report).toContain("BANGER_CANDIDATE_REVIEW: 1");
+    expect(report).toContain("RISK_TRAP: 2");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");

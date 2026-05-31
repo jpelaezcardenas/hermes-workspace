@@ -187,6 +187,7 @@ describe("AI stock radar free signal engine", () => {
     expect(report).toContain("VERIFY_CATALYST");
     expect(report).toContain("## CEO Control");
     expect(report).toContain("## Source Confidence Ledger");
+    expect(report).toContain("## Advanced Signal Stack");
     expect(report).toContain("SAFEAI");
     expect(report).toContain("free_price_data_unavailable");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
@@ -277,12 +278,14 @@ describe("AI stock radar free signal engine", () => {
     expect(watchlist.candidates[0].ceo_control).toBeDefined();
     expect(watchlist.candidates[0].source_confidence).toBeDefined();
     expect(watchlist.candidates[0].entry_readiness).toBeDefined();
+    expect(watchlist.candidates[0].advanced_signals).toBeDefined();
     expect(fs.existsSync(path.join(tempRoot, "projects/ai-stock-radar/false-positive-memory.json"))).toBe(true);
     expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-radar-ceo-audit-2026-05-30.md"))).toBe(true);
     expect(fs.existsSync(path.join(tempRoot, "projects/ai-stock-radar/shadow-backtest-ledger.json"))).toBe(true);
     expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"))).toBe(true);
     expect(fs.existsSync(path.join(tempRoot, "projects/ai-stock-radar/paper-portfolio.json"))).toBe(true);
     expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-paper-portfolio-2026-05-30.md"))).toBe(true);
+    expect(fs.existsSync(path.join(tempRoot, "reports/ai-stock-radar/ai-stock-advanced-signals-2026-05-30.md"))).toBe(true);
     expect(() => validateWatchlist(watchlist)).not.toThrow();
   });
 

@@ -14,12 +14,15 @@ Required files:
 - S-Tier grade spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-stier-grading-design.md
 - Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
 - CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
+- Advanced Signal Stack spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-advanced-signal-stack-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
 - Paper portfolio: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/paper-portfolio.json
+- Optional AI basket context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ai-basket-context.json
+- Optional ownership context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ownership-context.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Live discovery engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-live-discovery.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
@@ -29,6 +32,7 @@ Required files:
 - CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
 - Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
 - Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
+- Advanced signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-advanced-signals.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -64,6 +68,14 @@ Safety:
 - The Paper Portfolio state and report must be updated after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-paper-portfolio-YYYY-MM-DD.md.
 - Entry/Exit labels are simulation labels only: ENTRY_READY, WAIT_FOR_CONFIRMATION, TOO_RISKY, LATE_MOVE, FAKE_AI_HYPE, THESIS_INTACT, THESIS_WEAKENING, EXIT_RISK_REVIEW, ARCHIVE_REVIEW.
 - Paper actions are workflow labels only: PAPER_ENTRY_REVIEW, PAPER_HOLD_REVIEW, PAPER_EXIT_REVIEW, PAPER_ARCHIVE_REVIEW.
+- The Advanced Signal Stack must be applied after Entry Readiness and before CEO audit.
+- Every candidate must carry `advanced_signals` with SEC catalyst, customer proof, relative strength, liquidity, ownership, thesis invalidation, catalyst calendar, and explainable banger score components.
+- Advanced Signal labels are research-review labels only: BANGER_CANDIDATE_REVIEW, EARLY_BUT_THIN, WAIT, RISK_TRAP.
+- Advanced Signal actions are workflow labels only: ADVANCED_REVIEW, ADVANCED_WAIT, ADVANCED_RISK_REVIEW, ADVANCED_ARCHIVE_REVIEW.
+- BANGER_CANDIDATE_REVIEW is not a trade instruction; it means highest-priority research review candidate.
+- Missing AI basket or ownership context must be `unavailable`, not bullish.
+- Hard risk gates, Evidence Firewall reject, CEO reject, TOO_RISKY, FAKE_AI_HYPE, name-only AI, delisting, reverse split, going concern, shell/SPAC, security-structure, dilution, warrants, and weak cash runway must override positive advanced components.
+- The Advanced Signals companion report must be written after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-advanced-signals-YYYY-MM-DD.md.
 - SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
 - Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
@@ -85,6 +97,7 @@ Required report sections:
 ## CEO Control
 ## Source Confidence Ledger
 ## Entry Readiness
+## Advanced Signal Stack
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid
@@ -105,6 +118,15 @@ Separate required paper report:
 ## Entry Readiness
 ## Exit Risk
 ## Paper Simulations
+## Decision Inbox
+
+Separate required advanced report:
+# AI Stock Radar Advanced Signals - YYYY-MM-DD
+## Banger Score
+## Component Summary
+## Risk Traps
+## Review Queue
+## Data Gaps
 ## Decision Inbox
 
 Decision Inbox requirement:

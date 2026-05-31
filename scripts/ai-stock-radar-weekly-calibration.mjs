@@ -6,6 +6,7 @@ import { classifyCalibrationBucket } from "./ai-stock-radar-quality-rules.mjs";
 import { buildFalsePositiveMemory } from "./ai-stock-radar-ceo-control.mjs";
 import { summarizeShadowBacktest } from "./ai-stock-radar-shadow-backtest.mjs";
 import { summarizePaperPortfolio } from "./ai-stock-radar-paper-portfolio.mjs";
+import { summarizeAdvancedSignals } from "./ai-stock-radar-advanced-signals.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 
@@ -125,6 +126,22 @@ function formatPaperPortfolioSummary(summary) {
   ].join("\n");
 }
 
+function formatAdvancedSignalSummary(summary) {
+  const counts = summary.label_counts || {};
+  const queue = summary.review_queue || [];
+  const gaps = summary.data_gaps || {};
+  return [
+    `- BANGER_CANDIDATE_REVIEW: ${counts.BANGER_CANDIDATE_REVIEW || 0}`,
+    `- EARLY_BUT_THIN: ${counts.EARLY_BUT_THIN || 0}`,
+    `- WAIT: ${counts.WAIT || 0}`,
+    `- RISK_TRAP: ${counts.RISK_TRAP || 0}`,
+    `- review_queue: ${queue.map((item) => item.ticker).join(", ") || "none"}`,
+    `- relative_strength_unavailable: ${gaps.relative_strength_unavailable || 0}`,
+    `- ownership_unavailable: ${gaps.ownership_unavailable || 0}`,
+    `- liquidity_unavailable: ${gaps.liquidity_unavailable || 0}`,
+  ].join("\n");
+}
+
 export function bucketWatchlistCandidates(candidates) {
   const buckets = emptyBuckets();
 
@@ -149,6 +166,7 @@ export function renderWeeklyCalibrationReport({
   const falsePositiveMemory = buildFalsePositiveMemory(watchlist.candidates || []);
   const shadowBacktestSummary = summarizeShadowBacktest(shadowBacktestLedger);
   const paperPortfolioSummary = summarizePaperPortfolio(paperPortfolio);
+  const advancedSignalSummary = summarizeAdvancedSignals(watchlist.candidates || []);
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -174,6 +192,9 @@ ${formatShadowBacktestSummary(shadowBacktestSummary)}
 
 ## Paper Portfolio Summary
 ${formatPaperPortfolioSummary(paperPortfolioSummary)}
+
+## Advanced Signal Summary
+${formatAdvancedSignalSummary(advancedSignalSummary)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}

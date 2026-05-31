@@ -108,6 +108,18 @@
 - ARBE: TOO_RISKY / PAPER_ARCHIVE_REVIEW; reasons: risk gate active; cash_runway_watch; dilution_trend_watch
 - HPAI: FAKE_AI_HYPE / PAPER_ARCHIVE_REVIEW; reasons: name-only AI evidence
 
+## Advanced Signal Stack
+- GMEX: WAIT / ADVANCED_WAIT; score 38; SEC none; proof none; strength unavailable; liquidity unavailable
+- DUKR: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC material_agreement; proof hard_customer_or_contract; strength unavailable; liquidity unavailable
+- AISP: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC listing_or_structure_risk; proof none; strength unavailable; liquidity unavailable
+- AMCI: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC listing_or_structure_risk; proof hard_customer_or_contract; strength unavailable; liquidity unavailable
+- GMM: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC listing_or_structure_risk; proof none; strength unavailable; liquidity unavailable
+- KDK: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC offering_or_dilution; proof none; strength unavailable; liquidity unavailable
+- GFAI: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC listing_or_structure_risk; proof none; strength unavailable; liquidity unavailable
+- AIIO: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC listing_or_structure_risk; proof none; strength unavailable; liquidity unavailable
+- ARBE: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC offering_or_dilution; proof none; strength unavailable; liquidity unavailable
+- HPAI: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC offering_or_dilution; proof none; strength unavailable; liquidity unavailable
+
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
 - Kandidaten im Lauf: 20

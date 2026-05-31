@@ -48,6 +48,16 @@
 - THESIS_INTACT: 0
 - EXIT_RISK_REVIEW: 0
 
+## Advanced Signal Summary
+- BANGER_CANDIDATE_REVIEW: 0
+- EARLY_BUT_THIN: 0
+- WAIT: 1
+- RISK_TRAP: 19
+- review_queue: none
+- relative_strength_unavailable: 20
+- ownership_unavailable: 20
+- liquidity_unavailable: 20
+
 ## Keep Review
 - GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
 - DUKR (DUKE Robotics Corp.): Grade C, Early Watch, Score 63, Datenqualitaet A, Status fresh. Notes: cash runway watch
