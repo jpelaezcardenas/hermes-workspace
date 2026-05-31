@@ -13,6 +13,7 @@ import {
   loadRiskProfile,
   writeIntegrationAudit,
 } from "./ai-stock-radar-ceo-control.mjs";
+import { applyEntryReadiness } from "./ai-stock-radar-paper-portfolio.mjs";
 
 function candidate(overrides = {}) {
   return {
@@ -114,20 +115,23 @@ describe("AI stock radar CEO control", () => {
     fs.mkdirSync(path.join(root, "projects/ai-stock-radar/prompts"), { recursive: true });
     fs.mkdirSync(path.join(root, "reports/ai-stock-radar"), { recursive: true });
     fs.mkdirSync(path.join(root, "scripts"), { recursive: true });
-    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\n");
-    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\nPaper Portfolio\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\nPaper Portfolio Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-radar-2026-05-30.md"), "## Idea Grade\n## Price/Volume Confirmation\n## Evidence Firewall\n## CEO Control\n");
-    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n## Paper Portfolio Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"), "# AI Stock Radar Shadow Backtest\n## 30-Day Calibration\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-paper-portfolio-2026-05-30.md"), "# AI Stock Radar Paper Portfolio\n## Entry Readiness\n");
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/shadow-backtest-ledger.json"), JSON.stringify({ version: 1, snapshots: [] }));
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/paper-portfolio.json"), JSON.stringify({ version: 1, positions: [] }));
     fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-idea-grade.mjs"), "assignIdeaGrade");
     fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-evidence-firewall.mjs"), "applyEvidenceFirewall");
     fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-shadow-backtest.mjs"), "writeShadowBacktestRun");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-paper-portfolio.mjs"), "writePaperPortfolioRun");
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/watchlist.json"), JSON.stringify({
       version: 1,
       updated_at: "2026-05-30",
       provider_status: { market_data: "free_price_data_unavailable", filings: "available", news: "public_sources_only" },
-      candidates: [applyCeoControl(candidate(), loadRiskProfile({ root: process.cwd() }))],
+      candidates: [applyEntryReadiness(applyCeoControl(candidate(), loadRiskProfile({ root: process.cwd() })))],
     }));
 
     const audit = buildIntegrationAudit({ root, date: "2026-05-30" });
@@ -135,6 +139,7 @@ describe("AI stock radar CEO control", () => {
     expect(audit.status).toBe("pass");
     expect(audit.checks.every((check) => check.status === "pass")).toBe(true);
     expect(audit.checks.find((check) => check.id === "shadow_backtest_artifacts")).toMatchObject({ status: "pass" });
+    expect(audit.checks.find((check) => check.id === "paper_portfolio_artifacts")).toMatchObject({ status: "pass" });
   });
 
   it("writes a safe integration audit report", () => {
@@ -142,20 +147,23 @@ describe("AI stock radar CEO control", () => {
     fs.mkdirSync(path.join(root, "projects/ai-stock-radar/prompts"), { recursive: true });
     fs.mkdirSync(path.join(root, "reports/ai-stock-radar"), { recursive: true });
     fs.mkdirSync(path.join(root, "scripts"), { recursive: true });
-    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\n");
-    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\nPaper Portfolio\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\nPaper Portfolio Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-radar-2026-05-30.md"), "## Idea Grade\n## Price/Volume Confirmation\n## Evidence Firewall\n## CEO Control\n");
-    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n## Paper Portfolio Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"), "# AI Stock Radar Shadow Backtest\n## 30-Day Calibration\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-paper-portfolio-2026-05-30.md"), "# AI Stock Radar Paper Portfolio\n## Entry Readiness\n");
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/shadow-backtest-ledger.json"), JSON.stringify({ version: 1, snapshots: [] }));
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/paper-portfolio.json"), JSON.stringify({ version: 1, positions: [] }));
     fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-idea-grade.mjs"), "assignIdeaGrade");
     fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-evidence-firewall.mjs"), "applyEvidenceFirewall");
     fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-shadow-backtest.mjs"), "writeShadowBacktestRun");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-paper-portfolio.mjs"), "writePaperPortfolioRun");
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/watchlist.json"), JSON.stringify({
       version: 1,
       updated_at: "2026-05-30",
       provider_status: { market_data: "free_price_data_unavailable", filings: "available", news: "public_sources_only" },
-      candidates: [applyCeoControl(candidate(), loadRiskProfile({ root: process.cwd() }))],
+      candidates: [applyEntryReadiness(applyCeoControl(candidate(), loadRiskProfile({ root: process.cwd() })))],
     }));
 
     const result = writeIntegrationAudit({ root, date: "2026-05-30" });

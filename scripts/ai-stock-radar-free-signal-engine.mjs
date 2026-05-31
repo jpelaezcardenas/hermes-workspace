@@ -29,6 +29,10 @@ import {
   writeIntegrationAudit,
 } from "./ai-stock-radar-ceo-control.mjs";
 import { writeShadowBacktestRun } from "./ai-stock-radar-shadow-backtest.mjs";
+import {
+  applyEntryReadiness,
+  writePaperPortfolioRun,
+} from "./ai-stock-radar-paper-portfolio.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -347,6 +351,12 @@ function formatSourceConfidenceCandidate(candidate) {
   return `- ${candidate.ticker}: facts ${summary.facts || 0}, interpretations ${summary.interpretations || 0}, missing ${summary.missing || 0}; missing: ${missing}`;
 }
 
+function formatEntryReadinessCandidate(candidate) {
+  const readiness = candidate.entry_readiness || {};
+  const reasons = (readiness.reasons || []).join("; ") || "no entry-readiness reason";
+  return `- ${candidate.ticker}: ${readiness.label || "WAIT_FOR_CONFIRMATION"} / ${readiness.action || "PAPER_HOLD_REVIEW"}; reasons: ${reasons}`;
+}
+
 export function renderFreeSourceReport({
   date,
   candidates,
@@ -402,6 +412,9 @@ ${gradeCandidates.length ? gradeCandidates.map(formatCeoControlCandidate).join("
 
 ## Source Confidence Ledger
 ${gradeCandidates.length ? gradeCandidates.map(formatSourceConfidenceCandidate).join("\n") : "- Keine Source-Confidence-Daten."}
+
+## Entry Readiness
+${gradeCandidates.length ? gradeCandidates.map(formatEntryReadinessCandidate).join("\n") : "- Keine Entry-Readiness-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
@@ -506,6 +519,7 @@ export async function writeFreeSignalRun({
   });
   const riskProfile = loadRiskProfile({ root });
   candidates = candidates.map((candidate) => applyCeoControl(candidate, riskProfile));
+  candidates = candidates.map(applyEntryReadiness);
   candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || right.score - left.score || left.ticker.localeCompare(right.ticker));
   const watchlist = validateWatchlist({
     version: 1,
@@ -556,6 +570,11 @@ export async function writeFreeSignalRun({
     date: resolvedDate,
     watchlist,
   });
+  const paperPortfolioResult = writePaperPortfolioRun({
+    root,
+    date: resolvedDate,
+    watchlist,
+  });
   const auditResult = writeIntegrationAudit({ root, date: resolvedDate });
 
   return {
@@ -565,6 +584,8 @@ export async function writeFreeSignalRun({
     auditReportPath: auditResult.reportPath,
     shadowBacktestLedgerPath: shadowBacktestResult.ledgerPath,
     shadowBacktestReportPath: shadowBacktestResult.reportPath,
+    paperPortfolioPath: paperPortfolioResult.portfolioPath,
+    paperPortfolioReportPath: paperPortfolioResult.reportPath,
     dossierPaths,
     candidateCount: candidates.length,
     discoveryMode: discovery.discoveryMode,

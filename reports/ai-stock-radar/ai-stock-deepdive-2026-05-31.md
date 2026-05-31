@@ -32,13 +32,21 @@
 - offering-watch: 4
 
 ## Shadow Backtest Summary
-- total_snapshots: 20
+- total_snapshots: 40
 - assessed: 0
-- pending: 20
+- pending: 40
 - unavailable: 0
 - constructive: 0
 - risk_confirmed: 0
 - inconclusive: 0
+
+## Paper Portfolio Summary
+- total_positions: 0
+- open_positions: 0
+- PAPER_ENTRY_REVIEW: 0
+- PAPER_EXIT_REVIEW: 0
+- THESIS_INTACT: 0
+- EXIT_RISK_REVIEW: 0
 
 ## Keep Review
 - GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes

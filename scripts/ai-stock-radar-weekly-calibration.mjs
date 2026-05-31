@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { classifyCalibrationBucket } from "./ai-stock-radar-quality-rules.mjs";
 import { buildFalsePositiveMemory } from "./ai-stock-radar-ceo-control.mjs";
 import { summarizeShadowBacktest } from "./ai-stock-radar-shadow-backtest.mjs";
+import { summarizePaperPortfolio } from "./ai-stock-radar-paper-portfolio.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 
@@ -113,6 +114,17 @@ function formatShadowBacktestSummary(summary) {
   ].join("\n");
 }
 
+function formatPaperPortfolioSummary(summary) {
+  return [
+    `- total_positions: ${summary.total_positions || 0}`,
+    `- open_positions: ${summary.open_positions || 0}`,
+    `- PAPER_ENTRY_REVIEW: ${summary.action_counts?.PAPER_ENTRY_REVIEW || 0}`,
+    `- PAPER_EXIT_REVIEW: ${summary.action_counts?.PAPER_EXIT_REVIEW || 0}`,
+    `- THESIS_INTACT: ${summary.exit_risk_counts?.THESIS_INTACT || 0}`,
+    `- EXIT_RISK_REVIEW: ${summary.exit_risk_counts?.EXIT_RISK_REVIEW || 0}`,
+  ].join("\n");
+}
+
 export function bucketWatchlistCandidates(candidates) {
   const buckets = emptyBuckets();
 
@@ -123,13 +135,20 @@ export function bucketWatchlistCandidates(candidates) {
   return buckets;
 }
 
-export function renderWeeklyCalibrationReport({ date, watchlist, reportPath, shadowBacktestLedger = { version: 1, snapshots: [] } }) {
+export function renderWeeklyCalibrationReport({
+  date,
+  watchlist,
+  reportPath,
+  shadowBacktestLedger = { version: 1, snapshots: [] },
+  paperPortfolio = { version: 1, positions: [] },
+}) {
   const buckets = bucketWatchlistCandidates(watchlist.candidates || []);
   const gradeSummary = summarizeIdeaGrades(watchlist.candidates || []);
   const firewallSummary = summarizeFirewallVerdicts(watchlist.candidates || []);
   const ceoControlSummary = summarizeCeoControlLanes(watchlist.candidates || []);
   const falsePositiveMemory = buildFalsePositiveMemory(watchlist.candidates || []);
   const shadowBacktestSummary = summarizeShadowBacktest(shadowBacktestLedger);
+  const paperPortfolioSummary = summarizePaperPortfolio(paperPortfolio);
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -152,6 +171,9 @@ ${formatFalsePositiveMemory(falsePositiveMemory)}
 
 ## Shadow Backtest Summary
 ${formatShadowBacktestSummary(shadowBacktestSummary)}
+
+## Paper Portfolio Summary
+${formatPaperPortfolioSummary(paperPortfolioSummary)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}
@@ -194,10 +216,14 @@ export function writeWeeklyCalibration({ root = DEFAULT_ROOT, date = process.env
   const shadowBacktestLedger = fs.existsSync(shadowBacktestLedgerPath)
     ? JSON.parse(fs.readFileSync(shadowBacktestLedgerPath, "utf8"))
     : { version: 1, snapshots: [] };
+  const paperPortfolioPath = path.join(root, "projects/ai-stock-radar/paper-portfolio.json");
+  const paperPortfolio = fs.existsSync(paperPortfolioPath)
+    ? JSON.parse(fs.readFileSync(paperPortfolioPath, "utf8"))
+    : { version: 1, positions: [] };
   const reportDir = path.join(root, "reports/ai-stock-radar");
   fs.mkdirSync(reportDir, { recursive: true });
   const reportPath = path.join(reportDir, `ai-stock-deepdive-${resolvedDate}.md`);
-  const report = renderWeeklyCalibrationReport({ date: resolvedDate, watchlist, reportPath, shadowBacktestLedger });
+  const report = renderWeeklyCalibrationReport({ date: resolvedDate, watchlist, reportPath, shadowBacktestLedger, paperPortfolio });
   fs.writeFileSync(reportPath, report);
   const memoryPath = path.join(root, "projects/ai-stock-radar/false-positive-memory.json");
   fs.writeFileSync(memoryPath, `${JSON.stringify(buildFalsePositiveMemory(watchlist.candidates || []), null, 2)}\n`);
@@ -208,6 +234,7 @@ export function writeWeeklyCalibration({ root = DEFAULT_ROOT, date = process.env
     reportPath,
     memoryPath,
     shadowBacktestLedgerPath,
+    paperPortfolioPath,
     buckets: Object.fromEntries(Object.entries(buckets).map(([key, value]) => [key, value.length])),
   };
 }

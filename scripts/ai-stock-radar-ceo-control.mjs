@@ -255,6 +255,8 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
   const weeklyReportPath = path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md");
   const shadowReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-shadow-backtest-${date}.md`);
   const shadowLedgerPath = path.join(root, "projects/ai-stock-radar/shadow-backtest-ledger.json");
+  const paperReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-paper-portfolio-${date}.md`);
+  const paperPortfolioPath = path.join(root, "projects/ai-stock-radar/paper-portfolio.json");
   const watchlistPath = path.join(root, "projects/ai-stock-radar/watchlist.json");
   const shadowArtifactCheck = checkContains({
     id: "shadow_backtest_artifacts",
@@ -262,18 +264,24 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
     text: readIfExists(shadowReportPath),
     required: ["# AI Stock Radar Shadow Backtest", "## 30-Day Calibration"],
   });
+  const paperArtifactCheck = checkContains({
+    id: "paper_portfolio_artifacts",
+    filePath: paperReportPath,
+    text: readIfExists(paperReportPath),
+    required: ["# AI Stock Radar Paper Portfolio", "## Entry Readiness"],
+  });
   const checks = [
     checkContains({
       id: "daily_prompt_sections",
       filePath: dailyPromptPath,
       text: readIfExists(dailyPromptPath),
-      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest"],
+      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio"],
     }),
     checkContains({
       id: "weekly_prompt_sections",
       filePath: weeklyPromptPath,
       text: readIfExists(weeklyPromptPath),
-      required: ["Grade Summary", "Firewall Summary", "CEO Control Summary", "False Positive Memory", "Shadow Backtest Summary"],
+      required: ["Grade Summary", "Firewall Summary", "CEO Control Summary", "False Positive Memory", "Shadow Backtest Summary", "Paper Portfolio Summary"],
     }),
     checkContains({
       id: "daily_report_sections",
@@ -285,7 +293,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       id: "weekly_report_sections",
       filePath: weeklyReportPath,
       text: readIfExists(weeklyReportPath),
-      required: ["## Grade Summary", "## Firewall Summary", "## CEO Control Summary", "## False Positive Memory", "## Shadow Backtest Summary"],
+      required: ["## Grade Summary", "## Firewall Summary", "## CEO Control Summary", "## False Positive Memory", "## Shadow Backtest Summary", "## Paper Portfolio Summary"],
     }),
     checkContains({
       id: "idea_grade_module",
@@ -305,9 +313,19 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       text: readIfExists(path.join(root, "scripts/ai-stock-radar-shadow-backtest.mjs")),
       required: ["writeShadowBacktestRun"],
     }),
+    checkContains({
+      id: "paper_portfolio_module",
+      filePath: path.join(root, "scripts/ai-stock-radar-paper-portfolio.mjs"),
+      text: readIfExists(path.join(root, "scripts/ai-stock-radar-paper-portfolio.mjs")),
+      required: ["writePaperPortfolioRun"],
+    }),
     {
       ...shadowArtifactCheck,
       status: fs.existsSync(shadowLedgerPath) && shadowArtifactCheck.status === "pass" ? "pass" : "fail",
+    },
+    {
+      ...paperArtifactCheck,
+      status: fs.existsSync(paperPortfolioPath) && paperArtifactCheck.status === "pass" ? "pass" : "fail",
     },
   ];
 
@@ -321,7 +339,8 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
         candidate.idea_grade &&
         candidate.evidence_firewall &&
         candidate.ceo_control &&
-        candidate.source_confidence
+        candidate.source_confidence &&
+        candidate.entry_readiness
       ) ? "pass" : "fail",
       missing: [],
     });

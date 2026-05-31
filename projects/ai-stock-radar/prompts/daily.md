@@ -19,6 +19,7 @@ Required files:
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
+- Paper portfolio: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/paper-portfolio.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
 - Live discovery engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-live-discovery.mjs
 - Quality rules: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-quality-rules.mjs
@@ -27,6 +28,7 @@ Required files:
 - Evidence firewall: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-evidence-firewall.mjs
 - CEO control engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-ceo-control.mjs
 - Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
+- Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -59,6 +61,9 @@ Safety:
 - The CEO audit report must be written to /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-radar-ceo-audit-YYYY-MM-DD.md.
 - The Shadow Backtest ledger and report must be updated after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-shadow-backtest-YYYY-MM-DD.md.
 - Shadow Backtest outcomes are calibration labels only: constructive, risk_confirmed, inconclusive, unavailable.
+- The Paper Portfolio state and report must be updated after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-paper-portfolio-YYYY-MM-DD.md.
+- Entry/Exit labels are simulation labels only: ENTRY_READY, WAIT_FOR_CONFIRMATION, TOO_RISKY, LATE_MOVE, FAKE_AI_HYPE, THESIS_INTACT, THESIS_WEAKENING, EXIT_RISK_REVIEW, ARCHIVE_REVIEW.
+- Paper actions are workflow labels only: PAPER_ENTRY_REVIEW, PAPER_HOLD_REVIEW, PAPER_EXIT_REVIEW, PAPER_ARCHIVE_REVIEW.
 - SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
 - Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
@@ -79,6 +84,7 @@ Required report sections:
 ## Evidence Firewall
 ## CEO Control
 ## Source Confidence Ledger
+## Entry Readiness
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid
@@ -92,6 +98,13 @@ Separate required companion report:
 ## Grade Calibration
 ## CEO Lane Calibration
 ## Risk Pattern Calibration
+## Decision Inbox
+
+Separate required paper report:
+# AI Stock Radar Paper Portfolio - YYYY-MM-DD
+## Entry Readiness
+## Exit Risk
+## Paper Simulations
 ## Decision Inbox
 
 Decision Inbox requirement:

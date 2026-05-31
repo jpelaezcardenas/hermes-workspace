@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-05-30",
+  "updated_at": "2026-05-31",
   "provider_status": {
     "market_data": "free_price_data_unavailable",
     "filings": "available",
@@ -59,7 +59,7 @@
       ],
       "quality_notes": [],
       "score_penalty": 0,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "WAIT_FOR_CONFIRMATION: Wait for stronger evidence or price/volume context; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -80,7 +80,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "B",
@@ -146,6 +146,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "WAIT_FOR_CONFIRMATION",
+        "action": "PAPER_HOLD_REVIEW",
+        "reasons": [
+          "not enough confirmation for paper entry review"
+        ]
       }
     },
     {
@@ -214,7 +221,7 @@
         "cash runway watch"
       ],
       "score_penalty": 14,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -235,7 +242,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "C",
@@ -302,6 +309,14 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "cash_runway_watch"
+        ]
       }
     },
     {
@@ -365,7 +380,7 @@
         "name only ai watch"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -386,7 +401,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -452,6 +467,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -518,7 +540,7 @@
         "delisting watch"
       ],
       "score_penalty": 30,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -539,7 +561,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -606,6 +628,14 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "delisting_watch"
+        ]
       }
     },
     {
@@ -667,7 +697,7 @@
         "name only ai watch"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -688,7 +718,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -754,6 +784,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -823,7 +860,7 @@
         "offering watch"
       ],
       "score_penalty": 40,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -844,7 +881,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -910,6 +947,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -965,7 +1009,7 @@
         "SEC companyfacts fundamentals unavailable"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -984,7 +1028,7 @@
         "fundamental_quality": "limited public fact coverage",
         "signal_breadth": "3 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1050,6 +1094,13 @@
           "interpretations": 2,
           "missing": 2
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -1117,7 +1168,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 33,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1138,7 +1189,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1204,6 +1255,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -1272,7 +1330,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 34,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1293,7 +1351,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1359,6 +1417,15 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ]
       }
     },
     {
@@ -1422,7 +1489,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 37,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1443,7 +1510,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1509,6 +1576,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -1577,7 +1651,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 47,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1598,7 +1672,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1664,6 +1738,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -1741,7 +1822,7 @@
         "cash runway watch"
       ],
       "score_penalty": 59,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1762,7 +1843,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1829,6 +1910,16 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "delisting_watch",
+          "offering_watch",
+          "cash_runway_watch"
+        ]
       }
     },
     {
@@ -1910,7 +2001,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 63,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1931,7 +2022,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1998,6 +2089,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -2075,7 +2173,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 67,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2096,7 +2194,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2163,6 +2261,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -2240,7 +2345,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 67,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2261,7 +2366,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2328,6 +2433,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -2402,7 +2514,7 @@
         "offering watch"
       ],
       "score_penalty": 70,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2423,7 +2535,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2490,6 +2602,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -2570,7 +2689,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 75,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2591,7 +2710,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2658,6 +2777,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -2745,7 +2871,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 96,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2766,7 +2892,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2833,6 +2959,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -2917,7 +3050,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 81,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2938,7 +3071,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3005,6 +3138,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     },
     {
@@ -3087,7 +3227,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 81,
-      "last_checked": "2026-05-30",
+      "last_checked": "2026-05-31",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3108,7 +3248,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-30",
+      "first_seen": "2026-05-31",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3175,6 +3315,13 @@
           "interpretations": 2,
           "missing": 1
         }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
       }
     }
   ]

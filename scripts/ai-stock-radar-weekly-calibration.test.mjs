@@ -79,6 +79,12 @@ describe("AI stock radar weekly calibration", () => {
           { status: "assessed", outcome_label: "constructive", idea_grade: "A", ceo_lane: "monitor" },
         ],
       },
+      paperPortfolio: {
+        version: 1,
+        positions: [
+          { status: "paper_open", paper_action: "PAPER_ENTRY_REVIEW", exit_risk: { label: "THESIS_INTACT" } },
+        ],
+      },
     });
 
     expect(report).toContain("# AI Stock Radar Weekly Calibration - 2026-06-07");
@@ -97,6 +103,8 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("name-only AI evidence");
     expect(report).toContain("## Shadow Backtest Summary");
     expect(report).toContain("constructive: 1");
+    expect(report).toContain("## Paper Portfolio Summary");
+    expect(report).toContain("open_positions: 1");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
@@ -120,11 +128,21 @@ describe("AI stock radar weekly calibration", () => {
         ],
       }, null, 2)}\n`,
     );
+    fs.writeFileSync(
+      path.join(root, "projects/ai-stock-radar/paper-portfolio.json"),
+      `${JSON.stringify({
+        version: 1,
+        positions: [
+          { status: "paper_open", paper_action: "PAPER_ENTRY_REVIEW", exit_risk: { label: "THESIS_INTACT" } },
+        ],
+      }, null, 2)}\n`,
+    );
 
     const result = writeWeeklyCalibration({ root, date: "2026-06-07" });
 
     expect(fs.existsSync(result.reportPath)).toBe(true);
     expect(fs.existsSync(result.shadowBacktestLedgerPath)).toBe(true);
+    expect(fs.existsSync(result.paperPortfolioPath)).toBe(true);
     expect(result.buckets.false_positive_review).toBe(1);
     expect(result.buckets.archive_review).toBe(1);
     expect(JSON.parse(fs.readFileSync(path.join(root, "projects/ai-stock-radar/watchlist.json"), "utf8"))).toEqual(
