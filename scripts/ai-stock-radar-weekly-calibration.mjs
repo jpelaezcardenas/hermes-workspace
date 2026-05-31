@@ -8,6 +8,7 @@ import { summarizeShadowBacktest } from "./ai-stock-radar-shadow-backtest.mjs";
 import { summarizePaperPortfolio } from "./ai-stock-radar-paper-portfolio.mjs";
 import { summarizeAdvancedSignals } from "./ai-stock-radar-advanced-signals.mjs";
 import { summarizeThesisIntelligence } from "./ai-stock-radar-thesis-intelligence.mjs";
+import { summarizeAlphaMemory } from "./ai-stock-radar-alpha-memory.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 
@@ -161,6 +162,38 @@ function formatThesisIntelligenceSummary(summary) {
   ].join("\n");
 }
 
+function formatAlphaMemorySummary(summary) {
+  const hypotheses = summary.hypothesis_counts || {};
+  const contradictions = summary.contradiction_severity_counts || {};
+  const labels = Object.entries(summary.contradiction_label_counts || {})
+    .sort(([, left], [, right]) => right - left)
+    .slice(0, 5)
+    .map(([label, count]) => `${label} (${count})`)
+    .join(", ") || "none";
+  const riskPatterns = Object.entries(summary.recurring_risk_counts || {})
+    .sort(([, left], [, right]) => right - left)
+    .slice(0, 5)
+    .map(([label, count]) => `${label} (${count})`)
+    .join(", ") || "none";
+  const timing = summary.catalyst_timing_counts || {};
+  const outcomes = summary.assessment_counts || {};
+  return [
+    `- TRACK_HYPOTHESIS: ${hypotheses.TRACK_HYPOTHESIS || 0}`,
+    `- WATCH_ONLY: ${hypotheses.WATCH_ONLY || 0}`,
+    `- CONTRADICTION_REVIEW: ${hypotheses.CONTRADICTION_REVIEW || 0}`,
+    `- RISK_PATTERN: ${hypotheses.RISK_PATTERN || 0}`,
+    `- critical_contradictions: ${contradictions.critical || 0}`,
+    `- serious_contradictions: ${contradictions.serious || 0}`,
+    `- top_contradiction_labels: ${labels}`,
+    `- recurring_risk_patterns: ${riskPatterns}`,
+    `- fresh_catalyst: ${timing.fresh_catalyst || 0}`,
+    `- late_or_risk: ${timing.late_or_risk || 0}`,
+    `- constructive_assessments: ${outcomes.constructive || 0}`,
+    `- risk_confirmed_assessments: ${outcomes.risk_confirmed || 0}`,
+    `- false_positive_assessments: ${outcomes.false_positive || 0}`,
+  ].join("\n");
+}
+
 export function bucketWatchlistCandidates(candidates) {
   const buckets = emptyBuckets();
 
@@ -177,6 +210,7 @@ export function renderWeeklyCalibrationReport({
   reportPath,
   shadowBacktestLedger = { version: 1, snapshots: [] },
   paperPortfolio = { version: 1, positions: [] },
+  alphaMemory = { version: 1, snapshots: [], assessments: [] },
 }) {
   const buckets = bucketWatchlistCandidates(watchlist.candidates || []);
   const gradeSummary = summarizeIdeaGrades(watchlist.candidates || []);
@@ -187,6 +221,7 @@ export function renderWeeklyCalibrationReport({
   const paperPortfolioSummary = summarizePaperPortfolio(paperPortfolio);
   const advancedSignalSummary = summarizeAdvancedSignals(watchlist.candidates || []);
   const thesisIntelligenceSummary = summarizeThesisIntelligence(watchlist.candidates || []);
+  const alphaMemorySummary = summarizeAlphaMemory({ candidates: watchlist.candidates || [], memory: alphaMemory });
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -218,6 +253,9 @@ ${formatAdvancedSignalSummary(advancedSignalSummary)}
 
 ## Thesis Intelligence Summary
 ${formatThesisIntelligenceSummary(thesisIntelligenceSummary)}
+
+## Alpha Memory Summary
+${formatAlphaMemorySummary(alphaMemorySummary)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}
@@ -264,10 +302,14 @@ export function writeWeeklyCalibration({ root = DEFAULT_ROOT, date = process.env
   const paperPortfolio = fs.existsSync(paperPortfolioPath)
     ? JSON.parse(fs.readFileSync(paperPortfolioPath, "utf8"))
     : { version: 1, positions: [] };
+  const alphaMemoryPath = path.join(root, "projects/ai-stock-radar/alpha-memory.json");
+  const alphaMemory = fs.existsSync(alphaMemoryPath)
+    ? JSON.parse(fs.readFileSync(alphaMemoryPath, "utf8"))
+    : { version: 1, snapshots: [], assessments: [] };
   const reportDir = path.join(root, "reports/ai-stock-radar");
   fs.mkdirSync(reportDir, { recursive: true });
   const reportPath = path.join(reportDir, `ai-stock-deepdive-${resolvedDate}.md`);
-  const report = renderWeeklyCalibrationReport({ date: resolvedDate, watchlist, reportPath, shadowBacktestLedger, paperPortfolio });
+  const report = renderWeeklyCalibrationReport({ date: resolvedDate, watchlist, reportPath, shadowBacktestLedger, paperPortfolio, alphaMemory });
   fs.writeFileSync(reportPath, report);
   const memoryPath = path.join(root, "projects/ai-stock-radar/false-positive-memory.json");
   fs.writeFileSync(memoryPath, `${JSON.stringify(buildFalsePositiveMemory(watchlist.candidates || []), null, 2)}\n`);
@@ -279,6 +321,7 @@ export function writeWeeklyCalibration({ root = DEFAULT_ROOT, date = process.env
     memoryPath,
     shadowBacktestLedgerPath,
     paperPortfolioPath,
+    alphaMemoryPath,
     buckets: Object.fromEntries(Object.entries(buckets).map(([key, value]) => [key, value.length])),
   };
 }

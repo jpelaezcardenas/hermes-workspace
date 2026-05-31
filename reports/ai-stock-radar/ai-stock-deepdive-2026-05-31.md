@@ -69,6 +69,21 @@
 - reality_risk: 15
 - top_gaps: ownership context unavailable (20), price volume context unavailable (20), relative strength unavailable (20), source confidence has missing data (20), AI revenue proof missing (17), AI revenue split not verified (3), fundamentals unavailable (1)
 
+## Alpha Memory Summary
+- TRACK_HYPOTHESIS: 0
+- WATCH_ONLY: 0
+- CONTRADICTION_REVIEW: 1
+- RISK_PATTERN: 19
+- critical_contradictions: 19
+- serious_contradictions: 0
+- top_contradiction_labels: broken_thesis (19), critical_negative_catalyst (19), advanced_signal_risk_trap (19), ai_story_without_revenue_proof (17)
+- recurring_risk_patterns: name_only_ai_watch (15), delisting_watch (10), dilution_trend_watch (8), cash_runway_watch (7), revenue_decline_watch (5)
+- fresh_catalyst: 0
+- late_or_risk: 19
+- constructive_assessments: 0
+- risk_confirmed_assessments: 0
+- false_positive_assessments: 0
+
 ## Keep Review
 - GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
 - DUKR (DUKE Robotics Corp.): Grade C, Early Watch, Score 63, Datenqualitaet A, Status fresh. Notes: cash runway watch

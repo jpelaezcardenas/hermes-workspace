@@ -43,6 +43,12 @@ const watchlist = {
         negative_catalysts: { severity: "none", labels: [] },
         graph: { gaps: [] },
       },
+      alpha_memory: {
+        hypothesis_label: "TRACK_HYPOTHESIS",
+        memory_action: "ALPHA_TRACK",
+        contradiction_detector: { severity: "none", labels: [] },
+        catalyst_timeline: { timing_label: "fresh_catalyst", events: [] },
+      },
     },
     {
       ticker: "FALSE",
@@ -67,6 +73,12 @@ const watchlist = {
         negative_catalysts: { severity: "critical", labels: ["name_only_ai_watch"] },
         graph: { gaps: ["AI revenue proof missing"] },
       },
+      alpha_memory: {
+        hypothesis_label: "RISK_PATTERN",
+        memory_action: "ALPHA_RISK_ARCHIVE",
+        contradiction_detector: { severity: "critical", labels: ["ai_story_without_revenue_proof"] },
+        catalyst_timeline: { timing_label: "late_or_risk", events: [] },
+      },
     },
     {
       ticker: "ARCH",
@@ -90,6 +102,12 @@ const watchlist = {
         ai_revenue_reality: { label: "unknown" },
         negative_catalysts: { severity: "critical", labels: ["single_source"] },
         graph: { gaps: ["fundamentals unavailable"] },
+      },
+      alpha_memory: {
+        hypothesis_label: "RISK_PATTERN",
+        memory_action: "ALPHA_RISK_ARCHIVE",
+        contradiction_detector: { severity: "critical", labels: ["weak_source_pattern"] },
+        catalyst_timeline: { timing_label: "stale_or_thin", events: [] },
       },
     },
   ],
@@ -148,6 +166,10 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("THESIS_CONFIRMED_REVIEW: 1");
     expect(report).toContain("BROKEN_THESIS: 2");
     expect(report).toContain("verified_ai_revenue: 1");
+    expect(report).toContain("## Alpha Memory Summary");
+    expect(report).toContain("TRACK_HYPOTHESIS: 1");
+    expect(report).toContain("RISK_PATTERN: 2");
+    expect(report).toContain("critical_contradictions: 2");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");

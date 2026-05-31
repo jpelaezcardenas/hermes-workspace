@@ -132,6 +132,18 @@
 - ARBE: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue ai_context_only
 - HPAI: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
 
+## Alpha Memory
+- GMEX: CONTRADICTION_REVIEW / ALPHA_CONTRADICTION_REVIEW; learning 33; contradiction watch; labels ai_story_without_revenue_proof; timeline stale_or_thin
+- DUKR: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels broken_thesis, critical_negative_catalyst, advanced_signal_risk_trap; timeline late_or_risk
+- AISP: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+- AMCI: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels broken_thesis, critical_negative_catalyst, advanced_signal_risk_trap; timeline late_or_risk
+- GMM: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+- KDK: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+- GFAI: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+- AIIO: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+- ARBE: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+- HPAI: RISK_PATTERN / ALPHA_RISK_ARCHIVE; learning 0; contradiction critical; labels ai_story_without_revenue_proof, broken_thesis, critical_negative_catalyst; timeline late_or_risk
+
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
 - Kandidaten im Lauf: 20

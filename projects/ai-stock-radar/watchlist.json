@@ -271,6 +271,63 @@
           "ownership context unavailable",
           "AI revenue proof missing"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "CONTRADICTION_REVIEW",
+        "memory_action": "ALPHA_CONTRADICTION_REVIEW",
+        "learning_score": 33,
+        "contradiction_detector": {
+          "severity": "watch",
+          "labels": [
+            "ai_story_without_revenue_proof"
+          ],
+          "reasons": [
+            "AI revenue reality is ai_context_only"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "stale_or_thin",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "pass",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "WAIT",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "WATCH_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "free_source_evidence_still_needs_manual_review",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is ai_context_only",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -565,6 +622,79 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue split not verified"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -862,6 +992,82 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -1169,6 +1375,79 @@
           "relative strength unavailable",
           "ownership context unavailable"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -1463,6 +1742,74 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -1769,6 +2116,88 @@
           "ownership context unavailable",
           "AI revenue proof missing"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -2052,6 +2481,74 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -2353,6 +2850,80 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -2658,6 +3229,86 @@
           "ownership context unavailable",
           "AI revenue proof missing"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is ai_context_only",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is ai_context_only",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -2954,6 +3605,80 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -3258,6 +3983,86 @@
           "relative strength unavailable",
           "ownership context unavailable",
           "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -3581,6 +4386,91 @@
           "source confidence has missing data",
           "relative strength unavailable",
           "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -3907,6 +4797,94 @@
           "relative strength unavailable",
           "ownership context unavailable"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -4227,6 +5205,94 @@
           "source confidence has missing data",
           "relative strength unavailable",
           "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -4549,6 +5615,94 @@
           "relative strength unavailable",
           "ownership context unavailable"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -4866,6 +6020,94 @@
           "source confidence has missing data",
           "relative strength unavailable",
           "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -5192,6 +6434,100 @@
           "source confidence has missing data",
           "relative strength unavailable",
           "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     },
@@ -5528,6 +6864,100 @@
           "relative strength unavailable",
           "ownership context unavailable"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -5858,6 +7288,100 @@
           "relative strength unavailable",
           "ownership context unavailable"
         ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
       }
     },
     {
@@ -6185,6 +7709,100 @@
           "source confidence has missing data",
           "relative strength unavailable",
           "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-05-31",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-05-31",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-05-31",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-05-31",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-05-31",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "cash_runway_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-05-31",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
         ]
       }
     }

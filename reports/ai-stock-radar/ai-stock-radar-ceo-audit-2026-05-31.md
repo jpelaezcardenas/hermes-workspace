@@ -13,10 +13,12 @@ Status: pass
 - paper_portfolio_module: pass
 - advanced_signals_module: pass
 - thesis_intelligence_module: pass
+- alpha_memory_module: pass
 - shadow_backtest_artifacts: pass
 - paper_portfolio_artifacts: pass
 - advanced_signals_artifacts: pass
 - thesis_intelligence_artifacts: pass
+- alpha_memory_artifacts: pass
 - watchlist_candidate_fields: pass
 
 ## Decision Inbox

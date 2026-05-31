@@ -42,6 +42,10 @@ import {
   applyThesisIntelligence,
   writeThesisIntelligenceRun,
 } from "./ai-stock-radar-thesis-intelligence.mjs";
+import {
+  applyAlphaMemorySignal,
+  writeAlphaMemoryRun,
+} from "./ai-stock-radar-alpha-memory.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -377,6 +381,12 @@ function formatThesisIntelligenceCandidate(candidate) {
   return `- ${candidate.ticker}: ${thesis.thesis_verdict || "WATCH_THESIS"} / ${thesis.research_action || "THESIS_MONITOR"}; confidence ${thesis.confidence_score ?? 0}; negative ${thesis.negative_catalysts?.severity || "watch"}; revenue ${thesis.ai_revenue_reality?.label || "unknown"}`;
 }
 
+function formatAlphaMemoryCandidate(candidate) {
+  const alpha = candidate.alpha_memory || {};
+  const labels = (alpha.contradiction_detector?.labels || []).slice(0, 3).join(", ") || "none";
+  return `- ${candidate.ticker}: ${alpha.hypothesis_label || "WATCH_ONLY"} / ${alpha.memory_action || "ALPHA_MONITOR"}; learning ${alpha.learning_score ?? 0}; contradiction ${alpha.contradiction_detector?.severity || "watch"}; labels ${labels}; timeline ${alpha.catalyst_timeline?.timing_label || "watch"}`;
+}
+
 export function renderFreeSourceReport({
   date,
   candidates,
@@ -441,6 +451,9 @@ ${gradeCandidates.length ? gradeCandidates.map(formatAdvancedSignalCandidate).jo
 
 ## Thesis Intelligence
 ${gradeCandidates.length ? gradeCandidates.map(formatThesisIntelligenceCandidate).join("\n") : "- Keine Thesis-Intelligence-Daten."}
+
+## Alpha Memory
+${gradeCandidates.length ? gradeCandidates.map(formatAlphaMemoryCandidate).join("\n") : "- Keine Alpha-Memory-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
@@ -549,7 +562,8 @@ export async function writeFreeSignalRun({
   const advancedSignalContext = loadAdvancedSignalContext({ root });
   candidates = candidates.map((candidate) => applyAdvancedSignals(candidate, advancedSignalContext));
   candidates = candidates.map(applyThesisIntelligence);
-  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || (right.advanced_signals?.banger_score || 0) - (left.advanced_signals?.banger_score || 0) || (right.thesis_intelligence?.confidence_score || 0) - (left.thesis_intelligence?.confidence_score || 0) || right.score - left.score || left.ticker.localeCompare(right.ticker));
+  candidates = candidates.map((candidate) => applyAlphaMemorySignal(candidate, { date: resolvedDate }));
+  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || (right.advanced_signals?.banger_score || 0) - (left.advanced_signals?.banger_score || 0) || (right.thesis_intelligence?.confidence_score || 0) - (left.thesis_intelligence?.confidence_score || 0) || (right.alpha_memory?.learning_score || 0) - (left.alpha_memory?.learning_score || 0) || right.score - left.score || left.ticker.localeCompare(right.ticker));
   const watchlist = validateWatchlist({
     version: 1,
     updated_at: resolvedDate,
@@ -614,6 +628,11 @@ export async function writeFreeSignalRun({
     date: resolvedDate,
     watchlist,
   });
+  const alphaMemoryResult = writeAlphaMemoryRun({
+    root,
+    date: resolvedDate,
+    watchlist,
+  });
   const auditResult = writeIntegrationAudit({ root, date: resolvedDate });
 
   return {
@@ -627,6 +646,8 @@ export async function writeFreeSignalRun({
     paperPortfolioReportPath: paperPortfolioResult.reportPath,
     advancedSignalsReportPath: advancedSignalsResult.reportPath,
     thesisIntelligenceReportPath: thesisIntelligenceResult.reportPath,
+    alphaMemoryPath: alphaMemoryResult.memoryPath,
+    alphaMemoryReportPath: alphaMemoryResult.reportPath,
     dossierPaths,
     candidateCount: candidates.length,
     discoveryMode: discovery.discoveryMode,

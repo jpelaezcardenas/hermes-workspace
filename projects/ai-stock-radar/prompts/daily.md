@@ -16,12 +16,14 @@ Required files:
 - CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
 - Advanced Signal Stack spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-advanced-signal-stack-design.md
 - Thesis Intelligence spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-thesis-intelligence-design.md
+- Alpha Memory spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-alpha-memory-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
 - Paper portfolio: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/paper-portfolio.json
+- Alpha memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/alpha-memory.json
 - Optional AI basket context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ai-basket-context.json
 - Optional ownership context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ownership-context.json
 - Free signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-free-signal-engine.mjs
@@ -35,6 +37,7 @@ Required files:
 - Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
 - Advanced signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-advanced-signals.mjs
 - Thesis intelligence engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-thesis-intelligence.mjs
+- Alpha memory engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-alpha-memory.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -86,6 +89,14 @@ Safety:
 - Negative catalysts and AI revenue reality risks must override positive narrative strength.
 - Missing AI revenue proof is a gap, not a bullish assumption.
 - The Thesis Intelligence companion report must be written after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-thesis-intelligence-YYYY-MM-DD.md.
+- The Alpha Memory layer must be applied after Thesis Intelligence and before CEO audit.
+- Every candidate must carry `alpha_memory` with hypothesis memory, contradiction detector, catalyst timeline, learning score, and research-only workflow action.
+- Alpha Memory labels are research-only review labels: TRACK_HYPOTHESIS, WATCH_ONLY, CONTRADICTION_REVIEW, RISK_PATTERN.
+- Alpha Memory actions are workflow labels only: ALPHA_TRACK, ALPHA_MONITOR, ALPHA_CONTRADICTION_REVIEW, ALPHA_RISK_ARCHIVE.
+- TRACK_HYPOTHESIS is not a trade instruction; it means the hypothesis is worth tracking in the research memory.
+- Contradiction severities and stale catalysts must override positive narrative, Banger Score, and thesis labels.
+- Missing catalyst timing, missing hard filings, missing AI revenue proof, repeated dilution, and failed historical patterns are gaps or risk inputs, not bullish assumptions.
+- The Alpha Memory companion report must be written after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-alpha-memory-YYYY-MM-DD.md.
 - SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
 - Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
@@ -109,6 +120,7 @@ Required report sections:
 ## Entry Readiness
 ## Advanced Signal Stack
 ## Thesis Intelligence
+## Alpha Memory
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid
@@ -146,6 +158,14 @@ Separate required thesis report:
 ## Negative Catalysts
 ## AI Revenue Reality
 ## Thesis Graph Gaps
+## Decision Inbox
+
+Separate required alpha memory report:
+# AI Stock Radar Alpha Memory - YYYY-MM-DD
+## Hypothesis Memory
+## Contradiction Detector
+## Catalyst Timeline
+## Learning Loop
 ## Decision Inbox
 
 Decision Inbox requirement:

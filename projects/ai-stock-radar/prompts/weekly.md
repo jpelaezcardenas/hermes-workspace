@@ -15,11 +15,13 @@ Required files:
 - CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
 - Advanced Signal Stack spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-advanced-signal-stack-design.md
 - Thesis Intelligence spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-thesis-intelligence-design.md
+- Alpha Memory spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-alpha-memory-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
 - Shadow backtest ledger: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/shadow-backtest-ledger.json
 - Paper portfolio: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/paper-portfolio.json
+- Alpha memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/alpha-memory.json
 - Optional AI basket context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ai-basket-context.json
 - Optional ownership context: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/ownership-context.json
 - Weekly calibration engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-weekly-calibration.mjs
@@ -31,6 +33,7 @@ Required files:
 - Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
 - Advanced signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-advanced-signals.mjs
 - Thesis intelligence engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-thesis-intelligence.mjs
+- Alpha memory engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-alpha-memory.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -51,6 +54,7 @@ Tasks:
 13. Summarize Paper Portfolio entry/exit review state and compare it against risk clusters.
 14. Summarize Advanced Signal labels, review queue, risk traps, and data gaps.
 15. Summarize Thesis Intelligence verdicts, negative catalyst severity, AI revenue reality labels, and top thesis gaps.
+16. Summarize Alpha Memory hypothesis labels, contradiction severities, catalyst timing, learning outcomes, and recurring risk patterns.
 
 Archive boundary:
 - Do not silently delete watchlist entries.
@@ -72,6 +76,7 @@ Required report sections:
 ## Paper Portfolio Summary
 ## Advanced Signal Summary
 ## Thesis Intelligence Summary
+## Alpha Memory Summary
 ## Keep Review
 ## Downgrade Review
 ## Archive Review
@@ -101,6 +106,10 @@ Safety:
 - THESIS_CONFIRMED_REVIEW is a deeper human-review label, not a trade instruction.
 - Thesis Intelligence Summary must name THESIS_CONFIRMED_REVIEW, WATCH_THESIS, WEAK_THESIS, BROKEN_THESIS, negative catalyst severities, AI revenue reality labels, and top thesis gaps.
 - Missing AI revenue proof is a gap and must not improve conviction.
+- Alpha Memory labels are research-only quality-control labels, never real buy/sell/hold instructions.
+- TRACK_HYPOTHESIS means a hypothesis is worth tracking in memory, not that any position should be opened.
+- Alpha Memory Summary must name TRACK_HYPOTHESIS, WATCH_ONLY, CONTRADICTION_REVIEW, RISK_PATTERN, contradiction severity distribution, catalyst timing, learning outcomes, and recurring risk patterns.
+- Contradictions, stale catalysts, failed historical patterns, and missing hard evidence must downgrade conviction before any scoring adjustment.
 
 Decision Inbox requirement:
 - Signal: Green / Yellow / Red
