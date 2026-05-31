@@ -222,6 +222,55 @@
           "local ownership context unavailable",
           "no thesis invalidation signal detected"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "WATCH_THESIS",
+        "research_action": "THESIS_MONITOR",
+        "confidence_score": 41,
+        "graph": {
+          "thesis": [
+            "GMEX ROBOTICS CORPORATION shows public AI exposure in robotics; score 65 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "Evidence Firewall pass",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [],
+          "counter_evidence": [],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "none",
+          "labels": [],
+          "reasons": [
+            "no negative catalyst detected"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "ai_context_only",
+          "score": 3,
+          "reasons": [
+            "AI context exists without verified revenue proof"
+          ]
+        },
+        "reasons": [
+          "no negative catalyst detected",
+          "AI context exists without verified revenue proof",
+          "Evidence Firewall pass",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
+        ]
       }
     },
     {
@@ -455,6 +504,68 @@
           "local ownership context unavailable",
           "hard risk gate: TOO_RISKY"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "DUKE Robotics Corp. shows public AI exposure in robotics; score 63 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "cash_runway_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue split not verified"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "cash_runway_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "product_core_no_revenue_split",
+          "score": 10,
+          "reasons": [
+            "AI appears product-core, but a dedicated revenue split is not verified"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI appears product-core, but a dedicated revenue split is not verified",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue split not verified"
+        ]
       }
     },
     {
@@ -686,6 +797,71 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Airship AI Holdings, Inc shows public AI exposure in ai_keyword_match; score 52 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
         ]
       }
     },
@@ -926,6 +1102,73 @@
           "hard risk gate: TOO_RISKY",
           "hard risk gate: delisting_watch"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "AMC Robotics Corporation shows public AI exposure in robotics; score 47 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "delisting_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue split not verified"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "delisting_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "product_core_no_revenue_split",
+          "score": 10,
+          "reasons": [
+            "AI appears product-core, but a dedicated revenue split is not verified"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI appears product-core, but a dedicated revenue split is not verified",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
       }
     },
     {
@@ -1155,6 +1398,71 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Global Mofy AI Limited shows public AI exposure in ai_keyword_match; score 40 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
         ]
       }
     },
@@ -1394,6 +1702,73 @@
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Kodiak AI, Inc. shows public AI exposure in ai_keyword_match; score 37 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "offering_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "offering_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
+        ]
       }
     },
     {
@@ -1615,6 +1990,68 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Guardforce AI Co., Limited shows public AI exposure in ai_keyword_match; score 35 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions. Data quality B."
+          ],
+          "evidence": [],
+          "risks": [
+            "name_only_ai_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "fundamentals unavailable",
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "fundamentals unavailable",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
         ]
       }
     },
@@ -1851,6 +2288,71 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Robo.ai Inc. shows public AI exposure in ai_keyword_match; score 32 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
         ]
       }
     },
@@ -2089,6 +2591,73 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: TOO_RISKY"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Arbe Robotics Ltd. shows public AI exposure in robotics; score 31 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "cash_runway_watch",
+            "dilution_trend_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "cash_runway_watch",
+            "dilution_trend_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "ai_context_only",
+          "score": 3,
+          "reasons": [
+            "AI context exists without verified revenue proof"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI context exists without verified revenue proof",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
+        ]
       }
     },
     {
@@ -2320,6 +2889,71 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Helport AI Limited shows public AI exposure in ai_keyword_match; score 28 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
         ]
       }
     },
@@ -2557,6 +3191,73 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Huachen AI Parking Management Technology Holding Co., Ltd. shows public AI exposure in ai_keyword_match; score 18 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "cash_runway_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "cash_runway_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
         ]
       }
     },
@@ -2809,6 +3510,77 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: TOO_RISKY",
           "hard risk gate: delisting_watch"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Nauticus Robotics, Inc. shows public AI exposure in robotics; score 18 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "delisting_watch",
+            "offering_watch",
+            "cash_runway_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue split not verified"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "delisting_watch",
+            "offering_watch",
+            "cash_runway_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "product_core_no_revenue_split",
+          "score": 10,
+          "reasons": [
+            "AI appears product-core, but a dedicated revenue split is not verified"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI appears product-core, but a dedicated revenue split is not verified",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
         ]
       }
     },
@@ -3064,6 +3836,77 @@
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Jet.AI Inc. shows public AI exposure in ai_keyword_match; score 14 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
       }
     },
     {
@@ -3313,6 +4156,77 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Arrive AI Inc. shows public AI exposure in ai_keyword_match; score 10 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
         ]
       }
     },
@@ -3564,6 +4478,77 @@
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Bullfrog AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 10 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
       }
     },
     {
@@ -3810,6 +4795,77 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Fabric.AI, Inc. shows public AI exposure in ai_keyword_match; score 7 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
         ]
       }
     },
@@ -4063,6 +5119,79 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Spectral AI, Inc. shows public AI exposure in ai_keyword_match; score 2 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "dilution_trend_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "dilution_trend_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
         ]
       }
     },
@@ -4324,6 +5453,81 @@
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "AI Financial Corporation shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
       }
     },
     {
@@ -4581,6 +5785,79 @@
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
         ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Datavault AI Inc. shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
       }
     },
     {
@@ -4835,6 +6112,79 @@
           "hard risk gate: Avoid or X classification",
           "hard risk gate: FAKE_AI_HYPE",
           "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Gaxos.ai Inc. shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
         ]
       }
     }

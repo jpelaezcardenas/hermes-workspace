@@ -258,6 +258,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
   const paperReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-paper-portfolio-${date}.md`);
   const paperPortfolioPath = path.join(root, "projects/ai-stock-radar/paper-portfolio.json");
   const advancedReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-advanced-signals-${date}.md`);
+  const thesisReportPath = path.join(root, `reports/ai-stock-radar/ai-stock-thesis-intelligence-${date}.md`);
   const watchlistPath = path.join(root, "projects/ai-stock-radar/watchlist.json");
   const shadowArtifactCheck = checkContains({
     id: "shadow_backtest_artifacts",
@@ -277,30 +278,36 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
     text: readIfExists(advancedReportPath),
     required: ["# AI Stock Radar Advanced Signals", "## Banger Score"],
   });
+  const thesisArtifactCheck = checkContains({
+    id: "thesis_intelligence_artifacts",
+    filePath: thesisReportPath,
+    text: readIfExists(thesisReportPath),
+    required: ["# AI Stock Radar Thesis Intelligence", "## Thesis Verdicts"],
+  });
   const checks = [
     checkContains({
       id: "daily_prompt_sections",
       filePath: dailyPromptPath,
       text: readIfExists(dailyPromptPath),
-      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio", "Advanced Signal Stack"],
+      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio", "Advanced Signal Stack", "Thesis Intelligence"],
     }),
     checkContains({
       id: "weekly_prompt_sections",
       filePath: weeklyPromptPath,
       text: readIfExists(weeklyPromptPath),
-      required: ["Grade Summary", "Firewall Summary", "CEO Control Summary", "False Positive Memory", "Shadow Backtest Summary", "Paper Portfolio Summary", "Advanced Signal Summary"],
+      required: ["Grade Summary", "Firewall Summary", "CEO Control Summary", "False Positive Memory", "Shadow Backtest Summary", "Paper Portfolio Summary", "Advanced Signal Summary", "Thesis Intelligence Summary"],
     }),
     checkContains({
       id: "daily_report_sections",
       filePath: dailyReportPath,
       text: readIfExists(dailyReportPath),
-      required: ["## Idea Grade", "## Price/Volume Confirmation", "## Evidence Firewall", "## CEO Control", "## Advanced Signal Stack"],
+      required: ["## Idea Grade", "## Price/Volume Confirmation", "## Evidence Firewall", "## CEO Control", "## Advanced Signal Stack", "## Thesis Intelligence"],
     }),
     checkContains({
       id: "weekly_report_sections",
       filePath: weeklyReportPath,
       text: readIfExists(weeklyReportPath),
-      required: ["## Grade Summary", "## Firewall Summary", "## CEO Control Summary", "## False Positive Memory", "## Shadow Backtest Summary", "## Paper Portfolio Summary", "## Advanced Signal Summary"],
+      required: ["## Grade Summary", "## Firewall Summary", "## CEO Control Summary", "## False Positive Memory", "## Shadow Backtest Summary", "## Paper Portfolio Summary", "## Advanced Signal Summary", "## Thesis Intelligence Summary"],
     }),
     checkContains({
       id: "idea_grade_module",
@@ -332,6 +339,12 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       text: readIfExists(path.join(root, "scripts/ai-stock-radar-advanced-signals.mjs")),
       required: ["writeAdvancedSignalsRun"],
     }),
+    checkContains({
+      id: "thesis_intelligence_module",
+      filePath: path.join(root, "scripts/ai-stock-radar-thesis-intelligence.mjs"),
+      text: readIfExists(path.join(root, "scripts/ai-stock-radar-thesis-intelligence.mjs")),
+      required: ["writeThesisIntelligenceRun"],
+    }),
     {
       ...shadowArtifactCheck,
       status: fs.existsSync(shadowLedgerPath) && shadowArtifactCheck.status === "pass" ? "pass" : "fail",
@@ -341,6 +354,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       status: fs.existsSync(paperPortfolioPath) && paperArtifactCheck.status === "pass" ? "pass" : "fail",
     },
     advancedArtifactCheck,
+    thesisArtifactCheck,
   ];
 
   try {
@@ -355,7 +369,8 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
         candidate.ceo_control &&
         candidate.source_confidence &&
         candidate.entry_readiness &&
-        candidate.advanced_signals
+        candidate.advanced_signals &&
+        candidate.thesis_intelligence
       ) ? "pass" : "fail",
       missing: [],
     });

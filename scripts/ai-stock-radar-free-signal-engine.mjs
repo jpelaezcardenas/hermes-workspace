@@ -38,6 +38,10 @@ import {
   loadAdvancedSignalContext,
   writeAdvancedSignalsRun,
 } from "./ai-stock-radar-advanced-signals.mjs";
+import {
+  applyThesisIntelligence,
+  writeThesisIntelligenceRun,
+} from "./ai-stock-radar-thesis-intelligence.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 const DEFAULT_SOURCE_STATUS = {
@@ -368,6 +372,11 @@ function formatAdvancedSignalCandidate(candidate) {
   return `- ${candidate.ticker}: ${signals.banger_label || "WAIT"} / ${signals.review_action || "ADVANCED_WAIT"}; score ${signals.banger_score ?? 0}; SEC ${components.sec_catalyst?.label || "none"}; proof ${components.customer_proof?.label || "none"}; strength ${components.relative_strength?.label || "unavailable"}; liquidity ${components.liquidity?.label || "unavailable"}`;
 }
 
+function formatThesisIntelligenceCandidate(candidate) {
+  const thesis = candidate.thesis_intelligence || {};
+  return `- ${candidate.ticker}: ${thesis.thesis_verdict || "WATCH_THESIS"} / ${thesis.research_action || "THESIS_MONITOR"}; confidence ${thesis.confidence_score ?? 0}; negative ${thesis.negative_catalysts?.severity || "watch"}; revenue ${thesis.ai_revenue_reality?.label || "unknown"}`;
+}
+
 export function renderFreeSourceReport({
   date,
   candidates,
@@ -429,6 +438,9 @@ ${gradeCandidates.length ? gradeCandidates.map(formatEntryReadinessCandidate).jo
 
 ## Advanced Signal Stack
 ${gradeCandidates.length ? gradeCandidates.map(formatAdvancedSignalCandidate).join("\n") : "- Keine Advanced-Signal-Daten."}
+
+## Thesis Intelligence
+${gradeCandidates.length ? gradeCandidates.map(formatThesisIntelligenceCandidate).join("\n") : "- Keine Thesis-Intelligence-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
@@ -536,7 +548,8 @@ export async function writeFreeSignalRun({
   candidates = candidates.map(applyEntryReadiness);
   const advancedSignalContext = loadAdvancedSignalContext({ root });
   candidates = candidates.map((candidate) => applyAdvancedSignals(candidate, advancedSignalContext));
-  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || (right.advanced_signals?.banger_score || 0) - (left.advanced_signals?.banger_score || 0) || right.score - left.score || left.ticker.localeCompare(right.ticker));
+  candidates = candidates.map(applyThesisIntelligence);
+  candidates = candidates.sort((left, right) => gradeSortRank(left.idea_grade) - gradeSortRank(right.idea_grade) || (right.advanced_signals?.banger_score || 0) - (left.advanced_signals?.banger_score || 0) || (right.thesis_intelligence?.confidence_score || 0) - (left.thesis_intelligence?.confidence_score || 0) || right.score - left.score || left.ticker.localeCompare(right.ticker));
   const watchlist = validateWatchlist({
     version: 1,
     updated_at: resolvedDate,
@@ -596,6 +609,11 @@ export async function writeFreeSignalRun({
     date: resolvedDate,
     watchlist,
   });
+  const thesisIntelligenceResult = writeThesisIntelligenceRun({
+    root,
+    date: resolvedDate,
+    watchlist,
+  });
   const auditResult = writeIntegrationAudit({ root, date: resolvedDate });
 
   return {
@@ -608,6 +626,7 @@ export async function writeFreeSignalRun({
     paperPortfolioPath: paperPortfolioResult.portfolioPath,
     paperPortfolioReportPath: paperPortfolioResult.reportPath,
     advancedSignalsReportPath: advancedSignalsResult.reportPath,
+    thesisIntelligenceReportPath: thesisIntelligenceResult.reportPath,
     dossierPaths,
     candidateCount: candidates.length,
     discoveryMode: discovery.discoveryMode,

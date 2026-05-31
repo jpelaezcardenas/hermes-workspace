@@ -120,6 +120,18 @@
 - ARBE: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC offering_or_dilution; proof none; strength unavailable; liquidity unavailable
 - HPAI: RISK_TRAP / ADVANCED_ARCHIVE_REVIEW; score 0; SEC offering_or_dilution; proof none; strength unavailable; liquidity unavailable
 
+## Thesis Intelligence
+- GMEX: WATCH_THESIS / THESIS_MONITOR; confidence 41; negative none; revenue ai_context_only
+- DUKR: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue product_core_no_revenue_split
+- AISP: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
+- AMCI: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue product_core_no_revenue_split
+- GMM: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
+- KDK: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
+- GFAI: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
+- AIIO: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
+- ARBE: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue ai_context_only
+- HPAI: BROKEN_THESIS / THESIS_ARCHIVE_REVIEW; confidence 0; negative critical; revenue reality_risk
+
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
 - Kandidaten im Lauf: 20

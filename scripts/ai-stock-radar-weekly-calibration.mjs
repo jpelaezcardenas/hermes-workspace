@@ -7,6 +7,7 @@ import { buildFalsePositiveMemory } from "./ai-stock-radar-ceo-control.mjs";
 import { summarizeShadowBacktest } from "./ai-stock-radar-shadow-backtest.mjs";
 import { summarizePaperPortfolio } from "./ai-stock-radar-paper-portfolio.mjs";
 import { summarizeAdvancedSignals } from "./ai-stock-radar-advanced-signals.mjs";
+import { summarizeThesisIntelligence } from "./ai-stock-radar-thesis-intelligence.mjs";
 
 const DEFAULT_ROOT = "/Users/zondrius/hermes-workspace";
 
@@ -142,6 +143,24 @@ function formatAdvancedSignalSummary(summary) {
   ].join("\n");
 }
 
+function formatThesisIntelligenceSummary(summary) {
+  const verdicts = summary.verdict_counts || {};
+  const severities = summary.negative_severity_counts || {};
+  const revenue = summary.revenue_reality_counts || {};
+  const gaps = summary.top_gaps || [];
+  return [
+    `- THESIS_CONFIRMED_REVIEW: ${verdicts.THESIS_CONFIRMED_REVIEW || 0}`,
+    `- WATCH_THESIS: ${verdicts.WATCH_THESIS || 0}`,
+    `- WEAK_THESIS: ${verdicts.WEAK_THESIS || 0}`,
+    `- BROKEN_THESIS: ${verdicts.BROKEN_THESIS || 0}`,
+    `- critical_negative_catalysts: ${severities.critical || 0}`,
+    `- serious_negative_catalysts: ${severities.serious || 0}`,
+    `- verified_ai_revenue: ${revenue.verified_ai_revenue || 0}`,
+    `- reality_risk: ${revenue.reality_risk || 0}`,
+    `- top_gaps: ${gaps.map((item) => `${item.gap} (${item.count})`).join(", ") || "none"}`,
+  ].join("\n");
+}
+
 export function bucketWatchlistCandidates(candidates) {
   const buckets = emptyBuckets();
 
@@ -167,6 +186,7 @@ export function renderWeeklyCalibrationReport({
   const shadowBacktestSummary = summarizeShadowBacktest(shadowBacktestLedger);
   const paperPortfolioSummary = summarizePaperPortfolio(paperPortfolio);
   const advancedSignalSummary = summarizeAdvancedSignals(watchlist.candidates || []);
+  const thesisIntelligenceSummary = summarizeThesisIntelligence(watchlist.candidates || []);
 
   return `# AI Stock Radar Weekly Calibration - ${date}
 
@@ -195,6 +215,9 @@ ${formatPaperPortfolioSummary(paperPortfolioSummary)}
 
 ## Advanced Signal Summary
 ${formatAdvancedSignalSummary(advancedSignalSummary)}
+
+## Thesis Intelligence Summary
+${formatThesisIntelligenceSummary(thesisIntelligenceSummary)}
 
 ## Keep Review
 ${formatBucket(buckets.keep_review, "Keine Kandidaten im Keep Review.")}

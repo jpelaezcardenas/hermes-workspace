@@ -15,6 +15,7 @@ Required files:
 - Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
 - CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
 - Advanced Signal Stack spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-advanced-signal-stack-design.md
+- Thesis Intelligence spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-thesis-intelligence-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Free source seeds: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/free-source-seeds.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
@@ -33,6 +34,7 @@ Required files:
 - Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
 - Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
 - Advanced signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-advanced-signals.mjs
+- Thesis intelligence engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-thesis-intelligence.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -76,6 +78,14 @@ Safety:
 - Missing AI basket or ownership context must be `unavailable`, not bullish.
 - Hard risk gates, Evidence Firewall reject, CEO reject, TOO_RISKY, FAKE_AI_HYPE, name-only AI, delisting, reverse split, going concern, shell/SPAC, security-structure, dilution, warrants, and weak cash runway must override positive advanced components.
 - The Advanced Signals companion report must be written after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-advanced-signals-YYYY-MM-DD.md.
+- The Thesis Intelligence layer must be applied after Advanced Signal Stack and before CEO audit.
+- Every candidate must carry `thesis_intelligence` with Thesis Graph, Negative Catalyst Detector, and AI Revenue Reality Check.
+- Thesis verdicts are research-quality labels only: THESIS_CONFIRMED_REVIEW, WATCH_THESIS, WEAK_THESIS, BROKEN_THESIS.
+- Thesis actions are workflow labels only: THESIS_DEEPEN_REVIEW, THESIS_MONITOR, THESIS_RISK_REVIEW, THESIS_ARCHIVE_REVIEW.
+- THESIS_CONFIRMED_REVIEW is not a trade instruction; it means the thesis deserves deeper human review.
+- Negative catalysts and AI revenue reality risks must override positive narrative strength.
+- Missing AI revenue proof is a gap, not a bullish assumption.
+- The Thesis Intelligence companion report must be written after every daily run: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-thesis-intelligence-YYYY-MM-DD.md.
 - SEC companyfacts fundamentals must stay explicit: missing fundamentals are a gap, not a bullish assumption.
 - Dilution, warrants, weak cash runway, delisting, reverse split, going concern, shell/SPAC, and name-only AI are risk gates before any promotion.
 - Free-source seed candidates are not recommendations; they are fallback/overlay records when live discovery is unavailable or too thin.
@@ -98,6 +108,7 @@ Required report sections:
 ## Source Confidence Ledger
 ## Entry Readiness
 ## Advanced Signal Stack
+## Thesis Intelligence
 ## Watchlist Aenderungen
 ## Deep-Dive Kandidaten
 ## Overheated / Avoid
@@ -127,6 +138,14 @@ Separate required advanced report:
 ## Risk Traps
 ## Review Queue
 ## Data Gaps
+## Decision Inbox
+
+Separate required thesis report:
+# AI Stock Radar Thesis Intelligence - YYYY-MM-DD
+## Thesis Verdicts
+## Negative Catalysts
+## AI Revenue Reality
+## Thesis Graph Gaps
 ## Decision Inbox
 
 Decision Inbox requirement:

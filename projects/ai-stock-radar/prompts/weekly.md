@@ -14,6 +14,7 @@ Required files:
 - Evidence Firewall spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-evidence-firewall-design.md
 - CEO Control spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-30-ai-stock-radar-ceo-control-design.md
 - Advanced Signal Stack spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-advanced-signal-stack-design.md
+- Thesis Intelligence spec: /Users/zondrius/hermes-workspace/docs/superpowers/specs/2026-05-31-ai-stock-radar-thesis-intelligence-design.md
 - Watchlist: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/watchlist.json
 - Risk profile: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/risk-profile.json
 - False-positive memory: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/false-positive-memory.json
@@ -29,6 +30,7 @@ Required files:
 - Shadow backtest engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-shadow-backtest.mjs
 - Paper portfolio engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-paper-portfolio.mjs
 - Advanced signal engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-advanced-signals.mjs
+- Thesis intelligence engine: /Users/zondrius/hermes-workspace/scripts/ai-stock-radar-thesis-intelligence.mjs
 - Dossiers: /Users/zondrius/hermes-workspace/projects/ai-stock-radar/dossiers/
 - Reports: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/
 
@@ -48,6 +50,7 @@ Tasks:
 12. Summarize Shadow Backtest outcomes and name whether any rules need calibration review.
 13. Summarize Paper Portfolio entry/exit review state and compare it against risk clusters.
 14. Summarize Advanced Signal labels, review queue, risk traps, and data gaps.
+15. Summarize Thesis Intelligence verdicts, negative catalyst severity, AI revenue reality labels, and top thesis gaps.
 
 Archive boundary:
 - Do not silently delete watchlist entries.
@@ -68,6 +71,7 @@ Required report sections:
 ## Shadow Backtest Summary
 ## Paper Portfolio Summary
 ## Advanced Signal Summary
+## Thesis Intelligence Summary
 ## Keep Review
 ## Downgrade Review
 ## Archive Review
@@ -93,6 +97,10 @@ Safety:
 - BANGER_CANDIDATE_REVIEW is a highest-priority research review label, not a trade instruction.
 - Advanced Signal Summary must name BANGER_CANDIDATE_REVIEW, EARLY_BUT_THIN, WAIT, RISK_TRAP, review_queue, and data gaps.
 - Missing basket or ownership context is a gap and must not improve conviction.
+- Thesis Intelligence labels are research-only quality labels, never real buy/sell/hold instructions.
+- THESIS_CONFIRMED_REVIEW is a deeper human-review label, not a trade instruction.
+- Thesis Intelligence Summary must name THESIS_CONFIRMED_REVIEW, WATCH_THESIS, WEAK_THESIS, BROKEN_THESIS, negative catalyst severities, AI revenue reality labels, and top thesis gaps.
+- Missing AI revenue proof is a gap and must not improve conviction.
 
 Decision Inbox requirement:
 - Signal: Green / Yellow / Red

@@ -58,6 +58,17 @@
 - ownership_unavailable: 20
 - liquidity_unavailable: 20
 
+## Thesis Intelligence Summary
+- THESIS_CONFIRMED_REVIEW: 0
+- WATCH_THESIS: 1
+- WEAK_THESIS: 0
+- BROKEN_THESIS: 19
+- critical_negative_catalysts: 19
+- serious_negative_catalysts: 0
+- verified_ai_revenue: 0
+- reality_risk: 15
+- top_gaps: ownership context unavailable (20), price volume context unavailable (20), relative strength unavailable (20), source confidence has missing data (20), AI revenue proof missing (17), AI revenue split not verified (3), fundamentals unavailable (1)
+
 ## Keep Review
 - GMEX (GMEX ROBOTICS CORPORATION): Grade B, Early Watch, Score 65, Datenqualitaet A, Status fresh. Notes: no quality notes
 - DUKR (DUKE Robotics Corp.): Grade C, Early Watch, Score 63, Datenqualitaet A, Status fresh. Notes: cash runway watch

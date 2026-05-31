@@ -36,6 +36,13 @@ const watchlist = {
         banger_label: "BANGER_CANDIDATE_REVIEW",
         review_action: "ADVANCED_REVIEW",
       },
+      thesis_intelligence: {
+        thesis_verdict: "THESIS_CONFIRMED_REVIEW",
+        research_action: "THESIS_DEEPEN_REVIEW",
+        ai_revenue_reality: { label: "verified_ai_revenue" },
+        negative_catalysts: { severity: "none", labels: [] },
+        graph: { gaps: [] },
+      },
     },
     {
       ticker: "FALSE",
@@ -53,6 +60,13 @@ const watchlist = {
         banger_label: "RISK_TRAP",
         review_action: "ADVANCED_ARCHIVE_REVIEW",
       },
+      thesis_intelligence: {
+        thesis_verdict: "BROKEN_THESIS",
+        research_action: "THESIS_ARCHIVE_REVIEW",
+        ai_revenue_reality: { label: "reality_risk" },
+        negative_catalysts: { severity: "critical", labels: ["name_only_ai_watch"] },
+        graph: { gaps: ["AI revenue proof missing"] },
+      },
     },
     {
       ticker: "ARCH",
@@ -69,6 +83,13 @@ const watchlist = {
         banger_score: 12,
         banger_label: "RISK_TRAP",
         review_action: "ADVANCED_ARCHIVE_REVIEW",
+      },
+      thesis_intelligence: {
+        thesis_verdict: "BROKEN_THESIS",
+        research_action: "THESIS_ARCHIVE_REVIEW",
+        ai_revenue_reality: { label: "unknown" },
+        negative_catalysts: { severity: "critical", labels: ["single_source"] },
+        graph: { gaps: ["fundamentals unavailable"] },
       },
     },
   ],
@@ -123,6 +144,10 @@ describe("AI stock radar weekly calibration", () => {
     expect(report).toContain("## Advanced Signal Summary");
     expect(report).toContain("BANGER_CANDIDATE_REVIEW: 1");
     expect(report).toContain("RISK_TRAP: 2");
+    expect(report).toContain("## Thesis Intelligence Summary");
+    expect(report).toContain("THESIS_CONFIRMED_REVIEW: 1");
+    expect(report).toContain("BROKEN_THESIS: 2");
+    expect(report).toContain("verified_ai_revenue: 1");
     expect(report).toContain("## False Positive Review");
     expect(report).toContain("FALSE");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
