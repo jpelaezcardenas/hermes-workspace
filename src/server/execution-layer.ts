@@ -163,14 +163,58 @@ function classifySignal(openHandoffs: number, warnings: number): ExecutionSignal
   return 'Green'
 }
 
-function listOpenHandoffs(workspaceRoot: string): Array<ExecutionHandoff> {
+function expectedOutboxResultName(handoffFilename: string): string {
+  return handoffFilename.replace(/^codex-handoff-/, 'codex-result-')
+}
+
+function listOutboxResults(workspaceRoot: string): Array<ReadFile> {
+  const outboxDir = path.join(workspaceRoot, 'handoff/codex-outbox')
+  return listMarkdownFiles(outboxDir)
+    .map((filePath) => readTextFile(filePath))
+    .filter((file): file is ReadFile => Boolean(file))
+}
+
+function hasMatchingOutboxResult(
+  handoffFilename: string,
+  outboxResults: Array<ReadFile>,
+): boolean {
+  return Boolean(matchingOutboxResult(handoffFilename, outboxResults))
+}
+
+function matchingOutboxResult(
+  handoffFilename: string,
+  outboxResults: Array<ReadFile>,
+): ReadFile | null {
+  const expectedName = expectedOutboxResultName(handoffFilename)
+  return (
+    outboxResults.find((result) => path.basename(result.path) === expectedName) ??
+    null
+  )
+}
+
+function listResolvedOutboxResults(
+  workspaceRoot: string,
+  outboxResults: Array<ReadFile>,
+): Array<ReadFile> {
   const inboxDir = path.join(workspaceRoot, 'handoff/codex-inbox')
-  return listMarkdownFiles(inboxDir).map((filePath) => ({
-    filename: path.basename(filePath),
-    status: 'open',
-    source: filePath,
-    next: 'Bearbeiten, zur Review geben oder explizit blockieren.',
-  }))
+  return listMarkdownFiles(inboxDir)
+    .map((filePath) => matchingOutboxResult(path.basename(filePath), outboxResults))
+    .filter((result): result is ReadFile => Boolean(result))
+}
+
+function listOpenHandoffs(
+  workspaceRoot: string,
+  outboxResults: Array<ReadFile>,
+): Array<ExecutionHandoff> {
+  const inboxDir = path.join(workspaceRoot, 'handoff/codex-inbox')
+  return listMarkdownFiles(inboxDir)
+    .filter((filePath) => !hasMatchingOutboxResult(path.basename(filePath), outboxResults))
+    .map((filePath) => ({
+      filename: path.basename(filePath),
+      status: 'open',
+      source: filePath,
+      next: 'Bearbeiten, zur Review geben oder explizit blockieren.',
+    }))
 }
 
 function buildTodayActions(
@@ -325,7 +369,9 @@ export function buildExecutionLayerSnapshot(
     path.join(workspaceRoot, 'handoff/HANDOFF_OVERVIEW.md'),
   )
 
-  const codexOpen = listOpenHandoffs(workspaceRoot)
+  const codexOutbox = listOutboxResults(workspaceRoot)
+  const codexResolved = listResolvedOutboxResults(workspaceRoot, codexOutbox)
+  const codexOpen = listOpenHandoffs(workspaceRoot, codexOutbox)
   const waitingForChris = buildChrisDecisions(latestDecisionInbox)
   const today = buildTodayActions(codexOpen, latestDecisionInbox)
   const dontTouch = buildDontTouch(latestDecisionInbox, latestMomentum)
@@ -345,6 +391,7 @@ export function buildExecutionLayerSnapshot(
         : null,
       handoffOverview ? source(handoffOverview.path, 'handoff-overview') : null,
       ...codexOpen.map((handoff) => source(handoff.source, 'codex-inbox')),
+      ...codexResolved.map((result) => source(result.path, 'codex-outbox')),
       ...wins.map((win) => source(win.proof, 'product-report')),
     ].filter((entry): entry is ExecutionSource => Boolean(entry)),
   )

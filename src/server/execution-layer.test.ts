@@ -155,6 +155,53 @@ describe('buildExecutionLayerSnapshot', () => {
     )
   })
 
+  it('treats a handoff as no longer open when its outbox result exists', () => {
+    const workspaceRoot = makeWorkspaceFixture()
+    fs.writeFileSync(
+      path.join(rootPath(workspaceRoot), 'handoff/codex-outbox/codex-result-2026-06-01-demo.md'),
+      [
+        '# Codex Result',
+        '## Auftrag',
+        'Demo handoff abgeschlossen.',
+        '## Checks',
+        '- Result exists.',
+        '',
+      ].join('\n'),
+    )
+    fs.writeFileSync(
+      path.join(rootPath(workspaceRoot), 'handoff/codex-outbox/codex-result-2026-06-01-unrelated.md'),
+      ['# Codex Result', 'Unrelated old result.', ''].join('\n'),
+    )
+
+    const snapshot = buildExecutionLayerSnapshot({
+      workspaceRoot,
+      now: new Date('2026-06-01T10:00:00.000Z'),
+    })
+
+    expect(snapshot.codexOpen).toEqual([])
+    expect(snapshot.signal).toBe('Green')
+    expect(snapshot.proofLog).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'codex-outbox',
+          path: path.join(
+            rootPath(workspaceRoot),
+            'handoff/codex-outbox/codex-result-2026-06-01-demo.md',
+          ),
+        }),
+      ]),
+    )
+    expect(snapshot.proofLog.map((entry) => entry.path)).not.toContain(
+      path.join(
+        rootPath(workspaceRoot),
+        'handoff/codex-outbox/codex-result-2026-06-01-unrelated.md',
+      ),
+    )
+    expect(snapshot.nextSmallestSlice.action).not.toContain(
+      'codex-handoff-2026-06-01-demo.md',
+    )
+  })
+
   it('writes a dated markdown report into reports/hermes-control', () => {
     const workspaceRoot = makeWorkspaceFixture()
     const snapshot = buildExecutionLayerSnapshot({

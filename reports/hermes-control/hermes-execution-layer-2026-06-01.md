@@ -1,20 +1,14 @@
 # Hermes Execution Layer - 2026-06-01
 
-Signal: Yellow
-Fokus: Offene Codex-Handoffs klaeren, bevor neue Slices gestartet werden.
+Signal: Green
+Fokus: Keine offenen Codex-Handoffs; naechste sichere Tagesaktion waehlen.
 
 ## Heute wirklich tun
-1. Action: Offenen Codex-Handoff codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md abschliessen oder sauber blockieren.
-   Owner: Codex
-   Timebox: 30-45 Minuten
-   Source: `/Users/zondrius/hermes-workspace/handoff/codex-inbox/codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md`
-   Done when: Outbox-Ergebnis existiert oder ein Blocker ist dokumentiert.
-
-2. Action: Offenen Codex-Handoff codex-handoff-2026-05-31-ge-minikisten-checkliste.md abschliessen oder sauber blockieren.
-   Owner: Codex
-   Timebox: 30-45 Minuten
-   Source: `/Users/zondrius/hermes-workspace/handoff/codex-inbox/codex-handoff-2026-05-31-ge-minikisten-checkliste.md`
-   Done when: Outbox-Ergebnis existiert oder ein Blocker ist dokumentiert.
+1. Action: Die drei bereits abgeschlossenen Codex-Handoff-Paare als Archiv-Kandidaten markieren.
+   Owner: Hermes
+   Timebox: 20 Minuten
+   Source: `/Users/zondrius/hermes-workspace/reports/decision-inbox/decision-inbox-2026-05-28.md`
+   Done when: Aktion ist erledigt oder als blockiert markiert.
 
 ## Wartet auf Chris
 - Decision: Archivierung dieser drei Handoffs; codegraph P2; agentmemory/Codex P4.
@@ -23,15 +17,7 @@ Fokus: Offene Codex-Handoffs klaeren, bevor neue Slices gestartet werden.
   Source: `/Users/zondrius/hermes-workspace/reports/decision-inbox/decision-inbox-2026-05-28.md`
 
 ## Codex offen
-- Handoff: `codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md`
-  Status: open
-  Next: Bearbeiten, zur Review geben oder explizit blockieren.
-  Source: `/Users/zondrius/hermes-workspace/handoff/codex-inbox/codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md`
-
-- Handoff: `codex-handoff-2026-05-31-ge-minikisten-checkliste.md`
-  Status: open
-  Next: Bearbeiten, zur Review geben oder explizit blockieren.
-  Source: `/Users/zondrius/hermes-workspace/handoff/codex-inbox/codex-handoff-2026-05-31-ge-minikisten-checkliste.md`
+- Keine offenen Codex-Handoffs gefunden.
 
 ## Gewonnen diese Woche
 - Win: Productklarheit v1 ist belegt.
@@ -59,9 +45,9 @@ Fokus: Offene Codex-Handoffs klaeren, bevor neue Slices gestartet werden.
   Source: `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-momentum-cockpit-2026-05-31.md`
 
 ## Naechster kleinster Slice
-Action: Codex-Handoff codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md abschliessen oder sauber blockieren.
-Why this: Offene Handoffs senken, bevor Hermes neue Arbeit erzeugt.
-Acceptance: Outbox-Ergebnis existiert oder ein Blocker ist dokumentiert.
+Action: Die drei bereits abgeschlossenen Codex-Handoff-Paare als Archiv-Kandidaten markieren.
+Why this: Es gibt keinen offenen Codex-Handoff.
+Acceptance: Aktion ist erledigt oder als blockiert markiert.
 Should become Codex handoff: no
 
 ## Belege
@@ -69,6 +55,6 @@ Should become Codex handoff: no
 - `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-momentum-cockpit-2026-05-31.md` (momentum-cockpit)
 - `/Users/zondrius/hermes-workspace/reports/codex-handoff-scout/codex-handoff-scout-2026-05-31.md` (codex-handoff-scout)
 - `/Users/zondrius/hermes-workspace/handoff/HANDOFF_OVERVIEW.md` (handoff-overview)
-- `/Users/zondrius/hermes-workspace/handoff/codex-inbox/codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md` (codex-inbox)
-- `/Users/zondrius/hermes-workspace/handoff/codex-inbox/codex-handoff-2026-05-31-ge-minikisten-checkliste.md` (codex-inbox)
+- `/Users/zondrius/hermes-workspace/handoff/codex-outbox/codex-result-2026-05-28-ge-spielraum-schmale-viewport.md` (codex-outbox)
+- `/Users/zondrius/hermes-workspace/handoff/codex-outbox/codex-result-2026-05-31-ge-minikisten-checkliste.md` (codex-outbox)
 - `/Users/zondrius/hermes-workspace/reports/productklarheit-v1-ceo-synthesis-2026-05-31.md` (product-report)
