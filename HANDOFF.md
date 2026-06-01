@@ -43,7 +43,7 @@ All tests pass: **25/25** (`pnpm test`).
 - [x] **Re-QA the two originally failing items (2026-04-19 15:45 EDT):**
   - **Model switch toast:** originally "fail" because no toast appeared when selecting another model on vanilla hermes. Re-analysis: the MODEL_SWITCH_BLOCKED_TOAST only fires when `mode === 'zero-fork' && vanillaAgent && !supportsRuntimeSwitching`. Vanilla 0.10 returns `mode=enhanced-fork` (streaming available) so the toast correctly does NOT fire — the user CAN switch models on vanilla via `hermes config set model <id>`. Original QA was testing a scenario that only applies to the narrower `zero-fork` dashboard-bundled deployment. **Pass as intended.**
   - **Tool pill inline rendering:** `b368871` fix landed after the original QA. Tests cover the synthesizeToolPill code path (chat-composer-model-switch.test.ts, message-item.test.ts). **Pass on automated tests.** Visual re-QA in browser still recommended before launch copy goes live.
-- [ ] **Tag and ship** — `git tag v2.0.0 && git push origin v2-zero-fork --tags` — ready.
+- [x] **Tag and ship** — already shipped remotely. Verified on 2026-06-01: `origin/v2-zero-fork` at `b7426553`, remote `v2.0.0` tag exists at peeled commit `51da5d1`. Local release validation on `v2-zero-fork` passed with `npx --yes pnpm@11.5.0 test` (12 files / 27 tests) and `npx --yes pnpm@11.5.0 build` (client + SSR build green).
 
 ### 🧊 Cold storage (do not touch unless explicitly asked)
 
