@@ -220,6 +220,7 @@ function listOpenHandoffs(
 function buildTodayActions(
   codexOpen: Array<ExecutionHandoff>,
   latestDecisionInbox: ReadFile | null,
+  latestArchiveReview: ReadFile | null,
 ): Array<ExecutionAction> {
   const actions: Array<ExecutionAction> = []
 
@@ -240,8 +241,27 @@ function buildTodayActions(
       'SOFORT_MACHEN:',
     )
     if (immediate) {
+      const immediateTitle = immediate.replace(/^SOFORT_MACHEN:\s*/i, '').trim()
+      if (
+        latestArchiveReview &&
+        archiveReviewIsComplete(latestArchiveReview) &&
+        isArchiveCandidateAction(immediateTitle)
+      ) {
+        actions.push({
+          title:
+            'Decision-Cleanup fuer `codegraph` P2 und agentmemory/Codex P4 vorbereiten.',
+          owner: 'Hermes',
+          timebox: '20 Minuten',
+          source: latestArchiveReview.path,
+          doneWhen:
+            'Beide Entscheidungen sind als `freigeben`, `parken` oder `nein` vorbereitet.',
+          risk: 'Low',
+        })
+        return actions.slice(0, 3)
+      }
+
       actions.push({
-        title: immediate.replace(/^SOFORT_MACHEN:\s*/i, '').trim(),
+        title: immediateTitle,
         owner: 'Hermes',
         timebox: '20 Minuten',
         source: latestDecisionInbox.path,
@@ -254,8 +274,20 @@ function buildTodayActions(
   return actions.slice(0, 3)
 }
 
+function archiveReviewIsComplete(archiveReview: ReadFile): boolean {
+  return (
+    archiveReview.content.includes('Review abgeschlossen') &&
+    archiveReview.content.includes('Inbox-Dateien archiviert')
+  )
+}
+
+function isArchiveCandidateAction(title: string): boolean {
+  return title.includes('abgeschlossenen Codex-Handoff-Paare als Archiv-Kandidaten')
+}
+
 function buildChrisDecisions(
   latestDecisionInbox: ReadFile | null,
+  latestArchiveReview: ReadFile | null,
 ): Array<ExecutionDecision> {
   if (!latestDecisionInbox) return []
   const decision = firstMatchingLine(
@@ -264,14 +296,28 @@ function buildChrisDecisions(
   )
   if (!decision) return []
 
+  const title =
+    latestArchiveReview && archiveReviewIsComplete(latestArchiveReview)
+      ? stripCompletedArchiveDecision(stripDecisionPrefix(decision))
+      : stripDecisionPrefix(decision)
+
+  if (!title) return []
+
   return [
     {
-      title: stripDecisionPrefix(decision),
+      title,
       whyChris: 'Diese Entscheidung betrifft Risiko, dauerhafte Struktur oder Prioritaet.',
       risk: 'Medium',
       source: latestDecisionInbox.path,
     },
   ]
+}
+
+function stripCompletedArchiveDecision(title: string): string {
+  return title
+    .replace(/^Archivierung dieser drei Handoffs;\s*/i, '')
+    .replace(/^Ob diese drei abgeschlossenen Handoffs tatsaechlich archiviert werden sollen;\s*/i, '')
+    .trim()
 }
 
 function buildDontTouch(
@@ -365,6 +411,10 @@ export function buildExecutionLayerSnapshot(
     path.join(workspaceRoot, 'reports/codex-handoff-scout'),
     'codex-handoff-scout-',
   )
+  const latestArchiveReview = latestMarkdownFile(
+    path.join(workspaceRoot, 'reports/hermes-control'),
+    'handoff-archive-review-',
+  )
   const handoffOverview = readTextFile(
     path.join(workspaceRoot, 'handoff/HANDOFF_OVERVIEW.md'),
   )
@@ -372,8 +422,8 @@ export function buildExecutionLayerSnapshot(
   const codexOutbox = listOutboxResults(workspaceRoot)
   const codexResolved = listResolvedOutboxResults(workspaceRoot, codexOutbox)
   const codexOpen = listOpenHandoffs(workspaceRoot, codexOutbox)
-  const waitingForChris = buildChrisDecisions(latestDecisionInbox)
-  const today = buildTodayActions(codexOpen, latestDecisionInbox)
+  const waitingForChris = buildChrisDecisions(latestDecisionInbox, latestArchiveReview)
+  const today = buildTodayActions(codexOpen, latestDecisionInbox, latestArchiveReview)
   const dontTouch = buildDontTouch(latestDecisionInbox, latestMomentum)
   const wins = buildWins(workspaceRoot)
   const memoryCandidates = buildMemoryCandidates(
@@ -389,6 +439,7 @@ export function buildExecutionLayerSnapshot(
       latestHandoffScout
         ? source(latestHandoffScout.path, 'codex-handoff-scout')
         : null,
+      latestArchiveReview ? source(latestArchiveReview.path, 'archive-review') : null,
       handoffOverview ? source(handoffOverview.path, 'handoff-overview') : null,
       ...codexOpen.map((handoff) => source(handoff.source, 'codex-inbox')),
       ...codexResolved.map((result) => source(result.path, 'codex-outbox')),
@@ -422,8 +473,12 @@ export function buildExecutionLayerSnapshot(
         }
       : {
           action: today[0]?.title ?? 'Naechsten Decision-Inbox-Eintrag pruefen.',
-          whyThis: 'Es gibt keinen offenen Codex-Handoff.',
-          acceptance: 'Aktion ist erledigt oder als blockiert markiert.',
+          whyThis:
+            today[0]?.title.includes('Decision-Cleanup')
+              ? 'Die Handoff-Hygiene ist erledigt; nur bewusste Tool-Entscheidungen bleiben offen.'
+              : 'Es gibt keinen offenen Codex-Handoff.',
+          acceptance:
+            today[0]?.doneWhen ?? 'Aktion ist erledigt oder als blockiert markiert.',
           shouldBecomeCodexHandoff: false,
         },
     proofLog,

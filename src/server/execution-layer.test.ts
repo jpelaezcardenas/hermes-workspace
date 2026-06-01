@@ -202,6 +202,58 @@ describe('buildExecutionLayerSnapshot', () => {
     )
   })
 
+  it('does not repeat archive-candidate work after the archive review is complete', () => {
+    const workspaceRoot = makeWorkspaceFixture()
+    fs.writeFileSync(
+      path.join(rootPath(workspaceRoot), 'reports/decision-inbox/decision-inbox-2026-06-01.md'),
+      [
+        '# Decision Inbox 2026-06-01',
+        '## SOFORT_MACHEN',
+        '- SOFORT_MACHEN: Die drei bereits abgeschlossenen Codex-Handoff-Paare als Archiv-Kandidaten markieren.',
+        '- CHRIS_ENTSCHEIDET: codegraph P2; agentmemory/Codex P4.',
+        '- NICHT_TUN: Keine neuen Cronjobs.',
+        '',
+      ].join('\n'),
+    )
+    fs.writeFileSync(
+      path.join(rootPath(workspaceRoot), 'handoff/codex-outbox/codex-result-2026-06-01-demo.md'),
+      ['# Codex Result', 'Demo handoff abgeschlossen.', ''].join('\n'),
+    )
+    fs.writeFileSync(
+      path.join(
+        rootPath(workspaceRoot),
+        'reports/hermes-control/handoff-archive-review-2026-06-01.md',
+      ),
+      [
+        '# Hermes Handoff Archive Review',
+        'Status: Review abgeschlossen, zwei Inbox-Dateien archiviert',
+        '',
+      ].join('\n'),
+    )
+
+    const snapshot = buildExecutionLayerSnapshot({
+      workspaceRoot,
+      now: new Date('2026-06-01T10:00:00.000Z'),
+    })
+
+    expect(snapshot.codexOpen).toEqual([])
+    expect(snapshot.today[0]?.title).toContain('Decision-Cleanup')
+    expect(snapshot.today[0]?.title).not.toContain('Archiv-Kandidaten markieren')
+    expect(snapshot.waitingForChris[0]?.title).toBe('codegraph P2; agentmemory/Codex P4.')
+    expect(snapshot.nextSmallestSlice.whyThis).toContain('Handoff-Hygiene ist erledigt')
+    expect(snapshot.proofLog).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'archive-review',
+          path: path.join(
+            rootPath(workspaceRoot),
+            'reports/hermes-control/handoff-archive-review-2026-06-01.md',
+          ),
+        }),
+      ]),
+    )
+  })
+
   it('writes a dated markdown report into reports/hermes-control', () => {
     const workspaceRoot = makeWorkspaceFixture()
     const snapshot = buildExecutionLayerSnapshot({
