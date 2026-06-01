@@ -1,6 +1,6 @@
 # Goal: Hermes Classroom-Ready Pilotpaket v1
 
-Status: active-ceo-monitoring
+Status: approved-for-classroom-smoke
 Start: 2026-06-01
 Owner: Chris / Neva
 Mode: CEO-geführter Unterrichtsnutzen-Slice, keine Tool-Integration
@@ -73,6 +73,7 @@ The goal succeeds when these files exist and are internally consistent:
 - `EXECUTE_PLAN.md`
 - `CEO_MONITORING.md`
 - one pilot package report under `reports/hermes-control/`
+- one CEO decision report that says `einsetzen`, `kuerzen` or `parken`
 
 The pilot package itself succeeds when:
 
@@ -120,3 +121,4 @@ Stop or split if:
 - `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/EXECUTE_PLAN.md`
 - `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/CEO_MONITORING.md`
 - `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-classroom-ready-pilotpaket-v1-2026-06-01.md`
+- `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-classroom-ready-pilotpaket-ceo-decision-2026-06-01.md`

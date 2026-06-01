@@ -1,17 +1,17 @@
 # Hermes Execution Layer - 2026-06-01
 
 Signal: Green
-Fokus: Classroom-Ready Pilotpaket v1 als naechsten Unterrichtsnutzen-Slice starten.
+Fokus: Classroom-Ready Pilotpaket v1 ist freigegeben; Tisch-Smoke starten.
 
 ## Heute wirklich tun
-1. Action: Hermes Classroom-Ready Pilotpaket v1 erstellen.
+1. Action: Fuenferfeld-Tisch-Smoke vorbereiten.
    Owner: Hermes
-   Timebox: 45-60 Minuten
-   Source: `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/EXECUTE_PLAN.md`
-   Done when: Ein GE-Pilotpaket mit Material, Ablauf, Hilfen, Beobachtung und genau einem naechsten Slice existiert.
+   Timebox: 10 Minuten
+   Source: `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-classroom-ready-pilotpaket-v1-2026-06-01.md`
+   Done when: Fuenferfeld, 5 Steine, Zahlkarten 1-3 und UK-Karten `mehr`, `nochmal`, `fertig` liegen bereit.
 
 ## Wartet auf Chris
-- Decision: Nach Fertigstellung Classroom-Ready Pilotpaket einsetzen, kuerzen oder parken.
+- Decision: Nach dem Tisch-Smoke Auswahl 1-3 behalten oder auf 1-5 erweitern.
   Why Chris: Diese Entscheidung betrifft Risiko, dauerhafte Struktur oder Prioritaet.
   Risk: Low
   Source: `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/CEO_MONITORING.md`
@@ -45,9 +45,9 @@ Fokus: Classroom-Ready Pilotpaket v1 als naechsten Unterrichtsnutzen-Slice start
   Source: `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-momentum-cockpit-2026-05-31.md`
 
 ## Naechster kleinster Slice
-Action: Hermes Classroom-Ready Pilotpaket v1 erstellen.
-Why this: Die Handoff-Hygiene ist erledigt; die naechste Wirkung liegt in einem direkt nutzbaren Unterrichtspaket.
-Acceptance: Ein GE-Pilotpaket mit Material, Ablauf, Hilfen, Beobachtung und genau einem naechsten Slice existiert.
+Action: Fuenferfeld-Tisch-Smoke vorbereiten.
+Why this: Das Pilotpaket ist freigegeben; die naechste Wirkung entsteht durch reales Tischmaterial.
+Acceptance: Fuenferfeld, 5 Steine, Zahlkarten 1-3 und UK-Karten `mehr`, `nochmal`, `fertig` liegen bereit.
 Should become Codex handoff: no
 
 ## Belege
@@ -58,4 +58,6 @@ Should become Codex handoff: no
 - `/Users/zondrius/hermes-workspace/reports/hermes-control/handoff-archive-review-2026-06-01.md` (archive-review)
 - `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/GOAL.md` (goal)
 - `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/CEO_MONITORING.md` (goal)
+- `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-classroom-ready-pilotpaket-v1-2026-06-01.md` (product-report)
+- `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-classroom-ready-pilotpaket-ceo-decision-2026-06-01.md` (product-report)
 - `/Users/zondrius/hermes-workspace/reports/productklarheit-v1-ceo-synthesis-2026-05-31.md` (product-report)

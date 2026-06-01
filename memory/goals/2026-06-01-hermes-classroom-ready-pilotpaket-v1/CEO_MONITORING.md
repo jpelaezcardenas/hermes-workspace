@@ -1,6 +1,6 @@
 # CEO Monitoring: Classroom-Ready Pilotpaket v1
 
-Status: active
+Status: approved-for-classroom-smoke
 CEO: Chris
 Orchestrierung: Neva
 Arbeitsregel: Wirkung vor Infrastruktur
@@ -15,6 +15,8 @@ Warum:
 - Keine neuen Tools.
 - Keine offenen Handoffs als Blocker.
 - Ergebnis ist ein nutzbares Unterrichtspaket, kein neues System.
+- Der erste Bericht liegt vor: `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-classroom-ready-pilotpaket-v1-2026-06-01.md`.
+- CEO-Entscheidung liegt vor: `einsetzen`.
 
 ## Täglicher CEO-Check
 
@@ -82,7 +84,7 @@ Wenn Hermes abdriftet:
 
 ## Freigabe-Regel
 
-Das Goal darf erst als abgeschlossen gelten, wenn:
+Das Goal darf erst als classroom-smoke-ready gelten, wenn:
 
 - der Bericht `hermes-classroom-ready-pilotpaket-v1-2026-06-01.md` existiert;
 - alle vier CEO-Gates mindestens Yellow sind;
@@ -91,8 +93,12 @@ Das Goal darf erst als abgeschlossen gelten, wenn:
 
 ## CEO-Entscheidung nach Fertigstellung
 
-Chris entscheidet:
+Chris hat entschieden:
 
 - `einsetzen`: Paket ist gut genug fuer einen echten kleinen Unterrichts-Smoke.
-- `kuerzen`: Paket ist richtig, aber noch zu gross.
-- `parken`: gerade ist ein anderer Unterrichts-/Produktfokus wichtiger.
+
+## Naechster CEO-Check
+
+Nach dem Tisch-Smoke nur eine Frage beantworten:
+
+`Bleibt die sichtbare Auswahl bei 1-3 oder kann sie auf 1-5 erweitert werden?`
