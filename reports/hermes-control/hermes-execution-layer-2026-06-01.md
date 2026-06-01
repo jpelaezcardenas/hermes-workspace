@@ -1,20 +1,20 @@
 # Hermes Execution Layer - 2026-06-01
 
 Signal: Green
-Fokus: Codex-Inbox ist leer; Archiv-Review ist erledigt.
+Fokus: Classroom-Ready Pilotpaket v1 als naechsten Unterrichtsnutzen-Slice starten.
 
 ## Heute wirklich tun
-1. Action: Decision-Cleanup fuer `codegraph` P2 und agentmemory/Codex P4 vorbereiten.
+1. Action: Hermes Classroom-Ready Pilotpaket v1 erstellen.
    Owner: Hermes
-   Timebox: 20 Minuten
-   Source: `/Users/zondrius/hermes-workspace/reports/hermes-control/handoff-archive-review-2026-06-01.md`
-   Done when: Beide Entscheidungen sind als `freigeben`, `parken` oder `nein` vorbereitet.
+   Timebox: 45-60 Minuten
+   Source: `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/EXECUTE_PLAN.md`
+   Done when: Ein GE-Pilotpaket mit Material, Ablauf, Hilfen, Beobachtung und genau einem naechsten Slice existiert.
 
 ## Wartet auf Chris
-- Decision: codegraph P2; agentmemory/Codex P4.
+- Decision: Nach Fertigstellung Classroom-Ready Pilotpaket einsetzen, kuerzen oder parken.
   Why Chris: Diese Entscheidung betrifft Risiko, dauerhafte Struktur oder Prioritaet.
-  Risk: Medium
-  Source: `/Users/zondrius/hermes-workspace/reports/decision-inbox/decision-inbox-2026-05-28.md`
+  Risk: Low
+  Source: `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/CEO_MONITORING.md`
 
 ## Codex offen
 - Keine offenen Codex-Handoffs gefunden.
@@ -45,9 +45,9 @@ Fokus: Codex-Inbox ist leer; Archiv-Review ist erledigt.
   Source: `/Users/zondrius/hermes-workspace/reports/hermes-control/hermes-momentum-cockpit-2026-05-31.md`
 
 ## Naechster kleinster Slice
-Action: Decision-Cleanup fuer `codegraph` P2 und agentmemory/Codex P4 vorbereiten.
-Why this: Die Handoff-Hygiene ist erledigt; nur bewusste Tool-Entscheidungen bleiben offen.
-Acceptance: Beide Entscheidungen sind als `freigeben`, `parken` oder `nein` vorbereitet.
+Action: Hermes Classroom-Ready Pilotpaket v1 erstellen.
+Why this: Die Handoff-Hygiene ist erledigt; die naechste Wirkung liegt in einem direkt nutzbaren Unterrichtspaket.
+Acceptance: Ein GE-Pilotpaket mit Material, Ablauf, Hilfen, Beobachtung und genau einem naechsten Slice existiert.
 Should become Codex handoff: no
 
 ## Belege
@@ -56,4 +56,6 @@ Should become Codex handoff: no
 - `/Users/zondrius/hermes-workspace/reports/codex-handoff-scout/codex-handoff-scout-2026-05-31.md` (codex-handoff-scout)
 - `/Users/zondrius/hermes-workspace/handoff/HANDOFF_OVERVIEW.md` (handoff-overview)
 - `/Users/zondrius/hermes-workspace/reports/hermes-control/handoff-archive-review-2026-06-01.md` (archive-review)
+- `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/GOAL.md` (goal)
+- `/Users/zondrius/hermes-workspace/memory/goals/2026-06-01-hermes-classroom-ready-pilotpaket-v1/CEO_MONITORING.md` (goal)
 - `/Users/zondrius/hermes-workspace/reports/productklarheit-v1-ceo-synthesis-2026-05-31.md` (product-report)
