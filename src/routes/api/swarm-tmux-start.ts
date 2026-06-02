@@ -81,24 +81,52 @@ function validateWorkerId(value: string): boolean {
   return /^[a-z0-9][a-z0-9_-]{0,63}$/i.test(value)
 }
 
-/** Derive hermes-agent venv path from HERMES_HOME so we find the binary
- *  even when hermes-agent lives next to profiles (e.g. D:\ai\hermes\)
- *  rather than under ~/.hermes/. */
+/** Find hermes-agent venv binary, checking several strategies:
+ *  1. From HERMES_HOME (for D:\ai\hermes\profiles -> D:\ai\hermes\hermes-agent)
+ *  2. Well-known D:\ai\hermes\hermes-agent path (common dev setup)
+ *  3. Same-directory sibling: profiles parent + hermes-agent/.venv
+ *  Returns first path that exists, or null. */
 function hermesAgentVenvBin(): string | null {
+  const isWin = process.platform === 'win32'
+  const hermesExe = isWin ? 'hermes.exe' : 'hermes'
+  const venvBinDir = isWin ? 'Scripts' : 'bin'
+
+  const check = (p: string) => (existsSync(p) ? p : null)
+
+  // Strategy 1: from HERMES_HOME
   const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
-  if (!base) return null
-  const parts = base.split(/[/\\]/).filter(Boolean)
-  const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
-  const root = profilesIdx >= 0
-    ? parts.slice(0, profilesIdx).join('/')
-    : dirname(base)
-  return join(
-    root,
-    'hermes-agent',
-    '.venv',
-    process.platform === 'win32' ? 'Scripts' : 'bin',
-    process.platform === 'win32' ? 'hermes.exe' : 'hermes',
-  )
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    const root = profilesIdx >= 0
+      ? parts.slice(0, profilesIdx).join('/')
+      : dirname(base)
+    for (const venv of ['.venv', 'venv']) {
+      const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+      if (r) return r
+    }
+  }
+
+  // Strategy 2: well-known D:\ai\hermes\hermes-agent (NousResearch/hermes-agent dev clone)
+  for (const venv of ['.venv', 'venv']) {
+    const r = check(join('D:/ai/hermes/hermes-agent', venv, venvBinDir, hermesExe))
+    if (r) return r
+  }
+
+  // Strategy 3: hermes-agent as sibling to profiles directory
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    if (profilesIdx >= 0) {
+      const root = parts.slice(0, profilesIdx).join('/')
+      for (const venv of ['.venv', 'venv']) {
+        const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+        if (r) return r
+      }
+    }
+  }
+
+  return null
 }
 
 const HERMES_BIN_CANDIDATES = [
