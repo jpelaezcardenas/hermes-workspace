@@ -3,7 +3,7 @@ import { execSync, spawn } from 'node:child_process'
 import type { ChildProcess } from 'node:child_process'
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
 import net from 'node:net'
-import { resolve, dirname } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import os from 'node:os'
 
 // devtools removed
@@ -48,6 +48,30 @@ function resolveClaudeAgentDir(env: Record<string, string>): string | null {
   return null
 }
 
+/** Derive hermes-agent venv binary path from HERMES_HOME so we find it
+ *  even when hermes-agent lives next to profiles (e.g. D:\ai\hermes\)
+ *  rather than under ~/.hermes/. */
+function hermesAgentVenvBin(): string | null {
+  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  if (!base) return null
+  const parts = base.split(/[/\\]/).filter(Boolean)
+  const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+  const root = profilesIdx >= 0
+    ? parts.slice(0, profilesIdx).join('/')
+    : dirname(base)
+  const isWin = process.platform === 'win32'
+  // Nous-style installs use .venv; older pip installs used venv
+  for (const venv of ['.venv', 'venv']) {
+    const resolved = resolve(
+      root, 'hermes-agent', venv,
+      isWin ? 'Scripts' : 'bin',
+      isWin ? 'hermes.exe' : 'hermes',
+    )
+    if (existsSync(resolved)) return resolved
+  }
+  return null
+}
+
 /** Find the Hermes CLI binary used to start the local gateway. */
 function resolveClaudeBinary(): string | null {
   const isWin = process.platform === 'win32'
@@ -56,12 +80,13 @@ function resolveClaudeBinary(): string | null {
   const binDir = isWin ? 'Scripts' : 'bin'
   const candidates = [
     process.env.HERMES_CLI_BIN || '',
+    hermesAgentVenvBin(),
     resolve(os.homedir(), '.hermes', 'hermes-agent', 'venv', binDir, hermesBin),
     resolve(os.homedir(), '.claude', 'bin', claudeBin),
     resolve(os.homedir(), '.local', 'bin', claudeBin),
   ]
   for (const c of candidates) {
-    if (existsSync(c)) return c
+    if (c && existsSync(c)) return c
   }
   return null
 }
