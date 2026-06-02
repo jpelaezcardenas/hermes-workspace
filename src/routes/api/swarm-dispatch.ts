@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { execFile } from 'node:child_process'
+import { execFile, execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { newestCheckpointFromMessages, parseSwarmCheckpoint, type ParsedSwarmCheckpoint } from '../../server/swarm-checkpoints'
 import { readWorkerMessages } from '../../server/swarm-chat-reader'
@@ -13,8 +13,30 @@ import { rosterByWorkerId, type SwarmRosterWorker } from '../../server/swarm-ros
 import { publishSwarmCheckpointNotification } from '../../server/swarm-notifications'
 import { ensureSwarmProfileConfig } from '../../server/swarm-profile-config'
 
+/** Derive hermes-agent venv path from HERMES_HOME so we find the binary
+ *  even when hermes-agent lives next to profiles (e.g. D:\ai\hermes\)
+ *  rather than under ~/.hermes/. */
+function hermesAgentVenvBin(): string | null {
+  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  if (!base) return null
+  // Normalise away the /profiles suffix if present
+  const parts = base.split(/[/\\]/).filter(Boolean)
+  const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+  const root = profilesIdx >= 0
+    ? parts.slice(0, profilesIdx).join('/')
+    : dirname(base)
+  return join(
+    root,
+    'hermes-agent',
+    '.venv',
+    process.platform === 'win32' ? 'Scripts' : 'bin',
+    process.platform === 'win32' ? 'hermes.exe' : 'hermes',
+  )
+}
+
 const HERMES_BIN_CANDIDATES = [
   process.env.HERMES_CLI_BIN,
+  hermesAgentVenvBin(),
   process.platform === 'win32'
     ? join(homedir(), '.hermes', 'hermes-agent', 'venv', 'Scripts', 'hermes.exe')
     : join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
@@ -30,7 +52,14 @@ function resolveHermesBin(): string {
       if (existsSync(candidate)) return candidate
       continue
     }
-    return candidate
+    // Bare command — verify it resolves in PATH before returning it
+    try {
+      const where = process.platform === 'win32' ? 'where.exe' : 'which'
+      const resolved = execFileSync(where, [candidate], { timeout: 5000 }).toString().trim().split('\n')[0]
+      if (resolved) return resolved
+    } catch {
+      // not in PATH, continue to next candidate
+    }
   }
   return 'hermes'
 }
