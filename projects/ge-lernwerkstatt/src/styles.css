@@ -937,7 +937,7 @@ summary { cursor: pointer; font-weight: 750; }
 
 .studentTopNav {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin: 14px 0;
   padding: 12px;
@@ -1125,26 +1125,237 @@ summary { cursor: pointer; font-weight: 750; }
   font-weight: 850;
   color: #536157;
 }
+
+/* UK-Station: Mehr, fertig, nochmal */
+.ukPlaySpace {
+  display: grid;
+  gap: 16px;
+}
+.ukGameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  border: 2px solid #d7e2de;
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, #fffdf7 0%, #ecf7f4 54%, #fff4db 100%),
+    repeating-linear-gradient(90deg, rgba(73, 103, 124, .06) 0 1px, transparent 1px 28px);
+  box-shadow: 0 16px 38px rgba(67, 76, 82, .1);
+}
+.ukGameHeader h1 {
+  margin: 4px 0 8px;
+  font-size: 3.6rem;
+  line-height: .96;
+  color: #244654;
+  letter-spacing: 0;
+}
+.ukLevelBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.ukLevel {
+  min-height: 74px;
+  justify-content: center;
+  flex-direction: column;
+  border: 2px solid #d6cdc0;
+  border-radius: 18px;
+  background: #fbfaf7;
+  white-space: normal;
+  font-size: 1.4rem;
+}
+.ukLevel span {
+  display: block;
+  font-size: .86rem;
+  color: #536157;
+}
+.ukLevel.active {
+  border-color: #537989;
+  background: #e8f4f6;
+  color: #244654;
+}
+.ukLevel.active span {
+  color: #244654;
+}
+.ukPlayBoard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.ukFocus,
+.ukChoicePanel {
+  border-radius: 26px;
+}
+.ukTable {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  min-height: 300px;
+  margin: 16px 0;
+  padding: 36px 22px 22px;
+  border: 4px dashed #a9c5bd;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.82), rgba(241,248,246,.9)),
+    repeating-linear-gradient(45deg, rgba(83,121,137,.08) 0 2px, transparent 2px 22px);
+}
+.ukRoundChip {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #fff8e8;
+  color: #6a5432;
+  font-weight: 850;
+}
+.ukPiece {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 104px;
+  border: 3px solid #d6cdc0;
+  border-radius: 18px;
+  background: #fffaf0;
+  color: #36505a;
+  font-size: 2.2rem;
+  font-weight: 900;
+  box-shadow: 0 10px 18px rgba(55, 72, 78, .12);
+}
+.ukActionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ukActionButtons button {
+  flex: 1 1 150px;
+}
+.ukChoiceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.ukChoiceCard {
+  min-height: 148px;
+  justify-content: center;
+  flex-direction: column;
+  border: 3px solid #d7d2c8;
+  border-radius: 28px;
+  color: #263a42;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.08);
+}
+.ukChoiceCard.green {
+  background: #eaf7e2;
+  border-color: #8cbf7c;
+}
+.ukChoiceCard.blue {
+  background: #e7f1fb;
+  border-color: #87aac9;
+}
+.ukChoiceCard.amber {
+  background: #fff1d4;
+  border-color: #d4a656;
+}
+.ukChoiceCard.selectedTile {
+  border-color: #244654;
+  box-shadow: 0 0 0 4px rgba(36, 70, 84, .15), inset 0 -5px 0 rgba(0,0,0,.08);
+}
+.ukChoiceIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 8px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.72);
+  font-size: 2rem;
+  font-weight: 950;
+}
+.ukChoiceCard strong {
+  font-size: 1.75rem;
+  letter-spacing: 0;
+}
+.ukFeedback {
+  min-height: 64px;
+  padding: 16px 18px;
+  border: 2px solid #d7e2de;
+  border-radius: 20px;
+  background: #f8fcfb;
+  color: #314a37;
+  font-weight: 850;
+}
+.ukSupportBar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #dfe7d8;
+  border-radius: 22px;
+  background: rgba(255, 253, 247, .9);
+}
+.ukSupportBar button {
+  min-height: 56px;
+  justify-content: center;
+  white-space: normal;
+}
+.ukTeacherDrawer {
+  border: 1px solid #d8d0bf;
+  border-radius: 18px;
+  padding: 12px 16px;
+  background: #fbfaf7;
+}
+.ukTeacherDrawer summary {
+  cursor: pointer;
+  font-weight: 850;
+  color: #536157;
+}
 @media (max-width: 820px) {
   .quantityGameHeader,
-  .quantityGameBoard {
+  .quantityGameBoard,
+  .ukGameHeader,
+  .ukPlayBoard {
     grid-template-columns: 1fr;
   }
-  .quantityGameHeader {
+  .quantityGameHeader,
+  .ukGameHeader {
     flex-direction: column;
   }
   .quietExit,
   .quantityLevel,
-  .quantitySupportBar button {
+  .ukLevel,
+  .quantitySupportBar button,
+  .ukSupportBar button {
     width: 100%;
   }
   .quantityLevelBar,
   .quantityChoiceGrid,
-  .quantitySupportBar {
+  .quantitySupportBar,
+  .ukLevelBar,
+  .ukChoiceGrid,
+  .ukSupportBar {
     grid-template-columns: 1fr;
   }
   .quantityNumber {
     min-height: 92px;
+  }
+  .ukGameHeader h1 {
+    font-size: 2.4rem;
+    line-height: 1.05;
+  }
+  .ukChoiceCard {
+    min-height: 104px;
+  }
+  .ukTable {
+    min-height: 220px;
   }
 }
 
@@ -1161,11 +1372,22 @@ summary { cursor: pointer; font-weight: 750; }
     border-radius: 22px;
     gap: 10px;
   }
+  .ukGameHeader {
+    padding: 16px;
+    border-radius: 22px;
+    gap: 10px;
+  }
   .quantityGameHeader h1 {
     font-size: 2rem;
     line-height: 1.05;
   }
+  .ukGameHeader h1 {
+    font-size: 2rem;
+  }
   .quantityGameHeader p {
+    margin: 4px 0;
+  }
+  .ukGameHeader p {
     margin: 4px 0;
   }
   .quietExit {
@@ -1174,7 +1396,16 @@ summary { cursor: pointer; font-weight: 750; }
   .quantityLevelBar {
     gap: 8px;
   }
+  .ukLevelBar {
+    gap: 8px;
+  }
   .quantityLevel {
+    min-height: 58px;
+    border-radius: 16px;
+    font-size: 1.18rem;
+    padding: 8px 10px;
+  }
+  .ukLevel {
     min-height: 58px;
     border-radius: 16px;
     font-size: 1.18rem;
@@ -1183,11 +1414,19 @@ summary { cursor: pointer; font-weight: 750; }
   .quantityLevel span {
     font-size: .78rem;
   }
+  .ukLevel span {
+    font-size: .78rem;
+  }
   .quantityGameBoard {
     gap: 10px;
   }
+  .ukPlayBoard {
+    gap: 10px;
+  }
   .quantityFocus,
-  .quantityChoice {
+  .quantityChoice,
+  .ukFocus,
+  .ukChoicePanel {
     padding: 14px;
     border-radius: 20px;
   }
@@ -1199,10 +1438,12 @@ summary { cursor: pointer; font-weight: 750; }
   .emptyMat {
     font-size: 1.05rem;
   }
-  .quantityActions {
+  .quantityActions,
+  .ukActionButtons {
     gap: 8px;
   }
-  .quantityActions button {
+  .quantityActions button,
+  .ukActionButtons button {
     flex-basis: 120px;
     min-height: 54px;
     padding-inline: 10px;
@@ -1214,17 +1455,51 @@ summary { cursor: pointer; font-weight: 750; }
     gap: 8px;
     margin: 10px 0;
   }
+  .ukChoiceGrid {
+    gap: 8px;
+    margin: 10px 0;
+  }
   .quantityNumber {
     min-height: 78px;
     border-radius: 20px;
   }
-  .quantitySupportBar {
+  .ukTable {
+    min-height: 172px;
+    margin: 8px 0 10px;
+    padding: 42px 14px 16px;
+  }
+  .ukPiece {
+    width: 58px;
+    height: 78px;
+    border-radius: 14px;
+    font-size: 1.55rem;
+  }
+  .ukChoiceCard {
+    min-height: 84px;
+    border-radius: 20px;
+  }
+  .ukChoiceIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 1.45rem;
+  }
+  .ukChoiceCard strong {
+    font-size: 1.35rem;
+  }
+  .ukFeedback {
+    min-height: 54px;
+    padding: 12px 14px;
+  }
+  .quantitySupportBar,
+  .ukSupportBar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     padding: 10px;
     border-radius: 18px;
   }
-  .quantitySupportBar button {
+  .quantitySupportBar button,
+  .ukSupportBar button {
     min-height: 52px;
     padding-inline: 8px;
   }
