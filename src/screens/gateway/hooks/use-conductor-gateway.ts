@@ -65,6 +65,10 @@ const DEFAULT_CONDUCTOR_SETTINGS: ConductorSettings = {
   supervised: false,
 }
 
+export function shouldPersistActiveConductorMission(phase: MissionPhase): boolean {
+  return phase === 'decomposing' || phase === 'running'
+}
+
 type PersistedMission = {
   missionId: string | null
   missionJobId: string | null
@@ -331,6 +335,16 @@ function loadPersistedMission(): PersistedMission | null {
     if (!goal || (phase !== 'idle' && phase !== 'decomposing' && phase !== 'running' && phase !== 'complete') || streamText === null || planText === null || !workerKeys || !workerLabels) {
       return null
     }
+
+    // Completed/stopped missions are already represented in mission history.
+    // Restoring them as the active mission causes stale terminal records to be
+    // re-queried on page load and can surface an old failure as if Conductor is
+    // currently broken.
+    if (!shouldPersistActiveConductorMission(phase)) {
+      clearPersistedMission()
+      return null
+    }
+
     return {
       missionId,
       missionJobId,
@@ -1020,7 +1034,7 @@ export function useConductorGateway() {
       if (!missionId) return null
       return fetchConductorMission(missionId)
     },
-    enabled: Boolean(missionId) && phase !== 'idle',
+    enabled: Boolean(missionId) && shouldPersistActiveConductorMission(phase),
     refetchInterval: phase === 'decomposing' || phase === 'running' ? 2_500 : false,
     retry: Infinity,
     retryDelay: (attemptIndex: number) => Math.min(2000 * 2 ** attemptIndex, 10_000),
@@ -1374,7 +1388,7 @@ export function useConductorGateway() {
   }, [conductorSettings])
 
   useEffect(() => {
-    if (phase === 'idle') {
+    if (!shouldPersistActiveConductorMission(phase)) {
       try {
         localStorage.removeItem(ACTIVE_MISSION_STORAGE_KEY)
       } catch {}
