@@ -757,6 +757,14 @@ async function sendPromptToLiveSession(workerId: string, prompt: string): Promis
   }
 }
 
+export function buildHermesChatQueryArgs(prompt: string): string[] {
+  // `hermes chat -q` requires the query as the *immediate* next argv item.
+  // Keeping the prompt adjacent to -q prevents argparse from interpreting
+  // following flags (for example -Q) as a missing query and failing with:
+  // "argument -q/--query: expected one argument".
+  return ['chat', '-q', prompt, '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch']
+}
+
 function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: SwarmRosterWorker | undefined, options?: { waitForCheckpoint?: boolean; checkpointPollMs?: number; missionId?: string | null; notifySessionKey?: string | null }): Promise<WorkerResult> {
   return new Promise(async (resolve) => {
     const workerId = assignment.workerId
@@ -887,9 +895,7 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
 
     const useWrapper = existsSync(wrapperPath)
     const cmd = useWrapper ? wrapperPath : resolveHermesBin()
-    const args = useWrapper
-      ? ['chat', '-q', '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch', prompt]
-      : ['chat', '-q', '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch']
+    const args = buildHermesChatQueryArgs(prompt)
     const env: NodeJS.ProcessEnv = {
       ...process.env,
       HERMES_HOME: profilePath,

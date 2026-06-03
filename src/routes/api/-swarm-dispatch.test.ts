@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  buildHermesChatQueryArgs,
   buildHermesTmuxLaunchCommand,
   buildWorkerPrompt,
   checkpointFromRuntimeSnapshot,
@@ -109,6 +110,20 @@ describe('buildHermesTmuxLaunchCommand', () => {
   })
 })
 
+describe('buildHermesChatQueryArgs', () => {
+  it('passes the prompt immediately after -q so flags are not parsed as the query', () => {
+    const prompt = 'STATE: DONE\nRESULT: ok'
+    const args = buildHermesChatQueryArgs(prompt)
+
+    expect(args.slice(0, 3)).toEqual(['chat', '-q', prompt])
+    expect(args).toContain('-Q')
+    expect(args).toContain('--source')
+    expect(args[1]).toBe('-q')
+    expect(args[2]).toBe(prompt)
+    expect(args[3]).toBe('-Q')
+  })
+})
+
 describe('buildWorkerPrompt', () => {
   const roster = {
     id: 'swarm5',
@@ -117,9 +132,15 @@ describe('buildWorkerPrompt', () => {
     specialty: 'full-stack implementation across Hermes Workspace and Swarm2',
     model: 'GPT-5.5',
     mission: 'Ship focused product slices with tests and clean diffs.',
+    modes: [],
+    tools: [],
     skills: ['swarm-ui-worker', 'swarm-worker-core'],
+    plugins: [],
+    pluginToolsets: [],
+    mcpServers: [],
     capabilities: ['code-editing', 'ui-implementation', 'build-verification'],
     preferredTaskTypes: ['implementation'],
+    greenlightRequiredFor: [],
     maxConcurrentTasks: 1,
     acceptsBroadcast: true,
     reviewRequired: false,
