@@ -51,6 +51,7 @@ coverage
 *.temp
 .cache
 .parcel-cache
+test-compile.*
 
 # Tauri
 src-tauri/target
