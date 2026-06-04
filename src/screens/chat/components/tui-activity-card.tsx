@@ -81,6 +81,77 @@ function formatElapsed(seconds: number): string {
   return `${m}m ${s}s`
 }
 
+/**
+ * Render the tool's input in the most useful way for each tool type.
+ * For shell-style tools (command / cmd / shell_command / bash), show the
+ * full command on its own line — that's the part the user actually
+ * wants to see, not a JSON wrapper. For file tools (read/edit/write),
+ * surface the file path on its own line and dump the rest as JSON.
+ * For everything else, fall back to a pretty-printed JSON dump.
+ */
+function formatToolInput(section: TuiToolSection): string {
+  const input = section.input
+  if (!input || typeof input !== 'object') return ''
+
+  const tool = section.type.toLowerCase()
+  const isShell =
+    tool === 'bash' ||
+    tool === 'shell' ||
+    tool === 'exec' ||
+    tool === 'command' ||
+    tool === 'run_command' ||
+    tool === 'shell_command'
+  const isFileRead =
+    tool === 'read' ||
+    tool === 'read_file' ||
+    tool === 'file_read' ||
+    tool === 'cat'
+  const isFileWrite =
+    tool === 'write' ||
+    tool === 'write_file' ||
+    tool === 'edit' ||
+    tool === 'edit_file' ||
+    tool === 'create' ||
+    tool === 'create_file' ||
+    tool === 'apply_patch'
+
+  const pickString = (...keys: Array<string>): string | null => {
+    for (const key of keys) {
+      const value = input[key]
+      if (typeof value === 'string' && value.trim().length > 0) return value
+    }
+    return null
+  }
+
+  if (isShell) {
+    const command = pickString('command', 'cmd', 'shell_command', 'script')
+    if (command) {
+      // If there's a cwd, surface it as a header line so the user knows
+      // the working directory. Don't dump it inside the command itself.
+      const cwd = pickString('cwd', 'working_dir', 'workdir')
+      const header = cwd ? `[cwd: ${cwd}]\n` : ''
+      return `${header}$ ${command}`
+    }
+  }
+
+  if (isFileRead || isFileWrite) {
+    const path = pickString('path', 'file_path', 'file', 'filepath')
+    if (path) {
+      const rest: Record<string, unknown> = { ...input }
+      // Don't repeat the path inside the rest
+      for (const k of ['path', 'file_path', 'file', 'filepath']) {
+        delete (rest as Record<string, unknown>)[k]
+      }
+      const restJson = Object.keys(rest).length
+        ? `\n\n${JSON.stringify(rest, null, 2)}`
+        : ''
+      return `path: ${path}${restJson}`
+    }
+  }
+
+  return JSON.stringify(input, null, 2)
+}
+
 function ToolRow({
   section,
   isStreamingActive,
@@ -94,14 +165,26 @@ function ToolRow({
   formatLabel: (name: string, args?: Record<string, unknown>) => string
   formatArg: (name: string, args?: Record<string, unknown>) => string | null
 }) {
-  const [open, setOpen] = useState(false)
-  useEffect(() => {
-    if (expandAll) setOpen(true)
-  }, [expandAll])
-
   const isError = section.state === 'output-error'
   const isDone = section.state === 'output-available'
   const isPending = !isError && !isDone
+
+  // Auto-expand when:
+  //   1. Caller requested expandAll (e.g. user toggled "expand all")
+  //   2. The run has finished and there's something to show — a finished tool
+  //      call with no expanded view hides its real command/output behind a
+  //      single truncated line, which makes the chat feel opaque. The whole
+  //      point of "越用越想用" is that the user can SEE what the agent did.
+  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if (expandAll) {
+      setOpen(true)
+      return
+    }
+    if (isDone || isError) {
+      setOpen(true)
+    }
+  }, [expandAll, isDone, isError])
 
   // Per-row elapsed timer when running
   const [elapsed, setElapsed] = useState(0)
@@ -118,8 +201,11 @@ function ToolRow({
   const label = formatLabel(section.type, section.input)
   const arg = formatArg(section.type, section.input)
   const argLabel = section.preview ?? arg ?? null
-  const argTruncated =
-    argLabel && argLabel.length > 60 ? `${argLabel.slice(0, 57)}…` : argLabel
+  // No 60-char truncation here — show the full arg. The row already has a
+  // hover state and the user can read the full text in the expanded panel
+  // below. Truncating a shell command to "git s…" hides exactly the part
+  // the user cares about.
+  const argTruncated = argLabel
 
   const outputText = section.outputText || section.errorText || ''
   const outputSummary = isPending
@@ -213,10 +299,10 @@ function ToolRow({
                 Input
               </div>
               <pre
-                className="max-h-32 overflow-auto whitespace-pre-wrap break-words rounded font-mono text-[10px]"
+                className="max-h-96 overflow-auto whitespace-pre-wrap break-words rounded font-mono text-[10px]"
                 style={{ color: 'var(--code-foreground, var(--theme-text))' }}
               >
-                {JSON.stringify(section.input, null, 2)}
+                {formatToolInput(section)}
               </pre>
             </div>
           ) : null}
@@ -233,7 +319,7 @@ function ToolRow({
                 {isError ? 'Error' : 'Output'}
               </div>
               <pre
-                className="max-h-48 overflow-auto whitespace-pre-wrap break-words rounded font-mono text-[10px]"
+                className="max-h-[28rem] overflow-auto whitespace-pre-wrap break-words rounded font-mono text-[10px]"
                 style={{
                   color: isError
                     ? 'var(--theme-danger, #ef4444)'
