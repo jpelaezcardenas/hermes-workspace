@@ -4,6 +4,7 @@ import {
   buildHermesTmuxLaunchCommand,
   buildWorkerPrompt,
   checkpointFromRuntimeSnapshot,
+  dispatchBlockReason,
   runtimeCheckpointSignature,
   runtimeSnapshotIsFresh,
 } from './swarm-dispatch'
@@ -44,6 +45,14 @@ describe('checkpointFromRuntimeSnapshot', () => {
     })
 
     expect(checkpoint).toBeNull()
+  })
+})
+
+describe('dispatchBlockReason', () => {
+  it('turns failed or timed-out dispatch results into mission blocker text', () => {
+    expect(dispatchBlockReason({ ok: false, error: 'Command failed: worker exited', output: '', checkpointStatus: undefined })).toBe('Command failed: worker exited')
+    expect(dispatchBlockReason({ ok: true, error: null, output: 'Delivered', checkpointStatus: 'timeout' })).toBe('No fresh checkpoint before poll timeout.')
+    expect(dispatchBlockReason({ ok: true, error: null, output: 'Checkpoint DONE', checkpointStatus: 'checkpointed' })).toBeNull()
   })
 })
 
