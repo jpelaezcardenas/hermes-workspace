@@ -1,26 +1,86 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { basename, join } from 'node:path'
+import { basename, dirname, join } from 'node:path'
 import { getHermesRoot, getProfilesDir } from './claude-paths'
 
 const PROFILE_NAME_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/
 const JOB_ID_RE = /^[A-Fa-f0-9]{8,64}$/
 
+/** Find hermes-agent venv binary, checking several strategies:
+ *  1. From HERMES_HOME (for D:\ai\hermes\profiles -> D:\ai\hermes\hermes-agent)
+ *  2. Well-known D:\ai\hermes\hermes-agent path (common dev setup)
+ *  3. Same-directory sibling: profiles parent + hermes-agent/.venv
+ *  Returns first path that exists, or null. */
+function hermesAgentVenvBin(): string | null {
+  const isWin = process.platform === 'win32'
+  const hermesExe = isWin ? 'hermes.exe' : 'hermes'
+  const venvBinDir = isWin ? 'Scripts' : 'bin'
+
+  const check = (p: string) => (existsSync(p) ? p : null)
+
+  // Strategy 1: from HERMES_HOME
+  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    const root = profilesIdx >= 0
+      ? parts.slice(0, profilesIdx).join('/')
+      : dirname(base)
+    for (const venv of ['.venv', 'venv']) {
+      const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+      if (r) return r
+    }
+  }
+
+  // Strategy 2: well-known D:\ai\hermes\hermes-agent (NousResearch/hermes-agent dev clone)
+  for (const venv of ['.venv', 'venv']) {
+    const r = check(join('D:/ai/hermes/hermes-agent', venv, venvBinDir, hermesExe))
+    if (r) return r
+  }
+
+  // Strategy 3: hermes-agent as sibling to profiles directory
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    if (profilesIdx >= 0) {
+      const root = parts.slice(0, profilesIdx).join('/')
+      for (const venv of ['.venv', 'venv']) {
+        const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+        if (r) return r
+      }
+    }
+  }
+
+  return null
+}
+
 const HERMES_BIN_CANDIDATES = [
   process.env.HERMES_CLI_BIN,
-  join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
-  join(homedir(), '.local', 'bin', 'hermes'),
+  hermesAgentVenvBin(),
+  process.platform === 'win32'
+    ? join(homedir(), '.hermes', 'hermes-agent', 'venv', 'Scripts', 'hermes.exe')
+    : join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
+  process.platform === 'win32'
+    ? join(homedir(), '.local', 'bin', 'hermes.exe')
+    : join(homedir(), '.local', 'bin', 'hermes'),
   'hermes',
 ].filter((value): value is string => Boolean(value))
 
 function resolveHermesBin(): string {
   for (const candidate of HERMES_BIN_CANDIDATES) {
-    if (candidate.includes('/')) {
+    if (candidate.includes('/') || candidate.includes('\\')) {
       if (existsSync(candidate)) return candidate
       continue
     }
-    return candidate
+    // Bare command — verify it resolves in PATH before returning it
+    try {
+      const where = process.platform === 'win32' ? 'where.exe' : 'which'
+      const resolved = execFileSync(where, [candidate], { timeout: 5000 }).toString().trim().split('\n')[0]
+      if (resolved) return resolved
+    } catch {
+      // not in PATH, continue to next candidate
+    }
   }
   return 'hermes'
 }

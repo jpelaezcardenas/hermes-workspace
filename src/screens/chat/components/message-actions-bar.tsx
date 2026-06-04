@@ -56,6 +56,7 @@ export function MessageActionsBar({
   onRetry,
 }: MessageActionsBarProps) {
   const [copied, setCopied] = useState(false)
+  const [hovered, setHovered] = useState(false)
 
   const handleCopy = async () => {
     try {
@@ -68,12 +69,25 @@ export function MessageActionsBar({
   }
 
   const positionClass = align === 'end' ? 'justify-end' : 'justify-start'
+  const alwaysOn = forceVisible || isQueued || isFailed
+  const visible = alwaysOn || hovered
 
   return (
     <div
+      data-chat-message-actions=""
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
       className={cn(
-        'flex items-center gap-2 text-xs text-primary-600 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 duration-100 ease-out',
-        forceVisible || isQueued || isFailed ? 'opacity-100' : 'opacity-0',
+        'flex items-center gap-2 text-xs text-primary-600 transition-opacity duration-100 ease-out',
+        // Default: invisible. While queued/failed: always-on. While the
+        // user is hovering the bar (or it contains keyboard focus), show
+        // it. The CSS group-hover fallback is kept in case some parent
+        // bubble has its own group class for related animations.
+        visible
+          ? 'opacity-100'
+          : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100',
         positionClass,
       )}
     >

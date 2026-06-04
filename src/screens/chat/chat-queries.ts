@@ -65,10 +65,33 @@ export async function fetchSessions(): Promise<Array<SessionMeta>> {
 export async function fetchHistory(payload: {
   sessionKey: string
   friendlyId: string
+  /**
+   * Optional pagination cursor. When set, the server returns up to
+   * `limit` messages whose timestamp is strictly less than this value.
+   * Omit to fetch the most recent page.
+   */
+  before?: number
+  /**
+   * Optional lower-bound cursor. When set, the server returns
+   * messages with timestamp >= from, so a refetch after a new user
+   * message doesn't slide the window forward and drop boundary
+   * messages. Without this, the latest 50 always start at the most
+   * recent message and the front of the previous page is lost.
+   */
+  from?: number
+  /** Page size. Default 50 for the first page. */
+  limit?: number
 }): Promise<HistoryResponse> {
-  const query = new URLSearchParams({ limit: '1000' })
+  const limit = payload.limit && payload.limit > 0 ? payload.limit : 50
+  const query = new URLSearchParams({ limit: String(limit) })
   if (payload.sessionKey) query.set('sessionKey', payload.sessionKey)
   if (payload.friendlyId) query.set('friendlyId', payload.friendlyId)
+  if (typeof payload.before === 'number') {
+    query.set('before', String(payload.before))
+  }
+  if (typeof payload.from === 'number') {
+    query.set('from', String(payload.from))
+  }
   const res = await fetch(`/api/history?${query.toString()}`)
   if (!res.ok) throw new Error(await readError(res))
   return (await res.json()) as HistoryResponse

@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { execFile } from 'node:child_process'
+import { execFile, execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { rosterByWorkerId } from '../../server/swarm-roster'
 import { resolveSwarmModelLabel } from '../../server/swarm-model-resolver'
@@ -14,13 +14,18 @@ import { syncSwarmProfileModel } from '../../server/swarm-profile-config'
 function getProfilesDir(): string {
   const envHome = process.env.HERMES_HOME || process.env.CLAUDE_HOME
   if (envHome) {
-    const parts = envHome.split('/').filter(Boolean)
+    const parts = envHome.split(/[/\\]/).filter(Boolean)
     if (parts.length >= 2 && parts.at(-2) === 'profiles') {
-      return envHome.split('/').slice(0, -1).join('/')
+      const sep = envHome.includes('\\') ? '\\' : '/'
+      return envHome.split(/[/\\]/).slice(0, -1).join(sep)
     }
     return join(envHome, 'profiles')
   }
   return join(homedir(), '.hermes', 'profiles')
+}
+
+function getProfilePath(workerId: string): string {
+  return join(getProfilesDir(), workerId)
 }
 
 /**
@@ -48,7 +53,7 @@ const TMUX_BIN_CANDIDATES = [
 
 function resolveTmuxBin(): string | null {
   for (const candidate of TMUX_BIN_CANDIDATES) {
-    if (candidate.includes('/')) {
+    if (candidate.includes('/') || candidate.includes('\\')) {
       // On this launchd-started Workspace, existsSync can incorrectly miss
       // Homebrew binaries and then execFile('tmux') fails with ENOENT because
       // PATH has been reshaped by pnpm. Prefer the stable absolute Homebrew
@@ -80,20 +85,80 @@ function validateWorkerId(value: string): boolean {
   return /^[a-z0-9][a-z0-9_-]{0,63}$/i.test(value)
 }
 
+/** Find hermes-agent venv binary, checking several strategies:
+ *  1. From HERMES_HOME (for D:\ai\hermes\profiles -> D:\ai\hermes\hermes-agent)
+ *  2. Well-known D:\ai\hermes\hermes-agent path (common dev setup)
+ *  3. Same-directory sibling: profiles parent + hermes-agent/.venv
+ *  Returns first path that exists, or null. */
+function hermesAgentVenvBin(): string | null {
+  const isWin = process.platform === 'win32'
+  const hermesExe = isWin ? 'hermes.exe' : 'hermes'
+  const venvBinDir = isWin ? 'Scripts' : 'bin'
+
+  const check = (p: string) => (existsSync(p) ? p : null)
+
+  // Strategy 1: from HERMES_HOME
+  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    const root = profilesIdx >= 0
+      ? parts.slice(0, profilesIdx).join('/')
+      : dirname(base)
+    for (const venv of ['.venv', 'venv']) {
+      const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+      if (r) return r
+    }
+  }
+
+  // Strategy 2: well-known D:\ai\hermes\hermes-agent (NousResearch/hermes-agent dev clone)
+  for (const venv of ['.venv', 'venv']) {
+    const r = check(join('D:/ai/hermes/hermes-agent', venv, venvBinDir, hermesExe))
+    if (r) return r
+  }
+
+  // Strategy 3: hermes-agent as sibling to profiles directory
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    if (profilesIdx >= 0) {
+      const root = parts.slice(0, profilesIdx).join('/')
+      for (const venv of ['.venv', 'venv']) {
+        const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+        if (r) return r
+      }
+    }
+  }
+
+  return null
+}
+
 const HERMES_BIN_CANDIDATES = [
   process.env.HERMES_CLI_BIN,
-  join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
-  join(homedir(), '.local', 'bin', 'hermes'),
+  hermesAgentVenvBin(),
+  process.platform === 'win32'
+    ? join(homedir(), '.hermes', 'hermes-agent', 'venv', 'Scripts', 'hermes.exe')
+    : join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
+  process.platform === 'win32'
+    ? join(homedir(), '.local', 'bin', 'hermes.exe')
+    : join(homedir(), '.local', 'bin', 'hermes'),
   'hermes',
 ].filter((value): value is string => Boolean(value))
 
 function resolveHermesBin(): string {
   for (const candidate of HERMES_BIN_CANDIDATES) {
-    if (candidate.includes('/')) {
+    if (candidate.includes('/') || candidate.includes('\\')) {
       if (existsSync(candidate)) return candidate
       continue
     }
-    return candidate
+    // Bare command — verify it resolves in PATH before returning it
+    try {
+      const where = process.platform === 'win32' ? 'where.exe' : 'which'
+      const resolved = execFileSync(where, [candidate], { timeout: 5000 }).toString().trim().split('\n')[0]
+      if (resolved) return resolved
+    } catch {
+      // not in PATH, continue to next candidate
+    }
   }
   return 'hermes'
 }
@@ -134,13 +199,27 @@ function startSession(
   })
 }
 
-function resolveWorkerCwd(workerId: string): string {
+function getWrapperPath(workerId: string): string {
   const worker = rosterByWorkerId([workerId]).get(workerId)
-  const wrapperName = worker?.wrapper?.trim() || workerId
-  const wrapperPath = join(homedir(), '.local', 'bin', wrapperName)
-  if (existsSync(wrapperPath)) {
+  const wrapperName = (worker?.wrapper?.trim() || workerId)
+  return join(getProfilePath(workerId), wrapperName)
+}
+
+function resolveWrapperForExec(wrapperPath: string): string {
+  if (existsSync(wrapperPath)) return wrapperPath
+  if (process.platform === 'win32') {
+    const withBat = `${wrapperPath}.bat`
+    if (existsSync(withBat)) return withBat
+  }
+  return wrapperPath
+}
+
+function resolveWorkerCwd(workerId: string): string {
+  const wrapperPath = getWrapperPath(workerId)
+  const resolved = resolveWrapperForExec(wrapperPath)
+  if (existsSync(resolved)) {
     try {
-      const text = readFileSync(wrapperPath, 'utf8')
+      const text = readFileSync(resolved, 'utf8')
       const m = text.match(/cd\s+'([^']+)'/)
       if (m && m[1] && existsSync(m[1])) return m[1]
     } catch {

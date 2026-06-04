@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
-import { execFile } from 'node:child_process'
+import { execFile, execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { newestCheckpointFromMessages, parseSwarmCheckpoint, type ParsedSwarmCheckpoint } from '../../server/swarm-checkpoints'
 import { readWorkerMessages } from '../../server/swarm-chat-reader'
@@ -13,20 +13,80 @@ import { rosterByWorkerId, type SwarmRosterWorker } from '../../server/swarm-ros
 import { publishSwarmCheckpointNotification } from '../../server/swarm-notifications'
 import { ensureSwarmProfileConfig } from '../../server/swarm-profile-config'
 
+/** Find hermes-agent venv binary, checking several strategies:
+ *  1. From HERMES_HOME (for D:\ai\hermes\profiles -> D:\ai\hermes\hermes-agent)
+ *  2. Well-known D:\ai\hermes\hermes-agent path (common dev setup)
+ *  3. Same-directory sibling: profiles parent + hermes-agent/.venv
+ *  Returns first path that exists, or null. */
+function hermesAgentVenvBin(): string | null {
+  const isWin = process.platform === 'win32'
+  const hermesExe = isWin ? 'hermes.exe' : 'hermes'
+  const venvBinDir = isWin ? 'Scripts' : 'bin'
+
+  const check = (p: string) => (existsSync(p) ? p : null)
+
+  // Strategy 1: from HERMES_HOME
+  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    const root = profilesIdx >= 0
+      ? parts.slice(0, profilesIdx).join('/')
+      : dirname(base)
+    for (const venv of ['.venv', 'venv']) {
+      const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+      if (r) return r
+    }
+  }
+
+  // Strategy 2: well-known D:\ai\hermes\hermes-agent (NousResearch/hermes-agent dev clone)
+  for (const venv of ['.venv', 'venv']) {
+    const r = check(join('D:/ai/hermes/hermes-agent', venv, venvBinDir, hermesExe))
+    if (r) return r
+  }
+
+  // Strategy 3: hermes-agent as sibling to profiles directory
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    if (profilesIdx >= 0) {
+      const root = parts.slice(0, profilesIdx).join('/')
+      for (const venv of ['.venv', 'venv']) {
+        const r = check(join(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+        if (r) return r
+      }
+    }
+  }
+
+  return null
+}
+
 const HERMES_BIN_CANDIDATES = [
   process.env.HERMES_CLI_BIN,
-  join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
-  join(homedir(), '.local', 'bin', 'hermes'),
+  hermesAgentVenvBin(),
+  process.platform === 'win32'
+    ? join(homedir(), '.hermes', 'hermes-agent', 'venv', 'Scripts', 'hermes.exe')
+    : join(homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
+  process.platform === 'win32'
+    ? join(homedir(), '.local', 'bin', 'hermes.exe')
+    : join(homedir(), '.local', 'bin', 'hermes'),
   'hermes',
 ].filter((value): value is string => Boolean(value))
 
 function resolveHermesBin(): string {
   for (const candidate of HERMES_BIN_CANDIDATES) {
-    if (candidate.includes('/')) {
+    if (candidate.includes('/') || candidate.includes('\\')) {
       if (existsSync(candidate)) return candidate
       continue
     }
-    return candidate
+    // Bare command — verify it resolves in PATH before returning it
+    try {
+      const where = process.platform === 'win32' ? 'where.exe' : 'which'
+      const resolved = execFileSync(where, [candidate], { timeout: 5000 }).toString().trim().split('\n')[0]
+      if (resolved) return resolved
+    } catch {
+      // not in PATH, continue to next candidate
+    }
   }
   return 'hermes'
 }
@@ -87,9 +147,10 @@ const MAX_TIMEOUT_S = 600
 function getProfilesDir(): string {
   const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
   if (base) {
-    const parts = base.split('/').filter(Boolean)
+    const parts = base.split(/[/\\]/).filter(Boolean)
     if (parts.length >= 2 && parts.at(-2) === 'profiles') {
-      return base.split('/').slice(0, -1).join('/')
+      const sep = base.includes('\\') ? '\\' : '/'
+      return base.split(/[/\\]/).slice(0, -1).join(sep)
     }
     return join(base, 'profiles')
   }
@@ -98,8 +159,22 @@ function getProfilesDir(): string {
 
 function getWrapperPath(workerId: string): string {
   const worker = rosterByWorkerId([workerId]).get(workerId)
-  const wrapperName = worker?.wrapper?.trim() || workerId
-  return join(homedir(), '.local', 'bin', wrapperName)
+  const wrapperName = (worker?.wrapper?.trim() || workerId)
+  return join(getProfilePath(workerId), wrapperName)
+}
+
+/** Resolve a wrapper path for Node's execFile on Windows: append .bat if the
+ *  bare path doesn't exist but a .bat variant does. This lets hermes profile
+ *  alias --name <path> place wrappers anywhere (e.g. inside the profile dir)
+ *  without requiring the caller to know the .bat suffix. */
+function resolveWrapperForExec(wrapperPath: string): string {
+  if (existsSync(wrapperPath)) return wrapperPath
+  // Windows: hermes profile alias appends .bat; Node execFile does NOT auto-resolve
+  if (process.platform === 'win32') {
+    const withBat = `${wrapperPath}.bat`
+    if (existsSync(withBat)) return withBat
+  }
+  return wrapperPath
 }
 
 function getProfilePath(workerId: string): string {
@@ -131,7 +206,7 @@ function resolveTmuxBin(): string | null {
     if (!override.includes('/')) return override
   }
   for (const candidate of TMUX_BIN_CANDIDATES) {
-    if (candidate.includes('/')) {
+    if (candidate.includes('/') || candidate.includes('\\')) {
       if (
         candidate === process.env.TMUX_BIN ||
         candidate === '/opt/homebrew/bin/tmux' ||
@@ -559,9 +634,10 @@ async function waitForFreshCheckpoint(
 
 function resolveWorkerCwd(workerId: string): string {
   const wrapperPath = getWrapperPath(workerId)
-  if (existsSync(wrapperPath)) {
+  const resolved = resolveWrapperForExec(wrapperPath)
+  if (existsSync(resolved)) {
     try {
-      const text = readFileSync(wrapperPath, 'utf8')
+      const text = readFileSync(resolved, 'utf8')
       const m = text.match(/cd\s+([^\n]+?)\s+\|\|\s+exit\s+1/)
       if (m?.[1]) {
         const raw = m[1].trim().replace(/^['"]|['"]$/g, '')
@@ -886,10 +962,8 @@ function runWorker(assignment: AssignmentRequest, timeoutMs: number, roster: Swa
     }
 
     const useWrapper = existsSync(wrapperPath)
-    const cmd = useWrapper ? wrapperPath : resolveHermesBin()
-    const args = useWrapper
-      ? ['chat', '-q', '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch', prompt]
-      : ['chat', '-q', '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch']
+    const cmd = useWrapper ? resolveWrapperForExec(wrapperPath) : resolveHermesBin()
+    const args = ['chat', '-q', prompt, '-Q', '--yolo', '--ignore-rules', '--source', 'swarm-dispatch']
     const env: NodeJS.ProcessEnv = {
       ...process.env,
       HERMES_HOME: profilePath,

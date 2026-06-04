@@ -3,7 +3,7 @@ import { execSync, spawn } from 'node:child_process'
 import type { ChildProcess } from 'node:child_process'
 import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
 import net from 'node:net'
-import { resolve, dirname } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import os from 'node:os'
 
 // devtools removed
@@ -48,16 +48,69 @@ function resolveClaudeAgentDir(env: Record<string, string>): string | null {
   return null
 }
 
+/** Find hermes-agent venv binary, checking several strategies:
+ *  1. From HERMES_HOME (for D:\ai\hermes\profiles -> D:\ai\hermes\hermes-agent)
+ *  2. Well-known D:\ai\hermes\hermes-agent path (common dev setup)
+ *  3. Same-directory sibling: profiles parent + hermes-agent/.venv
+ *  Returns first path that exists, or null. */
+function hermesAgentVenvBin(): string | null {
+  const isWin = process.platform === 'win32'
+  const hermesExe = isWin ? 'hermes.exe' : 'hermes'
+  const venvBinDir = isWin ? 'Scripts' : 'bin'
+
+  const check = (p: string) => (existsSync(p) ? p : null)
+
+  // Strategy 1: from HERMES_HOME
+  const base = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    const root = profilesIdx >= 0
+      ? parts.slice(0, profilesIdx).join('/')
+      : dirname(base)
+    for (const venv of ['.venv', 'venv']) {
+      const r = check(resolve(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+      if (r) return r
+    }
+  }
+
+  // Strategy 2: well-known D:\ai\hermes\hermes-agent (NousResearch/hermes-agent dev clone)
+  for (const venv of ['.venv', 'venv']) {
+    const r = check(resolve('D:/ai/hermes/hermes-agent', venv, venvBinDir, hermesExe))
+    if (r) return r
+  }
+
+  // Strategy 3: hermes-agent as sibling to profiles directory
+  if (base) {
+    const parts = base.split(/[/\\]/).filter(Boolean)
+    const profilesIdx = parts.findLastIndex((p) => p === 'profiles')
+    if (profilesIdx >= 0) {
+      const root = parts.slice(0, profilesIdx).join('/')
+      for (const venv of ['.venv', 'venv']) {
+        const r = check(resolve(root, 'hermes-agent', venv, venvBinDir, hermesExe))
+        if (r) return r
+      }
+    }
+  }
+
+  return null
+}
+
 /** Find the Hermes CLI binary used to start the local gateway. */
 function resolveClaudeBinary(): string | null {
+  const isWin = process.platform === 'win32'
+  const hermesBin = isWin ? 'hermes.exe' : 'hermes'
+  const claudeBin = isWin ? 'claude.exe' : 'claude'
+  const binDir = isWin ? 'Scripts' : 'bin'
   const candidates = [
     process.env.HERMES_CLI_BIN || '',
-    resolve(os.homedir(), '.hermes', 'hermes-agent', 'venv', 'bin', 'hermes'),
-    resolve(os.homedir(), '.claude', 'bin', 'claude'),
-    resolve(os.homedir(), '.local', 'bin', 'claude'),
+    hermesAgentVenvBin(),
+    resolve(os.homedir(), '.hermes', 'hermes-agent', 'venv', binDir, hermesBin),
+    resolve(os.homedir(), '.claude', 'bin', claudeBin),
+    resolve(os.homedir(), '.local', 'bin', claudeBin),
   ]
   for (const c of candidates) {
-    if (existsSync(c)) return c
+    if (c && existsSync(c)) return c
   }
   return null
 }
@@ -66,12 +119,15 @@ function resolveClaudeBinary(): string | null {
  *  Prefers .venv/bin/python inside agentDir, falls back to system python3.
  */
 function resolveClaudePython(agentDir: string): string {
-  const venvPython = resolve(agentDir, '.venv', 'bin', 'python')
+  const isWin = process.platform === 'win32'
+  const pyBin = isWin ? 'python.exe' : 'python'
+  const binDir = isWin ? 'Scripts' : 'bin'
+  const venvPython = resolve(agentDir, '.venv', binDir, pyBin)
   if (existsSync(venvPython)) return venvPython
   // uv creates 'venv' not '.venv' sometimes
-  const uvVenv = resolve(agentDir, 'venv', 'bin', 'python')
+  const uvVenv = resolve(agentDir, 'venv', binDir, pyBin)
   if (existsSync(uvVenv)) return uvVenv
-  return 'python3'
+  return isWin ? 'python' : 'python3'
 }
 
 /** Check if hermes-agent health endpoint is responding */
@@ -162,6 +218,7 @@ const config = defineConfig(({ mode, command }) => {
       return
     }
 
+    const isWin = process.platform === 'win32'
     const child = spawn(launchCmd, commandArgs, {
       cwd: launchCwd,
       detached: false, // keep tied to vite process — stops when dev server stops
@@ -171,12 +228,12 @@ const config = defineConfig(({ mode, command }) => {
         PATH: [
           resolve(os.homedir(), '.claude', 'bin'),
           resolve(os.homedir(), '.local', 'bin'),
-          agentDir ? resolve(agentDir, '.venv', 'bin') : '',
-          agentDir ? resolve(agentDir, 'venv', 'bin') : '',
+          agentDir ? resolve(agentDir, '.venv', isWin ? 'Scripts' : 'bin') : '',
+          agentDir ? resolve(agentDir, 'venv', isWin ? 'Scripts' : 'bin') : '',
           process.env.PATH || '',
         ]
           .filter(Boolean)
-          .join(':'),
+          .join(isWin ? ';' : ':'),
       },
     })
 

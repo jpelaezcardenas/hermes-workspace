@@ -84,6 +84,18 @@ export type HistoryResponse = {
   sessionKey: string
   sessionId?: string
   messages: Array<ChatMessage>
+  /**
+   * True when the server has older messages before this page. The
+   * client can pass `nextBefore` as the `before` cursor to fetch the
+   * next page. Both fields are optional so older clients that don't
+   * send a cursor still work.
+   */
+  hasMore?: boolean
+  /**
+   * Cursor for the next page: a millisecond timestamp. Pass it back
+   * as `?before=<value>` to load older messages.
+   */
+  nextBefore?: number
 }
 
 export type SessionMeta = {
