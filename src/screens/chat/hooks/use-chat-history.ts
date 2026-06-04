@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import { chatQueryKeys, fetchHistory } from '../chat-queries'
@@ -409,6 +409,93 @@ export function useChatHistory({
   const [persistedPending, setPersistedPending] =
     useState<PendingSendPayload | null>(null)
 
+  // Older pages cache: when the user scrolls to the top and we fetch
+  // older messages, we PREPEND them to a local list and merge with the
+  // initial page. We keep a separate `olderMessages` array so that the
+  // remote-history cache (TanStack Query) isn't mutated out from under
+  // other consumers that might re-render based on it.
+  const [olderMessages, setOlderMessages] = useState<Array<ChatMessage>>([])
+  const [nextBefore, setNextBefore] = useState<number | null>(null)
+  const [isLoadingOlder, setIsLoadingOlder] = useState(false)
+  const [historyError2, setHistoryError2] = useState<unknown>(null)
+
+  // When the active session changes, drop the older-pages cache so we
+  // don't render stale rows from a different session.
+  useEffect(() => {
+    setOlderMessages([])
+    setNextBefore(null)
+    setIsLoadingOlder(false)
+    setHistoryError2(null)
+  }, [activeFriendlyId, sessionKeyForHistory])
+
+  // Pull hasMore / nextBefore from the latest query response. The server
+  // only emits these on the initial page (no `before` cursor); the
+  // follow-up `loadOlder` calls update `nextBefore` from their own
+  // response so the next call can keep going.
+  const initialHasMore = Boolean(historyQuery.data?.hasMore)
+  const initialNextBefore =
+    typeof historyQuery.data?.nextBefore === 'number'
+      ? historyQuery.data.nextBefore
+      : null
+  // The "effective" cursor for the NEXT loadOlder call: prefer the
+  // cursor from the most recent follow-up response, falling back to
+  // the initial page cursor. Either being non-null + hasMore being
+  // true means we can keep loading.
+  const effectiveNextBefore = nextBefore ?? initialNextBefore
+  const hasMore = effectiveNextBefore != null && (isLoadingOlder || initialHasMore || nextBefore != null)
+
+  const loadOlder = useCallback(async (): Promise<boolean> => {
+    if (isLoadingOlder) return false
+    const cursor =
+      nextBefore ??
+      (typeof historyQuery.data?.nextBefore === 'number'
+        ? historyQuery.data.nextBefore
+        : null)
+    if (cursor == null) return false
+    setIsLoadingOlder(true)
+    setHistoryError2(null)
+    try {
+      const page = await fetchHistory({
+        sessionKey: sessionKeyForHistory,
+        friendlyId: activeFriendlyId,
+        before: cursor,
+        limit: 50,
+      })
+      const newOlder = Array.isArray(page.messages) ? page.messages : []
+      if (newOlder.length === 0) {
+        // No more pages — clear cursor so further calls are no-ops.
+        setNextBefore(null)
+        return false
+      }
+      setOlderMessages((prev) => {
+        // Dedup by id when stitching pages together (server may overlap
+        // a row on the boundary).
+        const seen = new Set(prev.map((m) => m.id).filter(Boolean))
+        const additions = newOlder.filter(
+          (m) => !m.id || !seen.has(m.id as string),
+        )
+        return [...additions, ...prev]
+      })
+      if (page.nextBefore != null) {
+        setNextBefore(page.nextBefore)
+      } else {
+        setNextBefore(null)
+      }
+      return true
+    } catch (err) {
+      setHistoryError2(err)
+      return false
+    } finally {
+      setIsLoadingOlder(false)
+    }
+  }, [
+    activeFriendlyId,
+    historyQuery.data?.nextBefore,
+    isLoadingOlder,
+    nextBefore,
+    sessionKeyForHistory,
+  ])
+
   useEffect(() => {
     cleanupExpiredPendingSends()
     setPersistedPending(
@@ -615,15 +702,29 @@ export function useChatHistory({
   const activeCanonicalKey =
     resolvedSessionKey || sessionKeyForHistory || 'main'
 
+  // Merge older paginated history in front of the latest page so the
+  // user can scroll up and see them. The older pages are returned
+  // already in chronological order (oldest -> newest within each page),
+  // and TanStack Query returns the initial page in chronological order
+  // too, so the concatenation preserves order.
+  const mergedHistoryMessages = useMemo(() => {
+    if (olderMessages.length === 0) return historyMessages
+    return [...olderMessages, ...historyMessages]
+  }, [historyMessages, olderMessages])
+
   return {
     historyQuery,
-    historyMessages,
+    historyMessages: mergedHistoryMessages,
     displayMessages,
     messageCount,
     historyError,
     resolvedSessionKey,
     activeCanonicalKey,
     sessionKeyForHistory,
+    // Pagination: load older history when the user scrolls to the top.
+    loadOlder,
+    hasMore,
+    isLoadingOlder,
   }
 }
 

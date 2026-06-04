@@ -354,6 +354,7 @@ function ThinkingBubble({
 const VIRTUAL_ROW_HEIGHT = 136
 const VIRTUAL_OVERSCAN = 8
 const NEAR_BOTTOM_THRESHOLD = 200
+const LOAD_OLDER_THRESHOLD = 120
 // Pull-to-refresh constants removed
 
 const HIDDEN_SYSTEM_USER_PREFIXES = [
@@ -560,6 +561,14 @@ type ChatMessageListProps = {
    *  can confirm the server received it). Keeps the thinking indicator visible
    *  during the very first render after the user submits. */
   sending?: boolean
+  /**
+   * Reverse-infinite-scroll: called when the user scrolls near the top
+   * of the viewport and there are older messages available. Should
+   * resolve once the next page is appended (or hasMore becomes false).
+   */
+  onLoadOlder?: () => Promise<boolean> | boolean
+  hasMoreHistory?: boolean
+  isLoadingOlder?: boolean
 }
 
 function ChatMessageListComponent({
@@ -589,6 +598,9 @@ function ChatMessageListComponent({
   hideSystemMessages = false,
   isCompacting = false,
   sending = false,
+  onLoadOlder,
+  hasMoreHistory = false,
+  isLoadingOlder = false,
 }: ChatMessageListProps) {
   const anchorRef = useRef<HTMLDivElement | null>(null)
   const lastUserRef = useRef<HTMLDivElement | null>(null)
@@ -602,6 +614,9 @@ function ChatMessageListComponent({
   streamingTargetsClearRef.current = () => setStreamingCleared((c) => c + 1)
   const lastScrollTopRef = useRef(0)
   const isNearBottomRef = useRef(true)
+  // Reverse-infinite-scroll guard: only one loadOlder in flight at a
+  // time, even if the user parks the scrollbar at scrollTop=0.
+  const loadOlderInFlightRef = useRef(false)
   const [isNearBottom, setIsNearBottom] = useState(true)
   const [unreadCount, setUnreadCount] = useState(0)
   const [expandAllToolSections, setExpandAllToolSections] = useState(false)
@@ -673,7 +688,47 @@ function ChatMessageListComponent({
       stickToBottomRef.current = true
       isNearBottomRef.current = true
     }
-  }, [])
+
+    // Reverse-infinite-scroll: when the user scrolls near the top
+    // (scrollTop within LOAD_OLDER_THRESHOLD px) and there are older
+    // pages available, trigger a load. We guard against firing the
+    // load on every scroll event with the loadingRef.
+    if (
+      onLoadOlder &&
+      hasMoreHistory &&
+      !isLoadingOlder &&
+      metrics.scrollTop <= LOAD_OLDER_THRESHOLD
+    ) {
+      if (!loadOlderInFlightRef.current) {
+        loadOlderInFlightRef.current = true
+        // Snapshot the pre-load height so we can preserve the user's
+        // viewport position once the older messages are prepended.
+        const preHeight = metrics.scrollHeight
+        Promise.resolve(onLoadOlder())
+          .catch(() => false)
+          .finally(() => {
+            // After the new page is prepended, scrollTop will read as
+            // 0 — but the document is now `preHeight + appended` tall.
+            // To keep the user's view stable, shift scrollTop by the
+            // delta in scrollHeight. We do this on the next frame to
+            // make sure the DOM has flushed.
+            requestAnimationFrame(() => {
+              const anchor = anchorRef.current
+              if (!anchor) return
+              const viewport = anchor.closest(
+                '[data-chat-scroll-viewport]',
+              ) as HTMLElement | null
+              if (!viewport) return
+              const delta = viewport.scrollHeight - preHeight
+              if (delta > 0) {
+                viewport.scrollTop = metrics.scrollTop + delta
+              }
+            })
+            loadOlderInFlightRef.current = false
+          })
+      }
+    }
+  }, [onLoadOlder, hasMoreHistory, isLoadingOlder])
 
   // Simple scroll to bottom — find viewport and scroll
   const scrollToBottom = useCallback(function scrollToBottom(
@@ -1633,6 +1688,29 @@ function ChatMessageListComponent({
             style={chatContentStyle}
           >
             {notice && noticePosition === 'start' ? notice : null}
+            {/* Reverse-infinite-scroll sentinel: at the top of the list
+                we surface a small hint when older history is available
+                and a loading state while a page is in flight. This makes
+                the affordance discoverable without forcing the user to
+                scroll all the way up before anything happens. */}
+            {hasMoreHistory || isLoadingOlder ? (
+              <div
+                className="mx-auto mb-3 flex w-full max-w-[var(--chat-content-max-width)] items-center justify-center py-2 text-[11px] font-mono uppercase tracking-wider opacity-60"
+                data-chat-load-older-sentinel
+              >
+                {isLoadingOlder ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span
+                      className="size-1.5 rounded-full animate-pulse"
+                      style={{ background: 'var(--theme-accent, #6366f1)' }}
+                    />
+                    Loading older messages…
+                  </span>
+                ) : (
+                  <span>Scroll up for older messages</span>
+                )}
+              </div>
+            ) : null}
             {shouldBottomPin ? (
               <div className="flex-1" aria-hidden="true" />
             ) : null}

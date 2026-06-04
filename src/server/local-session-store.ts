@@ -119,6 +119,49 @@ export function getLocalMessages(sessionId: string): Array<LocalMessage> {
   return store.messages[sessionId] ?? []
 }
 
+/**
+ * Cursor-paginated read. Returns up to `limit` messages whose
+ * timestamp is strictly less than `beforeTs`. If `beforeTs` is
+ * undefined, returns the most recent `limit` messages.
+ *
+ * Returned array is in chronological order (oldest -> newest) so the
+ * caller can just append/prepend without resorting.
+ */
+export function getLocalMessagesPage(
+  sessionId: string,
+  options: { limit?: number; beforeTs?: number } = {},
+): { messages: Array<LocalMessage>; hasMore: boolean; total: number } {
+  const all = store.messages[sessionId] ?? []
+  const total = all.length
+  if (total === 0) {
+    return { messages: [], hasMore: false, total: 0 }
+  }
+  const limit = options.limit && options.limit > 0 ? options.limit : 50
+  const beforeTs = options.beforeTs
+
+  // All entries are kept in insertion order (oldest -> newest).
+  let endIndex = all.length
+  if (typeof beforeTs === 'number') {
+    // Find the first message whose timestamp is >= beforeTs. Everything
+    // before that index has ts < beforeTs (strictly).
+    let i = 0
+    for (; i < all.length; i += 1) {
+      if (typeof all[i].timestamp === 'number' && all[i].timestamp >= beforeTs) {
+        break
+      }
+    }
+    endIndex = i
+  }
+
+  const startIndex = Math.max(0, endIndex - limit)
+  const slice = all.slice(startIndex, endIndex)
+  return {
+    messages: slice,
+    hasMore: startIndex > 0,
+    total,
+  }
+}
+
 export function appendLocalMessage(
   sessionId: string,
   message: LocalMessage,

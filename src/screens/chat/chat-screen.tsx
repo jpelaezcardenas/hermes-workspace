@@ -599,6 +599,9 @@ export function ChatScreen({
     resolvedSessionKey,
     activeCanonicalKey,
     sessionKeyForHistory,
+    loadOlder,
+    hasMore: hasMoreHistory,
+    isLoadingOlder,
   } = useChatHistory({
     activeFriendlyId: portableChatFriendlyId,
     activeSessionKey,
@@ -2798,6 +2801,9 @@ export function ChatScreen({
               researchCard={researchCard}
               isCompacting={isCompacting}
               sending={sending}
+              onLoadOlder={loadOlder}
+              hasMoreHistory={hasMoreHistory}
+              isLoadingOlder={isLoadingOlder}
             />
           )}
           {showComposer ? (
