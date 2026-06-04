@@ -159,6 +159,11 @@ export const Route = createFileRoute('/api/history')({
             return json({
               sessionKey: 'main',
               sessionId: 'main',
+              // local-session-store entries are already in canonical
+              // shape after normalizeLocalContentToParts(). Don't run
+              // them through toChatMessage() — it would re-wrap a
+              // content array as a single text part, which the client
+              // renders as "[object Object]" in the bubble.
               messages: localMessages.map((m, index) => ({
                 id: m.id,
                 role: m.role,
@@ -187,7 +192,17 @@ export const Route = createFileRoute('/api/history')({
           // Dedup by message id (local ids are stable UUIDs assigned at
           // write time). Sort by timestamp so the merged transcript is
           // ordered the way the user typed it.
+          //
+          // IMPORTANT: the local tail must keep its `content` as a real
+          // `[{type, text}]` array. toChatMessage() below assumes `msg.content`
+          // is a raw string and re-wraps it as a single text part; if we run
+          // it on local-tail messages whose content is already an array,
+          // it nests a text part whose text field is the whole array, which
+          // renders as "[object Object]" in the bubble. So we mark local
+          // entries and only pipe remote (string-content) messages through
+          // toChatMessage.
           const localSession = getLocalSession(sessionKey)
+          const alreadyCanonical: Array<Record<string, unknown>> = []
           if (localSession) {
             const localMessages = getLocalMessages(sessionKey)
             if (localMessages.length > 0) {
@@ -199,24 +214,31 @@ export const Route = createFileRoute('/api/history')({
                   })
                   .filter((id): id is string => Boolean(id)),
               )
-              const tailOnly = localMessages
-                .filter((m) => !remoteIds.has(m.id))
-                .map((m) => ({
+              for (const m of localMessages) {
+                if (remoteIds.has(m.id)) continue
+                alreadyCanonical.push({
                   id: m.id,
                   role: m.role,
                   content: normalizeLocalContentToParts(m.content),
                   timestamp: m.timestamp,
                   // Tag so the frontend can render a "saved locally" hint
                   __source: 'local-tail' as const,
-                }))
+                })
+              }
 
-              if (tailOnly.length > 0) {
-                const merged = [...messages, ...tailOnly].sort(
+              if (alreadyCanonical.length > 0) {
+                const merged = [...messages, ...alreadyCanonical].sort(
                   (a, b) => {
                     const aTs =
-                      typeof a.timestamp === 'number' ? a.timestamp : 0
+                      typeof (a as Record<string, unknown>).timestamp ===
+                      'number'
+                        ? ((a as Record<string, unknown>).timestamp as number)
+                        : 0
                     const bTs =
-                      typeof b.timestamp === 'number' ? b.timestamp : 0
+                      typeof (b as Record<string, unknown>).timestamp ===
+                      'number'
+                        ? ((b as Record<string, unknown>).timestamp as number)
+                        : 0
                     return aTs - bTs
                   },
                 )
@@ -230,9 +252,19 @@ export const Route = createFileRoute('/api/history')({
           return json({
             sessionKey,
             sessionId: sessionKey,
-            messages: boundedMessages.map((message, index) =>
-              toChatMessage(message, { historyIndex: index }),
-            ),
+            messages: boundedMessages.map((message, index) => {
+              // Local-tail messages are already in canonical
+              // {role, content: [{type:'text', text}]} shape — just attach
+              // historyIndex and ship them. Running them through
+              // toChatMessage() would re-wrap the content array as a text
+              // part, which the client renders as "[object Object]".
+              if (
+                (message as Record<string, unknown>).__source === 'local-tail'
+              ) {
+                return { ...message, historyIndex: index }
+              }
+              return toChatMessage(message, { historyIndex: index })
+            }),
           })
         } catch (err) {
           return json(
