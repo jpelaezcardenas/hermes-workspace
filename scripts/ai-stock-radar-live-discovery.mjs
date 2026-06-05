@@ -1,0 +1,429 @@
+import {
+  evaluateEvidenceQuality,
+  extractFilingQualityLabels,
+} from "./ai-stock-radar-quality-rules.mjs";
+import {
+  applyEvidenceFirewall,
+  chooseReviewAction,
+  decodeFilingEvents,
+  evaluateFundamentalSnapshot,
+} from "./ai-stock-radar-evidence-firewall.mjs";
+
+export const AI_KEYWORDS = [
+  "artificial intelligence",
+  "ai",
+  "machine learning",
+  "deep learning",
+  "neural",
+  "gpu",
+  "accelerated computing",
+  "data center",
+  "datacenter",
+  "robotics",
+  "automation",
+  "voice ai",
+  "generative ai",
+];
+
+const AI_THEME_PATTERNS = [
+  { pattern: /\bartificial intelligence\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bai\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bmachine learning\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bdeep learning\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bneural\b/i, theme: "ai_keyword_match" },
+  { pattern: /\bgpu\b/i, theme: "gpu_capacity" },
+  { pattern: /\baccelerated computing\b/i, theme: "gpu_capacity" },
+  { pattern: /\bdata[- ]?center\b/i, theme: "ai_infrastructure" },
+  { pattern: /\brobotics\b/i, theme: "robotics" },
+  { pattern: /\bautomation\b/i, theme: "automation" },
+  { pattern: /\bvoice ai\b/i, theme: "voice_ai" },
+  { pattern: /\bgenerative ai\b/i, theme: "ai_keyword_match" },
+];
+
+const NASDAQ_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt";
+const OTHER_LISTED_URL = "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt";
+const SEC_COMPANY_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json";
+const SEC_SUBMISSIONS_ROOT = "https://data.sec.gov/submissions";
+const SEC_COMPANYFACTS_ROOT = "https://data.sec.gov/api/xbrl/companyfacts";
+const SEC_USER_AGENT =
+  process.env.AI_STOCK_RADAR_SEC_USER_AGENT ||
+  "HermesAIStockRadar/1.0 contact=local-research@example.invalid";
+
+const COMMON_STOCK_MARKERS = [
+  "common stock",
+  "ordinary shares",
+  "american depositary",
+  "class a",
+  "class b",
+];
+
+const EXCLUDED_NAME_MARKERS = [
+  "etf",
+  "fund",
+  "warrant",
+  "unit",
+  "right",
+  "note due",
+  "preferred",
+  "depositary share",
+];
+
+const EXCHANGE_CODES = {
+  A: "NYSE American",
+  N: "NYSE",
+  P: "NYSE Arca",
+  Z: "BATS",
+  V: "IEX",
+};
+
+function cleanCompanyName(securityName) {
+  return String(securityName || "")
+    .replace(/\s+-\s+.*$/, "")
+    .replace(/\s+Class [A-Z].*$/i, "")
+    .replace(/\s+Common Stock.*$/i, "")
+    .replace(/\s+Ordinary Shares.*$/i, "")
+    .trim();
+}
+
+function unique(values) {
+  return [...new Set((values || []).filter(Boolean))];
+}
+
+function stricterCategory(left, right) {
+  const rank = {
+    Avoid: 0,
+    Overheated: 1,
+    "Early Watch": 2,
+    "Breakout Watch": 3,
+    "Deep Dive": 4,
+  };
+
+  if (!left) return right;
+  if (!right) return left;
+  return rank[left] <= rank[right] ? left : right;
+}
+
+function splitPipeRows(text) {
+  const [headerLine, ...lines] = String(text || "").trim().split(/\r?\n/);
+  const headers = headerLine.split("|");
+
+  return lines
+    .filter((line) => line && !line.startsWith("File Creation Time:"))
+    .map((line) => {
+      const values = line.split("|");
+      return Object.fromEntries(headers.map((header, index) => [header, values[index] || ""]));
+    });
+}
+
+function isOperatingEquity({ securityName, etf, testIssue }) {
+  const normalized = String(securityName || "").toLowerCase();
+  if (etf === "Y" || testIssue === "Y") return false;
+  if (EXCLUDED_NAME_MARKERS.some((marker) => normalized.includes(marker))) return false;
+  return COMMON_STOCK_MARKERS.some((marker) => normalized.includes(marker));
+}
+
+export function parseNasdaqListed(text) {
+  return splitPipeRows(text)
+    .filter((row) =>
+      isOperatingEquity({
+        securityName: row["Security Name"],
+        etf: row.ETF,
+        testIssue: row["Test Issue"],
+      }),
+    )
+    .map((row) => ({
+      ticker: row.Symbol,
+      company: cleanCompanyName(row["Security Name"]),
+      exchange: "Nasdaq",
+      listed: true,
+      security_name: row["Security Name"],
+    }));
+}
+
+export function parseOtherListed(text) {
+  return splitPipeRows(text)
+    .filter((row) =>
+      isOperatingEquity({
+        securityName: row["Security Name"],
+        etf: row.ETF,
+        testIssue: row["Test Issue"],
+      }),
+    )
+    .map((row) => ({
+      ticker: row["ACT Symbol"],
+      company: cleanCompanyName(row["Security Name"]),
+      exchange: EXCHANGE_CODES[row.Exchange] || row.Exchange || "Other",
+      listed: true,
+      security_name: row["Security Name"],
+    }));
+}
+
+export function normalizeSecCompanyTickers(companyTickers) {
+  return Object.values(companyTickers || {}).reduce((byTicker, entry) => {
+    const ticker = String(entry.ticker || "").toUpperCase();
+    if (!ticker) return byTicker;
+
+    byTicker[ticker] = {
+      cik: String(entry.cik_str).padStart(10, "0"),
+      ticker,
+      title: entry.title,
+    };
+    return byTicker;
+  }, {});
+}
+
+export function inferAiProfile({ ticker, company, security_name, seedByTicker }) {
+  const seed = seedByTicker[ticker] || {};
+  const haystack = `${company || ""} ${security_name || ""}`.toLowerCase();
+  const keywordMatches = AI_THEME_PATTERNS.filter(({ pattern }) => pattern.test(haystack));
+  const seedThemes = seed.themes || [];
+  const themes = [...new Set([...seedThemes, ...keywordMatches.map((match) => match.theme)])];
+  const isAiRelevant = themes.length > 0;
+
+  return {
+    isAiRelevant,
+    themes,
+    ai_exposure: seed.ai_exposure || (keywordMatches.length > 0 ? "core" : "watch"),
+    risk_flags: seed.risk_flags || [],
+  };
+}
+
+export function summarizeSubmissions(submissions) {
+  const recent = submissions?.filings?.recent || {};
+  const forms = recent.form || [];
+  const items = recent.items || [];
+  const relevantForms = [...new Set(forms.filter((form) => ["10-K", "10-Q", "8-K", "20-F", "6-K"].includes(form)))]
+    .slice(0, 5);
+  const filingDescriptions = [
+    ...items,
+    ...(recent.primaryDocDescription || []),
+  ];
+  const filingEvents = decodeFilingEvents({
+    forms,
+    items,
+    descriptions: filingDescriptions,
+  });
+  const catalystLabels = ["recent_public_company_filings"];
+
+  if (relevantForms.includes("8-K") || relevantForms.includes("6-K")) {
+    catalystLabels.push("recent_8k");
+  }
+  if (filingEvents.hard_catalyst) {
+    catalystLabels.push("hard_catalyst");
+  }
+  catalystLabels.push(...filingEvents.positive_labels);
+  catalystLabels.push(...extractFilingQualityLabels(filingDescriptions));
+
+  return {
+    recent_filings: relevantForms,
+    has_company_facts: relevantForms.some((form) => ["10-K", "10-Q", "20-F", "6-K"].includes(form)),
+    catalyst_labels: unique(catalystLabels),
+    filing_events: filingEvents,
+  };
+}
+
+function seedMap(seedRecords) {
+  return Object.fromEntries((seedRecords || []).map((record) => [record.ticker, record]));
+}
+
+async function resolveSubmission({ cik, submissionsByCik, fetcher }) {
+  if (submissionsByCik && submissionsByCik[cik]) return submissionsByCik[cik];
+  return fetcher(`${SEC_SUBMISSIONS_ROOT}/CIK${cik}.json`);
+}
+
+async function resolveCompanyFacts({ cik, companyFactsByCik, fetcher }) {
+  if (companyFactsByCik && companyFactsByCik[cik]) return companyFactsByCik[cik];
+  try {
+    return await fetcher(`${SEC_COMPANYFACTS_ROOT}/CIK${cik}.json`);
+  } catch {
+    return null;
+  }
+}
+
+export async function buildLiveEvidenceRecords({
+  nasdaqListedText,
+  otherListedText,
+  secCompanyTickers,
+  submissionsByCik = {},
+  companyFactsByCik = {},
+  seedRecords = [],
+  fetcher = defaultTextOrJsonFetcher,
+  maxSubmissionFetches = 25,
+  maxRecords = 20,
+}) {
+  const listed = [...parseNasdaqListed(nasdaqListedText), ...parseOtherListed(otherListedText)];
+  const secByTicker = normalizeSecCompanyTickers(secCompanyTickers);
+  const seedByTicker = seedMap(seedRecords);
+  const aiCandidates = listed
+    .map((record) => ({
+      ...record,
+      sec: secByTicker[record.ticker],
+      aiProfile: inferAiProfile({
+        ticker: record.ticker,
+        company: record.company,
+        security_name: record.security_name,
+        seedByTicker,
+      }),
+    }))
+    .filter((record) => record.sec && record.aiProfile.isAiRelevant)
+    .slice(0, maxSubmissionFetches);
+
+  const evidence = [];
+  for (const record of aiCandidates) {
+    const submissions = await resolveSubmission({
+      cik: record.sec.cik,
+      submissionsByCik,
+      fetcher,
+    });
+    const companyFacts = await resolveCompanyFacts({
+      cik: record.sec.cik,
+      companyFactsByCik,
+      fetcher,
+    });
+    const submissionSummary = summarizeSubmissions(submissions);
+    const fundamentalSnapshot = evaluateFundamentalSnapshot(companyFacts);
+    const seed = seedByTicker[record.ticker] || {};
+    const sourceTypes = [
+      "nasdaq_symbol_directory",
+      "sec_company_tickers",
+      "sec_submissions",
+      ...(fundamentalSnapshot.status === "available" ? ["sec_companyfacts"] : []),
+    ];
+    const sourceUrls = [
+      NASDAQ_LISTED_URL,
+      OTHER_LISTED_URL,
+      SEC_COMPANY_TICKERS_URL,
+      `${SEC_SUBMISSIONS_ROOT}/CIK${record.sec.cik}.json`,
+      ...(fundamentalSnapshot.status === "available" ? [`${SEC_COMPANYFACTS_ROOT}/CIK${record.sec.cik}.json`] : []),
+      ...(seed.source_urls || []),
+    ];
+
+    const baseEvidence = {
+      ticker: record.ticker,
+      company: record.company || record.sec.title,
+      exchange: record.exchange,
+      listed: true,
+      themes: record.aiProfile.themes,
+      ai_exposure: record.aiProfile.ai_exposure,
+      source_types: sourceTypes,
+      recent_filings: submissionSummary.recent_filings,
+      catalyst_labels: submissionSummary.catalyst_labels,
+      has_company_facts: fundamentalSnapshot.status === "available",
+      filing_events: submissionSummary.filing_events,
+      fundamental_snapshot: fundamentalSnapshot,
+      finra_context: "not_checked",
+      risk_flags: record.aiProfile.risk_flags,
+      source_urls: sourceUrls,
+      security_name: record.security_name,
+    };
+    const quality = evaluateEvidenceQuality(baseEvidence);
+    const firewall = applyEvidenceFirewall({
+      filingEvents: submissionSummary.filing_events,
+      fundamentalSnapshot,
+      existingRiskFlags: quality.riskFlags,
+    });
+
+    evidence.push({
+      ...baseEvidence,
+      risk_flags: firewall.risk_flags,
+      quality_notes: unique([...quality.qualityNotes, ...firewall.notes]),
+      score_penalty: quality.scorePenalty + firewall.score_penalty,
+      max_category: stricterCategory(quality.maxCategory, firewall.max_category),
+      evidence_firewall: firewall,
+      review_action: chooseReviewAction(firewall),
+    });
+  }
+
+  return evidence.slice(0, maxRecords);
+}
+
+async function defaultTextOrJsonFetcher(url) {
+  const response = await fetch(url, {
+    headers: url.includes("sec.gov")
+      ? {
+          "User-Agent": SEC_USER_AGENT,
+          Accept: "application/json,text/plain,*/*",
+        }
+      : {
+          Accept: "text/plain,application/json,*/*",
+        },
+  });
+
+  if (!response.ok) {
+    throw new Error(`${url} returned ${response.status}`);
+  }
+
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("application/json") || url.endsWith(".json")) {
+    return response.json();
+  }
+  return response.text();
+}
+
+export async function discoverLiveEvidence({
+  fetcher = defaultTextOrJsonFetcher,
+  seedRecords = [],
+  maxSubmissionFetches = 25,
+  maxRecords = 20,
+} = {}) {
+  try {
+    const [nasdaqListedText, otherListedText, secCompanyTickers] = await Promise.all([
+      fetcher(NASDAQ_LISTED_URL),
+      fetcher(OTHER_LISTED_URL),
+      fetcher(SEC_COMPANY_TICKERS_URL),
+    ]);
+    const records = await buildLiveEvidenceRecords({
+      nasdaqListedText,
+      otherListedText,
+      secCompanyTickers,
+      seedRecords,
+      fetcher,
+      maxSubmissionFetches,
+      maxRecords,
+    });
+
+    if (records.length === 0) {
+      return {
+        mode: "seed_fallback",
+        records: seedRecords,
+        fallbackReason: "live discovery returned no AI-relevant joined records",
+        sourceStatus: {
+          nasdaq_symbol_directory: "live_available_no_ai_records",
+          sec_company_tickers: "live_available_no_ai_records",
+          sec_submissions: "live_available_no_ai_records",
+          sec_companyfacts: "available_without_api_key",
+          finra_public_data: "not_checked",
+          paid_market_data: "not_configured",
+        },
+      };
+    }
+
+    return {
+      mode: "live",
+      records,
+      fallbackReason: "",
+      sourceStatus: {
+        nasdaq_symbol_directory: "live_available",
+        sec_company_tickers: "live_available",
+        sec_submissions: "live_available",
+        sec_companyfacts: "available_without_api_key",
+        finra_public_data: "not_checked",
+        paid_market_data: "not_configured",
+      },
+    };
+  } catch (error) {
+    return {
+      mode: "seed_fallback",
+      records: seedRecords,
+      fallbackReason: error instanceof Error ? error.message : String(error),
+      sourceStatus: {
+        nasdaq_symbol_directory: "live_failed_seed_fallback",
+        sec_company_tickers: "live_failed_seed_fallback",
+        sec_submissions: "live_failed_seed_fallback",
+        sec_companyfacts: "available_without_api_key",
+        finra_public_data: "not_checked",
+        paid_market_data: "not_configured",
+      },
+    };
+  }
+}

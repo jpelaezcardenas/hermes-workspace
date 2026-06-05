@@ -1,0 +1,1506 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #202923;
+  background: #f4f2ec;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+.app {
+  width: min(100% - 32px, 1180px);
+  margin: 0 auto;
+  padding: 20px 0 32px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  background: #fffdf9;
+  border: 1px solid #ddd7cb;
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 18px rgba(60, 55, 45, .06);
+}
+
+.top p { margin: .25rem 0; max-width: 760px; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #5f735e;
+  font-size: .76rem;
+  font-weight: 750;
+}
+
+h1 {
+  margin: .1rem 0;
+  font-size: clamp(1.55rem, 2vw, 2rem);
+  line-height: 1.15;
+  color: #25302a;
+}
+
+h2 {
+  margin: 0 0 .75rem;
+  color: #25302a;
+  font-size: 1.18rem;
+  line-height: 1.25;
+}
+
+h3 {
+  color: #405246;
+  margin: 1.1rem 0 .35rem;
+  font-size: 1rem;
+}
+
+p { margin: .45rem 0; }
+
+ul { padding-left: 1.25rem; }
+
+li { margin: .35rem 0; }
+
+.shield {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eef5ee;
+  border: 1px solid #cbdccb;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #314d35;
+  font-weight: 650;
+  min-width: 250px;
+  max-width: 310px;
+}
+
+.mainNav {
+  display: flex;
+  gap: 8px;
+  row-gap: 10px;
+  flex-wrap: wrap;
+  margin: 14px 0 18px;
+  padding: 10px;
+  background: #ebe7dd;
+  border: 1px solid #ddd7cb;
+  border-radius: 16px;
+}
+
+button {
+  border: 1px solid #d3cbbb;
+  background: #fffdf9;
+  color: #25302a;
+  border-radius: 11px;
+  padding: 9px 13px;
+  cursor: pointer;
+  font-weight: 650;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  line-height: 1.2;
+}
+
+button:hover { background: #f0ede4; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 3px solid rgba(77, 107, 87, .32);
+  outline-offset: 2px;
+}
+
+.active,
+.primary {
+  background: #4d6b57;
+  color: white;
+  border-color: #4d6b57;
+}
+
+.active { box-shadow: inset 0 -3px 0 rgba(255,255,255,.22); }
+.primary:hover { background: #405a49; }
+.secondary { background: #f8f6f1; }
+.danger { border-color: #c98888; color: #8a2f2f; background: #fff7f7; }
+.danger:hover { background: #f8e4e4; }
+.large { font-size: 1rem; padding: 12px 16px; }
+
+.grid { display: grid; gap: 16px; }
+.two { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
+.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.full { grid-column: 1 / -1; }
+
+.card {
+  background: #fffdf9;
+  border: 1px solid #ddd7cb;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(60, 55, 45, .05);
+}
+
+.dashboardGrid .card { min-height: 180px; }
+.hero { display: flex; flex-direction: column; align-items: flex-start; }
+.big { font-size: 3rem; line-height: 1; margin: .2rem 0; color: #4d6b57; font-weight: 850; }
+.cardActions, .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.quickLinks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.quickLinks button { flex-direction: column; align-items: flex-start; text-align: left; min-height: 74px; }
+.quickLinks small { color: inherit; opacity: .82; font-weight: 600; }
+.emptyState { color: #5f675f; background: #f8f6f1; border: 1px solid #e6dfd1; border-radius: 12px; padding: 12px; }
+
+.dashboardBeta {
+  position: relative;
+}
+
+.beta3Launcher {
+  position: relative;
+  overflow: hidden;
+  min-height: 620px;
+  padding: 22px clamp(18px, 4vw, 46px) 34px;
+  border: 1px solid #dbe9cf;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(244, 251, 235, .92), rgba(255, 253, 232, .96)),
+    radial-gradient(circle at 12% 20%, rgba(177, 218, 155, .22), transparent 22%),
+    radial-gradient(circle at 90% 72%, rgba(161, 211, 226, .22), transparent 24%);
+  box-shadow: 0 14px 40px rgba(74, 95, 62, .12);
+}
+
+.beta3Launcher::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 44px;
+  opacity: .56;
+  background: repeating-linear-gradient(90deg, transparent 0 11px, rgba(113, 151, 70, .32) 12px 14px, transparent 15px 24px);
+  pointer-events: none;
+}
+
+.beta3NavIcons {
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 30px);
+  margin: -22px calc(clamp(18px, 4vw, 46px) * -1) 42px;
+  padding: 12px 18px;
+  background: #4e8a46;
+  box-shadow: 0 4px 14px rgba(48, 87, 42, .18);
+}
+
+.beta3NavIcons button {
+  width: 54px;
+  min-width: 54px;
+  height: 54px;
+  min-height: 54px;
+  padding: 0;
+  border-radius: 999px;
+  border-color: rgba(255,255,255,.32);
+  background: rgba(255,255,255,.18);
+  font-size: 1.8rem;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,.08);
+}
+
+.beta3NavIcons button:hover,
+.beta3NavIcons button:focus-visible {
+  background: rgba(255,255,255,.3);
+}
+
+.beta3Scene {
+  position: absolute;
+  inset: 80px 24px auto;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(93, 134, 64, .35);
+  font-size: 1.7rem;
+  pointer-events: none;
+}
+
+.beta3Launcher > .eyebrow,
+.beta3Launcher > h2,
+.profileLauncher,
+.beta3Or,
+.beta3PlayGrid,
+.teacherShortcut {
+  position: relative;
+  z-index: 1;
+}
+
+.beta3Launcher > .eyebrow,
+.beta3Launcher > h2,
+.beta3Or {
+  text-align: center;
+}
+
+.beta3Launcher > h2 {
+  margin: 0 auto 24px;
+  color: #285c91;
+  font-size: clamp(2rem, 5vw, 3.35rem);
+  letter-spacing: 0;
+}
+
+.profileLauncher {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(92px, 1fr));
+  gap: clamp(12px, 2vw, 22px);
+  max-width: 740px;
+  margin: 0 auto 18px;
+}
+
+.profileBubble {
+  min-height: 142px;
+  border: 0;
+  background: transparent;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 1.05rem;
+}
+
+.profileBubble span {
+  width: clamp(72px, 9vw, 112px);
+  height: clamp(72px, 9vw, 112px);
+  border-radius: 999px;
+  border: 4px solid rgba(255,255,255,.78);
+  box-shadow: 0 10px 22px rgba(59, 75, 45, .18), inset 0 -12px 0 rgba(0,0,0,.1);
+}
+
+.profileLila span { background: linear-gradient(135deg, #b456cc, #6d28a8); }
+.profileGelb span { background: linear-gradient(135deg, #fff27e, #f3c546); }
+.profileOrange span { background: linear-gradient(135deg, #ffc05e, #ec7c23); }
+.profileGruen span { background: linear-gradient(135deg, #88c782, #459653); }
+.profileBlau span { background: linear-gradient(135deg, #79bcf1, #367fd8); }
+
+.profileBubble:hover {
+  background: transparent;
+  transform: translateY(-2px);
+}
+
+.beta3Or {
+  color: #566655;
+  font-weight: 750;
+  margin: 4px 0 14px;
+}
+
+.beta3PlayGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.beta3PlayTile {
+  min-height: 190px;
+  padding: 18px;
+  border: 1px solid #e8eadb;
+  border-radius: 22px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 10px 24px rgba(73, 82, 55, .08);
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.beta3PlayTile strong {
+  font-size: 1.2rem;
+}
+
+.beta3PlayTile small {
+  max-width: 24ch;
+  color: #5a675c;
+  font-weight: 650;
+}
+
+.beta3PlayIcon {
+  width: 74px;
+  height: 74px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 23px;
+  background: #f0f7ec;
+  border: 2px solid #dbe9cf;
+  font-size: 2.2rem;
+}
+
+.teacherShortcut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 28px auto 0;
+  padding: 10px;
+  border: 1px solid #dbe9cf;
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+}
+
+.teacherShortcut span {
+  padding: 0 8px;
+  color: #546257;
+  font-size: .82rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.teacherShortcut button {
+  min-height: 38px;
+  border-radius: 999px;
+  background: #fffdf9;
+}
+
+.privacy h2 { display: flex; gap: 8px; align-items: center; }
+.privacy li { margin: .5rem 0; }
+
+.listitem {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  margin: 8px 0;
+  background: #fbfaf7;
+  line-height: 1.35;
+}
+.listitem span { margin-top: 3px; }
+.listitem small { color: #5e675f; margin-top: 5px; }
+.selectedItem { border-color: #4d6b57; background: #edf4ed; }
+
+.assist { color: #5d665e; }
+.warning { background: #fff4d8; border: 1px solid #e0c36a; border-radius: 12px; padding: 12px; color: #604b00; }
+.warning.soft { background: #fff9e9; }
+.success { color: #266338; font-weight: 700; }
+
+.form { max-width: 1080px; margin: 0 auto; }
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #e5dfd2;
+  padding-bottom: 14px;
+}
+.formHeader h2 { margin-bottom: .35rem; }
+.formHeader .primary { flex: 0 0 auto; }
+.formGroup {
+  border: 1px solid #e2dccc;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 14px 0;
+  background: #fffefa;
+}
+.formGroup legend {
+  padding: 0 8px;
+  font-weight: 750;
+  color: #334638;
+}
+.emphasisGroup { background: #f7f6ef; }
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.row:last-child { margin-bottom: 0; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field span { font-weight: 700; color: #3b453d; }
+.field small { color: #5d665e; }
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #cfc7b7;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #202923;
+  font: inherit;
+}
+textarea { min-height: 105px; resize: vertical; }
+input[type="range"] { padding: 0; accent-color: #4d6b57; }
+.scaleField strong { font-size: 1.25rem; color: #3f6048; }
+.stickyActions {
+  background: #fffdf9;
+  border: 1px solid #e2dccc;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 6px 14px rgba(60, 55, 45, .05);
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 8px 10px; min-height: 34px; background: #f8f6f1; }
+.chip.selected { background: #4d6b57; color: #fff; border-color: #4d6b57; }
+.chips.static .chip { cursor: default; }
+
+.competencyBadge {
+  background: #eef5ee;
+  border: 1px solid #cbdccb;
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 12px 0;
+}
+.competencyBadge small { color: #455249; }
+
+.filterPanel h2 { display: flex; gap: 8px; align-items: center; }
+.scaleList p, .mini, details {
+  border: 1px solid #e2dccc;
+  border-radius: 12px;
+  background: #fbfaf7;
+  padding: 12px;
+}
+summary { cursor: pointer; font-weight: 750; }
+.markdownPreview, pre {
+  white-space: pre-wrap;
+  overflow-x: auto;
+  background: #f8f6f1;
+  border: 1px solid #e2dccc;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.materialCards { margin-top: 16px; }
+.materialCard { page-break-inside: avoid; }
+.checkGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 16px; }
+.writeLines { min-height: 110px; border: 1px dashed #b9b19f; border-radius: 12px; padding: 14px; color: #6a6257; }
+.qualityList li { margin: .65rem 0; }
+.planItem { border-left: 5px solid #4d6b57; }
+.printPage section { page-break-inside: avoid; }
+.miniForm { display: grid; gap: 10px; }
+.stationGrid { margin-top: 16px; }
+
+@media print {
+  body { background: #fff; }
+  .app { width: auto; max-width: none; padding: 0; }
+  .top, nav, .noPrint, button, .stickyActions { display: none !important; }
+  .card, .printPage, section { box-shadow: none !important; border: 1px solid #bbb !important; }
+  .grid, .two, .three { display: block !important; }
+  .materialCard { break-inside: avoid; margin: 0 0 12px 0; }
+  .printPage { font-size: 12pt; }
+  .writeLines { min-height: 130px; }
+}
+
+@media (max-width: 980px) {
+  .top { align-items: flex-start; flex-direction: column; }
+  .shield { max-width: none; min-width: 0; width: 100%; }
+  .three, .two, .row { grid-template-columns: 1fr; }
+  .dashboardGrid .card { min-height: auto; }
+  .formHeader { flex-direction: column; }
+  .formHeader .primary { width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .app { width: min(100% - 20px, 1180px); padding-top: 10px; }
+  .top, .card, .formGroup { padding: 14px; border-radius: 14px; }
+  .mainNav { overflow-x: auto; flex-wrap: nowrap; padding: 8px; }
+  .mainNav button { white-space: nowrap; }
+  .stickyActions { position: static; }
+}
+
+
+/* Schüler:innenmodus Beta: abgegrenzter, rückbaubarer Prototyp ohne Diagnostikdaten */
+.studentMode {
+  display: grid;
+  gap: 16px;
+}
+.studentMode .card {
+  overflow-wrap: anywhere;
+}
+.betaHero,
+.student-game-hero,
+.student-station-head {
+  border-left: 6px solid #4d6b57;
+}
+.student-game-hero p,
+.student-station-head p {
+  max-width: 880px;
+}
+.student-game-nav,
+.student-step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.student-game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.student-game-card {
+  display: flex;
+  min-height: 310px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.student-game-card h3 {
+  margin: 0;
+  font-size: 1.12rem;
+}
+.student-game-card .primary {
+  margin-top: auto;
+  width: 100%;
+}
+.student-game-icon {
+  width: 68px;
+  height: 68px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: #eef5ee;
+  border: 2px solid #cbdccb;
+  font-size: 2.1rem;
+  flex: 0 0 auto;
+}
+.student-game-task {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #334638;
+  background: #f4f7ef;
+  border: 1px solid #dbe6d4;
+  border-radius: 16px;
+  padding: 12px;
+  width: 100%;
+}
+.student-game-status {
+  color: #536157;
+  font-weight: 750;
+  background: #fbfaf7;
+  border: 1px dashed #d8d0bf;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.student-station-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.student-station-title h2,
+.student-station-title p {
+  margin: 0;
+}
+.student-station-grid {
+  align-items: stretch;
+}
+.student-step-card,
+.student-material-card,
+.student-support-card,
+.student-finish-card,
+.student-state-card,
+.student-learning-trace {
+  border-color: #d8d0bf;
+}
+.student-step-current {
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: clamp(1.45rem, 4vw, 2.2rem);
+  font-weight: 850;
+  color: #25302a;
+  background: #eef5ee;
+  border: 2px solid #cbdccb;
+  border-radius: 22px;
+  padding: 20px;
+}
+.student-step-actions button,
+.student-game-nav button {
+  min-height: 48px;
+  font-size: 1rem;
+}
+.student-support-options,
+.student-reflection-options,
+.student-state-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.student-support,
+.student-reflection,
+.student-state {
+  min-height: 74px;
+  border: 2px solid #d8d0bf;
+  border-radius: 18px;
+  background: #fbfaf7;
+  padding: 14px;
+  text-align: center;
+  white-space: normal;
+  font-size: 1.02rem;
+}
+.student-state-options {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.student-state {
+  min-height: 88px;
+}
+.selectedTile {
+  background: #eef5ee !important;
+  border-color: #4d6b57 !important;
+  color: #243328;
+  box-shadow: 0 0 0 3px rgba(77,107,87,.16);
+}
+.learningTrace,
+.student-learning-trace {
+  border-style: dashed;
+}
+.student-learning-trace p {
+  font-size: 1.02rem;
+}
+
+@media (max-width: 1080px) {
+  .student-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .student-state-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 980px) {
+  .student-support-options,
+  .student-reflection-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .studentMode { gap: 12px; }
+  .student-game-grid,
+  .student-support-options,
+  .student-reflection-options,
+  .student-state-options { grid-template-columns: 1fr; }
+  .student-game-card { min-height: auto; }
+  .student-game-icon { width: 58px; height: 58px; font-size: 1.8rem; border-radius: 18px; }
+  .student-station-title { align-items: flex-start; }
+  .student-step-current { min-height: 110px; padding: 16px; }
+  .student-support,
+  .student-reflection,
+  .student-state { min-height: 64px; }
+  .student-step-actions button,
+  .student-game-nav button { width: 100%; }
+}
+
+
+/* Symbol-Sortiergarten: additiver lokaler Prototyp ohne Punkte/Ranking/Speicherung */
+.symbolGardenHero {
+  border-left: 6px solid #6f8a5d;
+}
+.symbolLevelButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.symbolLevel {
+  min-height: 54px;
+  padding: 14px 18px;
+  font-size: 1.02rem;
+}
+.symbolToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid #d8d0bf;
+  border-radius: 14px;
+  background: #fbfaf7;
+  font-weight: 750;
+}
+.symbolToggle input {
+  width: auto;
+  min-width: 24px;
+  min-height: 24px;
+}
+.symbolGardenTask h3 {
+  margin-top: 0;
+}
+.symbolFeedback {
+  display: inline-flex;
+  min-height: 54px;
+  align-items: center;
+  border: 2px solid #cbdccb;
+  border-radius: 18px;
+  background: #eef5ee;
+  color: #243328;
+  font-size: 1.18rem;
+  font-weight: 800;
+  padding: 12px 16px;
+}
+.symbolGardenBoard {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: 16px;
+}
+.symbolCardGrid,
+.symbolTargetGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.symbolCard,
+.symbolTarget {
+  min-height: 112px;
+  border: 2px solid #d8d0bf;
+  border-radius: 20px;
+  background: #fbfaf7;
+  white-space: normal;
+  text-align: center;
+  flex-direction: column;
+  font-size: 1.08rem;
+}
+.symbolCard span,
+.symbolIcon,
+.symbolTargetIcon {
+  display: inline-flex;
+  min-width: 72px;
+  min-height: 72px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: #eef5ee;
+  color: #334638;
+  padding: 8px 12px;
+  font-size: 2.4rem;
+  font-weight: 850;
+}
+.visuallyQuietLabel {
+  font-size: .88rem;
+  color: #536157;
+}
+.symbolTeacherTrace textarea {
+  min-height: 92px;
+}
+.row.twoCols {
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+}
+.symbolTarget {
+  min-height: 160px;
+  background: #f7f8f1;
+}
+.symbolTarget small {
+  color: #536157;
+  font-weight: 700;
+}
+.symbolDone {
+  border-color: #cbdccb;
+  background: #fbfff8;
+}
+.symbolTeacherTrace input[readonly] {
+  background: #f8f6f1;
+}
+
+@media (max-width: 980px) {
+  .symbolGardenBoard,
+  .symbolCardGrid,
+  .symbolTargetGrid {
+    grid-template-columns: 1fr;
+  }
+  .symbolCard,
+  .symbolTarget {
+    min-height: 96px;
+  }
+}
+
+@media (max-width: 640px) {
+  .symbolLevel,
+  .symbolGardenHero .student-game-nav button {
+    width: 100%;
+  }
+  .symbolFeedback {
+    width: 100%;
+  }
+}
+
+
+/* Lernwerkstatt 4.0 additions */
+.exerciseLibrary, .quantityMode { width: 100%; }
+.libraryIntro { border-left: 8px solid #6b8a72; }
+.libraryAppHeader {
+  position: relative;
+  overflow: hidden;
+  padding-top: 28px;
+  background:
+    linear-gradient(180deg, rgba(255,253,249,.94), rgba(246,250,239,.96)),
+    radial-gradient(circle at 86% 15%, rgba(137, 187, 113, .2), transparent 20%);
+}
+.libraryHeroIcon {
+  width: 78px;
+  height: 78px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 24px;
+  background: #edf6e9;
+  border: 2px solid #dbe9cf;
+  font-size: 2.3rem;
+}
+.libraryStatus { margin: 12px 0; padding: 10px 12px; border: 1px solid #dbe6d4; border-radius: 12px; background: #f4f7ef; color: #334638; }
+.exerciseCard { min-height: 100%; }
+.appExerciseCard {
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  border-color: #e7e1d4;
+}
+.exerciseGameIcon {
+  width: 78px;
+  height: 78px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background: #edf6e9;
+  border: 2px solid #dbe9cf;
+  font-size: 2.25rem;
+}
+.exerciseFacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; margin: 14px 0; }
+.exerciseFacts div { background: #f7f4ec; border: 1px solid #e3ddcf; border-radius: 12px; padding: 10px; }
+.exerciseFacts dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: #657466; font-weight: 800; }
+.exerciseFacts dd { margin: 2px 0 0; font-weight: 650; }
+.quantityHero { background: #fffdf9; border-left: 8px solid #55745d; }
+.quantityMat { min-height: 180px; border: 3px dashed #b9c9b7; border-radius: 24px; background: #f8fbf6; display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center; padding: 22px; margin: 14px 0; }
+.stone { width: 72px; height: 72px; border-radius: 999px; background: #5f7f67; color: #5f7f67; box-shadow: inset 0 -8px 0 rgba(0,0,0,.08), 0 4px 12px rgba(60,80,60,.15); display: inline-flex; align-items: center; justify-content: center; font-size: 1px; }
+.quantityChoice .student-reflection { min-width: 96px; min-height: 96px; font-size: 2rem; }
+.studentMode button.large, .quantityMode .large { min-height: 58px; font-size: 1.05rem; padding: 14px 18px; }
+@media (max-width: 760px) { .exerciseFacts { grid-template-columns: 1fr; } .quantityGrid, .libraryGrid { grid-template-columns: 1fr; } .stone { width: 58px; height: 58px; } }
+
+@media (max-width: 980px) {
+  .beta3Launcher {
+    min-height: auto;
+  }
+  .profileLauncher {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .beta3PlayGrid {
+    grid-template-columns: 1fr;
+  }
+  .teacherShortcut {
+    width: 100%;
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .beta3Launcher {
+    padding-inline: 14px;
+    border-radius: 20px;
+  }
+  .beta3NavIcons {
+    justify-content: flex-start;
+    overflow-x: auto;
+    margin-inline: -14px;
+    gap: 10px;
+  }
+  .beta3NavIcons button {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    font-size: 1.55rem;
+  }
+  .profileLauncher {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .profileBubble {
+    min-height: 118px;
+  }
+  .teacherShortcut button {
+    width: 100%;
+  }
+}
+
+
+/* Beta-3.0 Kinder-Startmodus: erster Eindruck vor Lehrkraftdiagnostik */
+.childStartTop {
+  margin-bottom: 12px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.94), rgba(244, 251, 235, .96)),
+    radial-gradient(circle at 8% 22%, rgba(136, 199, 130, .18), transparent 24%);
+  border-color: #dbe9cf;
+}
+
+.childStartTop h1 {
+  font-size: clamp(1.75rem, 4vw, 2.65rem);
+  color: #285c91;
+}
+
+.childStartTop p:not(.eyebrow) {
+  max-width: 54ch;
+  font-size: 1.05rem;
+  color: #46564a;
+}
+
+.studentTopNav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+  padding: 12px;
+  border-radius: 22px;
+  background: #4e8a46;
+  box-shadow: 0 8px 20px rgba(48, 87, 42, .16);
+}
+
+.studentTopNav button {
+  min-height: 68px;
+  border-radius: 18px;
+  border-color: rgba(255,255,255,.32);
+  background: rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 1.05rem;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,.08);
+}
+
+.studentTopNav button:hover,
+.studentTopNav button:focus-visible,
+.studentTopNav button.active {
+  background: rgba(255,255,255,.34);
+}
+
+.teacherDrawer {
+  margin: 0 0 18px;
+  border: 1px solid #d7ded0;
+  border-radius: 18px;
+  background: rgba(255,255,255,.74);
+  overflow: hidden;
+}
+
+.teacherDrawer summary {
+  padding: 14px 18px;
+  color: #405246;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.teacherDrawer .teacherNav {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid #d7ded0;
+  border-radius: 0;
+  background: #f8f6f1;
+}
+
+.dashboardBeta > .card:not(.beta3Launcher) {
+  opacity: .72;
+}
+
+.dashboardBeta > .card:not(.beta3Launcher) h2 {
+  font-size: 1rem;
+}
+
+@media (max-width: 760px) {
+  .studentTopNav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .studentTopNav button { min-height: 62px; }
+}
+
+/* Mengen legen: reduzierter GE-Spielraum */
+.appPlaySpace {
+  max-width: 1180px;
+  padding-top: 18px;
+}
+.quantityPlaySpace {
+  display: grid;
+  gap: 16px;
+}
+.quantityGameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  border: 2px solid #dce8d4;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(135, 190, 105, .22), transparent 22%),
+    linear-gradient(135deg, #fffdf7 0%, #eef7e9 100%);
+  box-shadow: 0 16px 38px rgba(70, 88, 65, .1);
+}
+.quantityGameHeader h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
+  line-height: .95;
+  color: #314a37;
+}
+.quietExit {
+  border-color: #d8d0bf;
+  background: #fffaf0;
+  color: #536157;
+}
+.quantityLevelBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.quantityLevel {
+  min-height: 74px;
+  justify-content: center;
+  flex-direction: column;
+  border: 2px solid #d8d0bf;
+  border-radius: 18px;
+  background: #fbfaf7;
+  white-space: normal;
+  font-size: 1.4rem;
+}
+.quantityLevel span {
+  display: block;
+  font-size: .86rem;
+  color: #536157;
+}
+.quantityLevel.active {
+  border-color: #6b8a72;
+  background: #edf6e9;
+}
+.quantityGameBoard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.quantityFocus,
+.quantityChoice {
+  border-radius: 26px;
+}
+.quantityMat {
+  min-height: clamp(220px, 34vw, 360px);
+  border: 4px dashed #b9c9b7;
+  background:
+    radial-gradient(circle, rgba(95,127,103,.08) 1px, transparent 1px),
+    #f8fbf6;
+  background-size: 28px 28px;
+}
+.emptyMat {
+  color: #70806f;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+.quantityActions button {
+  flex: 1 1 150px;
+}
+.quantityChoiceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.quantityNumber {
+  min-height: 120px;
+  justify-content: center;
+  border: 3px solid #d8d0bf;
+  border-radius: 28px;
+  background: #fffaf0;
+  font-size: clamp(2.8rem, 8vw, 4.8rem);
+  font-weight: 900;
+}
+.quantityNumber.selectedTile {
+  border-color: #55745d;
+  background: #eaf5e5;
+}
+.quantitySupportBar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #dfe7d8;
+  border-radius: 22px;
+  background: rgba(255, 253, 247, .9);
+}
+.quantitySupportBar button {
+  min-height: 56px;
+  justify-content: center;
+  white-space: normal;
+}
+.quantityTeacherDrawer {
+  border: 1px solid #d8d0bf;
+  border-radius: 18px;
+  padding: 12px 16px;
+  background: #fbfaf7;
+}
+.quantityTeacherDrawer summary {
+  cursor: pointer;
+  font-weight: 850;
+  color: #536157;
+}
+
+/* UK-Station: Mehr, fertig, nochmal */
+.ukPlaySpace {
+  display: grid;
+  gap: 16px;
+}
+.ukGameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  border: 2px solid #d7e2de;
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, #fffdf7 0%, #ecf7f4 54%, #fff4db 100%),
+    repeating-linear-gradient(90deg, rgba(73, 103, 124, .06) 0 1px, transparent 1px 28px);
+  box-shadow: 0 16px 38px rgba(67, 76, 82, .1);
+}
+.ukGameHeader h1 {
+  margin: 4px 0 8px;
+  font-size: 3.6rem;
+  line-height: .96;
+  color: #244654;
+  letter-spacing: 0;
+}
+.ukLevelBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.ukLevel {
+  min-height: 74px;
+  justify-content: center;
+  flex-direction: column;
+  border: 2px solid #d6cdc0;
+  border-radius: 18px;
+  background: #fbfaf7;
+  white-space: normal;
+  font-size: 1.4rem;
+}
+.ukLevel span {
+  display: block;
+  font-size: .86rem;
+  color: #536157;
+}
+.ukLevel.active {
+  border-color: #537989;
+  background: #e8f4f6;
+  color: #244654;
+}
+.ukLevel.active span {
+  color: #244654;
+}
+.ukPlayBoard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.ukFocus,
+.ukChoicePanel {
+  border-radius: 26px;
+}
+.ukTable {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  min-height: 300px;
+  margin: 16px 0;
+  padding: 36px 22px 22px;
+  border: 4px dashed #a9c5bd;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.82), rgba(241,248,246,.9)),
+    repeating-linear-gradient(45deg, rgba(83,121,137,.08) 0 2px, transparent 2px 22px);
+}
+.ukRoundChip {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #fff8e8;
+  color: #6a5432;
+  font-weight: 850;
+}
+.ukPiece {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 104px;
+  border: 3px solid #d6cdc0;
+  border-radius: 18px;
+  background: #fffaf0;
+  color: #36505a;
+  font-size: 2.2rem;
+  font-weight: 900;
+  box-shadow: 0 10px 18px rgba(55, 72, 78, .12);
+}
+.ukActionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ukActionButtons button {
+  flex: 1 1 150px;
+}
+.ukChoiceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.ukChoiceCard {
+  min-height: 148px;
+  justify-content: center;
+  flex-direction: column;
+  border: 3px solid #d7d2c8;
+  border-radius: 28px;
+  color: #263a42;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.08);
+}
+.ukChoiceCard.green {
+  background: #eaf7e2;
+  border-color: #8cbf7c;
+}
+.ukChoiceCard.blue {
+  background: #e7f1fb;
+  border-color: #87aac9;
+}
+.ukChoiceCard.amber {
+  background: #fff1d4;
+  border-color: #d4a656;
+}
+.ukChoiceCard.selectedTile {
+  border-color: #244654;
+  box-shadow: 0 0 0 4px rgba(36, 70, 84, .15), inset 0 -5px 0 rgba(0,0,0,.08);
+}
+.ukChoiceIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 8px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.72);
+  font-size: 2rem;
+  font-weight: 950;
+}
+.ukChoiceCard strong {
+  font-size: 1.75rem;
+  letter-spacing: 0;
+}
+.ukFeedback {
+  min-height: 64px;
+  padding: 16px 18px;
+  border: 2px solid #d7e2de;
+  border-radius: 20px;
+  background: #f8fcfb;
+  color: #314a37;
+  font-weight: 850;
+}
+.ukSupportBar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #dfe7d8;
+  border-radius: 22px;
+  background: rgba(255, 253, 247, .9);
+}
+.ukSupportBar button {
+  min-height: 56px;
+  justify-content: center;
+  white-space: normal;
+}
+.ukTeacherDrawer {
+  border: 1px solid #d8d0bf;
+  border-radius: 18px;
+  padding: 12px 16px;
+  background: #fbfaf7;
+}
+.ukTeacherDrawer summary {
+  cursor: pointer;
+  font-weight: 850;
+  color: #536157;
+}
+@media (max-width: 820px) {
+  .quantityGameHeader,
+  .quantityGameBoard,
+  .ukGameHeader,
+  .ukPlayBoard {
+    grid-template-columns: 1fr;
+  }
+  .quantityGameHeader,
+  .ukGameHeader {
+    flex-direction: column;
+  }
+  .quietExit,
+  .quantityLevel,
+  .ukLevel,
+  .quantitySupportBar button,
+  .ukSupportBar button {
+    width: 100%;
+  }
+  .quantityLevelBar,
+  .quantityChoiceGrid,
+  .quantitySupportBar,
+  .ukLevelBar,
+  .ukChoiceGrid,
+  .ukSupportBar {
+    grid-template-columns: 1fr;
+  }
+  .quantityNumber {
+    min-height: 92px;
+  }
+  .ukGameHeader h1 {
+    font-size: 2.4rem;
+    line-height: 1.05;
+  }
+  .ukChoiceCard {
+    min-height: 104px;
+  }
+  .ukTable {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 430px) {
+  .appPlaySpace {
+    width: min(100% - 20px, 1180px);
+    padding-top: 10px;
+  }
+  .quantityPlaySpace {
+    gap: 10px;
+  }
+  .quantityGameHeader {
+    padding: 16px;
+    border-radius: 22px;
+    gap: 10px;
+  }
+  .ukGameHeader {
+    padding: 16px;
+    border-radius: 22px;
+    gap: 10px;
+  }
+  .quantityGameHeader h1 {
+    font-size: 2rem;
+    line-height: 1.05;
+  }
+  .ukGameHeader h1 {
+    font-size: 2rem;
+  }
+  .quantityGameHeader p {
+    margin: 4px 0;
+  }
+  .ukGameHeader p {
+    margin: 4px 0;
+  }
+  .quietExit {
+    min-height: 48px;
+  }
+  .quantityLevelBar {
+    gap: 8px;
+  }
+  .ukLevelBar {
+    gap: 8px;
+  }
+  .quantityLevel {
+    min-height: 58px;
+    border-radius: 16px;
+    font-size: 1.18rem;
+    padding: 8px 10px;
+  }
+  .ukLevel {
+    min-height: 58px;
+    border-radius: 16px;
+    font-size: 1.18rem;
+    padding: 8px 10px;
+  }
+  .quantityLevel span {
+    font-size: .78rem;
+  }
+  .ukLevel span {
+    font-size: .78rem;
+  }
+  .quantityGameBoard {
+    gap: 10px;
+  }
+  .ukPlayBoard {
+    gap: 10px;
+  }
+  .quantityFocus,
+  .quantityChoice,
+  .ukFocus,
+  .ukChoicePanel {
+    padding: 14px;
+    border-radius: 20px;
+  }
+  .quantityMat {
+    min-height: 172px;
+    margin: 8px 0 10px;
+    padding: 16px;
+  }
+  .emptyMat {
+    font-size: 1.05rem;
+  }
+  .quantityActions,
+  .ukActionButtons {
+    gap: 8px;
+  }
+  .quantityActions button,
+  .ukActionButtons button {
+    flex-basis: 120px;
+    min-height: 54px;
+    padding-inline: 10px;
+  }
+  .quantityChoice h2 {
+    margin-bottom: 8px;
+  }
+  .quantityChoiceGrid {
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .ukChoiceGrid {
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .quantityNumber {
+    min-height: 78px;
+    border-radius: 20px;
+  }
+  .ukTable {
+    min-height: 172px;
+    margin: 8px 0 10px;
+    padding: 42px 14px 16px;
+  }
+  .ukPiece {
+    width: 58px;
+    height: 78px;
+    border-radius: 14px;
+    font-size: 1.55rem;
+  }
+  .ukChoiceCard {
+    min-height: 84px;
+    border-radius: 20px;
+  }
+  .ukChoiceIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 1.45rem;
+  }
+  .ukChoiceCard strong {
+    font-size: 1.35rem;
+  }
+  .ukFeedback {
+    min-height: 54px;
+    padding: 12px 14px;
+  }
+  .quantitySupportBar,
+  .ukSupportBar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+    border-radius: 18px;
+  }
+  .quantitySupportBar button,
+  .ukSupportBar button {
+    min-height: 52px;
+    padding-inline: 8px;
+  }
+}

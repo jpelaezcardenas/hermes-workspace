@@ -1,0 +1,25 @@
+# AI Stock Radar CEO Audit - 2026-05-30
+
+Status: pass
+
+## Checks
+- daily_prompt_sections: pass
+- weekly_prompt_sections: pass
+- daily_report_sections: pass
+- weekly_report_sections: pass
+- idea_grade_module: pass
+- firewall_module: pass
+- shadow_backtest_module: pass
+- shadow_backtest_artifacts: pass
+- watchlist_candidate_fields: pass
+
+## Decision Inbox
+- Signal: Green
+- SOFORT_MACHEN: nichts
+- CHRIS_ENTSCHEIDET: Keine Trading-Entscheidung; nur ob weitere Research-Gates gewuenscht sind.
+- BEOBACHTEN: Checks mit fail oder fehlenden Report-Sektionen.
+- SPAETER: Cron-Historie ueber mehrere Laeufe vergleichen.
+- BLOCKIERT: nichts
+- NICHT_TUN: Keine automatischen Trades; keine Schlussfolgerung aus einem Audit allein.
+- Naechste kleinste Aktion: naechsten planmaessigen Lauf abwarten
+- Beleg / Datei: /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-radar-ceo-audit-2026-05-30.md

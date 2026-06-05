@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "observations": [
+    {
+      "id": "MDAI-4-0001213900-26-061594-2026-05-27",
+      "observed_at": "2026-05-31",
+      "ticker": "MDAI",
+      "source": "SEC",
+      "form": "4",
+      "holder": "Spectral AI, Inc.",
+      "cik": "0001833498",
+      "accession": "0001213900-26-061594",
+      "primary_document": "xslF345X06/ownership.xml",
+      "filed_at": "2026-05-27",
+      "document_review_required": true
+    }
+  ],
+  "generated_at": "2026-05-31T17:08:30.427Z"
+}

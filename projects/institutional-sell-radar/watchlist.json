@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-31",
+  "focus": "US-listed companies from the AI Stock Radar plus optional extra US tickers; large global institutions are monitored when they appear in public SEC filings.",
+  "extra_tickers": [],
+  "source_limits": [
+    "13F is delayed quarterly data and cannot prove live selling by itself.",
+    "13D and 13G are threshold-based beneficial ownership filings.",
+    "Form 4 covers insiders, directors, officers, and 10 percent holders, not every institution.",
+    "FINRA short data is pressure context, not proof of institutional selling."
+  ]
+}
