@@ -6,6 +6,7 @@ import {
   Cancel01Icon,
   Castle02Icon,
   Chat01Icon,
+  CheckListIcon,
   Clock01Icon,
   CommandLineIcon,
   DashboardSquare01Icon,
@@ -70,6 +71,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: Rocket01Icon,
     to: '/conductor',
     match: (p: string) => p.startsWith('/conductor'),
+  },
+  {
+    id: 'executive-queue',
+    label: 'Executive Queue',
+    icon: CheckListIcon,
+    to: '/executive-queue',
+    match: (p: string) => p.startsWith('/executive-queue'),
   },
   {
     id: 'operations',

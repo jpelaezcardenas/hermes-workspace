@@ -9,8 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as XBookmarksRouteImport } from './routes/x-bookmarks'
+import { Route as XBookmarkReviewRouteImport } from './routes/x-bookmark-review'
 import { Route as WorldRouteImport } from './routes/world'
 import { Route as VtCapitalRouteImport } from './routes/vt-capital'
+import { Route as VoiceLabRouteImport } from './routes/voice-lab'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as Swarm2RouteImport } from './routes/swarm2'
@@ -23,14 +26,17 @@ import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as LearningLoopRouteImport } from './routes/learning-loop'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
+import { Route as ExecutiveQueueRouteImport } from './routes/executive-queue'
 import { Route as EchoStudioRouteImport } from './routes/echo-studio'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
 import { Route as AgoraRouteImport } from './routes/agora'
+import { Route as AgentSurfacesRouteImport } from './routes/agent-surfaces'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -40,6 +46,7 @@ import { Route as ReserveConfirmRouteImport } from './routes/reserve/confirm'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
 import { Route as ApiVtCapitalRouteImport } from './routes/api/vt-capital'
+import { Route as ApiVoiceLabLedgerRouteImport } from './routes/api/voice-lab-ledger'
 import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
@@ -67,6 +74,7 @@ import { Route as ApiSwarmCheckpointRouteImport } from './routes/api/swarm-check
 import { Route as ApiSwarmChatRouteImport } from './routes/api/swarm-chat'
 import { Route as ApiStartClaudeRouteImport } from './routes/api/start-claude'
 import { Route as ApiStartAgentRouteImport } from './routes/api/start-agent'
+import { Route as ApiSourceCoverageRouteImport } from './routes/api/source-coverage'
 import { Route as ApiSkillsRouteImport } from './routes/api/skills'
 import { Route as ApiSessionsRouteImport } from './routes/api/sessions'
 import { Route as ApiSessionStatusRouteImport } from './routes/api/session-status'
@@ -93,7 +101,11 @@ import { Route as ApiHermesConfigRouteImport } from './routes/api/hermes-config'
 import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-status'
 import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
+import { Route as ApiExecutiveQueueNotionSyncRouteImport } from './routes/api/executive-queue-notion-sync'
+import { Route as ApiExecutiveQueueExecutionRouteImport } from './routes/api/executive-queue-execution'
+import { Route as ApiExecutiveQueueRouteImport } from './routes/api/executive-queue'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
+import { Route as ApiElevenlabsTokenRouteImport } from './routes/api/elevenlabs-token'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
@@ -112,6 +124,13 @@ import { Route as ApiAuthCheckRouteImport } from './routes/api/auth-check'
 import { Route as ApiAuthRouteImport } from './routes/api/auth'
 import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
 import { Route as ApiAgentBusRouteImport } from './routes/api/agent-bus'
+import { Route as ApiXBookmarksStatusRouteImport } from './routes/api/x-bookmarks/status'
+import { Route as ApiXBookmarksReviewRouteImport } from './routes/api/x-bookmarks/review'
+import { Route as ApiXBookmarksImportArticleRouteImport } from './routes/api/x-bookmarks/import-article'
+import { Route as ApiXBookmarksFetchRouteImport } from './routes/api/x-bookmarks/fetch'
+import { Route as ApiXBookmarksExtractArticlesRouteImport } from './routes/api/x-bookmarks/extract-articles'
+import { Route as ApiXBookmarksCallbackRouteImport } from './routes/api/x-bookmarks/callback'
+import { Route as ApiXBookmarksAuthorizeRouteImport } from './routes/api/x-bookmarks/authorize'
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
 import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
@@ -147,6 +166,7 @@ import { Route as ApiMcpHubSearchRouteImport } from './routes/api/mcp/hub-search
 import { Route as ApiMcpDiscoverRouteImport } from './routes/api/mcp/discover'
 import { Route as ApiMcpConfigureRouteImport } from './routes/api/mcp/configure'
 import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
+import { Route as ApiLearningLoopReviewRouteImport } from './routes/api/learning-loop/review'
 import { Route as ApiKnowledgeSyncRouteImport } from './routes/api/knowledge/sync'
 import { Route as ApiKnowledgeSearchRouteImport } from './routes/api/knowledge/search'
 import { Route as ApiKnowledgeReadRouteImport } from './routes/api/knowledge/read'
@@ -163,6 +183,7 @@ import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-ta
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
+import { Route as ApiAgentSurfacesSampleRouteImport } from './routes/api/agent-surfaces/sample'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
@@ -170,6 +191,16 @@ import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 import { Route as ApiRunsSessionKeyRunIdAbandonRouteImport } from './routes/api/runs/$sessionKey.$runId.abandon'
 
+const XBookmarksRoute = XBookmarksRouteImport.update({
+  id: '/x-bookmarks',
+  path: '/x-bookmarks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const XBookmarkReviewRoute = XBookmarkReviewRouteImport.update({
+  id: '/x-bookmark-review',
+  path: '/x-bookmark-review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
   path: '/world',
@@ -178,6 +209,11 @@ const WorldRoute = WorldRouteImport.update({
 const VtCapitalRoute = VtCapitalRouteImport.update({
   id: '/vt-capital',
   path: '/vt-capital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VoiceLabRoute = VoiceLabRouteImport.update({
+  id: '/voice-lab',
+  path: '/voice-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TerminalRoute = TerminalRouteImport.update({
@@ -240,6 +276,11 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearningLoopRoute = LearningLoopRouteImport.update({
+  id: '/learning-loop',
+  path: '/learning-loop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
@@ -253,6 +294,11 @@ const HermesWorldRoute = HermesWorldRouteImport.update({
 const FilesRoute = FilesRouteImport.update({
   id: '/files',
   path: '/files',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExecutiveQueueRoute = ExecutiveQueueRouteImport.update({
+  id: '/executive-queue',
+  path: '/executive-queue',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EchoStudioRoute = EchoStudioRouteImport.update({
@@ -278,6 +324,11 @@ const ConductorRoute = ConductorRouteImport.update({
 const AgoraRoute = AgoraRouteImport.update({
   id: '/agora',
   path: '/agora',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentSurfacesRoute = AgentSurfacesRouteImport.update({
+  id: '/agent-surfaces',
+  path: '/agent-surfaces',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -323,6 +374,11 @@ const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
 const ApiVtCapitalRoute = ApiVtCapitalRouteImport.update({
   id: '/api/vt-capital',
   path: '/api/vt-capital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVoiceLabLedgerRoute = ApiVoiceLabLedgerRouteImport.update({
+  id: '/api/voice-lab-ledger',
+  path: '/api/voice-lab-ledger',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
@@ -461,6 +517,11 @@ const ApiStartAgentRoute = ApiStartAgentRouteImport.update({
   path: '/api/start-agent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSourceCoverageRoute = ApiSourceCoverageRouteImport.update({
+  id: '/api/source-coverage',
+  path: '/api/source-coverage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSkillsRoute = ApiSkillsRouteImport.update({
   id: '/api/skills',
   path: '/api/skills',
@@ -591,9 +652,31 @@ const ApiFilesRoute = ApiFilesRouteImport.update({
   path: '/api/files',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiExecutiveQueueNotionSyncRoute =
+  ApiExecutiveQueueNotionSyncRouteImport.update({
+    id: '/api/executive-queue-notion-sync',
+    path: '/api/executive-queue-notion-sync',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiExecutiveQueueExecutionRoute =
+  ApiExecutiveQueueExecutionRouteImport.update({
+    id: '/api/executive-queue-execution',
+    path: '/api/executive-queue-execution',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiExecutiveQueueRoute = ApiExecutiveQueueRouteImport.update({
+  id: '/api/executive-queue',
+  path: '/api/executive-queue',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiEventsRoute = ApiEventsRouteImport.update({
   id: '/api/events',
   path: '/api/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiElevenlabsTokenRoute = ApiElevenlabsTokenRouteImport.update({
+  id: '/api/elevenlabs-token',
+  path: '/api/elevenlabs-token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCrewStatusRoute = ApiCrewStatusRouteImport.update({
@@ -684,6 +767,43 @@ const ApiArtifactsRoute = ApiArtifactsRouteImport.update({
 const ApiAgentBusRoute = ApiAgentBusRouteImport.update({
   id: '/api/agent-bus',
   path: '/api/agent-bus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiXBookmarksStatusRoute = ApiXBookmarksStatusRouteImport.update({
+  id: '/api/x-bookmarks/status',
+  path: '/api/x-bookmarks/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiXBookmarksReviewRoute = ApiXBookmarksReviewRouteImport.update({
+  id: '/api/x-bookmarks/review',
+  path: '/api/x-bookmarks/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiXBookmarksImportArticleRoute =
+  ApiXBookmarksImportArticleRouteImport.update({
+    id: '/api/x-bookmarks/import-article',
+    path: '/api/x-bookmarks/import-article',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiXBookmarksFetchRoute = ApiXBookmarksFetchRouteImport.update({
+  id: '/api/x-bookmarks/fetch',
+  path: '/api/x-bookmarks/fetch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiXBookmarksExtractArticlesRoute =
+  ApiXBookmarksExtractArticlesRouteImport.update({
+    id: '/api/x-bookmarks/extract-articles',
+    path: '/api/x-bookmarks/extract-articles',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiXBookmarksCallbackRoute = ApiXBookmarksCallbackRouteImport.update({
+  id: '/api/x-bookmarks/callback',
+  path: '/api/x-bookmarks/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiXBookmarksAuthorizeRoute = ApiXBookmarksAuthorizeRouteImport.update({
+  id: '/api/x-bookmarks/authorize',
+  path: '/api/x-bookmarks/authorize',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiUpdateWorkspaceRoute = ApiUpdateWorkspaceRouteImport.update({
@@ -861,6 +981,11 @@ const ApiMcpNameRoute = ApiMcpNameRouteImport.update({
   path: '/$name',
   getParentRoute: () => ApiMcpRoute,
 } as any)
+const ApiLearningLoopReviewRoute = ApiLearningLoopReviewRouteImport.update({
+  id: '/api/learning-loop/review',
+  path: '/api/learning-loop/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiKnowledgeSyncRoute = ApiKnowledgeSyncRouteImport.update({
   id: '/api/knowledge/sync',
   path: '/api/knowledge/sync',
@@ -944,6 +1069,11 @@ const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   path: '/$artifactId',
   getParentRoute: () => ApiArtifactsRoute,
 } as any)
+const ApiAgentSurfacesSampleRoute = ApiAgentSurfacesSampleRouteImport.update({
+  id: '/api/agent-surfaces/sample',
+  path: '/api/agent-surfaces/sample',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
     id: '/$sessionKey/status',
@@ -982,14 +1112,17 @@ const ApiRunsSessionKeyRunIdAbandonRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agent-surfaces': typeof AgentSurfacesRoute
   '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/echo-studio': typeof EchoStudioRoute
+  '/executive-queue': typeof ExecutiveQueueRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
+  '/learning-loop': typeof LearningLoopRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -1002,8 +1135,11 @@ export interface FileRoutesByFullPath {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/voice-lab': typeof VoiceLabRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
+  '/x-bookmark-review': typeof XBookmarkReviewRoute
+  '/x-bookmarks': typeof XBookmarksRoute
   '/api/agent-bus': typeof ApiAgentBusRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1022,7 +1158,11 @@ export interface FileRoutesByFullPath {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/elevenlabs-token': typeof ApiElevenlabsTokenRoute
   '/api/events': typeof ApiEventsRoute
+  '/api/executive-queue': typeof ApiExecutiveQueueRoute
+  '/api/executive-queue-execution': typeof ApiExecutiveQueueExecutionRoute
+  '/api/executive-queue-notion-sync': typeof ApiExecutiveQueueNotionSyncRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -1049,6 +1189,7 @@ export interface FileRoutesByFullPath {
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
   '/api/skills': typeof ApiSkillsRouteWithChildren
+  '/api/source-coverage': typeof ApiSourceCoverageRoute
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-claude': typeof ApiStartClaudeRoute
   '/api/swarm-chat': typeof ApiSwarmChatRoute
@@ -1076,6 +1217,7 @@ export interface FileRoutesByFullPath {
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/transcribe': typeof ApiTranscribeRoute
+  '/api/voice-lab-ledger': typeof ApiVoiceLabLedgerRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
@@ -1083,6 +1225,7 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/agent-surfaces/sample': typeof ApiAgentSurfacesSampleRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1099,6 +1242,7 @@ export interface FileRoutesByFullPath {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/learning-loop/review': typeof ApiLearningLoopReviewRoute
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
@@ -1134,6 +1278,13 @@ export interface FileRoutesByFullPath {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/x-bookmarks/authorize': typeof ApiXBookmarksAuthorizeRoute
+  '/api/x-bookmarks/callback': typeof ApiXBookmarksCallbackRoute
+  '/api/x-bookmarks/extract-articles': typeof ApiXBookmarksExtractArticlesRoute
+  '/api/x-bookmarks/fetch': typeof ApiXBookmarksFetchRoute
+  '/api/x-bookmarks/import-article': typeof ApiXBookmarksImportArticleRoute
+  '/api/x-bookmarks/review': typeof ApiXBookmarksReviewRoute
+  '/api/x-bookmarks/status': typeof ApiXBookmarksStatusRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1144,14 +1295,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agent-surfaces': typeof AgentSurfacesRoute
   '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/echo-studio': typeof EchoStudioRoute
+  '/executive-queue': typeof ExecutiveQueueRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
+  '/learning-loop': typeof LearningLoopRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -1163,8 +1317,11 @@ export interface FileRoutesByTo {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/voice-lab': typeof VoiceLabRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
+  '/x-bookmark-review': typeof XBookmarkReviewRoute
+  '/x-bookmarks': typeof XBookmarksRoute
   '/api/agent-bus': typeof ApiAgentBusRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1183,7 +1340,11 @@ export interface FileRoutesByTo {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/elevenlabs-token': typeof ApiElevenlabsTokenRoute
   '/api/events': typeof ApiEventsRoute
+  '/api/executive-queue': typeof ApiExecutiveQueueRoute
+  '/api/executive-queue-execution': typeof ApiExecutiveQueueExecutionRoute
+  '/api/executive-queue-notion-sync': typeof ApiExecutiveQueueNotionSyncRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -1210,6 +1371,7 @@ export interface FileRoutesByTo {
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
   '/api/skills': typeof ApiSkillsRouteWithChildren
+  '/api/source-coverage': typeof ApiSourceCoverageRoute
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-claude': typeof ApiStartClaudeRoute
   '/api/swarm-chat': typeof ApiSwarmChatRoute
@@ -1237,6 +1399,7 @@ export interface FileRoutesByTo {
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/transcribe': typeof ApiTranscribeRoute
+  '/api/voice-lab-ledger': typeof ApiVoiceLabLedgerRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
@@ -1244,6 +1407,7 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/api/agent-surfaces/sample': typeof ApiAgentSurfacesSampleRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1260,6 +1424,7 @@ export interface FileRoutesByTo {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/learning-loop/review': typeof ApiLearningLoopReviewRoute
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
@@ -1295,6 +1460,13 @@ export interface FileRoutesByTo {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/x-bookmarks/authorize': typeof ApiXBookmarksAuthorizeRoute
+  '/api/x-bookmarks/callback': typeof ApiXBookmarksCallbackRoute
+  '/api/x-bookmarks/extract-articles': typeof ApiXBookmarksExtractArticlesRoute
+  '/api/x-bookmarks/fetch': typeof ApiXBookmarksFetchRoute
+  '/api/x-bookmarks/import-article': typeof ApiXBookmarksImportArticleRoute
+  '/api/x-bookmarks/review': typeof ApiXBookmarksReviewRoute
+  '/api/x-bookmarks/status': typeof ApiXBookmarksStatusRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1306,14 +1478,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agent-surfaces': typeof AgentSurfacesRoute
   '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/echo-studio': typeof EchoStudioRoute
+  '/executive-queue': typeof ExecutiveQueueRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
+  '/learning-loop': typeof LearningLoopRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/operations': typeof OperationsRoute
@@ -1326,8 +1501,11 @@ export interface FileRoutesById {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/voice-lab': typeof VoiceLabRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
+  '/x-bookmark-review': typeof XBookmarkReviewRoute
+  '/x-bookmarks': typeof XBookmarksRoute
   '/api/agent-bus': typeof ApiAgentBusRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1346,7 +1524,11 @@ export interface FileRoutesById {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/elevenlabs-token': typeof ApiElevenlabsTokenRoute
   '/api/events': typeof ApiEventsRoute
+  '/api/executive-queue': typeof ApiExecutiveQueueRoute
+  '/api/executive-queue-execution': typeof ApiExecutiveQueueExecutionRoute
+  '/api/executive-queue-notion-sync': typeof ApiExecutiveQueueNotionSyncRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
   '/api/gateway-status': typeof ApiGatewayStatusRoute
@@ -1373,6 +1555,7 @@ export interface FileRoutesById {
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
   '/api/skills': typeof ApiSkillsRouteWithChildren
+  '/api/source-coverage': typeof ApiSourceCoverageRoute
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-claude': typeof ApiStartClaudeRoute
   '/api/swarm-chat': typeof ApiSwarmChatRoute
@@ -1400,6 +1583,7 @@ export interface FileRoutesById {
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
   '/api/transcribe': typeof ApiTranscribeRoute
+  '/api/voice-lab-ledger': typeof ApiVoiceLabLedgerRoute
   '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
@@ -1407,6 +1591,7 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/agent-surfaces/sample': typeof ApiAgentSurfacesSampleRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1423,6 +1608,7 @@ export interface FileRoutesById {
   '/api/knowledge/read': typeof ApiKnowledgeReadRoute
   '/api/knowledge/search': typeof ApiKnowledgeSearchRoute
   '/api/knowledge/sync': typeof ApiKnowledgeSyncRoute
+  '/api/learning-loop/review': typeof ApiLearningLoopReviewRoute
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
@@ -1458,6 +1644,13 @@ export interface FileRoutesById {
   '/api/update/agent': typeof ApiUpdateAgentRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
+  '/api/x-bookmarks/authorize': typeof ApiXBookmarksAuthorizeRoute
+  '/api/x-bookmarks/callback': typeof ApiXBookmarksCallbackRoute
+  '/api/x-bookmarks/extract-articles': typeof ApiXBookmarksExtractArticlesRoute
+  '/api/x-bookmarks/fetch': typeof ApiXBookmarksFetchRoute
+  '/api/x-bookmarks/import-article': typeof ApiXBookmarksImportArticleRoute
+  '/api/x-bookmarks/review': typeof ApiXBookmarksReviewRoute
+  '/api/x-bookmarks/status': typeof ApiXBookmarksStatusRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1470,14 +1663,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/agent-surfaces'
     | '/agora'
     | '/conductor'
     | '/dashboard'
     | '/early-access'
     | '/echo-studio'
+    | '/executive-queue'
     | '/files'
     | '/hermes-world'
     | '/jobs'
+    | '/learning-loop'
     | '/mcp'
     | '/memory'
     | '/operations'
@@ -1490,8 +1686,11 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/voice-lab'
     | '/vt-capital'
     | '/world'
+    | '/x-bookmark-review'
+    | '/x-bookmarks'
     | '/api/agent-bus'
     | '/api/artifacts'
     | '/api/auth'
@@ -1510,7 +1709,11 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/elevenlabs-token'
     | '/api/events'
+    | '/api/executive-queue'
+    | '/api/executive-queue-execution'
+    | '/api/executive-queue-notion-sync'
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
@@ -1537,6 +1740,7 @@ export interface FileRouteTypes {
     | '/api/session-status'
     | '/api/sessions'
     | '/api/skills'
+    | '/api/source-coverage'
     | '/api/start-agent'
     | '/api/start-claude'
     | '/api/swarm-chat'
@@ -1564,6 +1768,7 @@ export interface FileRouteTypes {
     | '/api/terminal-resize'
     | '/api/terminal-stream'
     | '/api/transcribe'
+    | '/api/voice-lab-ledger'
     | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
@@ -1571,6 +1776,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/agent-surfaces/sample'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -1587,6 +1793,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/learning-loop/review'
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
@@ -1622,6 +1829,13 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/x-bookmarks/authorize'
+    | '/api/x-bookmarks/callback'
+    | '/api/x-bookmarks/extract-articles'
+    | '/api/x-bookmarks/fetch'
+    | '/api/x-bookmarks/import-article'
+    | '/api/x-bookmarks/review'
+    | '/api/x-bookmarks/status'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1632,14 +1846,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/agent-surfaces'
     | '/agora'
     | '/conductor'
     | '/dashboard'
     | '/early-access'
     | '/echo-studio'
+    | '/executive-queue'
     | '/files'
     | '/hermes-world'
     | '/jobs'
+    | '/learning-loop'
     | '/mcp'
     | '/memory'
     | '/operations'
@@ -1651,8 +1868,11 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/voice-lab'
     | '/vt-capital'
     | '/world'
+    | '/x-bookmark-review'
+    | '/x-bookmarks'
     | '/api/agent-bus'
     | '/api/artifacts'
     | '/api/auth'
@@ -1671,7 +1891,11 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/elevenlabs-token'
     | '/api/events'
+    | '/api/executive-queue'
+    | '/api/executive-queue-execution'
+    | '/api/executive-queue-notion-sync'
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
@@ -1698,6 +1922,7 @@ export interface FileRouteTypes {
     | '/api/session-status'
     | '/api/sessions'
     | '/api/skills'
+    | '/api/source-coverage'
     | '/api/start-agent'
     | '/api/start-claude'
     | '/api/swarm-chat'
@@ -1725,6 +1950,7 @@ export interface FileRouteTypes {
     | '/api/terminal-resize'
     | '/api/terminal-stream'
     | '/api/transcribe'
+    | '/api/voice-lab-ledger'
     | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
@@ -1732,6 +1958,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/api/agent-surfaces/sample'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -1748,6 +1975,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/learning-loop/review'
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
@@ -1783,6 +2011,13 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/x-bookmarks/authorize'
+    | '/api/x-bookmarks/callback'
+    | '/api/x-bookmarks/extract-articles'
+    | '/api/x-bookmarks/fetch'
+    | '/api/x-bookmarks/import-article'
+    | '/api/x-bookmarks/review'
+    | '/api/x-bookmarks/status'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1793,14 +2028,17 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/agent-surfaces'
     | '/agora'
     | '/conductor'
     | '/dashboard'
     | '/early-access'
     | '/echo-studio'
+    | '/executive-queue'
     | '/files'
     | '/hermes-world'
     | '/jobs'
+    | '/learning-loop'
     | '/mcp'
     | '/memory'
     | '/operations'
@@ -1813,8 +2051,11 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/voice-lab'
     | '/vt-capital'
     | '/world'
+    | '/x-bookmark-review'
+    | '/x-bookmarks'
     | '/api/agent-bus'
     | '/api/artifacts'
     | '/api/auth'
@@ -1833,7 +2074,11 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/elevenlabs-token'
     | '/api/events'
+    | '/api/executive-queue'
+    | '/api/executive-queue-execution'
+    | '/api/executive-queue-notion-sync'
     | '/api/files'
     | '/api/gateway-reprobe'
     | '/api/gateway-status'
@@ -1860,6 +2105,7 @@ export interface FileRouteTypes {
     | '/api/session-status'
     | '/api/sessions'
     | '/api/skills'
+    | '/api/source-coverage'
     | '/api/start-agent'
     | '/api/start-claude'
     | '/api/swarm-chat'
@@ -1887,6 +2133,7 @@ export interface FileRouteTypes {
     | '/api/terminal-resize'
     | '/api/terminal-stream'
     | '/api/transcribe'
+    | '/api/voice-lab-ledger'
     | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
@@ -1894,6 +2141,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/agent-surfaces/sample'
     | '/api/artifacts/$artifactId'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -1910,6 +2158,7 @@ export interface FileRouteTypes {
     | '/api/knowledge/read'
     | '/api/knowledge/search'
     | '/api/knowledge/sync'
+    | '/api/learning-loop/review'
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
@@ -1945,6 +2194,13 @@ export interface FileRouteTypes {
     | '/api/update/agent'
     | '/api/update/status'
     | '/api/update/workspace'
+    | '/api/x-bookmarks/authorize'
+    | '/api/x-bookmarks/callback'
+    | '/api/x-bookmarks/extract-articles'
+    | '/api/x-bookmarks/fetch'
+    | '/api/x-bookmarks/import-article'
+    | '/api/x-bookmarks/review'
+    | '/api/x-bookmarks/status'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1956,14 +2212,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AgentSurfacesRoute: typeof AgentSurfacesRoute
   AgoraRoute: typeof AgoraRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   EchoStudioRoute: typeof EchoStudioRoute
+  ExecutiveQueueRoute: typeof ExecutiveQueueRoute
   FilesRoute: typeof FilesRoute
   HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
+  LearningLoopRoute: typeof LearningLoopRoute
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
   OperationsRoute: typeof OperationsRoute
@@ -1976,8 +2235,11 @@ export interface RootRouteChildren {
   Swarm2Route: typeof Swarm2Route
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
+  VoiceLabRoute: typeof VoiceLabRoute
   VtCapitalRoute: typeof VtCapitalRoute
   WorldRoute: typeof WorldRoute
+  XBookmarkReviewRoute: typeof XBookmarkReviewRoute
+  XBookmarksRoute: typeof XBookmarksRoute
   ApiAgentBusRoute: typeof ApiAgentBusRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
@@ -1996,7 +2258,11 @@ export interface RootRouteChildren {
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
+  ApiElevenlabsTokenRoute: typeof ApiElevenlabsTokenRoute
   ApiEventsRoute: typeof ApiEventsRoute
+  ApiExecutiveQueueRoute: typeof ApiExecutiveQueueRoute
+  ApiExecutiveQueueExecutionRoute: typeof ApiExecutiveQueueExecutionRoute
+  ApiExecutiveQueueNotionSyncRoute: typeof ApiExecutiveQueueNotionSyncRoute
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
   ApiGatewayStatusRoute: typeof ApiGatewayStatusRoute
@@ -2023,6 +2289,7 @@ export interface RootRouteChildren {
   ApiSessionStatusRoute: typeof ApiSessionStatusRoute
   ApiSessionsRoute: typeof ApiSessionsRouteWithChildren
   ApiSkillsRoute: typeof ApiSkillsRouteWithChildren
+  ApiSourceCoverageRoute: typeof ApiSourceCoverageRoute
   ApiStartAgentRoute: typeof ApiStartAgentRoute
   ApiStartClaudeRoute: typeof ApiStartClaudeRoute
   ApiSwarmChatRoute: typeof ApiSwarmChatRoute
@@ -2050,10 +2317,12 @@ export interface RootRouteChildren {
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
   ApiTranscribeRoute: typeof ApiTranscribeRoute
+  ApiVoiceLabLedgerRoute: typeof ApiVoiceLabLedgerRoute
   ApiVtCapitalRoute: typeof ApiVtCapitalRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  ApiAgentSurfacesSampleRoute: typeof ApiAgentSurfacesSampleRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
   ApiExternalMemoryCandidatesRoute: typeof ApiExternalMemoryCandidatesRoute
@@ -2066,6 +2335,7 @@ export interface RootRouteChildren {
   ApiKnowledgeReadRoute: typeof ApiKnowledgeReadRoute
   ApiKnowledgeSearchRoute: typeof ApiKnowledgeSearchRoute
   ApiKnowledgeSyncRoute: typeof ApiKnowledgeSyncRoute
+  ApiLearningLoopReviewRoute: typeof ApiLearningLoopReviewRoute
   ApiModelInfoRoute: typeof ApiModelInfoRoute
   ApiOauthDeviceCodeRoute: typeof ApiOauthDeviceCodeRoute
   ApiOauthPollTokenRoute: typeof ApiOauthPollTokenRoute
@@ -2082,11 +2352,32 @@ export interface RootRouteChildren {
   ApiUpdateAgentRoute: typeof ApiUpdateAgentRoute
   ApiUpdateStatusRoute: typeof ApiUpdateStatusRoute
   ApiUpdateWorkspaceRoute: typeof ApiUpdateWorkspaceRoute
+  ApiXBookmarksAuthorizeRoute: typeof ApiXBookmarksAuthorizeRoute
+  ApiXBookmarksCallbackRoute: typeof ApiXBookmarksCallbackRoute
+  ApiXBookmarksExtractArticlesRoute: typeof ApiXBookmarksExtractArticlesRoute
+  ApiXBookmarksFetchRoute: typeof ApiXBookmarksFetchRoute
+  ApiXBookmarksImportArticleRoute: typeof ApiXBookmarksImportArticleRoute
+  ApiXBookmarksReviewRoute: typeof ApiXBookmarksReviewRoute
+  ApiXBookmarksStatusRoute: typeof ApiXBookmarksStatusRoute
   ApiRunsSessionKeyRunIdAbandonRoute: typeof ApiRunsSessionKeyRunIdAbandonRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/x-bookmarks': {
+      id: '/x-bookmarks'
+      path: '/x-bookmarks'
+      fullPath: '/x-bookmarks'
+      preLoaderRoute: typeof XBookmarksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/x-bookmark-review': {
+      id: '/x-bookmark-review'
+      path: '/x-bookmark-review'
+      fullPath: '/x-bookmark-review'
+      preLoaderRoute: typeof XBookmarkReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/world': {
       id: '/world'
       path: '/world'
@@ -2099,6 +2390,13 @@ declare module '@tanstack/react-router' {
       path: '/vt-capital'
       fullPath: '/vt-capital'
       preLoaderRoute: typeof VtCapitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voice-lab': {
+      id: '/voice-lab'
+      path: '/voice-lab'
+      fullPath: '/voice-lab'
+      preLoaderRoute: typeof VoiceLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terminal': {
@@ -2185,6 +2483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learning-loop': {
+      id: '/learning-loop'
+      path: '/learning-loop'
+      fullPath: '/learning-loop'
+      preLoaderRoute: typeof LearningLoopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jobs': {
       id: '/jobs'
       path: '/jobs'
@@ -2204,6 +2509,13 @@ declare module '@tanstack/react-router' {
       path: '/files'
       fullPath: '/files'
       preLoaderRoute: typeof FilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/executive-queue': {
+      id: '/executive-queue'
+      path: '/executive-queue'
+      fullPath: '/executive-queue'
+      preLoaderRoute: typeof ExecutiveQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/echo-studio': {
@@ -2239,6 +2551,13 @@ declare module '@tanstack/react-router' {
       path: '/agora'
       fullPath: '/agora'
       preLoaderRoute: typeof AgoraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agent-surfaces': {
+      id: '/agent-surfaces'
+      path: '/agent-surfaces'
+      fullPath: '/agent-surfaces'
+      preLoaderRoute: typeof AgentSurfacesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -2302,6 +2621,13 @@ declare module '@tanstack/react-router' {
       path: '/api/vt-capital'
       fullPath: '/api/vt-capital'
       preLoaderRoute: typeof ApiVtCapitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/voice-lab-ledger': {
+      id: '/api/voice-lab-ledger'
+      path: '/api/voice-lab-ledger'
+      fullPath: '/api/voice-lab-ledger'
+      preLoaderRoute: typeof ApiVoiceLabLedgerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/transcribe': {
@@ -2493,6 +2819,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStartAgentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/source-coverage': {
+      id: '/api/source-coverage'
+      path: '/api/source-coverage'
+      fullPath: '/api/source-coverage'
+      preLoaderRoute: typeof ApiSourceCoverageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/skills': {
       id: '/api/skills'
       path: '/api/skills'
@@ -2675,11 +3008,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiFilesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/executive-queue-notion-sync': {
+      id: '/api/executive-queue-notion-sync'
+      path: '/api/executive-queue-notion-sync'
+      fullPath: '/api/executive-queue-notion-sync'
+      preLoaderRoute: typeof ApiExecutiveQueueNotionSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/executive-queue-execution': {
+      id: '/api/executive-queue-execution'
+      path: '/api/executive-queue-execution'
+      fullPath: '/api/executive-queue-execution'
+      preLoaderRoute: typeof ApiExecutiveQueueExecutionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/executive-queue': {
+      id: '/api/executive-queue'
+      path: '/api/executive-queue'
+      fullPath: '/api/executive-queue'
+      preLoaderRoute: typeof ApiExecutiveQueueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/events': {
       id: '/api/events'
       path: '/api/events'
       fullPath: '/api/events'
       preLoaderRoute: typeof ApiEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/elevenlabs-token': {
+      id: '/api/elevenlabs-token'
+      path: '/api/elevenlabs-token'
+      fullPath: '/api/elevenlabs-token'
+      preLoaderRoute: typeof ApiElevenlabsTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/crew-status': {
@@ -2806,6 +3167,55 @@ declare module '@tanstack/react-router' {
       path: '/api/agent-bus'
       fullPath: '/api/agent-bus'
       preLoaderRoute: typeof ApiAgentBusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/status': {
+      id: '/api/x-bookmarks/status'
+      path: '/api/x-bookmarks/status'
+      fullPath: '/api/x-bookmarks/status'
+      preLoaderRoute: typeof ApiXBookmarksStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/review': {
+      id: '/api/x-bookmarks/review'
+      path: '/api/x-bookmarks/review'
+      fullPath: '/api/x-bookmarks/review'
+      preLoaderRoute: typeof ApiXBookmarksReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/import-article': {
+      id: '/api/x-bookmarks/import-article'
+      path: '/api/x-bookmarks/import-article'
+      fullPath: '/api/x-bookmarks/import-article'
+      preLoaderRoute: typeof ApiXBookmarksImportArticleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/fetch': {
+      id: '/api/x-bookmarks/fetch'
+      path: '/api/x-bookmarks/fetch'
+      fullPath: '/api/x-bookmarks/fetch'
+      preLoaderRoute: typeof ApiXBookmarksFetchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/extract-articles': {
+      id: '/api/x-bookmarks/extract-articles'
+      path: '/api/x-bookmarks/extract-articles'
+      fullPath: '/api/x-bookmarks/extract-articles'
+      preLoaderRoute: typeof ApiXBookmarksExtractArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/callback': {
+      id: '/api/x-bookmarks/callback'
+      path: '/api/x-bookmarks/callback'
+      fullPath: '/api/x-bookmarks/callback'
+      preLoaderRoute: typeof ApiXBookmarksCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/x-bookmarks/authorize': {
+      id: '/api/x-bookmarks/authorize'
+      path: '/api/x-bookmarks/authorize'
+      fullPath: '/api/x-bookmarks/authorize'
+      preLoaderRoute: typeof ApiXBookmarksAuthorizeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/update/workspace': {
@@ -3053,6 +3463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMcpNameRouteImport
       parentRoute: typeof ApiMcpRoute
     }
+    '/api/learning-loop/review': {
+      id: '/api/learning-loop/review'
+      path: '/api/learning-loop/review'
+      fullPath: '/api/learning-loop/review'
+      preLoaderRoute: typeof ApiLearningLoopReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/knowledge/sync': {
       id: '/api/knowledge/sync'
       path: '/api/knowledge/sync'
@@ -3164,6 +3581,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/artifacts/$artifactId'
       preLoaderRoute: typeof ApiArtifactsArtifactIdRouteImport
       parentRoute: typeof ApiArtifactsRoute
+    }
+    '/api/agent-surfaces/sample': {
+      id: '/api/agent-surfaces/sample'
+      path: '/api/agent-surfaces/sample'
+      fullPath: '/api/agent-surfaces/sample'
+      preLoaderRoute: typeof ApiAgentSurfacesSampleRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
@@ -3425,14 +3849,17 @@ const ApiHermesworldReservationsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AgentSurfacesRoute: AgentSurfacesRoute,
   AgoraRoute: AgoraRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   EchoStudioRoute: EchoStudioRoute,
+  ExecutiveQueueRoute: ExecutiveQueueRoute,
   FilesRoute: FilesRoute,
   HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
+  LearningLoopRoute: LearningLoopRoute,
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
   OperationsRoute: OperationsRoute,
@@ -3445,8 +3872,11 @@ const rootRouteChildren: RootRouteChildren = {
   Swarm2Route: Swarm2Route,
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
+  VoiceLabRoute: VoiceLabRoute,
   VtCapitalRoute: VtCapitalRoute,
   WorldRoute: WorldRoute,
+  XBookmarkReviewRoute: XBookmarkReviewRoute,
+  XBookmarksRoute: XBookmarksRoute,
   ApiAgentBusRoute: ApiAgentBusRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
@@ -3465,7 +3895,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
   ApiCrewStatusRoute: ApiCrewStatusRoute,
+  ApiElevenlabsTokenRoute: ApiElevenlabsTokenRoute,
   ApiEventsRoute: ApiEventsRoute,
+  ApiExecutiveQueueRoute: ApiExecutiveQueueRoute,
+  ApiExecutiveQueueExecutionRoute: ApiExecutiveQueueExecutionRoute,
+  ApiExecutiveQueueNotionSyncRoute: ApiExecutiveQueueNotionSyncRoute,
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
   ApiGatewayStatusRoute: ApiGatewayStatusRoute,
@@ -3492,6 +3926,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSessionStatusRoute: ApiSessionStatusRoute,
   ApiSessionsRoute: ApiSessionsRouteWithChildren,
   ApiSkillsRoute: ApiSkillsRouteWithChildren,
+  ApiSourceCoverageRoute: ApiSourceCoverageRoute,
   ApiStartAgentRoute: ApiStartAgentRoute,
   ApiStartClaudeRoute: ApiStartClaudeRoute,
   ApiSwarmChatRoute: ApiSwarmChatRoute,
@@ -3519,10 +3954,12 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
   ApiTranscribeRoute: ApiTranscribeRoute,
+  ApiVoiceLabLedgerRoute: ApiVoiceLabLedgerRoute,
   ApiVtCapitalRoute: ApiVtCapitalRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
+  ApiAgentSurfacesSampleRoute: ApiAgentSurfacesSampleRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
   ApiExternalMemoryCandidatesRoute: ApiExternalMemoryCandidatesRoute,
@@ -3535,6 +3972,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiKnowledgeReadRoute: ApiKnowledgeReadRoute,
   ApiKnowledgeSearchRoute: ApiKnowledgeSearchRoute,
   ApiKnowledgeSyncRoute: ApiKnowledgeSyncRoute,
+  ApiLearningLoopReviewRoute: ApiLearningLoopReviewRoute,
   ApiModelInfoRoute: ApiModelInfoRoute,
   ApiOauthDeviceCodeRoute: ApiOauthDeviceCodeRoute,
   ApiOauthPollTokenRoute: ApiOauthPollTokenRoute,
@@ -3551,6 +3989,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiUpdateAgentRoute: ApiUpdateAgentRoute,
   ApiUpdateStatusRoute: ApiUpdateStatusRoute,
   ApiUpdateWorkspaceRoute: ApiUpdateWorkspaceRoute,
+  ApiXBookmarksAuthorizeRoute: ApiXBookmarksAuthorizeRoute,
+  ApiXBookmarksCallbackRoute: ApiXBookmarksCallbackRoute,
+  ApiXBookmarksExtractArticlesRoute: ApiXBookmarksExtractArticlesRoute,
+  ApiXBookmarksFetchRoute: ApiXBookmarksFetchRoute,
+  ApiXBookmarksImportArticleRoute: ApiXBookmarksImportArticleRoute,
+  ApiXBookmarksReviewRoute: ApiXBookmarksReviewRoute,
+  ApiXBookmarksStatusRoute: ApiXBookmarksStatusRoute,
   ApiRunsSessionKeyRunIdAbandonRoute: ApiRunsSessionKeyRunIdAbandonRoute,
 }
 export const routeTree = rootRouteImport

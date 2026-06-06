@@ -4,15 +4,13 @@ import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   BrainIcon,
-  Building01Icon,
-  Castle02Icon,
+  ChartRelationshipIcon,
   Chat01Icon,
   CheckListIcon,
   Clock01Icon,
   ComputerTerminal01Icon,
   DashboardSquare01Icon,
   File01Icon,
-  McpServerIcon,
   MessageMultiple01Icon,
   Moon02Icon,
   PencilEdit02Icon,
@@ -73,27 +71,27 @@ function ThemeToggleMini() {
   // Detect dark/light from actual data-theme attribute
   const currentDataTheme =
     typeof document !== 'undefined'
-      ? document.documentElement.getAttribute('data-theme') || 'claude-nous'
-      : 'claude-nous'
+      ? document.documentElement.getAttribute('data-theme') || 'hermes-nous'
+      : 'hermes-nous'
   const isDark = !currentDataTheme.endsWith('-light')
 
   // Map between dark and light counterparts — must include all theme families
   const LIGHT_DARK_PAIRS: Record<string, string> = {
-    'claude-nous': 'claude-nous-light',
-    'claude-nous-light': 'claude-nous',
-    'claude-official': 'claude-official-light',
-    'claude-official-light': 'claude-official',
-    'claude-classic': 'claude-classic-light',
-    'claude-classic-light': 'claude-classic',
-    'claude-slate': 'claude-slate-light',
-    'claude-slate-light': 'claude-slate',
+    'hermes-nous': 'hermes-nous-light',
+    'hermes-nous-light': 'hermes-nous',
+    'hermes-official': 'hermes-official-light',
+    'hermes-official-light': 'hermes-official',
+    'hermes-classic': 'hermes-classic-light',
+    'hermes-classic-light': 'hermes-classic',
+    'hermes-slate': 'hermes-slate-light',
+    'hermes-slate-light': 'hermes-slate',
   }
 
   return (
     <button
       type="button"
       onClick={() => {
-        // Fall back to current family rather than dropping the user into claude-official
+        // Fall back to current family rather than dropping the user into hermes-official
         const nextDataTheme =
           LIGHT_DARK_PAIRS[currentDataTheme] ||
           (isDark
@@ -162,7 +160,7 @@ export async function fetchWorkspaceStats(): Promise<WorkspaceStats | null> {
   }
 }
 
-export async function fetchWorkspaceProjectShortcuts(): Promise<Array<never>> {
+export function fetchWorkspaceProjectShortcuts(): Array<never> {
   return []
 }
 
@@ -220,19 +218,7 @@ function NavItem({
             {item.label}
           </span>
           {item.badge && item.badge !== 'error-dot' ? (
-            <span
-              className="ml-auto inline-flex min-w-6 items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold leading-none"
-              style={
-                item.badge === 'NEW'
-                  ? {
-                      background: 'linear-gradient(180deg, #fde68a 0%, #fbbf24 50%, #d4a017 100%)',
-                      color: '#0b1320',
-                      boxShadow: '0 0 8px rgba(250,204,21,0.4)',
-                      letterSpacing: '0.08em',
-                    }
-                  : undefined
-              }
-            >
+            <span className="ml-auto inline-flex min-w-6 items-center justify-center rounded-full border border-primary-700 bg-primary-900 px-2 py-0.5 text-[10px] font-semibold leading-none text-primary-300">
               {item.badge}
             </span>
           ) : null}
@@ -331,7 +317,7 @@ function NavItem({
 
 // ── Last-visited route tracking ─────────────────────────────────────────
 
-const LAST_ROUTE_KEY = 'claude-sidebar-last-route'
+const LAST_ROUTE_KEY = 'hermes-sidebar-last-route'
 
 function getLastRoute(section: string): string | null {
   try {
@@ -547,7 +533,9 @@ function ChatSidebarComponent({
   useEffect(() => {
     function handleOpenSettingsEvent(event: Event) {
       const detail = (event as CustomEvent<ChatOpenSettingsDetail>).detail
-      handleOpenSettings(detail.section === 'appearance' ? 'appearance' : 'claude')
+      handleOpenSettings(
+        detail.section === 'appearance' ? 'appearance' : 'hermes',
+      )
     }
 
     window.addEventListener(CHAT_OPEN_SETTINGS_EVENT, handleOpenSettingsEvent)
@@ -576,20 +564,17 @@ function ChatSidebarComponent({
     pathname === '/new' || pathname.startsWith('/chat/new')
   const _isSettingsActive = pathname === '/settings'
   const isSkillsActive = pathname === '/skills'
-  const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
-  const isPlaygroundActive = pathname === '/playground'
-  const isAgoraActive = pathname === '/agora'
   const isTerminalActive = pathname === '/terminal'
   const isJobsActive = pathname === '/jobs'
   const isMemoryActive = pathname === '/memory'
   const isTasksActive = pathname === '/tasks'
+  const isAgentSurfacesActive = pathname === '/agent-surfaces'
+  const isXBookmarksActive = pathname === '/x-bookmarks'
+  const isLearningLoopActive = pathname === '/learning-loop'
+  const isExecutiveQueueActive = pathname === '/executive-queue'
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
-  const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
-  const echoStudioEnabled = useSettingsStore(
-    (state) => state.settings.experimentalEchoStudio,
-  )
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
@@ -611,15 +596,15 @@ function ChatSidebarComponent({
 
   // Collapsible section states
   const [mainExpanded, toggleMain] = usePersistedBool(
-    'claude-sidebar-main-expanded',
+    'hermes-sidebar-main-expanded',
     true,
   )
   const [knowledgeExpanded, toggleKnowledge] = usePersistedBool(
-    'claude-sidebar-knowledge-expanded',
+    'hermes-sidebar-knowledge-expanded',
     true,
   )
   const [_systemExpanded, _toggleSystem] = usePersistedBool(
-    'claude-sidebar-system-expanded',
+    'hermes-sidebar-system-expanded',
     false,
   )
 
@@ -798,7 +783,6 @@ function ChatSidebarComponent({
       label: t('nav.chat'),
       active: isChatActive,
     },
-
     {
       kind: 'link',
       to: '/files',
@@ -824,8 +808,36 @@ function ChatSidebarComponent({
       kind: 'link',
       to: '/tasks',
       icon: CheckListIcon,
-      label: 'Tasks',
+      label: t('nav.tasks'),
       active: isTasksActive,
+    },
+    {
+      kind: 'link',
+      to: '/agent-surfaces',
+      icon: ChartRelationshipIcon,
+      label: 'Agent Surfaces',
+      active: isAgentSurfacesActive,
+    },
+    {
+      kind: 'link',
+      to: '/x-bookmarks',
+      icon: Search01Icon,
+      label: 'X Bookmarks',
+      active: isXBookmarksActive,
+    },
+    {
+      kind: 'link',
+      to: '/learning-loop',
+      icon: BrainIcon,
+      label: 'Learning Loop',
+      active: isLearningLoopActive,
+    },
+    {
+      kind: 'link',
+      to: '/executive-queue',
+      icon: CheckListIcon,
+      label: 'Executive Queue',
+      active: isExecutiveQueueActive,
     },
     {
       kind: 'link',
@@ -837,29 +849,10 @@ function ChatSidebarComponent({
     {
       kind: 'link',
       to: '/operations',
-      icon: UserMultipleIcon,
+      icon: UserGroupIcon,
       label: 'Operations',
       active: isOperationsActive,
     },
-    {
-      kind: 'link',
-      to: '/swarm',
-      icon: UserGroupIcon,
-      label: 'Swarm',
-      active: isSwarmActive,
-    },
-    ...(echoStudioEnabled
-      ? [
-          {
-            kind: 'link' as const,
-            to: '/echo-studio',
-            icon: DashboardSquare01Icon,
-            label: 'Echo Studio',
-            active: pathname.startsWith('/echo-studio'),
-          },
-        ]
-      : []),
-
   ]
 
   const knowledgeItems: Array<NavItemDef> = [
@@ -877,13 +870,6 @@ function ChatSidebarComponent({
       label: t('nav.skills'),
       active: isSkillsActive,
       dataTour: 'skills',
-    },
-    {
-      kind: 'link',
-      to: '/mcp',
-      icon: McpServerIcon,
-      label: 'MCP',
-      active: isMcpActive,
     },
     {
       kind: 'link',
@@ -951,8 +937,8 @@ function ChatSidebarComponent({
                 )}
               >
                 <img
-                  src="/claude-avatar.webp"
-                  alt="Hermes Agent"
+                  src="/hermes-avatar.webp"
+                  alt="Hermes"
                   className="size-6 rounded-lg"
                 />
                 <span
@@ -1042,46 +1028,6 @@ function ChatSidebarComponent({
               className="size-5 shrink-0"
             />
             <span>New Session</span>
-          </Link>
-        </div>
-      )}
-
-      {/* ── HermesWorld featured link (gold castle, NEW badge) ────── */}
-      {/* Hide when VITE_HERMESWORLD_ENABLED is explicitly '0' */}
-      {!isVisuallyCollapsed &&
-        (import.meta as any).env?.VITE_HERMESWORLD_ENABLED !== '0' && (
-        <div className="px-2 pb-2">
-          <Link
-            to="/playground"
-            onClick={() => onSelectSession?.()}
-            className={cn(
-              buttonVariants({ variant: 'ghost', size: 'sm' }),
-              'group w-full justify-start gap-2.5 px-3 py-2 text-primary-900 hover:bg-primary-200 dark:hover:bg-primary-800',
-              isPlaygroundActive &&
-                'bg-accent-500/10 text-accent-500 hover:bg-accent-50 dark:hover:bg-accent-900/300/15',
-            )}
-            data-tour="hermesworld"
-          >
-            <HugeiconsIcon
-              icon={Castle02Icon}
-              size={20}
-              strokeWidth={1.5}
-              className="size-5 shrink-0"
-              style={{ color: '#facc15' }}
-            />
-            <span>HermesWorld</span>
-            <span
-              className="ml-auto inline-flex min-w-6 items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold leading-none"
-              style={{
-                background:
-                  'linear-gradient(180deg, #fde68a 0%, #fbbf24 50%, #d4a017 100%)',
-                color: '#0b1320',
-                boxShadow: '0 0 8px rgba(250,204,21,0.4)',
-                letterSpacing: '0.08em',
-              }}
-            >
-              NEW
-            </span>
           </Link>
         </div>
       )}
@@ -1209,7 +1155,7 @@ function ChatSidebarComponent({
             <MenuContent side="top" align="start" className="min-w-[200px]">
               <MenuItem
                 onClick={function onOpenSettings() {
-                  handleOpenSettings('claude')
+                  handleOpenSettings('hermes')
                 }}
                 className="justify-between"
               >
@@ -1230,7 +1176,7 @@ function ChatSidebarComponent({
             <div className="flex items-center gap-0.5">
               <button
                 type="button"
-                onClick={() => handleOpenSettings('claude')}
+                onClick={() => handleOpenSettings('hermes')}
                 className="shrink-0 rounded-lg p-1.5 text-primary-400 hover:bg-primary-200 dark:hover:bg-neutral-800 hover:text-primary-600 dark:hover:text-neutral-300 transition-colors"
                 aria-label="Settings"
               >

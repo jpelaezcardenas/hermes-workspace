@@ -1,531 +1,406 @@
-import {
-  BubbleChatAddIcon,
-  CheckmarkCircle02Icon,
-  ConsoleIcon,
-  Edit02Icon,
-  Moon02Icon,
-  PuzzleIcon,
-  Settings02Icon,
-  Sun02Icon,
-} from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
-import { AchievementsCard } from './components/achievements-card'
-import { ActiveModelKpi } from './components/active-model-kpi'
-import { AnalyticsChartCard } from './components/analytics-chart-card'
-import { AttentionMarquee } from './components/attention-marquee'
-import { CacheEfficiencyCard } from './components/cache-efficiency-card'
-import { CostLedgerCard } from './components/cost-ledger-card'
-import { EditModePanel } from './components/edit-mode-panel'
-import { HeroMetrics } from './components/hero-metrics'
-import { LogsTailCard } from './components/logs-tail-card'
-import { OperatorTipCard } from './components/operator-tip-card'
-import { OpsStrip } from './components/ops-strip'
-import { ProviderMixCard } from './components/provider-mix-card'
-import { SessionsIntelligenceCard } from './components/sessions-intelligence-card'
-import { SkillsUsageCard } from './components/skills-usage-card'
-import { TokenMixHourCard } from './components/token-mix-hour-card'
-import { TopModelsCard } from './components/top-models-card'
-import { VelocityCard } from './components/velocity-card'
-import { WidgetShell } from './components/widget-shell'
-import { normalizeDashboardSessionsPayload } from './lib/sessions-query'
-import { useDashboardLayout } from './lib/use-dashboard-layout'
-import type { SessionRowData } from './components/sessions-intelligence-card'
-import type { AnalyticsPeriod } from './components/analytics-chart-card'
+  DOMAIN_ORDER,
+  getStartHereQueueState,
+  sortQueueItems,
+} from './-command-center-utils'
 import type { ReactNode } from 'react'
-import type { ClaudeSession } from '@/server/claude-api'
-import type { DashboardOverview } from '@/server/dashboard-aggregator'
-import { getUnavailableReason } from '@/lib/feature-gates'
+import type {
+  ExecutiveQueueItem,
+  QueueBoardColumn,
+} from '@/routes/api/-executive-queue-utils'
 import { cn } from '@/lib/utils'
-import { applyTheme, useSettingsStore } from '@/hooks/use-settings'
+import { toast } from '@/components/ui/toast'
 import { openHamburgerMenu } from '@/components/mobile-hamburger-menu'
-import { useFeatureAvailable } from '@/hooks/use-feature-available'
 
-// `IconSvgObject` isn't exported from @hugeicons/react; reuse the
-// inferred type from a real icon import for prop typing.
-type HugeIcon = typeof Settings02Icon
-
-// ── Helpers ──────────────────────────────────────────────────────
-
-function timeAgo(ts: number): string {
-  const diff = Date.now() / 1000 - ts
-  if (diff < 60) return 'just now'
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
-  return `${Math.floor(diff / 86400)}d ago`
+type ExecutiveQueueResponse = {
+  ok: boolean
+  items: Array<ExecutiveQueueItem>
+  grouped: Record<QueueBoardColumn, Array<ExecutiveQueueItem>>
+  total: number
+  error?: string
 }
 
-function formatNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`
-  return String(n)
+type QueueExecutionMode = 'approve_and_run' | 'draft_only' | 'explain_more'
+
+type QueueMutationResponse = {
+  ok: boolean
+  item?: ExecutiveQueueItem
+  error?: string
 }
 
-function themeColor(name: string, fallback: string): string {
-  if (typeof document === 'undefined') return fallback
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim()
-  return value || fallback
+type QueueExecutionResponse = QueueMutationResponse & {
+  execution?: { id: string; sessionKey: string; mode?: QueueExecutionMode }
+  runId?: string | null
+  sessionKey?: string
 }
 
-function alpha(color: string, amount: number): string {
-  const pct = Math.max(0, Math.min(100, Math.round(amount * 100)))
-  return `color-mix(in srgb, ${color} ${pct}%, transparent)`
+type GatewayStatusResponse = {
+  gateway?: { available?: boolean; url?: string }
+  dashboard?: { available?: boolean; url?: string }
+  mode?: string
+  capabilities?: Record<string, boolean | { available?: boolean }>
+  error?: string
 }
 
-function readDashboardPalette() {
-  return {
-    accent: themeColor('--theme-accent', '#6366f1'),
-    accentSecondary: themeColor('--theme-accent-secondary', '#8b5cf6'),
-    success: themeColor('--theme-success', '#22c55e'),
-    warning: themeColor('--theme-warning', '#f59e0b'),
-    danger: themeColor('--theme-danger', '#ef4444'),
-    muted: themeColor('--theme-muted', '#6b7280'),
-    border: themeColor('--theme-border', '#333333'),
-    card: themeColor('--theme-card', '#1a1a2e'),
-    text: themeColor('--theme-text', '#e5e7eb'),
-  }
-}
-
-function useDashboardPalette() {
-  const [palette, setPalette] = useState(readDashboardPalette)
-
-  useEffect(() => {
-    if (typeof document === 'undefined') return undefined
-    const refresh = () => setPalette(readDashboardPalette())
-    refresh()
-    const observer = new MutationObserver(refresh)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme', 'style', 'class'],
-    })
-    return () => observer.disconnect()
-  }, [])
-
-  return palette
-}
-
-// ── Glass Card ───────────────────────────────────────────────────
-
-function GlassCard({
-  title,
-  titleRight,
-  accentColor,
-  noPadding,
-  className,
-  children,
-}: {
+type JobLike = {
+  id?: string
+  name?: string
   title?: string
-  titleRight?: ReactNode
-  accentColor?: string
-  noPadding?: boolean
-  className?: string
+  enabled?: boolean
+  last_status?: string
+  lastStatus?: string
+  status?: string
+  next_run?: string
+  nextRun?: string
+  schedule?: string
+}
+
+type JobsResponse = {
+  jobs?: Array<JobLike>
+  items?: Array<JobLike>
+  error?: string
+}
+
+type SessionLike = {
+  id?: string
+  key?: string
+  title?: string
+  label?: string
+  derivedTitle?: string
+  startedAt?: number
+  started_at?: number
+  updatedAt?: number
+  updated_at?: number
+}
+
+type SessionsResponse = {
+  sessions?: Array<SessionLike>
+}
+
+type MotionAction = {
+  taskId?: string
+  name?: string
+  workspace?: string
+  dueDateET?: string
+  scheduledStartET?: string | null
+  priority?: string
+  deadlineType?: string
+  ownership?: string
+  riskLevel?: string
+  actionType?: string
+  safety?: string
+  reason?: string
+}
+
+type ReaderAction = {
+  title?: string
+  author?: string
+  source?: string
+  source_url?: string
+  contentType?: string
+  score?: number
+  actionType?: string
+  safety?: string
+  reason?: string
+  failureReason?: string
+  nextAction?: string
+  handle?: string
+  saves?: number
+  examples?: Array<ReaderAction>
+}
+
+type GranolaAction = {
+  noteId?: string
+  noteTitle?: string
+  createdAt?: string
+  domain?: string
+  heading?: string
+  text?: string
+  actionType?: string
+  safety?: string
+  reason?: string
+}
+
+type AiOpsIntakeQueueItem = {
+  id?: string
+  source?: string
+  sourceType?: string
+  sourceId?: string | null
+  title?: string
+  detail?: string
+  actionType?: string
+  nextAction?: string
+  owner?: string
+  domain?: string
+  priority?: string
+  riskLevel?: string
+  gate?: string
+  safety?: string
+  createdAt?: string | null
+  sourceUrl?: string | null
+  reason?: string
+}
+
+type SourceCoverageSource = {
+  available?: boolean
+  items_last_30_days_scanned?: number
+  estimated_ai_relevant_items?: number
+  x_bookmarks_30_days?: number
+  reader_action_summary?: {
+    readyForAiLearningCount?: number
+    freshReadyCount?: number
+    xWatchlistCandidateCount?: number
+    transcriptFailureCount?: number
+  }
+  reader_actions?: {
+    readyForAiLearning?: Array<ReaderAction>
+    freshReady?: Array<ReaderAction>
+    xWatchlistCandidates?: Array<ReaderAction>
+    transcriptFailures?: Array<ReaderAction>
+  }
+  content_type_counts?: Record<string, number>
+  ai_relevant_type_counts?: Record<string, number>
+  task_count?: number
+  unscheduled_count?: number
+  due_today_count?: number
+  tim_owned_count?: number
+  teammate_owned_count?: number
+  ambiguous_unassigned_count?: number
+  tim_owned_unscheduled_count?: number
+  ownership_counts?: Record<string, number>
+  action_summary?: {
+    actionCandidateCount?: number
+    needsTimDecisionCount?: number
+    followUpCandidateCount?: number
+    ownershipClarificationCount?: number
+    assignedActionCandidateCount?: number
+    safeWriteCount?: number
+    approvalRequiredCount?: number
+    suppressedCount?: number
+  }
+  motion_actions?: {
+    safeWriteActions?: Array<MotionAction>
+    approvalRequired?: Array<MotionAction>
+    suppressedItems?: Array<MotionAction>
+  }
+  recent_notes_scanned?: number
+  eligible_notes_parsed?: number
+  skipped_confidential_or_sensitive?: number
+  fetch_errors?: number
+  domain_counts?: Record<string, number>
+  granola_actions?: {
+    needsTimDecision?: Array<GranolaAction>
+    followUpCandidates?: Array<GranolaAction>
+    ownershipClarifications?: Array<GranolaAction>
+    assignedActionCandidates?: Array<GranolaAction>
+  }
+  summary?: {
+    totalItemCount?: number
+    topItemCount?: number
+    needsTimDecisionCount?: number
+    safeAgentWorkCount?: number
+    approvalRequiredCount?: number
+    recoveryRequiredCount?: number
+    reviewOwnerCount?: number
+    learnFromThisCount?: number
+    draftFollowUpCount?: number
+    suppressedAuditCount?: number
+    sourceCounts?: Record<string, number>
+    ownerCounts?: Record<string, number>
+    actionCounts?: Record<string, number>
+    gateCounts?: Record<string, number>
+    riskCounts?: Record<string, number>
+  }
+  topItems?: Array<AiOpsIntakeQueueItem>
+  notes_returned_first_page?: number
+  recent_notes_36h_first_page?: number
+  items_checked?: number
+  acceptable_full_transcripts?: number
+  unacceptable_transcripts?: number
+  tim_notice_required?: boolean
+  error?: string
+}
+
+type SourceCoverageResponse = {
+  ok: boolean
+  snapshot?: {
+    generated_at?: string
+    sources?: Partial<Record<string, SourceCoverageSource>>
+  }
+  error?: string
+}
+
+async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url)
+  const data = (await response.json().catch(() => ({}))) as T
+  if (!response.ok) {
+    const maybeError = data as { error?: string }
+    throw new Error(maybeError.error ?? `HTTP ${response.status}`)
+  }
+  return data
+}
+
+async function holdQueueItem(
+  id: string,
+  note: string,
+): Promise<ExecutiveQueueItem> {
+  const response = await fetch('/api/executive-queue', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id,
+      action: 'approval',
+      decision: 'hold',
+      note,
+      actor: 'Tim',
+    }),
+  })
+  const data = (await response
+    .json()
+    .catch(() => ({}))) as QueueMutationResponse
+  if (!response.ok || data.ok === false || !data.item) {
+    throw new Error(data.error ?? `HTTP ${response.status}`)
+  }
+  return data.item
+}
+
+async function executeQueueItem(
+  id: string,
+  mode: QueueExecutionMode,
+  note: string,
+): Promise<QueueExecutionResponse> {
+  const response = await fetch('/api/executive-queue-execution', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id,
+      mode,
+      note,
+      actor: 'Tim',
+      sessionKey: 'executive-command-center',
+    }),
+  })
+  const data = (await response
+    .json()
+    .catch(() => ({}))) as QueueExecutionResponse
+  if (!response.ok || data.ok === false) {
+    throw new Error(data.error ?? `HTTP ${response.status}`)
+  }
+  return data
+}
+
+function priorityTone(
+  priority: string,
+): 'neutral' | 'good' | 'warn' | 'danger' | 'accent' {
+  if (priority === 'P0') return 'danger'
+  if (priority === 'P1') return 'warn'
+  if (priority === 'P2') return 'accent'
+  return 'neutral'
+}
+
+function statusTone(
+  status: string,
+): 'neutral' | 'good' | 'warn' | 'danger' | 'accent' {
+  if (status === 'Blocked') return 'danger'
+  if (status === 'Proposed' || status === 'Triage') return 'warn'
+  if (status === 'In Progress') return 'accent'
+  if (status === 'Queued') return 'good'
+  return 'neutral'
+}
+
+function formatTimestamp(value?: string | number): string {
+  if (!value) return 'No time set'
+  const date =
+    typeof value === 'number'
+      ? new Date(value > 10_000_000_000 ? value : value * 1000)
+      : new Date(value)
+  if (Number.isNaN(date.getTime())) return 'Unknown'
+  return date.toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
+function getSessionTime(session: SessionLike): number {
+  const raw =
+    session.updatedAt ??
+    session.updated_at ??
+    session.startedAt ??
+    session.started_at ??
+    0
+  return raw > 10_000_000_000 ? raw : raw * 1000
+}
+
+function Badge({
+  children,
+  tone = 'neutral',
+}: {
   children: ReactNode
+  tone?: 'neutral' | 'good' | 'warn' | 'danger' | 'accent'
 }) {
   return (
-    <div
-      className={cn(
-        'relative flex flex-col overflow-hidden rounded-xl border transition-colors',
-        className,
-      )}
-      style={{
-        background: 'var(--theme-card)',
-        borderColor: 'var(--theme-border)',
-      }}
-    >
-      {accentColor && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
-          style={{
-            background: `linear-gradient(90deg, ${accentColor}, ${accentColor}50, transparent)`,
-          }}
-        />
-      )}
-      {title && (
-        <div className="flex items-center justify-between px-5 pt-4 pb-0">
-          <h3 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted">
-            {title}
-          </h3>
-          {titleRight}
-        </div>
-      )}
-      <div className={cn('flex-1', noPadding ? '' : 'px-5 pb-4 pt-3')}>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function EnhancedBadge({ label = 'Enhanced API' }: { label?: string }) {
-  return (
     <span
-      className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]"
-      style={{
-        border: `1px solid ${themeColor('--theme-accent-border', 'rgba(245, 158, 11, 0.28)')}`,
-        background: themeColor('--theme-accent-subtle', 'rgba(245, 158, 11, 0.12)'),
-        color: themeColor('--theme-accent', '#f59e0b'),
-      }}
+      className={cn(
+        'inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium',
+        tone === 'good' &&
+          'border-emerald-400/30 bg-emerald-400/10 text-emerald-300',
+        tone === 'warn' && 'border-amber-400/30 bg-amber-400/10 text-amber-200',
+        tone === 'danger' && 'border-red-400/30 bg-red-400/10 text-red-200',
+        tone === 'accent' &&
+          'border-[var(--theme-accent-border)] bg-[var(--theme-accent)]/10 text-[var(--theme-accent)]',
+        tone === 'neutral' &&
+          'border-[var(--theme-border)] text-[var(--theme-muted)]',
+      )}
     >
-      {label}
+      {children}
     </span>
   )
 }
 
-function UnavailableWidget({
+function Panel({
   title,
-  description,
+  eyebrow,
+  children,
+  action,
 }: {
   title: string
-  description: string
+  eyebrow?: string
+  children: ReactNode
+  action?: ReactNode
 }) {
   return (
-    <GlassCard
-      title={title}
-      titleRight={<EnhancedBadge />}
-      accentColor={themeColor('--theme-warning', '#f59e0b')}
-      className="h-full"
-    >
-      <div className="flex h-full min-h-[180px] items-center justify-center rounded-lg border border-dashed border-[var(--theme-border)] bg-[var(--theme-card2)] px-4 text-center">
-        <p className="text-sm text-muted">{description}</p>
-      </div>
-    </GlassCard>
-  )
-}
-
-// ── Metric Tile ──────────────────────────────────────────────────
-
-function MetricTile({
-  label,
-  value,
-  sub,
-  icon,
-  accentColor,
-}: {
-  label: string
-  value: string
-  sub?: string
-  icon: string
-  accentColor: string
-}) {
-  return (
-    <GlassCard accentColor={accentColor}>
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col gap-0.5">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted">
-            {label}
-          </div>
-          <div className="text-2xl font-bold tabular-nums text-ink">
-            {value}
-          </div>
-          {sub && <div className="text-[11px] text-muted">{sub}</div>}
+    <section className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)]/85 p-4 shadow-sm backdrop-blur">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div>
+          {eyebrow ? (
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+              {eyebrow}
+            </div>
+          ) : null}
+          <h2 className="mt-1 text-base font-semibold text-ink">{title}</h2>
         </div>
-        <div
-          className="flex size-8 items-center justify-center rounded-lg text-base"
-          style={{ background: `${accentColor}15` }}
-        >
-          {icon}
-        </div>
+        {action}
       </div>
-    </GlassCard>
+      {children}
+    </section>
   )
 }
 
-// ── Activity Chart ───────────────────────────────────────────────
-
-function ActivityChart({
-  sessions,
-  palette,
-}: {
-  sessions: Array<ClaudeSession>
-  palette: ReturnType<typeof readDashboardPalette>
-}) {
-  const chartData = useMemo(() => {
-    const dayMap = new Map<string, { sessions: number; messages: number }>()
-    const now = Date.now() / 1000
-    for (let i = 13; i >= 0; i--) {
-      const d = new Date((now - i * 86400) * 1000)
-      const key = d.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-      dayMap.set(key, { sessions: 0, messages: 0 })
-    }
-    for (const s of sessions) {
-      if (!s.started_at) continue
-      const d = new Date(s.started_at * 1000)
-      const key = d.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-      const entry = dayMap.get(key)
-      if (entry) {
-        entry.sessions += 1
-        entry.messages += s.message_count ?? 0
-      }
-    }
-    const all = Array.from(dayMap.entries()).map(([date, data]) => ({
-      date,
-      ...data,
-    }))
-    let firstActive = all.findIndex((d) => d.sessions > 0 || d.messages > 0)
-    if (firstActive > 0) firstActive = Math.max(0, firstActive - 1)
-    return firstActive > 0 ? all.slice(firstActive) : all
-  }, [sessions])
-
-  return (
-    <GlassCard
-      title="Activity"
-      titleRight={<span className="text-[10px] text-muted">14 days</span>}
-      accentColor={palette.accent}
-      className="h-full"
-    >
-      <div className="h-[200px] w-full -ml-2">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={chartData}
-            margin={{ top: 8, right: 32, left: -16, bottom: 0 }}
-          >
-            <defs>
-              <linearGradient id="g-sessions" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={palette.accent} stopOpacity={0.3} />
-                <stop offset="100%" stopColor={palette.accent} stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="g-messages" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={palette.success} stopOpacity={0.2} />
-                <stop offset="100%" stopColor={palette.success} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke={palette.border} opacity={0.45} />
-            <XAxis
-              dataKey="date"
-              tick={{ fontSize: 10, fill: palette.muted }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <YAxis
-              yAxisId="left"
-              tick={{ fontSize: 10, fill: palette.success }}
-              axisLine={false}
-              tickLine={false}
-              allowDecimals={false}
-              width={28}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              tick={{ fontSize: 10, fill: palette.accent }}
-              axisLine={false}
-              tickLine={false}
-              allowDecimals={false}
-              width={28}
-            />
-            <Tooltip
-              contentStyle={{
-                background: palette.card,
-                border: `1px solid ${palette.border}`,
-                borderRadius: '8px',
-                fontSize: '11px',
-              }}
-              labelStyle={{ color: palette.muted, fontSize: '10px' }}
-            />
-            <Area
-              yAxisId="left"
-              type="monotone"
-              dataKey="messages"
-              stroke={palette.success}
-              fill="url(#g-messages)"
-              strokeWidth={1.5}
-              dot={false}
-            />
-            <Area
-              yAxisId="right"
-              type="monotone"
-              dataKey="sessions"
-              stroke={palette.accent}
-              fill="url(#g-sessions)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
-      <div className="mt-2 flex items-center gap-5 text-[10px] text-muted">
-        <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-full" style={{ background: palette.accent }} />
-          Sessions
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-full" style={{ background: palette.success }} />
-          Messages
-        </span>
-      </div>
-    </GlassCard>
-  )
-}
-
-// ── Skills Widget ────────────────────────────────────────────────
-
-function SkillsWidget({
-  palette,
-  onOpen,
-  usage,
-}: {
-  palette: ReturnType<typeof readDashboardPalette>
-  onOpen: () => void
-  usage: DashboardOverview['skillsUsage']
-}) {
-  const skillsAvailable = useFeatureAvailable('skills')
-  const skillsQuery = useQuery({
-    queryKey: ['claude-skills'],
-    queryFn: async () => {
-      const res = await fetch('/api/skills?tab=installed&limit=200&summary=search')
-      if (!res.ok) return []
-      const data = await res.json()
-      return (data?.skills ?? []) as Array<Record<string, unknown>>
-    },
-    staleTime: 30_000,
-    enabled: skillsAvailable,
-  })
-
-  const skills = skillsQuery.data ?? []
-
-  if (!skillsAvailable) {
-    return (
-      <UnavailableWidget
-        title="Skills"
-        description={getUnavailableReason('skills')}
-      />
-    )
-  }
-
-  // Summary view per Hermes Agent feedback: 'don’t enumerate, summarise.'
-  // Prefer real usage signal from /api/analytics/usage when present
-  // (counts what the agent *actually used*, not just what's installed).
-  const installed = skills.length
-  const enabled = skills.filter((s) => s.enabled !== false).length
-  const usedThisWindow = usage?.distinctSkills ?? null
-  const topUsed = usage?.topSkills[0]
-  const topInstalled =
-    skills.find((s) => s.enabled !== false) ?? skills.at(0)
-  const topName = topUsed?.skill ?? String(topInstalled?.name ?? '—')
-
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group relative flex w-full flex-col gap-1.5 overflow-hidden rounded-xl border px-4 py-3 text-left transition-colors hover:bg-[var(--theme-card)]/80"
-      style={{
-        background: 'var(--theme-card)',
-        borderColor: 'var(--theme-border)',
-      }}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
-        style={{
-          background: `linear-gradient(90deg, ${palette.warning}, ${palette.warning}50, transparent)`,
-        }}
-      />
-      <div className="flex items-center justify-between">
-        <h3
-          className="text-[10px] font-semibold uppercase tracking-[0.18em]"
-          style={{ color: 'var(--theme-muted)' }}
-        >
-          Skills
-        </h3>
-        <span
-          className="font-mono text-[9px] uppercase tracking-[0.15em]"
-          style={{ color: 'var(--theme-muted)' }}
-        >
-          manage →
-        </span>
-      </div>
-      <div
-        className="font-mono text-2xl font-bold tabular-nums leading-none"
-        style={{ color: 'var(--theme-text)' }}
-      >
-        {installed}
-      </div>
-      <div
-        className="font-mono text-[10px] uppercase tracking-[0.1em]"
-        style={{ color: 'var(--theme-muted)' }}
-      >
-        {installed === 0
-          ? 'no skills installed'
-          : usedThisWindow !== null && usedThisWindow > 0
-            ? `${enabled} enabled · ${usedThisWindow} used · top: ${topName}`
-            : `${enabled} enabled · top: ${topName}`}
-      </div>
-    </button>
-  )
-}
-
-// ── Secondary action (smaller, monochrome) ─────────────────────
-
-function SecondaryAction({
-  label,
-  icon,
+function ActionButton({
+  children,
   onClick,
-  disabled,
+  primary = false,
+  disabled = false,
 }: {
-  label: string
-  icon: HugeIcon
+  children: ReactNode
   onClick: () => void
+  primary?: boolean
   disabled?: boolean
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className="group inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-[0.05em] transition-all hover:scale-[1.015] hover:bg-[var(--theme-card)]/70 hover:text-[var(--theme-text)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-      style={{
-        borderColor: 'var(--theme-border)',
-        color: 'var(--theme-muted)',
-        background:
-          'linear-gradient(135deg, color-mix(in srgb, var(--theme-card) 80%, transparent), transparent)',
-      }}
-    >
-      <HugeiconsIcon
-        icon={icon}
-        size={14}
-        strokeWidth={1.6}
-        className="transition-colors group-hover:text-[var(--theme-accent)]"
-      />
-      <span>{label}</span>
-    </button>
-  )
-}
-
-// ── Quick Action ─────────────────────────────────────────────────
-
-function QuickAction({
-  label,
-  icon,
-  onClick,
-  accentColor,
-  disabled,
-  badge,
-}: {
-  label: string
-  icon: string
-  onClick: () => void
-  accentColor: string
-  disabled?: boolean
-  badge?: string
 }) {
   return (
     <button
@@ -533,670 +408,1187 @@ function QuickAction({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'relative overflow-hidden flex min-h-12 w-full items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-all',
-        'border-[var(--theme-border)] bg-[var(--theme-card)] text-left',
-        disabled
-          ? 'cursor-not-allowed opacity-60'
-          : 'hover:border-[var(--theme-accent-border)] hover:scale-[1.01] active:scale-[0.99]',
+        'rounded-xl border px-3 py-2 text-sm font-medium transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50',
+        primary
+          ? 'border-[var(--theme-accent-border)] bg-[var(--theme-accent)] text-white hover:brightness-110'
+          : 'border-[var(--theme-border)] bg-[var(--theme-card2)] text-ink hover:border-[var(--theme-accent-border)]',
       )}
     >
-      <div
-        className="flex size-7 shrink-0 items-center justify-center rounded-md text-sm"
-        style={{ background: `${accentColor}18` }}
-      >
-        {icon}
-      </div>
-      <span
-        className="min-w-0 flex-1 text-xs font-semibold"
-        style={{ color: 'var(--theme-text)' }}
-      >
-        {label}
-      </span>
-      {badge ? (
-        <span className="ml-auto shrink-0 rounded-full border border-amber-300 bg-amber-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-amber-700">
-          {badge}
-        </span>
-      ) : null}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[2px]"
-        style={{
-          background: `linear-gradient(90deg, ${accentColor}, transparent)`,
-        }}
-      />
+      {children}
     </button>
   )
 }
 
-// ── Session Row (minimal) ────────────────────────────────────────
-
-function SessionRow({
-  session,
-  maxTokens,
+function QueueRow({
+  item,
   onClick,
-  palette,
+  dense = false,
 }: {
-  session: ClaudeSession
-  maxTokens: number
+  item: ExecutiveQueueItem
   onClick: () => void
-  palette: ReturnType<typeof readDashboardPalette>
+  dense?: boolean
 }) {
-  const tokens = (session.input_tokens ?? 0) + (session.output_tokens ?? 0)
-  const msgs = session.message_count ?? 0
-  const tools = session.tool_call_count ?? 0
-  const barWidth = maxTokens > 0 ? Math.max(1, (tokens / maxTokens) * 100) : 0
-
+  const riskTone =
+    item.riskLevel === 'High'
+      ? 'danger'
+      : item.riskLevel === 'Medium'
+        ? 'warn'
+        : 'good'
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-[var(--theme-card2)] transition-colors group"
+      className={cn(
+        'w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] text-left transition hover:border-[var(--theme-accent-border)]',
+        dense ? 'p-2.5' : 'p-3',
+      )}
     >
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-[13px] font-medium text-ink truncate flex-1 group-hover:text-ink">
-          {session.title || session.id}
-        </span>
-        <span className="text-[10px] tabular-nums text-muted shrink-0">
-          {session.started_at ? timeAgo(session.started_at) : ''}
-        </span>
-      </div>
-      <div className="mb-1.5 flex items-center gap-2 text-[10px] text-neutral-500">
-        {session.model && (
-          <span
-            className="rounded px-1.5 py-0.5 font-mono text-[9px] font-medium"
-            style={{
-              background: alpha(palette.accent, 0.1),
-              color: palette.accent,
-            }}
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold leading-snug text-ink">
+            {item.title}
+          </div>
+          <p
+            className={cn(
+              'mt-1 text-xs leading-relaxed text-[var(--theme-muted)]',
+              dense ? 'line-clamp-1' : 'line-clamp-2',
+            )}
           >
-            {session.model}
-          </span>
-        )}
-        <span>{msgs} msgs</span>
-        {tools > 0 && <span>{tools} tools</span>}
-        {tokens > 0 && <span>{formatNumber(tokens)} tok</span>}
+            {item.nextAction || item.outcome}
+          </p>
+        </div>
+        <Badge tone={priorityTone(item.priority)}>{item.priority}</Badge>
       </div>
-      <div className="h-[3px] rounded-full w-full bg-[var(--theme-border)] overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{
-            width: `${barWidth}%`,
-            background: `linear-gradient(90deg, ${palette.accent}, ${palette.accentSecondary})`,
-          }}
-        />
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        <Badge tone={statusTone(item.status)}>{item.status}</Badge>
+        <Badge tone={riskTone}>{item.riskLevel} risk</Badge>
+        <Badge>{item.owner}</Badge>
       </div>
     </button>
   )
 }
 
-// ── Main Dashboard ───────────────────────────────────────────────
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="rounded-xl border border-dashed border-[var(--theme-border)] bg-[var(--theme-card2)] p-4 text-sm text-[var(--theme-muted)]">
+      {text}
+    </div>
+  )
+}
 
 export function DashboardScreen() {
   const navigate = useNavigate()
-  const skillsAvailable = useFeatureAvailable('skills')
-  const sessionsQuery = useQuery({
-    // Use a dedicated query key — NOT chatQueryKeys.sessions — to avoid
-    // cache collisions with the chat sidebar which fetches fewer sessions
-    // and overwrites the dashboard's larger dataset.
-    // Also use the workspace proxy (/api/sessions) rather than the server-side
-    // listSessions() — the latter calls the gateway via CLAUDE_API which is
-    // only available server-side and returns nothing when called from the client.
-    // Do not gate this direct proof behind /api/gateway-status. That probe can
-    // be stale/loading while /api/sessions already works, which made the
-    // dashboard show a bogus “Enhanced API required” warning even though
-    // sessions were healthy.
-    queryKey: ['dashboard', 'sessions'],
-    queryFn: async () => {
-      const res = await fetch('/api/sessions?limit=200&offset=0')
-      if (!res.ok) {
-        throw new Error(`Sessions API returned HTTP ${res.status}`)
-      }
-      const data = await res.json()
-      return normalizeDashboardSessionsPayload(data)
-    },
+  const queryClient = useQueryClient()
+
+  const queueQuery = useQuery({
+    queryKey: ['command-center', 'executive-queue'],
+    queryFn: () => fetchJson<ExecutiveQueueResponse>('/api/executive-queue'),
+    staleTime: 10_000,
+    refetchInterval: 20_000,
+  })
+
+  const gatewayQuery = useQuery({
+    queryKey: ['command-center', 'gateway-status'],
+    queryFn: () => fetchJson<GatewayStatusResponse>('/api/gateway-status'),
     staleTime: 10_000,
     refetchInterval: 30_000,
-    retry: 1,
   })
 
-  const sessionsResult = sessionsQuery.data
+  const jobsQuery = useQuery({
+    queryKey: ['command-center', 'jobs'],
+    queryFn: () => fetchJson<JobsResponse>('/api/hermes-jobs'),
+    staleTime: 20_000,
+    refetchInterval: 60_000,
+  })
 
-  // Raw rows from the sessions endpoint. Used both for hero stats
-  // (count/tokens) and for the SessionsIntelligenceCard below.
-  const rawSessions = sessionsResult?.sessions ?? []
-  const sessionsUnavailable = Boolean(sessionsResult?.unavailable)
-  const sessionsUnavailableMessage =
-    sessionsResult?.message ?? getUnavailableReason('sessions')
+  const sessionsQuery = useQuery({
+    queryKey: ['command-center', 'sessions'],
+    queryFn: () =>
+      fetchJson<SessionsResponse>('/api/sessions?limit=8&offset=0'),
+    staleTime: 20_000,
+    refetchInterval: 60_000,
+  })
 
-  // Adapter shape kept for the legacy fallbacks that still reference
-  // ClaudeSession (HeroMetrics fallback path, etc.).
-  const sessions = useMemo(
-    () =>
-      rawSessions.map((s) => ({
-        id: (s.key ?? s.id) as string,
-        started_at: s.startedAt ? (s.startedAt as number) / 1000 : undefined,
-        message_count: (s.message_count as number | undefined) ?? 0,
-        tool_call_count: (s.tool_call_count as number | undefined) ?? 0,
-        input_tokens: (s.tokenCount as number | undefined) ?? 0,
-        output_tokens: 0,
-      })) as Array<ClaudeSession>,
-    [rawSessions],
-  )
-
-  // Enriched rows for the Sessions Intelligence card. Keeps the rich
-  // fields (`derivedTitle`, `kind`, `status`, `source`, `updatedAt`,
-  // etc.) the legacy adapter dropped.
-  const sessionRows: Array<SessionRowData> = useMemo(
-    () =>
-      [...rawSessions]
-        .sort(
-          (a, b) =>
-            ((b.updatedAt as number | undefined) ??
-              (b.startedAt as number | undefined) ??
-              0) -
-            ((a.updatedAt as number | undefined) ??
-              (a.startedAt as number | undefined) ??
-              0),
-        )
-        .slice(0, 12)
-        .map((s) => ({
-          key: String(s.key ?? s.id ?? ''),
-          title:
-            (s.derivedTitle as string | undefined) ||
-            (s.title as string | undefined) ||
-            (s.preview as string | undefined) ||
-            String(s.key ?? ''),
-          kind: String(s.kind ?? 'chat'),
-          status: String(s.status ?? ''),
-          source: (s.source as string | undefined) ?? null,
-          model: (s.model as string | undefined) ?? null,
-          messageCount:
-            ((s.messageCount as number | undefined) ??
-              (s.message_count as number | undefined) ??
-              0),
-          toolCallCount:
-            ((s.toolCallCount as number | undefined) ??
-              (s.tool_call_count as number | undefined) ??
-              0),
-          tokenCount:
-            ((s.tokenCount as number | undefined) ??
-              (s.totalTokens as number | undefined) ??
-              0),
-          startedAt: (s.startedAt as number | undefined) ?? null,
-          updatedAt: (s.updatedAt as number | undefined) ?? null,
-        })),
-    [rawSessions],
-  )
-
-  const stats = useMemo(() => {
-    let totalMessages = 0,
-      totalToolCalls = 0,
-      totalTokens = 0
-    for (const s of sessions) {
-      totalMessages += s.message_count ?? 0
-      totalToolCalls += s.tool_call_count ?? 0
-      totalTokens += (s.input_tokens ?? 0) + (s.output_tokens ?? 0)
-    }
-    return {
-      totalSessions: sessions.length,
-      totalMessages,
-      totalToolCalls,
-      totalTokens,
-    }
-  }, [sessions])
-
-  const recentSessions = useMemo(
-    () =>
-      [...sessions]
-        .sort((a, b) => (b.started_at ?? 0) - (a.started_at ?? 0))
-        .slice(0, 6),
-    [sessions],
-  )
-
-  const maxTokens = useMemo(() => {
-    let max = 0
-    for (const s of recentSessions) {
-      const t = (s.input_tokens ?? 0) + (s.output_tokens ?? 0)
-      if (t > max) max = t
-    }
-    return max
-  }, [recentSessions])
-
-  // Skills count for the SkillsUsageCard sub-text. Cheap query, used
-  // only for the "X of Y used" microcopy.
-  const skillsCountQuery = useQuery({
-    queryKey: ['dashboard', 'skills-count'],
-    queryFn: async () => {
-      const res = await fetch(
-        '/api/skills?tab=installed&limit=200&summary=search',
-      )
-      if (!res.ok) return 0
-      const data = (await res.json()) as {
-        skills?: Array<unknown>
-      }
-      return data.skills?.length ?? 0
-    },
+  const sourceCoverageQuery = useQuery({
+    queryKey: ['command-center', 'source-coverage'],
+    queryFn: () => fetchJson<SourceCoverageResponse>('/api/source-coverage'),
     staleTime: 60_000,
-    enabled: skillsAvailable,
+    refetchInterval: 120_000,
   })
-  const skillsInstalled = skillsCountQuery.data ?? 0
 
-  // Per-user widget visibility + edit-mode state (localStorage backed).
-  const layout = useDashboardLayout()
-
-  // Period selector for analytics; persists across navigation via
-  // localStorage so refreshes don't reset the operator's preference.
-  const [period, setPeriod] = useState<AnalyticsPeriod>(() => {
-    if (typeof window === 'undefined') return 30
-    const stored = window.localStorage.getItem('dashboard.analyticsPeriod')
-    const n = Number(stored)
-    if (n === 7 || n === 14 || n === 30) return n
-    return 30
-  })
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(
-        'dashboard.analyticsPeriod',
-        String(period),
+  const executionMutation = useMutation({
+    mutationFn: ({
+      id,
+      mode,
+      note,
+    }: {
+      id: string
+      mode: QueueExecutionMode
+      note: string
+    }) => executeQueueItem(id, mode, note),
+    onSuccess: async (result) => {
+      await queryClient.invalidateQueries({
+        queryKey: ['command-center', 'executive-queue'],
+      })
+      const mode = result.execution?.mode
+      if (mode === 'explain_more') {
+        toast('Explanation requested. Watch Telegram for the answer.', {
+          type: 'success',
+        })
+        return
+      }
+      toast(
+        result.sessionKey
+          ? `Execution dispatched to ${result.sessionKey}.`
+          : 'Execution dispatched.',
+        { type: 'success' },
       )
-    }
-  }, [period])
-
-  // Aggregate dashboard overview — surfaces the data the native
-  // Hermes dashboard exposes (status, platforms, cron, achievements,
-  // model info, analytics) in a single round trip with per-section
-  // graceful fallbacks. Each card renders only when its slice resolves.
-  const overviewQuery = useQuery<DashboardOverview>({
-    queryKey: ['dashboard', 'overview', period],
-    queryFn: async () => {
-      // achievements=5 (instead of 3) gives the Achievements rail
-      // card enough vertical mass to fill the gap below Top Models.
-      const res = await fetch(
-        `/api/dashboard/overview?days=${period}&achievements=5`,
-      )
-      if (!res.ok) throw new Error(`overview ${res.status}`)
-      return (await res.json()) as DashboardOverview
     },
-    staleTime: 5_000,
-    refetchInterval: 30_000,
+    onError: (error) => {
+      toast(
+        error instanceof Error ? error.message : 'Execution dispatch failed.',
+        { type: 'error' },
+      )
+    },
   })
-  const overview = overviewQuery.data ?? null
 
-  const palette = useDashboardPalette()
-
-  const updateSettings = useSettingsStore((state) => state.updateSettings)
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === 'undefined') return true
-    const dt = document.documentElement.getAttribute('data-theme') || ''
-    return !dt.endsWith('-light')
+  const holdMutation = useMutation({
+    mutationFn: ({ id, note }: { id: string; note: string }) =>
+      holdQueueItem(id, note),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['command-center', 'executive-queue'],
+      })
+      toast('Queue item held.', { type: 'success' })
+    },
+    onError: (error) => {
+      toast(error instanceof Error ? error.message : 'Hold failed.', {
+        type: 'error',
+      })
+    },
   })
+
+  const items = queueQuery.data?.items ?? []
+  const startHereState = useMemo(() => getStartHereQueueState(items), [items])
+  const {
+    activeItems,
+    criticalExceptionItems,
+    approvalItems,
+    blockedItems,
+    blitzItems,
+    safeDraftOnlyItem,
+    inProgressItems,
+    primaryItem,
+    primaryMode,
+    primaryCta,
+    topLine: queueTopLine,
+  } = startHereState
+  const laneCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const item of activeItems)
+      counts.set(item.domain, (counts.get(item.domain) ?? 0) + 1)
+    return [...counts.entries()].sort((a, b) => {
+      const aIndex = DOMAIN_ORDER.indexOf(a[0])
+      const bIndex = DOMAIN_ORDER.indexOf(b[0])
+      return (
+        (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex) ||
+        b[1] - a[1]
+      )
+    })
+  }, [activeItems])
+  const jobs = jobsQuery.data?.jobs ?? jobsQuery.data?.items ?? []
+  const sourceCoverage = sourceCoverageQuery.data?.snapshot?.sources ?? {}
+  const aiOpsIntakeQueue = sourceCoverage.ai_ops_intake_queue
+  const aiOpsIntakeSummary = aiOpsIntakeQueue?.summary
+  const aiOpsIntakeItems = aiOpsIntakeQueue?.topItems ?? []
+  const readerCoverage = sourceCoverage.reader_readwise
+  const readerActionSummary = readerCoverage?.reader_action_summary
+  const readerActions = readerCoverage?.reader_actions
+  const readerReadyActions = readerActions?.readyForAiLearning ?? []
+  const readerFreshActions = readerActions?.freshReady ?? []
+  const readerXWatchlistCandidates = readerActions?.xWatchlistCandidates ?? []
+  const readerTranscriptFailures = readerActions?.transcriptFailures ?? []
+  const transcriptCoverage = sourceCoverage.ai_learning_transcripts
+  const granolaCoverage = sourceCoverage.granola
+  const granolaActionSummary = granolaCoverage?.action_summary
+  const granolaActions = granolaCoverage?.granola_actions
+  const granolaNeedsDecision = granolaActions?.needsTimDecision ?? []
+  const granolaFollowUps = granolaActions?.followUpCandidates ?? []
+  const granolaOwnershipClarifications =
+    granolaActions?.ownershipClarifications ?? []
+  const granolaAssignedActions = granolaActions?.assignedActionCandidates ?? []
+  const motionCoverage = sourceCoverage.motion
+  const motionActionSummary = motionCoverage?.action_summary
+  const motionActions = motionCoverage?.motion_actions
+  const motionSafeWriteActions = motionActions?.safeWriteActions ?? []
+  const motionApprovalRequiredActions = motionActions?.approvalRequired ?? []
+  const motionSuppressedItems = motionActions?.suppressedItems ?? []
+  const sourceCoverageGeneratedAt =
+    sourceCoverageQuery.data?.snapshot?.generated_at
+  const sourceCoverageProblems = [
+    readerCoverage && !readerCoverage.available ? 'Reader unavailable' : null,
+    readerActionSummary?.readyForAiLearningCount
+      ? 'Reader actions ready'
+      : null,
+    readerActionSummary?.transcriptFailureCount
+      ? 'Reader transcript gaps'
+      : null,
+    transcriptCoverage?.tim_notice_required ? 'Transcript gaps' : null,
+    granolaCoverage && !granolaCoverage.available
+      ? 'Granola unavailable'
+      : null,
+    granolaActionSummary?.needsTimDecisionCount
+      ? 'Granola Tim decisions'
+      : null,
+    granolaActionSummary?.followUpCandidateCount ? 'Granola follow-ups' : null,
+    motionCoverage && !motionCoverage.available ? 'Motion unavailable' : null,
+    motionActionSummary?.safeWriteCount ? 'Motion write actions ready' : null,
+    motionActionSummary?.approvalRequiredCount
+      ? 'Motion ownership review'
+      : null,
+    aiOpsIntakeSummary?.needsTimDecisionCount
+      ? 'Unified queue Tim decisions'
+      : null,
+    aiOpsIntakeSummary?.recoveryRequiredCount
+      ? 'Unified queue recovery work'
+      : null,
+    aiOpsIntakeSummary?.approvalRequiredCount
+      ? 'Unified queue approvals'
+      : null,
+  ].filter(Boolean)
+  const failedJobs = jobs.filter((job) =>
+    String(job.last_status ?? job.lastStatus ?? job.status ?? '')
+      .toLowerCase()
+      .includes('fail'),
+  )
+  const enabledJobs = jobs.filter((job) => job.enabled !== false)
+  const recentSessions = (sessionsQuery.data?.sessions ?? [])
+    .slice()
+    .sort((a, b) => getSessionTime(b) - getSessionTime(a))
+    .slice(0, 5)
+
+  const gatewayOnline = Boolean(gatewayQuery.data?.gateway?.available)
+  const dashboardOnline = Boolean(gatewayQuery.data?.dashboard?.available)
+  const gatewayStatusLoaded = Boolean(gatewayQuery.data)
+  const systemExceptions = [
+    ...(gatewayStatusLoaded && !gatewayOnline
+      ? [
+          {
+            id: 'gateway-offline',
+            title: 'Hermes gateway offline',
+            detail:
+              'Telegram command surface and Workspace backend access may be impaired.',
+            target: '/dashboard' as const,
+          },
+        ]
+      : []),
+    ...(gatewayStatusLoaded && !dashboardOnline
+      ? [
+          {
+            id: 'dashboard-limited',
+            title: 'Dashboard API limited',
+            detail:
+              'Sessions, skills, config, and Command Center context may be incomplete.',
+            target: '/dashboard' as const,
+          },
+        ]
+      : []),
+    ...failedJobs.slice(0, 5).map((job, index) => ({
+      id: job.id ?? `failed-job-${index}`,
+      title: job.name ?? job.title ?? job.id ?? 'Unnamed failed job',
+      detail:
+        'Scheduled work reported a failure. Inspect before trusting the workflow.',
+      target: '/jobs' as const,
+    })),
+  ]
+  const criticalExceptionCount =
+    criticalExceptionItems.length + systemExceptions.length
+  const needsDecisionCount = approvalItems.length
+  const needsUnblockCount = blockedItems.length
+  const activeCount = activeItems.length
+
+  const topLine =
+    !primaryItem && systemExceptions.length
+      ? `${systemExceptions.length} system exception${systemExceptions.length === 1 ? '' : 's'} need repair before the operating picture is trustworthy.`
+      : queueTopLine
+
+  const mutationPending = executionMutation.isPending || holdMutation.isPending
+  const canRunPrimarySafeDraft =
+    primaryMode === 'Blitz' &&
+    Boolean(primaryItem) &&
+    safeDraftOnlyItem?.id === primaryItem?.id
+  const runPrimaryItem = (mode: QueueExecutionMode) => {
+    if (!primaryItem || mutationPending) return
+    if (mode !== 'explain_more' && !canRunPrimarySafeDraft) {
+      toast('This item needs Tim approval before Workspace can run it.', {
+        type: 'error',
+      })
+      return
+    }
+    const defaultNote =
+      mode === 'explain_more'
+        ? 'Explain what this is before I approve.'
+        : 'Draft only. No external side effects.'
+    const promptLabel =
+      mode === 'explain_more'
+        ? 'Optional question for Executive to answer in Telegram:'
+        : 'Optional execution note for Executive:'
+    const note = window.prompt(promptLabel, defaultNote)
+    if (note === null) return
+    executionMutation.mutate({ id: primaryItem.id, mode, note })
+  }
+  const holdPrimaryItem = () => {
+    if (!primaryItem || mutationPending) return
+    const note = window.prompt(
+      'Why should this be held?',
+      primaryItem.blockedReason || 'Held by Tim from Command Center.',
+    )
+    if (!note?.trim()) return
+    holdMutation.mutate({ id: primaryItem.id, note })
+  }
 
   return (
-    <div className="min-h-full">
-      {/* Floating mobile nav: hamburger left, theme toggle right */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-2 h-12" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+    <div className="min-h-full bg-surface text-ink">
+      <div
+        className="md:hidden fixed top-0 left-0 right-0 z-50 flex h-12 items-center justify-between px-2"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
         <button
           type="button"
           aria-label="Open navigation menu"
           onClick={openHamburgerMenu}
-          className="flex items-center justify-center w-11 h-11 rounded-xl active:bg-white/10 transition-colors touch-manipulation"
+          className="flex h-11 w-11 items-center justify-center rounded-xl transition active:bg-white/10"
         >
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" className="opacity-70" style={{ color: 'var(--color-ink, #111)' }}>
-            <path d="M1 1.5H19M1 8H19M1 14.5H13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <svg
+            width="20"
+            height="16"
+            viewBox="0 0 20 16"
+            fill="none"
+            className="opacity-70"
+            style={{ color: 'var(--color-ink, #111)' }}
+          >
+            <path
+              d="M1 1.5H19M1 8H19M1 14.5H13"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
           </svg>
         </button>
-        <button
-          type="button"
-          aria-label="Toggle theme"
-          onClick={() => {
-            const LIGHT_DARK_PAIRS: Record<string, string> = {
-              'claude-nous': 'claude-nous-light',
-              'claude-nous-light': 'claude-nous',
-              'claude-official': 'claude-official-light',
-              'claude-official-light': 'claude-official',
-              'claude-classic': 'claude-classic-light',
-              'claude-classic-light': 'claude-classic',
-              'claude-slate': 'claude-slate-light',
-              'claude-slate-light': 'claude-slate',
-            }
-            const cur = document.documentElement.getAttribute('data-theme') || 'claude-official'
-            const nextDataTheme = LIGHT_DARK_PAIRS[cur] || (isDark ? 'claude-official-light' : 'claude-official')
-            import('@/lib/theme').then(({ setTheme }) => { setTheme(nextDataTheme as any) })
-            const nextMode = nextDataTheme.endsWith('-light') ? 'light' : 'dark'
-            applyTheme(nextMode)
-            updateSettings({ theme: nextMode })
-            setIsDark(nextMode === 'dark')
-          }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl active:bg-white/10 transition-colors touch-manipulation"
-          style={{ color: 'var(--theme-muted)' }}
-        >
-          <HugeiconsIcon icon={isDark ? Sun02Icon : Moon02Icon} size={20} strokeWidth={1.5} />
-        </button>
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+          Command Center
+        </span>
+        <div className="h-11 w-11" />
       </div>
-      <div className="px-4 pt-14 md:pt-4 py-4 md:px-8 md:py-6 lg:px-10 space-y-5 pb-28">
-      {/* ── Header: brand lockup left, action cluster right.
-           Iteration 010: dropped redundant "Dashboard" eyebrow (the
-           page IS the dashboard); promoted "Hermes Workspace" to
-           the primary heading at a larger weight. Logo bumped from
-           36px → 44px and gets a soft accent glow + ring so the
-           lockup commands the left side instead of feeling like
-           filler before the action cluster. Kept anchored left
-           (not centered) on purpose: ops dashboards put brand left
-           + actions right because that's the spatial hierarchy
-           operators expect (Linear, Vercel, Datadog all do this). */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-3">
-          <span
-            className="relative inline-flex shrink-0 items-center justify-center rounded-xl border"
-            style={{
-              width: 44,
-              height: 44,
-              borderColor:
-                'color-mix(in srgb, var(--theme-accent) 35%, var(--theme-border))',
-              background:
-                'linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 14%, var(--theme-card)), var(--theme-card))',
-              boxShadow:
-                '0 0 0 4px color-mix(in srgb, var(--theme-accent) 6%, transparent)',
-            }}
-          >
-            <img
-              src="/claude-avatar.webp"
-              alt="Hermes Workspace logo"
-              className="size-8 rounded-md"
-              style={{ background: 'transparent' }}
-            />
-          </span>
-          {/* Iter 011: dropped the 'Operator console · vX.Y.Z'
-              eyebrow. The gateway version is already on the OpsStrip
-              (♦ GATEWAY V0.12.0), so the eyebrow was duplicating it.
-              Single bold lockup feels cleaner; vertical centering on
-              the lockup matches the height of the action cluster on
-              the right so they don't visually drift. */}
-          <div className="flex flex-col justify-center">
-            <h1
-              className="text-2xl font-bold tracking-tight"
-              style={{
-                color: 'var(--theme-text)',
-                letterSpacing: '-0.015em',
-                lineHeight: 1.1,
-              }}
+
+      <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-5 px-4 pb-28 pt-16 md:px-8 md:py-6 lg:px-10">
+        <header className="overflow-hidden rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 md:p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-4xl">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--theme-accent)]">
+                Executive Command Center
+              </div>
+              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-5xl">
+                What does Tim need to know, decide, or unblock right now?
+              </h1>
+              <p className="mt-4 text-base leading-relaxed text-[var(--theme-muted)] md:text-lg">
+                {topLine}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <ActionButton
+                primary
+                onClick={() => navigate({ to: '/executive-queue' })}
+              >
+                Review Queue
+              </ActionButton>
+              <ActionButton onClick={() => navigate({ to: '/jobs' })}>
+                Check Jobs
+              </ActionButton>
+              <ActionButton
+                onClick={() =>
+                  navigate({
+                    to: '/chat/$sessionKey',
+                    params: { sessionKey: 'new' },
+                  })
+                }
+              >
+                Start Chat
+              </ActionButton>
+            </div>
+          </div>
+        </header>
+
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="rounded-2xl border border-red-400/30 bg-red-400/10 p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-red-200">
+              Critical exceptions
+            </div>
+            <div className="mt-2 text-3xl font-semibold text-ink">
+              {criticalExceptionCount}
+            </div>
+            <p className="mt-1 text-xs text-[var(--theme-muted)]">
+              Broken access or system failure
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+              Needs decision
+            </div>
+            <div className="mt-2 text-3xl font-semibold text-ink">
+              {needsDecisionCount}
+            </div>
+            <p className="mt-1 text-xs text-[var(--theme-muted)]">
+              Approval-gated items
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+              Blocked
+            </div>
+            <div className="mt-2 text-3xl font-semibold text-ink">
+              {needsUnblockCount}
+            </div>
+            <p className="mt-1 text-xs text-[var(--theme-muted)]">
+              Waiting on a constraint
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+              Blitz-ready
+            </div>
+            <div className="mt-2 text-3xl font-semibold text-ink">
+              {blitzItems.length}
+            </div>
+            <p className="mt-1 text-xs text-[var(--theme-muted)]">
+              Ready to pick up now
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+              System
+            </div>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              <Badge tone={gatewayOnline ? 'good' : 'danger'}>
+                Gateway {gatewayOnline ? 'online' : 'offline'}
+              </Badge>
+              <Badge tone={dashboardOnline ? 'good' : 'warn'}>
+                Dashboard {dashboardOnline ? 'online' : 'limited'}
+              </Badge>
+              <Badge tone={failedJobs.length ? 'danger' : 'good'}>
+                {failedJobs.length} failed jobs
+              </Badge>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-4 rounded-3xl border border-[var(--theme-accent-border)] bg-[var(--theme-accent)]/10 p-4 md:grid-cols-[1fr_auto] md:items-center md:p-5">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge
+                tone={
+                  primaryMode === 'Repair'
+                    ? 'danger'
+                    : primaryMode === 'Decide'
+                      ? 'warn'
+                      : primaryMode === 'Unblock'
+                        ? 'danger'
+                        : primaryMode === 'Blitz'
+                          ? 'accent'
+                          : 'neutral'
+                }
+              >
+                Start here: {primaryMode}
+              </Badge>
+              {primaryItem ? (
+                <Badge tone={priorityTone(primaryItem.priority)}>
+                  {primaryItem.priority}
+                </Badge>
+              ) : null}
+              {primaryItem ? <Badge>{primaryItem.domain}</Badge> : null}
+            </div>
+            <h2 className="mt-3 text-xl font-semibold text-ink md:text-2xl">
+              {primaryItem
+                ? primaryItem.title
+                : 'Load or create Executive Queue work'}
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--theme-muted)]">
+              {primaryItem
+                ? primaryItem.nextAction || primaryItem.outcome
+                : 'The Command Center is healthy, but it has no active work loaded. Check the queue source before assuming there is nothing to move.'}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            {primaryItem ? (
+              <>
+                {canRunPrimarySafeDraft ? (
+                  <ActionButton
+                    primary
+                    disabled={mutationPending}
+                    onClick={() => runPrimaryItem('draft_only')}
+                  >
+                    {mutationPending ? 'Working…' : 'Run Safe Draft'}
+                  </ActionButton>
+                ) : null}
+                <ActionButton
+                  disabled={mutationPending}
+                  onClick={() => runPrimaryItem('explain_more')}
+                >
+                  Explain More
+                </ActionButton>
+                <ActionButton
+                  disabled={mutationPending || !canRunPrimarySafeDraft}
+                  onClick={() => runPrimaryItem('draft_only')}
+                >
+                  Draft Only
+                </ActionButton>
+                <ActionButton
+                  disabled={mutationPending}
+                  onClick={holdPrimaryItem}
+                >
+                  Hold
+                </ActionButton>
+              </>
+            ) : null}
+            <ActionButton
+              disabled={mutationPending}
+              onClick={() => navigate({ to: '/executive-queue' })}
             >
-              Hermes Workspace
-            </h1>
+              {primaryCta}
+            </ActionButton>
+            <ActionButton
+              disabled={mutationPending}
+              onClick={() =>
+                navigate({
+                  to: '/chat/$sessionKey',
+                  params: { sessionKey: 'new' },
+                })
+              }
+            >
+              Ask Executive
+            </ActionButton>
           </div>
-        </div>
-        {/* Action row: hierarchy per Hermes Agent review.
-           New Chat is primary (full button + accent), Terminal +
-           Skills are secondary, Settings collapses to icon-only. */}
-        <div className="flex w-full flex-wrap items-center gap-2 lg:justify-end lg:max-w-xl">
-          <button
-            type="button"
-            onClick={() =>
-              navigate({
-                to: '/chat/$sessionKey',
-                params: { sessionKey: 'new' },
-              })
-            }
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.05em] transition-all hover:scale-[1.02] active:scale-[0.99] sm:px-3.5 sm:py-2 sm:text-sm"
-            style={{
-              background: `linear-gradient(135deg, ${palette.accent}, ${palette.accentSecondary})`,
-              color: 'var(--theme-on-accent, white)',
-              boxShadow: `0 6px 18px -8px ${palette.accent}aa, inset 0 1px 0 0 rgba(255,255,255,0.18)`,
-            }}
-          >
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100"
-              style={{
-                background:
-                  'linear-gradient(135deg, rgba(255,255,255,0.15), transparent 60%)',
-              }}
-            />
-            <HugeiconsIcon
-              icon={BubbleChatAddIcon}
-              size={16}
-              strokeWidth={1.8}
-            />
-            <span>New Chat</span>
-          </button>
-          <SecondaryAction
-            label="Terminal"
-            icon={ConsoleIcon}
-            onClick={() => navigate({ to: '/terminal' })}
-          />
-          <SecondaryAction
-            label="Skills"
-            icon={PuzzleIcon}
-            onClick={() => navigate({ to: '/skills' })}
-            disabled={!skillsAvailable}
-          />
-          {/* Edit toggle: enters "layout edit mode" where each widget
-              shows an X button and a banner appears for re-adding
-              hidden widgets. Persisted to localStorage. */}
-          <button
-            type="button"
-            aria-label={layout.editMode ? 'Done editing layout' : 'Edit layout'}
-            title={layout.editMode ? 'Done editing layout' : 'Edit layout'}
-            onClick={layout.toggleEdit}
-            className="inline-flex size-9 items-center justify-center rounded-lg border transition-all hover:scale-[1.05] hover:bg-[var(--theme-card)]/70"
-            style={{
-              borderColor: layout.editMode
-                ? 'var(--theme-accent)'
-                : 'var(--theme-border)',
-              background: layout.editMode
-                ? 'color-mix(in srgb, var(--theme-accent) 14%, transparent)'
-                : 'linear-gradient(135deg, color-mix(in srgb, var(--theme-card) 80%, transparent), transparent)',
-              color: layout.editMode
-                ? 'var(--theme-accent)'
-                : 'var(--theme-muted)',
-            }}
-          >
-            <HugeiconsIcon
-              icon={layout.editMode ? CheckmarkCircle02Icon : Edit02Icon}
-              size={15}
-              strokeWidth={1.7}
-            />
-          </button>
-          <button
-            type="button"
-            aria-label="Settings"
-            title="Settings"
-            onClick={() => navigate({ to: '/settings', search: {} })}
-            className="inline-flex size-9 items-center justify-center rounded-lg border transition-all hover:scale-[1.05] hover:bg-[var(--theme-card)]/70 hover:text-[var(--theme-text)]"
-            style={{
-              borderColor: 'var(--theme-border)',
-              color: 'var(--theme-muted)',
-              background:
-                'linear-gradient(135deg, color-mix(in srgb, var(--theme-card) 80%, transparent), transparent)',
-            }}
-          >
-            <HugeiconsIcon
-              icon={Settings02Icon}
-              size={15}
-              strokeWidth={1.7}
-            />
-          </button>
-        </div>
-      </div>
+        </section>
 
-      {/* ── Attention marquee ──
-           Iteration 008: lifted *out* of the OpsStrip into its own
-           dedicated row above it. Fixed Eric's 'feels cluttered'
-           concern by giving the ticker its own visual chamber
-           (warning gradient, separated border) so it doesn't blend
-           into the gateway/version/cron line below it. */}
-      {(overview?.incidents.length ?? 0) > 0 ? (
-        <AttentionMarquee overview={overview ?? null} />
-      ) : null}
-
-      {/* ── Ops strip (gateway + version drift + platforms + cron pulse). ── */}
-      <OpsStrip
-        status={overview?.status ?? null}
-        cron={overview?.cron ?? null}
-        kanban={overview?.kanban ?? null}
-        platforms={overview?.platforms ?? []}
-      />
-
-      {/* ── Hero Metrics: 3 analytics tiles + Active Model KPI in slot 4 ── */}
-      <HeroMetrics
-        analytics={overview?.analytics ?? null}
-        fallback={{
-          sessions: stats.totalSessions,
-          messages: stats.totalMessages,
-          toolCalls: stats.totalToolCalls,
-          tokens: stats.totalTokens,
-        }}
-        extraTile={
-          <ActiveModelKpi
-            modelInfo={overview?.modelInfo ?? null}
-            analytics={overview?.analytics ?? null}
-          />
-        }
-      />
-
-      {/* ── Edit-mode banner (only renders when toggled). ── */}
-      <EditModePanel layout={layout} />
-
-      {/* ── Analytics chart (left) + Top models / Provider mix / Cache
-           efficiency stacked on the right. The right-side stack now
-           occupies the full vertical of the chart so we don't get the
-           floating-card empty-space Eric flagged in iter 008. ── */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12">
-        {layout.isVisible('analytics_chart') ? (
-          <div className="lg:col-span-8">
-            <WidgetShell id="analytics_chart" layout={layout}>
-              <AnalyticsChartCard
-                analytics={overview?.analytics ?? null}
-                insights={overview?.insights ?? []}
-                period={period}
-                onPeriodChange={setPeriod}
-                loading={overviewQuery.isFetching}
+        <Panel
+          eyebrow="Critical"
+          title="Critical exceptions"
+          action={
+            <Badge tone={criticalExceptionCount ? 'danger' : 'good'}>
+              {criticalExceptionCount}
+            </Badge>
+          }
+        >
+          <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            {criticalExceptionCount === 0 ? (
+              <EmptyState text="No broken access or system-failure exceptions are elevated right now." />
+            ) : null}
+            {criticalExceptionItems.slice(0, 6).map((item) => (
+              <QueueRow
+                key={item.id}
+                item={item}
+                dense
+                onClick={() => navigate({ to: '/executive-queue' })}
               />
-            </WidgetShell>
+            ))}
+            {systemExceptions.map((exception) => (
+              <button
+                key={exception.id}
+                type="button"
+                onClick={() => navigate({ to: exception.target })}
+                className="w-full rounded-xl border border-red-400/25 bg-red-400/10 p-3 text-left transition hover:border-red-300/60"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold leading-snug text-red-100">
+                      {exception.title}
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-red-100/75">
+                      {exception.detail}
+                    </p>
+                  </div>
+                  <Badge tone="danger">Repair</Badge>
+                </div>
+              </button>
+            ))}
           </div>
-        ) : null}
-        {layout.isVisible('top_models') ||
-        layout.isVisible('provider_mix') ||
-        layout.isVisible('cache_efficiency') ||
-        layout.isVisible('velocity') ||
-        layout.isVisible('cost_ledger') ? (
-          <div
-            className={
-              layout.isVisible('analytics_chart')
-                ? 'flex flex-col gap-3 lg:col-span-4'
-                : 'flex flex-col gap-3 lg:col-span-12'
-            }
-          >
-            {layout.isVisible('top_models') ? (
-              <WidgetShell id="top_models" layout={layout}>
-                <TopModelsCard analytics={overview?.analytics ?? null} />
-              </WidgetShell>
-            ) : null}
-            {layout.isVisible('cache_efficiency') ? (
-              <WidgetShell id="cache_efficiency" layout={layout}>
-                <CacheEfficiencyCard
-                  analytics={overview?.analytics ?? null}
-                />
-              </WidgetShell>
-            ) : null}
-            {layout.isVisible('provider_mix') ? (
-              <WidgetShell id="provider_mix" layout={layout}>
-                <ProviderMixCard analytics={overview?.analytics ?? null} />
-              </WidgetShell>
-            ) : null}
-            {layout.isVisible('velocity') ? (
-              <WidgetShell id="velocity" layout={layout}>
-                <VelocityCard analytics={overview?.analytics ?? null} />
-              </WidgetShell>
-            ) : null}
-            {layout.isVisible('cost_ledger') ? (
-              <WidgetShell id="cost_ledger" layout={layout}>
-                <CostLedgerCard
-                  analytics={overview?.analytics ?? null}
-                />
-              </WidgetShell>
-            ) : null}
-          </div>
-        ) : null}
-      </div>
+        </Panel>
 
-      {/* ── Primary content: Sessions Intelligence (replaces 14d Activity) + side rail ──
-           Iteration 006 layout per Eric:
-           - Attention now rides the OpsStrip marquee, not the rail.
-           - Achievements moved up to sit beside Top Models would push the chart out
-             of place; instead it now lives at the *top* of the side rail since the
-             rail itself is right of the chart, which produces the same visual order.
-           - Logs default off; still toggleable from edit mode for power users. */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12">
-        {/* Iter 013 main column order: Operator Tip first (compact),
-            then Sessions Intelligence (the bottom anchor that grows
-            to fill the column to match the side rail height), then
-            optional Logs Tail at the bottom for power users in edit
-            mode. The column itself is `min-h-full flex` so the
-            child Sessions card's `flex-1` actually expands. */}
-        <div className="flex min-h-full flex-col gap-3 lg:col-span-8">
-          {layout.isVisible('operator_tip') ? (
-            <WidgetShell id="operator_tip" layout={layout}>
-              <OperatorTipCard overview={overview ?? null} />
-            </WidgetShell>
-          ) : null}
-          {layout.isVisible('sessions_intelligence') ? (
-            <div className="flex min-h-0 flex-1 flex-col">
-              <WidgetShell id="sessions_intelligence" layout={layout}>
-                {sessionsQuery.isError || sessionsUnavailable ? (
-                  <UnavailableWidget
-                    title="Recent Sessions"
-                    description={
-                      sessionsQuery.isError
-                        ? getUnavailableReason('sessions')
-                        : sessionsUnavailableMessage
+        <Panel
+          eyebrow="Blitz"
+          title="Loaded queue: next work waiting for Tim"
+          action={
+            <Badge tone={blitzItems.length ? 'accent' : 'warn'}>
+              {blitzItems.length} ready
+            </Badge>
+          }
+        >
+          <div className="mb-3 flex flex-wrap gap-1.5">
+            {laneCounts.map(([domain, count]) => (
+              <Badge key={domain} tone="neutral">
+                {domain}: {count}
+              </Badge>
+            ))}
+          </div>
+          <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            {queueQuery.isLoading ? (
+              <EmptyState text="Loading the loaded queue…" />
+            ) : null}
+            {queueQuery.isError ? (
+              <EmptyState
+                text={
+                  queueQuery.error instanceof Error
+                    ? queueQuery.error.message
+                    : 'Executive Queue failed to load.'
+                }
+              />
+            ) : null}
+            {!queueQuery.isLoading &&
+            !queueQuery.isError &&
+            blitzItems.length === 0 ? (
+              <EmptyState text="No blitz-ready work is loaded. Check the queue source." />
+            ) : null}
+            {blitzItems.slice(0, 12).map((item) => (
+              <QueueRow
+                key={item.id}
+                item={item}
+                dense
+                onClick={() => navigate({ to: '/executive-queue' })}
+              />
+            ))}
+          </div>
+        </Panel>
+
+        <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+          <div className="flex flex-col gap-5">
+            <Panel
+              eyebrow="Decide"
+              title="Items waiting on Tim"
+              action={
+                <Badge tone={needsDecisionCount ? 'warn' : 'good'}>
+                  {needsDecisionCount}
+                </Badge>
+              }
+            >
+              <div className="grid gap-3">
+                {queueQuery.isLoading ? (
+                  <EmptyState text="Loading Executive Queue…" />
+                ) : null}
+                {queueQuery.isError ? (
+                  <EmptyState
+                    text={
+                      queueQuery.error instanceof Error
+                        ? queueQuery.error.message
+                        : 'Executive Queue failed to load.'
                     }
                   />
-                ) : (
-                  <SessionsIntelligenceCard sessions={sessionRows} />
-                )}
-              </WidgetShell>
-            </div>
-          ) : null}
-          {layout.isVisible('logs_tail') ? (
-            <WidgetShell id="logs_tail" layout={layout}>
-              <LogsTailCard logs={overview?.logs ?? null} />
-            </WidgetShell>
-          ) : null}
-        </div>
-        {/* Side rail. Achievements is now first (sits beside Top Models
-            visually since the rail is right of the chart row + sessions),
-            then Skills, then the rhythm card. Mix & rhythm is the unique
-            chart in this column — keeping it.
-            `min-h-full` + the trailing `flex-1` rhythm card together
-            stretch the rail to match Sessions Intelligence height so
-            we don't get the dangling gap Eric flagged in iter 007. */}
-        <div className="flex min-h-full flex-col gap-3 lg:col-span-4">
-          <WidgetShell id="achievements" layout={layout}>
-            <AchievementsCard
-              achievements={overview?.achievements ?? null}
-            />
-          </WidgetShell>
-          <WidgetShell id="skills_usage" layout={layout}>
-            <SkillsUsageCard
-              usage={overview?.skillsUsage ?? null}
-              installedCount={skillsInstalled}
-              onOpen={() => navigate({ to: '/skills' })}
-            />
-          </WidgetShell>
-          {/* `flex-1` here pushes the rhythm card to consume any
-              remaining vertical space so the rail's bottom aligns
-              with Sessions Intelligence. The card itself uses
-              h-full + flex-1 to honor the stretch. */}
-          <div className="flex min-h-0 flex-1 flex-col">
-            <WidgetShell id="mix_rhythm" layout={layout}>
-              <TokenMixHourCard
-                analytics={overview?.analytics ?? null}
-                sessions={sessionRows}
-              />
-            </WidgetShell>
+                ) : null}
+                {!queueQuery.isLoading &&
+                !queueQuery.isError &&
+                approvalItems.length === 0 ? (
+                  <EmptyState text="No approval-gated item is waiting. Keep moving." />
+                ) : null}
+                {approvalItems.slice(0, 4).map((item) => (
+                  <QueueRow
+                    key={item.id}
+                    item={item}
+                    onClick={() => navigate({ to: '/executive-queue' })}
+                  />
+                ))}
+              </div>
+            </Panel>
+
+            <Panel
+              eyebrow="Unblock"
+              title="Blocked work"
+              action={
+                <Badge tone={needsUnblockCount ? 'danger' : 'good'}>
+                  {needsUnblockCount}
+                </Badge>
+              }
+            >
+              <div className="grid gap-3">
+                {blockedItems.length === 0 ? (
+                  <EmptyState text="Nothing is blocked in the Executive Queue." />
+                ) : null}
+                {blockedItems.slice(0, 3).map((item) => (
+                  <QueueRow
+                    key={item.id}
+                    item={item}
+                    onClick={() => navigate({ to: '/executive-queue' })}
+                  />
+                ))}
+              </div>
+            </Panel>
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <Panel eyebrow="Know" title="Operating picture">
+              <div className="grid gap-3">
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Source coverage
+                    </span>
+                    <Badge
+                      tone={sourceCoverageProblems.length ? 'warn' : 'good'}
+                    >
+                      {sourceCoverageProblems.length
+                        ? `${sourceCoverageProblems.length} watch`
+                        : 'Covered'}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    Reader:{' '}
+                    {readerCoverage?.items_last_30_days_scanned ?? 'unknown'}{' '}
+                    items, {readerActionSummary?.readyForAiLearningCount ?? 0}{' '}
+                    ready. Transcripts:{' '}
+                    {transcriptCoverage?.acceptable_full_transcripts ?? 0}/
+                    {transcriptCoverage?.items_checked ?? 0} full. Granola:{' '}
+                    {granolaCoverage?.eligible_notes_parsed ??
+                      granolaCoverage?.recent_notes_36h_first_page ??
+                      'unknown'}{' '}
+                    parsed, {granolaActionSummary?.followUpCandidateCount ?? 0}{' '}
+                    follow-ups. Motion:{' '}
+                    {motionCoverage?.task_count ?? 'unknown'} tasks,{' '}
+                    {motionCoverage?.tim_owned_count ?? 0} Tim-owned,{' '}
+                    {motionActionSummary?.safeWriteCount ?? 0} safe writes
+                    ready.
+                  </p>
+                  {sourceCoverageGeneratedAt ? (
+                    <p className="mt-1 text-[11px] text-[var(--theme-muted)]">
+                      Snapshot: {formatTimestamp(sourceCoverageGeneratedAt)}
+                    </p>
+                  ) : null}
+                  {sourceCoverageProblems.length ? (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {sourceCoverageProblems.map((problem) => (
+                        <Badge key={String(problem)} tone="warn">
+                          {problem}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-accent-border)] bg-[var(--theme-accent)]/10 p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Unified AI Ops Intake Queue
+                    </span>
+                    <Badge
+                      tone={
+                        aiOpsIntakeSummary?.needsTimDecisionCount
+                          ? 'warn'
+                          : aiOpsIntakeSummary?.recoveryRequiredCount
+                            ? 'danger'
+                            : aiOpsIntakeSummary?.safeAgentWorkCount
+                              ? 'accent'
+                              : 'good'
+                      }
+                    >
+                      {aiOpsIntakeSummary?.totalItemCount ?? 0} items
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    Tim decisions:{' '}
+                    {aiOpsIntakeSummary?.needsTimDecisionCount ?? 0}. Safe agent
+                    work: {aiOpsIntakeSummary?.safeAgentWorkCount ?? 0}.
+                    Recoveries: {aiOpsIntakeSummary?.recoveryRequiredCount ?? 0}
+                    . Owner checks: {aiOpsIntakeSummary?.reviewOwnerCount ?? 0}.
+                    Learning intake:{' '}
+                    {aiOpsIntakeSummary?.learnFromThisCount ?? 0}.
+                  </p>
+                  {aiOpsIntakeItems.length ? (
+                    <div className="mt-3 grid gap-2">
+                      {aiOpsIntakeItems.slice(0, 5).map((queueItem) => (
+                        <div
+                          key={queueItem.id ?? queueItem.title}
+                          className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="line-clamp-1 text-xs font-semibold text-ink">
+                                {queueItem.title ?? 'AI Ops intake item'}
+                              </div>
+                              <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-[var(--theme-muted)]">
+                                {queueItem.nextAction ?? queueItem.detail}
+                              </p>
+                            </div>
+                            <div className="flex shrink-0 flex-col items-end gap-1">
+                              <Badge
+                                tone={priorityTone(queueItem.priority ?? 'P3')}
+                              >
+                                {queueItem.priority ?? 'P3'}
+                              </Badge>
+                              <Badge tone="neutral">
+                                {queueItem.source ?? 'Source'}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyState text="No unified intake items are loaded. Re-run the AI Ops intake queue script after source scans." />
+                  )}
+                  <p className="mt-2 text-[11px] text-[var(--theme-muted)]">
+                    Read-only. Sending, spending, calendar commitments, people
+                    decisions, Motion writes, and subscriptions stay
+                    approval-gated.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Reader action layer
+                    </span>
+                    <Badge
+                      tone={
+                        readerTranscriptFailures.length
+                          ? 'warn'
+                          : readerReadyActions.length
+                            ? 'accent'
+                            : 'good'
+                      }
+                    >
+                      {readerReadyActions.length
+                        ? `${readerReadyActions.length} ready`
+                        : 'Clear'}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    Scanned:{' '}
+                    {readerCoverage?.items_last_30_days_scanned ?? 'unknown'}.
+                    AI-relevant:{' '}
+                    {readerCoverage?.estimated_ai_relevant_items ?? 0}. Fresh:{' '}
+                    {readerActionSummary?.freshReadyCount ?? 0}. X watchlist:{' '}
+                    {readerActionSummary?.xWatchlistCandidateCount ?? 0}.
+                    Transcript failures:{' '}
+                    {readerActionSummary?.transcriptFailureCount ?? 0}.
+                  </p>
+                  {readerReadyActions.length ? (
+                    <div className="mt-3 grid gap-2">
+                      {readerReadyActions.slice(0, 3).map((action) => (
+                        <div
+                          key={action.source_url ?? action.title}
+                          className="rounded-lg border border-[var(--theme-accent-border)] bg-[var(--theme-accent)]/10 px-3 py-2"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="line-clamp-1 text-xs font-semibold text-ink">
+                                {action.title ?? 'Untitled Reader item'}
+                              </div>
+                              <p className="mt-1 text-[11px] leading-relaxed text-[var(--theme-muted)]">
+                                {action.reason ??
+                                  'Ready for AI Learning filter.'}
+                              </p>
+                            </div>
+                            <Badge tone="accent">
+                              {action.contentType ?? 'Reader'}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  {readerTranscriptFailures.length ? (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {readerTranscriptFailures.slice(0, 4).map((failure) => (
+                        <Badge
+                          key={failure.source_url ?? failure.title}
+                          tone="warn"
+                        >
+                          Transcript: {failure.title ?? 'Reader item'}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : null}
+                  {readerXWatchlistCandidates.length ? (
+                    <p className="mt-2 text-[11px] text-[var(--theme-muted)]">
+                      {readerXWatchlistCandidates.length} X accounts have enough
+                      repeated saves to consider for monitoring. Verify claims
+                      before acting.
+                    </p>
+                  ) : null}
+                  {readerFreshActions.length ? (
+                    <p className="mt-1 text-[11px] text-[var(--theme-muted)]">
+                      {readerFreshActions.length} fresh items are ready from the
+                      last 7 days.
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Granola action layer
+                    </span>
+                    <Badge
+                      tone={
+                        granolaNeedsDecision.length
+                          ? 'warn'
+                          : granolaFollowUps.length
+                            ? 'accent'
+                            : 'good'
+                      }
+                    >
+                      {granolaNeedsDecision.length
+                        ? `${granolaNeedsDecision.length} decision`
+                        : granolaFollowUps.length
+                          ? `${granolaFollowUps.length} follow-up`
+                          : 'Clear'}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    Scanned: {granolaCoverage?.recent_notes_scanned ?? 0}.
+                    Parsed: {granolaCoverage?.eligible_notes_parsed ?? 0}.
+                    Skipped sensitive:{' '}
+                    {granolaCoverage?.skipped_confidential_or_sensitive ?? 0}.
+                    Candidates:{' '}
+                    {granolaActionSummary?.actionCandidateCount ?? 0}. Ownership
+                    checks:{' '}
+                    {granolaActionSummary?.ownershipClarificationCount ?? 0}.
+                  </p>
+                  {granolaNeedsDecision.length ? (
+                    <div className="mt-3 grid gap-2">
+                      {granolaNeedsDecision.slice(0, 3).map((action) => (
+                        <div
+                          key={`${action.noteId}-${action.text}`}
+                          className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-2"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="line-clamp-1 text-xs font-semibold text-ink">
+                                {action.text ?? 'Granola decision candidate'}
+                              </div>
+                              <p className="mt-1 text-[11px] leading-relaxed text-[var(--theme-muted)]">
+                                {action.noteTitle ?? 'Meeting note'}
+                              </p>
+                            </div>
+                            <Badge tone="warn">Review</Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  {granolaFollowUps.length ? (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {granolaFollowUps.slice(0, 4).map((action) => (
+                        <Badge
+                          key={`${action.noteId}-${action.text}`}
+                          tone="accent"
+                        >
+                          Follow-up: {action.noteTitle ?? 'Meeting'}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : null}
+                  {granolaAssignedActions.length ? (
+                    <p className="mt-2 text-[11px] text-[var(--theme-muted)]">
+                      {granolaAssignedActions.length} assigned-action candidates
+                      are visible for review before writing tasks.
+                    </p>
+                  ) : null}
+                  {granolaOwnershipClarifications.length ? (
+                    <p className="mt-1 text-[11px] text-[var(--theme-muted)]">
+                      {granolaOwnershipClarifications.length} items need owner
+                      or wording clarification before side effects.
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Motion action layer
+                    </span>
+                    <Badge
+                      tone={
+                        motionSafeWriteActions.length
+                          ? 'accent'
+                          : motionApprovalRequiredActions.length
+                            ? 'warn'
+                            : 'good'
+                      }
+                    >
+                      {motionSafeWriteActions.length
+                        ? `${motionSafeWriteActions.length} safe write`
+                        : motionApprovalRequiredActions.length
+                          ? `${motionApprovalRequiredActions.length} review`
+                          : 'Clear'}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    Tim-owned: {motionCoverage?.tim_owned_count ?? 0}. Safe
+                    writes: {motionActionSummary?.safeWriteCount ?? 0}. Approval
+                    required: {motionActionSummary?.approvalRequiredCount ?? 0}.
+                    Suppressed teammate/ambiguous:{' '}
+                    {motionActionSummary?.suppressedCount ?? 0}.
+                  </p>
+                  {motionSafeWriteActions.length ? (
+                    <div className="mt-3 grid gap-2">
+                      {motionSafeWriteActions.slice(0, 3).map((action) => (
+                        <div
+                          key={action.taskId ?? action.name}
+                          className="rounded-lg border border-[var(--theme-accent-border)] bg-[var(--theme-accent)]/10 px-3 py-2"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="line-clamp-1 text-xs font-semibold text-ink">
+                                {action.name ?? 'Unnamed Motion task'}
+                              </div>
+                              <p className="mt-1 text-[11px] leading-relaxed text-[var(--theme-muted)]">
+                                {action.reason ?? 'Safe Motion write is ready.'}
+                              </p>
+                            </div>
+                            <Badge tone="accent">Ready</Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  {motionApprovalRequiredActions.length ? (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {motionApprovalRequiredActions
+                        .slice(0, 4)
+                        .map((action) => (
+                          <Badge key={action.taskId ?? action.name} tone="warn">
+                            Review: {action.name ?? 'Motion task'}
+                          </Badge>
+                        ))}
+                    </div>
+                  ) : null}
+                  {motionSuppressedItems.length ? (
+                    <p className="mt-2 text-[11px] text-[var(--theme-muted)]">
+                      {motionSuppressedItems.length} teammate-owned items are
+                      visible but suppressed from Tim-owned alerts.
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Hermes backend
+                    </span>
+                    <Badge
+                      tone={gatewayOnline && dashboardOnline ? 'good' : 'warn'}
+                    >
+                      {gatewayOnline && dashboardOnline ? 'Ready' : 'Check'}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    Gateway: {gatewayOnline ? 'online' : 'offline'}. Dashboard
+                    API: {dashboardOnline ? 'online' : 'limited'}. Mode:{' '}
+                    {gatewayQuery.data?.mode ?? 'unknown'}.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      Scheduled work
+                    </span>
+                    <Badge tone={failedJobs.length ? 'danger' : 'good'}>
+                      {failedJobs.length
+                        ? `${failedJobs.length} failed`
+                        : 'Healthy'}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--theme-muted)]">
+                    {enabledJobs.length || jobs.length} jobs visible.{' '}
+                    {jobsQuery.isError
+                      ? jobsQuery.error instanceof Error
+                        ? jobsQuery.error.message
+                        : 'Jobs failed to load.'
+                      : 'Failure count is based on latest reported status.'}
+                  </p>
+                  {failedJobs.length ? (
+                    <div className="mt-3 grid gap-2">
+                      {failedJobs.slice(0, 3).map((job, index) => (
+                        <button
+                          key={job.id ?? index}
+                          type="button"
+                          onClick={() => navigate({ to: '/jobs' })}
+                          className="rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2 text-left text-xs text-red-100"
+                        >
+                          {job.name ?? job.title ?? job.id ?? 'Unnamed job'}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-ink">
+                      In progress
+                    </span>
+                    <Badge tone={inProgressItems.length ? 'accent' : 'neutral'}>
+                      {inProgressItems.length}
+                    </Badge>
+                  </div>
+                  <div className="mt-2 grid gap-2">
+                    {inProgressItems.slice(0, 3).map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => navigate({ to: '/executive-queue' })}
+                        className="text-left text-xs leading-relaxed text-[var(--theme-muted)] hover:text-ink"
+                      >
+                        {item.title}
+                      </button>
+                    ))}
+                    {!inProgressItems.length ? (
+                      <p className="text-xs text-[var(--theme-muted)]">
+                        No queue item is marked In Progress.
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            </Panel>
+
+            <Panel eyebrow="Resume" title="Recent threads">
+              <div className="grid gap-2">
+                {sessionsQuery.isLoading ? (
+                  <EmptyState text="Loading recent sessions…" />
+                ) : null}
+                {!sessionsQuery.isLoading && recentSessions.length === 0 ? (
+                  <EmptyState text="No recent sessions found." />
+                ) : null}
+                {recentSessions.map((session) => {
+                  const key = session.key ?? session.id ?? 'main'
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() =>
+                        navigate({
+                          to: '/chat/$sessionKey',
+                          params: { sessionKey: key },
+                        })
+                      }
+                      className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card2)] p-3 text-left transition hover:border-[var(--theme-accent-border)]"
+                    >
+                      <div className="line-clamp-1 text-sm font-medium text-ink">
+                        {session.title ??
+                          session.label ??
+                          session.derivedTitle ??
+                          key}
+                      </div>
+                      <div className="mt-1 text-xs text-[var(--theme-muted)]">
+                        {formatTimestamp(getSessionTime(session))}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </Panel>
           </div>
         </div>
-      </div>
       </div>
     </div>
   )
