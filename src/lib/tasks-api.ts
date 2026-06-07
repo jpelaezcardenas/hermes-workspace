@@ -85,6 +85,17 @@ export function resetBackendResolution(): void {
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
+export type WorkerExecutionSummary = {
+  status: 'blocked' | 'needs_tim' | 'completed' | 'failed'
+  safe_summary: string
+  safe_next_prompt: string | null
+  requires_tim_approval: boolean
+  approval_prompt: string | null
+  execution_record_id: string
+  updated_at: string
+  dry_run: true
+}
+
 export type ClaudeTask = {
   id: string
   title: string
@@ -99,6 +110,7 @@ export type ClaudeTask = {
   created_at: string
   updated_at: string
   session_id?: string | null
+  worker_execution?: WorkerExecutionSummary | null
 }
 
 export type CreateTaskInput = {
@@ -203,6 +215,17 @@ export async function launchSession(taskId: string): Promise<{ sessionId: string
     body: JSON.stringify({}),
   })
   if (!res.ok) throw new Error(`Failed to launch session: ${res.status}`)
+  return res.json()
+}
+
+export async function runWorkerTask(taskId: string): Promise<{ task: ClaudeTask; worker: unknown }> {
+  const { base } = await resolveBackend()
+  const res = await fetch(`${base}/${taskId}?action=worker-run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dryRun: true }),
+  })
+  if (!res.ok) throw new Error(`Failed to run fake worker: ${res.status}`)
   return res.json()
 }
 

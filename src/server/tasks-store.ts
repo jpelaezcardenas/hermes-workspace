@@ -6,6 +6,17 @@ import { randomUUID } from 'node:crypto'
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
+export type WorkerExecutionSummary = {
+  status: 'blocked' | 'needs_tim' | 'completed' | 'failed'
+  safe_summary: string
+  safe_next_prompt: string | null
+  requires_tim_approval: boolean
+  approval_prompt: string | null
+  execution_record_id: string
+  updated_at: string
+  dry_run: true
+}
+
 export type TaskRecord = {
   id: string
   title: string
@@ -13,16 +24,17 @@ export type TaskRecord = {
   column: TaskColumn
   priority: TaskPriority
   assignee: string | null
-  tags: string[]
+  tags: Array<string>
   due_date: string | null
   position: number
   created_by: string
   created_at: string
   updated_at: string
   session_id?: string | null
+  worker_execution?: WorkerExecutionSummary | null
 }
 
-type TaskFile = { tasks: TaskRecord[] }
+type TaskFile = { tasks: Array<TaskRecord> }
 
 type TaskFilters = {
   column?: string | null
@@ -61,13 +73,39 @@ function writeTaskFile(data: TaskFile): void {
   fs.writeFileSync(TASKS_FILE, JSON.stringify(data, null, 2) + '\n', 'utf-8')
 }
 
+function normalizeWorkerExecution(value: unknown): WorkerExecutionSummary | null {
+  if (!value || typeof value !== 'object') return null
+  const candidate = value as Partial<WorkerExecutionSummary>
+  if (
+    candidate.status !== 'blocked' &&
+    candidate.status !== 'needs_tim' &&
+    candidate.status !== 'completed' &&
+    candidate.status !== 'failed'
+  ) {
+    return null
+  }
+  if (typeof candidate.safe_summary !== 'string' || typeof candidate.execution_record_id !== 'string') {
+    return null
+  }
+  return {
+    status: candidate.status,
+    safe_summary: candidate.safe_summary,
+    safe_next_prompt: typeof candidate.safe_next_prompt === 'string' ? candidate.safe_next_prompt : null,
+    requires_tim_approval: candidate.requires_tim_approval === true,
+    approval_prompt: typeof candidate.approval_prompt === 'string' ? candidate.approval_prompt : null,
+    execution_record_id: candidate.execution_record_id,
+    updated_at: typeof candidate.updated_at === 'string' ? candidate.updated_at : new Date(0).toISOString(),
+    dry_run: true,
+  }
+}
+
 function normalizeTask(task: Partial<TaskRecord> & Pick<TaskRecord, 'id' | 'title' | 'created_at' | 'updated_at' | 'created_by'>): TaskRecord {
   return {
     id: task.id,
     title: task.title,
     description: task.description ?? '',
-    column: (task.column as TaskColumn) ?? 'backlog',
-    priority: (task.priority as TaskPriority) ?? 'medium',
+    column: task.column ?? 'backlog',
+    priority: task.priority ?? 'medium',
     assignee: task.assignee ?? null,
     tags: Array.isArray(task.tags) ? task.tags.filter((tag): tag is string => typeof tag === 'string') : [],
     due_date: task.due_date ?? null,
@@ -76,10 +114,11 @@ function normalizeTask(task: Partial<TaskRecord> & Pick<TaskRecord, 'id' | 'titl
     created_at: task.created_at,
     updated_at: task.updated_at,
     session_id: task.session_id ?? null,
+    worker_execution: normalizeWorkerExecution(task.worker_execution),
   }
 }
 
-export function listTasks(filters: TaskFilters = {}): TaskRecord[] {
+export function listTasks(filters: TaskFilters = {}): Array<TaskRecord> {
   let tasks = readTaskFile().tasks.map(normalizeTask)
   if (!filters.includeDone) {
     tasks = tasks.filter((task) => task.column !== 'done')
@@ -127,7 +166,7 @@ export function updateTask(taskId: string, updates: UpdateTaskInput): TaskRecord
   const index = file.tasks.findIndex((task) => task.id === taskId)
   if (index === -1) return null
 
-  const current = normalizeTask(file.tasks[index] as TaskRecord)
+  const current = normalizeTask(file.tasks[index])
   const next = normalizeTask({
     ...current,
     ...updates,
@@ -151,7 +190,7 @@ export function deleteTask(taskId: string): boolean {
   const file = readTaskFile()
   const nextTasks = file.tasks.filter((task) => task.id !== taskId)
   if (nextTasks.length === file.tasks.length) return false
-  writeTaskFile({ tasks: nextTasks.map((task) => normalizeTask(task as TaskRecord)) })
+  writeTaskFile({ tasks: nextTasks.map((task) => normalizeTask(task)) })
   return true
 }
 

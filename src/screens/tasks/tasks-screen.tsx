@@ -23,6 +23,7 @@ import {
   launchSession,
   linkSession,
   moveTask,
+  runWorkerTask,
   updateTask,
 } from '@/lib/tasks-api'
 import { stashPendingSend } from '@/screens/chat/pending-send'
@@ -137,6 +138,19 @@ export function TasksScreen() {
     mutationFn: ({ id, column }: { id: string; column: TaskColumn }) => moveTask(id, column, 'user'),
     onSuccess: () => invalidate(),
     onError: (e) => toast(e instanceof Error ? e.message : 'Failed to move task', { type: 'error' }),
+  })
+
+  const workerRunMutation = useMutation({
+    mutationFn: runWorkerTask,
+    onSuccess: (result) => {
+      void queryClient.setQueryData<Array<ClaudeTask> | undefined>([...QUERY_KEY, showDone], (current) => {
+        if (!current) return current
+        return current.map((task) => task.id === result.task.id ? result.task : task)
+      })
+      invalidate()
+      toast('Fake worker run completed')
+    },
+    onError: (e) => toast(e instanceof Error ? e.message : 'Failed to run fake worker', { type: 'error' }),
   })
 
   function handleDragStart(e: React.DragEvent, taskId: string) {
@@ -354,6 +368,8 @@ export function TasksScreen() {
                             assigneeLabels={assigneeLabels}
                             isDragging={draggingId === task.id}
                             onDragStart={e => handleDragStart(e, task.id)}
+                            onRunWorker={() => workerRunMutation.mutate(task.id)}
+                            workerRunning={workerRunMutation.isPending && workerRunMutation.variables === task.id}
                             onClick={() => setEditingTask(task)}
                           />
                         </motion.div>

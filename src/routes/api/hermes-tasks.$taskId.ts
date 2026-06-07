@@ -1,9 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { randomUUID } from 'node:crypto'
+import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../server/auth-middleware'
-import { deleteTask, getTask, moveTask, updateTask } from '../../server/tasks-store'
-import { ensureLocalSession, appendLocalMessage, getLocalMessages } from '../../server/local-session-store'
 import { getSessionMessages } from '../../server/claude-dashboard-api'
+import { appendLocalMessage, ensureLocalSession, getLocalMessages } from '../../server/local-session-store'
+import { deleteTask, getTask, moveTask, updateTask } from '../../server/tasks-store'
+import { mapWorkerResultToTaskPatch, runFakeWorkerForTask } from '../../server/worker-spine/task-execution'
+import { parseWorkerRunBody, workerRunResponsePayload } from './-hermes-tasks-worker'
 import type { TaskColumn, TaskPriority } from '../../server/tasks-store'
 
 function jsonResponse(data: unknown, status = 200) {
@@ -86,6 +88,18 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
         const url = new URL(request.url)
         const action = url.searchParams.get('action') || 'move'
 
+        if (action === 'worker-run') {
+          const task = getTask(params.taskId)
+          if (!task) return jsonResponse({ error: 'Task not found' }, 404)
+
+          await request.json().then(parseWorkerRunBody).catch(() => parseWorkerRunBody({}))
+          const result = await runFakeWorkerForTask(task)
+          const patch = mapWorkerResultToTaskPatch(result)
+          const updatedTask = updateTask(params.taskId, patch)
+          if (!updatedTask) return jsonResponse({ error: 'Task not found' }, 404)
+          return jsonResponse(workerRunResponsePayload({ task: updatedTask, safeResponse: result.safeResponse }))
+        }
+
         if (action === 'launch') {
           const task = getTask(params.taskId)
           if (!task) return jsonResponse({ error: 'Task not found' }, 404)
@@ -101,7 +115,7 @@ export const Route = createFileRoute('/api/hermes-tasks/$taskId')({
             // Try dashboard API first — this has the full conversation history
             try {
               const dashResult = await getSessionMessages(task.session_id)
-              if (dashResult?.messages?.length) {
+              if (dashResult.messages.length) {
                 tail = dashResult.messages
                   .filter((m) => m.role === 'user' || m.role === 'assistant')
                   .filter((m) => typeof m.content === 'string' && m.content.trim().length > 0)
