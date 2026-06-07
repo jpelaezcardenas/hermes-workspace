@@ -236,6 +236,77 @@ describe('gateway-capabilities', () => {
     )
   })
 
+  it('does not mark MCP available when /api/mcp explicitly returns capability_unavailable', async () => {
+    process.env.HERMES_API_URL = 'http://gateway.test'
+    process.env.CLAUDE_DASHBOARD_URL = 'http://dashboard.test'
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input)
+      if (url === 'http://dashboard.test/api/status') {
+        return new Response(JSON.stringify({ version: '0.12.0' }), {
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://dashboard.test/') {
+        return new Response("<script>window.__CLAUDE_SESSION_TOKEN__ = 'test-token'</script>", {
+          headers: { 'content-type': 'text/html' },
+        })
+      }
+      if (url === 'http://dashboard.test/api/mcp') {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            code: 'capability_unavailable',
+            capability: 'mcp',
+            servers: [],
+            total: 0,
+          }),
+          { status: 200, headers: { 'content-type': 'application/json' } },
+        )
+      }
+      if (url === 'http://gateway.test/api/mcp') {
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            code: 'capability_unavailable',
+            capability: 'mcp',
+            servers: [],
+            total: 0,
+          }),
+          { status: 200, headers: { 'content-type': 'application/json' } },
+        )
+      }
+      if (url === 'http://dashboard.test/api/config') {
+        return new Response(JSON.stringify({ config: {} }), {
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://dashboard.test/api/conductor/missions') {
+        return new Response(JSON.stringify({ missions: [] }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://dashboard.test/api/plugins/kanban/board') {
+        return new Response(JSON.stringify({ ok: true }), {
+          headers: { 'content-type': 'application/json' },
+        })
+      }
+      if (url === 'http://gateway.test/v1/chat/completions') return new Response('', { status: 405 })
+      if (url === 'http://gateway.test/api/sessions/__probe__/chat/stream') return new Response('', { status: 404 })
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const mod = await loadMod()
+    const caps = await mod.probeGateway({ force: true })
+
+    expect(caps.mcp).toBe(false)
+    expect(caps.mcpFallback).toBe(false)
+  })
+
   it('marks Conductor available when dashboard returns JSON from missions API', async () => {
     process.env.HERMES_API_URL = 'http://gateway.test'
     process.env.CLAUDE_DASHBOARD_URL = 'http://dashboard.test'

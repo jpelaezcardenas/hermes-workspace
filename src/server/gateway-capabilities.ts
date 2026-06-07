@@ -356,6 +356,7 @@ export async function dashboardFetch(
       ...init,
       method,
       headers,
+      signal: init.signal ?? AbortSignal.timeout(30_000),
     })
   }
 
@@ -384,7 +385,7 @@ export async function gatewayFetch(
   for (const [k, v] of Object.entries(authHeaders())) {
     if (!headers.has(k)) headers.set(k, v)
   }
-  return fetch(url, { ...init, headers })
+  return fetch(url, { ...init, headers, signal: init.signal ?? AbortSignal.timeout(30_000) })
 }
 
 // ── Probing ───────────────────────────────────────────────────────
@@ -477,6 +478,11 @@ async function probeMcp(): Promise<boolean> {
     if (!res.ok) return false
     const body = (await res.json().catch(() => null)) as unknown
     if (body === null) return false
+    if (typeof body === 'object' && !Array.isArray(body)) {
+      const payload = body as Record<string, unknown>
+      if (payload.ok === false) return false
+      if (payload.code === 'capability_unavailable') return false
+    }
     // Empty list is a valid configured-zero state — still indicates the
     // endpoint is real. The shape check is "does the normalizer accept it
     // without throwing", which it does for `{servers: []}`, `[]`, etc.
@@ -655,7 +661,7 @@ const DASHBOARD_BACKED_APIS = new Set([
 
 export function getCapabilityWarningMessage(
   next: GatewayCapabilities,
-  criticalMissing: string[],
+  criticalMissing: Array<string>,
 ): string | null {
   if (criticalMissing.length === 0 || (!next.health && !next.dashboard.available)) {
     return null
