@@ -1,3 +1,12 @@
+/**
+ * EchoStudioScreen — PREVIEW / MOCK.
+ *
+ * This is a non-functional design preview: the templates are hardcoded and the
+ * counters (screens/widgets/endpoints) are local component state with no
+ * backend wiring — it does not create or persist anything. Replace with a real
+ * backend-backed implementation (or gate behind a feature flag) before
+ * presenting it as a working feature.
+ */
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
