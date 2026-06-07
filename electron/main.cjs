@@ -17,8 +17,26 @@ try {
 const APP_PORT = 3847
 const HERMES_GATEWAY_URL = 'http://127.0.0.1:8642/health'
 const HERMES_DASHBOARD_URL = 'http://127.0.0.1:9119/api/status'
-const HERMES_INSTALL_SCRIPT =
-  'curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash -s -- --skip-setup'
+const HERMES_INSTALL_URL =
+  'https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh'
+
+// Build the macOS/Linux install command. Rather than a blind `curl … | bash`,
+// download the upstream installer to a temp file over hardened TLS, optionally
+// verify its SHA-256 (set NOUS_INSTALLER_SHA256 to pin it), then execute. This
+// can't run a partially-downloaded script and supports integrity pinning.
+function buildHermesInstallScript() {
+  const expected = (process.env.NOUS_INSTALLER_SHA256 || '').trim()
+  const verify = expected
+    ? `actual=$(sha256sum "$t" 2>/dev/null | awk '{print $1}' || shasum -a 256 "$t" | awk '{print $1}') && ` +
+      `[ "$actual" = "${expected}" ] || { echo "hermes installer checksum mismatch"; rm -f "$t"; exit 1; } && `
+    : ''
+  return (
+    `t=$(mktemp) && ` +
+    `curl --proto '=https' --tlsv1.2 -fsSL '${HERMES_INSTALL_URL}' -o "$t" && ` +
+    verify +
+    `bash "$t" --skip-setup; rc=$?; rm -f "$t"; exit $rc`
+  )
+}
 
 let mainWindow = null
 let localServer = null
@@ -231,11 +249,15 @@ async function installHermesInBackground() {
   if (installProcess) {
     return { started: false, reason: 'already-running' }
   }
-  // Windows: pip install (no curl|bash). macOS/Linux: use install script.
+  // Windows: pip install (no curl|bash). macOS/Linux: download+verify+run.
+  // SECURITY NOTE: hermes-agent is not published on PyPI (see install.sh), so
+  // `pip install hermes-agent` is exposed to dependency confusion (a squatted
+  // PyPI package of the same name). Pin a trusted index/version or install from
+  // a vetted source before shipping the Windows path to users.
   const installCmd =
     process.platform === 'win32'
       ? 'pip install hermes-agent'
-      : HERMES_INSTALL_SCRIPT
+      : buildHermesInstallScript()
   const shell = process.platform === 'win32' ? 'cmd' : 'bash'
   const args =
     process.platform === 'win32' ? ['/c', installCmd] : ['-lc', installCmd]

@@ -19,6 +19,10 @@ REPO_URL="${REPO_URL:-https://github.com/outsourc-e/hermes-workspace.git}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/hermes-workspace}"
 GATEWAY_PORT="${GATEWAY_PORT:-8642}"
 NOUS_INSTALLER_URL="${NOUS_INSTALLER_URL:-https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh}"
+# Optional integrity pin for the upstream Nous installer. When set, the
+# downloaded script must match this SHA-256 before it runs. Leave empty to
+# proceed with a warning (the script is downloaded first, never piped blind).
+NOUS_INSTALLER_SHA256="${NOUS_INSTALLER_SHA256:-}"
 
 # ─── helpers ──────────────────────────────────────────────────────────────
 
@@ -39,6 +43,58 @@ banner() {
    ╰────────────────────────────────────────────╯
 
 EOF
+}
+
+# sha256_of: print the SHA-256 of a file (portable across Linux/macOS).
+sha256_of() {
+  if command -v sha256sum &>/dev/null; then
+    sha256sum "$1" | awk '{print $1}'
+  elif command -v shasum &>/dev/null; then
+    shasum -a 256 "$1" | awk '{print $1}'
+  else
+    echo ""
+  fi
+}
+
+# fetch_and_run: download a remote install script to a temp file over hardened
+# TLS, optionally verify its SHA-256 against an expected hash, then execute it.
+# Safer than a blind `curl … | bash`: it cannot execute a partially-downloaded
+# script, and it supports integrity pinning. Pass the expected hash as $2 (or
+# leave empty to proceed with a warning). Extra args after $2 are forwarded.
+fetch_and_run() {
+  local url="$1"
+  local expected_sha="${2:-}"
+  shift 2 2>/dev/null || shift $#
+  local tmp
+  tmp="$(mktemp)" || { red "  Could not create temp file."; return 1; }
+  if ! curl --proto '=https' --tlsv1.2 -fsSL "$url" -o "$tmp"; then
+    red "  Failed to download: $url"
+    rm -f "$tmp"
+    return 1
+  fi
+  if [[ -n "$expected_sha" ]]; then
+    local actual_sha
+    actual_sha="$(sha256_of "$tmp")"
+    if [[ -z "$actual_sha" ]]; then
+      red "  Cannot verify checksum (no sha256sum/shasum on PATH)."
+      rm -f "$tmp"
+      return 1
+    fi
+    if [[ "$actual_sha" != "$expected_sha" ]]; then
+      red "  Checksum mismatch for $url"
+      red "    expected: $expected_sha"
+      red "    actual:   $actual_sha"
+      rm -f "$tmp"
+      return 1
+    fi
+    green "  Checksum verified ✓"
+  else
+    yellow "  ⚠ Installer integrity not pinned — set NOUS_INSTALLER_SHA256 to verify."
+  fi
+  bash "$tmp" "$@"
+  local rc=$?
+  rm -f "$tmp"
+  return $rc
 }
 
 # ensure_path: prepend a dir to PATH for this shell if it's not already there
@@ -142,10 +198,10 @@ if command -v hermes &>/dev/null; then
   green "  hermes-agent already installed ✓ ($(command -v hermes))"
 else
   yellow "  Delegating to: $NOUS_INSTALLER_URL"
-  if ! curl -fsSL "$NOUS_INSTALLER_URL" | bash; then
+  if ! fetch_and_run "$NOUS_INSTALLER_URL" "$NOUS_INSTALLER_SHA256"; then
     red "  Nous installer failed. See its output above for details."
     red "  You can retry manually:"
-    red "    curl -fsSL $NOUS_INSTALLER_URL | bash"
+    red "    curl --proto '=https' --tlsv1.2 -fsSL $NOUS_INSTALLER_URL -o /tmp/nous.sh && bash /tmp/nous.sh"
     exit 1
   fi
   # Nous typically installs `hermes` to ~/.hermes/bin or ~/.local/bin

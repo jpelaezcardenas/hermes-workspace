@@ -92,7 +92,7 @@ Three paths — pick the one that matches you:
 ### One-line install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/install.sh | bash
+curl --proto '=https' --tlsv1.2 -fsSL https://raw.githubusercontent.com/outsourc-e/hermes-workspace/main/install.sh | bash
 ```
 
 This installs `hermes-agent` via Nous's official installer, clones this repo, sets up `.env`, and installs dependencies. Then:
@@ -191,7 +191,7 @@ Example Hermes Agent gateway setup (from scratch):
 
 ```bash
 # Install hermes-agent via Nous's official installer
-curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+curl --proto '=https' --tlsv1.2 -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
 
 # Configure a provider + start the gateway
 hermes setup

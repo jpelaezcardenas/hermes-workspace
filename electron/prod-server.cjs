@@ -59,8 +59,27 @@ async function main() {
     const pathname = url.split('?')[0]
 
     if (pathname !== '/' && !pathname.startsWith('/api/')) {
-      const filePath = path.join(DIST_CLIENT, pathname)
-      if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      // Confine static serving to DIST_CLIENT — guard against path traversal
+      // (`..`, URL-encoded variants, NUL bytes, absolute escapes). Without this,
+      // a request like `/../../../etc/passwd` would resolve outside the client
+      // dir and be served. Mirrors the guard in server-entry.js.
+      let decodedPath
+      try {
+        decodedPath = decodeURIComponent(pathname)
+      } catch {
+        decodedPath = pathname
+      }
+      const filePath = path.resolve(DIST_CLIENT, `.${decodedPath}`)
+      const withinRoot =
+        filePath === DIST_CLIENT ||
+        filePath.startsWith(DIST_CLIENT + path.sep)
+      if (
+        !decodedPath.includes('..') &&
+        !decodedPath.includes('\0') &&
+        withinRoot &&
+        fs.existsSync(filePath) &&
+        fs.statSync(filePath).isFile()
+      ) {
         const ext = path.extname(filePath)
         const mime = MIME_TYPES[ext] || 'application/octet-stream'
         const content = fs.readFileSync(filePath)

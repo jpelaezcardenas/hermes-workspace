@@ -10,7 +10,6 @@ export type InterfaceDensity = 'compact' | 'comfortable' | 'spacious'
 
 export type StudioSettings = {
   claudeUrl: string
-  claudeToken: string
   theme: SettingsThemeMode
   accentColor: AccentColor
   showUsageMeter: boolean
@@ -39,7 +38,6 @@ type SettingsState = {
 
 export const defaultStudioSettings: StudioSettings = {
   claudeUrl: '',
-  claudeToken: '',
   theme: 'system',
   accentColor: 'blue',
   showUsageMeter: false,
