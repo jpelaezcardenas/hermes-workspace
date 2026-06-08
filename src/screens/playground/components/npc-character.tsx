@@ -1,4 +1,3 @@
-import { HERMESWORLD_CHARACTER_ARCHETYPES } from '../lib/character-config'
 import type { ThreeElements } from '@react-three/fiber'
 import type { CharacterArchetypeId } from '../lib/character-config'
 
@@ -18,11 +17,6 @@ export function NpcCharacter({
   accent,
   ...props
 }: NpcCharacterProps) {
-  const archetype =
-    HERMESWORLD_CHARACTER_ARCHETYPES.find(
-      (entry) => entry.id === archetypeId,
-    ) ?? HERMESWORLD_CHARACTER_ARCHETYPES[0]
-
   const tint = accent ?? inferTint(archetypeId)
 
   return (

@@ -17,18 +17,13 @@ describe('ChatComposer context controls', () => {
     expect(src).toContain('Activated profile')
   })
 
-  it('surfaces workspace context and reasoning controls next to the model picker', () => {
+  it('surfaces the reasoning-effort control next to the model picker', () => {
     const src = source()
 
-    // Workspace context is fetched and derived in the composer.
-    // NOTE: the inline workspace *picker menu* was refactored out; the orphaned
-    // `workspaceSelectMutation` / `workspaceButtonLabel` / `isWorkspaceMenuOpen`
-    // scaffolding is tracked for removal (cruft cleanup). Assert the live wiring.
-    expect(src).toContain("fetch('/api/workspace')")
-    expect(src).toContain('workspaceContextQuery')
-    expect(src).toContain('workspaceEntries')
-    expect(src).toContain('SEARCH_MODAL_EVENTS.TOGGLE_FILE_EXPLORER')
-    // Reasoning-effort control (live).
+    // The inline workspace *picker menu* and its orphaned scaffolding
+    // (workspaceSelectMutation / workspaceContextQuery / workspaceEntries /
+    // SEARCH_MODAL_EVENTS) were removed as dead code once noUnusedLocals was
+    // enabled. The live composer control asserted here is reasoning effort.
     expect(src).toContain('Reasoning effort')
     expect(src).toContain("['medium', 'Medium']")
     expect(src).toContain("['high', 'High']")

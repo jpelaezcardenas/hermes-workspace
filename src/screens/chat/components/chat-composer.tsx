@@ -29,7 +29,7 @@ import {
 import { ContextBar } from './context-bar'
 import type { CSSProperties, Ref } from 'react'
 
-import type { ModelCatalogEntry, ModelSwitchResponse } from '@/lib/model-types'
+import type { ModelCatalogEntry } from '@/lib/model-types'
 import type {
   SlashCommandDefinition,
   SlashCommandMenuHandle,
@@ -56,11 +56,6 @@ import { cn } from '@/lib/utils'
 import { useVoiceInput } from '@/hooks/use-voice-input'
 import { useVoiceRecorder } from '@/hooks/use-voice-recorder'
 import { toast } from '@/components/ui/toast'
-import {
-  SEARCH_MODAL_EVENTS,
-  emitSearchModalEvent,
-} from '@/hooks/use-search-modal'
-import { setLocalModelOverride } from '@/screens/chat/local-model-override'
 import { formatModelName } from '@/lib/format-model-name'
 
 type ChatComposerAttachment = {
@@ -348,59 +343,6 @@ async function fetchModelsForProvider(
     name: model.id,
     provider: normalizedProvider,
   }))
-}
-
-const LOCAL_PROVIDERS_SET = new Set(['ollama', 'atomic-chat'])
-
-async function switchModel(
-  model: string,
-  provider?: string,
-  _sessionKey?: string,
-): Promise<ModelSwitchResponse> {
-  const modelId = model.trim()
-  const modelProvider =
-    typeof provider === 'string' && provider.trim()
-      ? provider.trim()
-      : modelId.includes('/')
-        ? modelId.split('/')[0]
-        : undefined
-
-  // For local providers, don't write to gateway config — just track client-side.
-  // The gateway can't run local models (context too small for agent loop).
-  if (modelProvider && LOCAL_PROVIDERS_SET.has(modelProvider)) {
-    setLocalModelOverride(`${modelProvider}/${modelId}`)
-    return {
-      ok: true,
-      resolved: {
-        modelProvider,
-        model: modelId,
-      },
-    }
-  }
-  // Switching to a cloud model — clear any local override
-  setLocalModelOverride('')
-
-  // Write the model change to ~/.hermes/config.yaml via the webapi
-  const patch: Record<string, string> = { model: modelId }
-  if (modelProvider) patch.provider = modelProvider
-
-  const response = await fetch('/api/claude-proxy/api/config', {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(patch),
-  })
-
-  if (!response.ok) {
-    throw new Error(await readResponseError(response))
-  }
-
-  return {
-    ok: true,
-    resolved: {
-      modelProvider: modelProvider || 'hermes-agent',
-      model: modelId,
-    },
-  }
 }
 
 /** Maximum file size accepted from picker/drop before processing (50MB). */
@@ -745,11 +687,6 @@ function readSlashCommandQuery(inputValue: string): string | null {
   return firstLine.slice(1)
 }
 
-function isTimeoutErrorMessage(message: string): boolean {
-  const normalized = message.toLowerCase()
-  return normalized.includes('timed out') || normalized.includes('timeout')
-}
-
 async function readResponseError(response: Response): Promise<string> {
   try {
     const payload = (await response.json()) as Record<string, unknown>
@@ -842,12 +779,6 @@ async function fetchWorkspaceContext(): Promise<WorkspaceDetectionResponse> {
   return (await response.json()) as WorkspaceDetectionResponse
 }
 
-function shortPathLabel(pathValue: string): string {
-  if (!pathValue) return 'Workspace'
-  const parts = pathValue.replace(/\\/g, '/').split('/').filter(Boolean)
-  return parts.at(-1) || pathValue
-}
-
 function thinkingLabel(level: ThinkingLevel): string {
   if (level === 'off') return 'None'
   if (level === 'low') return 'Low'
@@ -921,7 +852,6 @@ function ChatComposerComponent({
   })
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-  const [isWorkspaceMenuOpen, setIsWorkspaceMenuOpen] = useState(false)
   const [isThinkingMenuOpen, setIsThinkingMenuOpen] = useState(false)
   const [isControlsMenuOpen, setIsControlsMenuOpen] = useState(false)
   const [isProviderSwitcherExpanded, setIsProviderSwitcherExpanded] =
@@ -929,7 +859,7 @@ function ChatComposerComponent({
   const [isMobileActionsMenuOpen, setIsMobileActionsMenuOpen] = useState(false)
   const [isWebSearchMode, _setIsWebSearchMode] = useState(false)
   const [isSlashMenuDismissed, setIsSlashMenuDismissed] = useState(false)
-  const [modelNotice, setModelNotice] = useState<ModelSwitchNotice | null>(null)
+  const [, setModelNotice] = useState<ModelSwitchNotice | null>(null)
   const [fastMode, setFastMode] = useState(false)
   // Per-session thinking level — controlled externally (chat-screen owns the state)
   // Falls back to internal state if no external controller provided
@@ -955,14 +885,13 @@ function ChatComposerComponent({
   const submittingRef = useRef(false)
   const pendingSubmitAfterAttachmentsRef = useRef(false)
   const modelSelectorRef = useRef<HTMLDivElement | null>(null)
-  const workspaceMenuRef = useRef<HTMLDivElement | null>(null)
   const thinkingMenuRef = useRef<HTMLDivElement | null>(null)
   const controlsMenuRef = useRef<HTMLDivElement | null>(null)
   const composerWrapperRef = useRef<HTMLDivElement | null>(null)
   const focusFrameRef = useRef<number | null>(null)
 
   // Phase 4.2: Pinned models (kept for future use)
-  const { pinned, isPinned, togglePin } = usePinnedModels()
+  const { isPinned, togglePin } = usePinnedModels()
 
   const modelsQuery = useQuery({
     queryKey: ['claude', 'models'],
@@ -978,7 +907,7 @@ function ChatComposerComponent({
       ),
     [currentProvider, modelsQuery.data?.providers],
   )
-  const otherProviderModelsQuery = useQuery({
+  useQuery({
     queryKey: [
       'claude',
       'models',
@@ -1054,7 +983,7 @@ function ChatComposerComponent({
     retry: false,
     staleTime: 60_000,
   })
-  const workspaceContextQuery = useQuery({
+  useQuery({
     queryKey: ['workspace', 'composer-context'],
     queryFn: fetchWorkspaceContext,
     retry: false,
@@ -1077,30 +1006,6 @@ function ChatComposerComponent({
     onError: (error) => {
       toast(
         error instanceof Error ? error.message : 'Failed to activate profile',
-      )
-    },
-  })
-  const workspaceSelectMutation = useMutation({
-    mutationFn: async (workspace: { path: string; name?: string }) => {
-      const response = await fetch('/api/workspace', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(workspace),
-      })
-      if (!response.ok) {
-        throw new Error(await readResponseError(response))
-      }
-      return (await response.json()) as WorkspaceDetectionResponse
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['workspace', 'composer-context'],
-      })
-      setIsWorkspaceMenuOpen(false)
-    },
-    onError: (error) => {
-      toast(
-        error instanceof Error ? error.message : 'Failed to switch workspace',
       )
     },
   })
@@ -1171,11 +1076,6 @@ function ChatComposerComponent({
     [onThinkingLevelChange],
   )
 
-  const handleOpenWorkspaceManager = useCallback(() => {
-    setIsWorkspaceMenuOpen(false)
-    emitSearchModalEvent(SEARCH_MODAL_EVENTS.TOGGLE_FILE_EXPLORER)
-  }, [])
-
   const activeProfileName =
     profilesQuery.data?.activeProfile ||
     profilesQuery.data?.profiles?.find((profile) => profile.active)?.name ||
@@ -1183,17 +1083,6 @@ function ChatComposerComponent({
   const activeProfile = profilesQuery.data?.profiles?.find(
     (profile) => profile.name === activeProfileName,
   )
-  const workspaceEntries = workspaceContextQuery.data?.workspaces ?? []
-  const detectedWorkspacePath = workspaceContextQuery.data?.path ?? ''
-  const activeWorkspace = workspaceEntries.find(
-    (workspace) => workspace.path === detectedWorkspacePath,
-  )
-  const workspaceButtonLabel =
-    activeWorkspace?.name ||
-    workspaceContextQuery.data?.folderName ||
-    shortPathLabel(detectedWorkspacePath) ||
-    'Workspace'
-
   const currentModel = currentModelQuery.data ?? ''
 
   // Auto-switch to hermes-agent model on mount (Hermes Workspace uses Hermes Agent)

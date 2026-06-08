@@ -13,9 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../../server/auth-middleware'
 import {
   addHubSource,
-  deleteHubSource,
   readHubSources,
-  updateHubSource,
 } from '../../../server/mcp-hub-sources-store'
 
 export const Route = createFileRoute('/api/mcp/hub-sources')({

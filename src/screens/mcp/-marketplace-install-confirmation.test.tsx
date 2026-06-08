@@ -85,14 +85,6 @@ async function renderInto(element: React.ReactElement) {
   }
 }
 
-function q(container: HTMLElement, selector: string) {
-  return container.querySelector(selector)
-}
-
-function textOf(el: Element | null) {
-  return el?.textContent ?? ''
-}
-
 // ---------------------------------------------------------------------------
 // Fixtures
 // ---------------------------------------------------------------------------

@@ -71,41 +71,6 @@ const CheckpointBodySchema = z.object({
   previews: z.array(z.unknown()).optional(),
 })
 
-const ALLOWED_STATES = new Set([
-  'idle',
-  'executing',
-  'thinking',
-  'writing',
-  'waiting',
-  'blocked',
-  'syncing',
-  'reviewing',
-  'offline',
-])
-const ALLOWED_CHECKPOINTS = new Set([
-  'none',
-  'in_progress',
-  'done',
-  'blocked',
-  'handoff',
-  'needs_input',
-])
-
-function validateWorkerId(value: string): boolean {
-  return isSwarmWorkerId(value)
-}
-
-function cleanString(value: unknown): string | null | undefined {
-  if (value === null) return null
-  if (typeof value !== 'string') return undefined
-  const trimmed = value.trim()
-  return trimmed.length ? trimmed.slice(0, 16_000) : null
-}
-
-function cleanArray(value: unknown): Array<unknown> | undefined {
-  return Array.isArray(value) ? value : undefined
-}
-
 function readCurrent(runtimePath: string): Record<string, unknown> {
   if (!existsSync(runtimePath)) return {}
   try {

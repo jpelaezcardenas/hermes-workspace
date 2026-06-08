@@ -1,9 +1,4 @@
-import { HERMESWORLD_CHARACTER_ARCHETYPES } from '../lib/character-config'
 import type { ThreeElements } from '@react-three/fiber'
-
-const PLAYER_ARCHETYPE = HERMESWORLD_CHARACTER_ARCHETYPES.find(
-  (entry) => entry.id === 'player-adventurer',
-)
 
 /**
  * Placeholder component for the first believable-player pipeline.

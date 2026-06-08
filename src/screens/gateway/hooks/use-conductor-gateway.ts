@@ -1389,7 +1389,6 @@ export function useConductorGateway() {
     return swarmAssignments.map((assignment, index) => {
       const workerId = assignment.workerId
       const state = assignment.state ?? 'dispatched'
-      const checkpoint = assignment.checkpoint
       const isComplete =
         state === 'checkpointed' || state === 'done' || state === 'cancelled'
       const isBlocked = state === 'blocked' || state === 'needs_input'

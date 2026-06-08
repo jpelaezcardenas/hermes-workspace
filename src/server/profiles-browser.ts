@@ -31,23 +31,6 @@ export type ProfileDetail = {
   skillsDir?: string
 }
 
-const PROFILE_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/
-const TEXT_REWRITE_EXTENSIONS = new Set([
-  '.md',
-  '.txt',
-  '.yaml',
-  '.yml',
-  '.json',
-  '.jsonl',
-  '.toml',
-  '.env',
-  '.plist',
-  '.sh',
-  '.js',
-  '.ts',
-  '.tsx',
-])
-
 function getHermesRoot(): string {
   return (
     process.env.HERMES_HOME ??

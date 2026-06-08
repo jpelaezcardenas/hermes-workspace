@@ -413,14 +413,6 @@ const config = defineConfig(({ mode, command }) => {
     }
   }
 
-  // Allow access from Tailscale, LAN, or custom domains via env var
-  // e.g. CLAUDE_ALLOWED_HOSTS=my-server.tail1234.ts.net,192.168.1.50
-  const _allowedHosts: string[] | true = env.CLAUDE_ALLOWED_HOSTS?.trim()
-    ? env
-        .CLAUDE_ALLOWED_HOSTS!.split(',')
-        .map((h) => h.trim())
-        .filter(Boolean)
-    : ['.ts.net'] // allow all Tailscale hostnames by default
   let proxyTarget = 'http://127.0.0.1:18789'
 
   try {

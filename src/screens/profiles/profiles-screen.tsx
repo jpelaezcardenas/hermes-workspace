@@ -68,14 +68,6 @@ function formatDate(value?: string): string {
   }).format(parsed)
 }
 
-function StatChip({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="rounded-lg border border-primary-200 bg-primary-100/60 px-2.5 py-1 text-xs text-primary-700">
-      <span className="font-semibold text-primary-900">{value}</span> {label}
-    </div>
-  )
-}
-
 function ProfileStat({
   label,
   value,

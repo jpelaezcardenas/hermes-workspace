@@ -8,7 +8,6 @@ import {
   createSession,
   deleteSession,
   ensureGatewayProbed,
-  getGatewayCapabilities,
   listSessions,
   toSessionSummary,
   updateSession,

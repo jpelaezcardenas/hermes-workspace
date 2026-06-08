@@ -162,17 +162,6 @@ class GitHubKnowledgeProvider {
     this.cacheDir = base
   }
 
-  private get cacheRoot(): string {
-    return path.join(
-      os.homedir(),
-      '.claude',
-      'knowledge-cache',
-      'github',
-      this.repo.replace('/', '_'),
-      this.branch,
-    )
-  }
-
   /** Fetch + decode the GitHub repo into the local cache directory. */
   async sync(): Promise<void> {
     try {

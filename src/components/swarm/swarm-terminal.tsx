@@ -56,7 +56,7 @@ export const SwarmTerminal = memo(function ({
   const nativeInputCounterRef = useRef(0)
   const [state, setState] = useState<ConnectionState>('idle')
   const [error, setError] = useState<string | null>(null)
-  const [reconnectKey, setReconnectKey] = useState(0)
+  const [reconnectKey] = useState(0)
   const [isFocused, setIsFocused] = useState(false)
 
   const focusTerminal = useCallback(() => {
@@ -126,15 +126,6 @@ export const SwarmTerminal = memo(function ({
     sessionIdRef.current = null
     setState('closed')
   }, [flushPendingInput])
-
-  const restart = useCallback(() => {
-    stop()
-    if (terminalRef.current) {
-      terminalRef.current.write('\r\n\x1b[33m[swarm] restarting…\x1b[0m\r\n')
-    }
-    setReconnectKey((k) => k + 1)
-    setState('idle')
-  }, [stop])
 
   useEffect(() => {
     const abortController = new AbortController()

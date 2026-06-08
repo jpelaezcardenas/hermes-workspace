@@ -57,18 +57,6 @@ function expandHome(value: string, homeDir: string): string {
   return value
 }
 
-function readJson(filePath: string): Record<string, unknown> | null {
-  try {
-    if (!fs.existsSync(filePath)) return null
-    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'))
-    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
-      ? (parsed as Record<string, unknown>)
-      : null
-  } catch {
-    return null
-  }
-}
-
 function readYaml(filePath: string): Record<string, unknown> | null {
   try {
     if (!fs.existsSync(filePath)) return null

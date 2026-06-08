@@ -4,9 +4,7 @@ import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   BrainIcon,
-  Building01Icon,
   Castle02Icon,
-  Chat01Icon,
   CheckListIcon,
   Clock01Icon,
   ComputerTerminal01Icon,
@@ -25,7 +23,7 @@ import {
   UserMultipleIcon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { CHAT_OPEN_SETTINGS_EVENT } from '../chat-events'
 import { useChatSettings as useSidebarSettings } from '../hooks/use-chat-settings'
@@ -563,27 +561,15 @@ function ChatSidebarComponent({
     }
   }, [handleOpenSettings])
 
-  // Platform-aware modifier key
-  const _mod = useMemo(
-    () =>
-      typeof navigator !== 'undefined' &&
-      /Mac|iPod|iPhone|iPad/.test(navigator.userAgent)
-        ? '⌘'
-        : 'Ctrl+',
-    [],
-  )
-
   // Route active states
   const isChatActive =
     pathname === '/' || pathname === '/new' || pathname.startsWith('/chat')
   const isNewSessionActive =
     pathname === '/new' || pathname.startsWith('/chat/new')
-  const _isSettingsActive = pathname === '/settings'
   const isSkillsActive = pathname === '/skills'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
   const isPlaygroundActive = pathname === '/playground'
-  const isAgoraActive = pathname === '/agora'
   const isTerminalActive = pathname === '/terminal'
   const isJobsActive = pathname === '/jobs'
   const isMemoryActive = pathname === '/memory'
@@ -606,7 +592,6 @@ function ChatSidebarComponent({
 
   const mainNav = getLastRoute('main') || '/chat'
   const knowledgeNav = getLastRoute('knowledge') || '/memory'
-  const _systemNav = getLastRoute('system') || '/settings'
 
   const transition = {
     duration: 0.15,

@@ -216,13 +216,10 @@ export function Swarm2LiveChat({
   const {
     messages,
     isLoading,
-    isFetching,
     sendMessage,
     isSending,
     error,
     sendError,
-    sessionId,
-    sessionTitle,
     source,
   } = useSwarmChat({ workerId, limit: 30, enabled: Boolean(workerId) })
   const [draft, setDraft] = useState('')

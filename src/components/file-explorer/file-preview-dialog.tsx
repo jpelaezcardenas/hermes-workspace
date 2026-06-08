@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   DialogClose,
   DialogContent,
@@ -6,20 +6,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-
-const LANGUAGE_MAP: Record<string, string> = {
-  ts: 'typescript',
-  tsx: 'typescript',
-  js: 'javascript',
-  jsx: 'javascript',
-  json: 'json',
-  md: 'markdown',
-  css: 'css',
-  html: 'html',
-  yml: 'yaml',
-  yaml: 'yaml',
-  env: 'dotenv',
-}
 
 function getExtension(path: string) {
   const parts = path.split('.')
@@ -52,12 +38,6 @@ export default function FilePreviewDialog({
   const [dataUrl, setDataUrl] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [dirty, setDirty] = useState(false)
-
-  const language = useMemo(() => {
-    if (!path) return 'plaintext'
-    const ext = getExtension(path)
-    return LANGUAGE_MAP[ext] || 'plaintext'
-  }, [path])
 
   const loadFile = useCallback(async () => {
     if (!path) return

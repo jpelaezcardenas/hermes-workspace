@@ -199,9 +199,6 @@ export function SwarmScreen() {
     return map
   }, [runtimeQuery.data])
 
-  const selectedRuntime = selectedId
-    ? runtimeByWorker.get(selectedId)
-    : undefined
   const terminalTargets = useMemo(() => {
     if (roomIds.length > 0) {
       return swarmMembers.filter((member) => roomIds.includes(member.id))

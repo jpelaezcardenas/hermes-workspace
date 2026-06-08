@@ -2,7 +2,6 @@ import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   BrainIcon,
-  Building01Icon,
   Chat01Icon,
   Clock01Icon,
   CommandLineIcon,

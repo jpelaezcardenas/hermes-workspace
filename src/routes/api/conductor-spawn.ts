@@ -21,7 +21,6 @@ import {
   checkpointFromRuntimeSnapshot,
   dispatchSwarmAssignments,
   readRuntimeCheckpointSnapshot,
-  runtimeCheckpointSignature,
 } from './swarm-dispatch'
 import type { SwarmMission } from '../../server/swarm-missions'
 

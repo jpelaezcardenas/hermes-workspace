@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import {
   keepPreviousData,
   useMutation,
@@ -30,16 +30,12 @@ import {
   COLUMN_LABELS,
   COLUMN_ORDER,
   createTask,
-  deleteTask,
   fetchAssignees,
   fetchTasks,
   isOverdue,
-  launchSession,
-  linkSession,
   moveTask,
   updateTask,
 } from '@/lib/tasks-api'
-import { stashPendingSend } from '@/screens/chat/pending-send'
 
 const QUERY_KEY = ['claude', 'tasks'] as const
 const ASSIGNEES_KEY = ['claude', 'tasks', 'assignees'] as const
@@ -71,7 +67,6 @@ export function TasksScreen() {
   const [showDone, setShowDone] = useState(false)
 
   const search = useSearch({ from: '/tasks' })
-  const navigate = useNavigate()
   const initialAssignee =
     typeof search.assignee === 'string' ? search.assignee : null
   const [assigneeFilter, setAssigneeFilter] = useState<string | null>(
@@ -163,18 +158,6 @@ export function TasksScreen() {
     },
     onError: (e) =>
       toast(e instanceof Error ? e.message : 'Failed to update task', {
-        type: 'error',
-      }),
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteTask,
-    onSuccess: () => {
-      invalidate()
-      toast('Task deleted')
-    },
-    onError: (e) =>
-      toast(e instanceof Error ? e.message : 'Failed to delete task', {
         type: 'error',
       }),
   })

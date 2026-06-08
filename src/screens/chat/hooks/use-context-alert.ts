@@ -5,8 +5,6 @@ const STORAGE_KEY = 'claude-ctx-alert'
 // 35% threshold fires BEFORE the Hermes compacts (~40% / 80k on 200k window)
 const THRESHOLDS = [90, 75, 35] as const
 
-type Threshold = (typeof THRESHOLDS)[number]
-
 type StoredState = {
   date: string
   sent: Record<'35' | '75' | '90', boolean>

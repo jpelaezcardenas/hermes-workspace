@@ -15,7 +15,6 @@ import {
 } from '../../server/swarm-foundation'
 import {
   appendMissionContinuation,
-  markMissionAssignmentsReviewedByWorker,
   recordMissionCheckpoint,
 } from '../../server/swarm-missions'
 import { appendSwarmMemoryEvent } from '../../server/swarm-memory'

@@ -2,7 +2,7 @@
  * Tests for ssrf-guard helpers.
  */
 import { lookup } from 'node:dns/promises'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { assertNotPrivate, isPrivateAddress } from './ssrf-guard'
 
 // ---------------------------------------------------------------------------

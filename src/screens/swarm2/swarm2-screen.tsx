@@ -1351,32 +1351,6 @@ export function Swarm2Screen() {
     [runtimeQuery],
   )
 
-  const stopAgentSession = useCallback(
-    async (workerId: string) => {
-      setPendingTmux((prev) => new Set(prev).add(workerId))
-      try {
-        const res = await fetch('/api/swarm-tmux-stop', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ workerId }),
-        })
-        if (!res.ok) {
-          const text = await res.text().catch(() => '')
-
-          console.error('[swarm2] stop session failed:', res.status, text)
-        }
-      } finally {
-        setPendingTmux((prev) => {
-          const next = new Set(prev)
-          next.delete(workerId)
-          return next
-        })
-        void runtimeQuery.refetch()
-      }
-    },
-    [runtimeQuery],
-  )
-
   const scrollTmuxSession = useCallback(
     async (
       workerId: string,

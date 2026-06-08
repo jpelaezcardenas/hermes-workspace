@@ -6,7 +6,6 @@ import { requireJsonContentType } from '../../../server/rate-limit'
 import {
   SESSIONS_API_UNAVAILABLE_MESSAGE,
   ensureGatewayProbed,
-  getGatewayCapabilities,
   sendChat,
 } from '../../../server/claude-api'
 import { resolveSessionKey } from '../../../server/session-utils'

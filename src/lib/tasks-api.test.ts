@@ -279,7 +279,7 @@ describe('fetchAssignees', () => {
 
 describe('createTask', () => {
   it('POSTs the input as JSON and returns the created task', async () => {
-    const mock = stubResolvedTo('claude', (input, init) => {
+    const mock = stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(jsonResponse({ task: sampleTask }))
       }
@@ -301,7 +301,7 @@ describe('createTask', () => {
   })
 
   it('surfaces the detail message from an error body', async () => {
-    stubResolvedTo('claude', (input, init) => {
+    stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(
           jsonResponse({ detail: 'title is required' }, 422),
@@ -314,7 +314,7 @@ describe('createTask', () => {
   })
 
   it('falls back to the status message when the error body is not valid JSON', async () => {
-    stubResolvedTo('claude', (input, init) => {
+    stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(htmlResponse('Internal Server Error', 500))
       }
@@ -331,7 +331,7 @@ describe('createTask', () => {
 
 describe('updateTask', () => {
   it('PATCHes the task by id with the partial input and returns the task', async () => {
-    const mock = stubResolvedTo('claude', (input, init) => {
+    const mock = stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'PATCH') {
         return Promise.resolve(jsonResponse({ task: sampleTask }))
       }
@@ -351,7 +351,7 @@ describe('updateTask', () => {
   })
 
   it('throws on a non-OK update', async () => {
-    stubResolvedTo('claude', (input, init) => {
+    stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'PATCH') {
         return Promise.resolve(jsonResponse({}, 404))
       }
@@ -366,7 +366,7 @@ describe('updateTask', () => {
 
 describe('deleteTask', () => {
   it('sends a DELETE to the task url and resolves to void', async () => {
-    const mock = stubResolvedTo('claude', (input, init) => {
+    const mock = stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'DELETE') {
         return Promise.resolve(new Response(null, { status: 204 }))
       }
@@ -382,7 +382,7 @@ describe('deleteTask', () => {
   })
 
   it('throws on a failed delete', async () => {
-    stubResolvedTo('claude', (input, init) => {
+    stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'DELETE') {
         return Promise.resolve(new Response(null, { status: 500 }))
       }
@@ -397,7 +397,7 @@ describe('deleteTask', () => {
 
 describe('linkSession', () => {
   it('PATCHes the session_id (including null to unlink) and returns the task', async () => {
-    const mock = stubResolvedTo('claude', (input, init) => {
+    const mock = stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'PATCH') {
         return Promise.resolve(jsonResponse({ task: sampleTask }))
       }
@@ -424,7 +424,7 @@ describe('launchSession', () => {
       briefing: 'Do the thing',
       task: sampleTask,
     }
-    const mock = stubResolvedTo('claude', (input, init) => {
+    const mock = stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(jsonResponse(launchPayload))
       }
@@ -441,7 +441,7 @@ describe('launchSession', () => {
   })
 
   it('throws on a failed launch', async () => {
-    stubResolvedTo('claude', (input, init) => {
+    stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(jsonResponse({}, 409))
       }
@@ -458,7 +458,7 @@ describe('launchSession', () => {
 
 describe('moveTask', () => {
   it('POSTs to the move action with column and moved_by, defaulting moved_by to "user"', async () => {
-    const mock = stubResolvedTo('claude', (input, init) => {
+    const mock = stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(jsonResponse({ task: sampleTask }))
       }
@@ -477,7 +477,7 @@ describe('moveTask', () => {
   })
 
   it('surfaces the detail message on a non-OK move', async () => {
-    stubResolvedTo('claude', (input, init) => {
+    stubResolvedTo('claude', (_input, init) => {
       if (init?.method === 'POST') {
         return Promise.resolve(
           jsonResponse({ detail: 'column transition not allowed' }, 400),

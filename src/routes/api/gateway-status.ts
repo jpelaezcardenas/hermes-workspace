@@ -5,7 +5,6 @@ import {
   CLAUDE_API,
   CLAUDE_DASHBOARD_URL,
   ensureGatewayProbed,
-  getCapabilities,
   getGatewayMode,
 } from '../../server/gateway-capabilities'
 

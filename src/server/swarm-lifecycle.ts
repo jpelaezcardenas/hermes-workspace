@@ -388,7 +388,6 @@ function startWorkerProcessNative(workerId: string): {
   const hermesCmd = process.env.HERMES_CLI_PATH || 'hermes'
   const args = ['--tui', '--profile', workerId]
 
-  const logPath = workerLogPath(workerId)
   const logDir = join(profilePath, 'logs')
   if (!existsSync(logDir)) mkdirSync(logDir, { recursive: true })
 

@@ -20,7 +20,7 @@ function detectPlatform(): Platform {
 }
 
 function getSetupSteps(
-  platform: Platform,
+  _platform: Platform,
 ): Array<{ title: string; command: string; note?: string }> {
   return [
     {

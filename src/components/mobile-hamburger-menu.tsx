@@ -2,14 +2,12 @@ import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   BrainIcon,
-  Building01Icon,
   Cancel01Icon,
   Castle02Icon,
   Chat01Icon,
   Clock01Icon,
   CommandLineIcon,
   DashboardSquare01Icon,
-  File01Icon,
   McpServerIcon,
   Menu01Icon,
   PuzzleIcon,
@@ -173,9 +171,6 @@ export function MobileHamburgerMenu() {
   const visibleNavItems = MOBILE_HAMBURGER_NAV_ITEMS.filter(
     (item) => item.id !== 'echo-studio' || echoStudioEnabled,
   )
-  const isChatRoute =
-    pathname.startsWith('/chat') || pathname === '/new' || pathname === '/'
-
   function handleNav(to: string) {
     hapticTap()
     void navigate({ to })

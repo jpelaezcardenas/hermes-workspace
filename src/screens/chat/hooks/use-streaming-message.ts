@@ -850,7 +850,6 @@ export function useStreamingMessage(options: UseStreamingMessageOptions = {}) {
       // what this run will compare against. See #297.
       streamGenerationRef.current += 1
       const myGeneration = streamGenerationRef.current
-      const mySessionKey = params.sessionKey
 
       const messageId = `streaming-${Date.now()}`
 

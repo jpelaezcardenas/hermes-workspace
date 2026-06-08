@@ -122,7 +122,6 @@ function ChatHeaderComponent({
   onRefresh,
   agentModel: _agentModel = '',
   agentConnected = true,
-  onOpenAgentDetails,
   pullOffset = 0,
   statusMode = 'idle',
   activeToolName,
@@ -177,14 +176,6 @@ function ChatHeaderComponent({
     onRefresh()
     setTimeout(() => setIsRefreshing(false), 600)
   }, [onRefresh])
-
-  const handleOpenAgentDetails = useCallback(() => {
-    if (onOpenAgentDetails) {
-      onOpenAgentDetails()
-      return
-    }
-    window.dispatchEvent(new CustomEvent('claude:chat-agent-details'))
-  }, [onOpenAgentDetails])
 
   useEffect(() => {
     if (isEditingTitle) return

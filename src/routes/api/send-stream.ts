@@ -1439,17 +1439,6 @@ export const Route = createFileRoute('/api/send-stream')({
                               }
                             }
                             if (lastAssistantIndex >= 0) {
-                              const lastAssistant = recent[lastAssistantIndex]
-                              const rawToolCalls = (lastAssistant.tool_calls ??
-                                (lastAssistant as any).toolCalls) as
-                                | Array<Record<string, unknown>>
-                                | undefined
-                              const toolCalls =
-                                Array.isArray(rawToolCalls) &&
-                                rawToolCalls.length
-                                  ? rawToolCalls
-                                  : []
-
                               const syntheticEvents =
                                 collectSyntheticLiveToolEvents({
                                   messages: recent,

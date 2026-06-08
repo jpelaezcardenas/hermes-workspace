@@ -34,7 +34,7 @@ import { botsFor } from './lib/playground-bots'
 import { PLAYGROUND_WORLDS, itemById } from './lib/playground-rpg'
 import type { ChatMessage } from './components/playground-chat'
 import type { ReactNode } from 'react'
-import type { PlaygroundItemId, PlaygroundWorldId } from './lib/playground-rpg'
+import type { PlaygroundWorldId } from './lib/playground-rpg'
 import type { RemotePlayer } from './hooks/use-playground-multiplayer'
 import { useWorkspaceStore } from '@/stores/workspace-store'
 
@@ -1463,14 +1463,6 @@ function PremiumFeatureCard({
         </span>
       </div>
       <div className="mt-1 text-[11px] text-white/55">{desc}</div>
-    </div>
-  )
-}
-
-function FeatureCard({ children }: { children: ReactNode }) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-      {children}
     </div>
   )
 }

@@ -3636,7 +3636,6 @@ function BotPlayer({
   const ref = useRef<THREE.Group>(null)
   const target = useRef(new THREE.Vector3(...bot.spawn))
   const next = useRef(0)
-  const phase = useMemo(() => Math.random() * Math.PI * 2, [])
   const swing = useRef(0)
   const moving = useRef(false)
 

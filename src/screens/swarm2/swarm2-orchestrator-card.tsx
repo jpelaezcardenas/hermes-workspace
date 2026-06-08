@@ -4,10 +4,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Cancel01Icon,
-  ComputerTerminal01Icon,
   MessageMultiple01Icon,
   Settings01Icon,
-  ViewIcon,
 } from '@hugeicons/core-free-icons'
 import type { AgentWorkingRow } from '@/screens/gateway/components/agents-working-panel'
 import type { CrewMember } from '@/hooks/use-crew-status'
@@ -95,20 +93,12 @@ export type Swarm2OrchestratorCardProps = {
 export function Swarm2OrchestratorCard({
   totalWorkers,
   activeRuntimeCount,
-  roomCount,
-  authErrors,
-  selectedLabel,
-  workspaceModel,
   viewMode,
   onViewModeChange,
-  lanes = [],
   activeAgents = [],
   members,
   roomIds,
   selectedId,
-  recentUpdates = [],
-  latestMission = null,
-  inboxCounts = { needsReview: 0, blocked: 0, ready: 0 },
   routerSeed = null,
   onOpenRouter,
   onRouterResults,

@@ -37,7 +37,7 @@ import {
   ScrollAreaThumb,
   ScrollAreaViewport,
 } from '@/components/ui/scroll-area'
-import { formatCost, useAgentView } from '@/hooks/use-agent-view'
+import { useAgentView } from '@/hooks/use-agent-view'
 import { useCliAgents } from '@/hooks/use-cli-agents'
 import { useSounds } from '@/hooks/use-sounds'
 import { OrchestratorAvatar } from '@/components/orchestrator-avatar'
@@ -715,14 +715,6 @@ export function AgentViewPanel() {
     prevHistoryCount.current = historyAgents.length
   }, [historyAgents.length, setHistoryOpen])
 
-  const totalCost = useMemo(
-    function getTotalCost() {
-      return activeAgents.reduce(function sumCost(total, agent) {
-        return total + agent.estimatedCost
-      }, 0)
-    },
-    [activeAgents],
-  )
   const representedTaskFingerprints = useMemo(() => {
     const fingerprints = new Set<string>()
     activeAgents.forEach((agent) => {

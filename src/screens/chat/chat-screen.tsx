@@ -105,7 +105,6 @@ import { ContextAlertModal } from '@/components/usage-meter/context-alert-modal'
 import { ErrorToastContainer, showErrorToast } from '@/components/error-toast'
 // ContextMeter removed — ContextBar (PR #32) replaces it
 import { persistRecoveryMessage, useChatStore } from '@/stores/chat-store'
-import { useSessionModelStore } from '@/stores/session-model-store'
 import { useResearchCard } from '@/hooks/use-research-card'
 // MOBILE_TAB_BAR_OFFSET removed — tab bar always hidden in chat
 import { useTapDebug } from '@/hooks/use-tap-debug'
@@ -364,10 +363,6 @@ function getMessageRetryAttachments(
   })
 }
 
-function getMessageStatusValue(message: ChatMessage): string {
-  return normalizeMessageValue((message as Record<string, unknown>).status)
-}
-
 function getMessageTimestampValue(message: ChatMessage): number | null {
   const raw = message as Record<string, unknown>
   const candidates = [
@@ -406,14 +401,6 @@ function getMessageAttachmentSignature(message: ChatMessage): string {
     })
     .sort()
     .join('|')
-}
-
-function isOptimisticUserMessage(message: ChatMessage): boolean {
-  const raw = message as Record<string, unknown>
-  return (
-    normalizeMessageValue(raw.__optimisticId).length > 0 ||
-    ['sending', 'sent', 'done'].includes(getMessageStatusValue(message))
-  )
 }
 
 function shouldCollapseTextDuplicate(

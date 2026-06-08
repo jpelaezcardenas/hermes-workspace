@@ -224,13 +224,6 @@ function normalizeAgentList(input: unknown): Array<GatewayConfigAgent> {
   return agents
 }
 
-function parseConfigPayload(payload: ConfigPayload): ConfigPayload {
-  if (payload.payload && typeof payload.payload === 'object') {
-    return payload.payload as ConfigPayload
-  }
-  return payload
-}
-
 async function fetchClaudeProfiles(): Promise<Array<ClaudeProfileSummary>> {
   const response = await fetch('/api/profiles/list')
   const contentType = response.headers.get('content-type') || ''

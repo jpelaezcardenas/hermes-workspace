@@ -18,7 +18,6 @@ import {
   mkdirSync,
   openSync,
   readFileSync,
-  renameSync,
   unlinkSync,
   writeSync,
 } from 'node:fs'

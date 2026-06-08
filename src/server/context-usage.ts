@@ -146,18 +146,6 @@ function authHeaders(): Record<string, string> {
   return BEARER_TOKEN ? { Authorization: `Bearer ${BEARER_TOKEN}` } : {}
 }
 
-function emptySnapshot(): ContextUsageSnapshot {
-  return {
-    ok: true,
-    contextPercent: 0,
-    maxTokens: 0,
-    usedTokens: 0,
-    model: '',
-    staticTokens: 0,
-    conversationTokens: 0,
-  }
-}
-
 function configuredEmptySnapshot(
   configuredModelContext: ResolvedModelContext | null,
 ): ContextUsageSnapshot {

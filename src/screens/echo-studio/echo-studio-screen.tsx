@@ -8,7 +8,6 @@
  * presenting it as a working feature.
  */
 import { useState } from 'react'
-import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 type Tab = 'create' | 'manage' | 'theme'
@@ -29,7 +28,7 @@ export function EchoStudioScreen() {
   const [prompt, setPrompt] = useState('')
   const [creating, setCreating] = useState(false)
   const [screensCreated, setScreensCreated] = useState(0)
-  const [widgetsActive, setWidgetsActive] = useState(0)
+  const [widgetsActive] = useState(0)
   const [apiEndpoints, setApiEndpoints] = useState(0)
 
   const handleCreate = async () => {

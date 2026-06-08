@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useChatStore } from '../../../stores/chat-store'
 
 type ActiveRunStatus =
