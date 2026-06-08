@@ -12,8 +12,9 @@ The live service is `hermes-backup-status.service` on port `9120`.
 
 The Remote subagent servers panel tracks:
 
-- `108`: `192.168.1.108` / DietGTX780Ti
+- `219`: `192.168.1.219` / PiBench
 - `151`: `192.168.1.151` / DietPi
+- `108`: `192.168.1.108` / DietGTX780Ti
 
 The model selector is intentionally constrained to Ollama Cloud models verified with the active account:
 

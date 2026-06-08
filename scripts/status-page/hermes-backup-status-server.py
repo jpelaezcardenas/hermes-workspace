@@ -33,6 +33,10 @@ HOST_151_IP = os.environ.get("HERMES_151_HOST", "192.168.1.151")
 HOST_151_NAME = os.environ.get("HERMES_151_NAME", "DietPi")
 HOST_151_CRED_ENV = pathlib.Path(os.environ.get("HERMES_151_CRED_ENV", "/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/dietpi.env"))
 SUBAGENT_151_STATUS_PATH = pathlib.Path(os.environ.get("HERMES_151_SUBAGENT_STATUS", "/var/lib/hermes-subagent-151/status.json"))
+HOST_219_IP = os.environ.get("HERMES_219_HOST", "192.168.1.219")
+HOST_219_NAME = os.environ.get("HERMES_219_NAME", "PiBench")
+HOST_219_CRED_ENV = pathlib.Path(os.environ.get("HERMES_219_CRED_ENV", "/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/PiBench.env"))
+SUBAGENT_219_STATUS_PATH = pathlib.Path(os.environ.get("HERMES_219_SUBAGENT_STATUS", "/var/lib/hermes-subagent-219/status.json"))
 SUBAGENT_MODEL_STATE_PATH = pathlib.Path(os.environ.get("HERMES_SUBAGENT_MODEL_STATE", "/etc/hermes-subagent-models.json"))
 WORKING_OLLAMA_CLOUD_MODELS = [
     {"model": "qwen3-next:80b", "label": "Qwen3 Next 80B (verified OK)"},
@@ -40,8 +44,9 @@ WORKING_OLLAMA_CLOUD_MODELS = [
     {"model": "gpt-oss:20b", "label": "gpt-oss 20B (verified OK)"},
 ]
 SUBAGENT_SERVERS = {
-    "108": {"id": "108", "name": HOST_108_NAME, "ip": HOST_108_IP, "cred_env": HOST_108_CRED_ENV, "status_path": SUBAGENT_STATUS_PATH, "helper": "hermes-108-subagent"},
-    "151": {"id": "151", "name": HOST_151_NAME, "ip": HOST_151_IP, "cred_env": HOST_151_CRED_ENV, "status_path": SUBAGENT_151_STATUS_PATH, "helper": "hermes-151-subagent"},
+    "219": {"id": "219", "name": HOST_219_NAME, "ip": HOST_219_IP, "cred_env": HOST_219_CRED_ENV, "status_path": SUBAGENT_219_STATUS_PATH, "helper": "hermes-219-subagent", "env_prefix": "PIBENCH", "sudo_root": True},
+    "151": {"id": "151", "name": HOST_151_NAME, "ip": HOST_151_IP, "cred_env": HOST_151_CRED_ENV, "status_path": SUBAGENT_151_STATUS_PATH, "helper": "hermes-151-subagent", "env_prefix": "DIETPI"},
+    "108": {"id": "108", "name": HOST_108_NAME, "ip": HOST_108_IP, "cred_env": HOST_108_CRED_ENV, "status_path": SUBAGENT_STATUS_PATH, "helper": "hermes-108-subagent", "env_prefix": "DIETPI"},
 }
 
 CSS = """
@@ -298,17 +303,32 @@ def _read_env_file(path):
         data[k.strip()] = v.strip().strip(chr(34)).strip(chr(39))
     return data
 
+def _env_value(creds, prefix, name, *fallback_keys):
+    if prefix:
+        value = creds.get(f"{prefix}_{name}")
+        if value:
+            return value
+    for key in fallback_keys:
+        value = creds.get(key)
+        if value:
+            return value
+    return ""
+
+
 def _ssh_command_for_server(server_id, remote_script):
     cfg = SUBAGENT_SERVERS.get(str(server_id))
     if not cfg:
         raise RuntimeError(f"Unknown subagent server {server_id}")
     creds = _read_env_file(cfg["cred_env"])
-    host = creds.get("DIETPI_HOST") or creds.get("HERMES_MASTER_HOST") or cfg["ip"]
-    user = creds.get("DIETPI_USER") or creds.get("HERMES_MASTER_USER") or "root"
-    port = creds.get("DIETPI_PORT") or creds.get("HERMES_MASTER_PORT") or "22"
-    password = creds.get("DIETPI_PASSWORD") or creds.get("HERMES_MASTER_PASSWORD") or ""
+    prefix = cfg.get("env_prefix", "")
+    host = _env_value(creds, prefix, "HOST", "DIETPI_HOST", "HERMES_MASTER_HOST") or cfg["ip"]
+    user = _env_value(creds, prefix, "USER", "DIETPI_USER", "HERMES_MASTER_USER") or "root"
+    port = _env_value(creds, prefix, "PORT", "DIETPI_PORT", "HERMES_MASTER_PORT") or "22"
+    password = _env_value(creds, prefix, "PASSWORD", "DIETPI_PASSWORD", "HERMES_MASTER_PASSWORD")
     if not password:
         raise RuntimeError(f"No SSH password found in {cfg['cred_env']}")
+    if cfg.get("sudo_root") and user != "root":
+        remote_script = "sudo -H bash -lc " + shlex.quote(remote_script)
     env = os.environ.copy()
     env["SSHPASS"] = password
     cmd = ["sshpass", "-e", "ssh", "-o", "BatchMode=no", "-o", "StrictHostKeyChecking=accept-new", "-o", "ConnectTimeout=6", "-p", str(port), f"{user}@{host}", remote_script]
@@ -982,6 +1002,9 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/subagent-151.json":
             self.send_json(read_subagent_status_for("151"))
             return
+        if path == "/subagent-219.json":
+            self.send_json(read_subagent_status_for("219"))
+            return
         if path == "/cloudflare-ns-status.json":
             self.send_json(read_cloudflare_ns_status())
             return
@@ -1102,8 +1125,8 @@ class Handler(BaseHTTPRequestHandler):
 </section>
 """
         statuses = all_subagent_statuses()
-        subagent_body = "".join(render_subagent_card(sid, statuses[sid]) for sid in sorted(SUBAGENT_SERVERS)) + """
-<p class='muted small'>Verified working Ollama Cloud model scan: <code>qwen3-next:80b</code>, <code>glm-4.6:latest</code>, and <code>gpt-oss:20b</code>. JSON endpoints: <a href='/remote-subagents.json'>/remote-subagents.json</a>, <a href='/subagent-108.json'>/subagent-108.json</a>, <a href='/subagent-151.json'>/subagent-151.json</a>.</p>
+        subagent_body = "".join(render_subagent_card(sid, statuses[sid]) for sid in SUBAGENT_SERVERS) + """
+<p class='muted small'>Verified working Ollama Cloud model scan: <code>qwen3-next:80b</code>, <code>glm-4.6:latest</code>, and <code>gpt-oss:20b</code>. JSON endpoints: <a href='/remote-subagents.json'>/remote-subagents.json</a>, <a href='/subagent-108.json'>/subagent-108.json</a>, <a href='/subagent-151.json'>/subagent-151.json</a>, <a href='/subagent-219.json'>/subagent-219.json</a>.</p>
 """
         subagent_section = collapsible("Remote subagent servers", subagent_body, True)
         def fmt_ns_list(items):

@@ -4,6 +4,7 @@ import json
 import os
 import pathlib
 import subprocess
+import shlex
 import tempfile
 import time
 from datetime import datetime, timezone
@@ -11,17 +12,27 @@ from datetime import datetime, timezone
 MODEL_STATE_PATH = pathlib.Path('/etc/hermes-subagent-models.json')
 DEFAULT_MODEL = 'qwen3-next:80b'
 SERVERS = {
-    '108': {
-        'host': '192.168.1.108',
-        'name': 'DietGTX780Ti',
-        'env_path': '/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/hermes_slave.env',
-        'out_dir': '/var/lib/hermes-subagent-108',
+    '219': {
+        'host': '192.168.1.219',
+        'name': 'PiBench',
+        'env_path': '/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/PiBench.env',
+        'out_dir': '/var/lib/hermes-subagent-219',
+        'env_prefix': 'PIBENCH',
+        'sudo_root': True,
     },
     '151': {
         'host': '192.168.1.151',
         'name': 'DietPi',
         'env_path': '/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/dietpi.env',
         'out_dir': '/var/lib/hermes-subagent-151',
+        'env_prefix': 'DIETPI',
+    },
+    '108': {
+        'host': '192.168.1.108',
+        'name': 'DietGTX780Ti',
+        'env_path': '/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/hermes_slave.env',
+        'out_dir': '/var/lib/hermes-subagent-108',
+        'env_prefix': 'DIETPI',
     },
 }
 
@@ -66,13 +77,29 @@ def run(cmd, timeout=20):
         return {'ok': False, 'returncode': None, 'stdout': '', 'stderr': str(e), 'elapsed_seconds': round(time.time() - started, 2)}
 
 
-def ssh_cmd(env, remote_script, default_host):
-    host = env.get('DIETPI_HOST') or env.get('HERMES_MASTER_HOST') or default_host
-    user = env.get('DIETPI_USER') or env.get('HERMES_MASTER_USER') or 'root'
-    port = env.get('DIETPI_PORT') or env.get('HERMES_MASTER_PORT') or '22'
+def env_value(env, prefix, name, *fallback_keys):
+    if prefix:
+        val = env.get(f'{prefix}_{name}')
+        if val:
+            return val
+    for key in fallback_keys:
+        val = env.get(key)
+        if val:
+            return val
+    return ''
+
+
+def ssh_cmd(env, remote_script, default_host, cfg=None):
+    cfg = cfg or {}
+    prefix = cfg.get('env_prefix', '')
+    host = env_value(env, prefix, 'HOST', 'DIETPI_HOST', 'HERMES_MASTER_HOST') or default_host
+    user = env_value(env, prefix, 'USER', 'DIETPI_USER', 'HERMES_MASTER_USER') or 'root'
+    port = env_value(env, prefix, 'PORT', 'DIETPI_PORT', 'HERMES_MASTER_PORT') or '22'
     strict = env.get('HERMES_MASTER_STRICT_HOST_KEY_CHECKING', 'accept-new')
     key = env.get('HERMES_MASTER_SSH_KEY', '')
-    password = env.get('DIETPI_PASSWORD') or env.get('HERMES_MASTER_PASSWORD') or ''
+    password = env_value(env, prefix, 'PASSWORD', 'DIETPI_PASSWORD', 'HERMES_MASTER_PASSWORD')
+    if cfg.get('sudo_root') and user != 'root':
+        remote_script = 'sudo -H bash -lc ' + shlex.quote(remote_script)
     cmd = ['sshpass', '-p', password, 'ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=no', '-o', f'StrictHostKeyChecking={strict}', '-p', port]
     if key and pathlib.Path(key).exists():
         cmd += ['-i', key]
@@ -82,12 +109,12 @@ def ssh_cmd(env, remote_script, default_host):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--server', default='108', choices=sorted(SERVERS))
+    ap.add_argument('--server', default='108', choices=list(SERVERS))
     args = ap.parse_args()
     cfg = SERVERS[args.server]
     model = desired_model(args.server)
     env = load_env(cfg['env_path'])
-    cmd_dummy, has_password, host = ssh_cmd(env, 'true', cfg['host'])
+    cmd_dummy, has_password, host = ssh_cmd(env, 'true', cfg['host'], cfg)
     out_dir = pathlib.Path(cfg['out_dir'])
     out_path = out_dir / 'status.json'
     status = {
@@ -123,7 +150,7 @@ printf 'delegation='; grep -A6 '^delegation:' /root/.hermes/config.yaml 2>/dev/n
 printf '\nmodel='; grep -A5 '^model:' /root/.hermes/config.yaml 2>/dev/null | sed -n '1,6p' | tr '\n' ';'
 printf '\n'
 '''
-        ssh, _, _ = ssh_cmd(env, remote_probe, cfg['host'])
+        ssh, _, _ = ssh_cmd(env, remote_probe, cfg['host'], cfg)
         ssh_result = run(ssh, timeout=25)
         status['ssh_ok'] = ssh_result['ok']
         status['remote_probe'] = ssh_result['stdout'] if ssh_result['ok'] else ssh_result['stderr']
@@ -154,7 +181,7 @@ except Exception as e:
     print(json.dumps({{"ok": False, "model": model, "error": str(e)}}))
 PY
 '''
-        llm_cmd, _, _ = ssh_cmd(env, remote_llm, cfg['host'])
+        llm_cmd, _, _ = ssh_cmd(env, remote_llm, cfg['host'], cfg)
         llm = run(llm_cmd, timeout=70)
         try:
             llm_json = json.loads((llm['stdout'] or '{}').splitlines()[-1]) if llm['stdout'] else {}

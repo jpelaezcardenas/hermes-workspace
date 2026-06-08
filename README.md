@@ -62,8 +62,9 @@ Start here: [docs/swarm/](./docs/swarm/)
 
 The pve2 C&C status page at `http://192.168.1.140:9120/` includes a **Remote subagent servers** panel for LAN Hermes helper nodes. It currently tracks:
 
-- `192.168.1.108` / `DietGTX780Ti`
+- `192.168.1.219` / `PiBench` (primary/first fallback)
 - `192.168.1.151` / `DietPi`
+- `192.168.1.108` / `DietGTX780Ti`
 
 Both nodes are configured for Ollama Cloud subagent work. The panel exposes `/remote-subagents.json`, per-host JSON endpoints, and a model selector that applies changes to the selected server by running `hermes config set` remotely for both the main `model` block and the `delegation` block. The POST succeeds only after the remote Hermes config is read back and verified.
 
