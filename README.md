@@ -57,6 +57,18 @@ Start here: [docs/swarm/](./docs/swarm/)
 - 📱 **PWA + Tailscale** — Install as a native-feeling app; access from any device on your tailnet
 - ⚙️ **Capability gates** — Features that need upstream endpoints (Conductor) show a clean placeholder instead of failing mid-action
 
+
+### Remote subagent servers status panel
+
+The pve2 C&C status page at `http://192.168.1.140:9120/` includes a **Remote subagent servers** panel for LAN Hermes helper nodes. It currently tracks:
+
+- `192.168.1.108` / `DietGTX780Ti`
+- `192.168.1.151` / `DietPi`
+
+Both nodes are configured for Ollama Cloud subagent work. The panel exposes `/remote-subagents.json`, per-host JSON endpoints, and a model selector that applies changes to the selected server by running `hermes config set` remotely for both the main `model` block and the `delegation` block. The POST succeeds only after the remote Hermes config is read back and verified.
+
+Verified Ollama Cloud model options in this environment are `qwen3-next:80b`, `glm-4.6:latest`, and `gpt-oss:20b`. See [docs/operations/remote-subagent-servers.md](./docs/operations/remote-subagent-servers.md) for runtime paths, service names, endpoint contracts, and verification commands.
+
 ---
 
 ## 📸 Screenshots
