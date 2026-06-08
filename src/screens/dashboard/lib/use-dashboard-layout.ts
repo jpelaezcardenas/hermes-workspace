@@ -11,6 +11,7 @@ const STORAGE_KEY = 'dashboard.layout.v1'
  * can group them sensibly in the picker UI.
  */
 export type WidgetId =
+  | 'git_status'
   | 'analytics_chart'
   | 'top_models'
   | 'provider_mix'
@@ -35,6 +36,13 @@ export type WidgetMeta = {
 }
 
 export const WIDGET_CATALOG: ReadonlyArray<WidgetMeta> = [
+  {
+    id: 'git_status',
+    label: 'Git status',
+    description: 'Current commit, branch, and push/drift status for this workspace repo.',
+    column: 'rail',
+    hideable: true,
+  },
   {
     id: 'analytics_chart',
     label: 'Analytics chart',
