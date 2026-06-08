@@ -37,6 +37,10 @@ HOST_219_IP = os.environ.get("HERMES_219_HOST", "192.168.1.219")
 HOST_219_NAME = os.environ.get("HERMES_219_NAME", "PiBench")
 HOST_219_CRED_ENV = pathlib.Path(os.environ.get("HERMES_219_CRED_ENV", "/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/PiBench.env"))
 SUBAGENT_219_STATUS_PATH = pathlib.Path(os.environ.get("HERMES_219_SUBAGENT_STATUS", "/var/lib/hermes-subagent-219/status.json"))
+HOST_211_IP = os.environ.get("HERMES_211_HOST", "192.168.1.211")
+HOST_211_NAME = os.environ.get("HERMES_211_NAME", "Pxvirt")
+HOST_211_CRED_ENV = pathlib.Path(os.environ.get("HERMES_211_CRED_ENV", "/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/RPi5_01.env"))
+SUBAGENT_211_STATUS_PATH = pathlib.Path(os.environ.get("HERMES_211_SUBAGENT_STATUS", "/var/lib/hermes-subagent-211/status.json"))
 SUBAGENT_MODEL_STATE_PATH = pathlib.Path(os.environ.get("HERMES_SUBAGENT_MODEL_STATE", "/etc/hermes-subagent-models.json"))
 WORKING_OLLAMA_CLOUD_MODELS = [
     {"model": "qwen3-next:80b", "label": "Qwen3 Next 80B (verified OK)"},
@@ -45,6 +49,7 @@ WORKING_OLLAMA_CLOUD_MODELS = [
 ]
 SUBAGENT_SERVERS = {
     "219": {"id": "219", "name": HOST_219_NAME, "ip": HOST_219_IP, "cred_env": HOST_219_CRED_ENV, "status_path": SUBAGENT_219_STATUS_PATH, "helper": "hermes-219-subagent", "env_prefix": "PIBENCH", "sudo_root": True},
+    "211": {"id": "211", "name": HOST_211_NAME, "ip": HOST_211_IP, "cred_env": HOST_211_CRED_ENV, "status_path": SUBAGENT_211_STATUS_PATH, "helper": "hermes-211-subagent", "env_prefix": "RPI5_01"},
     "151": {"id": "151", "name": HOST_151_NAME, "ip": HOST_151_IP, "cred_env": HOST_151_CRED_ENV, "status_path": SUBAGENT_151_STATUS_PATH, "helper": "hermes-151-subagent", "env_prefix": "DIETPI"},
     "108": {"id": "108", "name": HOST_108_NAME, "ip": HOST_108_IP, "cred_env": HOST_108_CRED_ENV, "status_path": SUBAGENT_STATUS_PATH, "helper": "hermes-108-subagent", "env_prefix": "DIETPI"},
 }
@@ -1005,6 +1010,9 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/subagent-219.json":
             self.send_json(read_subagent_status_for("219"))
             return
+        if path == "/subagent-211.json":
+            self.send_json(read_subagent_status_for("211"))
+            return
         if path == "/cloudflare-ns-status.json":
             self.send_json(read_cloudflare_ns_status())
             return
@@ -1126,7 +1134,7 @@ class Handler(BaseHTTPRequestHandler):
 """
         statuses = all_subagent_statuses()
         subagent_body = "".join(render_subagent_card(sid, statuses[sid]) for sid in SUBAGENT_SERVERS) + """
-<p class='muted small'>Verified working Ollama Cloud model scan: <code>qwen3-next:80b</code>, <code>glm-4.6:latest</code>, and <code>gpt-oss:20b</code>. JSON endpoints: <a href='/remote-subagents.json'>/remote-subagents.json</a>, <a href='/subagent-108.json'>/subagent-108.json</a>, <a href='/subagent-151.json'>/subagent-151.json</a>, <a href='/subagent-219.json'>/subagent-219.json</a>.</p>
+<p class='muted small'>Verified working Ollama Cloud model scan: <code>qwen3-next:80b</code>, <code>glm-4.6:latest</code>, and <code>gpt-oss:20b</code>. JSON endpoints: <a href='/remote-subagents.json'>/remote-subagents.json</a>, <a href='/subagent-108.json'>/subagent-108.json</a>, <a href='/subagent-151.json'>/subagent-151.json</a>, <a href='/subagent-219.json'>/subagent-219.json</a>, <a href='/subagent-211.json'>/subagent-211.json</a>.</p>
 """
         subagent_section = collapsible("Remote subagent servers", subagent_body, True)
         def fmt_ns_list(items):

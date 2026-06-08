@@ -20,6 +20,13 @@ SERVERS = {
         'env_prefix': 'PIBENCH',
         'sudo_root': True,
     },
+    '211': {
+        'host': '192.168.1.211',
+        'name': 'Pxvirt',
+        'env_path': '/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/RPi5_01.env',
+        'out_dir': '/var/lib/hermes-subagent-211',
+        'env_prefix': 'RPI5_01',
+    },
     '151': {
         'host': '192.168.1.151',
         'name': 'DietPi',

@@ -12,6 +12,7 @@ It includes a **Remote subagent servers** section for LAN Hermes helper nodes an
 - Model selection state: `/etc/hermes-subagent-models.json`
 - Per-host status JSON, in fallback order:
   - `/var/lib/hermes-subagent-219/status.json`
+  - `/var/lib/hermes-subagent-211/status.json`
   - `/var/lib/hermes-subagent-151/status.json`
   - `/var/lib/hermes-subagent-108/status.json`
 
@@ -22,6 +23,7 @@ The repository keeps source snapshots in `scripts/status-page/` so changes can b
 | ID | Host | Name | Role |
 | --- | --- | --- | --- |
 | `219` | `192.168.1.219` | `PiBench` | Primary/first fallback Hermes remote subagent host; SSH user `blackscience`, commands run with sudo-root for Hermes config |
+| `211` | `192.168.1.211` | `Pxvirt` | Proxmox/Pi5 host running Hermes as root with `RPI5_01_*` SSH credentials |
 | `151` | `192.168.1.151` | `DietPi` | Hermes remote subagent host installed on DietPi/Debian 12 |
 | `108` | `192.168.1.108` | `DietGTX780Ti` | Existing Hermes remote subagent host |
 
@@ -48,8 +50,8 @@ delegation:
 Each server has its own status timer. The checker probes ping, SSH, Hermes install/config, and an Ollama Cloud chat-completion smoke test.
 
 ```bash
-systemctl status hermes-219-subagent-status.timer hermes-151-subagent-status.timer hermes-108-subagent-status.timer --no-pager
-systemctl start hermes-219-subagent-status.service hermes-151-subagent-status.service hermes-108-subagent-status.service
+systemctl status hermes-219-subagent-status.timer hermes-211-subagent-status.timer hermes-151-subagent-status.timer hermes-108-subagent-status.timer --no-pager
+systemctl start hermes-219-subagent-status.service hermes-211-subagent-status.service hermes-151-subagent-status.service hermes-108-subagent-status.service
 ```
 
 Expected JSON readiness after a healthy run:
@@ -70,6 +72,7 @@ Expected JSON readiness after a healthy run:
 
 - `/remote-subagents.json` returns all registered remote subagent statuses.
 - `/subagent-219.json` returns the PiBench primary fallback status.
+- `/subagent-211.json` returns the Pxvirt status.
 - `/subagent-151.json` returns the DietPi status.
 - `/subagent-108.json` returns the DietGTX780Ti status.
 - `/subagent-status.json` remains backward compatible with the original 108 status.
@@ -110,10 +113,10 @@ After applying, the remote command reads back `hermes config` / `config.yaml` an
 python3 -m py_compile /mnt/pve/LocalDir/hermes-critical/pve2/hermes-backup-status-server.py /usr/local/sbin/hermes-subagent-status.py
 systemctl restart hermes-backup-status.service
 systemctl is-active hermes-backup-status.service
-systemctl start hermes-219-subagent-status.service hermes-151-subagent-status.service hermes-108-subagent-status.service
+systemctl start hermes-219-subagent-status.service hermes-211-subagent-status.service hermes-151-subagent-status.service hermes-108-subagent-status.service
 python3 - <<'PY'
 import json, urllib.request
-for path in ['/remote-subagents.json', '/subagent-219.json', '/subagent-151.json', '/subagent-108.json']:
+for path in ['/remote-subagents.json', '/subagent-219.json', '/subagent-211.json', '/subagent-151.json', '/subagent-108.json']:
     data = json.load(urllib.request.urlopen('http://127.0.0.1:9120' + path, timeout=10))
     print(path, data if path != '/remote-subagents.json' else data.keys())
 PY
