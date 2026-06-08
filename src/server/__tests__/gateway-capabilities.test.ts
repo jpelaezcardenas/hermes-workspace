@@ -130,7 +130,7 @@ describe('gateway-capabilities', () => {
     mod.setGatewayUrl('http://tailscale:9999')
     expect(mod.CLAUDE_API).toBe('http://tailscale:9999')
 
-    const fallback = mod.setGatewayUrl(null as any)
+    const fallback = mod.setGatewayUrl(null)
     expect(fallback).toBe('http://127.0.0.1:8642')
     expect(mod.CLAUDE_API).toBe('http://127.0.0.1:8642')
   })

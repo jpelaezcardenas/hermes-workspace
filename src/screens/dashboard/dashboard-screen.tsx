@@ -448,8 +448,9 @@ export function DashboardScreen() {
             const nextDataTheme =
               LIGHT_DARK_PAIRS[cur] ||
               (isDark ? 'claude-official-light' : 'claude-official')
-            import('@/lib/theme').then(({ setTheme }) => {
-              setTheme(nextDataTheme as any)
+            import('@/lib/theme').then(({ setTheme, THEMES }) => {
+              const matched = THEMES.find((t) => t.id === nextDataTheme)
+              if (matched) setTheme(matched.id)
             })
             const nextMode = nextDataTheme.endsWith('-light') ? 'light' : 'dark'
             applyTheme(nextMode)

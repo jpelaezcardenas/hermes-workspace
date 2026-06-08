@@ -33,6 +33,7 @@ import { ProvidersDialog } from './providers-dialog'
 import { SessionRenameDialog } from './sidebar/session-rename-dialog'
 import { SessionDeleteDialog } from './sidebar/session-delete-dialog'
 import { SidebarSessions } from './sidebar/sidebar-sessions'
+import type { IconSvgElement } from '@hugeicons/react'
 import type { LinkProps } from '@tanstack/react-router'
 import type { ChatOpenSettingsDetail } from '../chat-events'
 import type { SessionMeta } from '../types'
@@ -99,8 +100,8 @@ function ThemeToggleMini() {
             ? `${currentDataTheme}-light`
             : currentDataTheme.replace(/-light$/, ''))
         // Import and call setTheme to persist and apply
-        import('@/lib/theme').then(({ setTheme }) => {
-          setTheme(nextDataTheme as any)
+        import('@/lib/theme').then(({ setTheme, isValidTheme }) => {
+          if (isValidTheme(nextDataTheme)) setTheme(nextDataTheme)
         })
         // Also update settings hook
         const nextMode = nextDataTheme.endsWith('-light') ? 'light' : 'dark'
@@ -142,7 +143,7 @@ type NavItemDef = {
   to?: LinkProps['to']
   search?: LinkProps['search']
   hash?: LinkProps['hash']
-  icon: unknown
+  icon: IconSvgElement
   label: string
   active: boolean
   onClick?: () => void
@@ -189,7 +190,7 @@ function NavItem({
     item.badge === 'error-dot' ? (
       <span className="relative inline-flex size-5 shrink-0 items-center justify-center">
         <HugeiconsIcon
-          icon={item.icon as any}
+          icon={item.icon}
           size={20}
           strokeWidth={1.5}
           className="size-5 shrink-0"
@@ -198,7 +199,7 @@ function NavItem({
       </span>
     ) : (
       <HugeiconsIcon
-        icon={item.icon as any}
+        icon={item.icon}
         size={20}
         strokeWidth={1.5}
         className="size-5 shrink-0"
@@ -1039,7 +1040,7 @@ function ChatSidebarComponent({
       {/* ── HermesWorld featured link (gold castle, NEW badge) ────── */}
       {/* Hide when VITE_HERMESWORLD_ENABLED is explicitly '0' */}
       {!isVisuallyCollapsed &&
-        (import.meta as any).env?.VITE_HERMESWORLD_ENABLED !== '0' && (
+        import.meta.env.VITE_HERMESWORLD_ENABLED !== '0' && (
           <div className="px-2 pb-2">
             <Link
               to="/playground"

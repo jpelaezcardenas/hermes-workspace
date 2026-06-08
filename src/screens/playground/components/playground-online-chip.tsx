@@ -29,9 +29,7 @@ type Stats = {
 type Transport = 'offline' | 'broadcast' | 'ws' | 'both'
 
 const STATS_URL =
-  (typeof import.meta !== 'undefined' &&
-    (import.meta as any).env?.VITE_PLAYGROUND_STATS_URL) ||
-  ''
+  (import.meta.env.VITE_PLAYGROUND_STATS_URL as string | undefined) || ''
 
 export function PlaygroundOnlineChip({
   accent = '#34d399',
@@ -60,11 +58,13 @@ export function PlaygroundOnlineChip({
     window.addEventListener('hermes-playground-transport', onTransport)
 
     // Pre-populate from window globals if hook fired before mount.
-    const cur = (window as any).__hermesPlaygroundLiveCount as Stats | undefined
+    const globals = window as Window & {
+      __hermesPlaygroundLiveCount?: Stats
+      __hermesPlaygroundLiveTransport?: Transport
+    }
+    const cur = globals.__hermesPlaygroundLiveCount
     if (cur) setStats(cur)
-    const curT = (window as any).__hermesPlaygroundLiveTransport as
-      | Transport
-      | undefined
+    const curT = globals.__hermesPlaygroundLiveTransport
     if (curT) setTransport(curT)
 
     // Fallback: one-shot /stats fetch if no push arrives in 3s.

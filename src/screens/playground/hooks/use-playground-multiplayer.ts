@@ -254,10 +254,8 @@ export function usePlaygroundMultiplayer({
   useEffect(() => {
     if (typeof window === 'undefined') return
     const url =
-      (window as any).__HERMES_PLAYGROUND_WS_URL ||
-      ((import.meta as any).env?.VITE_PLAYGROUND_WS_URL as
-        | string
-        | undefined) ||
+      window.__HERMES_PLAYGROUND_WS_URL ||
+      (import.meta.env.VITE_PLAYGROUND_WS_URL as string | undefined) ||
       'wss://hermes-playground-ws.myaurora-agi.workers.dev/playground'
 
     console.log('[Hermes MP] connecting to WS:', url)
@@ -522,11 +520,9 @@ export function usePlaygroundMultiplayer({
   useEffect(() => {
     if (typeof window === 'undefined') return
     const baseUrl =
-      (window as any).__HERMES_PLAYGROUND_HTTP_URL ||
+      window.__HERMES_PLAYGROUND_HTTP_URL ||
       (
-        (import.meta as any).env?.VITE_PLAYGROUND_STATS_URL as
-          | string
-          | undefined
+        import.meta.env.VITE_PLAYGROUND_STATS_URL as string | undefined
       )?.replace(/\/stats$/, '') ||
       'https://hermes-playground-ws.myaurora-agi.workers.dev'
     const control = { stopped: false }
@@ -560,21 +556,21 @@ export function usePlaygroundMultiplayer({
         })
         if (!isStopped() && r.ok) {
           const data = (await r.json()) as {
-            presences?: Array<any>
-            chats?: Array<any>
+            presences?: Array<RemotePlayer>
+            chats?: Array<ChatWire>
             online: number
             byWorld: Record<string, number>
             peakToday: number
           }
           // Merge presences
           for (const p of data.presences || []) {
-            mergePresence(p as RemotePlayer)
+            mergePresence(p)
           }
           // Replay any chat messages we haven't seen + attach them to the
           // matching remote player so a speech bubble appears over their head.
           for (const c of data.chats || []) {
             if (typeof c.ts === 'number' && c.ts > lastChatTs) lastChatTs = c.ts
-            onChatRef.current?.(c as ChatWire)
+            onChatRef.current?.(c)
             if (c.id && typeof c.text === 'string') {
               setRemotePlayers((prev) => {
                 const cur = Object.hasOwn(prev, c.id) ? prev[c.id] : undefined
@@ -639,11 +635,9 @@ export function usePlaygroundMultiplayer({
       const trimmed = text.trim()
       if (!trimmed) return
       const baseUrl =
-        (window as any).__HERMES_PLAYGROUND_HTTP_URL ||
+        window.__HERMES_PLAYGROUND_HTTP_URL ||
         (
-          (import.meta as any).env?.VITE_PLAYGROUND_STATS_URL as
-            | string
-            | undefined
+          import.meta.env.VITE_PLAYGROUND_STATS_URL as string | undefined
         )?.replace(/\/stats$/, '') ||
         'https://hermes-playground-ws.myaurora-agi.workers.dev'
       fetch(`${baseUrl}/chat`, {

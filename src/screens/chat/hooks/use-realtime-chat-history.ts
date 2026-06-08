@@ -243,8 +243,8 @@ export function useRealtimeChatHistory({
               )
               const cached =
                 queryClient.getQueryData<Record<string, unknown>>(key)
-              const existing = (cached?.messages ?? []) as Array<any>
-              const hasOptimistic = existing.some((m: any) => {
+              const existing = (cached?.messages ?? []) as Array<ChatMessage>
+              const hasOptimistic = existing.some((m: ChatMessage) => {
                 if (m.role !== 'user') return false
                 const isOptimistic =
                   typeof m.__optimisticId === 'string' &&

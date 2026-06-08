@@ -151,8 +151,8 @@ export function PlaygroundDialog({
         fallback: data.fallback,
       }
       setChatLog((p) => [...p, t])
-    } catch (e: any) {
-      if (e?.name === 'AbortError') return
+    } catch (e: unknown) {
+      if (e instanceof Error && e.name === 'AbortError') return
       // Never surface raw provider errors (401, JSON dumps, etc.) to the player.
       const npcName = npc?.name ?? 'The figure'
       const fallbackLines = [
@@ -177,7 +177,7 @@ export function PlaygroundDialog({
   }
 
   const showChat = chatLog.length > 0 || askingLLM
-  const llmEnabled = (import.meta as any).env?.VITE_PLAYGROUND_LLM_CHAT === '1'
+  const llmEnabled = import.meta.env.VITE_PLAYGROUND_LLM_CHAT === '1'
   const offlineMode = !llmEnabled || chatLog.some((t) => t.fallback)
 
   return (

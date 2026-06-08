@@ -12,6 +12,7 @@ import type {
   ChatAttachment,
   ChatMessage,
   SelectionCardContent,
+  TextContent,
   ToolCallContent,
 } from '../types'
 import type { ToolPart } from '@/components/prompt-kit/tool'
@@ -95,6 +96,26 @@ function getWordBoundaryIndex(text: string, wordCount: number): number {
   }
 
   return text.length
+}
+
+// Image content blocks the server emits inline. These are not part of the
+// MessageContent union, so narrow defensively from the union element type.
+type ImageContentSource = {
+  type?: string
+  data?: string
+  media_type?: string
+  url?: string
+}
+type ImageContent = {
+  type: 'image'
+  source?: ImageContentSource
+  url?: string
+}
+
+function isImageContent(part: unknown): part is ImageContent {
+  if (typeof part !== 'object' || part === null) return false
+  const candidate = part as { type?: unknown; source?: unknown }
+  return candidate.type === 'image' && candidate.source != null
 }
 
 type StreamToolCall = {
@@ -341,8 +362,11 @@ function extractToolResultText(msg: ChatMessage | undefined): string {
   // Prefer text from content blocks (exec stdout, Read output, etc.)
   if (Array.isArray(msg.content)) {
     const text = msg.content
-      .filter((b: any) => b?.type === 'text' && b?.text)
-      .map((b: any) => b.text as string)
+      .filter(
+        (b): b is TextContent =>
+          b.type === 'text' && typeof b.text === 'string' && b.text.length > 0,
+      )
+      .map((b) => b.text ?? '')
       .join('\n')
     if (text.trim()) return text
   }
@@ -1526,14 +1550,17 @@ function MessageItemComponent({
 
   // Extract inline images from content array (server sends images as content blocks)
   const inlineImages = useMemo(() => {
-    const parts = Array.isArray(message.content) ? message.content : []
+    const parts: Array<unknown> = Array.isArray(message.content)
+      ? message.content
+      : []
     return parts
-      .filter((p: any) => p.type === 'image' && p.source)
-      .map((p: any, i: number) => {
+      .filter(isImageContent)
+      .map((p, i) => {
+        const source = p.source
         const src =
-          p.source?.type === 'base64' && p.source?.data
-            ? `data:${p.source.media_type || 'image/jpeg'};base64,${p.source.data}`
-            : p.source?.url || p.url || ''
+          source?.type === 'base64' && source.data
+            ? `data:${source.media_type || 'image/jpeg'};base64,${source.data}`
+            : source?.url || p.url || ''
         return { id: `inline-img-${i}`, src }
       })
       .filter((img) => img.src.length > 0)

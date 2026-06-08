@@ -78,7 +78,13 @@ import type {
   ThinkingLevel,
 } from './components/chat-composer'
 import type { ApprovalRequest } from '@/screens/gateway/lib/approvals-store'
-import type { ChatAttachment, ChatMessage, SessionMeta } from './types'
+import type {
+  ChatAttachment,
+  ChatMessage,
+  HistoryResponse,
+  SessionMeta,
+  ToolCallContent,
+} from './types'
 import type { AgentActivity } from '@/stores/chat-activity-store'
 import { useChatSettingsStore } from '@/hooks/use-chat-settings'
 import { playChatComplete } from '@/lib/sounds'
@@ -114,6 +120,17 @@ import { useChatActivityStore } from '@/stores/chat-activity-store'
 export let _localModelOverride = ''
 export function setLocalModelOverride(model: string) {
   _localModelOverride = model
+}
+
+type ModelInfo = {
+  id?: string
+  [key: string]: unknown
+}
+
+type ModelsResponse = {
+  models: Array<ModelInfo>
+  streamAcceptedTimeoutMs?: number
+  streamHandoffTimeoutMs?: number
 }
 
 type ChatScreenProps = {
@@ -273,7 +290,7 @@ function messageFallbackSignature(message: ChatMessage): string {
 
   const contentParts = Array.isArray(message.content)
     ? message.content
-        .map((part: any) => {
+        .map((part) => {
           if (part.type === 'text') {
             return `t:${typeof part.text === 'string' ? part.text.trim() : ''}`
           }
@@ -284,7 +301,7 @@ function messageFallbackSignature(message: ChatMessage): string {
             const toolPart = part
             return `tc:${toolPart.id ?? ''}:${toolPart.name ?? ''}`
           }
-          return `p:${part.type ?? ''}`
+          return `p:${part.type}`
         })
         .join('|')
     : ''
@@ -981,10 +998,10 @@ export function ChatScreen({
   // Phase 4.1: Smart Model Suggestions
   const modelsQuery = useQuery({
     queryKey: ['models'],
-    queryFn: async () => {
+    queryFn: async (): Promise<ModelsResponse> => {
       const res = await fetch('/api/models')
       if (!res.ok) return { models: [] }
-      const data = await res.json()
+      const data = (await res.json()) as ModelsResponse
       return data
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -1061,7 +1078,7 @@ export function ChatScreen({
 
   const availableModelIds = useMemo(() => {
     const models = modelsQuery.data?.models || []
-    return models.map((m: any) => m.id).filter((id: string) => id)
+    return models.map((m) => m.id).filter((id): id is string => Boolean(id))
   }, [modelsQuery.data])
 
   const gatewayModel = currentModelQuery.data || ''
@@ -1121,7 +1138,7 @@ export function ChatScreen({
     messages: historyMessages.map((m) => ({
       role: m.role as 'user' | 'assistant',
       content: textFromMessage(m),
-    })) as any,
+    })),
     availableModels: availableModelIds,
   })
 
@@ -1472,14 +1489,14 @@ export function ChatScreen({
       if (streamToolCalls.length > 0) {
         const msgContent = Array.isArray(msg.content) ? msg.content : []
         const msgToolCalls = msgContent.filter(
-          (p: any) => p.type === 'toolCall',
+          (p): p is ToolCallContent => p.type === 'toolCall',
         )
         if (
           msgToolCalls.length > 0 &&
           msgToolCalls.length === streamToolCalls.length
         ) {
-          return streamToolCalls.every((stc: any) =>
-            msgToolCalls.some((mtc: any) => mtc.name === stc.name),
+          return streamToolCalls.every((stc) =>
+            msgToolCalls.some((mtc) => mtc.name === stc.name),
           )
         }
       }
@@ -2093,11 +2110,11 @@ export function ChatScreen({
       pending.friendlyId,
       pending.sessionKey,
     )
-    const cached = queryClient.getQueryData(historyKey)
-    const cachedMessages = Array.isArray((cached as any)?.messages)
-      ? (cached as any).messages
+    const cached = queryClient.getQueryData<HistoryResponse>(historyKey)
+    const cachedMessages = Array.isArray(cached?.messages)
+      ? cached.messages
       : []
-    const alreadyHasOptimistic = cachedMessages.some((message: any) => {
+    const alreadyHasOptimistic = cachedMessages.some((message) => {
       if (pending.optimisticMessage.clientId) {
         if (message.clientId === pending.optimisticMessage.clientId) return true
         if (message.__optimisticId === pending.optimisticMessage.clientId)

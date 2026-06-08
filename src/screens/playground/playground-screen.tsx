@@ -362,11 +362,10 @@ export function PlaygroundScreen() {
   }, [world])
 
   useEffect(() => {
-    ;(window as any).__hermesPlaygroundOpenDialog = (id: string) =>
-      setDialogNpc(id)
+    window.__hermesPlaygroundOpenDialog = (id: string) => setDialogNpc(id)
     return () => {
       try {
-        delete (window as any).__hermesPlaygroundOpenDialog
+        delete window.__hermesPlaygroundOpenDialog
       } catch {}
     }
   }, [])
@@ -513,7 +512,7 @@ export function PlaygroundScreen() {
       )
     } catch {}
     try {
-      ;(window as any).__hermesPlaygroundSendChat?.(body)
+      window.__hermesPlaygroundSendChat?.(body)
     } catch {}
   }
 

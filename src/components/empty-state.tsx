@@ -2,10 +2,11 @@
  * Phase 3.3: Reusable empty state component
  */
 import { HugeiconsIcon } from '@hugeicons/react'
+import type { IconSvgElement } from '@hugeicons/react'
 import { cn } from '@/lib/utils'
 
 type EmptyStateProps = {
-  icon: any
+  icon: IconSvgElement
   title: string
   description?: string
   action?: React.ReactNode

@@ -90,10 +90,12 @@ function ReserveRoute() {
         ...current,
         count: current.count + 1,
       }))
-    } catch (error: any) {
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Reservation failed'
       setSubmitState({
         status: 'error',
-        message: error?.message || 'Reservation failed',
+        message: message || 'Reservation failed',
       })
     }
   }

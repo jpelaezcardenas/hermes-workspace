@@ -131,9 +131,7 @@ export function PlaygroundHud({
       return
     }
     const compute = () => {
-      const player = (window as any).__hermesPlaygroundPlayerPos as
-        | { x: number; z: number }
-        | undefined
+      const player = window.__hermesPlaygroundPlayerPos
       const px = player?.x ?? 0
       const pz = player?.z ?? 0
       const dx = target[0] - px

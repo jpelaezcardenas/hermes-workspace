@@ -333,9 +333,9 @@ export function useChatHistory({
         return readPortableHistory()
       }
 
-      const cached = queryClient.getQueryData(historyKey)
-      const optimisticMessages = Array.isArray((cached as any)?.messages)
-        ? (cached as any).messages.filter((message: any) => {
+      const cached = queryClient.getQueryData<HistoryResponse>(historyKey)
+      const optimisticMessages = Array.isArray(cached?.messages)
+        ? cached.messages.filter((message: ChatMessage) => {
             if (message.status === 'sending') return true
             if (message.__optimisticId) return true
             return Boolean(message.clientId)
@@ -550,7 +550,7 @@ export function useChatHistory({
       if (!msg || msg.role !== 'assistant') continue
       const content = Array.isArray(msg.content) ? msg.content : []
       const hasToolCall = content.some(
-        (c: any) =>
+        (c: { type?: string }) =>
           c.type === 'toolCall' ||
           c.type === 'tool_use' ||
           c.type === 'toolUse',
@@ -559,7 +559,7 @@ export function useChatHistory({
 
       // Check if this message has substantial text (not just empty/whitespace)
       const substantialText = content.some(
-        (c: any) =>
+        (c: { type?: string; text?: unknown }) =>
           c.type === 'text' &&
           typeof c.text === 'string' &&
           c.text.trim().length > 20,

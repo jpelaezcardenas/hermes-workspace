@@ -15,6 +15,70 @@ import {
   estimateContextTokensFromMessages,
   readContextUsage,
 } from '../../server/context-usage'
+import type { ClaudeSession } from '../../server/claude-api'
+import type {
+  LocalMessage,
+  LocalSession,
+} from '../../server/local-session-store'
+import type { GatewayCapabilities } from '../../server/gateway-capabilities'
+
+// ─── Typed mock builders (real types — no `any`) ────────────────────────
+
+/** Build a full LocalSession from the fields a given test cares about. */
+function mockLocalSession(overrides: Partial<LocalSession>): LocalSession {
+  return {
+    id: 'local-session',
+    title: null,
+    model: null,
+    createdAt: 0,
+    updatedAt: 0,
+    messageCount: 0,
+    ...overrides,
+  }
+}
+
+/**
+ * Build a LocalMessage. The persisted `content` field is typed as a string,
+ * but production messages can carry structured content arrays that the token
+ * estimator walks, so we widen the builder input here rather than casting to
+ * `any`. `role` is only attached when the caller supplies it: some fixtures
+ * deliberately omit it so the mirror-resolution path (which only inspects
+ * user/assistant turns) skips them.
+ */
+function mockLocalMessage(
+  overrides: Partial<Omit<LocalMessage, 'content'>> & { content?: unknown },
+): LocalMessage {
+  return {
+    id: 'msg',
+    content: '',
+    timestamp: 0,
+    ...overrides,
+  } as LocalMessage
+}
+
+/** Build full GatewayCapabilities, overriding only the dashboard flags. */
+function mockCapabilities(
+  dashboard: Partial<GatewayCapabilities['dashboard']>,
+): GatewayCapabilities {
+  return {
+    health: false,
+    chatCompletions: false,
+    models: false,
+    streaming: false,
+    sessions: false,
+    enhancedChat: false,
+    skills: false,
+    memory: false,
+    config: false,
+    jobs: false,
+    mcp: false,
+    mcpFallback: false,
+    conductor: false,
+    kanban: false,
+    probed: false,
+    dashboard: { available: false, url: '', ...dashboard },
+  }
+}
 
 vi.mock('../../server/gateway-capabilities', () => ({
   BEARER_TOKEN: '',
@@ -83,7 +147,7 @@ describe('context usage estimation', () => {
         title: 'Live chat',
         message_count: 12,
       },
-    ] as any)
+    ])
 
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input)
@@ -121,19 +185,18 @@ describe('context usage estimation', () => {
   })
 
   it('prefers configured dashboard context length for local Workspace-only chats', async () => {
-    vi.mocked(getLocalSession).mockReturnValue({
-      id: 'local-1',
-      model: null,
-    } as any)
+    vi.mocked(getLocalSession).mockReturnValue(
+      mockLocalSession({ id: 'local-1', model: null }),
+    )
     vi.mocked(getLocalMessages).mockReturnValue([
-      { content: 'x'.repeat(700) },
-    ] as any)
-    vi.mocked(getCapabilities).mockReturnValue({
-      dashboard: { available: true },
-    } as any)
-    vi.mocked(ensureGatewayProbed).mockResolvedValue({
-      dashboard: { available: true },
-    } as any)
+      mockLocalMessage({ content: 'x'.repeat(700) }),
+    ])
+    vi.mocked(getCapabilities).mockReturnValue(
+      mockCapabilities({ available: true }),
+    )
+    vi.mocked(ensureGatewayProbed).mockResolvedValue(
+      mockCapabilities({ available: true }),
+    )
 
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input)
@@ -151,7 +214,7 @@ describe('context usage estimation', () => {
           config_context_length: 512000,
         }),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
-      ) as any,
+      ),
     )
 
     const snapshot = await readContextUsage('local-1')
@@ -170,18 +233,20 @@ describe('context usage estimation', () => {
   })
 
   it('maps a mirrored local chat to the nearest real Hermes runtime session even when the runtime session has zero stored messages', async () => {
-    vi.mocked(getLocalSession).mockReturnValue({
-      id: 'local-mirror',
-      model: null,
-      createdAt: 1_000_000,
-      updatedAt: 2_000_000,
-    } as any)
+    vi.mocked(getLocalSession).mockReturnValue(
+      mockLocalSession({
+        id: 'local-mirror',
+        model: null,
+        createdAt: 1_000_000,
+        updatedAt: 2_000_000,
+      }),
+    )
     vi.mocked(getLocalMessages).mockReturnValue([
-      { role: 'user', content: 'hello' },
-      { role: 'assistant', content: 'world' },
-    ] as any)
+      mockLocalMessage({ role: 'user', content: 'hello' }),
+      mockLocalMessage({ role: 'assistant', content: 'world' }),
+    ])
 
-    vi.mocked(listSessions).mockResolvedValue([
+    const sessions: Array<ClaudeSession> = [
       {
         id: 'runtime-nearest',
         started_at: 2000.01,
@@ -194,7 +259,8 @@ describe('context usage estimation', () => {
         last_active: 1900,
         message_count: 12,
       },
-    ] as any)
+    ]
+    vi.mocked(listSessions).mockResolvedValue(sessions)
 
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input)
@@ -243,14 +309,14 @@ describe('context usage estimation', () => {
   })
 
   it('keeps configured context length visible for unresolved synthetic sessions like new', async () => {
-    vi.mocked(getLocalSession).mockReturnValue(null as any)
-    vi.mocked(getLocalMessages).mockReturnValue([] as any)
-    vi.mocked(getCapabilities).mockReturnValue({
-      dashboard: { available: true },
-    } as any)
-    vi.mocked(ensureGatewayProbed).mockResolvedValue({
-      dashboard: { available: true },
-    } as any)
+    vi.mocked(getLocalSession).mockReturnValue(null)
+    vi.mocked(getLocalMessages).mockReturnValue([])
+    vi.mocked(getCapabilities).mockReturnValue(
+      mockCapabilities({ available: true }),
+    )
+    vi.mocked(ensureGatewayProbed).mockResolvedValue(
+      mockCapabilities({ available: true }),
+    )
 
     const fetchMock = vi.fn(() =>
       Promise.resolve(new Response('not found', { status: 404 })),
@@ -264,7 +330,7 @@ describe('context usage estimation', () => {
           config_context_length: 512000,
         }),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
-      ) as any,
+      ),
     )
 
     const snapshot = await readContextUsage('new')
@@ -297,21 +363,20 @@ describe('context usage estimation', () => {
   })
 
   it('uses structured message estimation for local sessions instead of string-only content lengths', async () => {
-    vi.mocked(getLocalSession).mockReturnValue({
-      id: 'local-structured',
-      model: null,
-    } as any)
+    vi.mocked(getLocalSession).mockReturnValue(
+      mockLocalSession({ id: 'local-structured', model: null }),
+    )
     vi.mocked(getLocalMessages).mockReturnValue([
-      {
+      mockLocalMessage({
         content: [{ type: 'tool_result', text: 'x'.repeat(400) }],
-      },
-    ] as any)
-    vi.mocked(getCapabilities).mockReturnValue({
-      dashboard: { available: true },
-    } as any)
-    vi.mocked(ensureGatewayProbed).mockResolvedValue({
-      dashboard: { available: true },
-    } as any)
+      }),
+    ])
+    vi.mocked(getCapabilities).mockReturnValue(
+      mockCapabilities({ available: true }),
+    )
+    vi.mocked(ensureGatewayProbed).mockResolvedValue(
+      mockCapabilities({ available: true }),
+    )
 
     const fetchMock = vi.fn(() =>
       Promise.resolve(new Response('not found', { status: 404 })),
@@ -325,7 +390,7 @@ describe('context usage estimation', () => {
           config_context_length: 512000,
         }),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
-      ) as any,
+      ),
     )
 
     const snapshot = await readContextUsage('local-structured')

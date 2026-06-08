@@ -378,7 +378,7 @@ describe('kanban-backend', () => {
       status: 'ready',
       parents: ['t_parent'],
       idempotencyKey: 'native-dispatch-1',
-    } as any)
+    })
 
     expect(created).toMatchObject({
       id: 't_created',

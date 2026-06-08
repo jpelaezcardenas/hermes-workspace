@@ -4,7 +4,10 @@ import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: (_path: string) => (opts: any) => opts,
+  createFileRoute:
+    (_path: string) =>
+    <T>(opts: T): T =>
+      opts,
 }))
 
 vi.mock('../../server/auth-middleware', () => ({
@@ -75,7 +78,9 @@ describe('canonical /api/hermes-config route', () => {
     expect(body.activeProvider).toBe('openrouter')
     expect(body.activeModel).toBe('auto')
     expect(body.paths.hermesHome).toBe(tmpHome)
-    const openrouter = body.providers.find((p: any) => p.id === 'openrouter')
+    const openrouter = body.providers.find(
+      (p: { id: string }) => p.id === 'openrouter',
+    )
     expect(openrouter.configured).toBe(true)
     expect(openrouter.isDefault).toBe(true)
   })
@@ -165,7 +170,9 @@ describe('legacy /api/claude-config alias', () => {
       request: new Request('http://localhost/api/claude-config'),
     })
     const body = await res.json()
-    const openrouter = body.providers.find((p: any) => p.id === 'openrouter')
+    const openrouter = body.providers.find(
+      (p: { id: string }) => p.id === 'openrouter',
+    )
 
     expect(openrouter.maskedKeys).toEqual(openrouter.maskedCredentials)
     expect(openrouter.maskedKeys.OPENROUTER_API_KEY).toBeTruthy()

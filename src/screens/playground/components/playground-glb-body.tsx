@@ -7,8 +7,8 @@ import {
   useState,
 } from 'react'
 import { useGLTF } from '@react-three/drei'
+import * as THREE from 'three'
 import type { ReactNode } from 'react'
-import type * as THREE from 'three'
 
 class GlbErrorBoundary extends Component<
   { children: ReactNode; onError?: () => void },
@@ -81,18 +81,23 @@ function GlbInner({
   scale: number
   yOffset: number
 }) {
-  const { scene } = useGLTF(url) as any
+  const { scene } = useGLTF(url)
   const ref = useRef<THREE.Group>(null)
   const cloned = useMemo(() => {
-    const s = (scene as THREE.Object3D).clone(true)
-    s.traverse((obj: any) => {
-      if (obj.isMesh) {
+    const s = scene.clone(true)
+    s.traverse((obj: THREE.Object3D) => {
+      if (obj instanceof THREE.Mesh) {
         obj.frustumCulled = true
         obj.castShadow = false
         obj.receiveShadow = false
         obj.raycast = () => {}
-        if (obj.material && obj.material.map) {
-          obj.material.map.anisotropy = 2
+        const material = obj.material
+        if (
+          !Array.isArray(material) &&
+          'map' in material &&
+          material.map instanceof THREE.Texture
+        ) {
+          material.map.anisotropy = 2
         }
       }
     })

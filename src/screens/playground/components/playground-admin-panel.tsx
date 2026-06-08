@@ -96,8 +96,10 @@ export function PlaygroundAdminPanel() {
           setStats(data)
           setError(null)
         }
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message || 'Failed to load admin stats')
+      } catch (e: unknown) {
+        const message =
+          e instanceof Error ? e.message : 'Failed to load admin stats'
+        if (!cancelled) setError(message)
       }
     }
     load()

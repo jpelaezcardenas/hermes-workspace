@@ -2,6 +2,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { BrainIcon, CodeIcon, PuzzleIcon } from '@hugeicons/core-free-icons'
 import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'
+import type { IconSvgElement } from '@hugeicons/react'
 
 type ProfileSummary = {
   name: string
@@ -12,7 +13,7 @@ type ProfileSummary = {
 type SuggestionChip = {
   label: string
   prompt: string
-  icon: unknown
+  icon: IconSvgElement
 }
 
 const SUGGESTIONS: Array<SuggestionChip> = [
@@ -137,7 +138,7 @@ export function ChatEmptyState({
               }}
             >
               <HugeiconsIcon
-                icon={suggestion.icon as any}
+                icon={suggestion.icon}
                 size={14}
                 strokeWidth={1.5}
                 style={{ color: 'var(--theme-accent)' }}

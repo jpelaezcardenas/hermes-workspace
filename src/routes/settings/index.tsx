@@ -307,13 +307,23 @@ function SettingsRoute() {
           setModelsError(true)
           return
         }
-        const data = await res.json()
-        const models = Array.isArray(data.models) ? data.models : []
+        const data: unknown = await res.json()
+        const rawModels =
+          data && typeof data === 'object' && 'models' in data
+            ? (data as { models: unknown }).models
+            : null
+        const models = Array.isArray(rawModels) ? rawModels : []
         setAvailableModels(
-          models.map((m: any) => ({
-            id: m.id || '',
-            label: m.id?.split('/').pop() || m.id || '',
-          })),
+          models.map((m: unknown) => {
+            const id =
+              m && typeof m === 'object' && 'id' in m
+                ? String((m as { id: unknown }).id ?? '')
+                : ''
+            return {
+              id,
+              label: id.split('/').pop() || id || '',
+            }
+          }),
         )
       } catch {
         setModelsError(true)

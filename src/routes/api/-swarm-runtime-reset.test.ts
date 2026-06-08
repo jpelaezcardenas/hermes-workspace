@@ -4,7 +4,7 @@ import * as path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: (_path: string) => (opts: any) => opts,
+  createFileRoute: (_path: string) => (opts: unknown) => opts,
 }))
 
 vi.mock('../../server/auth-middleware', () => ({
@@ -50,9 +50,15 @@ afterEach(() => {
   fs.rmSync(tmpHome, { recursive: true, force: true })
 })
 
-async function loadHandlers() {
-  const mod = await import('./swarm-runtime.reset')
-  return (mod as any).Route.server.handlers
+type ResetHandlers = {
+  POST: (ctx: { request: Request }) => Promise<Response>
+}
+
+async function loadHandlers(): Promise<ResetHandlers> {
+  const mod = (await import('./swarm-runtime.reset')) as unknown as {
+    Route: { server: { handlers: ResetHandlers } }
+  }
+  return mod.Route.server.handlers
 }
 
 describe('/api/swarm-runtime/reset', () => {

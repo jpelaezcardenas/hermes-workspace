@@ -61,7 +61,40 @@ type SectionId =
   | 'notifications'
   | 'language'
 
-const SECTIONS: Array<{ id: SectionId; label: string; icon: any }> = [
+// `IconSvgObject` isn't exported from @hugeicons; reuse the inferred type
+// from a real icon import for prop typing.
+type HugeIcon = typeof CloudIcon
+
+type LocalDiscovery = {
+  ok?: boolean
+  providers: Array<{
+    id: string
+    name: string
+    online: boolean
+    modelCount: number
+    configured: boolean
+    needsRestart: boolean
+  }>
+  models: Array<{ id: string; name: string; provider: string }>
+}
+
+type HermesConfigProvider = {
+  envKeys?: Array<string>
+  configured?: boolean
+  maskedCredentials?: Record<string, string>
+}
+
+type HermesConfigResponse = {
+  activeProvider?: string
+  activeModel?: string
+  providers?: Array<HermesConfigProvider>
+  config?: {
+    memory?: Record<string, unknown>
+    providers?: Record<string, { base_url?: string }>
+  }
+}
+
+const SECTIONS: Array<{ id: SectionId; label: string; icon: HugeIcon }> = [
   { id: 'claude', label: 'Model & Provider', icon: CloudIcon },
   { id: 'agent', label: 'Agent', icon: Settings02Icon },
   { id: 'voice', label: 'Voice', icon: VolumeHighIcon },
@@ -324,17 +357,9 @@ function HermesContent() {
   const [oauthVerificationUri, setOauthVerificationUri] = useState('')
   const oauthAbortRef = useRef<AbortController | null>(null)
   const [localProviderId, setLocalProviderId] = useState<string | null>(null)
-  const [localDiscovery, setLocalDiscovery] = useState<{
-    providers: Array<{
-      id: string
-      name: string
-      online: boolean
-      modelCount: number
-      configured: boolean
-      needsRestart: boolean
-    }>
-    models: Array<{ id: string; name: string; provider: string }>
-  } | null>(null)
+  const [localDiscovery, setLocalDiscovery] = useState<LocalDiscovery | null>(
+    null,
+  )
 
   const fetchModelsForProvider = useCallback(
     (providerId: string) => {
@@ -367,8 +392,16 @@ function HermesContent() {
   useEffect(() => {
     fetch('/api/local-providers')
       .then((r) => r.json())
-      .then((d: any) => {
-        if (d.ok) setLocalDiscovery(d)
+      .then((d: unknown) => {
+        if (
+          d &&
+          typeof d === 'object' &&
+          (d as { ok?: unknown }).ok &&
+          Array.isArray((d as LocalDiscovery).providers) &&
+          Array.isArray((d as LocalDiscovery).models)
+        ) {
+          setLocalDiscovery(d as LocalDiscovery)
+        }
       })
       .catch(() => {})
   }, [])
@@ -376,14 +409,14 @@ function HermesContent() {
   useEffect(() => {
     fetch('/api/hermes-config')
       .then((r) => r.json())
-      .then((d: any) => {
+      .then((raw: unknown) => {
+        const d = (raw ?? {}) as HermesConfigResponse
         setActiveProvider(d.activeProvider || '')
         setActiveModel(d.activeModel || '')
         setDefaultProvider(d.activeProvider || '')
         setDefaultModelId(d.activeModel || '')
         if (d.activeProvider) fetchModelsForProvider(d.activeProvider)
-        const mem =
-          (d.config?.memory as Record<string, unknown> | undefined) ?? {}
+        const mem = d.config?.memory ?? {}
         setMemEnabled(mem.memory_enabled !== false)
         setUserProfileEnabled(mem.user_profile_enabled !== false)
         // Build configured keys map
@@ -395,8 +428,7 @@ function HermesContent() {
         }
         setConfiguredKeys(keys)
         // Load custom provider config (may be stored as 'custom' or legacy 'manifest')
-        const cfgProviders =
-          (d.config?.providers as Record<string, any> | undefined) ?? {}
+        const cfgProviders = d.config?.providers ?? {}
         const customCfg =
           cfgProviders['custom'] || cfgProviders['manifest'] || {}
         if (customCfg.base_url) setCustomBaseUrl(customCfg.base_url)
@@ -1838,7 +1870,8 @@ function AgentBehaviorContent() {
   useEffect(() => {
     fetch('/api/hermes-config')
       .then((r) => r.json())
-      .then((d: any) => {
+      .then((raw: unknown) => {
+        const d = (raw ?? {}) as { config?: Record<string, unknown> }
         setConfig(
           (d.config?.agent as Record<string, unknown> | undefined) ?? {},
         )
@@ -1930,7 +1963,8 @@ function VoiceContent() {
   useEffect(() => {
     fetch('/api/hermes-config')
       .then((r) => r.json())
-      .then((d: any) => {
+      .then((raw: unknown) => {
+        const d = (raw ?? {}) as { config?: Record<string, unknown> }
         setTts((d.config?.tts as Record<string, unknown> | undefined) ?? {})
         setStt((d.config?.stt as Record<string, unknown> | undefined) ?? {})
       })
@@ -2104,7 +2138,8 @@ function DisplayContent() {
   useEffect(() => {
     fetch('/api/hermes-config')
       .then((r) => r.json())
-      .then((d: any) => {
+      .then((raw: unknown) => {
+        const d = (raw ?? {}) as { config?: Record<string, unknown> }
         setConfig(
           (d.config?.display as Record<string, unknown> | undefined) ?? {},
         )

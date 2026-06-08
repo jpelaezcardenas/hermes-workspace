@@ -219,7 +219,7 @@ export const Route = createFileRoute('/api/playground-npc')({
             })
           }
           return json({ reply: trimmed, ms: Date.now() - t0 })
-        } catch (e: any) {
+        } catch {
           return json({
             reply: FALLBACK(npcId, playerMessage),
             ms: Date.now() - t0,

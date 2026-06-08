@@ -94,6 +94,23 @@ export function SpeechBubble({
 }: SpeechBubbleProps) {
   const tokens = VARIANT_TOKENS[variant]
   const border = accent || tokens.border
+  const bubbleStyle: CSSProperties & Record<`--${string}`, string> = {
+    '--speech-border': border,
+    '--speech-tail-bg': tokens.bg,
+    maxWidth: compact ? 220 : 520,
+    border: `2px solid ${border}`,
+    borderRadius: compact ? 10 : 16,
+    padding: compact ? '8px 12px' : '13px 16px',
+    background: tokens.bg,
+    color: tokens.ink,
+    boxShadow: `0 12px 28px rgba(10,13,18,.38), 0 0 18px ${tokens.glow}, inset 0 2px 0 rgba(255,255,255,.42), inset 0 -10px 18px rgba(184,134,43,.14)`,
+    fontSize: compact ? 12 : 14,
+    fontWeight: 700,
+    lineHeight: 1.35,
+    textAlign: compact ? 'center' : 'left',
+    animation: 'hermes-speech-bubble-in 180ms cubic-bezier(.2,.8,.2,1)',
+    ...style,
+  }
   return (
     <>
       <SpeechBubbleStyles />
@@ -101,23 +118,7 @@ export function SpeechBubble({
         className={`hermes-speech-bubble ${className}`}
         data-tail={tail}
         data-variant={variant}
-        style={{
-          ['--speech-border' as any]: border,
-          ['--speech-tail-bg' as any]: tokens.bg,
-          maxWidth: compact ? 220 : 520,
-          border: `2px solid ${border}`,
-          borderRadius: compact ? 10 : 16,
-          padding: compact ? '8px 12px' : '13px 16px',
-          background: tokens.bg,
-          color: tokens.ink,
-          boxShadow: `0 12px 28px rgba(10,13,18,.38), 0 0 18px ${tokens.glow}, inset 0 2px 0 rgba(255,255,255,.42), inset 0 -10px 18px rgba(184,134,43,.14)`,
-          fontSize: compact ? 12 : 14,
-          fontWeight: 700,
-          lineHeight: 1.35,
-          textAlign: compact ? 'center' : 'left',
-          animation: 'hermes-speech-bubble-in 180ms cubic-bezier(.2,.8,.2,1)',
-          ...style,
-        }}
+        style={bubbleStyle}
       >
         <div
           style={{

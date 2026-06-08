@@ -17,13 +17,16 @@ interface BusState {
 }
 
 function getBus(): BusState {
-  if (!(globalThis as any)[BUS_KEY]) {
-    ;(globalThis as any)[BUS_KEY] = {
+  const globalWithBus = globalThis as typeof globalThis & {
+    [BUS_KEY]?: BusState
+  }
+  if (!globalWithBus[BUS_KEY]) {
+    globalWithBus[BUS_KEY] = {
       subscribers: new Set<ChatSSESubscriber>(),
       started: false,
     }
   }
-  return (globalThis as any)[BUS_KEY]
+  return globalWithBus[BUS_KEY]
 }
 
 function broadcast(event: string, data: Record<string, unknown>): void {

@@ -34,7 +34,10 @@ vi.mock('node:fs', () => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: (_path: string) => (opts: any) => opts,
+  createFileRoute:
+    (_path: string) =>
+    <T>(opts: T): T =>
+      opts,
 }))
 
 vi.mock('@tanstack/react-start', () => ({
@@ -80,7 +83,14 @@ describe('models route', () => {
 
   async function getHandler() {
     const mod = await importModels()
-    const get = (mod as any).Route.server.handlers.GET
+    const route = mod.Route as unknown as {
+      server: {
+        handlers: {
+          GET: (ctx: { request: Request }) => Promise<Response>
+        }
+      }
+    }
+    const get = route.server.handlers.GET
     return get
   }
 

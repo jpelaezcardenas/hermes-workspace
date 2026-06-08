@@ -5046,7 +5046,7 @@ function Scene({
     if (id && pendingNpc.current === id) {
       pendingNpc.current = null
       try {
-        ;(window as any).__hermesPlaygroundOpenDialog?.(id)
+        window.__hermesPlaygroundOpenDialog?.(id)
       } catch {}
     }
   }
@@ -5637,11 +5637,22 @@ function usePerfDebugEnabled() {
   return enabled
 }
 
+/**
+ * Reads the non-standard `performance.memory.usedJSHeapSize` (Chrome only),
+ * in megabytes. Returns 0 where the API is unavailable.
+ */
+function readUsedJsHeapMb(): number {
+  if (typeof performance === 'undefined' || !('memory' in performance)) return 0
+  const memory = (
+    performance as Performance & { memory?: { usedJSHeapSize?: number } }
+  ).memory
+  return (memory?.usedJSHeapSize ?? 0) / 1048576
+}
+
 function DevFpsSampler() {
   const sample = useRef({ last: 0, frames: 0, sum: 0, max: 0, heap: 0 })
   useFrame(({ clock }, delta) => {
-    if (typeof import.meta !== 'undefined' && !(import.meta as any).env?.DEV)
-      return
+    if (typeof import.meta !== 'undefined' && !import.meta.env.DEV) return
     const now = clock.elapsedTime
     const ms = delta * 1000
     const stats = sample.current
@@ -5649,7 +5660,7 @@ function DevFpsSampler() {
     stats.sum += ms
     stats.max = Math.max(stats.max, ms)
     if (typeof performance !== 'undefined' && 'memory' in performance)
-      stats.heap = ((performance as any).memory?.usedJSHeapSize || 0) / 1048576
+      stats.heap = readUsedJsHeapMb()
     if (now - stats.last < 10) return
     const avgFrame = stats.sum / Math.max(1, stats.frames)
     console.table([
@@ -5692,11 +5703,7 @@ function PerfDebugOverlay() {
     const frameMs = current.sum / Math.max(1, current.frames)
     const heap =
       typeof performance !== 'undefined' && 'memory' in performance
-        ? Number(
-            (
-              ((performance as any).memory?.usedJSHeapSize || 0) / 1048576
-            ).toFixed(1),
-          )
+        ? Number(readUsedJsHeapMb().toFixed(1))
         : 'n/a'
     setStats({
       fps: Number((1000 / Math.max(1, frameMs)).toFixed(1)),
@@ -5830,7 +5837,7 @@ export function PlaygroundWorld3D({
           z: playerPos.current.z,
         }
         positionForMp.current = p
-        ;(window as any).__hermesPlaygroundPlayerPos = p
+        window.__hermesPlaygroundPlayerPos = p
       },
       isMobile ? Math.ceil(1000 / 30) : Math.ceil(1000 / 60),
     )
@@ -5855,9 +5862,8 @@ export function PlaygroundWorld3D({
   })
   // Expose sendChat + multiplayer info globally so HUD/chat panel can read it.
   useEffect(() => {
-    ;(window as any).__hermesPlaygroundSendChat = (text: string) =>
-      sendChat(text)
-    ;(window as any).__hermesPlaygroundMpInfo = () => ({
+    window.__hermesPlaygroundSendChat = (text: string) => sendChat(text)
+    window.__hermesPlaygroundMpInfo = () => ({
       online,
       transport,
       myName,
@@ -5868,21 +5874,21 @@ export function PlaygroundWorld3D({
     })
     // Push live count for the HUD chip without polling /stats.
     if (serverCount) {
-      ;(window as any).__hermesPlaygroundLiveCount = serverCount
+      window.__hermesPlaygroundLiveCount = serverCount
       window.dispatchEvent(
         new CustomEvent('hermes-playground-count', { detail: serverCount }),
       )
     }
-    ;(window as any).__hermesPlaygroundLiveTransport = transport
+    window.__hermesPlaygroundLiveTransport = transport
     window.dispatchEvent(
       new CustomEvent('hermes-playground-transport', { detail: transport }),
     )
     return () => {
       try {
-        delete (window as any).__hermesPlaygroundSendChat
+        delete window.__hermesPlaygroundSendChat
       } catch {}
       try {
-        delete (window as any).__hermesPlaygroundMpInfo
+        delete window.__hermesPlaygroundMpInfo
       } catch {}
     }
   }, [

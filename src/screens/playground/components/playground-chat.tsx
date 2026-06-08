@@ -50,13 +50,9 @@ function PlaygroundChatInner({
   useEffect(() => {
     // Seed from window globals so we don't miss the first dispatch if chat
     // mounts after world-3d has already fired the events.
-    const cur = (window as any).__hermesPlaygroundLiveCount as
-      | { online?: number }
-      | undefined
+    const cur = window.__hermesPlaygroundLiveCount
     if (typeof cur?.online === 'number') setServerOnline(cur.online)
-    const curT = (window as any).__hermesPlaygroundLiveTransport as
-      | string
-      | undefined
+    const curT = window.__hermesPlaygroundLiveTransport
     if (curT) setTransport(curT)
     const onCount = (ev: Event) => {
       const detail = (ev as CustomEvent).detail as
