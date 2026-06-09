@@ -157,6 +157,33 @@ export const PROVIDER_CATALOG: Array<ProviderInfo> = [
       2,
     ),
   },
+  {
+    id: 'atlascloud',
+    name: 'Atlas Cloud',
+    description: 'Unified AI inference platform — 59 frontier models (DeepSeek-V4, Qwen3, Kimi K2, GPT-5, Gemini 2.5 Pro, Claude, Grok-4…) via a single OpenAI-compatible endpoint.',
+    authTypes: ['api-key'],
+    docsUrl: 'https://www.atlascloud.ai/console/coding-plan',
+    configExample: JSON.stringify(
+      {
+        auth: {
+          profiles: {
+            'atlascloud:default': {
+              provider: 'atlascloud',
+              apiKey: 'atlas-your-key-here',
+            },
+          },
+        },
+        custom_providers: [
+          {
+            name: 'atlascloud',
+            baseUrl: 'https://api.atlascloud.ai/v1',
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+  },
 ]
 
 export function normalizeProviderId(value: string): string {
