@@ -20,6 +20,38 @@ import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
 
+type McpLayer = {
+  status: 'enabled' | 'disabled' | 'blocked'
+  label: string
+  riskClass?: string
+  reason?: string
+}
+
+type ProfileMcpStatus = {
+  mcpAvailable: boolean
+  source: 'james-mcp-config' | 'not-configured'
+  layers: {
+    sensor: McpLayer
+    planner: McpLayer
+    operator: McpLayer
+  }
+  blockedGates: Array<{
+    key: string
+    label: string
+    status: 'blocked'
+    reason: string
+  }>
+  lastLedgerEntry: {
+    sequence?: number
+    timestamp?: string
+    actor?: string
+    tool?: string
+    riskClass?: string
+    dryRun?: boolean
+    ok?: boolean
+  } | null
+}
+
 type ProfileSummary = {
   name: string
   path: string
@@ -32,6 +64,7 @@ type ProfileSummary = {
   sessionCount: number
   hasEnv: boolean
   updatedAt?: string
+  mcp: ProfileMcpStatus
 }
 
 type ProfileDetail = {
@@ -44,6 +77,7 @@ type ProfileDetail = {
   hasEnv: boolean
   sessionsDir?: string
   skillsDir?: string
+  mcp: ProfileMcpStatus
 }
 
 async function readJson<T>(url: string): Promise<T> {
@@ -98,6 +132,75 @@ function ProfileStat({
       <div className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-primary-400 dark:text-neutral-500">
         {label}
       </div>
+    </div>
+  )
+}
+
+function McpLayerPill({ label, layer }: { label: string; layer: McpLayer }) {
+  const enabled = layer.status === 'enabled'
+  return (
+    <span
+      title={enabled ? `${label} ${layer.riskClass || ''}` : layer.reason || 'disabled'}
+      className={cn(
+        'rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+        enabled
+          ? 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300'
+          : 'border-primary-200 bg-primary-100 text-primary-400 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-500',
+      )}
+    >
+      {label}: {enabled ? layer.riskClass : 'off'}
+    </span>
+  )
+}
+
+function formatLedgerSummary(entry: ProfileMcpStatus['lastLedgerEntry']): string {
+  if (!entry) return 'Ledger: none observed'
+  const bits = [
+    entry.tool || 'unknown tool',
+    entry.riskClass || 'risk?',
+    entry.dryRun ? 'dry-run' : 'apply',
+    entry.ok === true ? 'ok' : entry.ok === false ? 'failed' : 'result?',
+  ]
+  return `Ledger #${entry.sequence ?? '?'}: ${bits.join(' · ')}`
+}
+
+function McpOperationalSummary({ mcp }: { mcp: ProfileMcpStatus }) {
+  return (
+    <div className="mx-4 mt-3 rounded-xl border border-primary-200 bg-primary-100/40 p-3 dark:border-neutral-800 dark:bg-neutral-900/40">
+      <div className="flex items-center justify-between gap-2 text-[11px]">
+        <span className="font-semibold uppercase tracking-wider text-primary-500 dark:text-neutral-400">
+          MCP James
+        </span>
+        <span
+          className={cn(
+            'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+            mcp.mcpAvailable
+              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300'
+              : 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300',
+          )}
+        >
+          {mcp.mcpAvailable ? 'configured' : 'not configured'}
+        </span>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        <McpLayerPill label="Sensor" layer={mcp.layers.sensor} />
+        <McpLayerPill label="Planner" layer={mcp.layers.planner} />
+        <McpLayerPill label="Operator" layer={mcp.layers.operator} />
+      </div>
+      {mcp.blockedGates.length > 0 ? (
+        <p className="mt-2 line-clamp-2 text-[11px] text-red-600 dark:text-red-300">
+          Blocked gates: {mcp.blockedGates.map((gate) => gate.label).join(', ')}
+        </p>
+      ) : (
+        <p className="mt-2 text-[11px] text-primary-400 dark:text-neutral-500">
+          No blocked gates advertised because no James MCP capability is configured.
+        </p>
+      )}
+      {mcp.source === 'james-mcp-config' && (
+        <p className="mt-1 truncate text-[11px] text-primary-500 dark:text-neutral-400">
+          {formatLedgerSummary(mcp.lastLedgerEntry)}
+        </p>
+      )}
     </div>
   )
 }
@@ -183,8 +286,8 @@ export function ProfilesScreen() {
   }, [createOpen, wizardStep, allModels.length, fetchAllModels])
 
   useEffect(() => {
-    setDescriptionDraft(detailQuery.data?.profile?.description ?? '')
-  }, [detailQuery.data?.profile?.description, detailsName])
+    setDescriptionDraft(detailQuery.data?.profile.description ?? '')
+  }, [detailQuery.data?.profile.description, detailsName])
 
   const nameValid =
     /^[A-Za-z0-9_-]+$/.test(newProfileName.trim()) &&
@@ -408,6 +511,8 @@ export function ProfilesScreen() {
                   value={profile.hasEnv ? '\u2713' : '\u2014'}
                 />
               </div>
+
+              <McpOperationalSummary mcp={profile.mcp} />
 
               {/* Updated timestamp */}
               <div className="mx-4 mt-3 flex items-center justify-center gap-1.5 text-xs text-primary-400 dark:text-neutral-500">
