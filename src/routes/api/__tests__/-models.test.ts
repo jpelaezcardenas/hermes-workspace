@@ -107,6 +107,33 @@ describe('models route', () => {
     expect(json.models[0].provider).toBe('nous')
   })
 
+  it('hides the default model from the picker when workspace.hide_default_model_in_picker is set', async () => {
+    const envHome = '/mock/profiles/jarvis'
+    process.env.CLAUDE_HOME = envHome
+
+    const configYaml =
+      'model: jarvis-model\nprovider: nous\nworkspace:\n  hide_default_model_in_picker: true\n'
+    const modelsJson = '[{"model":"x","provider":"y"}]'
+    existsSync.mockImplementation((p: string) => {
+      return p === `${envHome}/models.json` || p === `${envHome}/config.yaml`
+    })
+    readFileSync.mockImplementation((p: string) => {
+      if (p === `${envHome}/config.yaml`) return configYaml
+      if (p === `${envHome}/models.json`) return modelsJson
+      return ''
+    })
+
+    const get = await getHandler()
+    const request = new Request('http://localhost/api/models')
+    const res = await get({ request })
+    expect(res.status).toBe(200)
+    const json = await res.json()
+    expect(json.ok).toBe(true)
+    // default model is NOT injected; only the real models.json entry remains
+    expect(json.models.some((m: { id: string }) => m.id === 'jarvis-model')).toBe(false)
+    expect(json.models.map((m: { id: string }) => m.id)).toEqual(['x'])
+  })
+
   it('reads nested model object syntax from config using YAML.parse', async () => {
     const envHome = '/mock/profiles/jarvis'
     process.env.CLAUDE_HOME = envHome

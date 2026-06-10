@@ -184,6 +184,22 @@ function readClaudeDefaultModel(): ModelEntry | null {
 }
 
 /**
+ * Opt-out flag: when `workspace.hide_default_model_in_picker: true` is set in
+ * config.yaml, the configured default model is not injected as a standalone
+ * picker entry. Defaults to false (preserve historical "default first").
+ */
+function readHideDefaultModelInPicker(): boolean {
+  try {
+    if (!fs.existsSync(CONFIG_PATH)) return false
+    const parsed = YAML.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'))
+    const ws = asRecord(asRecord(parsed).workspace)
+    return ws.hide_default_model_in_picker === true
+  } catch {
+    return false
+  }
+}
+
+/**
  * Read providers.*.models (+ provider default model) and model_aliases
  * from ~/.hermes/config.yaml so the picker reflects the user's full Hermes
  * catalog, not just /v1/models + models.json + local discovery. Fix for #569.
@@ -419,9 +435,17 @@ export const Route = createFileRoute('/api/models')({
           let models = readClaudeModelsJson()
           let source = 'models.json'
 
-          // Ensure the default model from config.yaml is always first
+          // Ensure the default model from config.yaml is always first.
+          //
+          // Opt-out: when `workspace.hide_default_model_in_picker: true` is set
+          // in config.yaml, the default model is NOT injected as a standalone
+          // picker entry. This is for stacks where the top-level `model:` is the
+          // agent's upstream working model (e.g. anthropic/claude-opus-4-8 served
+          // via the gateway's own `hermes-agent` entry), where surfacing it adds
+          // a confusing provider-less ("unknown") duplicate. Default behaviour
+          // (inject + first) is unchanged.
           const defaultModel = readClaudeDefaultModel()
-          if (defaultModel) {
+          if (defaultModel && !readHideDefaultModelInPicker()) {
             models = models.filter((m) => m.id !== defaultModel.id)
             models.unshift(defaultModel)
           }
