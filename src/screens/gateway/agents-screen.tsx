@@ -1527,7 +1527,7 @@ export function AgentsScreen({ variant = 'mission-control' }: AgentsScreenProps)
                       Overview
                     </TabsTrigger>
                     <TabsTrigger value="tools" className="min-w-[92px] flex-1">
-                      Tools
+                      Tools/MCP
                     </TabsTrigger>
                     <TabsTrigger value="skills" className="min-w-[92px] flex-1">
                       Skills
