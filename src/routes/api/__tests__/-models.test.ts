@@ -56,6 +56,8 @@ beforeEach(() => {
   vi.clearAllMocks()
   delete process.env.HERMES_HOME
   delete process.env.CLAUDE_HOME
+  delete process.env.HERMES_WORKSPACE_CANONICAL_MODEL
+  delete process.env.HERMES_WORKSPACE_CANONICAL_ONLY
 })
 
 describe('models route', () => {
@@ -126,5 +128,25 @@ describe('models route', () => {
     expect(json.ok).toBe(true)
     expect(json.models[0].id).toBe('nest-model')
     expect(json.models[0].provider).toBe('anthropic')
+  })
+
+  it('can expose only the canonical Hermes facade model when explicitly configured', async () => {
+    process.env.HERMES_WORKSPACE_CANONICAL_MODEL = 'Hermes Loureiro Tech'
+    process.env.HERMES_WORKSPACE_CANONICAL_ONLY = '1'
+
+    const get = await getHandler()
+    const request = new Request('http://localhost/api/models')
+    const res = await get({ request })
+    expect(res.status).toBe(200)
+    const json = await res.json()
+    expect(json.ok).toBe(true)
+    expect(json.source).toBe('hermes-canonical')
+    expect(json.models).toEqual([
+      expect.objectContaining({
+        id: 'Hermes Loureiro Tech',
+        provider: 'hermes',
+        owned_by: 'hermes',
+      }),
+    ])
   })
 })

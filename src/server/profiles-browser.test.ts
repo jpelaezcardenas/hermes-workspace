@@ -78,6 +78,38 @@ describe('listProfiles', () => {
     expect(profiles.find((profile) => profile.name === 'builder')?.provider).toBe('anthropic')
   })
 
+  it('reads MCP Sensor/Planner/Operator capability status from profile config without false success', () => {
+    const hermesRoot = path.join(tempHome, '.hermes')
+    const profilesRoot = path.join(hermesRoot, 'profiles')
+    const readonlyRoot = path.join(profilesRoot, 'hermes-ops-readonly')
+    const execRoot = path.join(profilesRoot, 'hermes-ops-exec')
+
+    fs.mkdirSync(readonlyRoot, { recursive: true })
+    fs.mkdirSync(execRoot, { recursive: true })
+    fs.writeFileSync(path.join(hermesRoot, 'config.yaml'), 'model: root-model\n', 'utf-8')
+    fs.writeFileSync(
+      path.join(readonlyRoot, 'config.yaml'),
+      'mcp_servers:\n  james-readonly-v0:\n    command: python\n',
+      'utf-8',
+    )
+    fs.writeFileSync(
+      path.join(execRoot, 'config.yaml'),
+      'mcp_servers:\n  james-ops-v0:\n    command: python\n',
+      'utf-8',
+    )
+
+    const profiles = listProfiles()
+    const root = profiles.find((profile) => profile.name === 'default')
+    const readonly = profiles.find((profile) => profile.name === 'hermes-ops-readonly')
+    const exec = profiles.find((profile) => profile.name === 'hermes-ops-exec')
+
+    expect(root?.mcp.mcpAvailable).toBe(false)
+    expect(readonly?.mcp.layers.sensor.status).toBe('enabled')
+    expect(readonly?.mcp.layers.planner.status).toBe('disabled')
+    expect(exec?.mcp.layers.operator.status).toBe('enabled')
+    expect(exec?.mcp.blockedGates.map((gate) => gate.key)).toContain('camp-7')
+  })
+
   it('reads and updates profile descriptions from config.yaml', () => {
     const hermesRoot = path.join(tempHome, '.hermes')
     const profileRoot = path.join(hermesRoot, 'profiles', 'builder')

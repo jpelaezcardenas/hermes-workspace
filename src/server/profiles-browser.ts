@@ -2,6 +2,8 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import YAML from 'yaml'
+import { buildProfileMcpStatus } from './mcp-operational-status'
+import type { ProfileMcpStatus } from './mcp-operational-status'
 
 export type ProfileSummary = {
   name: string
@@ -16,6 +18,7 @@ export type ProfileSummary = {
   sessionCount: number
   hasEnv: boolean
   updatedAt?: string
+  mcp: ProfileMcpStatus
 }
 
 export type ProfileDetail = {
@@ -29,6 +32,7 @@ export type ProfileDetail = {
   hasEnv: boolean
   sessionsDir?: string
   skillsDir?: string
+  mcp: ProfileMcpStatus
 }
 
 const PROFILE_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/
@@ -258,6 +262,7 @@ async function fetchDashboardProfiles(): Promise<{
       sessionCount: p.session_count ?? 0,
       hasEnv: p.has_env ?? false,
       updatedAt: p.updated_at,
+      mcp: buildProfileMcpStatus(p.name, {}),
     }))
 
     profiles.sort((a, b) => {
@@ -350,6 +355,7 @@ export async function readProfileWithFallback(
             description: match.description || '',
             systemPrompt: '',
             hasEnv: false,
+            mcp: buildProfileMcpStatus(match.name, {}),
           }
         }
       }
@@ -445,6 +451,7 @@ export function listProfiles(): Array<ProfileSummary> {
           skillsDir,
           sessionsDir,
         ]),
+        mcp: buildProfileMcpStatus(name, config),
       })
     }
   }
@@ -486,6 +493,7 @@ export function listProfiles(): Array<ProfileSummary> {
     ),
     hasEnv: fs.existsSync(path.join(root, '.env')),
     updatedAt: latestMtime([root, path.join(root, 'config.yaml')]),
+    mcp: buildProfileMcpStatus('default', config),
   })
 
   results.sort((a, b) => {
@@ -520,6 +528,7 @@ export function readProfile(name: string): ProfileDetail {
     hasEnv: fs.existsSync(envPath),
     sessionsDir: fs.existsSync(sessionsDir) ? sessionsDir : undefined,
     skillsDir: fs.existsSync(skillsDir) ? skillsDir : undefined,
+    mcp: buildProfileMcpStatus(normalized, config),
   }
 }
 

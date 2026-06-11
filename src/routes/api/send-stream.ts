@@ -1,7 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { buildResolvedSessionHeaders } from '../../lib/send-stream-session-headers'
 import { buildWorkspaceScopedTextMessage } from '../../lib/workspace-message-scope'
-import { resolveSessionKey } from '../../server/session-utils'
+import {
+  getCanonicalHermesSessionConfig,
+  resolveSessionKey,
+} from '../../server/session-utils'
 import { isAuthenticated } from '../../server/auth-middleware'
 import { requireJsonContentType } from '../../server/rate-limit'
 import { publishChatEvent } from '../../server/chat-event-bus'
@@ -331,7 +334,10 @@ export const Route = createFileRoute('/api/send-stream')({
             defaultKey: 'main',
           })
           sessionKey = resolved.sessionKey
-          resolvedFriendlyId = resolved.sessionKey
+          resolvedFriendlyId =
+            resolved.resolvedVia === 'canonical'
+              ? (getCanonicalHermesSessionConfig()?.friendlyId ?? resolved.sessionKey)
+              : resolved.sessionKey
         } catch (err) {
           const errorMsg = normalizeClaudeErrorMessage(err)
           if (errorMsg === 'session not found') {

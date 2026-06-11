@@ -19,6 +19,10 @@ import {
 const CLAUDE_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
 const MODELS_PATH = path.join(CLAUDE_HOME, 'models.json')
 const CONFIG_PATH = path.join(CLAUDE_HOME, 'config.yaml')
+const CANONICAL_MODEL_ID = (process.env.HERMES_WORKSPACE_CANONICAL_MODEL || '').trim()
+const CANONICAL_ONLY = /^(1|true|yes)$/i.test(
+  process.env.HERMES_WORKSPACE_CANONICAL_ONLY || '',
+)
 
 type ModelEntry = {
   provider?: string
@@ -35,6 +39,21 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 function readString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
+}
+
+function canonicalWorkspaceModel(sourceModels: Array<ModelEntry> = []): Array<ModelEntry> {
+  if (!CANONICAL_MODEL_ID) return []
+  const existing = sourceModels.find((model) => model.id === CANONICAL_MODEL_ID)
+  return [
+    {
+      ...(existing || {}),
+      id: CANONICAL_MODEL_ID,
+      name: readString(existing?.name) || CANONICAL_MODEL_ID,
+      provider: 'hermes',
+      owned_by: 'hermes',
+      object: existing?.object || 'model',
+    },
+  ]
 }
 
 function normalizeModel(entry: unknown): ModelEntry | null {
@@ -415,6 +434,24 @@ export const Route = createFileRoute('/api/models')({
         await ensureGatewayProbed()
 
         try {
+          if (CANONICAL_ONLY && CANONICAL_MODEL_ID) {
+            const hermesModels = getGatewayCapabilities().models
+              ? await fetchClaudeModels().catch(() => [])
+              : []
+            const models = canonicalWorkspaceModel(hermesModels)
+            const streamTimeouts = readStreamTimeouts()
+
+            return json({
+              ok: true,
+              object: 'list',
+              data: models,
+              models,
+              configuredProviders: ['hermes'],
+              source: 'hermes-canonical',
+              ...streamTimeouts,
+            })
+          }
+
           // Primary: read user-configured models from ~/.hermes/models.json
           let models = readClaudeModelsJson()
           let source = 'models.json'

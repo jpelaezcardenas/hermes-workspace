@@ -6,7 +6,12 @@ type ResolveSessionKeyInput = {
 
 type ResolveSessionResult = {
   sessionKey: string
-  resolvedVia: 'raw' | 'friendly' | 'default'
+  resolvedVia: 'raw' | 'friendly' | 'default' | 'canonical'
+}
+
+type CanonicalSessionConfig = {
+  sessionKey: string
+  friendlyId: string
 }
 
 type SessionLike = {
@@ -22,6 +27,23 @@ type PortableMainBindingOptions = {
 }
 
 const SYNTHETIC_SESSION_KEYS = new Set(['main', 'new'])
+
+function readEnvString(name: string): string {
+  return typeof process !== 'undefined'
+    ? (process.env[name]?.trim() ?? '')
+    : ''
+}
+
+export function getCanonicalHermesSessionConfig(): CanonicalSessionConfig | null {
+  const sessionKey = readEnvString('HERMES_WORKSPACE_CANONICAL_SESSION_KEY')
+  if (!sessionKey) return null
+  return {
+    sessionKey,
+    friendlyId:
+      readEnvString('HERMES_WORKSPACE_CANONICAL_SESSION_FRIENDLY_ID') ||
+      sessionKey,
+  }
+}
 
 export function isInternalSessionKey(id: string): boolean {
   return (
@@ -78,6 +100,11 @@ export async function resolveSessionKey({
   defaultKey = 'new',
 }: ResolveSessionKeyInput): Promise<ResolveSessionResult> {
   const trimmedRaw = rawSessionKey?.trim() ?? ''
+  const canonical = getCanonicalHermesSessionConfig()
+  if (canonical && (!trimmedRaw || isSyntheticSessionKey(trimmedRaw))) {
+    return { sessionKey: canonical.sessionKey, resolvedVia: 'canonical' }
+  }
+
   if (trimmedRaw.length > 0) {
     return { sessionKey: trimmedRaw, resolvedVia: 'raw' }
   }
