@@ -6,7 +6,78 @@ import { describe, expect, it } from 'vitest'
 import {
   AutonomyDashboardPanel,
   ModulesRegistryPanel,
+  T29DecisionCockpitPanel,
 } from './james-mission-control-view'
+
+describe('T29DecisionCockpitPanel', () => {
+  it('renders dense local-only readiness, missing gates and disabled real-send control', () => {
+    render(
+      <T29DecisionCockpitPanel
+        cockpit={{
+          baseline: {
+            james2Commit: '8b42392',
+            loureiroTechCommit: '07280cd',
+            board: 'james-despachante quiet except real gates',
+          },
+          boardGate: {
+            safeBaselineCounts: { running: 0, ready: 0 },
+            t29Status: 'blocked',
+            t30Status: 'todo/gated',
+            t31Status: 'todo/gated',
+            quietExceptRealGates: true,
+          },
+          campaignCenter: {
+            mode: 'local-only/dry-run',
+            endpoints: [
+              'http://127.0.0.1:18089/health',
+              'http://127.0.0.1:18089/campaign-center/status',
+            ],
+            realSideEffectsEnabled: false,
+            whatsappMessagesSent: 0,
+          },
+          employeeLicenseBot: {
+            lastLocalSmokeStatus: 'ok',
+            employeeTelegramCheck: 'ok',
+            atendimentoCheck: 'ok',
+            expectedSanitizedReturn:
+              'Licenciamento encontrado. Honorário visível: R$ 30,00. Dados sensíveis ocultos.',
+            privacy: 'sensitive identifiers omitted from cockpit snapshot',
+          },
+          missingGates: [
+            { key: 'approval_ref', label: 'approval_ref explícito do Ugo', status: 'missing' },
+            { key: 'kill_switch', label: 'kill switch validado', status: 'missing' },
+          ],
+          realActionControl: {
+            label: 'Enviar campanha real',
+            enabled: false,
+            blockedBy: 'T29',
+            reason: 'T29/CAMP-7 remains blocked; Mission Control is local-only/dry-run.',
+          },
+        }}
+      />,
+    )
+
+    expect(screen.getByText('T29 / CAMP-7 decision cockpit')).toBeTruthy()
+    expect(screen.getByText('james-2 8b42392')).toBeTruthy()
+    expect(screen.getByText('loureiro-tech 07280cd')).toBeTruthy()
+    expect(screen.getByText('running=0 · ready=0')).toBeTruthy()
+    expect(screen.getByText('T29 blocked')).toBeTruthy()
+    expect(screen.getByText('T30 todo/gated · T31 todo/gated')).toBeTruthy()
+    expect(screen.getByText('local-only/dry-run')).toBeTruthy()
+    expect(screen.getByText('real_side_effects_enabled=false')).toBeTruthy()
+    expect(screen.getByText('whatsapp_messages_sent=0')).toBeTruthy()
+    expect(screen.getByText('employee_telegram_check=ok')).toBeTruthy()
+    expect(screen.getByText('atendimento_check=ok')).toBeTruthy()
+    expect(screen.getByText(/Honorário visível: R\$ 30,00/)).toBeTruthy()
+    expect(screen.getByText('approval_ref explícito do Ugo')).toBeTruthy()
+    expect(screen.getByText('kill switch validado')).toBeTruthy()
+    expect(
+      screen.getByRole('button', { name: /Enviar campanha real bloqueado por T29/i }),
+    ).toHaveProperty('disabled', true)
+    const sensitiveTextPattern = new RegExp(`${'C'}PF|tok${'en'}`, 'i')
+    expect(screen.queryByText(sensitiveTextPattern)).toBeNull()
+  })
+})
 
 describe('AutonomyDashboardPanel', () => {
   it('renders tier, trust score, permissions, gates, decisions, failures and recommended next step', () => {

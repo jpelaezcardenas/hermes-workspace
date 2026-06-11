@@ -130,6 +130,45 @@ export type JamesMcpHonestyStatus =
   | 'review_failed'
   | 'unavailable'
 
+export type JamesT29DecisionCockpit = {
+  baseline: {
+    james2Commit: string
+    loureiroTechCommit: string
+    board: string
+  }
+  boardGate: {
+    safeBaselineCounts: { running: number; ready: number }
+    t29Status: string
+    t30Status: string
+    t31Status: string
+    quietExceptRealGates: boolean
+  }
+  campaignCenter: {
+    mode: 'local-only/dry-run'
+    endpoints: Array<string>
+    realSideEffectsEnabled: false
+    whatsappMessagesSent: 0
+  }
+  employeeLicenseBot: {
+    lastLocalSmokeStatus: 'ok'
+    employeeTelegramCheck: 'ok'
+    atendimentoCheck: 'ok'
+    expectedSanitizedReturn: string
+    privacy: string
+  }
+  missingGates: Array<{
+    key: string
+    label: string
+    status: 'missing'
+  }>
+  realActionControl: {
+    label: string
+    enabled: false
+    blockedBy: 'T29'
+    reason: string
+  }
+}
+
 export type JamesMissionControlSnapshot = {
   generatedAt: string
   operationalStatus: JamesMissionControlStatus
@@ -163,6 +202,7 @@ export type JamesMissionControlSnapshot = {
     status: 'blocked'
     reason: string
   }>
+  t29DecisionCockpit: JamesT29DecisionCockpit
   modulesRegistry?: {
     source: { kind: 'canonical'; status: string | null; path?: string }
     counts: { total: number; byKind: Record<string, number> }
@@ -389,6 +429,90 @@ const SIDE_EFFECT_GATES: JamesMissionControlSnapshot['sideEffects'] = [
       'pilot/campaign gates remain blocked until separate explicit approval',
   },
 ]
+
+const T29_MISSING_GATES: JamesT29DecisionCockpit['missingGates'] = [
+  { key: 'approval_ref', label: 'approval_ref explícito do Ugo', status: 'missing' },
+  { key: 'lote', label: 'lote piloto definido', status: 'missing' },
+  { key: 'allowlist', label: 'allowlist de destinatários', status: 'missing' },
+  { key: 'janela', label: 'janela operacional aprovada', status: 'missing' },
+  { key: 'limite', label: 'limite de volume/frequência', status: 'missing' },
+  {
+    key: 'mensagem_aprovada',
+    label: 'mensagem final aprovada',
+    status: 'missing',
+  },
+  { key: 'kill_switch', label: 'kill switch validado', status: 'missing' },
+  { key: 'rollback', label: 'rollback definido', status: 'missing' },
+  { key: 'stop_criteria', label: 'critérios de parada', status: 'missing' },
+  {
+    key: 'humano_disponivel',
+    label: 'humano disponível durante a janela',
+    status: 'missing',
+  },
+]
+
+function normalizeGateStatus(status: string | null | undefined, fallback: string): string {
+  if (!status) return fallback
+  return status === 'todo' ? 'todo/gated' : status
+}
+
+function statusForGateCard(
+  cards: Array<MissionControlKanbanCard>,
+  gateKey: 'T29' | 'T30' | 'T31',
+  fallback: string,
+): string {
+  const titlePrefix = `${gateKey} —`
+  const card = cards.find((item) => item.title.startsWith(titlePrefix))
+  return normalizeGateStatus(card?.status, fallback)
+}
+
+function buildT29DecisionCockpit(
+  cards: Array<MissionControlKanbanCard>,
+): JamesT29DecisionCockpit {
+  const statusCounts = countsByStatus(cards)
+
+  return {
+    baseline: {
+      james2Commit: '8b42392',
+      loureiroTechCommit: '07280cd',
+      board: 'james-despachante quiet except real gates',
+    },
+    boardGate: {
+      safeBaselineCounts: {
+        running: statusCounts.running ?? 0,
+        ready: statusCounts.ready ?? 0,
+      },
+      t29Status: statusForGateCard(cards, 'T29', 'blocked'),
+      t30Status: statusForGateCard(cards, 'T30', 'todo/gated'),
+      t31Status: statusForGateCard(cards, 'T31', 'todo/gated'),
+      quietExceptRealGates: true,
+    },
+    campaignCenter: {
+      mode: 'local-only/dry-run',
+      endpoints: [
+        'http://127.0.0.1:18089/health',
+        'http://127.0.0.1:18089/campaign-center/status',
+      ],
+      realSideEffectsEnabled: false,
+      whatsappMessagesSent: 0,
+    },
+    employeeLicenseBot: {
+      lastLocalSmokeStatus: 'ok',
+      employeeTelegramCheck: 'ok',
+      atendimentoCheck: 'ok',
+      expectedSanitizedReturn:
+        'Licenciamento encontrado. Honorário visível: R$ 30,00. Dados sensíveis ocultos.',
+      privacy: 'sensitive identifiers omitted from cockpit snapshot',
+    },
+    missingGates: T29_MISSING_GATES,
+    realActionControl: {
+      label: 'Enviar campanha real',
+      enabled: false,
+      blockedBy: 'T29',
+      reason: 'T29/CAMP-7 remains blocked; Mission Control is local-only/dry-run.',
+    },
+  }
+}
 
 function asStringArray(value: unknown): Array<string> {
   return Array.isArray(value)
@@ -1142,6 +1266,7 @@ export function buildJamesMissionControlSnapshot(
     input.modulesRegistry ?? {},
     input.registryPaths?.modules,
   )
+  const t29DecisionCockpit = buildT29DecisionCockpit(cards)
   const autonomy = buildAutonomyDashboard(
     agents,
     input.agentsRegistry,
@@ -1164,6 +1289,7 @@ export function buildJamesMissionControlSnapshot(
       : ['modules_registry:missing']),
     `autonomy:${autonomy.managers.length ? 'visible' : 'missing'}`,
     `mcp:${mcpHonesty.status}`,
+    `t29:${t29DecisionCockpit.boardGate.t29Status}`,
     'side_effects:blocked',
   ]
   const operationalStatus: JamesMissionControlStatus =
@@ -1189,6 +1315,7 @@ export function buildJamesMissionControlSnapshot(
     },
     mcpHonesty,
     sideEffects: SIDE_EFFECT_GATES,
+    t29DecisionCockpit,
     ...(modulesRegistry ? { modulesRegistry } : {}),
     graph: graphNodesAndEdges(
       core,

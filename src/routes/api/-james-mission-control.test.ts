@@ -58,6 +58,46 @@ describe('GET /api/james-mission-control', () => {
       kanban: { countsByStatus: {}, cards: [] },
       mcpHonesty: { status: 'unavailable', taskId: null, reason: 'test' },
       sideEffects: [],
+      t29DecisionCockpit: {
+        baseline: {
+          james2Commit: '8b42392',
+          loureiroTechCommit: '07280cd',
+          board: 'james-despachante quiet except real gates',
+        },
+        boardGate: {
+          safeBaselineCounts: { running: 0, ready: 0 },
+          t29Status: 'blocked',
+          t30Status: 'todo/gated',
+          t31Status: 'todo/gated',
+          quietExceptRealGates: true,
+        },
+        campaignCenter: {
+          mode: 'local-only/dry-run',
+          endpoints: [
+            'http://127.0.0.1:18089/health',
+            'http://127.0.0.1:18089/campaign-center/status',
+          ],
+          realSideEffectsEnabled: false,
+          whatsappMessagesSent: 0,
+        },
+        employeeLicenseBot: {
+          lastLocalSmokeStatus: 'ok',
+          employeeTelegramCheck: 'ok',
+          atendimentoCheck: 'ok',
+          expectedSanitizedReturn:
+            'Licenciamento encontrado. Honorário visível: R$ 30,00. Dados sensíveis ocultos.',
+          privacy: 'sensitive identifiers omitted from cockpit snapshot',
+        },
+        missingGates: [
+          { key: 'approval_ref', label: 'approval_ref explícito do Ugo', status: 'missing' },
+        ],
+        realActionControl: {
+          label: 'Enviar campanha real',
+          enabled: false,
+          blockedBy: 'T29',
+          reason: 'blocked',
+        },
+      },
       graph: { nodes: [], edges: [] },
       sources: [],
     })
@@ -73,6 +113,10 @@ describe('GET /api/james-mission-control', () => {
       snapshot: {
         generatedAt: '2026-06-08T00:00:00.000Z',
         operationalStatus: 'review_required',
+        t29DecisionCockpit: {
+          baseline: { james2Commit: '8b42392', loureiroTechCommit: '07280cd' },
+          realActionControl: { enabled: false, blockedBy: 'T29' },
+        },
       },
     })
   })

@@ -114,6 +114,127 @@ const modulesRegistry = {
 }
 
 describe('buildJamesMissionControlSnapshot', () => {
+  it('projects a local-only T29/CAMP-7 decision cockpit with all real actions blocked', () => {
+    const snapshot = buildJamesMissionControlSnapshot({
+      agentsRegistry,
+      watchersRegistry,
+      modulesRegistry,
+      kanbanCards: [
+        {
+          id: 't_mcp15',
+          title: 'MCP-15 — Workspace mostra Sensor/Planner/Operator',
+          spec: 'review-failed: Workspace must not claim mcp success',
+          status: 'blocked',
+        },
+        {
+          id: 't_t29',
+          title: 'T29 — CAMP-7 piloto real',
+          status: 'blocked',
+        },
+        {
+          id: 't_t30',
+          title: 'T30 — follow-up gated',
+          status: 'todo',
+        },
+        {
+          id: 't_t31',
+          title: 'T31 — follow-up gated',
+          status: 'todo',
+        },
+      ],
+      now: 1_780_890_000_000,
+    })
+
+    expect(snapshot.t29DecisionCockpit).toMatchObject({
+      baseline: {
+        james2Commit: '8b42392',
+        loureiroTechCommit: '07280cd',
+        board: 'james-despachante quiet except real gates',
+      },
+      boardGate: {
+        safeBaselineCounts: { running: 0, ready: 0 },
+        t29Status: 'blocked',
+        t30Status: 'todo/gated',
+        t31Status: 'todo/gated',
+      },
+      campaignCenter: {
+        mode: 'local-only/dry-run',
+        endpoints: [
+          'http://127.0.0.1:18089/health',
+          'http://127.0.0.1:18089/campaign-center/status',
+        ],
+        realSideEffectsEnabled: false,
+        whatsappMessagesSent: 0,
+      },
+      employeeLicenseBot: {
+        lastLocalSmokeStatus: 'ok',
+        employeeTelegramCheck: 'ok',
+        atendimentoCheck: 'ok',
+        expectedSanitizedReturn:
+          'Licenciamento encontrado. Honorário visível: R$ 30,00. Dados sensíveis ocultos.',
+        privacy: 'sensitive identifiers omitted from cockpit snapshot',
+      },
+      realActionControl: {
+        label: 'Enviar campanha real',
+        enabled: false,
+        blockedBy: 'T29',
+      },
+    })
+    expect(snapshot.t29DecisionCockpit.missingGates.map((gate) => gate.key)).toEqual([
+      'approval_ref',
+      'lote',
+      'allowlist',
+      'janela',
+      'limite',
+      'mensagem_aprovada',
+      'kill_switch',
+      'rollback',
+      'stop_criteria',
+      'humano_disponivel',
+    ])
+    expect(snapshot.statusReasons).toContain('t29:blocked')
+  })
+
+  it('uses only canonical T29/T30/T31 gate cards for cockpit gate statuses', () => {
+    const snapshot = buildJamesMissionControlSnapshot({
+      agentsRegistry,
+      watchersRegistry,
+      modulesRegistry,
+      kanbanCards: [
+        {
+          id: 't_review_failed',
+          title: 'HJ-MC-T29-2 — Review Mission Control T29',
+          spec: 'review-failed: body cites T30 and T31 while the review card is running',
+          status: 'running',
+        },
+        {
+          id: 't_t29',
+          title: 'T29 — CAMP-7 piloto real',
+          status: 'blocked',
+        },
+        {
+          id: 't_t30',
+          title: 'T30 — follow-up gated',
+          status: 'todo',
+        },
+        {
+          id: 't_t31',
+          title: 'T31 — follow-up gated',
+          status: 'todo',
+        },
+      ],
+      now: 1_780_890_000_000,
+    })
+
+    expect(snapshot.t29DecisionCockpit.boardGate).toMatchObject({
+      safeBaselineCounts: { running: 1, ready: 0 },
+      t29Status: 'blocked',
+      t30Status: 'todo/gated',
+      t31Status: 'todo/gated',
+    })
+    expect(snapshot.statusReasons).toContain('t29:blocked')
+  })
+
   it('projects modules registry and dependency graph read-only without mixing declared health with observed health', () => {
     const snapshot = buildJamesMissionControlSnapshot({
       agentsRegistry,

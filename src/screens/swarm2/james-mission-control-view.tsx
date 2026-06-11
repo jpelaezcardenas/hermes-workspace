@@ -53,6 +53,7 @@ type MissionControlSnapshot = {
     status: 'blocked'
     reason: string
   }>
+  t29DecisionCockpit: T29DecisionCockpitSnapshot
   modulesRegistry?: ModulesRegistrySnapshot
   graph: {
     nodes: Array<{
@@ -64,6 +65,41 @@ type MissionControlSnapshot = {
     edges: Array<{ from: string; to: string; kind: string }>
   }
   sources: Array<{ kind: string; path?: string; status?: string | null }>
+}
+
+type T29DecisionCockpitSnapshot = {
+  baseline: {
+    james2Commit: string
+    loureiroTechCommit: string
+    board: string
+  }
+  boardGate: {
+    safeBaselineCounts: { running: number; ready: number }
+    t29Status: string
+    t30Status: string
+    t31Status: string
+    quietExceptRealGates: boolean
+  }
+  campaignCenter: {
+    mode: 'local-only/dry-run'
+    endpoints: Array<string>
+    realSideEffectsEnabled: false
+    whatsappMessagesSent: 0
+  }
+  employeeLicenseBot: {
+    lastLocalSmokeStatus: 'ok'
+    employeeTelegramCheck: 'ok'
+    atendimentoCheck: 'ok'
+    expectedSanitizedReturn: string
+    privacy: string
+  }
+  missingGates: Array<{ key: string; label: string; status: 'missing' }>
+  realActionControl: {
+    label: string
+    enabled: false
+    blockedBy: 'T29'
+    reason: string
+  }
 }
 
 type ModulesRegistrySnapshot = {
@@ -268,6 +304,8 @@ export function JamesMissionControlView({ className }: { className?: string }) {
         </div>
       </section>
 
+      <T29DecisionCockpitPanel cockpit={snapshot.t29DecisionCockpit} />
+
       <ModulesRegistryPanel modulesRegistry={snapshot.modulesRegistry} />
 
       <div className="grid gap-3 xl:grid-cols-[1.4fr_0.8fr]">
@@ -402,6 +440,114 @@ export function JamesMissionControlView({ className }: { className?: string }) {
 
       <AutonomyDashboardPanel autonomy={snapshot.autonomy} />
     </div>
+  )
+}
+
+export function T29DecisionCockpitPanel({
+  cockpit,
+}: {
+  cockpit: T29DecisionCockpitSnapshot
+}) {
+  const running = cockpit.boardGate.safeBaselineCounts.running
+  const ready = cockpit.boardGate.safeBaselineCounts.ready
+  return (
+    <section className="rounded-[1.5rem] border border-red-400/30 bg-red-500/[0.06] p-4 shadow-[0_16px_48px_var(--theme-shadow)]">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-semibold text-[var(--theme-text)]">
+            T29 / CAMP-7 decision cockpit
+          </h3>
+          <p className="mt-1 text-xs text-[var(--theme-muted-2)]">
+            Local-only snapshot before any red-button decision. Real send controls
+            are rendered disabled next to the gates that still block T29.
+          </p>
+        </div>
+        <button
+          type="button"
+          disabled
+          aria-label={`${cockpit.realActionControl.label} bloqueado por ${cockpit.realActionControl.blockedBy}`}
+          className="cursor-not-allowed rounded-full border border-red-400/40 bg-red-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-red-700 opacity-80"
+        >
+          {cockpit.realActionControl.label}: blocked by{' '}
+          {cockpit.realActionControl.blockedBy}
+        </button>
+      </div>
+      <div className="grid gap-3 lg:grid-cols-[1fr_1fr_1.2fr]">
+        <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-xs">
+          <div className="mb-2 font-semibold text-[var(--theme-text)]">
+            Baseline
+          </div>
+          <div className="space-y-1 text-[var(--theme-muted)]">
+            <div>james-2 {cockpit.baseline.james2Commit}</div>
+            <div>loureiro-tech {cockpit.baseline.loureiroTechCommit}</div>
+            <div>{cockpit.baseline.board}</div>
+          </div>
+        </div>
+        <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-xs">
+          <div className="mb-2 font-semibold text-[var(--theme-text)]">
+            Board gate
+          </div>
+          <div className="space-y-1 text-[var(--theme-muted)]">
+            <div>running={running} · ready={ready}</div>
+            <div>T29 {cockpit.boardGate.t29Status}</div>
+            <div>
+              T30 {cockpit.boardGate.t30Status} · T31{' '}
+              {cockpit.boardGate.t31Status}
+            </div>
+          </div>
+        </div>
+        <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-xs">
+          <div className="mb-2 font-semibold text-[var(--theme-text)]">
+            Campaign Center readiness
+          </div>
+          <div className="space-y-1 text-[var(--theme-muted)]">
+            <div>{cockpit.campaignCenter.mode}</div>
+            {cockpit.campaignCenter.endpoints.map((endpoint) => (
+              <div key={endpoint}>{endpoint}</div>
+            ))}
+            <div>
+              real_side_effects_enabled=
+              {String(cockpit.campaignCenter.realSideEffectsEnabled)}
+            </div>
+            <div>
+              whatsapp_messages_sent=
+              {cockpit.campaignCenter.whatsappMessagesSent}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-3 grid gap-3 lg:grid-cols-[1fr_1.4fr]">
+        <div className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-bg)] p-3 text-xs">
+          <div className="mb-2 font-semibold text-[var(--theme-text)]">
+            Funcionários /licenca smoke
+          </div>
+          <div className="space-y-1 text-[var(--theme-muted)]">
+            <div>last local smoke status {cockpit.employeeLicenseBot.lastLocalSmokeStatus}</div>
+            <div>employee_telegram_check={cockpit.employeeLicenseBot.employeeTelegramCheck}</div>
+            <div>atendimento_check={cockpit.employeeLicenseBot.atendimentoCheck}</div>
+            <div>{cockpit.employeeLicenseBot.expectedSanitizedReturn}</div>
+          </div>
+        </div>
+        <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3 text-xs">
+          <div className="mb-2 font-semibold text-amber-800">
+            Gates faltantes antes de T29
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {cockpit.missingGates.map((gate) => (
+              <span
+                key={gate.key}
+                className="rounded-full border border-amber-400/40 bg-[var(--theme-bg)] px-2 py-0.5 text-amber-800"
+              >
+                {gate.label}
+              </span>
+            ))}
+          </div>
+          <div className="mt-3 rounded-lg border border-red-400/30 bg-red-500/10 px-2 py-1 font-semibold text-red-700">
+            {cockpit.realActionControl.reason}
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
