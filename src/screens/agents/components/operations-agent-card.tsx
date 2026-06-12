@@ -44,16 +44,30 @@ function PersonalityBadge({ sister }: { sister: SisterInfo }) {
           ? 'paid'
           : null
     : null
+  const hasGrowth = (sister.growthEntryCount ?? 0) > 0
+  const growthTitle = hasGrowth
+    ? `${sister.growthLabel} (${sister.growthEntryCount} improvement${(sister.growthEntryCount ?? 0) === 1 ? '' : 's'})${sister.lastNote ? `\n"${sister.lastNote}"` : ''}`
+    : undefined
   return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
-        style.bg, style.text, style.border,
-      )}
-      title={sister.description || sister.role}
-    >
-      {sister.emoji} {sister.role}
-      {tier ? <span className="opacity-60">· {tier}</span> : null}
+    <span className="inline-flex items-center gap-1.5 flex-wrap justify-center">
+      <span
+        className={cn(
+          'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
+          style.bg, style.text, style.border,
+        )}
+        title={sister.description || sister.role}
+      >
+        {sister.emoji} {sister.role}
+        {tier ? <span className="opacity-60">· {tier}</span> : null}
+      </span>
+      {hasGrowth ? (
+        <span
+          className="inline-flex items-center gap-0.5 rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-white/50"
+          title={growthTitle}
+        >
+          {sister.growthEmoji} {sister.growthLabel}
+        </span>
+      ) : null}
     </span>
   )
 }

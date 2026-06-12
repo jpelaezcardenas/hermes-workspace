@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import YAML from 'yaml'
+import { getGrowthLevel, getGrowthLog } from './sisters-growth'
 
 export type SisterType = 'ai_sister' | 'business_agent' | 'delegation_profile'
 
@@ -20,6 +21,12 @@ export type Sister = {
   systemPrompt?: string
   priority?: number
   handoffTo?: string
+  // Growth / self-improvement fields
+  growthLevel?: number
+  growthLabel?: string
+  growthEmoji?: string
+  growthEntryCount?: number
+  lastNote?: string
 }
 
 function getHermesRoot(): string {
@@ -245,13 +252,33 @@ export function listSisters(skipCache = false): Sister[] {
 
   // De-duplicate: AI sisters take priority over delegation profiles with same id
   const seen = new Set<string>()
-  const result: Sister[] = []
+  const deduped: Sister[] = []
   for (const s of [...ai, ...delegation, ...business]) {
     if (!seen.has(s.id)) {
       seen.add(s.id)
-      result.push(s)
+      deduped.push(s)
     }
   }
+
+  // Attach growth level (filesystem reads — tolerate errors)
+  const result = deduped.map((s) => {
+    try {
+      const gl = getGrowthLevel(s.id)
+      const lastEntry = gl.entryCount > 0
+        ? (getGrowthLog(s.id, 1)[0]?.content.slice(0, 120) ?? undefined)
+        : undefined
+      return {
+        ...s,
+        growthLevel: gl.level,
+        growthLabel: gl.label,
+        growthEmoji: gl.emoji,
+        growthEntryCount: gl.entryCount,
+        lastNote: lastEntry,
+      }
+    } catch {
+      return s
+    }
+  })
 
   _cached = result
   _cachedAt = now

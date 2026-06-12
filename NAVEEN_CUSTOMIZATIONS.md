@@ -44,6 +44,11 @@ When `upstream-sync.py` reports that upstream touched one of our files:
 | `src/screens/agents/components/operations-agent-card.tsx` | Added PersonalityBadge component + sisterInfo prop — shows role/tier pill on sister agent cards | Personal customization | Keep; upstream doesn't have personality badges |
 | `src/screens/swarm2/operational-worker-card.tsx` | Added ROLE_TO_SISTER map + PersonalityBadge component — shows sister name/emoji badge per worker role | Personal customization | Keep; upstream doesn't have personality badges |
 | `src/screens/agents/components/agent-bus-panel.tsx` | De-hardcoded action buttons — thumbnail + handoff targets now driven by /api/sisters data | Personal customization | Keep; upstream doesn't have sisters-driven agent bus |
+| `src/server/sisters-growth.ts` | NEW — growth log engine: appendGrowthEntry, getGrowthLog, getGrowthLevel, updateSisterDescription, registerSisterCron (writes to ~/.hermes/cron/jobs.json) | Personal customization | Keep always |
+| `src/routes/api/sisters-improve.ts` | NEW — POST /api/sisters/improve: sisters update own personality note + description + create cron jobs | Personal customization | Keep always |
+| `src/routes/api/sisters-growth.ts` | NEW — GET /api/sisters/growth?id=: returns growth log and level for a sister | Personal customization | Keep always |
+| `src/server/sisters-registry.ts` | EXTEND — Sister type now includes growthLevel/growthLabel/growthEmoji/growthEntryCount/lastNote from growth log | Personal customization | Keep; merge carefully if upstream changes Sister type |
+| `src/screens/agents/components/operations-agent-card.tsx` | EXTEND PersonalityBadge — second mini pill shows growth level emoji+label (🌱 Seed → 💫 Transcendent) | Personal customization | Keep; upstream doesn't have growth tracking |
 
 ---
 

@@ -11,6 +11,11 @@ export type SisterInfo = {
   modelPreference?: string
   priority?: number
   handoffTo?: string
+  growthLevel?: number
+  growthLabel?: string
+  growthEmoji?: string
+  growthEntryCount?: number
+  lastNote?: string
 }
 
 async function fetchSisters(): Promise<SisterInfo[]> {
