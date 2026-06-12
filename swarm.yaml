@@ -559,6 +559,12 @@ workers:
   skills:
   - agent-council
   - faust-core
+  - cavekit-methodology
+  - cavekit-validation-first
+  - cavekit-revision
+  - cavekit-design-system
+  - caveman-compress
+  - plugin-creator
   capabilities:
   - council-attendance
   - memory-wing
