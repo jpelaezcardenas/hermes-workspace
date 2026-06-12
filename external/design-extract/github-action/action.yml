@@ -1,0 +1,92 @@
+name: "designlang — Design Regression Guard"
+description: "Diff a site's design tokens against a baseline and comment the delta on the pull request."
+author: "masyv"
+branding:
+  icon: "layers"
+  color: "orange"
+
+inputs:
+  url:
+    description: "URL to extract design from (required)."
+    required: true
+  baseline:
+    description: "Path to the baseline *-design-tokens.json file in your repo."
+    required: true
+  comment:
+    description: "Whether to post a PR comment with the diff (true/false)."
+    default: "true"
+  fail-on-change:
+    description: "Fail the job if any token changed."
+    default: "false"
+  full:
+    description: "Pass --full to designlang (screenshots, responsive, interactions)."
+    default: "false"
+  extra-args:
+    description: "Additional CLI args passed to `designlang`."
+    default: ""
+  github-token:
+    description: "Token used to comment on the PR. Defaults to github.token."
+    default: ${{ github.token }}
+
+outputs:
+  changed:
+    description: "true/false — whether any tokens changed since the baseline."
+  changed-count:
+    description: "Number of changed tokens."
+  diff-path:
+    description: "Path to the generated diff markdown."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install designlang
+      shell: bash
+      run: npm install -g designlang
+
+    - name: Extract tokens
+      shell: bash
+      env:
+        URL: ${{ inputs.url }}
+        FULL: ${{ inputs.full }}
+        EXTRA: ${{ inputs.extra-args }}
+      run: |
+        mkdir -p .designlang-run
+        ARGS="--out .designlang-run"
+        if [ "$FULL" = "true" ]; then ARGS="$ARGS --full"; fi
+        if [ -n "$EXTRA" ]; then ARGS="$ARGS $EXTRA"; fi
+        designlang "$URL" $ARGS
+
+    - name: Diff tokens against baseline
+      id: diff
+      shell: bash
+      env:
+        BASELINE: ${{ inputs.baseline }}
+      run: |
+        NEW=$(ls .designlang-run/*-design-tokens.json | head -n 1)
+        node "${{ github.action_path }}/diff-tokens.cjs" "$BASELINE" "$NEW" > .designlang-run/diff.md || true
+        CHANGED=$(grep -c '^- ' .designlang-run/diff.md || echo 0)
+        echo "changed=$([ "$CHANGED" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+        echo "changed-count=$CHANGED" >> "$GITHUB_OUTPUT"
+        echo "diff-path=.designlang-run/diff.md" >> "$GITHUB_OUTPUT"
+
+    - name: Comment on PR
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const fs = require('fs');
+          const body = fs.readFileSync('.designlang-run/diff.md', 'utf8');
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `### designlang — design regression guard\n\n${body}`,
+          });
+
+    - name: Fail on change
+      if: ${{ inputs.fail-on-change == 'true' && steps.diff.outputs.changed == 'true' }}
+      shell: bash
+      run: |
+        echo "::error::Design tokens changed vs baseline."
+        exit 1

@@ -1,0 +1,39 @@
+{
+  "installed_at": "2026-06-12T16:40:33.069250+00:00",
+  "target": "hermes-workspace bundled skills for Railway builds",
+  "source_package": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code",
+  "source_package_name": "@juliusbrussee/caveman-code",
+  "source_package_version": "0.65.2",
+  "skills": [
+    {
+      "name": "cavekit-design-system",
+      "source": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code/skills/cavekit-design-system",
+      "destination": "skills/caveman-code/cavekit-design-system"
+    },
+    {
+      "name": "cavekit-methodology",
+      "source": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code/skills/cavekit-methodology",
+      "destination": "skills/caveman-code/cavekit-methodology"
+    },
+    {
+      "name": "cavekit-revision",
+      "source": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code/skills/cavekit-revision",
+      "destination": "skills/caveman-code/cavekit-revision"
+    },
+    {
+      "name": "cavekit-validation-first",
+      "source": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code/skills/cavekit-validation-first",
+      "destination": "skills/caveman-code/cavekit-validation-first"
+    },
+    {
+      "name": "caveman-compress",
+      "source": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code/skills/caveman-compress",
+      "destination": "skills/caveman-code/caveman-compress"
+    },
+    {
+      "name": "plugin-creator",
+      "source": "/home/carme/.npm-global/lib/node_modules/@juliusbrussee/caveman-code/skills/plugin-creator",
+      "destination": "skills/caveman-code/plugin-creator"
+    }
+  ]
+}

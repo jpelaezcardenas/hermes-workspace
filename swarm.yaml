@@ -5,7 +5,8 @@ workers:
   role: Swarm Orchestrator / Greenlight Gate
   specialty: mission routing, task decomposition, handoffs, proof contracts, human approval gates
   model: GPT-5.5
-  mission: Decompose missions into safe, proof-bearing work and route to the right specialist while preserving human greenlight control.
+  mission: Decompose missions into safe, proof-bearing work and route to the right specialist while preserving human greenlight
+    control.
   profile: orchestrator
   modes:
   - plan
@@ -453,7 +454,8 @@ workers:
   role: Capture / Discard / Route / Task Triage
   specialty: low-friction inbox processing, capture routing, task/research/defer decisions, durable-context filtering
   model: GPT-5.5
-  mission: Route incoming material into discard, task, research, or durable brain capture with minimal overhead and no junk accumulation.
+  mission: Route incoming material into discard, task, research, or durable brain capture with minimal overhead and no junk
+    accumulation.
   profile: inbox-triage
   modes:
   - triage
@@ -496,3 +498,221 @@ workers:
   mcpServers:
   - gbrain
   wrapper: inbox:triage
+- id: agent-hermes
+  name: Hermes
+  role: Hermes Agent/platform operator and toolchain maintainer
+  specialty: Hermes CLI, profiles, tools, skills, gateway, workspace wiring, and controller verification
+  model: GPT-5.5
+  mission: Keep Hermes Agent and the workspace toolchain configured, documented, and operational.
+  profile: agent-hermes
+  modes:
+  - council
+  tools:
+  - terminal
+  - file
+  - session_search
+  - skills
+  - memory
+  - delegation
+  skills:
+  - agent-council
+  - hermes-agent
+  - caveman-compress
+  - mythos-research
+  - design-extract
+  capabilities:
+  - council-attendance
+  - memory-wing
+  - specialist-reasoning
+  preferredTaskTypes:
+  - council
+  - synthesis
+  - specialist-review
+  greenlightRequiredFor:
+  - destructive
+  - external-send
+  - credential-change
+  maxConcurrentTasks: 1
+  acceptsBroadcast: true
+  plugins: []
+  pluginToolsets: []
+  mcpServers:
+  - mempalace-hermes
+  wrapper: agent-hermes:council
+  workspacePath: /home/carme/hermes-workspace/agents/hermes
+  memoryWing: hermes
+  mempalacePalace: /home/carme/.mempalace/palaces/hermes
+- id: faust
+  name: Faust
+  role: AGI-in-progress meta-operator and learning steward
+  specialty: Skill ecosystem routing, MemPalace recall, persistent learning, mythos/agent orchestration, and AGI workbench
+    coordination
+  model: GPT-5.5
+  mission: Advance the AGI-in-progress operating loop while preserving evidence, safety, and durable learning.
+  profile: faust
+  modes:
+  - council
+  tools:
+  - terminal
+  - file
+  - session_search
+  - skills
+  - memory
+  - delegation
+  skills:
+  - agent-council
+  - faust-core
+  - cavekit-methodology
+  - cavekit-validation-first
+  - cavekit-revision
+  - cavekit-design-system
+  - caveman-compress
+  - plugin-creator
+  - mythos-research
+  - design-extract
+  - butterboard-1bit-subconscious
+  capabilities:
+  - council-attendance
+  - memory-wing
+  - specialist-reasoning
+  preferredTaskTypes:
+  - council
+  - synthesis
+  - specialist-review
+  greenlightRequiredFor:
+  - destructive
+  - external-send
+  - credential-change
+  maxConcurrentTasks: 1
+  acceptsBroadcast: true
+  plugins: []
+  pluginToolsets: []
+  mcpServers:
+  - mempalace-faust
+  wrapper: faust:council
+  workspacePath: /home/carme/hermes-workspace/agents/faust
+  memoryWing: faust
+  mempalacePalace: /home/carme/.mempalace/palaces/faust
+- id: kiki
+  name: Kiki
+  role: Creative/product/interface intuition agent
+  specialty: UX sensemaking, playful ideation, design taste, emotional resonance, and user-facing polish
+  model: GPT-5.5
+  mission: Turn rough ideas into clear, delightful, human-centered product and interface directions.
+  profile: kiki
+  modes:
+  - council
+  tools:
+  - terminal
+  - file
+  - session_search
+  - skills
+  - memory
+  - delegation
+  skills:
+  - agent-council
+  - ai-coding-agents
+  capabilities:
+  - council-attendance
+  - memory-wing
+  - specialist-reasoning
+  preferredTaskTypes:
+  - council
+  - synthesis
+  - specialist-review
+  greenlightRequiredFor:
+  - destructive
+  - external-send
+  - credential-change
+  maxConcurrentTasks: 1
+  acceptsBroadcast: true
+  plugins: []
+  pluginToolsets: []
+  mcpServers:
+  - mempalace-kiki
+  wrapper: kiki:council
+  workspacePath: /home/carme/hermes-workspace/agents/kiki
+  memoryWing: kiki
+  mempalacePalace: /home/carme/.mempalace/palaces/kiki
+- id: juju
+  name: Juju
+  role: Ops/automation/reliability execution agent
+  specialty: Ritualized operations, automation glue, recurring checks, scripts, local infrastructure, and practical follow-through
+  model: GPT-5.5
+  mission: Make workflows reliable, observable, repeatable, and low-friction.
+  profile: juju
+  modes:
+  - council
+  tools:
+  - terminal
+  - file
+  - session_search
+  - skills
+  - memory
+  - delegation
+  skills:
+  - agent-council
+  - ai-coding-agents
+  capabilities:
+  - council-attendance
+  - memory-wing
+  - specialist-reasoning
+  preferredTaskTypes:
+  - council
+  - synthesis
+  - specialist-review
+  greenlightRequiredFor:
+  - destructive
+  - external-send
+  - credential-change
+  maxConcurrentTasks: 1
+  acceptsBroadcast: true
+  plugins: []
+  pluginToolsets: []
+  mcpServers:
+  - mempalace-juju
+  wrapper: juju:council
+  workspacePath: /home/carme/hermes-workspace/agents/juju
+  memoryWing: juju
+  mempalacePalace: /home/carme/.mempalace/palaces/juju
+- id: socrates
+  name: Socrates
+  role: Critical reasoning and decision-quality agent
+  specialty: Questioning assumptions, identifying contradictions, ethics, epistemic hygiene, and adversarial review
+  model: GPT-5.5
+  mission: Improve truth-seeking and decision quality by asking the hard questions before action.
+  profile: socrates
+  modes:
+  - council
+  tools:
+  - terminal
+  - file
+  - session_search
+  - skills
+  - memory
+  - delegation
+  skills:
+  - agent-council
+  - ai-coding-agents
+  capabilities:
+  - council-attendance
+  - memory-wing
+  - specialist-reasoning
+  preferredTaskTypes:
+  - council
+  - synthesis
+  - specialist-review
+  greenlightRequiredFor:
+  - destructive
+  - external-send
+  - credential-change
+  maxConcurrentTasks: 1
+  acceptsBroadcast: true
+  plugins: []
+  pluginToolsets: []
+  mcpServers:
+  - mempalace-socrates
+  wrapper: socrates:council
+  workspacePath: /home/carme/hermes-workspace/agents/socrates
+  memoryWing: socrates
+  mempalacePalace: /home/carme/.mempalace/palaces/socrates
