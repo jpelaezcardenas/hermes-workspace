@@ -29,6 +29,7 @@ import { CacheEfficiencyCard } from './components/cache-efficiency-card'
 import { CostLedgerCard } from './components/cost-ledger-card'
 import { EditModePanel } from './components/edit-mode-panel'
 import { HeroMetrics } from './components/hero-metrics'
+import { GitStatusCard } from './components/git-status-card'
 import { LogsTailCard } from './components/logs-tail-card'
 import { OperatorTipCard } from './components/operator-tip-card'
 import { OpsStrip } from './components/ops-strip'
@@ -920,7 +921,7 @@ export function DashboardScreen() {
                 lineHeight: 1.1,
               }}
             >
-              Hermes Workspace
+              Hermes C&amp;C Interface
             </h1>
           </div>
         </div>
@@ -1171,6 +1172,9 @@ export function DashboardScreen() {
             stretch the rail to match Sessions Intelligence height so
             we don't get the dangling gap Eric flagged in iter 007. */}
         <div className="flex min-h-full flex-col gap-3 lg:col-span-4">
+          <WidgetShell id="git_status" layout={layout}>
+            <GitStatusCard />
+          </WidgetShell>
           <WidgetShell id="achievements" layout={layout}>
             <AchievementsCard
               achievements={overview?.achievements ?? null}

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
   WIDGET_CATALOG,
   type DashboardLayout,
@@ -6,19 +6,9 @@ import {
 } from '@/screens/dashboard/lib/use-dashboard-layout'
 
 /**
- * Wraps a dashboard widget so it participates in edit mode without
- * the widget itself needing to know edit state exists.
- *
- * Behavior:
- * - When `layout.editMode` is true: shows a subtle dashed outline +
- *   an X button in the top-right corner that hides the widget. The
- *   widget body remains interactive so the operator can still see
- *   what they're toggling.
- * - When edit mode is off: renders children unchanged (zero overhead
- *   layout-wise; the wrapper is just a passthrough div).
- *
- * If the widget is hidden (`!layout.isVisible(id)`), this returns
- * null in both modes — restoration happens through the EditPanel.
+ * Wraps a dashboard widget so it participates in edit mode and can be
+ * collapsed without fully hiding it. Collapsed state is per-widget and
+ * persisted in localStorage so operators can fit more status on one page.
  */
 export function WidgetShell({
   id,
@@ -33,16 +23,69 @@ export function WidgetShell({
 
   const meta = WIDGET_CATALOG.find((w) => w.id === id)
   const canHide = meta?.hideable ?? true
+  const storageKey = `dashboard.widget.collapsed.${id}`
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.localStorage.getItem(storageKey) === '1'
+  })
 
-  if (!layout.editMode) {
-    // Plain passthrough. Wrapping in a fragment-equivalent div would
-    // change the flexbox layout above us, so we skip the wrapper.
-    return <>{children}</>
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(storageKey, collapsed ? '1' : '0')
+  }, [collapsed, storageKey])
+
+  const collapseButton = (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation()
+        setCollapsed((value) => !value)
+      }}
+      className="absolute top-2 z-20 inline-flex h-6 items-center justify-center rounded-full border px-2 text-[11px] font-semibold uppercase tracking-[0.12em] shadow-sm transition-all hover:scale-105"
+      style={{
+        right: layout.editMode && canHide ? 30 : 8,
+        background: 'var(--theme-card)',
+        color: 'var(--theme-muted)',
+        borderColor: 'var(--theme-border)',
+      }}
+      title={`${collapsed ? 'Expand' : 'Collapse'} ${meta?.label ?? id}`}
+      aria-label={`${collapsed ? 'Expand' : 'Collapse'} widget ${meta?.label ?? id}`}
+    >
+      {collapsed ? '＋' : '－'}
+    </button>
+  )
+
+  if (collapsed) {
+    return (
+      <div
+        className="relative rounded-xl border px-4 py-3"
+        style={{
+          background: 'var(--theme-card)',
+          borderColor: 'var(--theme-border)',
+        }}
+      >
+        <div className="pr-16">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">
+            {meta?.label ?? id}
+          </div>
+          <div className="mt-1 text-xs text-muted">
+            Collapsed — click + to expand.
+          </div>
+        </div>
+        {collapseButton}
+      </div>
+    )
   }
 
-  // Use `h-full` on the edit-mode wrapper so children that opted
-  // into `flex-1`/`h-full` (e.g. Sessions Intelligence post iter 013)
-  // still expand correctly when the dashboard is in edit mode.
+  if (!layout.editMode) {
+    return (
+      <div className="relative h-full">
+        {children}
+        {collapseButton}
+      </div>
+    )
+  }
+
   return (
     <div className="relative h-full">
       <div
@@ -57,6 +100,7 @@ export function WidgetShell({
         }}
       />
       <div className="relative h-full">{children}</div>
+      {collapseButton}
       {canHide ? (
         <button
           type="button"
@@ -64,7 +108,7 @@ export function WidgetShell({
             e.stopPropagation()
             layout.hide(id)
           }}
-          className="absolute -right-2 -top-2 z-10 inline-flex size-6 items-center justify-center rounded-full text-[14px] font-bold leading-none shadow-md transition-transform hover:scale-110"
+          className="absolute -right-2 -top-2 z-20 inline-flex size-6 items-center justify-center rounded-full text-[14px] font-bold leading-none shadow-md transition-transform hover:scale-110"
           style={{
             background: 'var(--theme-card)',
             color: 'var(--theme-danger)',

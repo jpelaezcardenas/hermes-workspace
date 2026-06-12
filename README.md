@@ -1,9 +1,9 @@
 <div align="center">
 
-<img src="./public/claude-avatar.webp" alt="Hermes Workspace" width="80" style="border-radius: 16px" />
+<img src="./public/claude-avatar.webp" alt="Hermes C&C Interface" width="80" style="border-radius: 16px" />
 <!-- avatar filename retained for cache stability — do not rename without coordinated cache-bust -->
 
-# Hermes Workspace
+# Hermes C&C Interface
 
 **Your AI agent's command center — chat, files, memory, skills, and terminal in one place.**
 
@@ -16,7 +16,7 @@
 
 > **v2 — zero-fork.** Clone, don't fork. Runs on vanilla [`NousResearch/hermes-agent`](https://github.com/NousResearch/hermes-agent) installed via Nous's own installer. Chat, sessions, memory, skills, jobs, MCP, terminal, dashboard, Agent View, and Operations are all in vanilla parity. **Conductor** uses the dashboard mission API when available and falls back to Workspace-native Swarm dispatch (`mode: native-swarm`) when the dashboard endpoint is absent, preserving zero-fork behavior ([#262](https://github.com/outsourc-e/hermes-workspace/issues/262)).
 
-![Hermes Workspace](./docs/screenshots/splash.png)
+![Hermes C&C Interface](./docs/screenshots/splash.png)
 
 </div>
 
@@ -56,6 +56,20 @@ Start here: [docs/swarm/](./docs/swarm/)
 - 🔒 **Security** — Auth middleware on every route, CSP, path-traversal guard, fail-closed remote bind
 - 📱 **PWA + Tailscale** — Install as a native-feeling app; access from any device on your tailnet
 - ⚙️ **Capability gates** — Features that need upstream endpoints (Conductor) show a clean placeholder instead of failing mid-action
+
+
+### Remote subagent servers status panel
+
+The pve2 C&C status page at `http://192.168.1.140:9120/` includes a **Remote subagent servers** panel for LAN Hermes helper nodes. It currently tracks:
+
+- `192.168.1.219` / `PiBench` (primary/first fallback)
+- `192.168.1.211` / `Pxvirt`
+- `192.168.1.151` / `DietPi`
+- `192.168.1.108` / `DietGTX780Ti`
+
+All listed nodes are configured for Ollama Cloud subagent work. The panel exposes `/remote-subagents.json`, per-host JSON endpoints, and a model selector that applies changes to the selected server by running `hermes config set` remotely for both the main `model` block and the `delegation` block. The POST succeeds only after the remote Hermes config is read back and verified.
+
+Verified Ollama Cloud model options in this environment are `qwen3-next:80b`, `glm-4.6:latest`, and `gpt-oss:20b`. See [docs/operations/remote-subagent-servers.md](./docs/operations/remote-subagent-servers.md) for runtime paths, service names, endpoint contracts, and verification commands.
 
 ---
 
@@ -111,8 +125,8 @@ Open http://localhost:3000. That's it.
 If you already have `hermes-agent` installed (via Nous's official installer, a source checkout, systemd, Docker, or another existing setup) and it's serving the gateway at `http://<host>:8642`, you don't need to reinstall anything — just point the workspace at it.
 
 ```bash
-git clone https://github.com/outsourc-e/hermes-workspace.git
-cd hermes-workspace
+git clone https://github.com/blackscience/hermes-c-c-interface.git
+cd hermes-c-c-interface
 pnpm install
 cp .env.example .env
 

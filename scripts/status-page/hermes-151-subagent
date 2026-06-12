@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ENV_PATH=/mnt/pve/LocalDir/hermes-critical/pve2/hermes-home/private/dietpi.env
+STATUS=/usr/local/sbin/hermes-subagent-status.py
+if [ $# -lt 1 ]; then
+  echo "Usage: hermes-151-subagent 'task prompt for the remote subagent'" >&2
+  exit 2
+fi
+if [ -x "$STATUS" ]; then
+  "$STATUS" --server 151 >/dev/null || true
+fi
+if [ ! -f "$ENV_PATH" ]; then
+  echo "Missing $ENV_PATH" >&2
+  exit 1
+fi
+set -a
+. "$ENV_PATH"
+set +a
+HOST=${DIETPI_HOST:-192.168.1.151}
+USER=${DIETPI_USER:-root}
+PORT=${DIETPI_PORT:-22}
+STRICT=${HERMES_MASTER_STRICT_HOST_KEY_CHECKING:-accept-new}
+PASSWORD=${DIETPI_PASSWORD:-${HERMES_MASTER_PASSWORD:-}}
+if [ -z "$PASSWORD" ]; then
+  echo "Missing DIETPI_PASSWORD/HERMES_MASTER_PASSWORD in $ENV_PATH" >&2
+  exit 1
+fi
+prompt="$*"
+remote_cmd=$(python3 - "$prompt" <<'PY'
+import shlex, sys
+prompt=sys.argv[1]
+print('export PATH=/usr/local/bin:/root/.local/bin:$PATH; hermes chat -Q -q ' + shlex.quote(prompt))
+PY
+)
+tmp=$(mktemp)
+set +e
+sshpass -p "$PASSWORD" ssh \
+  -o ConnectTimeout=8 \
+  -o BatchMode=no \
+  -o ServerAliveInterval=15 \
+  -o StrictHostKeyChecking="$STRICT" \
+  -p "$PORT" \
+  "$USER@$HOST" "$remote_cmd" 2>&1 | tee "$tmp"
+rc=${PIPESTATUS[0]}
+set -e
+if [ -x "$STATUS" ]; then
+  "$STATUS" --server 151 >/dev/null || true
+fi
+rm -f "$tmp"
+exit "$rc"
