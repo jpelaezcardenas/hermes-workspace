@@ -1,8 +1,26 @@
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { spawn } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { listTasks, updateTask, createTask } from './tasks-store'
+
+// Resolve hermes binary path — the systemd service PATH doesn't include ~/.local/bin
+function resolveHermesBin(): string {
+  const candidates = [
+    process.env.HERMES_BIN,
+    path.join(os.homedir(), '.local', 'bin', 'hermes'),
+    path.join(os.homedir(), '.hermes', 'bin', 'hermes'),
+    '/usr/local/bin/hermes',
+    'hermes',
+  ].filter(Boolean) as string[]
+  for (const p of candidates) {
+    try { if (fs.existsSync(p)) return p } catch { /* skip */ }
+  }
+  // Last resort: ask the shell
+  const r = spawnSync('which', ['hermes'], { encoding: 'utf-8' })
+  return r.stdout.trim() || 'hermes'
+}
+const HERMES_BIN = resolveHermesBin()
 
 // ---------------------------------------------------------------------------
 // markTasksAsReviewing
@@ -58,9 +76,10 @@ ${JSON.stringify(taskSummary, null, 2)}`
     'tasks.json',
   )
 
-  // Escape the prompt and task data for embedding in the script string
+  // Escape values for embedding in the script string
   const promptEscaped = JSON.stringify(prompt)
   const tasksFilePathEscaped = JSON.stringify(tasksFilePath)
+  const hermesBinEscaped = JSON.stringify(HERMES_BIN)
 
   const scriptContent = `
 import { spawnSync } from 'node:child_process';
@@ -101,9 +120,10 @@ function clearAgentState(taskIds) {
 }
 
 // Call hermes CLI
+const hermesBin = ${hermesBinEscaped};
 const result = spawnSync(
-  'hermes',
-  ['-p', prompt, '-z'],
+  hermesBin,
+  ['-z', prompt],
   { encoding: 'utf-8', timeout: 90000, maxBuffer: 4 * 1024 * 1024 }
 );
 
@@ -186,10 +206,12 @@ type IdeaEntry = {
   estimated_effort?: string
 }
 
-// Resolve IDEAS.json relative to this file's location (src/server/ → repo root)
+// IDEAS.json lives in the repo root. The server always runs from the repo root
+// (WorkingDirectory in the systemd unit), so process.cwd() is reliable.
+// Override with HERMES_WORKSPACE_IDEAS_FILE if needed.
 const IDEAS_FILE =
   process.env.HERMES_WORKSPACE_IDEAS_FILE ??
-  path.join(path.dirname(path.dirname(path.dirname(new URL(import.meta.url).pathname))), 'IDEAS.json')
+  path.join(process.cwd(), 'IDEAS.json')
 
 export function injectIdeasAsBacklog(): { injected: number; ideas: string[] } {
   let ideas: IdeaEntry[] = []

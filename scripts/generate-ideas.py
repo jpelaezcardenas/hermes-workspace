@@ -86,7 +86,7 @@ Return a JSON array only — no prose, no markdown fences:
 ]
 """
     result = subprocess.run(
-        ['hermes', '-p', prompt, '-z'],
+        ['hermes', '-z', prompt],
         capture_output=True, text=True, timeout=60,
     )
     if result.returncode != 0 or not result.stdout.strip():

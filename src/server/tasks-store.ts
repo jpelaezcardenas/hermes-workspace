@@ -127,6 +127,10 @@ export function createTask(input: CreateTaskInput): TaskRecord {
     created_by: typeof input.created_by === 'string' && input.created_by ? input.created_by : 'user',
     created_at: now,
     updated_at: now,
+    source: input.source,
+    agent_state: input.agent_state,
+    agent_name: input.agent_name,
+    agent_action_at: input.agent_action_at,
   })
   file.tasks.push(task)
   writeTaskFile({ tasks: file.tasks.map(normalizeTask) })
