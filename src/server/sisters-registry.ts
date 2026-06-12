@@ -118,11 +118,20 @@ export const WORKER_ROLE_TO_SISTER: Record<string, string> = {
   docs:         'nova',
 }
 
+// Astra IS the default profile — its path is ~/.hermes/ itself, not a subdir.
+// The workspace profiles-browser always synthesizes it from config.yaml at root.
+const ASTRA_IS_DEFAULT = true
+
 function getProfilePath(hermesRoot: string, id: string): string {
+  if (id === 'astra' && ASTRA_IS_DEFAULT) return hermesRoot
   return path.join(hermesRoot, 'profiles', id)
 }
 
-function checkProfileLive(profilePath: string): { hasProfile: boolean; isLive: boolean } {
+function checkProfileLive(profilePath: string, id?: string): { hasProfile: boolean; isLive: boolean } {
+  if (id === 'astra' && ASTRA_IS_DEFAULT) {
+    // Astra's "profile" is always live — it IS the root hermes config
+    return { hasProfile: true, isLive: true }
+  }
   const hasProfile = fs.existsSync(profilePath)
   if (!hasProfile) return { hasProfile: false, isLive: false }
   const configPath = path.join(profilePath, 'config.yaml')
@@ -140,7 +149,7 @@ function readAiSisters(hermesRoot: string): Sister[] {
     const entry = obj(raw)
     if (entry.enabled === false) continue
     const profilePath = getProfilePath(hermesRoot, id)
-    const { hasProfile, isLive } = checkProfileLive(profilePath)
+    const { hasProfile, isLive } = checkProfileLive(profilePath, id)
     const role = str(entry.role) || (id === 'astra' ? 'orchestrator' : id === 'novus' ? 'builder' : id === 'nova' ? 'researcher' : 'assistant')
     result.push({
       id,
@@ -280,6 +289,10 @@ function buildProfileConfig(sister: Sister): string {
 }
 
 export function ensureSisterProfile(sister: Sister): void {
+  // Astra IS the default profile (root ~/.hermes/). Never create a subdir for it —
+  // that would produce a duplicate entry in the profiles list.
+  if (sister.id === 'astra' && ASTRA_IS_DEFAULT) return
+
   const { profilePath } = sister
   if (!fs.existsSync(profilePath)) {
     fs.mkdirSync(profilePath, { recursive: true })

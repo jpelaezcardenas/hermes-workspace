@@ -270,7 +270,7 @@ async function fetchOperationsConfig(): Promise<ConfigPayload> {
   const profiles = await fetchClaudeProfiles()
   const list = profiles.map((profile) => ({
     id: profile.name,
-    name: profile.name === 'default' ? 'Workspace' : profile.name,
+    name: profile.name === 'default' ? 'Astra' : profile.name,
     model: profile.model || '',
     workspace: profile.path,
     agentDir: profile.path,
@@ -587,6 +587,8 @@ export function useOperations() {
     const map: Record<string, SisterInfo> = {}
     for (const s of sistersQuery.data ?? []) {
       map[s.id] = s
+      // Astra IS the default profile — map 'default' → astra so the badge shows
+      if (s.id === 'astra') map['default'] = s
     }
     return map
   }, [sistersQuery.data])
