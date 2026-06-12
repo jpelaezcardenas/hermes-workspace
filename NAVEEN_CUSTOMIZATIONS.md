@@ -21,15 +21,20 @@ When `upstream-sync.py` reports that upstream touched one of our files:
 
 | File | What we changed | Upstream PR | Decision rule |
 |------|----------------|-------------|---------------|
-| `server-entry.js` | Added `Cache-Control: no-store` on HTML responses so stale chunk errors never recur after a rebuild | Submitted as part of good practices — not yet a PR | Adopt upstream if they add similar cache headers; otherwise keep ours |
+| `server-entry.js` | Added `Cache-Control: no-store` on HTML responses so stale chunk errors never recur after a rebuild | Not yet submitted | Adopt upstream if they add similar cache headers; otherwise keep ours |
 | `src/components/settings/settings-sidebar.tsx` | Added `'harp'` nav id and "HARP Routing" sidebar item | Part of PR #626 | If upstream merges PR #626 with the same sidebar entry, drop our commit |
+| `src/components/update-center-notifier.tsx` | Added Naveen smart-update card + conflict resolution modal with AI analysis | Personal customization | Keep always; upstream won't have this |
 | `src/routes/api/harp-config.ts` | New API route: GET/PATCH for HARP config | Part of PR #626 | Adopt upstream's version if merged; compare feature parity first |
 | `src/routes/api/personality-swarm.ts` | New API route: GET presets + POST apply personality to swarm | Not yet submitted upstream | Keep unless upstream ships a similar endpoint |
 | `src/routes/settings/index.tsx` | Render `<HarpConfigScreen>` when `activeSection === 'harp'` | Part of PR #626 | Drop if upstream merges PR #626 |
 | `src/screens/profiles/profiles-screen.tsx` | Extended wizard from 3 → 4 steps: added Personality + Swarm distribution step | Not yet submitted upstream | Keep; upstream doesn't have this feature yet |
-| `src/screens/settings/harp-config-screen.tsx` | New settings screen: full HARP tiered routing config UI | Part of PR #626 | Compare with upstream's version if merged — adopt theirs if feature-complete |
+| `src/screens/settings/harp-config-screen.tsx` | Full HARP tiered routing config screen + `CapWidget` for day/week/month cap selector | Part of PR #626 | Compare with upstream's version if merged — adopt theirs if feature-complete |
 | `src/server/harp-config-store.ts` | New server module: HARP config read/write/patch with multi-path auto-discovery | Part of PR #626 | Adopt upstream's version if merged |
 | `src/server/personality-swarm-store.ts` | New server module: personality presets + swarm distribution logic | Not yet submitted upstream | Keep; upstream doesn't have this feature yet |
+| `src/server/tasks-store.ts` | Added `agent_state`, `agent_name`, `agent_action_at`, `source` fields to `TaskRecord` | Not yet submitted upstream | If upstream adds agent task fields, merge carefully — check field naming |
+| `src/lib/tasks-api.ts` | Added same 4 agent fields to the client-facing `ClaudeTask` interface | Not yet submitted upstream | Keep in sync with `tasks-store.ts` changes |
+| `src/screens/tasks/task-card.tsx` | Added `AgentStateBadge`, `SourceBadge`, purple shimmer bar when agent is active | Not yet submitted upstream | Keep; upstream doesn't have agent-animated task cards yet |
+| `src/screens/tasks/tasks-screen.tsx` | Added "Ask Astra" + "Add Ideas" buttons, adaptive polling (4s/30s), agent-active stats | Not yet submitted upstream | Keep; upstream doesn't have Astra review trigger in UI |
 
 ---
 

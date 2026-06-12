@@ -118,6 +118,9 @@ import { Route as ApiArtifactsRouteImport } from './routes/api/artifacts'
 import { Route as ApiAgentBusRouteImport } from './routes/api/agent-bus'
 import { Route as ApiUpdateWorkspaceRouteImport } from './routes/api/update/workspace'
 import { Route as ApiUpdateStatusRouteImport } from './routes/api/update/status'
+import { Route as ApiUpdateNaveenStatusRouteImport } from './routes/api/update/naveen-status'
+import { Route as ApiUpdateNaveenApplyRouteImport } from './routes/api/update/naveen-apply'
+import { Route as ApiUpdateNaveenAiAnalysisRouteImport } from './routes/api/update/naveen-ai-analysis'
 import { Route as ApiUpdateAgentRouteImport } from './routes/api/update/agent'
 import { Route as ApiSwarmRuntimeResetRouteImport } from './routes/api/swarm-runtime.reset'
 import { Route as ApiSwarmMemorySearchRouteImport } from './routes/api/swarm-memory/search'
@@ -720,6 +723,22 @@ const ApiUpdateStatusRoute = ApiUpdateStatusRouteImport.update({
   path: '/api/update/status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiUpdateNaveenStatusRoute = ApiUpdateNaveenStatusRouteImport.update({
+  id: '/api/update/naveen-status',
+  path: '/api/update/naveen-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUpdateNaveenApplyRoute = ApiUpdateNaveenApplyRouteImport.update({
+  id: '/api/update/naveen-apply',
+  path: '/api/update/naveen-apply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUpdateNaveenAiAnalysisRoute =
+  ApiUpdateNaveenAiAnalysisRouteImport.update({
+    id: '/api/update/naveen-ai-analysis',
+    path: '/api/update/naveen-ai-analysis',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiUpdateAgentRoute = ApiUpdateAgentRouteImport.update({
   id: '/api/update/agent',
   path: '/api/update/agent',
@@ -1160,6 +1179,9 @@ export interface FileRoutesByFullPath {
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
   '/api/swarm-runtime/reset': typeof ApiSwarmRuntimeResetRoute
   '/api/update/agent': typeof ApiUpdateAgentRoute
+  '/api/update/naveen-ai-analysis': typeof ApiUpdateNaveenAiAnalysisRoute
+  '/api/update/naveen-apply': typeof ApiUpdateNaveenApplyRoute
+  '/api/update/naveen-status': typeof ApiUpdateNaveenStatusRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
@@ -1325,6 +1347,9 @@ export interface FileRoutesByTo {
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
   '/api/swarm-runtime/reset': typeof ApiSwarmRuntimeResetRoute
   '/api/update/agent': typeof ApiUpdateAgentRoute
+  '/api/update/naveen-ai-analysis': typeof ApiUpdateNaveenAiAnalysisRoute
+  '/api/update/naveen-apply': typeof ApiUpdateNaveenApplyRoute
+  '/api/update/naveen-status': typeof ApiUpdateNaveenStatusRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
@@ -1492,6 +1517,9 @@ export interface FileRoutesById {
   '/api/swarm-memory/search': typeof ApiSwarmMemorySearchRoute
   '/api/swarm-runtime/reset': typeof ApiSwarmRuntimeResetRoute
   '/api/update/agent': typeof ApiUpdateAgentRoute
+  '/api/update/naveen-ai-analysis': typeof ApiUpdateNaveenAiAnalysisRoute
+  '/api/update/naveen-apply': typeof ApiUpdateNaveenApplyRoute
+  '/api/update/naveen-status': typeof ApiUpdateNaveenStatusRoute
   '/api/update/status': typeof ApiUpdateStatusRoute
   '/api/update/workspace': typeof ApiUpdateWorkspaceRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
@@ -1660,6 +1688,9 @@ export interface FileRouteTypes {
     | '/api/swarm-memory/search'
     | '/api/swarm-runtime/reset'
     | '/api/update/agent'
+    | '/api/update/naveen-ai-analysis'
+    | '/api/update/naveen-apply'
+    | '/api/update/naveen-status'
     | '/api/update/status'
     | '/api/update/workspace'
     | '/api/hermesworld/reservations/confirm'
@@ -1825,6 +1856,9 @@ export interface FileRouteTypes {
     | '/api/swarm-memory/search'
     | '/api/swarm-runtime/reset'
     | '/api/update/agent'
+    | '/api/update/naveen-ai-analysis'
+    | '/api/update/naveen-apply'
+    | '/api/update/naveen-status'
     | '/api/update/status'
     | '/api/update/workspace'
     | '/api/hermesworld/reservations/confirm'
@@ -1991,6 +2025,9 @@ export interface FileRouteTypes {
     | '/api/swarm-memory/search'
     | '/api/swarm-runtime/reset'
     | '/api/update/agent'
+    | '/api/update/naveen-ai-analysis'
+    | '/api/update/naveen-apply'
+    | '/api/update/naveen-status'
     | '/api/update/status'
     | '/api/update/workspace'
     | '/api/hermesworld/reservations/confirm'
@@ -2132,6 +2169,9 @@ export interface RootRouteChildren {
   ApiProfilesUpdateRoute: typeof ApiProfilesUpdateRoute
   ApiRunsActiveRoute: typeof ApiRunsActiveRoute
   ApiUpdateAgentRoute: typeof ApiUpdateAgentRoute
+  ApiUpdateNaveenAiAnalysisRoute: typeof ApiUpdateNaveenAiAnalysisRoute
+  ApiUpdateNaveenApplyRoute: typeof ApiUpdateNaveenApplyRoute
+  ApiUpdateNaveenStatusRoute: typeof ApiUpdateNaveenStatusRoute
   ApiUpdateStatusRoute: typeof ApiUpdateStatusRoute
   ApiUpdateWorkspaceRoute: typeof ApiUpdateWorkspaceRoute
   ApiRunsSessionKeyRunIdAbandonRoute: typeof ApiRunsSessionKeyRunIdAbandonRoute
@@ -2902,6 +2942,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiUpdateStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/update/naveen-status': {
+      id: '/api/update/naveen-status'
+      path: '/api/update/naveen-status'
+      fullPath: '/api/update/naveen-status'
+      preLoaderRoute: typeof ApiUpdateNaveenStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/update/naveen-apply': {
+      id: '/api/update/naveen-apply'
+      path: '/api/update/naveen-apply'
+      fullPath: '/api/update/naveen-apply'
+      preLoaderRoute: typeof ApiUpdateNaveenApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/update/naveen-ai-analysis': {
+      id: '/api/update/naveen-ai-analysis'
+      path: '/api/update/naveen-ai-analysis'
+      fullPath: '/api/update/naveen-ai-analysis'
+      preLoaderRoute: typeof ApiUpdateNaveenAiAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/update/agent': {
       id: '/api/update/agent'
       path: '/api/update/agent'
@@ -3633,6 +3694,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiProfilesUpdateRoute: ApiProfilesUpdateRoute,
   ApiRunsActiveRoute: ApiRunsActiveRoute,
   ApiUpdateAgentRoute: ApiUpdateAgentRoute,
+  ApiUpdateNaveenAiAnalysisRoute: ApiUpdateNaveenAiAnalysisRoute,
+  ApiUpdateNaveenApplyRoute: ApiUpdateNaveenApplyRoute,
+  ApiUpdateNaveenStatusRoute: ApiUpdateNaveenStatusRoute,
   ApiUpdateStatusRoute: ApiUpdateStatusRoute,
   ApiUpdateWorkspaceRoute: ApiUpdateWorkspaceRoute,
   ApiRunsSessionKeyRunIdAbandonRoute: ApiRunsSessionKeyRunIdAbandonRoute,
