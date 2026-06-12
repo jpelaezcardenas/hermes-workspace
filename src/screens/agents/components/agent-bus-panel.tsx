@@ -1,5 +1,26 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/lib/utils'
+
+type SisterEntry = {
+  id: string
+  name: string
+  emoji: string
+  role: string
+  type: string
+  handoffTo?: string
+}
+
+async function fetchSistersForBus(): Promise<SisterEntry[]> {
+  try {
+    const res = await fetch('/api/sisters')
+    if (!res.ok) return []
+    const payload = (await res.json()) as { ok?: boolean; sisters?: SisterEntry[] }
+    return Array.isArray(payload.sisters) ? payload.sisters : []
+  } catch {
+    return []
+  }
+}
 
 type AgentBusSummary = {
   total?: number
@@ -115,6 +136,19 @@ export function AgentBusPanel() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [action, setAction] = useState<ActionState>(initialActionState)
+
+  const sistersQuery = useQuery({
+    queryKey: ['sisters'],
+    queryFn: fetchSistersForBus,
+    staleTime: 60_000,
+  })
+  const sisters = sistersQuery.data ?? []
+  const businessSisters = useMemo(() => sisters.filter((s) => s.type === 'business_agent'), [sisters])
+  const creativeSister = useMemo(() => businessSisters.find((s) => s.role === 'creative'), [businessSisters])
+  const handoffPairs = useMemo(() =>
+    businessSisters.filter((s) => s.handoffTo),
+    [businessSisters]
+  )
 
   async function load() {
     setError(null)
@@ -286,30 +320,67 @@ export function AgentBusPanel() {
                 >
                   Sincronizar Roadmap
                 </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    runAction(
-                      { action: 'thumbnail-mission', target: 'vini' },
-                      'Missão de thumbnail do Vini registrada.',
+                {creativeSister ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runAction(
+                        { action: 'thumbnail-mission', target: creativeSister.id },
+                        `Missão de thumbnail de ${creativeSister.name} registrada.`,
+                      )
+                    }
+                    className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-card2)]"
+                  >
+                    {creativeSister.emoji} Missão Thumbnail {creativeSister.name}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runAction(
+                        { action: 'thumbnail-mission', target: 'vini' },
+                        'Missão de thumbnail do Vini registrada.',
+                      )
+                    }
+                    className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-card2)]"
+                  >
+                    🎨 Missão Thumbnail Vini
+                  </button>
+                )}
+                {handoffPairs.length > 0 ? (
+                  handoffPairs.map((source) => {
+                    const target = sisters.find((s) => s.id === source.handoffTo)
+                    if (!target) return null
+                    return (
+                      <button
+                        key={`${source.id}->${target.id}`}
+                        type="button"
+                        onClick={() =>
+                          runAction(
+                            { action: 'handoff-mission', source: source.id, target: target.id },
+                            `Handoff ${source.name} -> ${target.name} registrado.`,
+                          )
+                        }
+                        className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-card2)]"
+                      >
+                        {source.emoji} Handoff {source.name} → {target.name}
+                      </button>
                     )
-                  }
-                  className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-card2)]"
-                >
-                  Missão Thumbnail Vini
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    runAction(
-                      { action: 'handoff-mission', source: 'dona-helena', target: 'larissinha' },
-                      'Handoff Dona Helena -> Larissinha registrado.',
-                    )
-                  }
-                  className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-card2)]"
-                >
-                  Handoff Helena para Larissinha
-                </button>
+                  })
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      runAction(
+                        { action: 'handoff-mission', source: 'dona-helena', target: 'larissinha' },
+                        'Handoff Dona Helena -> Larissinha registrado.',
+                      )
+                    }
+                    className="rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] px-3 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-card2)]"
+                  >
+                    ⚖️ Handoff Helena → Larissinha
+                  </button>
+                )}
               </div>
             </div>
             <p

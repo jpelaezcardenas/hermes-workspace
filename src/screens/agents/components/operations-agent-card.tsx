@@ -17,7 +17,46 @@ import { toast } from '@/components/ui/toast'
 import { runCronJob, toggleCronJob } from '@/lib/cron-api'
 import { cn } from '@/lib/utils'
 import { useAgentChat, type OperationsChatMessage } from '../hooks/use-agent-chat'
-import type { OperationsAgent } from '../hooks/use-operations'
+import type { OperationsAgent, SisterInfo } from '../hooks/use-operations'
+
+const SISTER_BADGE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  astra:    { bg: 'bg-violet-500/15',  text: 'text-violet-300',  border: 'border-violet-400/30' },
+  novus:    { bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-400/30' },
+  nova:     { bg: 'bg-sky-500/15',     text: 'text-sky-300',     border: 'border-sky-400/30' },
+  business: { bg: 'bg-amber-500/15',   text: 'text-amber-300',   border: 'border-amber-400/30' },
+  default:  { bg: 'bg-primary-500/10', text: 'text-primary-400', border: 'border-primary-300/20' },
+}
+
+function badgeStyle(sister: SisterInfo) {
+  if (SISTER_BADGE_STYLES[sister.id]) return SISTER_BADGE_STYLES[sister.id]
+  if (sister.type === 'business_agent') return SISTER_BADGE_STYLES.business
+  return SISTER_BADGE_STYLES.default
+}
+
+function PersonalityBadge({ sister }: { sister: SisterInfo }) {
+  const style = badgeStyle(sister)
+  const tier = sister.modelPreference
+    ? sister.modelPreference.startsWith('local:')
+      ? 'local'
+      : sister.modelPreference.includes(':free')
+        ? 'free'
+        : sister.modelPreference.includes(':paid')
+          ? 'paid'
+          : null
+    : null
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
+        style.bg, style.text, style.border,
+      )}
+      title={sister.description || sister.role}
+    >
+      {sister.emoji} {sister.role}
+      {tier ? <span className="opacity-60">· {tier}</span> : null}
+    </span>
+  )
+}
 
 function getStatusStyles(status: OperationsAgent['status']) {
   if (status === 'error') {
@@ -168,9 +207,11 @@ export function OperationsInlineChat({
 
 export function OperationsAgentCard({
   agent,
+  sisterInfo,
   onOpenSettings,
 }: {
   agent: OperationsAgent
+  sisterInfo?: SisterInfo
   onOpenSettings: (agentId: string) => void
 }) {
   const queryClient = useQueryClient()
@@ -336,6 +377,7 @@ export function OperationsAgentCard({
           </div>
         </div>
 
+        {sisterInfo ? <PersonalityBadge sister={sisterInfo} /> : null}
         <p className="w-full truncate text-[11px] text-[var(--theme-muted)]">
           {agent.meta.description || 'No description'}
         </p>

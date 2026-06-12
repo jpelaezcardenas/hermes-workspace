@@ -20,6 +20,37 @@ import type { CrewMember } from '@/hooks/use-crew-status'
 import { getOnlineStatus } from '@/hooks/use-crew-status'
 import { cn } from '@/lib/utils'
 
+// Role → sister mapping for personality badges
+const ROLE_TO_SISTER: Record<string, { name: string; emoji: string; bg: string; text: string; border: string }> = {
+  orchestrator:   { name: 'Astra',      emoji: '🌟', bg: 'bg-violet-500/12',  text: 'text-violet-300',  border: 'border-violet-400/25' },
+  'km-agent':     { name: 'Astra',      emoji: '🌟', bg: 'bg-violet-500/12',  text: 'text-violet-300',  border: 'border-violet-400/25' },
+  strategist:     { name: 'Astra',      emoji: '🌟', bg: 'bg-violet-500/12',  text: 'text-violet-300',  border: 'border-violet-400/25' },
+  'ops-watch':    { name: 'Astra',      emoji: '🌟', bg: 'bg-violet-500/12',  text: 'text-violet-300',  border: 'border-violet-400/25' },
+  'inbox-triage': { name: 'Astra',      emoji: '🌟', bg: 'bg-violet-500/12',  text: 'text-violet-300',  border: 'border-violet-400/25' },
+  researcher:     { name: 'Nova',       emoji: '📸', bg: 'bg-sky-500/12',     text: 'text-sky-300',     border: 'border-sky-400/25' },
+  reviewer:       { name: 'Nova',       emoji: '📸', bg: 'bg-sky-500/12',     text: 'text-sky-300',     border: 'border-sky-400/25' },
+  docs:           { name: 'Nova',       emoji: '📸', bg: 'bg-sky-500/12',     text: 'text-sky-300',     border: 'border-sky-400/25' },
+  builder:        { name: 'Novus',      emoji: '🔨', bg: 'bg-emerald-500/12', text: 'text-emerald-300', border: 'border-emerald-400/25' },
+  qa:             { name: 'Novus',      emoji: '🔨', bg: 'bg-emerald-500/12', text: 'text-emerald-300', border: 'border-emerald-400/25' },
+  maintainer:     { name: 'Novus',      emoji: '🔨', bg: 'bg-emerald-500/12', text: 'text-emerald-300', border: 'border-emerald-400/25' },
+}
+
+function PersonalityBadge({ role }: { role: string }) {
+  const sister = ROLE_TO_SISTER[role.toLowerCase()]
+  if (!sister) return null
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full border px-1.5 py-[1px] text-[9px] font-semibold',
+        sister.bg, sister.text, sister.border,
+      )}
+      title={`Personality: ${sister.name}`}
+    >
+      {sister.emoji} {sister.name}
+    </span>
+  )
+}
+
 type WorkerState =
   | 'active'
   | 'idle'
@@ -412,7 +443,8 @@ export function OperationalWorkerCard({
           </h3>
         </div>
 
-        <div className="absolute right-0 flex max-w-[9rem] items-center gap-1">
+        <div className="absolute right-0 flex max-w-[10rem] flex-col items-end gap-0.5">
+          <div className="flex items-center gap-1">
           <span
             className="truncate rounded-full border border-[var(--theme-accent)]/30 bg-[var(--theme-accent-soft)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--theme-muted)]"
             title={role}
@@ -431,7 +463,8 @@ export function OperationalWorkerCard({
           >
             <HugeiconsIcon icon={Settings01Icon} size={16} strokeWidth={1.8} />
           </button>
-
+          </div>
+          <PersonalityBadge role={role} />
         </div>
       </div>
 

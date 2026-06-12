@@ -70,6 +70,8 @@ import { Route as ApiSwarmChatRouteImport } from './routes/api/swarm-chat'
 import { Route as ApiStartClaudeRouteImport } from './routes/api/start-claude'
 import { Route as ApiStartAgentRouteImport } from './routes/api/start-agent'
 import { Route as ApiSkillsRouteImport } from './routes/api/skills'
+import { Route as ApiSistersBootstrapRouteImport } from './routes/api/sisters-bootstrap'
+import { Route as ApiSistersRouteImport } from './routes/api/sisters'
 import { Route as ApiSessionsRouteImport } from './routes/api/sessions'
 import { Route as ApiSessionStatusRouteImport } from './routes/api/session-status'
 import { Route as ApiSessionSendRouteImport } from './routes/api/session-send'
@@ -481,6 +483,16 @@ const ApiStartAgentRoute = ApiStartAgentRouteImport.update({
 const ApiSkillsRoute = ApiSkillsRouteImport.update({
   id: '/api/skills',
   path: '/api/skills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSistersBootstrapRoute = ApiSistersBootstrapRouteImport.update({
+  id: '/api/sisters-bootstrap',
+  path: '/api/sisters-bootstrap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSistersRoute = ApiSistersRouteImport.update({
+  id: '/api/sisters',
+  path: '/api/sisters',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSessionsRoute = ApiSessionsRouteImport.update({
@@ -1093,6 +1105,8 @@ export interface FileRoutesByFullPath {
   '/api/session-send': typeof ApiSessionSendRoute
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
+  '/api/sisters': typeof ApiSistersRoute
+  '/api/sisters-bootstrap': typeof ApiSistersBootstrapRoute
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-claude': typeof ApiStartClaudeRoute
@@ -1261,6 +1275,8 @@ export interface FileRoutesByTo {
   '/api/session-send': typeof ApiSessionSendRoute
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
+  '/api/sisters': typeof ApiSistersRoute
+  '/api/sisters-bootstrap': typeof ApiSistersBootstrapRoute
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-claude': typeof ApiStartClaudeRoute
@@ -1431,6 +1447,8 @@ export interface FileRoutesById {
   '/api/session-send': typeof ApiSessionSendRoute
   '/api/session-status': typeof ApiSessionStatusRoute
   '/api/sessions': typeof ApiSessionsRouteWithChildren
+  '/api/sisters': typeof ApiSistersRoute
+  '/api/sisters-bootstrap': typeof ApiSistersBootstrapRoute
   '/api/skills': typeof ApiSkillsRouteWithChildren
   '/api/start-agent': typeof ApiStartAgentRoute
   '/api/start-claude': typeof ApiStartClaudeRoute
@@ -1602,6 +1620,8 @@ export interface FileRouteTypes {
     | '/api/session-send'
     | '/api/session-status'
     | '/api/sessions'
+    | '/api/sisters'
+    | '/api/sisters-bootstrap'
     | '/api/skills'
     | '/api/start-agent'
     | '/api/start-claude'
@@ -1770,6 +1790,8 @@ export interface FileRouteTypes {
     | '/api/session-send'
     | '/api/session-status'
     | '/api/sessions'
+    | '/api/sisters'
+    | '/api/sisters-bootstrap'
     | '/api/skills'
     | '/api/start-agent'
     | '/api/start-claude'
@@ -1939,6 +1961,8 @@ export interface FileRouteTypes {
     | '/api/session-send'
     | '/api/session-status'
     | '/api/sessions'
+    | '/api/sisters'
+    | '/api/sisters-bootstrap'
     | '/api/skills'
     | '/api/start-agent'
     | '/api/start-claude'
@@ -2109,6 +2133,8 @@ export interface RootRouteChildren {
   ApiSessionSendRoute: typeof ApiSessionSendRoute
   ApiSessionStatusRoute: typeof ApiSessionStatusRoute
   ApiSessionsRoute: typeof ApiSessionsRouteWithChildren
+  ApiSistersRoute: typeof ApiSistersRoute
+  ApiSistersBootstrapRoute: typeof ApiSistersBootstrapRoute
   ApiSkillsRoute: typeof ApiSkillsRouteWithChildren
   ApiStartAgentRoute: typeof ApiStartAgentRoute
   ApiStartClaudeRoute: typeof ApiStartClaudeRoute
@@ -2604,6 +2630,20 @@ declare module '@tanstack/react-router' {
       path: '/api/skills'
       fullPath: '/api/skills'
       preLoaderRoute: typeof ApiSkillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sisters-bootstrap': {
+      id: '/api/sisters-bootstrap'
+      path: '/api/sisters-bootstrap'
+      fullPath: '/api/sisters-bootstrap'
+      preLoaderRoute: typeof ApiSistersBootstrapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/sisters': {
+      id: '/api/sisters'
+      path: '/api/sisters'
+      fullPath: '/api/sisters'
+      preLoaderRoute: typeof ApiSistersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/sessions': {
@@ -3634,6 +3674,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSessionSendRoute: ApiSessionSendRoute,
   ApiSessionStatusRoute: ApiSessionStatusRoute,
   ApiSessionsRoute: ApiSessionsRouteWithChildren,
+  ApiSistersRoute: ApiSistersRoute,
+  ApiSistersBootstrapRoute: ApiSistersBootstrapRoute,
   ApiSkillsRoute: ApiSkillsRouteWithChildren,
   ApiStartAgentRoute: ApiStartAgentRoute,
   ApiStartClaudeRoute: ApiStartClaudeRoute,

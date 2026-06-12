@@ -1,10 +1,11 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { motion } from 'motion/react'
 import { seedAgentPresets } from './agent-presets'
 import {
   AiBrain03Icon,
   Settings01Icon,
   PlusSignIcon,
+  UserAdd01Icon,
 } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -55,6 +56,7 @@ export function OperationsScreen() {
     configQuery,
     sessionsQuery,
     cronJobsQuery,
+    sisterMap,
     settings,
     saveSettings,
     defaultModel,
@@ -65,6 +67,24 @@ export function OperationsScreen() {
     deleteAgent,
     isDeletingAgent,
   } = useOperations()
+
+  // Split: AI sisters + delegation profiles first (sorted by priority), then others
+  const { sisterAgents, otherAgents } = useMemo(() => {
+    const si: typeof agents = []
+    const ot: typeof agents = []
+    for (const agent of agents) {
+      if (sisterMap[agent.id]) si.push(agent)
+      else ot.push(agent)
+    }
+    si.sort((a, b) => {
+      const pa = sisterMap[a.id]?.priority ?? 99
+      const pb = sisterMap[b.id]?.priority ?? 99
+      return pa - pb
+    })
+    return { sisterAgents: si, otherAgents: ot }
+  }, [agents, sisterMap])
+
+  const sortedAgents = useMemo(() => [...sisterAgents, ...otherAgents], [sisterAgents, otherAgents])
 
   const isLoading =
     configQuery.isPending || sessionsQuery.isPending || cronJobsQuery.isPending
@@ -121,6 +141,15 @@ export function OperationsScreen() {
               </button>
             </div>
             <Button
+              variant="secondary"
+              className="border border-violet-400/40 bg-violet-500/10 text-violet-300 hover:bg-violet-500/20"
+              onClick={() => setNewAgentOpen(true)}
+              title="Invite a new sister to join the agent space"
+            >
+              <HugeiconsIcon icon={UserAdd01Icon} size={16} strokeWidth={1.8} />
+              Invite Sister
+            </Button>
+            <Button
               className="bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
               onClick={() => setNewAgentOpen(true)}
             >
@@ -156,7 +185,7 @@ export function OperationsScreen() {
               transition={{ duration: 0.25 }}
             >
               <OrchestratorCard
-                totalAgents={agents.length}
+                totalAgents={sortedAgents.length}
               />
             </motion.div>
 
@@ -168,25 +197,79 @@ export function OperationsScreen() {
               <AgentBusPanel />
             </motion.div>
 
-            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {agents.map((agent, index) => (
-                <motion.div
-                  key={agent.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04, duration: 0.22 }}
-                >
-                  <OperationsAgentCard
-                    agent={agent}
-                    onOpenSettings={(agentId) => setSettingsAgentId(agentId)}
-                  />
-                </motion.div>
-              ))}
+            {sisterAgents.length > 0 ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 px-1">
+                  <span className="text-xs font-semibold uppercase tracking-[0.12em] text-violet-400">AI Sisters</span>
+                  <span className="h-px flex-1 bg-violet-400/20" />
+                  <span className="text-[10px] text-[var(--theme-muted)]">{sisterAgents.length} active</span>
+                </div>
+                <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {sisterAgents.map((agent, index) => (
+                    <motion.div
+                      key={agent.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.04, duration: 0.22 }}
+                    >
+                      <OperationsAgentCard
+                        agent={agent}
+                        sisterInfo={sisterMap[agent.id]}
+                        onOpenSettings={(agentId) => setSettingsAgentId(agentId)}
+                      />
+                    </motion.div>
+                  ))}
+                </section>
+              </div>
+            ) : null}
+
+            {otherAgents.length > 0 || sisterAgents.length === 0 ? (
+              <div className="space-y-3">
+                {sisterAgents.length > 0 ? (
+                  <div className="flex items-center gap-2 px-1">
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--theme-muted)]">Agents</span>
+                    <span className="h-px flex-1 bg-[var(--theme-border)]" />
+                  </div>
+                ) : null}
+                <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {otherAgents.map((agent, index) => (
+                    <motion.div
+                      key={agent.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: (sisterAgents.length + index) * 0.04, duration: 0.22 }}
+                    >
+                      <OperationsAgentCard
+                        agent={agent}
+                        sisterInfo={sisterMap[agent.id]}
+                        onOpenSettings={(agentId) => setSettingsAgentId(agentId)}
+                      />
+                    </motion.div>
+                  ))}
+                  <motion.button
+                    type="button"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: sortedAgents.length * 0.04, duration: 0.22 }}
+                    onClick={() => setNewAgentOpen(true)}
+                    className="flex min-h-[19rem] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-[var(--theme-border)] bg-[var(--theme-card)] p-4 text-center shadow-[0_20px_60px_color-mix(in_srgb,var(--theme-shadow)_10%,transparent)] transition-colors hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent-soft)]"
+                  >
+                    <HugeiconsIcon
+                      icon={PlusSignIcon}
+                      size={32}
+                      strokeWidth={1.7}
+                      className="text-[var(--theme-muted)]"
+                    />
+                    <span className="mt-3 text-sm text-[var(--theme-muted)]">Add Agent</span>
+                  </motion.button>
+                </section>
+              </div>
+            ) : (
               <motion.button
                 type="button"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: agents.length * 0.04, duration: 0.22 }}
+                transition={{ delay: sisterAgents.length * 0.04, duration: 0.22 }}
                 onClick={() => setNewAgentOpen(true)}
                 className="flex min-h-[19rem] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-[var(--theme-border)] bg-[var(--theme-card)] p-4 text-center shadow-[0_20px_60px_color-mix(in_srgb,var(--theme-shadow)_10%,transparent)] transition-colors hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent-soft)]"
               >
@@ -198,7 +281,7 @@ export function OperationsScreen() {
                 />
                 <span className="mt-3 text-sm text-[var(--theme-muted)]">Add Agent</span>
               </motion.button>
-            </section>
+            )}
 
             <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 shadow-[0_24px_80px_var(--theme-shadow)]">
               <div className="flex items-center justify-between gap-3">
@@ -214,7 +297,7 @@ export function OperationsScreen() {
               <div className="mt-4 space-y-3">
                 {recentActivity.length > 0 ? (
                   recentActivity.map((activity) => {
-                    const agent = agents.find((entry) => entry.id === activity.agentId)
+                    const agent = sortedAgents.find((entry) => entry.id === activity.agentId)
                     return (
                       <div
                         key={activity.id}

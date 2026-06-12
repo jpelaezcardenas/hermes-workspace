@@ -35,6 +35,15 @@ When `upstream-sync.py` reports that upstream touched one of our files:
 | `src/lib/tasks-api.ts` | Added same 4 agent fields to the client-facing `ClaudeTask` interface | Not yet submitted upstream | Keep in sync with `tasks-store.ts` changes |
 | `src/screens/tasks/task-card.tsx` | Added `AgentStateBadge`, `SourceBadge`, purple shimmer bar when agent is active | Not yet submitted upstream | Keep; upstream doesn't have agent-animated task cards yet |
 | `src/screens/tasks/tasks-screen.tsx` | Added "Ask Astra" + "Add Ideas" buttons, adaptive polling (4s/30s), agent-active stats | Not yet submitted upstream | Keep; upstream doesn't have Astra review trigger in UI |
+| `src/server/sisters-registry.ts` | NEW — unified sister registry: reads sisters.yaml + sister_profiles.yaml, bootstraps profiles on first API call | Personal customization | Keep always |
+| `src/routes/api/sisters.ts` | NEW — GET /api/sisters: returns full sister list; triggers lazy bootstrap | Personal customization | Keep always |
+| `src/routes/api/sisters-bootstrap.ts` | NEW — POST /api/sisters/bootstrap: force-bootstrap one or all sisters | Personal customization | Keep always |
+| `src/routes/api/profiles/list.ts` | Added bootstrapOnceLazy() call so sisters auto-appear on first Operations load | Personal customization | Keep; drop if upstream adds sister auto-bootstrap |
+| `src/screens/agents/hooks/use-operations.ts` | Added SisterInfo type, fetchSisters(), sistersQuery, sisterMap — exposes sister personality data to Operations UI | Personal customization | Keep; upstream doesn't have sisters concept |
+| `src/screens/agents/operations-screen.tsx` | Split agents grid into AI Sisters + Agents sections; added Invite Sister button; passes sisterInfo to cards | Personal customization | Keep; merge carefully if upstream changes Operations layout |
+| `src/screens/agents/components/operations-agent-card.tsx` | Added PersonalityBadge component + sisterInfo prop — shows role/tier pill on sister agent cards | Personal customization | Keep; upstream doesn't have personality badges |
+| `src/screens/swarm2/operational-worker-card.tsx` | Added ROLE_TO_SISTER map + PersonalityBadge component — shows sister name/emoji badge per worker role | Personal customization | Keep; upstream doesn't have personality badges |
+| `src/screens/agents/components/agent-bus-panel.tsx` | De-hardcoded action buttons — thumbnail + handoff targets now driven by /api/sisters data | Personal customization | Keep; upstream doesn't have sisters-driven agent bus |
 
 ---
 

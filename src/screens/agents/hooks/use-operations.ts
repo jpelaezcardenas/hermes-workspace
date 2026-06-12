@@ -1,5 +1,28 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+export type SisterInfo = {
+  id: string
+  name: string
+  emoji: string
+  description: string
+  role: string
+  type: 'ai_sister' | 'business_agent' | 'delegation_profile'
+  modelPreference?: string
+  priority?: number
+  handoffTo?: string
+}
+
+async function fetchSisters(): Promise<SisterInfo[]> {
+  try {
+    const res = await fetch('/api/sisters')
+    if (!res.ok) return []
+    const payload = (await res.json()) as { ok?: boolean; sisters?: SisterInfo[] }
+    return Array.isArray(payload.sisters) ? payload.sisters : []
+  } catch {
+    return []
+  }
+}
 import type { CronJob } from '@/components/cron-manager/cron-types'
 import { toast } from '@/components/ui/toast'
 import { fetchCronJobs } from '@/lib/cron-api'
@@ -553,6 +576,21 @@ export function useOperations() {
     refetchInterval: 30_000,
   })
 
+  const sistersQuery = useQuery({
+    queryKey: ['sisters'],
+    queryFn: fetchSisters,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  })
+
+  const sisterMap = useMemo(() => {
+    const map: Record<string, SisterInfo> = {}
+    for (const s of sistersQuery.data ?? []) {
+      map[s.id] = s
+    }
+    return map
+  }, [sistersQuery.data])
+
   const agents = useMemo(() => {
     const parsed = configQuery.data?.parsed
     const allAgents = normalizeAgentList(parsed?.agents?.list)
@@ -759,6 +797,8 @@ export function useOperations() {
     configQuery,
     sessionsQuery,
     cronJobsQuery,
+    sistersQuery,
+    sisterMap,
     recentActivity,
     settings,
     saveSettings,
