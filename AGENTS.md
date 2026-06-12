@@ -15,8 +15,8 @@ The named peer agents are Hermes, Faust, Socrates, Kiki, and Juju. Their filesys
 
 | Worker | Wrapper | Tools | Skills | MCP | Plugins |
 |---|---|---|---|---|---|
-| `agent-hermes` | `agent-hermes:council` | terminal, file, session_search, skills, memory, delegation | agent-council, hermes-agent | mempalace-hermes | none |
-| `faust` | `faust:council` | terminal, file, session_search, skills, memory, delegation | agent-council, faust-core, cavekit-methodology, cavekit-validation-first, cavekit-revision, cavekit-design-system, caveman-compress, plugin-creator | mempalace-faust | none |
+| `agent-hermes` | `agent-hermes:council` | terminal, file, session_search, skills, memory, delegation | agent-council, hermes-agent, caveman-compress, mythos-research, design-extract | mempalace-hermes | none |
+| `faust` | `faust:council` | terminal, file, session_search, skills, memory, delegation | agent-council, faust-core, cavekit-methodology, cavekit-validation-first, cavekit-revision, cavekit-design-system, caveman-compress, plugin-creator, mythos-research, design-extract, butterboard-1bit-subconscious | mempalace-faust | none |
 | `kiki` | `kiki:council` | terminal, file, session_search, skills, memory, delegation | agent-council, ai-coding-agents | mempalace-kiki | none |
 | `juju` | `juju:council` | terminal, file, session_search, skills, memory, delegation | agent-council, ai-coding-agents | mempalace-juju | none |
 | `socrates` | `socrates:council` | terminal, file, session_search, skills, memory, delegation | agent-council, ai-coding-agents | mempalace-socrates | none |
