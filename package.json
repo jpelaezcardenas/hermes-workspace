@@ -1,7 +1,7 @@
 {
-  "name": "hermes-workspace",
+  "name": "hermes-c-c-interface",
   "version": "2.3.0",
-  "description": "Desktop workspace for Hermes Agent — chat, orchestration, and multi-agent coding pipelines",
+  "description": "Hermes C&C Interface \u2014 command-and-control dashboard for Hermes Agent, backups, subagents, and homelab operations",
   "author": "Eric (https://github.com/outsourc-e)",
   "license": "MIT",
   "private": true,
