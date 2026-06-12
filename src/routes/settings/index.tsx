@@ -14,6 +14,7 @@ import {
   UserIcon,
   VolumeHighIcon,
 } from '@hugeicons/core-free-icons'
+import { HarpConfigScreen } from '@/screens/settings/harp-config-screen'
 import { createFileRoute } from '@tanstack/react-router'
 import { useCallback, useEffect, useState } from 'react'
 import type * as React from 'react'
@@ -360,6 +361,8 @@ function SettingsRoute() {
           {activeSection === 'routing' && (
             <ClaudeConfigSection activeView="routing" />
           )}
+          {/* ── HARP Routing ──────────────────────────────────── */}
+          {activeSection === 'harp' && <HarpConfigScreen />}
           {activeSection === 'voice' && (
             <ClaudeConfigSection activeView="voice" />
           )}
