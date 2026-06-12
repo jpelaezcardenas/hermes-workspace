@@ -5,7 +5,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Add01Icon, CheckListIcon, RefreshIcon } from '@hugeicons/core-free-icons'
+import { Add01Icon, AiBrainIcon, BulbIcon, CheckListIcon, RefreshIcon } from '@hugeicons/core-free-icons'
 import { TaskCard } from './task-card'
 import { TaskDialog } from './task-dialog'
 import type { ClaudeTask, CreateTaskInput, TaskAssignee, TaskColumn } from '@/lib/tasks-api'
@@ -55,6 +55,8 @@ export function TasksScreen() {
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [dragOverColumn, setDragOverColumn] = useState<TaskColumn | null>(null)
   const [showDone, setShowDone] = useState(false)
+  const [astraReviewing, setAstraReviewing] = useState(false)
+  const [ideasLoading, setIdeasLoading] = useState(false)
 
   const search = useSearch({ from: '/tasks' })
   const navigate = useNavigate()
@@ -64,7 +66,12 @@ export function TasksScreen() {
   const tasksQuery = useQuery({
     queryKey: [...QUERY_KEY, showDone],
     queryFn: () => fetchTasks({ include_done: showDone }),
-    refetchInterval: 30_000,
+    // Fast-poll while agents are active so the UI reflects live work; 30s otherwise
+    refetchInterval: (query) => {
+      const tasks = query.state.data ?? []
+      const hasActiveAgent = tasks.some((t) => t.agent_state)
+      return hasActiveAgent ? 4_000 : 30_000
+    },
     placeholderData: keepPreviousData,
   })
 
@@ -108,7 +115,8 @@ export function TasksScreen() {
     const done = tasks.filter(t => t.column === 'done').length
     const overdue = tasks.filter(t => isOverdue(t) && t.column !== 'done').length
     const completion = total > 0 ? Math.round((done / total) * 100) : 0
-    return { total, running, blocked, done, overdue, completion }
+    const agentActive = tasks.filter(t => t.agent_state).length
+    return { total, running, blocked, done, overdue, completion, agentActive }
   }, [tasks])
 
   const invalidate = useCallback(() => {
@@ -218,10 +226,83 @@ export function TasksScreen() {
             )}
             <span className="hidden sm:inline">·</span>
             <span className="hidden sm:inline">{stats.completion}% done</span>
+            {stats.agentActive > 0 && (
+              <>
+                <span>·</span>
+                <span className="flex items-center gap-1 text-violet-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse inline-block" />
+                  Astra reviewing {stats.agentActive}
+                </span>
+              </>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          {/* Ask Astra to review backlog */}
+          <button
+            onClick={async () => {
+              setAstraReviewing(true)
+              try {
+                await fetch('/api/tasks-astra-review', { method: 'POST' })
+                await tasksQuery.refetch()
+              } finally {
+                setAstraReviewing(false)
+              }
+            }}
+            disabled={astraReviewing}
+            title="Ask Astra to review and prioritise the backlog"
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium border transition-colors',
+              astraReviewing
+                ? 'border-violet-500/50 bg-violet-500/10 text-violet-400 cursor-wait'
+                : 'border-[var(--theme-border)] text-violet-400 hover:bg-violet-500/10 hover:border-violet-500/50',
+            )}
+          >
+            <HugeiconsIcon
+              icon={AiBrainIcon}
+              size={13}
+              strokeWidth={1.8}
+              className={astraReviewing ? 'animate-pulse' : ''}
+            />
+            {astraReviewing ? 'Reviewing…' : 'Ask Astra'}
+          </button>
+
+          {/* Inject ideas from IDEAS.json */}
+          <button
+            onClick={async () => {
+              setIdeasLoading(true)
+              try {
+                const res = await fetch('/api/tasks-inject-ideas', { method: 'POST' })
+                const data = await res.json() as { ok: boolean; injected: number; ideas: string[] }
+                if (data.ok && data.injected > 0) {
+                  await tasksQuery.refetch()
+                  toast(`Added ${data.injected} idea${data.injected > 1 ? 's' : ''} to backlog`)
+                } else if (data.ok) {
+                  toast('No new ideas to add', { type: 'error' })
+                }
+              } finally {
+                setIdeasLoading(false)
+              }
+            }}
+            disabled={ideasLoading}
+            title="Import ideas from IDEAS.json into backlog"
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium border transition-colors',
+              ideasLoading
+                ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 cursor-wait'
+                : 'border-[var(--theme-border)] text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/50',
+            )}
+          >
+            <HugeiconsIcon
+              icon={BulbIcon}
+              size={13}
+              strokeWidth={1.8}
+              className={ideasLoading ? 'animate-pulse' : ''}
+            />
+            {ideasLoading ? 'Adding…' : 'Add Ideas'}
+          </button>
+
           <button
             onClick={() => setShowDone(v => !v)}
             className={cn(

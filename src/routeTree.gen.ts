@@ -45,6 +45,8 @@ import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-str
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
 import { Route as ApiTerminalCloseRouteImport } from './routes/api/terminal-close'
+import { Route as ApiTasksInjectIdeasRouteImport } from './routes/api/tasks-inject-ideas'
+import { Route as ApiTasksAstraReviewRouteImport } from './routes/api/tasks-astra-review'
 import { Route as ApiSystemMetricsRouteImport } from './routes/api/system-metrics'
 import { Route as ApiSwarmTmuxStopRouteImport } from './routes/api/swarm-tmux-stop'
 import { Route as ApiSwarmTmuxStartRouteImport } from './routes/api/swarm-tmux-start'
@@ -350,6 +352,16 @@ const ApiTerminalInputRoute = ApiTerminalInputRouteImport.update({
 const ApiTerminalCloseRoute = ApiTerminalCloseRouteImport.update({
   id: '/api/terminal-close',
   path: '/api/terminal-close',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTasksInjectIdeasRoute = ApiTasksInjectIdeasRouteImport.update({
+  id: '/api/tasks-inject-ideas',
+  path: '/api/tasks-inject-ideas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTasksAstraReviewRoute = ApiTasksAstraReviewRouteImport.update({
+  id: '/api/tasks-astra-review',
+  path: '/api/tasks-astra-review',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSystemMetricsRoute = ApiSystemMetricsRouteImport.update({
@@ -1085,6 +1097,8 @@ export interface FileRoutesByFullPath {
   '/api/swarm-tmux-start': typeof ApiSwarmTmuxStartRoute
   '/api/swarm-tmux-stop': typeof ApiSwarmTmuxStopRoute
   '/api/system-metrics': typeof ApiSystemMetricsRoute
+  '/api/tasks-astra-review': typeof ApiTasksAstraReviewRoute
+  '/api/tasks-inject-ideas': typeof ApiTasksInjectIdeasRoute
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
@@ -1248,6 +1262,8 @@ export interface FileRoutesByTo {
   '/api/swarm-tmux-start': typeof ApiSwarmTmuxStartRoute
   '/api/swarm-tmux-stop': typeof ApiSwarmTmuxStopRoute
   '/api/system-metrics': typeof ApiSystemMetricsRoute
+  '/api/tasks-astra-review': typeof ApiTasksAstraReviewRoute
+  '/api/tasks-inject-ideas': typeof ApiTasksInjectIdeasRoute
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
@@ -1413,6 +1429,8 @@ export interface FileRoutesById {
   '/api/swarm-tmux-start': typeof ApiSwarmTmuxStartRoute
   '/api/swarm-tmux-stop': typeof ApiSwarmTmuxStopRoute
   '/api/system-metrics': typeof ApiSystemMetricsRoute
+  '/api/tasks-astra-review': typeof ApiTasksAstraReviewRoute
+  '/api/tasks-inject-ideas': typeof ApiTasksInjectIdeasRoute
   '/api/terminal-close': typeof ApiTerminalCloseRoute
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
@@ -1579,6 +1597,8 @@ export interface FileRouteTypes {
     | '/api/swarm-tmux-start'
     | '/api/swarm-tmux-stop'
     | '/api/system-metrics'
+    | '/api/tasks-astra-review'
+    | '/api/tasks-inject-ideas'
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
@@ -1742,6 +1762,8 @@ export interface FileRouteTypes {
     | '/api/swarm-tmux-start'
     | '/api/swarm-tmux-stop'
     | '/api/system-metrics'
+    | '/api/tasks-astra-review'
+    | '/api/tasks-inject-ideas'
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
@@ -1906,6 +1928,8 @@ export interface FileRouteTypes {
     | '/api/swarm-tmux-start'
     | '/api/swarm-tmux-stop'
     | '/api/system-metrics'
+    | '/api/tasks-astra-review'
+    | '/api/tasks-inject-ideas'
     | '/api/terminal-close'
     | '/api/terminal-input'
     | '/api/terminal-resize'
@@ -2071,6 +2095,8 @@ export interface RootRouteChildren {
   ApiSwarmTmuxStartRoute: typeof ApiSwarmTmuxStartRoute
   ApiSwarmTmuxStopRoute: typeof ApiSwarmTmuxStopRoute
   ApiSystemMetricsRoute: typeof ApiSystemMetricsRoute
+  ApiTasksAstraReviewRoute: typeof ApiTasksAstraReviewRoute
+  ApiTasksInjectIdeasRoute: typeof ApiTasksInjectIdeasRoute
   ApiTerminalCloseRoute: typeof ApiTerminalCloseRoute
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
@@ -2363,6 +2389,20 @@ declare module '@tanstack/react-router' {
       path: '/api/terminal-close'
       fullPath: '/api/terminal-close'
       preLoaderRoute: typeof ApiTerminalCloseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tasks-inject-ideas': {
+      id: '/api/tasks-inject-ideas'
+      path: '/api/tasks-inject-ideas'
+      fullPath: '/api/tasks-inject-ideas'
+      preLoaderRoute: typeof ApiTasksInjectIdeasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tasks-astra-review': {
+      id: '/api/tasks-astra-review'
+      path: '/api/tasks-astra-review'
+      fullPath: '/api/tasks-astra-review'
+      preLoaderRoute: typeof ApiTasksAstraReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/system-metrics': {
@@ -3556,6 +3596,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiSwarmTmuxStartRoute: ApiSwarmTmuxStartRoute,
   ApiSwarmTmuxStopRoute: ApiSwarmTmuxStopRoute,
   ApiSystemMetricsRoute: ApiSystemMetricsRoute,
+  ApiTasksAstraReviewRoute: ApiTasksAstraReviewRoute,
+  ApiTasksInjectIdeasRoute: ApiTasksInjectIdeasRoute,
   ApiTerminalCloseRoute: ApiTerminalCloseRoute,
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,

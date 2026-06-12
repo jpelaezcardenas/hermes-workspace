@@ -85,6 +85,9 @@ export function resetBackendResolution(): void {
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
+export type TaskAgentState = 'reviewing' | 'delegating' | 'working' | null
+export type TaskSource = 'human' | 'idea_job' | 'astra' | null
+
 export type ClaudeTask = {
   id: string
   title: string
@@ -99,6 +102,10 @@ export type ClaudeTask = {
   created_at: string
   updated_at: string
   session_id?: string | null
+  agent_state?: TaskAgentState
+  agent_name?: string | null
+  agent_action_at?: string | null
+  source?: TaskSource
 }
 
 export type CreateTaskInput = {

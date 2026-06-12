@@ -1,0 +1,8 @@
+[
+  {
+    "title": "Adaptive Memory Decay System",
+    "description": "Introduce a mechanism that automatically scores and decays memory entries over time based on the Ebbinghaus forgetting curve, with reinforcement upon retrieval. This would improve memory relevance and reduce stale information, enhancing agent's ability to recall important facts.",
+    "category": "memory",
+    "estimated_effort": "medium"
+  }
+]
