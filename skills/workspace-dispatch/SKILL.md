@@ -1,8 +1,7 @@
 ---
-name: workspace-dispatch
-description: |
-  Single-agent mission orchestrator. Decomposes a mission into tasks, spawns one worker per task using the default model, verifies exit criteria, and chains tasks with retry. No critic pattern — each worker self-verifies. Simple, fast, works with any model config.
----
+name: "workspace-dispatch"
+description: "Use when single-agent mission orchestrator. Decomposes a mission into tasks, spawns one worker per task using the default model, verifies exit criteria, and chains tasks with retry. No critic pattern \u2014 each worker self-verifies. Simple, fast, works with any model config."
+----
 
 # Workspace Dispatch (Single Agent)
 
