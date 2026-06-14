@@ -28,7 +28,7 @@ type KanbanWorker = {
 }
 
 type KanbanBackendMeta = {
-  id: 'local' | 'claude'
+  id: 'local' | 'claude' | 'hermes-proxy'
   label: string
   detected: boolean
   writable: boolean

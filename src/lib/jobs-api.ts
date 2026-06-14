@@ -166,18 +166,43 @@ type JobMutationInput = {
   schedule: string
   prompt: string
   name?: string
-  deliver?: Array<string>
+  deliver?: Array<string> | string
   skills?: Array<string>
   repeat?: number
 }
 
-export function buildJobMutationPayload(input: JobMutationInput): JobMutationInput & { input: string } {
+type JobMutationPayload = Omit<JobMutationInput, 'deliver'> & {
+  input: string
+  deliver?: string
+}
+
+function normalizeDeliverForBackend(deliver: JobMutationInput['deliver']): string | undefined {
+  if (typeof deliver === 'string') {
+    const trimmed = deliver.trim()
+    return trimmed || undefined
+  }
+  if (Array.isArray(deliver)) {
+    const targets = deliver
+      .map((target) => target.trim())
+      .filter(Boolean)
+    return targets.length > 0 ? Array.from(new Set(targets)).join(',') : undefined
+  }
+  return undefined
+}
+
+export function buildJobMutationPayload(input: JobMutationInput): JobMutationPayload {
   const prompt = typeof input.prompt === 'string' ? input.prompt : ''
-  return {
+  const deliver = normalizeDeliverForBackend(input.deliver)
+  const payload: JobMutationPayload = {
     ...input,
     prompt,
     input: prompt,
+    deliver,
   }
+  if (deliver === undefined) {
+    delete payload.deliver
+  }
+  return payload
 }
 
 export async function createJob(input: JobMutationInput): Promise<ClaudeJob> {
@@ -197,10 +222,7 @@ export async function updateJob(
   jobId: string,
   updates: Record<string, unknown>,
 ): Promise<ClaudeJob> {
-  const payload =
-    typeof updates.prompt === 'string'
-      ? { ...updates, input: updates.prompt }
-      : updates
+  const payload = buildJobMutationPayload(updates as JobMutationInput)
   const res = await fetch(`${CLAUDE_API}/${jobId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },

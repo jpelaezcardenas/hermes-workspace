@@ -45,11 +45,20 @@ const TEXT_REWRITE_EXTENSIONS = new Set([
 ])
 
 function getHermesRoot(): string {
-  return (
+  const configuredRoot =
     process.env.HERMES_HOME ??
     process.env.CLAUDE_HOME ??
     path.join(os.homedir(), '.hermes')
-  )
+  const resolvedRoot = path.resolve(configuredRoot)
+
+  // Hermes profile processes often run with HERMES_HOME pointing at
+  // ~/.hermes/profiles/<name>. The Workspace profile browser should still show
+  // the whole profile registry, not a nested <active-profile>/profiles tree.
+  if (path.basename(path.dirname(resolvedRoot)) === 'profiles') {
+    return path.dirname(path.dirname(resolvedRoot))
+  }
+
+  return resolvedRoot
 }
 
 function getClaudeRoot(): string {

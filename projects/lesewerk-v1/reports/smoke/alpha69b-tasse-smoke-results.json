@@ -1,0 +1,348 @@
+{
+  "desktop": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau die Tasse an.",
+      "orientation": [
+        "Tasse",
+        "1 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-desktop-01-bild.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: Tas - se.",
+      "orientation": [
+        "Tasse",
+        "2 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-desktop-02-silben.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Tasse.",
+      "orientation": [
+        "Tasse",
+        "3 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-desktop-03-wort.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Die Tasse ist da.",
+      "orientation": [
+        "Tasse",
+        "4 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Die",
+        "Tasse",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "Tas",
+        "se"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-desktop-04-satz.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Die Tasse ist da. Was passt?",
+      "orientation": [
+        "Tasse",
+        "5 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Die Tasse ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-desktop-05-verstehen.png"
+    }
+  ],
+  "mobile": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau die Tasse an.",
+      "orientation": [
+        "Tasse",
+        "1 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-mobile-01-bild.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: Tas - se.",
+      "orientation": [
+        "Tasse",
+        "2 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-mobile-02-silben.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Tasse.",
+      "orientation": [
+        "Tasse",
+        "3 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-mobile-03-wort.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Die Tasse ist da.",
+      "orientation": [
+        "Tasse",
+        "4 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Die",
+        "Tasse",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "Tas",
+        "se"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-mobile-04-satz.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Die Tasse ist da. Was passt?",
+      "orientation": [
+        "Tasse",
+        "5 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Die Tasse ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69b-tasse-mobile-05-verstehen.png"
+    }
+  ]
+}

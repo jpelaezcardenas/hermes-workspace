@@ -29,14 +29,20 @@ type BackendResolution = {
 let _resolved: BackendResolution | null = null
 let _resolving: Promise<BackendResolution> | null = null
 
-async function probeBackend(base: string): Promise<number> {
+type BackendProbe = {
+  available: boolean
+  count: number
+}
+
+async function probeBackend(base: string): Promise<BackendProbe> {
   try {
     const res = await fetch(base, { signal: AbortSignal.timeout(3000) })
-    if (!res.ok) return 0
+    const contentType = res.headers.get('content-type') ?? ''
+    if (!res.ok || !contentType.includes('application/json')) return { available: false, count: 0 }
     const data = await res.json()
-    return Array.isArray(data.tasks) ? data.tasks.length : 0
+    return { available: true, count: Array.isArray(data.tasks) ? data.tasks.length : 0 }
   } catch {
-    return 0
+    return { available: false, count: 0 }
   }
 }
 
@@ -45,14 +51,14 @@ async function resolveBackend(): Promise<BackendResolution> {
   if (_resolving) return _resolving
 
   _resolving = (async () => {
-    const [hermesCount, claudeCount] = await Promise.all([
+    const [hermesProbe, claudeProbe] = await Promise.all([
       probeBackend(HERMES_BASE),
       probeBackend(CLAUDE_BASE),
     ])
 
     // Prefer hermes if it has data; fall back to claude if only claude has data;
-    // default to hermes when both are empty (it is the canonical store agents write to).
-    const useHermes = hermesCount >= claudeCount
+    // default to hermes when both are empty and available (it is the canonical store agents write to).
+    const useHermes = hermesProbe.available && (!claudeProbe.available || hermesProbe.count >= claudeProbe.count)
     _resolved = {
       base: useHermes ? HERMES_BASE : CLAUDE_BASE,
       assigneesBase: useHermes ? '/api/hermes-tasks-assignees' : '/api/claude-tasks-assignees',

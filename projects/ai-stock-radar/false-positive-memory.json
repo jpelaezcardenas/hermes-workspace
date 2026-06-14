@@ -1,33 +1,45 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T07:19:34.498Z",
-  "candidate_count": 20,
-  "risky_candidate_count": 19,
+  "generated_at": "2026-06-14T14:30:33.590Z",
+  "candidate_count": 30,
+  "risky_candidate_count": 29,
   "pattern_counts": {
-    "cash_runway_watch": 7,
-    "name_only_ai_watch": 15,
-    "delisting_watch": 10,
-    "offering_watch": 4,
-    "revenue_decline_watch": 5,
-    "dilution_trend_watch": 8
+    "foreign_issuer": 1,
+    "limited_us_gaap_facts": 1,
+    "cash_runway_watch": 9,
+    "name_only_ai_watch": 21,
+    "delisting_watch": 16,
+    "clinical_risk": 1,
+    "cash_burn_watch": 1,
+    "offering_watch": 9,
+    "dilution_trend_watch": 12,
+    "revenue_decline_watch": 8,
+    "crowded_large_cap": 1,
+    "overheated_watch": 1
   },
   "verdict_counts": {
     "pass": 1,
-    "caution": 9,
-    "reject": 10
+    "caution": 13,
+    "reject": 16
   },
   "action_counts": {
     "WAIT_FOR_CONFIRMATION": 1,
-    "CHECK_DILUTION": 5,
-    "DOWNGRADE_REVIEW": 4,
-    "ARCHIVE_REVIEW": 10
+    "DOWNGRADE_REVIEW": 5,
+    "CHECK_DILUTION": 8,
+    "ARCHIVE_REVIEW": 16
   },
   "calibration_notes": [
-    "name_only_ai_watch: 15 candidates",
-    "delisting_watch: 10 candidates",
-    "dilution_trend_watch: 8 candidates",
-    "cash_runway_watch: 7 candidates",
-    "revenue_decline_watch: 5 candidates",
-    "offering_watch: 4 candidates"
+    "name_only_ai_watch: 21 candidates",
+    "delisting_watch: 16 candidates",
+    "dilution_trend_watch: 12 candidates",
+    "cash_runway_watch: 9 candidates",
+    "offering_watch: 9 candidates",
+    "revenue_decline_watch: 8 candidates",
+    "foreign_issuer: 1 candidates",
+    "limited_us_gaap_facts: 1 candidates",
+    "clinical_risk: 1 candidates",
+    "cash_burn_watch: 1 candidates",
+    "crowded_large_cap: 1 candidates",
+    "overheated_watch: 1 candidates"
   ]
 }

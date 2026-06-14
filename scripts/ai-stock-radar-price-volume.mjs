@@ -82,6 +82,15 @@ export async function fetchStooqPriceVolume({ ticker, fetcher = fetch }) {
   try {
     const response = await fetcher(url);
     const csv = typeof response === "string" ? response : await response.text();
+    if (/get your apikey|get_apikey|captcha/i.test(csv)) {
+      return {
+        status: "unavailable",
+        source: "stooq",
+        confirmation: "unavailable",
+        url,
+        reason: "stooq_api_key_required",
+      };
+    }
     const candles = parseStooqCsv(csv);
     const signal = computePriceVolumeSignal(candles);
     return {

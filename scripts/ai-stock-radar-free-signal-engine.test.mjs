@@ -169,6 +169,11 @@ describe("AI stock radar free signal engine", () => {
       date: "2026-05-30",
       records: [evidence({ ticker: "SAFEAI" })],
     });
+    candidates[0].price_volume = {
+      status: "unavailable",
+      confirmation: "unavailable",
+      reason: "stooq_api_key_required",
+    };
     const report = renderFreeSourceReport({
       date: "2026-05-30",
       candidates,
@@ -182,6 +187,10 @@ describe("AI stock radar free signal engine", () => {
     });
 
     expect(report).toContain("## Top Kandidaten Heute");
+    expect(report).toContain("## Potential Candidate Board");
+    expect(report).toContain("## Warum Keine Deep-Dive-Kandidaten");
+    expect(report).toContain("Gefundene Kandidaten:");
+    expect(report).toContain("Deep-Dive-Kandidaten:");
     expect(report).toContain("## Evidence Firewall");
     expect(report).toContain("SAFEAI: pass");
     expect(report).toContain("VERIFY_CATALYST");
@@ -191,11 +200,30 @@ describe("AI stock radar free signal engine", () => {
     expect(report).toContain("## Thesis Intelligence");
     expect(report).toContain("## Alpha Memory");
     expect(report).toContain("SAFEAI");
+    expect(report).toContain("reason stooq_api_key_required");
     expect(report).toContain("free_price_data_unavailable");
     expect(report).toContain("- SOFORT_MACHEN: nichts");
     expect(report).toContain("Keine automatischen Trades");
     expect(countSofortMachenItems(report)).toBe(0);
     expect(report.toLowerCase()).not.toMatch(/buy now|sell now|will explode|jetzt kaufen|jetzt verkaufen/);
+  });
+
+  it("shows idea grades for every candidate in the daily report", () => {
+    const tickers = ["AIA", "AIB", "AIC", "AID", "AIE", "AIF", "AIG", "AIH", "AII", "AIJ", "AIK", "AIL"];
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: tickers.map((ticker) => evidence({ ticker, company: `${ticker} Infrastructure Inc.` })),
+    });
+    const report = renderFreeSourceReport({
+      date: "2026-05-30",
+      candidates,
+      reportPath: "/tmp/ai-stock-radar-free.md",
+    });
+    const ideaGradeSection = report.match(/## Idea Grade\n([\s\S]*?)\n\n## Price\/Volume Confirmation/)?.[1] || "";
+    const gradedLines = ideaGradeSection.split("\n").filter((line) => /^- [A-Z]+: [SABCX]/.test(line));
+
+    expect(gradedLines).toHaveLength(12);
+    expect(ideaGradeSection).toContain("AIL: B");
   });
 
   it("applies firewall penalties and safe review actions to high-risk records", () => {
@@ -253,12 +281,34 @@ describe("AI stock radar free signal engine", () => {
       candidates,
       reportPath: "/tmp/ai-stock-radar-free.md",
     });
-    const topSection = report.match(/## Top Kandidaten Heute\n([\s\S]*?)\n\n## Neue Auffaelligkeiten/)?.[1] || "";
+    const topSection = report.match(/## Top Kandidaten Heute\n([\s\S]*?)\n\n## Potential Candidate Board/)?.[1] || "";
+    const potentialSection = report.match(/## Potential Candidate Board\n([\s\S]*?)\n\n## Neue Auffaelligkeiten/)?.[1] || "";
 
     expect(topSection).toContain("ROBOT");
     expect(topSection).not.toContain("NOISE");
+    expect(potentialSection).toContain("ROBOT");
+    expect(potentialSection).toContain("NOISE");
+    expect(potentialSection).toMatch(/NOISE: Archive\/Avoid Review/);
     expect(report).toContain("## Overheated / Avoid");
     expect(report).toContain("NOISE");
+  });
+
+  it("marks potential board candidates as risk review when thesis or alpha memory blocks them", () => {
+    const candidates = buildCandidatesFromEvidence({
+      date: "2026-05-30",
+      records: [evidence({ ticker: "ALPHA", company: "Alpha Memory AI Inc." })],
+    });
+    candidates[0].ceo_control = { lane: "monitor", action: "CEO_MONITOR" };
+    candidates[0].thesis_intelligence = { thesis_verdict: "BROKEN_THESIS" };
+    candidates[0].alpha_memory = { hypothesis_label: "CONTRADICTION_REVIEW" };
+    const report = renderFreeSourceReport({
+      date: "2026-05-30",
+      candidates,
+      reportPath: "/tmp/ai-stock-radar-free.md",
+    });
+    const potentialSection = report.match(/## Potential Candidate Board\n([\s\S]*?)\n\n## Neue Auffaelligkeiten/)?.[1] || "";
+
+    expect(potentialSection).toMatch(/ALPHA: Risk Review/);
   });
 
   it("writes a free-source report and watchlist without API keys", async () => {

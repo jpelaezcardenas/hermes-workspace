@@ -1,0 +1,79 @@
+version: 1
+scope: safe-local-integration-traces-only
+base_path: /Users/zondrius/hermes-workspace/projects/github-rising-2026-05-13
+created_for: github-rising-2026-05-13
+constraints:
+  no_install_performed_now: true
+  no_api_keys: true
+  no_private_data: true
+  no_student_data: true
+  no_productive_hermes_changes: true
+  localhost_only: true
+  sandbox_only: true
+common_paths:
+  sandbox_root: sandbox
+  synthetic_data_root: synthetic-data
+  logs_root: sandbox/_logs
+  reports_root: sandbox/_reports
+allowed_bind_hosts:
+  - 127.0.0.1
+  - localhost
+blocked_bind_hosts:
+  - 0.0.0.0
+  - "::"
+  - public interfaces
+candidates:
+  local-deep-research:
+    purpose: Lokale Deep-Research-Pipeline mit synthetischen/public Dokumenten evaluieren.
+    sandbox_dir: sandbox/local-deep-research
+    runbook: runbooks/local-deep-research.md
+    suggested_ports:
+      app: 8711
+      optional_backend: 8712
+    data_policy: Nur synthetische Markdown/PDF/Text-Dokumente, keine personenbezogenen Daten.
+    credential_policy: Keine echten Provider-Keys; falls nötig nur Dummy-Werte wie DUMMY_NOT_A_SECRET.
+    primary_checks:
+      - README/Lizenz prüfen
+      - Startbefehle auf Remote-Telemetrie prüfen
+      - bind host auf 127.0.0.1 erzwingen
+      - Outputs auf Quellenangaben und lokale Pfade prüfen
+  react-doctor:
+    purpose: Diagnosewerkzeug an kleinem synthetischem React-Projekt testen.
+    sandbox_dir: sandbox/react-doctor
+    runbook: runbooks/react-doctor.md
+    suggested_ports:
+      demo_app: 8721
+    data_policy: Nur neu generiertes Demo-React-Projekt ohne reale Appdaten.
+    credential_policy: Keine npm tokens, keine privaten Registry-Zugänge.
+    primary_checks:
+      - Paketskripte vor Ausführung lesen
+      - keine globalen Installationen
+      - kein Zugriff auf bestehende Projektverzeichnisse
+      - Report nur unter sandbox/_reports ablegen
+  DeepSeek-TUI:
+    purpose: TUI-Verhalten mit lokalem Mock-LLM-Endpunkt oder Dummy-Modellpfad bewerten.
+    sandbox_dir: sandbox/deepseek-tui
+    runbook: runbooks/deepseek-tui.md
+    suggested_ports:
+      mock_llm: 8731
+    data_policy: Nur synthetische Prompts, keine Chat-Historien, keine Secrets.
+    credential_policy: Keine DeepSeek/OpenAI/API-Keys; nur Mock-Endpunkt auf 127.0.0.1.
+    primary_checks:
+      - Konfiguration auf Remote-Provider prüfen
+      - History/Logs deaktivieren oder sandbox-lokal halten
+      - Terminal-Ausgaben auf Secret-Leaks prüfen
+      - Netzwerk auf localhost begrenzen
+  PageIndex:
+    purpose: Lokales Indexing/RAG über synthetische Webseiten/Dokumente prüfen.
+    sandbox_dir: sandbox/pageindex
+    runbook: runbooks/pageindex.md
+    suggested_ports:
+      app: 8741
+      optional_vector_service: 8742
+    data_policy: Nur synthetische HTML/Markdown-Dateien und öffentliche Beispielseiten, keine Crawls interner Systeme.
+    credential_policy: Keine Cloud-DB/API-Keys; lokale Wegwerf-Indizes.
+    primary_checks:
+      - Crawl-Scope explizit begrenzen
+      - robots/ToS bei öffentlichen Seiten beachten
+      - Indexverzeichnis löschbar halten
+      - keine personenbezogenen Daten in Embeddings

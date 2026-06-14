@@ -4,6 +4,7 @@ import { execFile } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { isAuthenticated } from '../../server/auth-middleware'
+import { listKanbanCards } from '../../server/kanban-backend'
 import { getProfilesDir } from '../../server/claude-paths'
 import {
   buildSwarmDispatchMetadata,
@@ -18,6 +19,7 @@ import {
   type SwarmDispatchMetadata,
   type SwarmLifecycleMetadata,
   type SwarmPreviewMetadata,
+  type SwarmRuntime,
   type SwarmRuntimeSource,
   type SwarmSessionMetadata,
   type SwarmTaskMetadata,
@@ -64,6 +66,15 @@ type RuntimeEntry = {
   tasks: Array<SwarmTaskMetadata>
   artifacts: Array<SwarmArtifactMetadata>
   previews: Array<SwarmPreviewMetadata>
+}
+
+type ActiveKanbanWorker = {
+  workerId: string
+  pid: number
+  taskId: string
+  title: string
+  spec: string
+  startedAt: number | null
 }
 
 function titleCase(value: string): string {
@@ -135,9 +146,10 @@ async function probeTmuxName(
 async function buildEntry(
   workerId: string,
   tmuxAvailable: boolean,
+  activeKanbanByWorker: Map<string, ActiveKanbanWorker>,
 ): Promise<RuntimeEntry> {
   const profilePath = join(getProfilesDir(), workerId)
-  const { source, runtime } = readSwarmRuntimeFile(profilePath, workerId, {
+  const { source, runtime: rawRuntime } = readSwarmRuntimeFile(profilePath, workerId, {
     workspaceRoot: process.cwd(),
   })
   const roster = rosterByWorkerId([workerId]).get(workerId)
@@ -146,6 +158,37 @@ async function buildEntry(
     ? await probeTmuxName(workerId, getSwarmTmuxSessionName(workerId))
     : null
   const tmuxAttachable = Boolean(matched)
+  const activeKanban = activeKanbanByWorker.get(workerId) ?? null
+  const pid = activeKanban?.pid ?? readPid(profilePath)
+  let runtime = rawRuntime
+  if (activeKanban) {
+    runtime = {
+      ...rawRuntime,
+      state: 'executing',
+      phase: 'kanban-running',
+      currentTask: activeKanban.title || activeKanban.spec || rawRuntime.currentTask,
+      checkpointStatus: 'in_progress',
+      needsHuman: false,
+      blockedReason: null,
+      startedAt: activeKanban.startedAt ?? rawRuntime.startedAt,
+      lastOutputAt: Date.now(),
+      lastCheckIn: new Date().toISOString(),
+      lastSummary: `Running Kanban task ${activeKanban.taskId}`,
+      nextAction: 'Kanban worker is executing this task.',
+    }
+  } else if (runtimeLooksStale(rawRuntime, { pid, tmuxAttachable })) {
+    runtime = {
+      ...rawRuntime,
+      state: 'offline',
+      phase: 'stale',
+      currentTask: null,
+      activeTool: null,
+      checkpointStatus: 'none',
+      needsHuman: false,
+      blockedReason: null,
+      nextAction: 'No live worker session detected. Dispatch a fresh task to continue.',
+    }
+  }
   let terminalKind: SwarmTerminalKind = 'none'
   if (tmuxAttachable) terminalKind = 'tmux'
   else if (runtime.cwd) terminalKind = 'shell'
@@ -180,7 +223,7 @@ async function buildEntry(
     lastSummary: runtime.lastSummary,
     lastResult: runtime.lastResult,
     nextAction: runtime.nextAction,
-    pid: readPid(profilePath),
+    pid,
     tmuxSession: matched,
     tmuxAttachable,
     terminalKind,
@@ -226,6 +269,62 @@ async function buildEntry(
   }
 }
 
+function execFileText(cmd: string, args: Array<string>, timeout = 5_000): Promise<string> {
+  return new Promise((resolve) => {
+    execFile(cmd, args, { timeout, maxBuffer: 2_000_000 }, (error, stdout) => {
+      resolve(error ? '' : String(stdout ?? ''))
+    })
+  })
+}
+
+async function listActiveKanbanProcesses(): Promise<Map<string, { pid: number; taskId: string }>> {
+  const output = await execFileText('ps', ['-axo', 'pid=,command='])
+  const active = new Map<string, { pid: number; taskId: string }>()
+  for (const line of output.split('\n')) {
+    if (!line.includes('work kanban task')) continue
+    const pid = Number(line.trim().match(/^(\d+)/)?.[1])
+    const workerId = line.match(/\s-p\s+([^\s]+)/)?.[1]
+    const taskId = line.match(/\bwork\s+kanban\s+task\s+([^\s]+)/)?.[1]
+    if (!Number.isFinite(pid) || !workerId || !taskId) continue
+    active.set(workerId, { pid, taskId })
+  }
+  return active
+}
+
+async function buildActiveKanbanByWorker(): Promise<Map<string, ActiveKanbanWorker>> {
+  const processes = await listActiveKanbanProcesses()
+  if (processes.size === 0) return new Map()
+  const cards = await listKanbanCards()
+  const cardsById = new Map(cards.map((card) => [card.id, card]))
+  const active = new Map<string, ActiveKanbanWorker>()
+  for (const [workerId, processInfo] of processes) {
+    const card = cardsById.get(processInfo.taskId)
+    active.set(workerId, {
+      workerId,
+      pid: processInfo.pid,
+      taskId: processInfo.taskId,
+      title: card?.title ?? processInfo.taskId,
+      spec: card?.spec ?? '',
+      startedAt: card?.updatedAt ?? null,
+    })
+  }
+  return active
+}
+
+function runtimeLooksStale(
+  runtime: SwarmRuntime,
+  input: { pid: number | null; tmuxAttachable: boolean },
+): boolean {
+  if (input.pid || input.tmuxAttachable) return false
+  if (runtime.checkpointStatus !== 'in_progress') return false
+  if (!['executing', 'thinking', 'writing', 'syncing', 'reviewing'].includes(runtime.state)) return false
+  const lastCheckIn = runtime.lastCheckIn ? Date.parse(runtime.lastCheckIn) : Number.NaN
+  const lastActivity = Number.isFinite(lastCheckIn)
+    ? lastCheckIn
+    : runtime.lastOutputAt ?? runtime.lastDispatchAt ?? null
+  return typeof lastActivity === 'number' && Date.now() - lastActivity > 15 * 60 * 1000
+}
+
 function readPid(profilePath: string): number | null {
   const runtimePath = join(profilePath, 'runtime.json')
   if (!existsSync(runtimePath)) return null
@@ -246,7 +345,8 @@ export const Route = createFileRoute('/api/swarm-runtime')({
         }
         const ids = listWorkerIds()
         const tmuxAvailable = await tmuxIsInstalled()
-        const entries = await Promise.all(ids.map((id) => buildEntry(id, tmuxAvailable)))
+        const activeKanbanByWorker = await buildActiveKanbanByWorker()
+        const entries = await Promise.all(ids.map((id) => buildEntry(id, tmuxAvailable, activeKanbanByWorker)))
         return json({
           checkedAt: Date.now(),
           registryVersion: 1,

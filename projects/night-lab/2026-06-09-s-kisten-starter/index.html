@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S-Kisten-Starter</title>
+  <style>
+    :root{--ink:#263238;--muted:#607d8b;--bg:#f5f1e8;--card:#fffaf0;--accent:#2e7d67;--soft:#d9eadf;--warn:#f7dfb0;--no:#ead7d2}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(160deg,#f6f1e6,#e8f1ea);color:var(--ink)}
+    main{max-width:1100px;margin:0 auto;padding:22px}.top{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:stretch}.hero,.panel,.zone,.note{background:rgba(255,250,240,.92);border:2px solid rgba(46,125,103,.18);border-radius:26px;box-shadow:0 14px 40px rgba(38,50,56,.08)}.hero{padding:24px}.hero h1{margin:.1rem 0;font-size:clamp(2rem,5vw,4.2rem);letter-spacing:-.04em}.hero p{font-size:1.18rem;line-height:1.45;color:var(--muted);max-width:680px}.badge{display:inline-flex;gap:8px;align-items:center;background:var(--soft);padding:8px 12px;border-radius:999px;font-weight:750;color:#1d5d4b}.panel{padding:18px}button{border:0;border-radius:18px;padding:13px 16px;font-size:1rem;font-weight:750;cursor:pointer;background:#fff;box-shadow:inset 0 0 0 2px rgba(46,125,103,.14)}button:hover,button.active{background:var(--accent);color:white}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.object{min-height:124px;font-size:3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}.object small{font-size:.9rem;color:var(--muted);font-weight:700}.zones{display:grid;grid-template-columns:1fr 1fr;gap:14px}.zone{padding:16px;min-height:176px}.zone h2{margin:.1rem 0 .8rem;font-size:1.3rem}.drop{display:flex;flex-wrap:wrap;gap:10px;min-height:80px}.chip{background:#fff;border-radius:16px;padding:10px 12px;font-weight:800;box-shadow:inset 0 0 0 2px rgba(0,0,0,.07)}.bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.step{background:#fff;border-radius:20px;padding:14px;min-height:126px}.step b{display:block;margin-bottom:6px;color:#1d5d4b}.note{padding:16px;margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.slip{background:#fff;border-radius:18px;padding:14px;border:2px dashed rgba(46,125,103,.25)}.danger{background:var(--no)}.print{background:var(--warn)}@media(max-width:800px){.top,.note,.steps,.zones{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.bar{grid-template-columns:1fr 1fr}}@media print{body{background:white}button,.objectsTitle{display:none}.hero,.panel,.zone,.note,.step{box-shadow:none;border-color:#999}main{padding:0}.top,.steps,.note{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="top">
+    <div class="hero"><span class="badge">GE · lokal · ohne Personendaten</span><h1>S-Kisten-Starter</h1><p>Eine ruhige 60-Sekunden-Karte für morgen: drei Gegenstände auswählen, in <b>passt zu S</b> / <b>passt nicht</b> legen und genau eine Beobachtungsfrage mitnehmen.</p><div class="bar"><button class="active" data-focus="hören">hören</button><button data-focus="fühlen">fühlen</button><button data-focus="zeigen">zeigen</button><button data-focus="sortieren">sortieren</button></div></div>
+    <div class="panel"><h2>Heute nicht aufblasen</h2><p id="focusText">Fokus: S langsam vormodellieren, dann nur eine sichtbare Reaktion beobachten.</p><p><b>Stop-Regel:</b> Wenn Unruhe entsteht: 1 Gegenstand, einmal „fertig“, Ende.</p><button class="print" onclick="window.print()">Druckkarte öffnen</button></div>
+  </section>
+  <h2 class="objectsTitle">1. Tippe die Karten an und lege sie in die passende Zone</h2>
+  <section class="grid" id="objects"></section>
+  <section class="zones"><div class="zone"><h2>passt zu S</h2><div class="drop" id="yes"></div></div><div class="zone"><h2>passt nicht</h2><div class="drop" id="no"></div></div></section>
+  <section class="steps"><div class="step"><b>Aufbau</b><span id="setup">Sonne, Socke, Seife sichtbar. Eine Nicht-S-Karte daneben.</span></div><div class="step"><b>Startsatz</b><span>„S wie Sonne. Was passt zu S?“</span></div><div class="step"><b>Hilfen</b><span>Zeig es mir · Pause · Fertig. Jede Reaktion zählt.</span></div></section>
+  <section class="note"><div class="slip"><b>Beobachtungszettel ohne Namen</b><p>Farblabel: ____<br>Sichtbare Handlung: ____<br>Genutzte Hilfe: ____<br>Nächster kleiner Schritt: ____</p></div><div class="slip danger"><b>Nicht ausführen</b><p>Keine Diagnosen, keine Namen, kein Ranking, kein Tempo, kein Fünferfeld, keine digitale Datensammlung.</p></div></section>
+</main>
+<script>
+const items=[['☀️','Sonne',true],['🧦','Socke',true],['🫧','Seife',true],['🍎','Apfel',false],['🐱','Katze',false],['🚗','Auto',false]];
+const texts={"hören":"Fokus: S langsam vormodellieren, dann nur eine sichtbare Reaktion beobachten.","fühlen":"Fokus: S-Fühlbuchstabe oder Sandweg anbieten. Eine Berührung reicht als Beteiligung.","zeigen":"Fokus: zwischen zwei Karten wählen lassen. Blick, Griff oder Zeigen genügt.","sortieren":"Fokus: gemeinsam legen: passt zu S / passt nicht. Keine Fehlerdramatik."};
+const objects=document.getElementById('objects'), yes=document.getElementById('yes'), no=document.getElementById('no');
+function render(){objects.innerHTML=''; items.forEach(([emoji,name,ok],i)=>{const b=document.createElement('button');b.className='object';b.innerHTML=`<span>${emoji}</span><small>${name}</small>`;b.onclick=()=>add(ok?yes:no,emoji+' '+name);objects.appendChild(b);});}
+function add(zone,label){const c=document.createElement('span');c.className='chip';c.textContent=label; c.onclick=()=>c.remove(); zone.appendChild(c)}
+document.querySelectorAll('[data-focus]').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('[data-focus]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('focusText').textContent=texts[btn.dataset.focus];});
+render(); add(yes,'☀️ Sonne'); add(yes,'🧦 Socke'); add(no,'🍎 Apfel');
+</script>
+</body></html>

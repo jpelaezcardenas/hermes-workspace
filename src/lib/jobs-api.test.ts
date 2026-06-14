@@ -82,7 +82,7 @@ describe('job mutation payloads', () => {
       schedule: 'every 30m',
       prompt: 'summarize the latest notes',
       input: 'summarize the latest notes',
-      deliver: ['local'],
+      deliver: 'local',
     })
   })
 })

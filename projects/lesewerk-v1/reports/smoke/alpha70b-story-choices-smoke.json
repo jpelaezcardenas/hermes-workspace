@@ -1,0 +1,74 @@
+[
+  {
+    "anchor": "Mama",
+    "viewport": "desktop",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Sofa",
+    "viewport": "desktop",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Tasse",
+    "viewport": "desktop",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Lama",
+    "viewport": "desktop",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Mama",
+    "viewport": "mobile",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Sofa",
+    "viewport": "mobile",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Tasse",
+    "viewport": "mobile",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  },
+  {
+    "anchor": "Lama",
+    "viewport": "mobile",
+    "ok": false,
+    "finalCards": [],
+    "badge": null,
+    "error": "locator.click: Error: strict mode violation: getByText('Lehrkraft') resolved to 2 elements:\n    1) <button class=\"\" type=\"button\" aria-pressed=\"false\">Lehrkraft</button> aka getByRole('button', { name: 'Lehrkraft' })\n    2) <span>Lehrkraft liest bei Bedarf kurz vor.</span> aka getByText('Lehrkraft liest bei Bedarf')\n\nCall log:\n\u001b[2m  - waiting for getByText('Lehrkraft')\u001b[22m\n",
+    "overflow": null
+  }
+]

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lehrer-Morgenkarte GE</title>
+  <style>
+    :root{--bg:#0f172a;--card:#111827;--muted:#94a3b8;--text:#e5e7eb;--accent:#38bdf8;--line:#243244;--good:#22c55e}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(180deg,#0b1020,#111827);color:var(--text)}
+    .wrap{max-width:960px;margin:0 auto;padding:24px} h1{margin:0 0 8px;font-size:clamp(28px,4vw,40px)} p{color:var(--muted);line-height:1.5}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0}
+    .card{background:rgba(17,24,39,.9);border:1px solid var(--line);border-radius:16px;padding:14px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    select,button{width:100%;border-radius:12px;border:1px solid var(--line);background:#0b1220;color:var(--text);padding:12px;font-size:16px}
+    button{cursor:pointer;background:linear-gradient(180deg,#38bdf8,#0ea5e9);border:none;color:#062034;font-weight:700}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#132238;border:1px solid var(--line);margin:4px 6px 0 0}
+    .result{border-left:4px solid var(--accent);padding-left:12px}
+    ul{padding-left:18px} .small{font-size:13px;color:var(--muted)} .good{color:var(--good);font-weight:700}
+    .footer{margin-top:24px;padding-top:14px;border-top:1px solid var(--line)}
+    .activity{white-space:pre-wrap;background:#0b1220;border:1px solid var(--line);border-radius:14px;padding:12px;min-height:148px}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Lehrer-Morgenkarte GE</h1>
+    <p>Lokale Morgenkarte fuer den schnellen Unterrichtsstart: waehlen, klicken, sofort drei Mini-Aktivitaeten bekommen. Ohne Namen, ohne Daten, ohne externe Dienste.</p>
+
+    <section class="grid">
+      <div class="card"><label for="fach">Bereich</label><select id="fach"><option>Mathe</option><option>Deutsch</option><option>Sachunterricht</option><option>Kommunikation</option></select></div>
+      <div class="card"><label for="zeit">Zeitfenster</label><select id="zeit"><option>5 Minuten</option><option>10 Minuten</option><option>15 Minuten</option></select></div>
+      <div class="card"><label for="niveau">Niveau</label><select id="niveau"><option>basal</option><option>unterstuetzt</option><option>erweitert</option></select></div>
+      <div class="card"><label for="material">Material</label><select id="material"><option>Steine / Muggelsteine</option><option>Karten</option><option>Stifte / Papier</option><option>Alltagsgegenstand</option></select></div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <button id="build">Morgenkarte bauen</button>
+        <button id="copy" type="button">Text kopieren</button>
+      </div>
+      <p class="small">Tipp: Die Vorschlaege bleiben bewusst klein und koennen direkt an den Tisch.</p>
+      <div class="result">
+        <div class="pill" id="meta1">—</div><div class="pill" id="meta2">—</div><div class="pill" id="meta3">—</div><div class="pill" id="meta4">—</div>
+      </div>
+      <h2 style="margin:16px 0 8px;font-size:20px">3 Mini-Aktivitaeten</h2>
+      <div class="activity" id="out">Klicke auf „Morgenkarte bauen“.</div>
+    </section>
+
+    <section class="footer small">
+      <strong>Pruefpunkte:</strong> lokal nutzbar, schnell sichtbar, ohne Personendaten, sofort testbar.
+      <br>Empfohlen fuer morgen: <span class="good">1 Kernauftrag + 3 kleine Handlungen</span>.
+    </section>
+  </main>
+
+  <script>
+    const activities = {
+      Mathe: {
+        basal: ['1) 1-3 Steine sichtbar legen.', '2) Menge zeigen oder beruehren.', '3) Mit „mehr / nochmal / fertig“ beenden.'],
+        unterstuetzt: ['1) Zahlkarte und passende Menge zuordnen.', '2) Reihenfolge 1-2-3 gemeinsam legen.', '3) Ein kurzes Zeigen statt Sprechen akzeptieren.'],
+        erweitert: ['1) 1-5 in einem Fuenferfeld legen.', '2) Eine Menge vergleichen: mehr / weniger.', '3) Einen kleinen Wechselauftrag geben.']
+      },
+      Deutsch: {
+        basal: ['1) Ein Bild oder Wort anschauen.', '2) Auswahl zwischen zwei Karten treffen.', '3) Mit Blick, Griff oder Gebaerde reagieren.'],
+        unterstuetzt: ['1) Ein Wort laut oder mit Karte wiederholen.', '2) Zwei Begriffe zuordnen.', '3) Einen kurzen Satz mit Modell beginnen.'],
+        erweitert: ['1) Ein Mini-Satz aus Karte bauen.', '2) Zwei passende Woerter verbinden.', '3) Ein Satz mit Startwort vervollstaendigen.']
+      },
+      'Sachunterricht': {
+        basal: ['1) Einen Gegenstand betrachten und benennen lassen.', '2) Eine Sache zeigen, die dazu passt.', '3) Gemeinsam sortieren: passt / passt nicht.'],
+        unterstuetzt: ['1) Zwei Alltagsgegenstaende vergleichen.', '2) Eine Eigenschaft auswählen.', '3) Einen kurzen Abschluss mit Zeigen.'],
+        erweitert: ['1) Drei Dinge nach einem Merkmal ordnen.', '2) Ein Mini-Raetsel loesen.', '3) Eine einfache Begruendung formulieren.']
+      },
+      Kommunikation: {
+        basal: ['1) Eine Auswahl aus zwei Karten anbieten.', '2) Jede passende Reaktion gelten lassen.', '3) Mit „fertig“ klar beenden.'],
+        unterstuetzt: ['1) Wunsch mit Karte / Geste zeigen.', '2) Ein Echo-Wort vormodellieren.', '3) Ein kurzes Wechselspiel starten.'],
+        erweitert: ['1) Ein Mini-Gespraech mit 2 Zuegen fuehren.', '2) Eine Frage mit Karte beantworten.', '3) Einen kleinen Auftrag weitergeben.']
+      }
+    };
+
+    const $ = id => document.getElementById(id);
+    function build(){
+      const fach = $('fach').value, zeit = $('zeit').value, niveau = $('niveau').value, material = $('material').value;
+      $('meta1').textContent = fach; $('meta2').textContent = zeit; $('meta3').textContent = niveau; $('meta4').textContent = material;
+      const list = activities[fach][niveau];
+      $('out').textContent = `Kern: ${fach} (${niveau})\nZeit: ${zeit}\nMaterial: ${material}\n\n` + list.join('\n');
+    }
+    $('build').addEventListener('click', build);
+    $('copy').addEventListener('click', async () => {
+      await navigator.clipboard.writeText($('out').textContent);
+      $('copy').textContent = 'Kopiert'; setTimeout(()=>$('copy').textContent='Text kopieren',1200);
+    });
+    build();
+  </script>
+</body>
+</html>

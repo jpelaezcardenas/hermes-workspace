@@ -183,9 +183,24 @@ function countPostures(candidates) {
   return counts;
 }
 
+function potentialCandidateLane(candidate) {
+  const posture = candidate.commander_assessment?.risk_posture;
+  if (posture === "RESEARCH_ATTENTION") return "Research Review";
+  if (posture === "RISK_REVIEW") return "Risk Review";
+  if (posture === "IGNORE_NOISE" || candidate.idea_grade === "X" || candidate.category === "Avoid") {
+    return "Archive/Avoid Review";
+  }
+  return "Watch";
+}
+
 function formatCandidate(candidate) {
   const assessment = candidate.commander_assessment || {};
   return `- ${candidate.ticker}: ${assessment.risk_posture || "CLEAN_WATCH"} / ${assessment.commander_action || "COMMANDER_MONITOR"}; score ${assessment.combined_score ?? 0}; attention ${compactList(assessment.attention_reasons)}; risk ${compactList(assessment.risk_overrides)}`;
+}
+
+function formatPotentialCandidate(candidate) {
+  const assessment = candidate.commander_assessment || {};
+  return `- ${candidate.ticker}: ${potentialCandidateLane(candidate)}; posture ${assessment.risk_posture || "CLEAN_WATCH"}; Grade ${candidate.idea_grade || "?"}; ${candidate.category || "Watch"}; score ${assessment.combined_score ?? 0}; risk ${compactList(assessment.risk_overrides)}; data ${compactList(assessment.data_gaps)}`;
 }
 
 function formatSection(candidates, filter, emptyText) {
@@ -217,6 +232,10 @@ export function renderStockRiskCommanderReport({
 
 ## Combined Risk Board
 ${candidates.length ? candidates.slice(0, 15).map(formatCandidate).join("\n") : "- Keine Kandidaten."}
+
+## Potential Candidate Board
+- Sichtbarkeitsboard fuer bis zu 15 Kandidaten aus AI Stock Radar plus Risk Overlay; Research-only, keine Anlageempfehlung.
+${candidates.length ? candidates.slice(0, 15).map(formatPotentialCandidate).join("\n") : "- Keine Kandidaten."}
 
 ## Top Research Attention
 ${formatSection(candidates, (candidate) => candidate.commander_assessment?.risk_posture === "RESEARCH_ATTENTION", "- Keine sauberen Research-Attention-Kandidaten.")}

@@ -42,7 +42,7 @@ export function parseSwarmCheckpoint(text: string): ParsedSwarmCheckpoint | null
   const lines = text.replace(/\r\n/g, '\n').split('\n')
 
   for (const line of lines) {
-    const match = line.match(/^\s*([A-Z_ -]{3,24})\s*:\s*(.*)$/i)
+    const match = line.match(/^\s*[+>|\s]*([A-Z_ -]{3,24})\s*:\s*(.*)$/i)
     const label = match ? normalizeLabel(match[1]) : null
     if (label) {
       current = label

@@ -1,0 +1,316 @@
+{
+  "desktop": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau das Bild an.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-desktop-01-bild-final.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: Ma - ma.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-desktop-02-silben-final.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Mama.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-desktop-03-wort-final.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Mama ist da.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Mama",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "Ma",
+        "ma"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-desktop-04-satz-final.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Mama ist da. Was passt?",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Mama ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-desktop-05-verstehen-final.png"
+    }
+  ],
+  "mobile": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau das Bild an.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-mobile-01-bild-final.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: Ma - ma.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-mobile-02-silben-final.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Mama.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-mobile-03-wort-final.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Mama ist da.",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Mama",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "Ma",
+        "ma"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-mobile-04-satz-final.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Mama ist da. Was passt?",
+      "hasCurrentObject": true,
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Mama ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha68e-mobile-05-verstehen-final.png"
+    }
+  ]
+}

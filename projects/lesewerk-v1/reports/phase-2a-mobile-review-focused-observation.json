@@ -1,0 +1,756 @@
+{
+  "logs": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    }
+  ],
+  "data": [
+    {
+      "label": "mini-reise-selector-viewport-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 31393,
+      "smallButtons": [
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": -10264,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": -10264,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": -10222,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": -9508,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": -9508,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": -9508,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": -9508,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": -9508,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": -9508,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": -9508,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": -9466,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": -9466,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": -9394,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": -9394,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": -9394,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": -9394,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": -9394,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": -9352,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 45,
+          "y": 6949,
+          "w": 43,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 96,
+          "y": 6949,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 141,
+          "y": 6949,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 186,
+          "y": 6949,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 232,
+          "y": 6949,
+          "w": 34,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 274,
+          "y": 6949,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "i",
+          "x": 45,
+          "y": 7001,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "n",
+          "x": 86,
+          "y": 7001,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 131,
+          "y": 7001,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 177,
+          "y": 7001,
+          "w": 35,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 219,
+          "y": 7001,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "u",
+          "x": 266,
+          "y": 7001,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "h",
+          "x": 45,
+          "y": 7053,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "d",
+          "x": 91,
+          "y": 7053,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "j",
+          "x": 137,
+          "y": 7053,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ei",
+          "x": 288,
+          "y": 7053,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 211,
+          "y": 7195,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "li",
+          "x": 261,
+          "y": 7195,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ja",
+          "x": 236,
+          "y": 7403,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        }
+      ],
+      "offscreenButtons": [],
+      "visibleText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nLEHRERBEREICH\nPlanung für heute\nHEUTE SO NUTZEN\nKurzer lokaler Lesemoment\nDiese Demo begleitet 10–15 Minuten Lesen. Beobachte nur Sichtbares: gewählte Hilfe, Wiederholung, reduzierte Auswahl, Storyantwort, Stopp oder ruhiges Weitergehen.\nKeine echten Namen, Fotos oder Klassenlisten speichern.\nNach zwei Karten bewusst enden oder denselben kleinen Schritt wiederholen.\nVorsichtig deuten: nur nächster pädagogischer Schritt, keine diagnostische Einordnung.\nUNTERRICHTSSERIEN\nHeute eine ruhige Serie vormerken\nHier nur Serie vormerken. Der Kinderpfad ändert sich erst unten bei der manuellen Tagesweg-Wahl.\nlokal · Vorschau\nSerie 1 · 3 Aufgaben\nAnkommen mit Bild und Silbe\nSTART\nMama mit Bildkarte oder Gegenstand ruhig zeigen.\nWIEDERHOLUNG\nma erst zeigen, dann sprechen, klatschen und legen.\nNÄCHSTER SCHRITT\nVom Bild aus eine sichere Silbe oder ein erstes Wort gemeinsam lesen.\n●\nBeispiel: Ball sehen und lesen.\nBildkarte Ball\nBall\nBall\nBall zeigen und lesen.\nBall zeigen. Ball lesen oder sprechen.\nHilfe: Ball zeigen. Langsam sprechen. Ein Schritt nach dem anderen.\nBildhilfe und kleine Auswahl · Heute reicht Bild oder Gegenstand, wenn Schrift noch nicht ruhig mitgeht.\nDarin: Bild/Symbol → Wort · Bekanntes Graphem wiederfinden · Sichere Silbe sprechen oder legen\nVorgemerkt – noch nicht im Tagesweg\nSerie 2 · 2 Aufgaben\nSilben verbinden\nheute naheliegend\nSTART\nma gemeinsam sprechen und sichtbar lassen.\nWIEDERHOLUNG\nErst die Silbe hören und legen, dann das Wort zusammenziehen.\nNÄCHSTER SCHRITT\nMama gemeinsam lesen und Auswahl klein halten.\n♡\nBeispiel: ma / ma legen.\nSilbenkarte Mama\nma / ma\nMama\nDaraus wird Mama.\nSilben klatschen. Dann zusammenziehen.\nHilfe: Silben trennen. Klatschen. Legen. Sprechen.\nSilbenklatschen, Legematerial und gemeinsames Mitsprechen. · Überspringen, wenn die Silbe heute noch nicht sicher gelegt oder gesprochen wird.\nDarin: Sichere Silbe sprechen oder legen · Zwei Silben zu einem Wort verbinden\nSerie vormerken\nSerie 3 · 2 Aufgaben\nWort im Satz\nheute naheliegend\nSTART\nMama als bekanntes Wort mit Bildkarte aufnehmen.\nWIEDERHOLUNG\nDer gleiche Satztyp kommt wieder, nur mit kleiner Veränderung.\nNÄCHSTER SCHRITT\nEinen kurzen Satzstreifen anbieten und bekannte Wörter markieren.\n◡\nBeispiel: Tasse im Satz finden.\nSatzstreifen Tasse\nTas / se\nTasse\nDie Tasse steht auf dem Tisch.\nTasse finden. Wort zeigen.\nHilfe: Wort markieren. Zwei Antworten zeigen: Tisch oder Bett.\nSatzstreifen, Bildkarte und kurzes Anlesen durch die Lehrkraft. · Heute bei der Wortebene bleiben, wenn Satzlesen noch zu viel ist.\nDarin: Zwei Silben zu einem Wort verbinden · Kurzer Satz mit Bildbezug\nSerie vormerken\nSerie 4 · 2 Aufgaben\nGeschichte und Schreibbrücke\nSTART\nMama in zwei kurzen Bildschritten erzählen.\nWIEDERHOL",
+      "buttons": [
+        {
+          "text": "Mama-Mini-Reise starten",
+          "x": 109,
+          "y": 388,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "label": "mini-reise-focus-start-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 3941,
+      "smallButtons": [],
+      "offscreenButtons": [],
+      "visibleText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nTAGESPFAD\nHeute lesen\nSchau. Klatsch. Lies.\nSchritt 1 von 6: Bild anschauen\nTagespfad starten\nAktiv:\nBildhilfe\nSilbenfarben\nWeniger Auswahl\nHilfe wählen\nLESELEITER\nHeute lesen wir so\nlokal\nMein Leseweg\nJetzt lesen: Bild\nDanach: Silbe\nBild\nSilbe\nWort\nSatz\nMini-Geschichte\nSchreibbrücke\nMein nächster Schritt\nJetzt\nBild\nDanach\nSilbe\nIch schaue.\n1\nBild\nBild anschauen: Wir finden zuerst Bedeutung.\n2\nSilbe\nSilbe sprechen: Wir hören den Klang.\n3\nWort\nWort lesen: Wir verbinden Klang und Zeichen.\n4\nSatz\nKurzer Satz: Wir lesen, was passiert.\n5\nMini-Geschichte\nMini-Geschichte: Wir verstehen eine kleine Szene.\n6\nSchreibbrücke\nSchreibbrücke: Nur wenn es heute passt, legen oder spuren wir ein Wort.\nBild\n→\nMa\nma\n→\nMama\n→\nMama ist da.\n→\nMama ist da\n→\nSchreibbrücke\nSCHRITTKARTE MAMA\n1 von 6\nBild\nBild anschauen. Wort zeigen.\nWeiter\nNochmal ruhig\nFOKUSSPIEL\nMama-Mini-Reise\nFünf ruhige Schritte: Bild, Silbe, Wort, Satz und kleine Geschichte. Ohne Uhr.\nMini-Reise starten\nZur Lehrkraft\nWenn möglich, öffnet sich der ganze Bildschirm.",
+      "buttons": [
+        {
+          "text": "",
+          "x": 48,
+          "y": 800,
+          "w": 294,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Mini-Reise starten",
+          "x": 94,
+          "y": 195,
+          "w": 203,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Zur Lehrkraft",
+          "x": 94,
+          "y": 273,
+          "w": 203,
+          "h": 72,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "label": "mini-reise-focus-playing-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 1181,
+      "smallButtons": [],
+      "offscreenButtons": [],
+      "visibleText": "LESELEITER\nHeute lesen wir so\nlokal\nMein Leseweg\nJetzt lesen: Bild\nDanach: Silbe\nBild\nSilbe\nWort\nSatz\nMini-Geschichte\nSchreibbrücke\nMein nächster Schritt\nJetzt\nBild\nDanach\nSilbe\nIch schaue.\n1\nBild\nBild anschauen: Wir finden zuerst Bedeutung.\n2\nSilbe\nSilbe sprechen: Wir hören den Klang.\n3\nWort\nWort lesen: Wir verbinden Klang und Zeichen.\n4\nSatz\nKurzer Satz: Wir lesen, was passiert.\n5\nMini-Geschichte\nMini-Geschichte: Wir verstehen eine kleine Szene.\n6\nSchreibbrücke\nSchreibbrücke: Nur wenn es heute passt, legen oder spuren wir ein Wort.\nBild\n→\nMa\nma\n→\nMama\n→\nMama ist da.\n→\nMama ist da\n→\nSchreibbrücke\nGANZER BILDSCHIRM\nMama-Mini-Reise\nZur Lehrkraft\nReise 1 von 5\nAktuelles Wort\nMama\nJetzt: Bild\n1 von 5\nDein nächster Schritt: Drück Weiter, wenn du bereit bist.\nSchau.\nMa\nma\nMama\nJetzt: Bild\nBild\nSchau.\nSilben\nLies langsam.\nWort\nLies ganz.\nSatz\nLies den Satz.\nMini-Geschichte\nZeig, was passt.\nBILD\nSchau das Bild an.\nDu hast geschaut.\nBleibt nur hier im Browser.\nNochmal\nHilfe\nWeiter\nZur Lehrkraft",
+      "buttons": [
+        {
+          "text": "Zur Lehrkraft",
+          "x": 28,
+          "y": 101,
+          "w": 334,
+          "h": 56,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "label": "wortpost-entry-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 31393,
+      "smallButtons": [
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": -10974,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": -10974,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": -10932,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": -10218,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": -10218,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": -10218,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": -10218,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": -10218,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": -10218,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": -10218,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": -10176,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": -10176,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": -10104,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": -10104,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": -10104,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": -10104,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": -10104,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": -10062,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 45,
+          "y": 6239,
+          "w": 43,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 96,
+          "y": 6239,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 141,
+          "y": 6239,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 186,
+          "y": 6239,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 232,
+          "y": 6239,
+          "w": 34,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 274,
+          "y": 6239,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "i",
+          "x": 45,
+          "y": 6291,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "n",
+          "x": 86,
+          "y": 6291,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 131,
+          "y": 6291,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 177,
+          "y": 6291,
+          "w": 35,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 219,
+          "y": 6291,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "u",
+          "x": 266,
+          "y": 6291,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "h",
+          "x": 45,
+          "y": 6343,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "d",
+          "x": 91,
+          "y": 6343,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "j",
+          "x": 137,
+          "y": 6343,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ei",
+          "x": 288,
+          "y": 6343,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 211,
+          "y": 6485,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "li",
+          "x": 261,
+          "y": 6485,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ja",
+          "x": 236,
+          "y": 6693,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        }
+      ],
+      "offscreenButtons": [],
+      "visibleText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nLEHRERBEREICH\nPlanung für heute\nHEUTE SO NUTZEN\nKurzer lokaler Lesemoment\nDiese Demo begleitet 10–15 Minuten Lesen. Beobachte nur Sichtbares: gewählte Hilfe, Wiederholung, reduzierte Auswahl, Storyantwort, Stopp oder ruhiges Weitergehen.\nKeine echten Namen, Fotos oder Klassenlisten speichern.\nNach zwei Karten bewusst enden oder denselben kleinen Schritt wiederholen.\nVorsichtig deuten: nur nächster pädagogischer Schritt, keine diagnostische Einordnung.\nUNTERRICHTSSERIEN\nHeute eine ruhige Serie vormerken\nHier nur Serie vormerken. Der Kinderpfad ändert sich erst unten bei der manuellen Tagesweg-Wahl.\nlokal · Vorschau\nSerie 1 · 3 Aufgaben\nAnkommen mit Bild und Silbe\nSTART\nMama mit Bildkarte oder Gegenstand ruhig zeigen.\nWIEDERHOLUNG\nma erst zeigen, dann sprechen, klatschen und legen.\nNÄCHSTER SCHRITT\nVom Bild aus eine sichere Silbe oder ein erstes Wort gemeinsam lesen.\n●\nBeispiel: Ball sehen und lesen.\nBildkarte Ball\nBall\nBall\nBall zeigen und lesen.\nBall zeigen. Ball lesen oder sprechen.\nHilfe: Ball zeigen. Langsam sprechen. Ein Schritt nach dem anderen.\nBildhilfe und kleine Auswahl · Heute reicht Bild oder Gegenstand, wenn Schrift noch nicht ruhig mitgeht.\nDarin: Bild/Symbol → Wort · Bekanntes Graphem wiederfinden · Sichere Silbe sprechen oder legen\nVorgemerkt – noch nicht im Tagesweg\nSerie 2 · 2 Aufgaben\nSilben verbinden\nheute naheliegend\nSTART\nma gemeinsam sprechen und sichtbar lassen.\nWIEDERHOLUNG\nErst die Silbe hören und legen, dann das Wort zusammenziehen.\nNÄCHSTER SCHRITT\nMama gemeinsam lesen und Auswahl klein halten.\n♡\nBeispiel: ma / ma legen.\nSilbenkarte Mama\nma / ma\nMama\nDaraus wird Mama.\nSilben klatschen. Dann zusammenziehen.\nHilfe: Silben trennen. Klatschen. Legen. Sprechen.\nSilbenklatschen, Legematerial und gemeinsames Mitsprechen. · Überspringen, wenn die Silbe heute noch nicht sicher gelegt oder gesprochen wird.\nDarin: Sichere Silbe sprechen oder legen · Zwei Silben zu einem Wort verbinden\nSerie vormerken\nSerie 3 · 2 Aufgaben\nWort im Satz\nheute naheliegend\nSTART\nMama als bekanntes Wort mit Bildkarte aufnehmen.\nWIEDERHOLUNG\nDer gleiche Satztyp kommt wieder, nur mit kleiner Veränderung.\nNÄCHSTER SCHRITT\nEinen kurzen Satzstreifen anbieten und bekannte Wörter markieren.\n◡\nBeispiel: Tasse im Satz finden.\nSatzstreifen Tasse\nTas / se\nTasse\nDie Tasse steht auf dem Tisch.\nTasse finden. Wort zeigen.\nHilfe: Wort markieren. Zwei Antworten zeigen: Tisch oder Bett.\nSatzstreifen, Bildkarte und kurzes Anlesen durch die Lehrkraft. · Heute bei der Wortebene bleiben, wenn Satzlesen noch zu viel ist.\nDarin: Zwei Silben zu einem Wort verbinden · Kurzer Satz mit Bildbezug\nSerie vormerken\nSerie 4 · 2 Aufgaben\nGeschichte und Schreibbrücke\nSTART\nMama in zwei kurzen Bildschritten erzählen.\nWIEDERHOL",
+      "buttons": [
+        {
+          "text": "Wortpost testen",
+          "x": 65,
+          "y": 390,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "label": "wortpost-start-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 3941,
+      "smallButtons": [],
+      "offscreenButtons": [],
+      "visibleText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nTAGESPFAD\nHeute lesen\nSchau. Klatsch. Lies.\nSchritt 1 von 6: Bild anschauen\nTagespfad starten\nAktiv:\nBildhilfe\nSilbenfarben\nWeniger Auswahl\nHilfe wählen\nLESELEITER\nHeute lesen wir so\nlokal\nMein Leseweg\nJetzt lesen: Bild\nDanach: Silbe\nBild\nSilbe\nWort\nSatz\nMini-Geschichte\nSchreibbrücke\nMein nächster Schritt\nJetzt\nBild\nDanach\nSilbe\nIch schaue.\n1\nBild\nBild anschauen: Wir finden zuerst Bedeutung.\n2\nSilbe\nSilbe sprechen: Wir hören den Klang.\n3\nWort\nWort lesen: Wir verbinden Klang und Zeichen.\n4\nSatz\nKurzer Satz: Wir lesen, was passiert.\n5\nMini-Geschichte\nMini-Geschichte: Wir verstehen eine kleine Szene.\n6\nSchreibbrücke\nSchreibbrücke: Nur wenn es heute passt, legen oder spuren wir ein Wort.\nBild\n→\nMa\nma\n→\nMama\n→\nMama ist da.\n→\nMama ist da\n→\nSchreibbrücke\nSCHRITTKARTE MAMA\n1 von 6\nBild\nBild anschauen. Wort zeigen.\nWeiter\nNochmal ruhig\nFOKUSSPIEL\nWortpost\nEine große Wortkarte geht zur passenden Symbolkarte. Antippen reicht. Ohne Bewertung, ohne Uhr.\nWortpost starten\nZur Lehrkraft\nWenn möglich, öffnet sich der ganze Bildschirm.",
+      "buttons": [
+        {
+          "text": "",
+          "x": 48,
+          "y": 800,
+          "w": 294,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Wortpost starten",
+          "x": 99,
+          "y": 188,
+          "w": 192,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Zur Lehrkraft",
+          "x": 99,
+          "y": 266,
+          "w": 192,
+          "h": 72,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "label": "wortpost-choices-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 1181,
+      "smallButtons": [],
+      "offscreenButtons": [],
+      "visibleText": "LESELEITER\nHeute lesen wir so\nlokal\nMein Leseweg\nJetzt lesen: Bild\nDanach: Silbe\nBild\nSilbe\nWort\nSatz\nMini-Geschichte\nSchreibbrücke\nMein nächster Schritt\nJetzt\nBild\nDanach\nSilbe\nIch schaue.\n1\nBild\nBild anschauen: Wir finden zuerst Bedeutung.\n2\nSilbe\nSilbe sprechen: Wir hören den Klang.\n3\nWort\nWort lesen: Wir verbinden Klang und Zeichen.\n4\nSatz\nKurzer Satz: Wir lesen, was passiert.\n5\nMini-Geschichte\nMini-Geschichte: Wir verstehen eine kleine Szene.\n6\nSchreibbrücke\nSchreibbrücke: Nur wenn es heute passt, legen oder spuren wir ein Wort.\nBild\n→\nMa\nma\n→\nMama\n→\nMama ist da.\n→\nMama ist da\n→\nSchreibbrücke\nGANZER BILDSCHIRM\nWortpost\nZur Lehrkraft\nPost 1 von 3\n✉\nPost 1\n✉\nPost 2\n✉\nPost 3\nPostweg\nLesegarten\nWORTKARTE\nMama\nMa\nma\n✉\n1 Symbol ansehen\n2 Silben hören\n3 Wort zum Postfach\nSprich die Silbe leise mit. Dann waehle.\nWohin geht die Wortpost?\nSilben zeigen\nWeniger Auswahl\nVormachen\nKleine Auswahl\nSilben sichtbar\nGebärde / Vormachen\nPOSTFACH\n♡\neine vertraute Person\nlokale Symbolhilfe\nMama\nPOSTFACH\n◐\nMond am Himmel\nlokale Symbolhilfe\nMond",
+      "buttons": [
+        {
+          "text": "Zur Lehrkraft",
+          "x": 28,
+          "y": 101,
+          "w": 334,
+          "h": 56,
+          "visible": true
+        }
+      ]
+    }
+  ]
+}

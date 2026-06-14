@@ -118,9 +118,9 @@ describe("AI stock radar CEO control", () => {
     fs.mkdirSync(path.join(root, "projects/ai-stock-radar/prompts"), { recursive: true });
     fs.mkdirSync(path.join(root, "reports/ai-stock-radar"), { recursive: true });
     fs.mkdirSync(path.join(root, "scripts"), { recursive: true });
-    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\nPaper Portfolio\nAdvanced Signal Stack\nThesis Intelligence\nAlpha Memory\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\nPaper Portfolio\nAdvanced Signal Stack\nThesis Intelligence\nAlpha Memory\nPotential Candidate Board\n");
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\nPaper Portfolio Summary\nAdvanced Signal Summary\nThesis Intelligence Summary\nAlpha Memory Summary\n");
-    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-radar-2026-05-30.md"), "## Idea Grade\n## Price/Volume Confirmation\n## Evidence Firewall\n## CEO Control\n## Advanced Signal Stack\n## Thesis Intelligence\n## Alpha Memory\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-radar-2026-05-30.md"), "## Idea Grade\n## Price/Volume Confirmation\n## Evidence Firewall\n## CEO Control\n## Advanced Signal Stack\n## Thesis Intelligence\n## Alpha Memory\n## Potential Candidate Board\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n## Paper Portfolio Summary\n## Advanced Signal Summary\n## Thesis Intelligence Summary\n## Alpha Memory Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"), "# AI Stock Radar Shadow Backtest\n## 30-Day Calibration\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-paper-portfolio-2026-05-30.md"), "# AI Stock Radar Paper Portfolio\n## Entry Readiness\n");
@@ -158,14 +158,52 @@ describe("AI stock radar CEO control", () => {
     expect(audit.checks.find((check) => check.id === "alpha_memory_artifacts")).toMatchObject({ status: "pass" });
   });
 
-  it("writes a safe integration audit report", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-ceo-audit-write-"));
+  it("fails the daily audit when the potential candidate board is missing", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-ceo-audit-potential-board-"));
     fs.mkdirSync(path.join(root, "projects/ai-stock-radar/prompts"), { recursive: true });
     fs.mkdirSync(path.join(root, "reports/ai-stock-radar"), { recursive: true });
     fs.mkdirSync(path.join(root, "scripts"), { recursive: true });
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\nPaper Portfolio\nAdvanced Signal Stack\nThesis Intelligence\nAlpha Memory\n");
     fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\nPaper Portfolio Summary\nAdvanced Signal Summary\nThesis Intelligence Summary\nAlpha Memory Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-radar-2026-05-30.md"), "## Idea Grade\n## Price/Volume Confirmation\n## Evidence Firewall\n## CEO Control\n## Advanced Signal Stack\n## Thesis Intelligence\n## Alpha Memory\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n## Paper Portfolio Summary\n## Advanced Signal Summary\n## Thesis Intelligence Summary\n## Alpha Memory Summary\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"), "# AI Stock Radar Shadow Backtest\n## 30-Day Calibration\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-paper-portfolio-2026-05-30.md"), "# AI Stock Radar Paper Portfolio\n## Entry Readiness\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-advanced-signals-2026-05-30.md"), "# AI Stock Radar Advanced Signals\n## Banger Score\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-thesis-intelligence-2026-05-30.md"), "# AI Stock Radar Thesis Intelligence\n## Thesis Verdicts\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-alpha-memory-2026-05-30.md"), "# AI Stock Radar Alpha Memory\n## Hypothesis Memory\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/shadow-backtest-ledger.json"), JSON.stringify({ version: 1, snapshots: [] }));
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/paper-portfolio.json"), JSON.stringify({ version: 1, positions: [] }));
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/alpha-memory.json"), JSON.stringify({ version: 1, snapshots: [], assessments: [] }));
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-idea-grade.mjs"), "assignIdeaGrade");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-evidence-firewall.mjs"), "applyEvidenceFirewall");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-shadow-backtest.mjs"), "writeShadowBacktestRun");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-paper-portfolio.mjs"), "writePaperPortfolioRun");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-advanced-signals.mjs"), "writeAdvancedSignalsRun");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-thesis-intelligence.mjs"), "writeThesisIntelligenceRun");
+    fs.writeFileSync(path.join(root, "scripts/ai-stock-radar-alpha-memory.mjs"), "writeAlphaMemoryRun");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/watchlist.json"), JSON.stringify({
+      version: 1,
+      updated_at: "2026-05-30",
+      provider_status: { market_data: "free_price_data_unavailable", filings: "available", news: "public_sources_only" },
+      candidates: [applyAlphaMemorySignal(applyThesisIntelligence(applyAdvancedSignals(applyEntryReadiness(applyCeoControl(candidate(), loadRiskProfile({ root: process.cwd() }))))))]
+    }));
+
+    const audit = buildIntegrationAudit({ root, date: "2026-05-30" });
+
+    expect(audit.status).toBe("fail");
+    expect(audit.checks.find((check) => check.id === "daily_prompt_sections").missing).toContain("Potential Candidate Board");
+    expect(audit.checks.find((check) => check.id === "daily_report_sections").missing).toContain("## Potential Candidate Board");
+  });
+
+  it("writes a safe integration audit report", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "ai-stock-ceo-audit-write-"));
+    fs.mkdirSync(path.join(root, "projects/ai-stock-radar/prompts"), { recursive: true });
+    fs.mkdirSync(path.join(root, "reports/ai-stock-radar"), { recursive: true });
+    fs.mkdirSync(path.join(root, "scripts"), { recursive: true });
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/daily.md"), "Idea Grade\nPrice/Volume Confirmation\nEvidence Firewall\nCEO Control\nShadow Backtest\nPaper Portfolio\nAdvanced Signal Stack\nThesis Intelligence\nAlpha Memory\nPotential Candidate Board\n");
+    fs.writeFileSync(path.join(root, "projects/ai-stock-radar/prompts/weekly.md"), "Grade Summary\nFirewall Summary\nCEO Control Summary\nFalse Positive Memory\nShadow Backtest Summary\nPaper Portfolio Summary\nAdvanced Signal Summary\nThesis Intelligence Summary\nAlpha Memory Summary\n");
+    fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-radar-2026-05-30.md"), "## Idea Grade\n## Price/Volume Confirmation\n## Evidence Firewall\n## CEO Control\n## Advanced Signal Stack\n## Thesis Intelligence\n## Alpha Memory\n## Potential Candidate Board\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-deepdive-2026-05-31.md"), "## Grade Summary\n## Firewall Summary\n## CEO Control Summary\n## False Positive Memory\n## Shadow Backtest Summary\n## Paper Portfolio Summary\n## Advanced Signal Summary\n## Thesis Intelligence Summary\n## Alpha Memory Summary\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-shadow-backtest-2026-05-30.md"), "# AI Stock Radar Shadow Backtest\n## 30-Day Calibration\n");
     fs.writeFileSync(path.join(root, "reports/ai-stock-radar/ai-stock-paper-portfolio-2026-05-30.md"), "# AI Stock Radar Paper Portfolio\n## Entry Readiness\n");

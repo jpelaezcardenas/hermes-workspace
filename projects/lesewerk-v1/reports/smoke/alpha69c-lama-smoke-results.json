@@ -1,0 +1,348 @@
+{
+  "desktop": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau das Lama an.",
+      "orientation": [
+        "Lama",
+        "1 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-desktop-01-bild.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: La - ma.",
+      "orientation": [
+        "Lama",
+        "2 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-desktop-02-silben.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Lama.",
+      "orientation": [
+        "Lama",
+        "3 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-desktop-03-wort.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Das Lama ist da.",
+      "orientation": [
+        "Lama",
+        "4 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Das",
+        "Lama",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "La",
+        "ma"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-desktop-04-satz.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Das Lama ist da. Was passt?",
+      "orientation": [
+        "Lama",
+        "5 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Das Lama ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-desktop-05-verstehen.png"
+    }
+  ],
+  "mobile": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau das Lama an.",
+      "orientation": [
+        "Lama",
+        "1 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-mobile-01-bild.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: La - ma.",
+      "orientation": [
+        "Lama",
+        "2 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-mobile-02-silben.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Lama.",
+      "orientation": [
+        "Lama",
+        "3 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-mobile-03-wort.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Das Lama ist da.",
+      "orientation": [
+        "Lama",
+        "4 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Das",
+        "Lama",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "La",
+        "ma"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-mobile-04-satz.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Das Lama ist da. Was passt?",
+      "orientation": [
+        "Lama",
+        "5 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Das Lama ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69c-lama-mobile-05-verstehen.png"
+    }
+  ]
+}

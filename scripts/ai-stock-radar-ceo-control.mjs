@@ -297,7 +297,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       id: "daily_prompt_sections",
       filePath: dailyPromptPath,
       text: readIfExists(dailyPromptPath),
-      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio", "Advanced Signal Stack", "Thesis Intelligence", "Alpha Memory"],
+      required: ["Idea Grade", "Price/Volume Confirmation", "Evidence Firewall", "CEO Control", "Shadow Backtest", "Paper Portfolio", "Advanced Signal Stack", "Thesis Intelligence", "Alpha Memory", "Potential Candidate Board"],
     }),
     checkContains({
       id: "weekly_prompt_sections",
@@ -309,7 +309,7 @@ export function buildIntegrationAudit({ root = process.cwd(), date = new Date().
       id: "daily_report_sections",
       filePath: dailyReportPath,
       text: readIfExists(dailyReportPath),
-      required: ["## Idea Grade", "## Price/Volume Confirmation", "## Evidence Firewall", "## CEO Control", "## Advanced Signal Stack", "## Thesis Intelligence", "## Alpha Memory"],
+      required: ["## Idea Grade", "## Price/Volume Confirmation", "## Evidence Firewall", "## CEO Control", "## Advanced Signal Stack", "## Thesis Intelligence", "## Alpha Memory", "## Potential Candidate Board"],
     }),
     checkContains({
       id: "weekly_report_sections",

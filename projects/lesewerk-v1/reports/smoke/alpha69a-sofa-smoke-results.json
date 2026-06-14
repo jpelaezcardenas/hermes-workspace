@@ -1,0 +1,348 @@
+{
+  "desktop": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau das Sofa an.",
+      "orientation": [
+        "Sofa",
+        "1 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-desktop-01-bild.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: So - fa.",
+      "orientation": [
+        "Sofa",
+        "2 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-desktop-02-silben.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Sofa.",
+      "orientation": [
+        "Sofa",
+        "3 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-desktop-03-wort.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Das Sofa ist da.",
+      "orientation": [
+        "Sofa",
+        "4 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Das",
+        "Sofa",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "So",
+        "fa"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-desktop-04-satz.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Das Sofa ist da. Was passt?",
+      "orientation": [
+        "Sofa",
+        "5 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Das Sofa ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-desktop-05-verstehen.png"
+    }
+  ],
+  "mobile": [
+    {
+      "layerCue": "Schau.",
+      "layerBadge": "Jetzt: Bild",
+      "active": "Bild",
+      "title": "Schau das Sofa an.",
+      "orientation": [
+        "Sofa",
+        "1 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-mobile-01-bild.png"
+    },
+    {
+      "layerCue": "Lies langsam.",
+      "layerBadge": "Jetzt: Silben",
+      "active": "Silben",
+      "title": "Lies: So - fa.",
+      "orientation": [
+        "Sofa",
+        "2 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-mobile-02-silben.png"
+    },
+    {
+      "layerCue": "Lies ganz.",
+      "layerBadge": "Jetzt: Wort",
+      "active": "Wort",
+      "title": "Lege oder wähle Sofa.",
+      "orientation": [
+        "Sofa",
+        "3 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-mobile-03-wort.png"
+    },
+    {
+      "layerCue": "Lies den Satz.",
+      "layerBadge": "Jetzt: Satz",
+      "active": "Satz",
+      "title": "Lies: Das Sofa ist da.",
+      "orientation": [
+        "Sofa",
+        "4 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [
+        "Das",
+        "Sofa",
+        "ist",
+        "da."
+      ],
+      "syllableTrace": [
+        "So",
+        "fa"
+      ],
+      "choiceCards": [],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Weiter",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-mobile-04-satz.png"
+    },
+    {
+      "layerCue": "Zeig, was passt.",
+      "layerBadge": "Jetzt: Mini-Geschichte",
+      "active": "Mini-Geschichte",
+      "title": "Das Sofa ist da. Was passt?",
+      "orientation": [
+        "Sofa",
+        "5 von 5"
+      ],
+      "path": [
+        "Bild",
+        "Silben",
+        "Wort",
+        "Satz",
+        "Mini-Geschichte"
+      ],
+      "wordTiles": [],
+      "syllableTrace": [],
+      "choiceCards": [
+        "Das Sofa ist da",
+        "Da ist Licht"
+      ],
+      "actionButtons": [
+        "Nochmal",
+        "Hilfe",
+        "Fertig",
+        "Zur Lehrkraft"
+      ],
+      "teacherExit": true,
+      "unsafe": false,
+      "overflow": false,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "screenshot": "/Users/zondrius/hermes-workspace/projects/lesewerk-v1/reports/smoke/alpha69a-sofa-mobile-05-verstehen.png"
+    }
+  ]
+}

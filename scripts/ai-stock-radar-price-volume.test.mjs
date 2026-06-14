@@ -50,4 +50,14 @@ describe("AI stock radar price/volume sensor", () => {
     expect(result.status).toBe("unavailable");
     expect(result.source).toBe("stooq");
   });
+
+  it("explains when Stooq requires an API key or captcha before CSV access", async () => {
+    const result = await fetchStooqPriceVolume({
+      ticker: "PLTR",
+      fetcher: async () => "Get your apikey:\n1. Open https://stooq.com/q/d/?s=pltr.us&get_apikey",
+    });
+
+    expect(result.status).toBe("unavailable");
+    expect(result.reason).toBe("stooq_api_key_required");
+  });
 });

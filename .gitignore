@@ -141,6 +141,15 @@ workspace-final-markdown-review.md
 
 # Local sibling projects (do not ship)
 skills-bundle/
+hermes-webui/
+integration-tests/
+projects/github-rising-2026-05-13/sandbox/react-doctor/.mise-data/
+projects/github-rising-2026-05-13/sandbox/react-doctor/.npm-cache/
+projects/github-rising-2026-05-13/sandbox/react-doctor/.npm-cache-node22/
+projects/github-rising-2026-05-13/sandbox/react-doctor/react-doctor-repo/
+**/.mise-data/
+**/.npm-cache/
+**/.npm-cache-node22/
 
 # Local agent artifacts (audit dumps, temporary playwright scripts)
 .hermes/

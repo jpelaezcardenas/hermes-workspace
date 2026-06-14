@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gartenpost - Prototyp</title>
+  <style>
+    :root {
+      --garden: #dcefc9;
+      --leaf: #42775b;
+      --leaf-dark: #24523b;
+      --path: #f3dfb6;
+      --paper: #fffdf7;
+      --ink: #25362f;
+      --muted: #5f6f68;
+      --sky: #eaf7f4;
+      --focus: #f5c74e;
+      --soft: rgba(37, 54, 47, 0.16);
+      --shadow: 0 16px 38px rgba(39, 73, 56, 0.18);
+      font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, var(--sky) 0%, #f8fbef 48%, var(--garden) 100%);
+      letter-spacing: 0;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px clamp(14px, 3vw, 32px);
+      background: linear-gradient(90deg, var(--leaf-dark), var(--leaf));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(15, 45, 29, 0.22);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .home-pill {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 1.5rem;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.8vw, 2.2rem);
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 0.98rem;
+    }
+
+    .teacher-toggle {
+      min-height: 48px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--leaf-dark);
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(20, 48, 33, 0.22);
+    }
+
+    .stage {
+      position: relative;
+      min-height: calc(100vh - 72px);
+      padding: clamp(14px, 3vw, 34px);
+      overflow: hidden;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 20% -8% -20%;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(246, 226, 184, 0.96) 0 22%, transparent 23%),
+        linear-gradient(90deg, transparent 0 24%, rgba(244, 219, 169, 0.9) 24% 76%, transparent 76%);
+      clip-path: polygon(38% 0, 62% 0, 82% 100%, 18% 100%);
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    .stage::after {
+      content: "Symbolplatzhalter: einfache lokale Emoji-/Textzeichen, keine externen Assets";
+      position: absolute;
+      right: 18px;
+      bottom: 10px;
+      color: rgba(37, 54, 47, 0.56);
+      font-size: 0.78rem;
+      max-width: min(420px, calc(100vw - 36px));
+      text-align: right;
+    }
+
+    .play-space {
+      position: relative;
+      z-index: 1;
+      min-height: calc(100vh - 140px);
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(270px, 440px);
+      align-items: center;
+      gap: clamp(18px, 4vw, 52px);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .card-zone {
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+    }
+
+    .instruction {
+      margin: 0;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255, 253, 247, 0.86);
+      color: var(--leaf-dark);
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(56, 92, 70, 0.12);
+      text-align: center;
+    }
+
+    .postcard {
+      width: min(420px, 82vw);
+      min-height: 300px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      justify-items: center;
+      padding: clamp(18px, 3vw, 30px);
+      border: 5px solid #ffffff;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.1)),
+        var(--paper);
+      box-shadow: var(--shadow);
+      transform: translateY(0) scale(1);
+      transition: transform 260ms ease, box-shadow 260ms ease, outline 160ms ease;
+      position: relative;
+    }
+
+    .postcard::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 2px dashed rgba(66, 119, 91, 0.22);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    .postcard.selected {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 22px 52px rgba(39, 73, 56, 0.24);
+      outline: 6px solid rgba(245, 199, 78, 0.48);
+    }
+
+    .postcard.flying {
+      animation: fly-card 900ms ease-in-out;
+    }
+
+    @keyframes fly-card {
+      0% { transform: translateY(-8px) scale(1.03); }
+      45% { transform: translate(70px, -22px) rotate(2deg) scale(0.95); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    .card-symbol {
+      width: min(180px, 42vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--card-color, #f6d66f);
+      font-size: clamp(4.8rem, 14vw, 7.2rem);
+      box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .card-word {
+      position: relative;
+      margin: 12px 0 0;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .mailboxes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-content: center;
+    }
+
+    .mailbox {
+      min-height: 116px;
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.94);
+      color: var(--ink);
+      box-shadow: 0 12px 28px rgba(48, 82, 62, 0.16);
+      border: 4px solid transparent;
+      text-align: left;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .mailbox:focus-visible,
+    .postcard:focus-visible,
+    .action-btn:focus-visible,
+    .help-choice:focus-visible,
+    .teacher-toggle:focus-visible {
+      outline: 5px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .mailbox:hover,
+    .mailbox.hint {
+      transform: translateY(-3px);
+      border-color: rgba(245, 199, 78, 0.88);
+    }
+
+    .mailbox.arrived {
+      border-color: var(--box-color);
+      box-shadow: 0 0 0 8px rgba(245, 199, 78, 0.24), 0 18px 32px rgba(48, 82, 62, 0.18);
+    }
+
+    .box-icon {
+      height: 86px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--box-color);
+      color: #fff;
+      font-size: 3.2rem;
+      box-shadow: inset 0 -9px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .box-copy strong {
+      display: block;
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      line-height: 1.05;
+    }
+
+    .box-copy span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.2;
+    }
+
+    .actions {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: -6px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .action-btn {
+      min-height: 68px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: clamp(1.05rem, 3vw, 1.45rem);
+      font-weight: 900;
+      box-shadow: 0 12px 24px rgba(37, 54, 47, 0.16);
+    }
+
+    .again {
+      background: #5176a3;
+    }
+
+    .help {
+      background: #b66a35;
+    }
+
+    .done {
+      background: #3f7a55;
+    }
+
+    .help-options {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 12px auto 0;
+      display: none;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .help-options.open {
+      display: grid;
+    }
+
+    .help-choice {
+      min-height: 82px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: clamp(1.05rem, 3vw, 1.42rem);
+      font-weight: 900;
+      box-shadow: 0 12px 24px rgba(37, 54, 47, 0.16);
+    }
+
+    .help-less {
+      background: #9a6330;
+    }
+
+    .help-demo {
+      background: #4f83b5;
+    }
+
+    .help-pause {
+      background: #6e638f;
+    }
+
+    .teacher-mode-banner {
+      position: relative;
+      z-index: 2;
+      width: min(900px, 100%);
+      min-height: 58px;
+      margin: 12px auto 0;
+      display: none;
+      place-items: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: #fffdf7;
+      color: var(--leaf-dark);
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 10px 22px rgba(37, 54, 47, 0.14);
+    }
+
+    body.teacher-open .teacher-mode-banner {
+      display: grid;
+    }
+
+    body.teacher-open .play-space,
+    body.teacher-open .actions,
+    body.teacher-open .help-options {
+      opacity: 0.42;
+      filter: grayscale(0.18);
+    }
+
+    body.teacher-open .postcard,
+    body.teacher-open .mailbox,
+    body.teacher-open .action-btn,
+    body.teacher-open .help-choice {
+      cursor: default;
+    }
+
+    button:disabled {
+      cursor: default;
+    }
+
+    .feedback {
+      position: fixed;
+      left: 50%;
+      bottom: 96px;
+      z-index: 5;
+      width: min(560px, calc(100vw - 28px));
+      min-height: 68px;
+      display: grid;
+      place-items: center;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: #fffdf7;
+      color: var(--leaf-dark);
+      box-shadow: 0 16px 42px rgba(31, 54, 42, 0.25);
+      font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+      font-weight: 900;
+      text-align: center;
+      transform: translate(-50%, 140px);
+      opacity: 0;
+      transition: transform 280ms ease, opacity 280ms ease;
+      pointer-events: none;
+    }
+
+    .feedback.show {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+
+    .teacher-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 9;
+      width: min(420px, 94vw);
+      height: 100vh;
+      padding: 18px;
+      background: #fffdf7;
+      box-shadow: -20px 0 50px rgba(22, 38, 30, 0.24);
+      transform: translateX(104%);
+      transition: transform 240ms ease;
+      overflow: auto;
+    }
+
+    .teacher-panel.open {
+      transform: translateX(0);
+    }
+
+    .teacher-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .teacher-head h2 {
+      margin: 0;
+      color: var(--leaf-dark);
+      font-size: 1.45rem;
+    }
+
+    .close-panel {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #e5efe4;
+      color: var(--leaf-dark);
+      font-size: 1.4rem;
+      font-weight: 900;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin: 14px 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .field select,
+    .field input {
+      width: 100%;
+      min-height: 44px;
+      border: 2px solid #d7e1d4;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+    }
+
+    .teacher-note {
+      padding: 12px;
+      border-radius: 8px;
+      background: #edf6e9;
+      color: var(--leaf-dark);
+      line-height: 1.4;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 8;
+      display: none;
+      background: rgba(25, 43, 33, 0.24);
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        transition-duration: 1ms !important;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .teacher-toggle {
+        padding: 0 12px;
+      }
+
+      .play-space {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 18px;
+      }
+
+      .postcard {
+        min-height: 250px;
+      }
+
+      .mailboxes {
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .stage {
+        padding: 12px 12px 46px;
+      }
+
+      .topbar {
+        min-height: 64px;
+        padding: 10px 12px;
+      }
+
+      .home-pill {
+        width: 42px;
+        height: 42px;
+      }
+
+      .brand h1 {
+        font-size: 1.22rem;
+      }
+
+      .teacher-toggle {
+        min-height: 42px;
+        font-size: 0.9rem;
+      }
+
+      .mailbox {
+        grid-template-columns: 76px 1fr;
+        min-height: 100px;
+        gap: 10px;
+      }
+
+      .box-icon {
+        height: 72px;
+        font-size: 2.6rem;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .help-options {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .action-btn {
+        min-height: 58px;
+      }
+
+      .help-choice {
+        min-height: 62px;
+      }
+
+      .feedback {
+        bottom: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand" aria-label="Gartenpost Spielraum">
+        <div class="home-pill" aria-hidden="true">⌂</div>
+        <div>
+          <h1>Gartenpost</h1>
+          <p>Bring die Karte zum Briefkasten.</p>
+        </div>
+      </div>
+      <button class="teacher-toggle" type="button" aria-controls="teacherPanel" aria-expanded="false">
+        Beobachtung
+      </button>
+    </header>
+
+    <main class="stage">
+      <section class="play-space" aria-label="Gartenpost Spiel">
+        <div class="card-zone">
+          <p class="instruction" id="instruction">Tippe die Karte an.</p>
+          <button class="postcard" id="postcard" type="button" aria-label="Bildkarte Blume antippen">
+            <span class="card-symbol" id="cardSymbol" aria-hidden="true">🌼</span>
+            <span class="card-word" id="cardWord">Blume</span>
+          </button>
+        </div>
+
+        <div class="mailboxes" id="mailboxes" aria-label="Briefkästen"></div>
+      </section>
+
+      <nav class="actions" aria-label="Spielaktionen">
+        <button class="action-btn again" id="againBtn" type="button">Nochmal</button>
+        <button class="action-btn help" id="helpBtn" type="button">Hilfe</button>
+        <button class="action-btn done" id="doneBtn" type="button">Fertig</button>
+      </nav>
+
+      <section class="help-options" id="helpOptions" aria-label="Hilfen" aria-hidden="true">
+        <button class="help-choice help-less" type="button" data-help="less">Weniger</button>
+        <button class="help-choice help-demo" type="button" data-help="demo">Zeig es mir</button>
+        <button class="help-choice help-pause" type="button" data-help="pause">Pause</button>
+      </section>
+
+      <p class="teacher-mode-banner" id="teacherModeBanner">Lehrkraftmodus: Spiel pausiert.</p>
+    </main>
+  </div>
+
+  <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="teacher-panel" id="teacherPanel" aria-label="Lehrkraftbereich" aria-hidden="true">
+    <div class="teacher-head">
+      <h2>Beobachtung</h2>
+      <button class="close-panel" id="closePanel" type="button" aria-label="Beobachtung schließen">×</button>
+    </div>
+
+    <div class="field">
+      <label for="levelSelect">Level</label>
+      <select id="levelSelect">
+        <option value="A">A - entdecken, 2 Briefkästen</option>
+        <option value="B" selected>B - zuordnen, 3 Briefkästen</option>
+        <option value="C">C - benennen, 4 Briefkästen</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="supportSelect">Hilfegrad</label>
+      <select id="supportSelect">
+        <option>ohne Hilfe</option>
+        <option>Wartezeit</option>
+        <option>verbaler Hinweis</option>
+        <option>Zeigen/Geste</option>
+        <option>Bild/Symbol</option>
+        <option>Vormachen</option>
+        <option>Materialstruktur</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="communicationSelect">Kommunikationsform</label>
+      <select id="communicationSelect">
+        <option>Blick</option>
+        <option>Zeigen</option>
+        <option selected>Antippen</option>
+        <option>Laut/Sprache</option>
+        <option>Gebärde</option>
+        <option>Talker/Symbol</option>
+        <option>Ja/Nein</option>
+        <option>Pause angezeigt</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="ratingInput">Situative Einschätzung 1-10</label>
+      <input id="ratingInput" type="range" min="1" max="10" value="5">
+    </div>
+
+    <div class="teacher-note">
+      <strong>Nächster kleiner Schritt:</strong>
+      <p id="teacherNextStep">Gleiche Aufgabe wiederholen und längere Wartezeit vor dem Hinweis geben.</p>
+    </div>
+
+    <div class="teacher-note">
+      <strong>Datenschutz:</strong>
+      <p>Keine echten Namen, keine Diagnose, keine Speicherung. Die 1-10-Einschätzung bleibt nur hier im Lehrkraftbereich.</p>
+    </div>
+  </aside>
+
+  <script>
+    const categories = [
+      { id: "garden", label: "Garten", hint: "Blume und Pflanze", icon: "🌼", color: "#5f9f69" },
+      { id: "animal", label: "Tier", hint: "Hund und Katze", icon: "🐕", color: "#7a6bb0" },
+      { id: "food", label: "Essen", hint: "Apfel und Brot", icon: "🍎", color: "#cc6a4a" },
+      { id: "play", label: "Spiel", hint: "Ball und Spielzeug", icon: "⚽", color: "#4f83b5" }
+    ];
+
+    const cards = [
+      { word: "Blume", icon: "🌼", target: "garden", color: "#f2cd55" },
+      { word: "Apfel", icon: "🍎", target: "food", color: "#e78870" },
+      { word: "Hund", icon: "🐕", target: "animal", color: "#a593d6" },
+      { word: "Ball", icon: "⚽", target: "play", color: "#86b6df" }
+    ];
+
+    const state = {
+      level: "B",
+      cardIndex: 0,
+      selected: false,
+      reduced: false,
+      busy: false,
+      helpOpen: false,
+      teacherOpen: false,
+      nextCardDelay: null
+    };
+
+    const postcard = document.getElementById("postcard");
+    const cardSymbol = document.getElementById("cardSymbol");
+    const cardWord = document.getElementById("cardWord");
+    const instruction = document.getElementById("instruction");
+    const mailboxes = document.getElementById("mailboxes");
+    const feedback = document.getElementById("feedback");
+    const againBtn = document.getElementById("againBtn");
+    const helpBtn = document.getElementById("helpBtn");
+    const doneBtn = document.getElementById("doneBtn");
+    const helpOptions = document.getElementById("helpOptions");
+    const teacherPanel = document.getElementById("teacherPanel");
+    const overlay = document.getElementById("overlay");
+    const teacherToggle = document.querySelector(".teacher-toggle");
+    const levelSelect = document.getElementById("levelSelect");
+    const teacherNextStep = document.getElementById("teacherNextStep");
+
+    function currentCard() {
+      return cards[state.cardIndex % cards.length];
+    }
+
+    function visibleCategories() {
+      const target = categories.find((category) => category.id === currentCard().target);
+      const others = categories.filter((category) => category.id !== target.id);
+      const count = state.reduced || state.level === "A" ? 2 : state.level === "C" ? 4 : 3;
+      return [target, ...others].slice(0, count).sort((a, b) => a.label.localeCompare(b.label));
+    }
+
+    function renderCard() {
+      const card = currentCard();
+      cardSymbol.textContent = card.icon;
+      cardWord.textContent = card.word;
+      cardSymbol.style.setProperty("--card-color", card.color);
+      postcard.setAttribute("aria-label", `Bildkarte ${card.word} antippen`);
+    }
+
+    function renderMailboxes() {
+      mailboxes.innerHTML = "";
+      visibleCategories().forEach((category) => {
+        const button = document.createElement("button");
+        button.className = "mailbox";
+        button.type = "button";
+        button.dataset.target = category.id;
+        button.style.setProperty("--box-color", category.color);
+        button.innerHTML = `
+          <span class="box-icon" aria-hidden="true">${category.icon}</span>
+          <span class="box-copy">
+            <strong>${category.label}</strong>
+            <span>${category.hint}</span>
+          </span>
+        `;
+        button.addEventListener("click", () => deliverTo(category.id, button));
+        if (state.teacherOpen) button.disabled = true;
+        mailboxes.appendChild(button);
+      });
+    }
+
+    function showFeedback(message, duration = 1800) {
+      feedback.textContent = message;
+      feedback.classList.add("show");
+      window.clearTimeout(showFeedback.timer);
+      showFeedback.timer = window.setTimeout(() => feedback.classList.remove("show"), duration);
+    }
+
+    function clearNextCardDelay() {
+      window.clearTimeout(state.nextCardDelay);
+      state.nextCardDelay = null;
+    }
+
+    function selectCard() {
+      if (state.busy || state.teacherOpen) return;
+      closeHelpOptions();
+      state.selected = true;
+      postcard.classList.add("selected");
+      instruction.textContent = "Tippe einen Briefkasten an.";
+      showFeedback("Du hast gewählt.", 1200);
+    }
+
+    function deliverTo(targetId, element) {
+      if (state.busy || state.teacherOpen) return;
+      closeHelpOptions();
+      if (!state.selected) {
+        selectCard();
+        return;
+      }
+
+      const card = currentCard();
+      state.busy = true;
+      postcard.classList.add("flying");
+
+      window.setTimeout(() => {
+        postcard.classList.remove("flying", "selected");
+        document.querySelectorAll(".mailbox").forEach((box) => box.classList.remove("arrived", "hint"));
+        element.classList.add("arrived");
+
+        if (targetId === card.target) {
+          showFeedback("Die Karte ist angekommen.");
+          teacherNextStep.textContent = "Gleiche Aufgabe wiederholen oder mit realer Bildkarte parallel zeigen.";
+          clearNextCardDelay();
+          state.nextCardDelay = window.setTimeout(nextCard, 1150);
+        } else {
+          showFeedback("Schau noch einmal. Ich zeige dir zwei Möglichkeiten.", 2300);
+          state.reduced = true;
+          renderMailboxes();
+          highlightTarget();
+          teacherNextStep.textContent = "Auswahl reduzieren und mit Zeigegeste oder Symbolhinweis wiederholen.";
+        }
+
+        state.selected = false;
+        state.busy = false;
+        instruction.textContent = "Tippe die Karte an.";
+      }, 850);
+    }
+
+    function nextCard() {
+      clearNextCardDelay();
+      state.cardIndex += 1;
+      state.reduced = false;
+      state.selected = false;
+      renderCard();
+      renderMailboxes();
+      instruction.textContent = "Tippe die Karte an.";
+    }
+
+    function resetRound() {
+      state.selected = false;
+      state.reduced = false;
+      state.busy = false;
+      clearNextCardDelay();
+      closeHelpOptions();
+      postcard.classList.remove("selected", "flying");
+      renderCard();
+      renderMailboxes();
+      instruction.textContent = "Tippe die Karte an.";
+      showFeedback("Wir probieren es noch einmal.");
+    }
+
+    function highlightTarget() {
+      const card = currentCard();
+      document.querySelectorAll(".mailbox").forEach((box) => {
+        if (box.dataset.target === card.target) box.classList.add("hint");
+      });
+    }
+
+    function openHelpOptions() {
+      if (state.busy || state.teacherOpen) return;
+      state.helpOpen = true;
+      helpOptions.classList.add("open");
+      helpOptions.setAttribute("aria-hidden", "false");
+      instruction.textContent = "Wähle eine Hilfe.";
+      showFeedback("Hilfe ist da.", 1200);
+    }
+
+    function closeHelpOptions() {
+      state.helpOpen = false;
+      helpOptions.classList.remove("open");
+      helpOptions.setAttribute("aria-hidden", "true");
+    }
+
+    function useLessHelp() {
+      closeHelpOptions();
+      state.reduced = true;
+      renderMailboxes();
+      highlightTarget();
+      instruction.textContent = "Tippe die Karte an.";
+      showFeedback("Weniger Briefkästen. Schau in Ruhe.");
+      teacherNextStep.textContent = "Auswahl erst reduziert anbieten, dann wieder erweitern.";
+    }
+
+    function showDemo() {
+      if (state.busy || state.teacherOpen) return;
+      closeHelpOptions();
+      state.reduced = true;
+      renderMailboxes();
+      highlightTarget();
+      state.selected = true;
+      postcard.classList.add("selected");
+      instruction.textContent = "Ich zeige es langsam.";
+      showFeedback("Ich zeige es dir langsam.", 1500);
+      teacherNextStep.textContent = "Vormachen anbieten, danach dieselbe Aufgabe noch einmal ruhig wiederholen.";
+      const targetBox = [...document.querySelectorAll(".mailbox")]
+        .find((box) => box.dataset.target === currentCard().target);
+      if (targetBox) {
+        window.setTimeout(() => deliverTo(currentCard().target, targetBox), 950);
+      }
+    }
+
+    function useHelp() {
+      if (state.helpOpen) {
+        closeHelpOptions();
+        instruction.textContent = "Tippe die Karte an.";
+        return;
+      }
+      openHelpOptions();
+    }
+
+    function finishRound() {
+      closeHelpOptions();
+      clearNextCardDelay();
+      state.selected = false;
+      postcard.classList.remove("selected");
+      instruction.textContent = "Pause ist okay.";
+      showFeedback("Fertig zeigen. Pause ist okay.", 2600);
+      teacherNextStep.textContent = "Abschluss akzeptieren und später mit gleicher Struktur neu anbieten.";
+    }
+
+    function setGamePaused(paused) {
+      state.teacherOpen = paused;
+      document.body.classList.toggle("teacher-open", paused);
+      [postcard, againBtn, helpBtn, doneBtn, ...document.querySelectorAll(".mailbox"), ...document.querySelectorAll(".help-choice")]
+        .forEach((button) => {
+          button.disabled = paused;
+          button.setAttribute("aria-disabled", paused ? "true" : "false");
+        });
+    }
+
+    function handleHelpChoice(type) {
+      if (type === "less") {
+        useLessHelp();
+        return;
+      }
+
+      if (type === "demo") {
+        showDemo();
+        return;
+      }
+
+      finishRound();
+    }
+
+    function setLevel(level) {
+      state.level = level;
+      state.reduced = false;
+      closeHelpOptions();
+      renderMailboxes();
+      const labels = {
+        A: "Level A: zwei Briefkästen, viel Struktur.",
+        B: "Level B: drei Briefkästen, Symbol im Vordergrund.",
+        C: "Level C: vier Briefkästen, Benennen möglich."
+      };
+      showFeedback(labels[level], 1800);
+    }
+
+    function openTeacherPanel() {
+      closeHelpOptions();
+      setGamePaused(true);
+      teacherPanel.classList.add("open");
+      overlay.classList.add("show");
+      teacherPanel.setAttribute("aria-hidden", "false");
+      teacherToggle.setAttribute("aria-expanded", "true");
+      instruction.textContent = "Spiel pausiert.";
+    }
+
+    function closeTeacherPanel() {
+      teacherPanel.classList.remove("open");
+      overlay.classList.remove("show");
+      teacherPanel.setAttribute("aria-hidden", "true");
+      teacherToggle.setAttribute("aria-expanded", "false");
+      setGamePaused(false);
+      instruction.textContent = "Tippe die Karte an.";
+    }
+
+    postcard.addEventListener("click", selectCard);
+    againBtn.addEventListener("click", resetRound);
+    helpBtn.addEventListener("click", useHelp);
+    doneBtn.addEventListener("click", finishRound);
+    helpOptions.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-help]");
+      if (!button) return;
+      handleHelpChoice(button.dataset.help);
+    });
+    teacherToggle.addEventListener("click", openTeacherPanel);
+    document.getElementById("closePanel").addEventListener("click", closeTeacherPanel);
+    overlay.addEventListener("click", closeTeacherPanel);
+    levelSelect.addEventListener("change", (event) => setLevel(event.target.value));
+
+    renderCard();
+    renderMailboxes();
+  </script>
+</body>
+</html>

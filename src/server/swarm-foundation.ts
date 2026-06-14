@@ -4,6 +4,7 @@ import * as path from 'node:path'
 import * as YAML from 'yaml'
 import { z } from 'zod'
 import { getLocalBinDir, getProfilesDir } from './claude-paths'
+import { parseSwarmCheckpoint } from './swarm-checkpoints'
 
 export const SwarmWorkerStateSchema = z.enum([
   'idle',
@@ -296,6 +297,50 @@ function parsePreviewMetadata(workerId: string, value: unknown): Array<SwarmPrev
     .flatMap((result) => (result.success ? [result.data] : []))
 }
 
+function readLatestSwarmHandoff(workerId: string): { raw: string; updatedAt: number } | null {
+  const profilesDir = getProfilesDir()
+  if (!fs.existsSync(profilesDir)) return null
+  let latest: { raw: string; updatedAt: number } | null = null
+  try {
+    for (const entry of fs.readdirSync(profilesDir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue
+      const handoffPath = path.join(
+        profilesDir,
+        entry.name,
+        'home',
+        '.openclaw',
+        'workspace',
+        'memory',
+        'handoffs',
+        'swarm',
+        `${workerId}-latest.md`,
+      )
+      if (!fs.existsSync(handoffPath)) continue
+      const stat = fs.statSync(handoffPath)
+      if (latest && stat.mtimeMs <= latest.updatedAt) continue
+      latest = { raw: fs.readFileSync(handoffPath, 'utf8'), updatedAt: Math.trunc(stat.mtimeMs) }
+    }
+  } catch {
+    return latest
+  }
+  return latest
+}
+
+function mergeLatestHandoff(
+  workerId: string,
+  raw: Record<string, unknown>,
+): Record<string, unknown> {
+  const handoff = readLatestSwarmHandoff(workerId)
+  if (!handoff) return raw
+  const lastDispatchAt = readNumber(raw.lastDispatchAt)
+  if (lastDispatchAt && handoff.updatedAt + 30_000 < lastDispatchAt) return raw
+  return {
+    ...raw,
+    checkpointRaw: readString(raw.checkpointRaw) ?? handoff.raw,
+    lastOutputAt: readNumber(raw.lastOutputAt) ?? handoff.updatedAt,
+  }
+}
+
 export function deriveSwarmBoundary(
   cwd: string | null,
   workspaceRoot = process.cwd(),
@@ -332,23 +377,36 @@ export function normalizeSwarmRuntime(
   options?: { workspaceRoot?: string },
 ): SwarmRuntime {
   const cwd = readString(raw.cwd)
+  const checkpoint = parseSwarmCheckpoint(
+    readString(raw.checkpointRaw) ?? readString(raw.lastDispatchResult) ?? '',
+  )
+  const checkpointIsTerminal =
+    checkpoint?.checkpointStatus === 'done' ||
+    checkpoint?.checkpointStatus === 'handoff'
+  const checkpointIsHumanAttention =
+    checkpoint?.checkpointStatus === 'blocked' ||
+    checkpoint?.checkpointStatus === 'needs_input'
   const runtime = {
     workerId: readString(raw.workerId) ?? workerId,
     role: readString(raw.role) ?? 'swarm-worker',
-    state: readString(raw.state) ?? 'idle',
-    phase: readString(raw.phase) ?? 'unknown',
-    currentTask: readString(raw.currentTask),
+    state: checkpoint?.runtimeState ?? readString(raw.state) ?? 'idle',
+    phase: checkpoint
+      ? checkpoint.checkpointStatus
+      : readString(raw.phase) ?? 'unknown',
+    currentTask: checkpointIsTerminal ? null : readString(raw.currentTask),
     activeTool: readString(raw.activeTool),
     cwd,
     lastOutputAt: readNumber(raw.lastOutputAt),
     startedAt: readNumber(raw.startedAt),
     lastCheckIn: readString(raw.lastCheckIn),
     lastSummary: readString(raw.lastSummary),
-    needsHuman: readBoolean(raw.needsHuman) ?? false,
-    blockedReason: readString(raw.blockedReason),
-    checkpointStatus: readString(raw.checkpointStatus) ?? 'none',
-    nextAction: readString(raw.nextAction),
-    lastResult: readString(raw.lastResult),
+    needsHuman: checkpointIsHumanAttention || (readBoolean(raw.needsHuman) ?? false),
+    blockedReason: checkpointIsHumanAttention
+      ? checkpoint?.blocker ?? readString(raw.blockedReason)
+      : readString(raw.blockedReason),
+    checkpointStatus: checkpoint?.checkpointStatus ?? readString(raw.checkpointStatus) ?? 'none',
+    nextAction: checkpoint?.nextAction ?? readString(raw.nextAction),
+    lastResult: checkpoint?.result ?? readString(raw.lastResult),
     assignedTaskCount: readNumber(raw.assignedTaskCount) ?? 0,
     cronJobCount: readNumber(raw.cronJobCount) ?? 0,
     sessionId: readString(raw.sessionId),
@@ -381,7 +439,10 @@ export function readSwarmRuntimeFile(
   }
 
   try {
-    const raw = JSON.parse(fs.readFileSync(runtimePath, 'utf8')) as Record<string, unknown>
+    const raw = mergeLatestHandoff(
+      workerId,
+      JSON.parse(fs.readFileSync(runtimePath, 'utf8')) as Record<string, unknown>,
+    )
     return {
       source: 'runtime.json',
       runtime: normalizeSwarmRuntime(workerId, raw, options),

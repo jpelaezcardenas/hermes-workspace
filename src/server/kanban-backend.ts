@@ -72,6 +72,10 @@ function mapDashboardStatusToLane(
   }
 }
 
+function isArchivedKanbanStatus(status: string | null | undefined): boolean {
+  return (status ?? '').toLowerCase() === 'archived'
+}
+
 function mapLaneToDashboardStatus(lane: SwarmKanbanCard['status']): string {
   switch (lane) {
     case 'backlog':
@@ -228,7 +232,9 @@ function readClaudeTasks(): ClaudeTaskRow[] {
   ].join(' ')
   const raw = runSqlite(detection.dbPath, query)
   const parsed = raw ? (JSON.parse(raw) as ClaudeTaskRow[]) : []
-  return Array.isArray(parsed) ? parsed : []
+  return Array.isArray(parsed)
+    ? parsed.filter((task) => !isArchivedKanbanStatus(task.status))
+    : []
 }
 
 function readClaudeTask(taskId: string): ClaudeTaskRow | null {
@@ -435,6 +441,7 @@ const dashboardProxyBackend: KanbanBackend = {
     const cards: SwarmKanbanCard[] = []
     for (const column of board.columns) {
       for (const task of column.tasks) {
+        if (isArchivedKanbanStatus(task.status)) continue
         cards.push(dashboardTaskToCard(task))
       }
     }

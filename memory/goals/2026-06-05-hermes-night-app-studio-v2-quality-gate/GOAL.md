@@ -1,8 +1,11 @@
 # Goal: Hermes Night App Studio v2 Quality Gate
 
-Status: planned
+Status: executed-active
 Date: 2026-06-05
 Owner: Chris / Neva / Codex
+
+Status note 2026-06-08:
+The Night App Studio v2 quality gate is active in the live Hermes cron prompts. The build job now uses repeat brakes, proof gates, score caps and execution-output rules; the briefing job preserves concrete Befehlskarten and no longer repeats conditional pseudo-goals as commands.
 
 ## Objective
 

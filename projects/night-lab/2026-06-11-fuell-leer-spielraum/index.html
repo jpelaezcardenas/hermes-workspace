@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fuell-Leer-Spielraum GE</title>
+  <style>
+    :root{--bg:#f7f1e7;--ink:#25302b;--card:#fffaf0;--accent:#2f7d5c;--accent2:#c56d35;--soft:#e8dcc8;--done:#5d6f86}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#fffaf0,#efe1ca);color:var(--ink)}
+    main{max-width:1050px;margin:0 auto;padding:24px;display:grid;gap:18px}
+    header,.panel{background:rgba(255,250,240,.9);border:2px solid #e0d1b8;border-radius:24px;padding:18px;box-shadow:0 10px 30px rgba(71,54,33,.10)}
+    h1{margin:0 0 6px;font-size:clamp(1.8rem,4vw,3rem)} p{font-size:1.05rem;line-height:1.45}.hint{margin:0;color:#59665f}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.choices{display:flex;gap:12px;flex-wrap:wrap}
+    button{border:0;border-radius:18px;padding:14px 18px;font-weight:800;font-size:1.05rem;cursor:pointer;color:white;background:var(--accent);box-shadow:0 5px 0 #20543f;transition:.15s transform}.choices button:nth-child(2){background:var(--accent2);box-shadow:0 5px 0 #8a4922}.choices button:nth-child(3){background:var(--done);box-shadow:0 5px 0 #3d4b5b}button:active{transform:translateY(4px);box-shadow:0 1px 0 #20543f}
+    .stage{min-height:360px;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:end}.zone{text-align:center;border:3px dashed #c9b99e;border-radius:24px;padding:18px;background:#fffdf6;min-height:280px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.zone h2{position:absolute;top:10px;margin:0;font-size:1.2rem}.bowl{width:180px;height:75px;border-radius:0 0 90px 90px;background:#d7b58a;border:6px solid #8f6842;margin-top:15px}.cup{width:120px;height:160px;border:6px solid #66819a;border-top:10px solid #66819a;border-radius:16px 16px 26px 26px;background:linear-gradient(to top,var(--accent) var(--fill,0%),#eef7f2 var(--fill,0%));position:relative}.cup:after{content:attr(data-label);position:absolute;bottom:-34px;left:0;right:0;font-weight:800}.pieces{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px}.piece{width:38px;height:38px;border-radius:50%;background:#f0b44c;border:4px solid #b87618;display:inline-block}.cardrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.signal{border-radius:18px;background:#fffdf6;border:2px solid #dfd0b7;padding:14px;text-align:center;font-weight:900;font-size:1.15rem}.log{background:#25302b;color:#fffaf0;border-radius:20px;padding:14px;font-size:1rem;min-height:96px}.print{font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap}.flow{font-weight:800;color:#2f7d5c}@media(max-width:760px){.grid,.stage{grid-template-columns:1fr}.cardrow{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Fuell-Leer-Spielraum GE</h1>
+    <p class="hint">Ein lokaler 60-Sekunden-Sichttest fuer die Morgenidee „Mengen fuellen und leeren“: vormachen, mitmachen, fertig markieren. Keine Namen, keine Diagnosen, keine Speicherung.</p>
+  </header>
+  <section class="grid">
+    <div class="panel">
+      <p><b>1-Minuten-Flow:</b> <span class="flow">Fuellen</span> antippen → Teile wandern in den Becher → <span class="flow">Leeren</span> antippen → Teile gehen in die Schale → <span class="flow">Fertig</span> antippen.</p>
+      <div class="choices" aria-label="Aktionen">
+        <button id="fill">Fuellen</button>
+        <button id="empty">Leeren</button>
+        <button id="finish">Fertig</button>
+      </div>
+      <div class="stage" aria-live="polite">
+        <div class="zone"><h2>Schale</h2><div id="bowlPieces" class="pieces"><span class="piece"></span><span class="piece"></span><span class="piece"></span></div><div class="bowl"></div></div>
+        <div class="zone"><h2>Becher</h2><div id="cup" class="cup" data-label="leer" style="--fill:0%"></div><div id="cupPieces" class="pieces"></div></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <h2>UK-Karten danebenlegen</h2>
+      <div class="cardrow"><div class="signal">mehr</div><div class="signal">fertig</div><div class="signal">Hilfe</div><div class="signal">Pause</div></div>
+      <h2>Beobachtungszettel ohne Namen</h2>
+      <div class="log print" id="log">Start: 3 Teile in der Schale. Beobachte nur: Welche Hilfe oeffnet Beteiligung?</div>
+      <p class="hint">Stop-Regel: Bei Unruhe nur eine gemeinsame Handlung und dann „fertig“ zeigen.</p>
+    </aside>
+  </section>
+</main>
+<script>
+let inBowl=3, inCup=0, step=0; const cup=document.getElementById('cup'), bp=document.getElementById('bowlPieces'), cp=document.getElementById('cupPieces'), log=document.getElementById('log');
+function dots(n){return Array.from({length:n},()=>'<span class="piece"></span>').join('')}
+function draw(msg){bp.innerHTML=dots(inBowl); cp.innerHTML=dots(inCup); cup.style.setProperty('--fill', (inCup*30)+'%'); cup.dataset.label=inCup===0?'leer':(inCup+' Teil'+(inCup>1?'e':'')); log.textContent=msg}
+document.getElementById('fill').onclick=()=>{ if(inBowl>0){inBowl--;inCup++;step++;draw('Schritt '+step+': Fuellen vormachen oder gemeinsam fuehren. Danach fragen: mehr oder fertig?')} else draw('Schale ist leer. Jetzt Leeren oder Fertig zeigen.') }
+document.getElementById('empty').onclick=()=>{ if(inCup>0){inCup--;inBowl++;step++;draw('Schritt '+step+': Leeren in die Schale. Sichtbar: Becher wird leer, Schale wird voller.')} else draw('Becher ist schon leer. Erst Fuellen oder Fertig markieren.') }
+document.getElementById('finish').onclick=()=>{ draw('Fertig: Karte zeigen, Material ruhig in der Schale lassen. Mini-Notiz: Hilfe / Handlung / naechster Schritt.') }
+draw(log.textContent)
+</script>
+</body>
+</html>

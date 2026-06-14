@@ -105,12 +105,15 @@ Safety:
 - Name-only AI evidence cannot become Breakout Watch or Deep Dive.
 - Apply quality filters for name_only_ai_watch, offering_watch, going_concern_watch, reverse_split_watch, shell_or_spac_watch, security_structure_watch, and stale candidates.
 - Record quality_notes, score_penalty, status, first_seen, and age_days in watchlist candidates when available.
+- Always include `## Potential Candidate Board` with up to 15 candidates from the current run, including early watch, risk-review, and archive/avoid-review items when they exist.
+- The Potential Candidate Board is a visibility layer only: every line must show grade/category, safe review lane, main risk or data gap, and must not promote candidates past Deep-Dive, Evidence Firewall, CEO Control, Thesis, Alpha Memory, or price/volume gates.
 
 Required report sections:
 # AI Stock Radar - YYYY-MM-DD
 ## Kurzfazit
 ## Marktumfeld
 ## Top Kandidaten Heute
+## Potential Candidate Board
 ## Neue Auffaelligkeiten
 ## Idea Grade
 ## Price/Volume Confirmation

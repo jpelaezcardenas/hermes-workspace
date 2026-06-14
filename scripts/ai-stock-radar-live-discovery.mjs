@@ -226,6 +226,23 @@ function seedMap(seedRecords) {
   return Object.fromEntries((seedRecords || []).map((record) => [record.ticker, record]));
 }
 
+function discoveryPriority(record, seedByTicker) {
+  const seed = seedByTicker[record.ticker] || {};
+  const themes = unique(record.aiProfile?.themes || []);
+  const hasSeed = Boolean(seed.ticker || (seed.themes || []).length || seed.ai_exposure);
+  const substantiveThemes = themes.filter((theme) => theme !== "ai_keyword_match");
+  let priority = 0;
+
+  if (hasSeed) priority += 40;
+  if (record.aiProfile?.ai_exposure === "material") priority += 20;
+  if (record.aiProfile?.ai_exposure === "core") priority += 10;
+  priority += Math.min(24, substantiveThemes.length * 8);
+  if (record.exchange === "Nasdaq" || record.exchange === "NYSE") priority += 4;
+  if (themes.length === 1 && themes[0] === "ai_keyword_match" && !hasSeed) priority -= 18;
+
+  return priority;
+}
+
 async function resolveSubmission({ cik, submissionsByCik, fetcher }) {
   if (submissionsByCik && submissionsByCik[cik]) return submissionsByCik[cik];
   return fetcher(`${SEC_SUBMISSIONS_ROOT}/CIK${cik}.json`);
@@ -248,13 +265,13 @@ export async function buildLiveEvidenceRecords({
   companyFactsByCik = {},
   seedRecords = [],
   fetcher = defaultTextOrJsonFetcher,
-  maxSubmissionFetches = 25,
-  maxRecords = 20,
+  maxSubmissionFetches = 40,
+  maxRecords = 30,
 }) {
   const listed = [...parseNasdaqListed(nasdaqListedText), ...parseOtherListed(otherListedText)];
   const secByTicker = normalizeSecCompanyTickers(secCompanyTickers);
   const seedByTicker = seedMap(seedRecords);
-  const aiCandidates = listed
+  const aiCandidatePool = listed
     .map((record) => ({
       ...record,
       sec: secByTicker[record.ticker],
@@ -266,7 +283,22 @@ export async function buildLiveEvidenceRecords({
       }),
     }))
     .filter((record) => record.sec && record.aiProfile.isAiRelevant)
-    .slice(0, maxSubmissionFetches);
+    .map((record, listedIndex) => ({
+      ...record,
+      listedIndex,
+      discoveryPriority: discoveryPriority(record, seedByTicker),
+    }));
+
+  const selectedTickers = new Set(
+    [...aiCandidatePool]
+      .sort((left, right) =>
+        right.discoveryPriority - left.discoveryPriority ||
+        left.listedIndex - right.listedIndex
+      )
+      .slice(0, maxSubmissionFetches)
+      .map((record) => record.ticker),
+  );
+  const aiCandidates = aiCandidatePool.filter((record) => selectedTickers.has(record.ticker));
 
   const evidence = [];
   for (const record of aiCandidates) {
@@ -315,6 +347,7 @@ export async function buildLiveEvidenceRecords({
       risk_flags: record.aiProfile.risk_flags,
       source_urls: sourceUrls,
       security_name: record.security_name,
+      discovery_priority: record.discoveryPriority,
     };
     const quality = evaluateEvidenceQuality(baseEvidence);
     const firewall = applyEvidenceFirewall({
@@ -363,8 +396,8 @@ async function defaultTextOrJsonFetcher(url) {
 export async function discoverLiveEvidence({
   fetcher = defaultTextOrJsonFetcher,
   seedRecords = [],
-  maxSubmissionFetches = 25,
-  maxRecords = 20,
+  maxSubmissionFetches = 40,
+  maxRecords = 30,
 } = {}) {
   try {
     const [nasdaqListedText, otherListedText, secCompanyTickers] = await Promise.all([

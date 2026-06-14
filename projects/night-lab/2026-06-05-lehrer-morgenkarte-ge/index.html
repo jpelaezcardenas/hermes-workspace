@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lehrer-Morgenkarte GE</title>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#38bdf8; --line:#243042; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: linear-gradient(180deg, #0f172a, #111827 65%); color: var(--text); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
+    .hero { display:grid; gap:16px; grid-template-columns: 1.2fr .8fr; align-items:start; }
+    .panel { background: rgba(17,24,39,.88); border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    h1 { margin:0 0 8px; font-size: clamp(28px, 4vw, 48px); }
+    p { line-height:1.5; margin:.35rem 0; }
+    .muted { color: var(--muted); }
+    .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    label { display:block; font-size: .92rem; margin-bottom: 6px; color: #cbd5e1; }
+    select, input, button, textarea { width:100%; border-radius: 12px; border:1px solid #334155; background:#0b1220; color:var(--text); padding: 11px 12px; font: inherit; }
+    button { cursor:pointer; background: linear-gradient(180deg, #38bdf8, #0ea5e9); color:#082f49; border:none; font-weight:700; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .activities { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:14px; }
+    .card { border:1px solid var(--line); border-radius:16px; padding:14px; background: rgba(15,23,42,.7); }
+    .tag { display:inline-block; font-size:.78rem; padding:4px 8px; border-radius:999px; background: rgba(56,189,248,.12); color:#7dd3fc; margin-bottom:10px; }
+    ol { padding-left: 1.15rem; margin: .5rem 0 0; }
+    .footer { margin-top: 16px; color: var(--muted); font-size:.92rem; }
+    @media (max-width: 820px) {
+      .hero, .grid, .activities { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body { background:#fff; color:#000; }
+      .panel { box-shadow:none; }
+      .actions, .footer button { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <section class="panel">
+        <h1>Lehrer-Morgenkarte GE</h1>
+        <p class="muted">Ein kleiner Morgen-Generator fuer GE: wenige Optionen, klare Reihenfolge, sofort nutzbar ohne Daten, Login oder Vorbereitungsmarathon.</p>
+        <div class="grid" aria-label="Einstellungen">
+          <div>
+            <label for="fach">Bereich</label>
+            <select id="fach">
+              <option>Mathe</option>
+              <option>Sprache / UK</option>
+              <option>Wahrnehmung</option>
+              <option>Motorik</option>
+            </select>
+          </div>
+          <div>
+            <label for="zeit">Dauer</label>
+            <select id="zeit">
+              <option>5 Minuten</option>
+              <option selected>10 Minuten</option>
+              <option>15 Minuten</option>
+            </select>
+          </div>
+          <div>
+            <label for="niveau">Niveau</label>
+            <select id="niveau">
+              <option>basal</option>
+              <option selected>unterstuetzt</option>
+              <option>erweitert</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="build">3 Mini-Aktivitaeten erzeugen</button>
+          <button id="print" type="button">Drucken / PDF</button>
+        </div>
+      </section>
+      <aside class="panel">
+        <p class="tag">Morgenfokus</p>
+        <p><strong>Regel 1:</strong> Eine Aufgabe beginnt mit Blick, Griff oder Zeigen.</p>
+        <p><strong>Regel 2:</strong> Nur ein kleiner Schritt pro Runde.</p>
+        <p><strong>Regel 3:</strong> Beenden, wenn die naechste Hilfe klar ist.</p>
+      </aside>
+    </div>
+
+    <section class="activities" id="out" aria-live="polite">
+      <article class="card"><span class="tag">1</span><div>Wähle links die Einstellungen und klicke auf <strong>3 Mini-Aktivitäten erzeugen</strong>.</div></article>
+      <article class="card"><span class="tag">2</span><div>Die Karte bleibt bewusst klein: Start, Mitmachen, Abschluss.</div></article>
+      <article class="card"><span class="tag">3</span><div>Keine Namen, keine Diagnosen, keine Daten — nur ein nutzbarer Morgenkern.</div></article>
+    </section>
+
+    <section class="panel" style="margin-top:12px;">
+      <label for="notizen">Notizfeld ohne Personendaten</label>
+      <textarea id="notizen" rows="4" placeholder="Z. B. Welche Hilfe oeffnet den Einstieg? Was war heute zu viel?"></textarea>
+      <div class="footer">Tipp: Erst morgen im Unterricht testen, danach nur kurz behalten / verbessern / verwerfen.</div>
+    </section>
+  </div>
+
+  <script>
+    const activityBank = {
+      Mathe: {
+        basal: [
+          '1) Lege 1-3 Steine ins Fuenferfeld und zeige dabei die Zahlkarte.',
+          '2) Finde dieselbe Menge durch Blick, Zeigen oder Beruehren.',
+          '3) Schließe mit "fertig" und lege alles zurueck in die Schale.'
+        ],
+        unterstuetzt: [
+          '1) Starte mit einer Zahlkarte 1-3 und lege die passende Menge gemeinsam.',
+          '2) Vergleiche: Was ist mehr, was ist gleich? Nur mit 1-3 sichtbaren Steinen.',
+          '3) Wähle am Ende eine UK-Karte: mehr, nochmal oder fertig.'
+        ],
+        erweitert: [
+          '1) Lege 4 oder 5 nur dann dazu, wenn 1-3 ruhig gelingt.',
+          '2) Zeige die Menge, ohne zu zaehlen, und beschreibe den Unterschied.',
+          '3) Uebernehme den Abschluss selbst: ordnen, ruecklegen, fertig.'
+        ]
+      },
+      'Sprache / UK': {
+        basal: [
+          '1) Zeige die Karten mehr / nochmal / fertig und lass eine Karte durch Blick oder Griff waehlen.',
+          '2) Modelliere eine kurze Antwort: "nochmal" oder "fertig".',
+          '3) Wiederhole genau eine passende Handlung gemeinsam.'
+        ],
+        unterstuetzt: [
+          '1) Biete zwei Karten an und reduziere die Wahl auf das Nötigste.',
+          '2) Lass die Person mit Zeigen, Laut oder Gebaerde reagieren.',
+          '3) Beende mit einem klaren Abschlusswort und ruhigem Wegraeumen.'
+        ],
+        erweitert: [
+          '1) Kombiniere Karte, Laut und Geste in einer Mini-Routine.',
+          '2) Lasse die Person die naechste Runde mit einer Karte anstossen.',
+          '3) Reflektiere mit einer Beobachtungsfrage: Was oeffnet den Einstieg?'
+        ]
+      },
+      Wahrnehmung: {
+        basal: [
+          '1) Biete einen Gegenstand mit klarer Form an und waehle nur eine Sinnesrichtung.',
+          '2) Entdecke durch schauen, anfassen oder hoeren genau einen Unterschied.',
+          '3) Schliesse mit einer ruhigen Rueckgabe an den Platz ab.'
+        ],
+        unterstuetzt: [
+          '1) Reduziere auf zwei Reize und starte mit dem leichteren.',
+          '2) Wiederhole dieselbe Bewegung langsam und sichtbar.',
+          '3) Markiere das Ende mit einer kurzen, klaren Geste.'
+        ],
+        erweitert: [
+          '1) Vergleiche zwei Reize und benenne den naechsten Schritt.',
+          '2) Erkundige dich, welche Hilfe am meisten entlastet.',
+          '3) Dokumentiere nur den sichtbaren Einstieg, nicht die Person.'
+        ]
+      },
+      Motorik: {
+        basal: [
+          '1) Lege eine kleine Bewegungsbahn auf den Tisch oder Boden.',
+          '2) Fuehre nur eine Bewegung pro Runde aus.',
+          '3) Stoppe, sobald die Bewegung ohne Druck gelingt.'
+        ],
+        unterstuetzt: [
+          '1) Zeige die Bewegung einmal vor und lasse sie gemeinsam nachmachen.',
+          '2) Kuerze die Bahn auf einen klaren Startpunkt und ein Ziel.',
+          '3) Schließe mit einem ruhigen "fertig" und Ordnung herstellen ab.'
+        ],
+        erweitert: [
+          '1) Verbinde zwei bekannte Bewegungen zu einem Mini-Ablauf.',
+          '2) Frage: Welche Hilfe hat heute am besten geholfen?',
+          '3) Lass die Lernenden den Abschluss selbst markieren.'
+        ]
+      }
+    };
+
+    const activityTitles = ['Start', 'Mitmachen', 'Abschluss'];
+
+    function render() {
+      const fach = document.getElementById('fach').value;
+      const zeit = document.getElementById('zeit').value;
+      const niveau = document.getElementById('niveau').value;
+      const items = activityBank[fach][niveau];
+      const cards = items.map((text, i) => `
+        <article class="card">
+          <span class="tag">${activityTitles[i]}</span>
+          <div><strong>${fach}</strong> · ${zeit} · ${niveau}</div>
+          <ol><li>${text.slice(3)}</li></ol>
+        </article>
+      `).join('');
+      document.getElementById('out').innerHTML = cards;
+    }
+
+    document.getElementById('build').addEventListener('click', render);
+    document.getElementById('print').addEventListener('click', () => window.print());
+    render();
+  </script>
+</body>
+</html>

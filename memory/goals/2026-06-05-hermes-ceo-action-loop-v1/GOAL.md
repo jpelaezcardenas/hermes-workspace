@@ -1,8 +1,11 @@
 # Goal: Hermes CEO Action Loop v1
 
-Status: planned
+Status: executed-active
 Date: 2026-06-05
 Owner: Chris / Hermes CEO / Neva / Codex
+
+Status note 2026-06-08:
+The core CEO action loop is active in the live Hermes cron prompts: Business Idea Firework now classifies follow-up readiness, Codex Handoff Scout can route safe local winners, AI Stock Radar has a delta section, and Hermes Control produces one CEO move. On 2026-06-08 the stock side was sharpened further with No-Progress Compression Mode.
 
 ## Objective
 

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-05-31",
+  "updated_at": "2026-06-12",
   "provider_status": {
     "market_data": "free_price_data_unavailable",
     "filings": "available",
@@ -59,7 +59,7 @@
       ],
       "quality_notes": [],
       "score_penalty": 0,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "WAIT_FOR_CONFIRMATION: Wait for stronger evidence or price/volume context; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -80,7 +80,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "B",
@@ -208,7 +208,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -291,31 +291,31 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "pass",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "WAIT",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "WATCH_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "free_source_evidence_still_needs_manual_review",
               "detail": "risk label in current evidence stack"
             }
@@ -326,6 +326,369 @@
         },
         "reasons": [
           "AI revenue reality is ai_context_only",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "NBIS",
+      "company": "Nebius Group N.V.",
+      "category": "Early Watch",
+      "score": 69,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_infrastructure",
+        "cloud_compute",
+        "gpu_capacity"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 350.89,
+        "latest_cash": 3721600000,
+        "latest_operating_cash_flow": 401900000,
+        "cash_runway_quarters": null,
+        "share_count_growth_yoy_pct": -13.69,
+        "risks": [],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "foreign_issuer",
+          "limited_us_gaap_facts"
+        ],
+        "positive_labels": [],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 0,
+        "max_category": null,
+        "notes": [
+          "foreign issuer",
+          "limited us gaap facts"
+        ]
+      },
+      "review_action": "DOWNGRADE_REVIEW",
+      "ai_relevance": 20,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Nebius Group N.V. shows public AI exposure in ai_infrastructure, cloud_compute, gpu_capacity; score 69 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "foreign issuer",
+        "limited us gaap facts"
+      ],
+      "quality_notes": [
+        "foreign issuer",
+        "limited us gaap facts"
+      ],
+      "score_penalty": 0,
+      "last_checked": "2026-06-12",
+      "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001513845.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001513845.json",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 3 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: foreign_issuer, limited_us_gaap_facts",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "B",
+      "grade_reasons": [
+        "watchable score with evidence gaps"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=nbis.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "manual_review",
+        "action": "CEO_REVIEW_RISK",
+        "reasons": [
+          "manual risk review"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "medium",
+            "detail": "Themes: ai_infrastructure, cloud_compute, gpu_capacity."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: caution."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "no specific SEC catalyst decoded"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "no customer or contract proof found"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: TOO_RISKY"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-22",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "no specific SEC catalyst decoded",
+          "no customer or contract proof found",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: TOO_RISKY"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Nebius Group N.V. shows public AI exposure in ai_infrastructure, cloud_compute, gpu_capacity; score 69 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "ai_context_only",
+          "score": 3,
+          "reasons": [
+            "AI context exists without verified revenue proof"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI context exists without verified revenue proof",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is ai_context_only",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "foreign_issuer",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "limited_us_gaap_facts",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is ai_context_only",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
           "timeline has data gaps or thin context"
         ]
       }
@@ -396,7 +759,7 @@
         "cash runway watch"
       ],
       "score_penalty": 14,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -417,7 +780,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "C",
@@ -547,7 +910,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -647,37 +1010,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -759,7 +1122,7 @@
         "name only ai watch"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -780,7 +1143,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -911,7 +1274,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -1019,37 +1382,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -1135,7 +1498,7 @@
         "delisting watch"
       ],
       "score_penalty": 30,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1156,7 +1519,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1290,7 +1653,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -1399,38 +1762,461 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "RXRX",
+      "company": "Recursion Pharmaceuticals, Inc.",
+      "category": "Avoid",
+      "score": 44,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_biotech",
+        "drug_discovery",
+        "data_platform"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "risk_labels": [
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -56.11,
+        "latest_cash": 665180000,
+        "latest_operating_cash_flow": -81101000,
+        "cash_runway_quarters": 8.2,
+        "share_count_growth_yoy_pct": 31.42,
+        "risks": [
+          "dilution_trend_watch",
+          "revenue_decline_watch"
+        ],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "clinical_risk",
+          "cash_burn_watch",
+          "offering_watch",
+          "dilution_trend_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 35,
+        "max_category": "Early Watch",
+        "notes": [
+          "clinical risk",
+          "cash burn watch",
+          "offering watch",
+          "dilution trend watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
+      "ai_relevance": 20,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 11,
+      "signal_breadth": 10,
+      "thesis": "Recursion Pharmaceuticals, Inc. shows public AI exposure in ai_biotech, drug_discovery, data_platform; score 44 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "clinical risk",
+        "cash burn watch",
+        "offering watch",
+        "dilution trend watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "clinical risk",
+        "cash burn watch",
+        "offering watch",
+        "dilution trend watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 35,
+      "last_checked": "2026-06-12",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001601830.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001601830.json",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 3 AI themes",
+        "catalyst": "3 recent filing types and 6 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: clinical_risk, cash_burn_watch, offering_watch, dilution_trend_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=rxrx.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "medium",
+            "detail": "Themes: ai_biotech, drug_discovery, data_platform."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: caution."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "offering_watch",
+          "dilution_trend_watch"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "hard_customer_or_contract",
+            "score": 14,
+            "reasons": [
+              "customer, contract, or material agreement label is present"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: TOO_RISKY"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "customer, contract, or material agreement label is present",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: TOO_RISKY"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Recursion Pharmaceuticals, Inc. shows public AI exposure in ai_biotech, drug_discovery, data_platform; score 44 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "offering_watch",
+            "dilution_trend_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue split not verified"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "offering_watch",
+            "dilution_trend_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "product_core_no_revenue_split",
+          "score": 10,
+          "reasons": [
+            "AI appears product-core, but a dedicated revenue split is not verified"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI appears product-core, but a dedicated revenue split is not verified",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue split not verified"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "clinical_risk",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "cash_burn_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
           ],
@@ -1509,7 +2295,7 @@
         "name only ai watch"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1530,7 +2316,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1661,7 +2447,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -1769,31 +2555,31 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -1880,7 +2666,7 @@
         "offering watch"
       ],
       "score_penalty": 40,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1901,7 +2687,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2032,7 +2818,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -2142,43 +2928,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -2253,7 +3039,7 @@
         "SEC companyfacts fundamentals unavailable"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2272,7 +3058,7 @@
         "fundamental_quality": "limited public fact coverage",
         "signal_breadth": "3 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2403,7 +3189,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -2508,31 +3294,31 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -2548,6 +3334,400 @@
           "critical negative catalyst is active",
           "advanced signal stack marks the candidate as risk trap",
           "risk event dominates timeline",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "RR",
+      "company": "Richtech Robotics Inc.",
+      "category": "Avoid",
+      "score": 35,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "robotics"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -8.75,
+        "latest_cash": 271811000,
+        "latest_operating_cash_flow": -1605000,
+        "cash_runway_quarters": 169.35,
+        "share_count_growth_yoy_pct": 106.43,
+        "risks": [
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "delisting_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 42,
+        "max_category": "Avoid",
+        "notes": [
+          "delisting watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Richtech Robotics Inc. shows public AI exposure in robotics; score 35 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "delisting watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "delisting watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 42,
+      "last_checked": "2026-06-12",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001963685.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001963685.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 4 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: delisting_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=rr.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate",
+          "delisting_watch"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "medium",
+            "detail": "Themes: robotics."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: reject."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "delisting_watch",
+          "dilution_trend_watch"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "hard_customer_or_contract",
+            "score": 14,
+            "reasons": [
+              "customer, contract, or material agreement label is present"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: TOO_RISKY",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "customer, contract, or material agreement label is present",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: TOO_RISKY",
+          "hard risk gate: delisting_watch"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Richtech Robotics Inc. shows public AI exposure in robotics; score 35 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "delisting_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue split not verified"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "delisting_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "product_core_no_revenue_split",
+          "score": 10,
+          "reasons": [
+            "AI appears product-core, but a dedicated revenue split is not verified"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI appears product-core, but a dedicated revenue split is not verified",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
           "timeline has data gaps or thin context"
         ]
       }
@@ -2617,7 +3797,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 33,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2638,7 +3818,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2769,7 +3949,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -2877,37 +4057,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -2993,7 +4173,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 34,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3014,7 +4194,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3146,7 +4326,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -3255,43 +4435,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -3307,6 +4487,411 @@
           "critical negative catalyst is active",
           "advanced signal stack marks the candidate as risk trap",
           "risk event dominates timeline",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "ODYS",
+      "company": "Odysight.ai Inc.",
+      "category": "Avoid",
+      "score": 29,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -96.03,
+        "latest_cash": 21763000,
+        "latest_operating_cash_flow": -4254000,
+        "cash_runway_quarters": 5.12,
+        "share_count_growth_yoy_pct": 12.43,
+        "risks": [
+          "revenue_decline_watch"
+        ],
+        "supports": [
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "offering_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [
+          "cash_runway_support"
+        ],
+        "score_penalty": 23,
+        "max_category": "Early Watch",
+        "notes": [
+          "name only ai watch",
+          "offering watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Odysight.ai Inc. shows public AI exposure in ai_keyword_match; score 29 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "offering watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "offering watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 48,
+      "last_checked": "2026-06-12",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001577445.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001577445.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, offering_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=odys.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Themes: ai_keyword_match."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: caution."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Odysight.ai Inc. shows public AI exposure in ai_keyword_match; score 29 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "offering_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "offering_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
           "timeline has data gaps or thin context"
         ]
       }
@@ -3372,7 +4957,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 37,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3393,7 +4978,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3524,7 +5109,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -3632,37 +5217,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -3678,6 +5263,807 @@
           "critical negative catalyst is active",
           "advanced signal stack marks the candidate as risk trap",
           "risk event dominates timeline",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "RZLV",
+      "company": "Rezolve AI PLC",
+      "category": "Avoid",
+      "score": 28,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [],
+        "risk_labels": [],
+        "hard_catalyst": false,
+        "hard_blocker": false
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 10241.45,
+        "latest_cash": 111112251,
+        "latest_operating_cash_flow": -63147255,
+        "cash_runway_quarters": 7.04,
+        "share_count_growth_yoy_pct": 64.55,
+        "risks": [
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "revenue_growth_support",
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "caution",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [],
+        "support_labels": [
+          "revenue_growth_support",
+          "cash_runway_support"
+        ],
+        "score_penalty": 12,
+        "max_category": "Early Watch",
+        "notes": [
+          "name only ai watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "CHECK_DILUTION",
+      "ai_relevance": 16,
+      "catalyst": 12,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 9,
+      "signal_breadth": 10,
+      "thesis": "Rezolve AI PLC shows public AI exposure in ai_keyword_match; score 28 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 37,
+      "last_checked": "2026-06-12",
+      "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001920294.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001920294.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "2 recent filing types and 2 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=rzlv.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Themes: ai_keyword_match."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: caution."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "no_known_event",
+            "score": 0,
+            "next_review_at": "2026-06-22",
+            "reasons": [
+              "no specific upcoming catalyst event is known from local evidence"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Rezolve AI PLC shows public AI exposure in ai_keyword_match; score 28 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable",
+          "AI revenue proof missing"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "caution",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "PLTR",
+      "company": "Palantir Technologies Inc.",
+      "category": "Avoid",
+      "score": 25,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "enterprise_ai_software",
+        "defense_ai",
+        "data_platform"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "risk_labels": [
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 84.71,
+        "latest_cash": 2324859000,
+        "latest_operating_cash_flow": 899165000,
+        "cash_runway_quarters": null,
+        "share_count_growth_yoy_pct": 1.92,
+        "risks": [],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "crowded_large_cap",
+          "overheated_watch",
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 45,
+        "max_category": "Avoid",
+        "notes": [
+          "crowded large cap",
+          "overheated watch",
+          "delisting watch",
+          "offering watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 4,
+      "earliness": 7,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 25 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "crowded large cap",
+        "overheated watch",
+        "delisting watch",
+        "offering watch"
+      ],
+      "quality_notes": [
+        "crowded large cap",
+        "overheated watch",
+        "delisting watch",
+        "offering watch"
+      ],
+      "score_penalty": 45,
+      "last_checked": "2026-06-12",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001321655.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001321655.json",
+        "https://www.nasdaqtrader.com/trader.aspx?id=symbollookup",
+        "https://data.sec.gov/submissions/",
+        "https://data.sec.gov/api/xbrl/companyfacts/"
+      ],
+      "score_reasons": {
+        "ai_relevance": "material exposure across 3 AI themes",
+        "catalyst": "3 recent filing types and 6 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: crowded_large_cap, overheated_watch, delisting_watch, offering_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=pltr.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate",
+          "delisting_watch"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "medium",
+            "detail": "Themes: enterprise_ai_software, defense_ai, data_platform."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: reject."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "TOO_RISKY",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "risk gate active",
+          "delisting_watch",
+          "offering_watch"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "hard_customer_or_contract",
+            "score": 14,
+            "reasons": [
+              "customer, contract, or material agreement label is present"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: TOO_RISKY",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "customer, contract, or material agreement label is present",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: TOO_RISKY",
+          "hard risk gate: delisting_watch"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Palantir Technologies Inc. shows public AI exposure in enterprise_ai_software, defense_ai, data_platform; score 25 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "delisting_watch",
+            "offering_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue split not verified"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "delisting_watch",
+            "offering_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness TOO_RISKY"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "product_core_no_revenue_split",
+          "score": 10,
+          "reasons": [
+            "AI appears product-core, but a dedicated revenue split is not verified"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness TOO_RISKY",
+          "AI appears product-core, but a dedicated revenue split is not verified",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "crowded_large_cap",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "overheated_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
           "timeline has data gaps or thin context"
         ]
       }
@@ -3748,7 +6134,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 47,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3769,7 +6155,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3900,7 +6286,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-10",
+            "next_review_at": "2026-06-22",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -4010,43 +6396,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -4141,7 +6527,7 @@
         "cash runway watch"
       ],
       "score_penalty": 59,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -4162,7 +6548,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -4298,7 +6684,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -4411,49 +6797,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -4553,7 +6939,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 63,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -4574,7 +6960,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -4708,7 +7094,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -4823,49 +7209,456 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
+              "label": "revenue_decline_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "KIDZ",
+      "company": "KIDZ AI Inc.",
+      "category": "Avoid",
+      "score": 14,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -36.37,
+        "latest_cash": 2116631,
+        "latest_operating_cash_flow": -602380,
+        "cash_runway_quarters": 3.51,
+        "share_count_growth_yoy_pct": null,
+        "risks": [
+          "revenue_decline_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "revenue_decline_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [],
+        "score_penalty": 38,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "revenue decline watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "KIDZ AI Inc. shows public AI exposure in ai_keyword_match; score 14 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "revenue decline watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "revenue decline watch"
+      ],
+      "score_penalty": 63,
+      "last_checked": "2026-06-12",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0002022308.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0002022308.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, revenue_decline_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=kidz.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate",
+          "delisting_watch"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Themes: ai_keyword_match."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: reject."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "KIDZ AI Inc. shows public AI exposure in ai_keyword_match; score 14 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "revenue_decline_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "revenue_decline_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -4962,7 +7755,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 67,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -4983,7 +7776,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -5117,7 +7910,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -5232,49 +8025,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -5371,7 +8164,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 67,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -5392,7 +8185,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -5526,7 +8319,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -5641,50 +8434,455 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "MYSE",
+      "company": "Myseum.AI, Inc.",
+      "category": "Avoid",
+      "score": 8,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "risk_labels": [
+          "delisting_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": -12.05,
+        "latest_cash": 777149,
+        "latest_operating_cash_flow": -1251131,
+        "cash_runway_quarters": 0.62,
+        "share_count_growth_yoy_pct": 4.7,
+        "risks": [
+          "cash_runway_watch"
+        ],
+        "supports": []
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "cash_runway_watch"
+        ],
+        "positive_labels": [
+          "material_agreement"
+        ],
+        "support_labels": [],
+        "score_penalty": 44,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "cash runway watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Myseum.AI, Inc. shows public AI exposure in ai_keyword_match; score 8 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "cash runway watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "cash runway watch"
+      ],
+      "score_penalty": 69,
+      "last_checked": "2026-06-12",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001648960.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001648960.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 4 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, cash_runway_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=myse.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate",
+          "delisting_watch"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Themes: ai_keyword_match."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: reject."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "listing_or_structure_risk",
+            "score": -22,
+            "reasons": [
+              "hard filing or security-structure risk before promotion"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "hard filing or security-structure risk before promotion",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Myseum.AI, Inc. shows public AI exposure in ai_keyword_match; score 8 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "cash_runway_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "cash_runway_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
           ],
@@ -5777,7 +8975,7 @@
         "offering watch"
       ],
       "score_penalty": 70,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -5798,7 +8996,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -5932,7 +9130,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -6047,49 +9245,461 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "MSAI",
+      "company": "MultiSensor AI Holdings, Inc.",
+      "category": "Avoid",
+      "score": 7,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "risk_labels": [
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 37.95,
+        "latest_cash": 22652000,
+        "latest_operating_cash_flow": -1688000,
+        "cash_runway_quarters": 13.42,
+        "share_count_growth_yoy_pct": -93.85,
+        "risks": [],
+        "supports": [
+          "revenue_growth_support",
+          "cash_runway_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context"
+        ],
+        "support_labels": [
+          "revenue_growth_support",
+          "cash_runway_support"
+        ],
+        "score_penalty": 45,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "offering watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "MultiSensor AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 7 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "offering watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "offering watch"
+      ],
+      "score_penalty": 70,
+      "last_checked": "2026-06-12",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001863990.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001863990.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 5 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, offering_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=msai.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate",
+          "delisting_watch"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Themes: ai_keyword_match."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: reject."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "MultiSensor AI Holdings, Inc. shows public AI exposure in ai_keyword_match; score 7 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -6189,7 +9799,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 75,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -6210,7 +9820,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -6344,7 +9954,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -6461,55 +10071,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -6616,7 +10226,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 96,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -6637,7 +10247,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -6771,7 +10381,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -6890,55 +10500,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -7042,7 +10652,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 81,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -7063,7 +10673,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -7197,7 +10807,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -7314,55 +10924,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -7464,7 +11074,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 81,
-      "last_checked": "2026-05-31",
+      "last_checked": "2026-06-12",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -7485,7 +11095,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-05-31",
+      "first_seen": "2026-06-12",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -7619,7 +11229,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-05",
+            "next_review_at": "2026-06-17",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -7736,56 +11346,489 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-05-31",
+              "date": "2026-06-12",
               "label": "dilution_trend_watch",
+              "detail": "risk label in current evidence stack"
+            }
+          ],
+          "reasons": [
+            "risk event dominates timeline",
+            "fresh filing or catalyst context present",
+            "timeline has data gaps or thin context"
+          ]
+        },
+        "reasons": [
+          "AI revenue reality is reality_risk",
+          "thesis intelligence marks the thesis as broken",
+          "critical negative catalyst is active",
+          "advanced signal stack marks the candidate as risk trap",
+          "risk event dominates timeline",
+          "fresh filing or catalyst context present",
+          "timeline has data gaps or thin context"
+        ]
+      }
+    },
+    {
+      "ticker": "PDYN",
+      "company": "Palladyne AI Corp.",
+      "category": "Avoid",
+      "score": 0,
+      "previous_score": 0,
+      "data_quality": "A",
+      "themes": [
+        "ai_keyword_match"
+      ],
+      "filing_events": {
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "risk_labels": [
+          "delisting_watch",
+          "offering_watch"
+        ],
+        "hard_catalyst": true,
+        "hard_blocker": true
+      },
+      "fundamental_snapshot": {
+        "status": "available",
+        "revenue_growth_yoy_pct": 106.9,
+        "latest_cash": 17854000,
+        "latest_operating_cash_flow": -10239000,
+        "cash_runway_quarters": 1.74,
+        "share_count_growth_yoy_pct": 27.51,
+        "risks": [
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "supports": [
+          "revenue_growth_support"
+        ]
+      },
+      "evidence_firewall": {
+        "verdict": "reject",
+        "risk_flags": [
+          "name_only_ai_watch",
+          "delisting_watch",
+          "offering_watch",
+          "cash_runway_watch",
+          "dilution_trend_watch"
+        ],
+        "positive_labels": [
+          "material_agreement",
+          "earnings_or_guidance_context",
+          "ma_catalyst"
+        ],
+        "support_labels": [
+          "revenue_growth_support"
+        ],
+        "score_penalty": 71,
+        "max_category": "Avoid",
+        "notes": [
+          "name only ai watch",
+          "delisting watch",
+          "offering watch",
+          "cash runway watch",
+          "dilution trend watch"
+        ]
+      },
+      "review_action": "ARCHIVE_REVIEW",
+      "ai_relevance": 16,
+      "catalyst": 20,
+      "market_momentum": 6,
+      "earliness": 12,
+      "fundamental_quality": 13,
+      "signal_breadth": 10,
+      "thesis": "Palladyne AI Corp. shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A.",
+      "top_risks": [
+        "name only ai watch",
+        "delisting watch",
+        "offering watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "quality_notes": [
+        "name-only AI evidence; needs manual substance check",
+        "name only ai watch",
+        "delisting watch",
+        "offering watch",
+        "cash runway watch",
+        "dilution trend watch"
+      ],
+      "score_penalty": 96,
+      "last_checked": "2026-06-12",
+      "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
+      "sources": [
+        "Nasdaq Symbol Directory",
+        "SEC company tickers",
+        "SEC submissions",
+        "SEC companyfacts",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "https://www.sec.gov/files/company_tickers.json",
+        "https://data.sec.gov/submissions/CIK0001826681.json",
+        "https://data.sec.gov/api/xbrl/companyfacts/CIK0001826681.json"
+      ],
+      "score_reasons": {
+        "ai_relevance": "core exposure across 1 AI themes",
+        "catalyst": "3 recent filing types and 6 catalyst labels",
+        "market_momentum": "capped because reliable free price data is unavailable",
+        "earliness": "risk flags: name_only_ai_watch, delisting_watch, offering_watch, cash_runway_watch, dilution_trend_watch",
+        "fundamental_quality": "SEC companyfacts available",
+        "signal_breadth": "4 independent public source types"
+      },
+      "first_seen": "2026-06-12",
+      "age_days": 0,
+      "status": "fresh",
+      "idea_grade": "X",
+      "grade_reasons": [
+        "reject/avoid quality gate triggered"
+      ],
+      "price_volume": {
+        "status": "unavailable",
+        "source": "stooq",
+        "confirmation": "unavailable",
+        "reason": "not enough candles",
+        "url": "https://stooq.com/q/d/l/?s=pdyn.us&i=d"
+      },
+      "ceo_control": {
+        "profile": "CEO Conservative Research Control",
+        "lane": "reject",
+        "action": "CEO_ARCHIVE_REVIEW",
+        "reasons": [
+          "reject quality gate",
+          "delisting_watch"
+        ]
+      },
+      "source_confidence": {
+        "entries": [
+          {
+            "label": "Listed common-equity universe",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Nasdaq/NYSE listing universe hygiene check."
+          },
+          {
+            "label": "SEC filing activity",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Recent SEC forms and filing labels."
+          },
+          {
+            "label": "SEC companyfacts fundamentals",
+            "kind": "fact",
+            "confidence": "high",
+            "detail": "Revenue, cash runway, operating cash flow, or share-count facts are available."
+          },
+          {
+            "label": "AI exposure thesis",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Themes: ai_keyword_match."
+          },
+          {
+            "label": "Evidence Firewall verdict",
+            "kind": "interpretation",
+            "confidence": "low",
+            "detail": "Verdict: reject."
+          },
+          {
+            "label": "Price/volume confirmation",
+            "kind": "missing",
+            "confidence": "none",
+            "detail": "Free price/volume context is unavailable or insufficient."
+          }
+        ],
+        "summary": {
+          "facts": 3,
+          "interpretations": 2,
+          "missing": 1
+        }
+      },
+      "entry_readiness": {
+        "label": "FAKE_AI_HYPE",
+        "action": "PAPER_ARCHIVE_REVIEW",
+        "reasons": [
+          "name-only AI evidence"
+        ]
+      },
+      "advanced_signals": {
+        "version": 1,
+        "banger_score": 0,
+        "banger_label": "RISK_TRAP",
+        "review_action": "ADVANCED_ARCHIVE_REVIEW",
+        "components": {
+          "sec_catalyst": {
+            "label": "offering_or_dilution",
+            "score": -18,
+            "reasons": [
+              "filing risk points to offering, warrants, or dilution review"
+            ]
+          },
+          "customer_proof": {
+            "label": "none",
+            "score": 0,
+            "reasons": [
+              "name-only AI evidence cannot count as customer proof"
+            ]
+          },
+          "relative_strength": {
+            "label": "unavailable",
+            "score": 0,
+            "spread_20d_pct": null,
+            "benchmark_return_20d_pct": null,
+            "reasons": [
+              "candidate or AI basket 20d return unavailable"
+            ]
+          },
+          "liquidity": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "free price/volume context unavailable"
+            ]
+          },
+          "ownership": {
+            "label": "unavailable",
+            "score": 0,
+            "reasons": [
+              "local ownership context unavailable"
+            ]
+          },
+          "thesis_invalidation": {
+            "label": "invalidated",
+            "score_penalty": 55,
+            "hard_gate": true,
+            "reasons": [
+              "hard risk gate: Evidence Firewall reject",
+              "hard risk gate: CEO reject lane",
+              "hard risk gate: Avoid or X classification",
+              "hard risk gate: FAKE_AI_HYPE",
+              "hard risk gate: name-only AI evidence",
+              "hard risk gate: delisting_watch"
+            ]
+          },
+          "catalyst_calendar": {
+            "label": "review_window",
+            "score": 3,
+            "next_review_at": "2026-06-17",
+            "reasons": [
+              "known filing or catalyst context should be reviewed again"
+            ]
+          }
+        },
+        "reasons": [
+          "filing risk points to offering, warrants, or dilution review",
+          "name-only AI evidence cannot count as customer proof",
+          "candidate or AI basket 20d return unavailable",
+          "free price/volume context unavailable",
+          "local ownership context unavailable",
+          "hard risk gate: Evidence Firewall reject",
+          "hard risk gate: CEO reject lane",
+          "hard risk gate: Avoid or X classification",
+          "hard risk gate: FAKE_AI_HYPE",
+          "hard risk gate: name-only AI evidence"
+        ]
+      },
+      "thesis_intelligence": {
+        "version": 1,
+        "thesis_verdict": "BROKEN_THESIS",
+        "research_action": "THESIS_ARCHIVE_REVIEW",
+        "confidence_score": 0,
+        "graph": {
+          "thesis": [
+            "Palladyne AI Corp. shows public AI exposure in ai_keyword_match; score 0 is based on Nasdaq Symbol Directory, SEC company tickers, SEC submissions, SEC companyfacts. Data quality A."
+          ],
+          "evidence": [
+            "customer or revenue-linked public label",
+            "source confidence has at least three fact entries"
+          ],
+          "risks": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "counter_evidence": [
+            "negative catalyst severity critical",
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ],
+          "gaps": [
+            "price volume context unavailable",
+            "source confidence has missing data",
+            "relative strength unavailable",
+            "ownership context unavailable",
+            "AI revenue proof missing"
+          ]
+        },
+        "negative_catalysts": {
+          "severity": "critical",
+          "labels": [
+            "name_only_ai_watch",
+            "delisting_watch",
+            "offering_watch",
+            "cash_runway_watch",
+            "dilution_trend_watch"
+          ],
+          "reasons": [
+            "critical negative catalyst before thesis promotion",
+            "Evidence Firewall reject",
+            "CEO reject lane",
+            "Advanced Signal risk trap",
+            "Entry readiness FAKE_AI_HYPE"
+          ]
+        },
+        "ai_revenue_reality": {
+          "label": "reality_risk",
+          "score": -25,
+          "reasons": [
+            "name-only AI or fake-hype risk blocks revenue reality"
+          ]
+        },
+        "reasons": [
+          "critical negative catalyst before thesis promotion",
+          "Evidence Firewall reject",
+          "CEO reject lane",
+          "Advanced Signal risk trap",
+          "Entry readiness FAKE_AI_HYPE",
+          "name-only AI or fake-hype risk blocks revenue reality",
+          "customer or revenue-linked public label",
+          "source confidence has at least three fact entries",
+          "price volume context unavailable",
+          "source confidence has missing data",
+          "relative strength unavailable",
+          "ownership context unavailable"
+        ]
+      },
+      "alpha_memory": {
+        "version": 1,
+        "hypothesis_label": "RISK_PATTERN",
+        "memory_action": "ALPHA_RISK_ARCHIVE",
+        "learning_score": 0,
+        "contradiction_detector": {
+          "severity": "critical",
+          "labels": [
+            "ai_story_without_revenue_proof",
+            "broken_thesis",
+            "critical_negative_catalyst",
+            "advanced_signal_risk_trap"
+          ],
+          "reasons": [
+            "AI revenue reality is reality_risk",
+            "thesis intelligence marks the thesis as broken",
+            "critical negative catalyst is active",
+            "advanced signal stack marks the candidate as risk trap"
+          ]
+        },
+        "catalyst_timeline": {
+          "timing_label": "late_or_risk",
+          "events": [
+            {
+              "kind": "checked",
+              "date": "2026-06-12",
+              "label": "last_checked",
+              "detail": "candidate was reviewed"
+            },
+            {
+              "kind": "filing_catalyst",
+              "date": "2026-06-12",
+              "label": "hard_catalyst",
+              "detail": "filing or material-agreement catalyst detected"
+            },
+            {
+              "kind": "evidence_firewall",
+              "date": "2026-06-12",
+              "label": "reject",
+              "detail": "evidence firewall verdict"
+            },
+            {
+              "kind": "advanced_signal",
+              "date": "2026-06-12",
+              "label": "RISK_TRAP",
+              "detail": "advanced signal stack label"
+            },
+            {
+              "kind": "thesis",
+              "date": "2026-06-12",
+              "label": "BROKEN_THESIS",
+              "detail": "thesis intelligence verdict"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "name_only_ai_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "delisting_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "offering_watch",
+              "detail": "risk label in current evidence stack"
+            },
+            {
+              "kind": "risk_event",
+              "date": "2026-06-12",
+              "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
           ],

@@ -326,6 +326,69 @@ function formatCandidate(candidate) {
   return `- ${candidate.ticker} (${candidate.company}): Grade ${candidate.idea_grade || "?"}, ${candidate.category}, Score ${candidate.score}, Datenqualitaet ${candidate.data_quality}. ${candidate.thesis}`;
 }
 
+function formatGradeSummary(candidates) {
+  const counts = { S: 0, A: 0, B: 0, C: 0, X: 0 };
+  for (const candidate of candidates || []) {
+    const grade = candidate.idea_grade || "X";
+    counts[grade] = (counts[grade] || 0) + 1;
+  }
+  return `- Summary S=${counts.S || 0}, A=${counts.A || 0}, B=${counts.B || 0}, C=${counts.C || 0}, X=${counts.X || 0}`;
+}
+
+function potentialCandidateLane(candidate) {
+  if (
+    candidate.idea_grade === "X" ||
+    candidate.category === "Avoid" ||
+    candidate.ceo_control?.lane === "reject" ||
+    candidate.evidence_firewall?.verdict === "reject"
+  ) {
+    return "Archive/Avoid Review";
+  }
+  if (
+    candidate.ceo_control?.lane === "manual_review" ||
+    candidate.evidence_firewall?.verdict === "caution" ||
+    candidate.thesis_intelligence?.thesis_verdict === "BROKEN_THESIS" ||
+    ["RISK_PATTERN", "CONTRADICTION_REVIEW"].includes(candidate.alpha_memory?.hypothesis_label) ||
+    ["CHECK_DILUTION", "DOWNGRADE_REVIEW", "ARCHIVE_REVIEW"].includes(candidate.review_action)
+  ) {
+    return "Risk Review";
+  }
+  if (
+    candidate.category === "Deep Dive" ||
+    ["S", "A"].includes(candidate.idea_grade) ||
+    candidate.ceo_control?.lane === "focus"
+  ) {
+    return "Research Review";
+  }
+  return "Watch";
+}
+
+export function selectPotentialCandidateBoard(candidates, limit = 15) {
+  return [...(candidates || [])].slice(0, limit);
+}
+
+function formatPotentialCandidate(candidate) {
+  const firewall = candidate.evidence_firewall || {};
+  const riskSignals = unique([
+    ...(firewall.risk_flags || []),
+    ...(candidate.top_risks || []),
+    ...(candidate.quality_notes || []),
+  ])
+    .slice(0, 3)
+    .join(", ") || "none";
+  const dataGaps = [];
+  if (candidate.price_volume?.status !== "available") {
+    dataGaps.push(candidate.price_volume?.reason || "price_volume_unavailable");
+  }
+  if (candidate.source_confidence?.summary?.missing > 0) {
+    dataGaps.push(`source_missing_${candidate.source_confidence.summary.missing}`);
+  }
+  if (candidate.fundamental_snapshot?.status !== "available") {
+    dataGaps.push("fundamentals_unavailable");
+  }
+  return `- ${candidate.ticker}: ${potentialCandidateLane(candidate)}; Grade ${candidate.idea_grade || "?"}; ${candidate.category}; Score ${candidate.score}; action ${candidate.review_action || "WAIT_FOR_CONFIRMATION"}; risk/gap ${riskSignals}; data ${dataGaps.join(", ") || "none"}`;
+}
+
 function formatScoreReasons(candidate) {
   const reasons = candidate.score_reasons || {};
   return [
@@ -387,6 +450,30 @@ function formatAlphaMemoryCandidate(candidate) {
   return `- ${candidate.ticker}: ${alpha.hypothesis_label || "WATCH_ONLY"} / ${alpha.memory_action || "ALPHA_MONITOR"}; learning ${alpha.learning_score ?? 0}; contradiction ${alpha.contradiction_detector?.severity || "watch"}; labels ${labels}; timeline ${alpha.catalyst_timeline?.timing_label || "watch"}`;
 }
 
+function formatDeepDiveExplanation({ candidates, deepDiveCandidates }) {
+  const priceGaps = candidates.filter((candidate) => candidate.price_volume?.status !== "available").length;
+  const riskBlocked = candidates.filter((candidate) =>
+    ["caution", "reject"].includes(candidate.evidence_firewall?.verdict) ||
+    candidate.ceo_control?.lane === "reject" ||
+    candidate.ceo_control?.lane === "manual_review" ||
+    candidate.thesis_intelligence?.thesis_verdict === "BROKEN_THESIS" ||
+    ["RISK_PATTERN", "CONTRADICTION_REVIEW"].includes(candidate.alpha_memory?.hypothesis_label)
+  ).length;
+  const topWatch = candidates
+    .filter((candidate) => candidate.idea_grade !== "X" && candidate.category !== "Avoid")
+    .slice(0, 5)
+    .map((candidate) => `${candidate.ticker} ${candidate.category}/${candidate.idea_grade}`)
+    .join(", ") || "keine";
+
+  return `## Warum Keine Deep-Dive-Kandidaten
+- Gefundene Kandidaten: ${candidates.length}
+- Deep-Dive-Kandidaten: ${deepDiveCandidates.length}
+- Watchbare, aber nicht freigegebene Kandidaten: ${topWatch}
+- Hauptgruende: ${priceGaps} Kandidat(en) ohne stabile Price/Volume-Bestaetigung; ${riskBlocked} Kandidat(en) mit Risk-, Thesis- oder Alpha-Memory-Bremse.
+- Interpretation: Das ist kein leerer Markt-Scan, sondern ein Qualitaetsgate. Kandidaten duerfen sichtbar bleiben, aber ohne belastbare Bestaetigung nicht in Deep-Dive oder Research-Attention hochrutschen.
+`;
+}
+
 export function renderFreeSourceReport({
   date,
   candidates,
@@ -398,7 +485,9 @@ export function renderFreeSourceReport({
   const topCandidates = candidates
     .filter((candidate) => candidate.idea_grade !== "X" && candidate.category !== "Avoid")
     .slice(0, 10);
-  const gradeCandidates = candidates.slice(0, 10);
+  const potentialCandidates = selectPotentialCandidateBoard(candidates, 15);
+  const gradeCandidates = candidates;
+  const detailCandidates = candidates.slice(0, 10);
   const deepDiveCandidates = candidates.filter((candidate) => candidate.category === "Deep Dive");
   const overheatedOrAvoid = candidates.filter((candidate) =>
     candidate.category === "Overheated" || candidate.category === "Avoid"
@@ -425,40 +514,46 @@ ${fallbackReason ? `- Fallback reason: ${fallbackReason}\n` : ""}- Kurs-Momentum
 ## Top Kandidaten Heute
 ${topCandidates.length ? topCandidates.map(formatCandidate).join("\n") : "- Keine Kandidaten aus kostenlosen Quellen."}
 
+## Potential Candidate Board
+- Sichtbarkeitsboard fuer bis zu 15 Kandidaten aus dem aktuellen Lauf; Research-only, keine Anlageempfehlung.
+${potentialCandidates.length ? potentialCandidates.map(formatPotentialCandidate).join("\n") : "- Keine potenziellen Kandidaten im aktuellen Lauf."}
+
 ## Neue Auffaelligkeiten
 ${topCandidates.length ? topCandidates.map((candidate) => `${formatCandidate(candidate)}\n${formatScoreReasons(candidate)}`).join("\n") : "- Keine neuen Auffaelligkeiten."}
 
 ## Idea Grade
-${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.idea_grade || "?"} (${(candidate.grade_reasons || []).join("; ") || "no grade reasons"})`).join("\n") : "- Keine Grades berechnet."}
+${gradeCandidates.length ? `${formatGradeSummary(gradeCandidates)}\n${gradeCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.idea_grade || "?"} (${(candidate.grade_reasons || []).join("; ") || "no grade reasons"})`).join("\n")}` : "- Keine Grades berechnet."}
 
 ## Price/Volume Confirmation
-${gradeCandidates.length ? gradeCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.price_volume?.status || "unavailable"} / ${candidate.price_volume?.confirmation || "unavailable"}${candidate.price_volume?.volume_ratio_20d ? `, volume ratio 20d ${candidate.price_volume.volume_ratio_20d}` : ""}${candidate.price_volume?.return_20d_pct ? `, return 20d ${candidate.price_volume.return_20d_pct}%` : ""}`).join("\n") : "- Keine Price/Volume-Daten."}
+${detailCandidates.length ? detailCandidates.map((candidate) => `- ${candidate.ticker}: ${candidate.price_volume?.status || "unavailable"} / ${candidate.price_volume?.confirmation || "unavailable"}${candidate.price_volume?.reason ? `; reason ${candidate.price_volume.reason}` : ""}${candidate.price_volume?.volume_ratio_20d ? `, volume ratio 20d ${candidate.price_volume.volume_ratio_20d}` : ""}${candidate.price_volume?.return_20d_pct ? `, return 20d ${candidate.price_volume.return_20d_pct}%` : ""}`).join("\n") : "- Keine Price/Volume-Daten."}
 
 ## Evidence Firewall
-${gradeCandidates.length ? gradeCandidates.map(formatFirewallCandidate).join("\n") : "- Keine Evidence-Firewall-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatFirewallCandidate).join("\n") : "- Keine Evidence-Firewall-Daten."}
 
 ## CEO Control
-${gradeCandidates.length ? gradeCandidates.map(formatCeoControlCandidate).join("\n") : "- Keine CEO-Control-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatCeoControlCandidate).join("\n") : "- Keine CEO-Control-Daten."}
 
 ## Source Confidence Ledger
-${gradeCandidates.length ? gradeCandidates.map(formatSourceConfidenceCandidate).join("\n") : "- Keine Source-Confidence-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatSourceConfidenceCandidate).join("\n") : "- Keine Source-Confidence-Daten."}
 
 ## Entry Readiness
-${gradeCandidates.length ? gradeCandidates.map(formatEntryReadinessCandidate).join("\n") : "- Keine Entry-Readiness-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatEntryReadinessCandidate).join("\n") : "- Keine Entry-Readiness-Daten."}
 
 ## Advanced Signal Stack
-${gradeCandidates.length ? gradeCandidates.map(formatAdvancedSignalCandidate).join("\n") : "- Keine Advanced-Signal-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatAdvancedSignalCandidate).join("\n") : "- Keine Advanced-Signal-Daten."}
 
 ## Thesis Intelligence
-${gradeCandidates.length ? gradeCandidates.map(formatThesisIntelligenceCandidate).join("\n") : "- Keine Thesis-Intelligence-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatThesisIntelligenceCandidate).join("\n") : "- Keine Thesis-Intelligence-Daten."}
 
 ## Alpha Memory
-${gradeCandidates.length ? gradeCandidates.map(formatAlphaMemoryCandidate).join("\n") : "- Keine Alpha-Memory-Daten."}
+${detailCandidates.length ? detailCandidates.map(formatAlphaMemoryCandidate).join("\n") : "- Keine Alpha-Memory-Daten."}
 
 ## Watchlist Aenderungen
 - Watchlist wurde aus kostenlosen Public-Source-Belegen neu berechnet; Seeds dienen nur als Fallback oder Themen-Overlay.
 - Kandidaten im Lauf: ${candidates.length}
 - Deep-Dive bleibt an A/B-Datenqualitaet und belegbare These gebunden.
+
+${formatDeepDiveExplanation({ candidates, deepDiveCandidates })}
 
 ## Deep-Dive Kandidaten
 ${deepDiveCandidates.length ? deepDiveCandidates.map(formatCandidate).join("\n") : "- Keine Deep-Dive-Kandidaten aus kostenlosen Quellen."}

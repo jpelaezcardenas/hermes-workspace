@@ -88,6 +88,15 @@ describe('kanban-backend', () => {
               created_at: 1777527540,
               updated_at: 1777527644,
             },
+            {
+              id: 't_archived',
+              title: 'Archived Hermes task',
+              body: 'Should not appear on active swarm board',
+              status: 'archived',
+              assignee: 'swarm2',
+              created_at: 1777527540,
+              updated_at: 1777527644,
+            },
           ])
         }
         throw new Error(`Unexpected command: ${command} ${args.join(' ')}`)

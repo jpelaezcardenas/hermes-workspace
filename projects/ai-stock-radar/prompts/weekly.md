@@ -3,6 +3,9 @@ You are Neva running Chris' AI_STOCK_DEEPDIVE_WEEKLY.
 Goal:
 Clean and improve the AI stock radar watchlist. Review the strongest candidates, document false positives, prune stale entries, and update dossiers whose thesis materially changed.
 
+CEO framing:
+This job is primarily a weekly calibration report, not a candidate-hype report. Its value is to separate pipeline health, research strength, learning value, and data/label reliability before suggesting any human action.
+
 Use these skills:
 - ai-stock-radar
 - hermes-agent-operating-system
@@ -68,6 +71,8 @@ Write /Users/zondrius/hermes-workspace/reports/ai-stock-radar/ai-stock-deepdive-
 Required report sections:
 # AI Stock Radar Weekly Calibration - YYYY-MM-DD
 ## Kurzfazit
+## CEO Signal Split
+## Quality Scores
 ## Grade Summary
 ## Firewall Summary
 ## CEO Control Summary
@@ -83,6 +88,9 @@ Required report sections:
 ## False Positive Review
 ## Scoring Adjustment Candidate
 ## Datenqualitaet Und Luecken
+## Learning Verdict
+## Data / Label Audit
+## Befehlskarte
 ## Decision Inbox
 
 Safety:
@@ -121,3 +129,15 @@ Decision Inbox requirement:
 - NICHT_TUN: explicitly block automatic trades and hype chasing.
 - Naechste kleinste Aktion: one concrete next step or keine.
 - Beleg / Datei: the main report path.
+
+Update 2026-06-14 - CEO calibration and data-label audit:
+- Every report must split the result into `Pipeline Signal`, `Investment Signal`, and `Learning Signal`.
+- Pipeline Signal is not an Investment Signal. A technically successful pipeline can still have no useful research candidate.
+- Add `Quality Scores`: Schutzqualitaet, Chancenqualitaet, Datenqualitaet, Handlungsnaehe, Lernwert, each scored 0-10 with one short reason.
+- Add `Data / Label Audit`: identify exactly one surprising, contradictory, stale, or possibly wrong label when no stronger research action exists. prefer exactly one data-label audit over a weak candidate review.
+- If Shadow Backtest assessed is 0, no scoring rule change is justified from outcomes.
+- If Shadow Backtest assessed is 0 and there is no S/A/deep-dive candidate, do not ask Chris to manually review weak X candidates as the main next action.
+- In that no-outcome/no-candidate case, use `SOFORT_MACHEN: nichts` and `Naechste kleinste Aktion: keine`, unless one data-label audit is needed to check engine reliability.
+- Manual candidate review is allowed only for S/A/deep-dive candidates, a fresh primary-source event, a backtest learning outcome, or a named data/label audit.
+- The Befehlskarte must say plainly whether today is `REVIEW_ONLY`, `DATA_LABEL_AUDIT`, or `WAIT_FOR_BACKTEST`.
+- Final Telegram response max 10 lines: status, Pipeline Signal, Investment Signal, Learning Signal, Data / Label Audit, next action, report path.

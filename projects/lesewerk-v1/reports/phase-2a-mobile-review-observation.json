@@ -1,0 +1,3043 @@
+{
+  "logs": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    }
+  ],
+  "data": [
+    {
+      "label": "start-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 4928,
+      "buttons": [
+        {
+          "text": "Kinderpfad",
+          "x": 33,
+          "y": 264,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Lehrkraft",
+          "x": 33,
+          "y": 340,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "● Profil Blau ruhig starten",
+          "x": 35,
+          "y": 541,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "◆ Profil Grün mit Hilfe lesen",
+          "x": 35,
+          "y": 707,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "☀ Profil Sonne nochmal versuchen",
+          "x": 35,
+          "y": 873,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "Tagespfad starten",
+          "x": 35,
+          "y": 1243,
+          "w": 320,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 48,
+          "y": 4884,
+          "w": 294,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 48,
+          "y": 4986,
+          "w": 294,
+          "h": 74,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 48,
+          "y": 5070,
+          "w": 294,
+          "h": 74,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 48,
+          "y": 5154,
+          "w": 294,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 48,
+          "y": 5256,
+          "w": 294,
+          "h": 74,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 48,
+          "y": 5340,
+          "w": 294,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Weiter",
+          "x": 55,
+          "y": 2791,
+          "w": 280,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Nochmal ruhig",
+          "x": 55,
+          "y": 2867,
+          "w": 280,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Erstes Wort Mond",
+          "x": 55,
+          "y": 3299,
+          "w": 280,
+          "h": 108,
+          "visible": true
+        },
+        {
+          "text": "Noch ein Wort Ball",
+          "x": 55,
+          "y": 3419,
+          "w": 280,
+          "h": 108,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Der Ball im Garten",
+          "x": 55,
+          "y": 3539,
+          "w": 280,
+          "h": 108,
+          "visible": true
+        },
+        {
+          "text": "Nochmal in Ruhe Mond",
+          "x": 55,
+          "y": 3659,
+          "w": 280,
+          "h": 108,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 3871,
+          "w": 136,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 201,
+          "y": 3871,
+          "w": 136,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 3953,
+          "w": 93,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 158,
+          "y": 3953,
+          "w": 78,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 249,
+          "y": 3953,
+          "w": 79,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4029,
+          "w": 78,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 143,
+          "y": 4029,
+          "w": 95,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4105,
+          "w": 99,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 164,
+          "y": 4105,
+          "w": 90,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4181,
+          "w": 91,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 156,
+          "y": 4181,
+          "w": 89,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4257,
+          "w": 99,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 164,
+          "y": 4257,
+          "w": 90,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4333,
+          "w": 99,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 164,
+          "y": 4333,
+          "w": 105,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4409,
+          "w": 110,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 175,
+          "y": 4409,
+          "w": 75,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4485,
+          "w": 89,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 154,
+          "y": 4485,
+          "w": 97,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4561,
+          "w": 85,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 150,
+          "y": 4561,
+          "w": 92,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4637,
+          "w": 87,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 152,
+          "y": 4637,
+          "w": 108,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4713,
+          "w": 108,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 173,
+          "y": 4713,
+          "w": 88,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4789,
+          "w": 89,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 154,
+          "y": 4789,
+          "w": 105,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4865,
+          "w": 88,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 153,
+          "y": 4865,
+          "w": 103,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 4941,
+          "w": 99,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 164,
+          "y": 4941,
+          "w": 99,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "",
+          "x": 53,
+          "y": 5017,
+          "w": 110,
+          "h": 64,
+          "visible": true
+        }
+      ],
+      "smallButtons": [],
+      "offscreenButtons": [],
+      "topText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nTAGESPFAD\nHeute lesen\nSchau. Klatsch. Lies.\nSchritt 1 von 6: Bild anschauen\nTagespfad starten\nAktiv:\nSilbenfarben\nHilfe wählen\nLESELEITER\nHeute lesen wir so\nlokal\nMein Leseweg\nJetzt lesen: Bild\nDanach: Silbe\nBild\nSilbe\nWort\nSatz\nMini-Geschichte\nSchreibbrücke\nMein nächster Schritt\nJetzt\nBild\nDanach\nSilbe\nIch schaue.\n1\nBild\nBild anschauen: Wir finden zuerst Bedeutung.\n2\nSilbe\nSilbe sprechen: Wir hören den Klang.\n3\nWort\nWort lesen: Wir verbinden Klang und Zeichen.\n4\nSatz\nKurzer Satz: Wir lesen, was passiert.\n5\nMini-Geschichte\nMini-Geschichte: Wir verstehen eine kleine Szene.\n6\nSchreibbrücke\nSchreibbrücke: Nur wenn es heute passt, legen oder spuren wir ein Wort.\nBild\n→\nMa\nma\n→\nMama\n→\nMama ist da.\n→\nMama ist da\n→\nSchreibbrücke\nSCHRITTKARTE MAMA\n1 von 6\nBild\nBild anschauen. Wort zeigen.\nWeiter\nNochmal ruhig\nHEUTE LESEN\nDein Tagesweg\nDu darfst eine Hilfe wählen. Wir lesen ohne Eile.\nKLEINE AUSWAHL\nHeute lesen\nVier ruhige Karten. Danach kannst du weiter lesen oder fertig sein.\nErstes Wort\nMond\nNoch ein Wort\nBall\nKurze Story\nDer Ball im Garten\nNochmal in Ruhe\nMond\nAlle Wörter und Geschichten öffnen\nHeute lesen wir so\nJetzt: Wort · Danach: Satz\n1\nBild\n2\nSilbe\n3\nWort\n4\nSatz\n5\nMini-Geschichte\n6\nSchreibbrücke\nBILD UND WORT\nZeige Mond.\nMond\nIch bin fertig\nLege oder spure das Wort."
+    },
+    {
+      "label": "teacher-mini-journey-selection-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 31393,
+      "buttons": [
+        {
+          "text": "Kinderpfad",
+          "x": 33,
+          "y": 264,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Lehrkraft",
+          "x": 33,
+          "y": 340,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "● Profil Blau ruhig starten",
+          "x": 35,
+          "y": 541,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "◆ Profil Grün mit Hilfe lesen",
+          "x": 35,
+          "y": 707,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "☀ Profil Sonne nochmal versuchen",
+          "x": 35,
+          "y": 873,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "Vorgemerkt – noch nicht im Tagesweg",
+          "x": 59,
+          "y": 2796,
+          "w": 272,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": 3802,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": 4810,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": 5884,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Pilot starten: nur 2 Karten",
+          "x": 65,
+          "y": 6404,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": 6866,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": 6866,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": 6908,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": 7622,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": 7622,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": 7622,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": 7622,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": 7622,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": 7622,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": 7622,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": 7664,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": 7664,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": 7736,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": 7736,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": 7736,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": 7736,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": 7736,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": 7778,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Silben sichtbar",
+          "x": 77,
+          "y": 7824,
+          "w": 150,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Kleine Auswahl",
+          "x": 77,
+          "y": 7882,
+          "w": 151,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Vormachen bei Bedarf",
+          "x": 77,
+          "y": 7940,
+          "w": 207,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Vorbereitung starten",
+          "x": 225,
+          "y": 9537,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Tasse-Vorbereitung starten",
+          "x": 225,
+          "y": 9932,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Lama-Vorbereitung starten",
+          "x": 225,
+          "y": 11536,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Objekt-Moment starten",
+          "x": 97,
+          "y": 12475,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Mama-Mini-Reise starten",
+          "x": 109,
+          "y": 17518,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Wortpost testen",
+          "x": 65,
+          "y": 18230,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Auswahl-Spiel starten",
+          "x": 47,
+          "y": 19269,
+          "w": 224,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Sicherer Standardpfad",
+          "x": 47,
+          "y": 19333,
+          "w": 320,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Mond",
+          "x": 47,
+          "y": 19477,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Ball",
+          "x": 47,
+          "y": 19579,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Bus",
+          "x": 47,
+          "y": 19681,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Hut",
+          "x": 47,
+          "y": 19783,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Tasse",
+          "x": 47,
+          "y": 19885,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Sonne",
+          "x": 47,
+          "y": 19987,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Haus",
+          "x": 47,
+          "y": 20089,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Maus",
+          "x": 47,
+          "y": 20191,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Der Ball im Garten",
+          "x": 47,
+          "y": 20293,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Die Tasse auf dem Tisch",
+          "x": 47,
+          "y": 20395,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Das Brot in der Tasche",
+          "x": 47,
+          "y": 20497,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        }
+      ],
+      "smallButtons": [
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": 6866,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": 6866,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": 6908,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": 7622,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": 7622,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": 7622,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": 7622,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": 7622,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": 7622,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": 7622,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": 7664,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": 7664,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": 7736,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": 7736,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": 7736,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": 7736,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": 7736,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": 7778,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 45,
+          "y": 24079,
+          "w": 43,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 96,
+          "y": 24079,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 141,
+          "y": 24079,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 186,
+          "y": 24079,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 232,
+          "y": 24079,
+          "w": 34,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 274,
+          "y": 24079,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "i",
+          "x": 45,
+          "y": 24131,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "n",
+          "x": 86,
+          "y": 24131,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 131,
+          "y": 24131,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 177,
+          "y": 24131,
+          "w": 35,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 219,
+          "y": 24131,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "u",
+          "x": 266,
+          "y": 24131,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "h",
+          "x": 45,
+          "y": 24183,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "d",
+          "x": 91,
+          "y": 24183,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "j",
+          "x": 137,
+          "y": 24183,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ei",
+          "x": 288,
+          "y": 24183,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 211,
+          "y": 24325,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "li",
+          "x": 261,
+          "y": 24325,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ja",
+          "x": 236,
+          "y": 24533,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        }
+      ],
+      "offscreenButtons": [],
+      "topText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nLEHRERBEREICH\nPlanung für heute\nHEUTE SO NUTZEN\nKurzer lokaler Lesemoment\nDiese Demo begleitet 10–15 Minuten Lesen. Beobachte nur Sichtbares: gewählte Hilfe, Wiederholung, reduzierte Auswahl, Storyantwort, Stopp oder ruhiges Weitergehen.\nKeine echten Namen, Fotos oder Klassenlisten speichern.\nNach zwei Karten bewusst enden oder denselben kleinen Schritt wiederholen.\nVorsichtig deuten: nur nächster pädagogischer Schritt, keine diagnostische Einordnung.\nUNTERRICHTSSERIEN\nHeute eine ruhige Serie vormerken\nHier nur Serie vormerken. Der Kinderpfad ändert sich erst unten bei der manuellen Tagesweg-Wahl.\nlokal · Vorschau\nSerie 1 · 3 Aufgaben\nAnkommen mit Bild und Silbe\nSTART\nMama mit Bildkarte oder Gegenstand ruhig zeigen.\nWIEDERHOLUNG\nma erst zeigen, dann sprechen, klatschen und legen.\nNÄCHSTER SCHRITT\nVom Bild aus eine sichere Silbe oder ein erstes Wort gemeinsam lesen.\n●\nBeispiel: Ball sehen und lesen.\nBildkarte Ball\nBall\nBall\nBall zeigen und lesen.\nBall zeigen. Ball lesen oder sprechen.\nHilfe: Ball zeigen. Langsam sprechen. Ein Schritt nach dem anderen.\nBildhilfe und kleine Auswahl · Heute reicht Bild oder Gegenstand, wenn Schrift noch nicht ruhig mitgeht.\nDarin: Bild/Symbol → Wort · Bekanntes Graphem wiederfinden · Sichere Silbe sprechen oder legen\nVorgemerkt – noch nicht im Tagesweg\nSerie 2 · 2 Aufgaben\nSilben verbinden\nheute naheliegend\nSTART\nma gemeinsam sprechen und sichtbar lassen.\nWIEDERHOLUNG\nErst die Silbe hören und legen, dann das Wort zusammenziehen.\nNÄCHSTER SCHRITT\nMama gemeinsam lesen und Auswahl klein halten.\n♡\nBeispiel: ma / ma legen.\nSilbenkarte Mama\nma / ma\nMama\nDaraus wird Mama.\nSilben klatschen. Dann zusammenziehen.\nHilfe: Silben trennen. Klatschen. Legen. Sprechen.\nSilbenklatschen, Lege"
+    },
+    {
+      "label": "after-mini-journey-click-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 32548,
+      "buttons": [
+        {
+          "text": "Kinderpfad",
+          "x": 33,
+          "y": -6140,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Lehrkraft",
+          "x": 33,
+          "y": -6064,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "● Profil Blau ruhig starten",
+          "x": 35,
+          "y": -5863,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "◆ Profil Grün mit Hilfe lesen",
+          "x": 35,
+          "y": -5697,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "☀ Profil Sonne nochmal versuchen",
+          "x": 35,
+          "y": -5531,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "Vorgemerkt – noch nicht im Tagesweg",
+          "x": 59,
+          "y": -3601,
+          "w": 272,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": -2627,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": -1650,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": -577,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Pilot starten: nur 2 Karten",
+          "x": 65,
+          "y": -57,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": 406,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": 406,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": 448,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": 1118,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": 1118,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": 1118,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": 1118,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": 1118,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": 1118,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": 1118,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": 1160,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": 1160,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": 1232,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": 1232,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": 1232,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": 1232,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": 1232,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": 1274,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Silben sichtbar",
+          "x": 77,
+          "y": 1320,
+          "w": 150,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Kleine Auswahl",
+          "x": 77,
+          "y": 1378,
+          "w": 151,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Vormachen bei Bedarf",
+          "x": 77,
+          "y": 1436,
+          "w": 207,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Tasse-Vorbereitung starten",
+          "x": 225,
+          "y": 3482,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Lama-Vorbereitung starten",
+          "x": 225,
+          "y": 5087,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Objekt-Moment starten",
+          "x": 97,
+          "y": 6026,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Mama-Mini-Reise starten",
+          "x": 109,
+          "y": 11068,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Mini-Reise starten",
+          "x": 109,
+          "y": 11679,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Wortpost testen",
+          "x": 65,
+          "y": 12940,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Auswahl-Spiel starten",
+          "x": 47,
+          "y": 13979,
+          "w": 224,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Sicherer Standardpfad",
+          "x": 47,
+          "y": 14043,
+          "w": 320,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Mond",
+          "x": 47,
+          "y": 14187,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Ball",
+          "x": 47,
+          "y": 14289,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Bus",
+          "x": 47,
+          "y": 14391,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Hut",
+          "x": 47,
+          "y": 14493,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Tasse",
+          "x": 47,
+          "y": 14595,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Sonne",
+          "x": 47,
+          "y": 14697,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Haus",
+          "x": 47,
+          "y": 14799,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Maus",
+          "x": 47,
+          "y": 14901,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Der Ball im Garten",
+          "x": 47,
+          "y": 15003,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Die Tasse auf dem Tisch",
+          "x": 47,
+          "y": 15105,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Das Brot in der Tasche",
+          "x": 47,
+          "y": 15207,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        }
+      ],
+      "smallButtons": [
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": 406,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": 406,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": 448,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": 1118,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": 1118,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": 1118,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": 1118,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": 1118,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": 1118,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": 1118,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": 1160,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": 1160,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": 1232,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": 1232,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": 1232,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": 1232,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": 1232,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": 1274,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 45,
+          "y": 18807,
+          "w": 43,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 96,
+          "y": 18807,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 141,
+          "y": 18807,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 186,
+          "y": 18807,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 232,
+          "y": 18807,
+          "w": 34,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 274,
+          "y": 18807,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "i",
+          "x": 45,
+          "y": 18859,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "n",
+          "x": 86,
+          "y": 18859,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 131,
+          "y": 18859,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 177,
+          "y": 18859,
+          "w": 35,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 219,
+          "y": 18859,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "u",
+          "x": 266,
+          "y": 18859,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "h",
+          "x": 45,
+          "y": 18911,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "d",
+          "x": 91,
+          "y": 18911,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "j",
+          "x": 137,
+          "y": 18911,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ei",
+          "x": 288,
+          "y": 18911,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 211,
+          "y": 19053,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "li",
+          "x": 261,
+          "y": 19053,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ja",
+          "x": 236,
+          "y": 19261,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        }
+      ],
+      "offscreenButtons": [],
+      "topText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nLEHRERBEREICH\nPlanung für heute\nHEUTE SO NUTZEN\nKurzer lokaler Lesemoment\nDiese Demo begleitet 10–15 Minuten Lesen. Beobachte nur Sichtbares: gewählte Hilfe, Wiederholung, reduzierte Auswahl, Storyantwort, Stopp oder ruhiges Weitergehen.\nKeine echten Namen, Fotos oder Klassenlisten speichern.\nNach zwei Karten bewusst enden oder denselben kleinen Schritt wiederholen.\nVorsichtig deuten: nur nächster pädagogischer Schritt, keine diagnostische Einordnung.\nUNTERRICHTSSERIEN\nHeute eine ruhige Serie vormerken\nHier nur Serie vormerken. Der Kinderpfad ändert sich erst unten bei der manuellen Tagesweg-Wahl.\nlokal · Vorschau\nSerie 1 · 3 Aufgaben\nAnkommen mit Bild und Silbe\nheute naheliegend\nSTART\nMama mit Bildkarte oder Gegenstand ruhig zeigen.\nWIEDERHOLUNG\nma erst zeigen, dann sprechen, klatschen und legen.\nNÄCHSTER SCHRITT\nVom Bild aus eine sichere Silbe oder ein erstes Wort gemeinsam lesen.\n●\nBeispiel: Ball sehen und lesen.\nBildkarte Ball\nBall\nBall\nBall zeigen und lesen.\nBall zeigen. Ball lesen oder sprechen.\nHilfe: Ball zeigen. Langsam sprechen. Ein Schritt nach dem anderen.\nBildhilfe · Heute reicht Bild oder Gegenstand, wenn Schrift noch nicht ruhig mitgeht.\nDarin: Bild/Symbol → Wort · Bekanntes Graphem wiederfinden · Sichere Silbe sprechen oder legen\nVorgemerkt – noch nicht im Tagesweg\nSerie 2 · 2 Aufgaben\nSilben verbinden\nSTART\nma gemeinsam sprechen und sichtbar lassen.\nWIEDERHOLUNG\nErst die Silbe hören und legen, dann das Wort zusammenziehen.\nNÄCHSTER SCHRITT\nMama gemeinsam lesen und Auswahl klein halten.\n♡\nBeispiel: ma / ma legen.\nSilbenkarte Mama\nma / ma\nMama\nDaraus wird Mama.\nSilben klatschen. Dann zusammenziehen.\nHilfe: Silben trennen. Klatschen. Legen. Sprechen.\nSilbenklatschen, Legematerial und gemein"
+    },
+    {
+      "label": "mini-journey-playing-390",
+      "vw": 390,
+      "scrollWidth": 390,
+      "overflowX": 0,
+      "bodyHeight": 31361,
+      "buttons": [
+        {
+          "text": "Kinderpfad",
+          "x": 33,
+          "y": -6164,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Lehrkraft",
+          "x": 33,
+          "y": -6088,
+          "w": 324,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "● Profil Blau ruhig starten",
+          "x": 35,
+          "y": -5887,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "◆ Profil Grün mit Hilfe lesen",
+          "x": 35,
+          "y": -5721,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "☀ Profil Sonne nochmal versuchen",
+          "x": 35,
+          "y": -5555,
+          "w": 320,
+          "h": 150,
+          "visible": true
+        },
+        {
+          "text": "Vorgemerkt – noch nicht im Tagesweg",
+          "x": 59,
+          "y": -3600,
+          "w": 272,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": -2626,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": -1650,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Serie vormerken",
+          "x": 59,
+          "y": -576,
+          "w": 272,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Pilot starten: nur 2 Karten",
+          "x": 65,
+          "y": -56,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": 406,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": 406,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": 448,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": 1162,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": 1162,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": 1162,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": 1162,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": 1162,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": 1162,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": 1162,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": 1204,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": 1204,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": 1276,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": 1276,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": 1276,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": 1276,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": 1276,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": 1318,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Silben sichtbar",
+          "x": 77,
+          "y": 1364,
+          "w": 150,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Kleine Auswahl",
+          "x": 77,
+          "y": 1422,
+          "w": 151,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Vormachen bei Bedarf",
+          "x": 77,
+          "y": 1480,
+          "w": 207,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Vorbereitung starten",
+          "x": 225,
+          "y": 3077,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Tasse-Vorbereitung starten",
+          "x": 225,
+          "y": 3472,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Lama-Vorbereitung starten",
+          "x": 225,
+          "y": 5076,
+          "w": 143,
+          "h": 82,
+          "visible": true
+        },
+        {
+          "text": "Objekt-Moment starten",
+          "x": 97,
+          "y": 6015,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Mama-Mini-Reise starten",
+          "x": 109,
+          "y": 11058,
+          "w": 220,
+          "h": 68,
+          "visible": true
+        },
+        {
+          "text": "Wortpost testen",
+          "x": 65,
+          "y": 11770,
+          "w": 284,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Auswahl-Spiel starten",
+          "x": 47,
+          "y": 12809,
+          "w": 224,
+          "h": 64,
+          "visible": true
+        },
+        {
+          "text": "Sicherer Standardpfad",
+          "x": 47,
+          "y": 12873,
+          "w": 320,
+          "h": 56,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Mond",
+          "x": 47,
+          "y": 13017,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Ball",
+          "x": 47,
+          "y": 13119,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Bus",
+          "x": 47,
+          "y": 13221,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Hut",
+          "x": 47,
+          "y": 13323,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Tasse",
+          "x": 47,
+          "y": 13425,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Sonne",
+          "x": 47,
+          "y": 13527,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Haus",
+          "x": 47,
+          "y": 13629,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Bild und Wort Maus",
+          "x": 47,
+          "y": 13731,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Der Ball im Garten",
+          "x": 47,
+          "y": 13833,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Die Tasse auf dem Tisch",
+          "x": 47,
+          "y": 13935,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        },
+        {
+          "text": "Kurze Story Das Brot in der Tasche",
+          "x": 47,
+          "y": 14037,
+          "w": 320,
+          "h": 92,
+          "visible": true
+        }
+      ],
+      "smallButtons": [
+        {
+          "text": "Start: m + a",
+          "x": 77,
+          "y": 406,
+          "w": 114,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Sofa-Pfad",
+          "x": 199,
+          "y": 406,
+          "w": 102,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "Satz bereit",
+          "x": 77,
+          "y": 448,
+          "w": 108,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 77,
+          "y": 1162,
+          "w": 35,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 120,
+          "y": 1162,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 158,
+          "y": 1162,
+          "w": 29,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 195,
+          "y": 1162,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 233,
+          "y": 1162,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 268,
+          "y": 1162,
+          "w": 25,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 300,
+          "y": 1162,
+          "w": 27,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 77,
+          "y": 1204,
+          "w": 30,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 115,
+          "y": 1204,
+          "w": 31,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "ma",
+          "x": 77,
+          "y": 1276,
+          "w": 45,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "so",
+          "x": 130,
+          "y": 1276,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "fa",
+          "x": 177,
+          "y": 1276,
+          "w": 36,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 221,
+          "y": 1276,
+          "w": 34,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "tas",
+          "x": 263,
+          "y": 1276,
+          "w": 46,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "se",
+          "x": 77,
+          "y": 1318,
+          "w": 39,
+          "h": 34,
+          "visible": true
+        },
+        {
+          "text": "m",
+          "x": 45,
+          "y": 17619,
+          "w": 43,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "a",
+          "x": 96,
+          "y": 17619,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "s",
+          "x": 141,
+          "y": 17619,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "o",
+          "x": 186,
+          "y": 17619,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "f",
+          "x": 232,
+          "y": 17619,
+          "w": 34,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "l",
+          "x": 274,
+          "y": 17619,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "i",
+          "x": 45,
+          "y": 17671,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "n",
+          "x": 86,
+          "y": 17671,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "e",
+          "x": 131,
+          "y": 17671,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "t",
+          "x": 177,
+          "y": 17671,
+          "w": 35,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "b",
+          "x": 219,
+          "y": 17671,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "u",
+          "x": 266,
+          "y": 17671,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "h",
+          "x": 45,
+          "y": 17723,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "d",
+          "x": 91,
+          "y": 17723,
+          "w": 38,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "j",
+          "x": 137,
+          "y": 17723,
+          "w": 33,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ei",
+          "x": 288,
+          "y": 17723,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "la",
+          "x": 211,
+          "y": 17865,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "li",
+          "x": 261,
+          "y": 17865,
+          "w": 37,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "text": "ja",
+          "x": 236,
+          "y": 18073,
+          "w": 42,
+          "h": 44,
+          "visible": true
+        }
+      ],
+      "offscreenButtons": [],
+      "topText": "LESEWERK · LOKALER PILOT-DEMO-STAND\nWillkommen im LeseWerk\nWir lesen langsam. Du darfst eine Hilfe wählen. Alles in Ruhe.\nKinderpfad\nLehrkraft\nANONYMES PROFIL\nWer liest heute?\n●\nProfil Blau\nruhig starten\n◆\nProfil Grün\nmit Hilfe lesen\n☀\nProfil Sonne\nnochmal versuchen\nLEHRERBEREICH\nPlanung für heute\nHEUTE SO NUTZEN\nKurzer lokaler Lesemoment\nDiese Demo begleitet 10–15 Minuten Lesen. Beobachte nur Sichtbares: gewählte Hilfe, Wiederholung, reduzierte Auswahl, Storyantwort, Stopp oder ruhiges Weitergehen.\nKeine echten Namen, Fotos oder Klassenlisten speichern.\nNach zwei Karten bewusst enden oder denselben kleinen Schritt wiederholen.\nVorsichtig deuten: nur nächster pädagogischer Schritt, keine diagnostische Einordnung.\nUNTERRICHTSSERIEN\nHeute eine ruhige Serie vormerken\nHier nur Serie vormerken. Der Kinderpfad ändert sich erst unten bei der manuellen Tagesweg-Wahl.\nlokal · Vorschau\nSerie 1 · 3 Aufgaben\nAnkommen mit Bild und Silbe\nheute naheliegend\nSTART\nMama mit Bildkarte oder Gegenstand ruhig zeigen.\nWIEDERHOLUNG\nma erst zeigen, dann sprechen, klatschen und legen.\nNÄCHSTER SCHRITT\nVom Bild aus eine sichere Silbe oder ein erstes Wort gemeinsam lesen.\n●\nBeispiel: Ball sehen und lesen.\nBildkarte Ball\nBall\nBall\nBall zeigen und lesen.\nBall zeigen. Ball lesen oder sprechen.\nHilfe: Ball zeigen. Langsam sprechen. Ein Schritt nach dem anderen.\nBildhilfe und kleine Auswahl · Heute reicht Bild oder Gegenstand, wenn Schrift noch nicht ruhig mitgeht.\nDarin: Bild/Symbol → Wort · Bekanntes Graphem wiederfinden · Sichere Silbe sprechen oder legen\nVorgemerkt – noch nicht im Tagesweg\nSerie 2 · 2 Aufgaben\nSilben verbinden\nSTART\nma gemeinsam sprechen und sichtbar lassen.\nWIEDERHOLUNG\nErst die Silbe hören und legen, dann das Wort zusammenziehen.\nNÄCHSTER SCHRITT\nMama gemeinsam lesen und Auswahl klein halten.\n♡\nBeispiel: ma / ma legen.\nSilbenkarte Mama\nma / ma\nMama\nDaraus wird Mama.\nSilben klatschen. Dann zusammenziehen.\nHilfe: Silben trennen. Klatschen. Legen. Sprechen.\nSilbenklatschen, Lege"
+    },
+    {
+      "label": "wortpost-3-choice-390",
+      "error": "No Wortpost candidate",
+      "buttonTexts": [
+        {
+          "i": 0,
+          "text": "Kinderpfad"
+        },
+        {
+          "i": 1,
+          "text": "Lehrkraft"
+        },
+        {
+          "i": 2,
+          "text": "● Profil Blau ruhig starten"
+        },
+        {
+          "i": 3,
+          "text": "◆ Profil Grün mit Hilfe lesen"
+        },
+        {
+          "i": 4,
+          "text": "☀ Profil Sonne nochmal versuchen"
+        },
+        {
+          "i": 5,
+          "text": "Tagespfad starten"
+        },
+        {
+          "i": 6,
+          "text": ""
+        },
+        {
+          "i": 7,
+          "text": ""
+        },
+        {
+          "i": 8,
+          "text": ""
+        },
+        {
+          "i": 9,
+          "text": ""
+        },
+        {
+          "i": 10,
+          "text": ""
+        },
+        {
+          "i": 11,
+          "text": ""
+        },
+        {
+          "i": 12,
+          "text": "Weiter"
+        },
+        {
+          "i": 13,
+          "text": "Nochmal ruhig"
+        },
+        {
+          "i": 14,
+          "text": "Erstes Wort Mond"
+        },
+        {
+          "i": 15,
+          "text": "Noch ein Wort Ball"
+        },
+        {
+          "i": 16,
+          "text": "Kurze Story Der Ball im Garten"
+        },
+        {
+          "i": 17,
+          "text": "Nochmal in Ruhe Mond"
+        },
+        {
+          "i": 18,
+          "text": ""
+        },
+        {
+          "i": 19,
+          "text": ""
+        },
+        {
+          "i": 20,
+          "text": ""
+        },
+        {
+          "i": 21,
+          "text": ""
+        },
+        {
+          "i": 22,
+          "text": ""
+        },
+        {
+          "i": 23,
+          "text": ""
+        },
+        {
+          "i": 24,
+          "text": ""
+        },
+        {
+          "i": 25,
+          "text": ""
+        },
+        {
+          "i": 26,
+          "text": ""
+        },
+        {
+          "i": 27,
+          "text": ""
+        },
+        {
+          "i": 28,
+          "text": ""
+        },
+        {
+          "i": 29,
+          "text": ""
+        },
+        {
+          "i": 30,
+          "text": ""
+        },
+        {
+          "i": 31,
+          "text": ""
+        },
+        {
+          "i": 32,
+          "text": ""
+        },
+        {
+          "i": 33,
+          "text": ""
+        },
+        {
+          "i": 34,
+          "text": ""
+        },
+        {
+          "i": 35,
+          "text": ""
+        },
+        {
+          "i": 36,
+          "text": ""
+        },
+        {
+          "i": 37,
+          "text": ""
+        },
+        {
+          "i": 38,
+          "text": ""
+        },
+        {
+          "i": 39,
+          "text": ""
+        },
+        {
+          "i": 40,
+          "text": ""
+        },
+        {
+          "i": 41,
+          "text": ""
+        },
+        {
+          "i": 42,
+          "text": ""
+        },
+        {
+          "i": 43,
+          "text": ""
+        },
+        {
+          "i": 44,
+          "text": ""
+        },
+        {
+          "i": 45,
+          "text": ""
+        },
+        {
+          "i": 46,
+          "text": ""
+        },
+        {
+          "i": 47,
+          "text": ""
+        },
+        {
+          "i": 48,
+          "text": ""
+        },
+        {
+          "i": 49,
+          "text": ""
+        },
+        {
+          "i": 50,
+          "text": ""
+        },
+        {
+          "i": 51,
+          "text": ""
+        },
+        {
+          "i": 52,
+          "text": ""
+        },
+        {
+          "i": 53,
+          "text": ""
+        },
+        {
+          "i": 54,
+          "text": ""
+        },
+        {
+          "i": 55,
+          "text": ""
+        },
+        {
+          "i": 56,
+          "text": ""
+        },
+        {
+          "i": 57,
+          "text": ""
+        },
+        {
+          "i": 58,
+          "text": ""
+        },
+        {
+          "i": 59,
+          "text": ""
+        },
+        {
+          "i": 60,
+          "text": ""
+        },
+        {
+          "i": 61,
+          "text": ""
+        },
+        {
+          "i": 62,
+          "text": ""
+        },
+        {
+          "i": 63,
+          "text": ""
+        },
+        {
+          "i": 64,
+          "text": ""
+        },
+        {
+          "i": 65,
+          "text": ""
+        },
+        {
+          "i": 66,
+          "text": ""
+        },
+        {
+          "i": 67,
+          "text": ""
+        },
+        {
+          "i": 68,
+          "text": ""
+        },
+        {
+          "i": 69,
+          "text": ""
+        },
+        {
+          "i": 70,
+          "text": ""
+        },
+        {
+          "i": 71,
+          "text": ""
+        },
+        {
+          "i": 72,
+          "text": ""
+        },
+        {
+          "i": 73,
+          "text": ""
+        },
+        {
+          "i": 74,
+          "text": ""
+        },
+        {
+          "i": 75,
+          "text": ""
+        },
+        {
+          "i": 76,
+          "text": ""
+        },
+        {
+          "i": 77,
+          "text": ""
+        },
+        {
+          "i": 78,
+          "text": ""
+        },
+        {
+          "i": 79,
+          "text": ""
+        },
+        {
+          "i": 80,
+          "text": ""
+        },
+        {
+          "i": 81,
+          "text": ""
+        },
+        {
+          "i": 82,
+          "text": ""
+        },
+        {
+          "i": 83,
+          "text": ""
+        },
+        {
+          "i": 84,
+          "text": ""
+        },
+        {
+          "i": 85,
+          "text": ""
+        },
+        {
+          "i": 86,
+          "text": ""
+        },
+        {
+          "i": 87,
+          "text": ""
+        },
+        {
+          "i": 88,
+          "text": ""
+        },
+        {
+          "i": 89,
+          "text": ""
+        },
+        {
+          "i": 90,
+          "text": ""
+        },
+        {
+          "i": 91,
+          "text": ""
+        },
+        {
+          "i": 92,
+          "text": ""
+        },
+        {
+          "i": 93,
+          "text": ""
+        },
+        {
+          "i": 94,
+          "text": ""
+        },
+        {
+          "i": 95,
+          "text": ""
+        },
+        {
+          "i": 96,
+          "text": ""
+        },
+        {
+          "i": 97,
+          "text": ""
+        },
+        {
+          "i": 98,
+          "text": ""
+        },
+        {
+          "i": 99,
+          "text": ""
+        },
+        {
+          "i": 100,
+          "text": ""
+        },
+        {
+          "i": 101,
+          "text": ""
+        },
+        {
+          "i": 102,
+          "text": ""
+        },
+        {
+          "i": 103,
+          "text": ""
+        },
+        {
+          "i": 104,
+          "text": ""
+        },
+        {
+          "i": 105,
+          "text": ""
+        },
+        {
+          "i": 106,
+          "text": ""
+        },
+        {
+          "i": 107,
+          "text": ""
+        },
+        {
+          "i": 108,
+          "text": ""
+        },
+        {
+          "i": 109,
+          "text": ""
+        },
+        {
+          "i": 110,
+          "text": ""
+        },
+        {
+          "i": 111,
+          "text": ""
+        },
+        {
+          "i": 112,
+          "text": ""
+        },
+        {
+          "i": 113,
+          "text": ""
+        },
+        {
+          "i": 114,
+          "text": ""
+        },
+        {
+          "i": 115,
+          "text": ""
+        },
+        {
+          "i": 116,
+          "text": ""
+        },
+        {
+          "i": 117,
+          "text": ""
+        },
+        {
+          "i": 118,
+          "text": ""
+        },
+        {
+          "i": 119,
+          "text": ""
+        },
+        {
+          "i": 120,
+          "text": ""
+        },
+        {
+          "i": 121,
+          "text": "Ich bin fertig"
+        }
+      ]
+    }
+  ]
+}

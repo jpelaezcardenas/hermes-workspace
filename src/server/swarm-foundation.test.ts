@@ -248,4 +248,40 @@ describe('patchSwarmRuntimeFile', () => {
       fs.rmSync(tempDir, { recursive: true, force: true })
     }
   })
+
+  it('treats a completed dispatch checkpoint as the current lifecycle state', () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'runtime-dispatch-done-'))
+    try {
+      const runtimePath = path.join(tempDir, 'runtime.json')
+      fs.writeFileSync(
+        runtimePath,
+        JSON.stringify({
+          workerId: 'swarm9',
+          state: 'executing',
+          phase: 'dispatched',
+          currentTask: 'old task that already finished',
+          checkpointStatus: 'in_progress',
+          lastDispatchResult: `+# Handoff
++STATE: DONE
++FILES_CHANGED: src/server/swarm-foundation.ts
++COMMANDS_RUN: pnpm vitest
++RESULT: Finished the runtime patch
++BLOCKER: none
++NEXT_ACTION: Reload swarm view`,
+        }) + '\n',
+        'utf8',
+      )
+
+      const { runtime } = readSwarmRuntimeFile(tempDir, 'swarm9', {
+        workspaceRoot: tempDir,
+      })
+      expect(runtime.state).toBe('idle')
+      expect(runtime.phase).toBe('done')
+      expect(runtime.checkpointStatus).toBe('done')
+      expect(runtime.currentTask).toBeNull()
+      expect(runtime.lastResult).toBe('Finished the runtime patch')
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true })
+    }
+  })
 })

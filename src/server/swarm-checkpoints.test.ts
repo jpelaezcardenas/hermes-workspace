@@ -22,6 +22,19 @@ COMMANDS_RUN: none`)
     expect(parsed).toBeNull()
   })
 
+  it('parses checkpoint blocks copied from unified diffs', () => {
+    const parsed = parseSwarmCheckpoint(`+# Handoff
++STATE: DONE
++FILES_CHANGED: src/server/swarm-foundation.ts
++COMMANDS_RUN: pnpm vitest
++RESULT: Finished the runtime patch
++BLOCKER: none
++NEXT_ACTION: Reload swarm view`)
+    expect(parsed?.stateLabel).toBe('DONE')
+    expect(parsed?.checkpointStatus).toBe('done')
+    expect(parsed?.result).toBe('Finished the runtime patch')
+  })
+
   it('maps blocked checkpoints to runtime blocked state', () => {
     const parsed = parseSwarmCheckpoint(`STATE: BLOCKED
 FILES_CHANGED: none

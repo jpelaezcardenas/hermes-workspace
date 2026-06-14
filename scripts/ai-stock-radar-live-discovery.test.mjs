@@ -272,6 +272,49 @@ describe("AI stock radar live discovery", () => {
     expect(records[1].risk_flags).toContain("overheated_watch");
   });
 
+  it("prioritizes seeded or substantive AI candidates before applying the live fetch cap", async () => {
+    const noisyNasdaqListedText = [
+      "Symbol|Security Name|Market Category|Test Issue|Financial Status|Round Lot Size|ETF|NextShares",
+      "AIA|Alpha AI Holdings, Inc. - Common Stock|G|N|N|100|N|N",
+      "AIB|Beta AI Systems, Inc. - Common Stock|G|N|N|100|N|N",
+      "File Creation Time: 0530202620:00|||||||",
+    ].join("\n");
+    const seededOtherListedText = [
+      "ACT Symbol|Security Name|Exchange|CQS Symbol|ETF|Round Lot Size|Test Issue|NASDAQ Symbol",
+      "PLTR|Palantir Technologies Inc. Class A Common Stock|N|PLTR|N|100|N|PLTR",
+      "File Creation Time: 0530202620:00|||||||",
+    ].join("\n");
+    const broadSecCompanyTickers = {
+      0: { cik_str: 1, ticker: "AIA", title: "Alpha AI Holdings, Inc." },
+      1: { cik_str: 2, ticker: "AIB", title: "Beta AI Systems, Inc." },
+      2: { cik_str: 1321655, ticker: "PLTR", title: "Palantir Technologies Inc." },
+    };
+    const broadSubmissionsByCik = {
+      "0000000001": { filings: { recent: { form: ["10-Q"], filingDate: ["2026-05-01"] } } },
+      "0000000002": { filings: { recent: { form: ["10-Q"], filingDate: ["2026-05-01"] } } },
+      "0001321655": { filings: { recent: { form: ["10-K", "10-Q"], filingDate: ["2026-02-20", "2026-05-05"] } } },
+    };
+
+    const records = await buildLiveEvidenceRecords({
+      nasdaqListedText: noisyNasdaqListedText,
+      otherListedText: seededOtherListedText,
+      secCompanyTickers: broadSecCompanyTickers,
+      submissionsByCik: broadSubmissionsByCik,
+      companyFactsByCik: {},
+      seedRecords: [
+        {
+          ticker: "PLTR",
+          themes: ["enterprise_ai_software", "defense_ai"],
+          ai_exposure: "material",
+        },
+      ],
+      maxSubmissionFetches: 2,
+      maxRecords: 2,
+    });
+
+    expect(records.map((record) => record.ticker)).toContain("PLTR");
+  });
+
   it("discovers live evidence with source status and no paid providers", async () => {
     const result = await discoverLiveEvidence({
       fetcher: fetcherForFixtures,

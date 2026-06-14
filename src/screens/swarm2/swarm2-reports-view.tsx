@@ -116,6 +116,7 @@ type WorkerReportCard = {
   stateLabel: string
   latest: Swarm2ReportRow
   rows: Array<Swarm2ReportRow>
+  prUrl: string | null
   reviewCount: number
   readyCount: number
   blockedCount: number
@@ -400,6 +401,7 @@ function buildWorkerReportCards(rows: Array<Swarm2ReportRow>): Array<WorkerRepor
       stateLabel: latest.stateLabel,
       latest,
       rows: sorted,
+      prUrl: extractPullRequestUrl(latest),
       reviewCount: workerRows.filter((row) => row.state === 'needs_review').length,
       readyCount: workerRows.filter((row) => row.state === 'ready').length,
       blockedCount: workerRows.filter((row) => row.state === 'blocked').length,
@@ -811,13 +813,13 @@ export function Swarm2ReportsView({
                     <div className="relative flex size-12 shrink-0 items-center justify-center">
                       <AgentProgress
                         value={card.state === 'blocked' ? 30 : card.state === 'needs_review' ? 74 : card.state === 'ready' ? 100 : 58}
-                        status={card.state === 'blocked' ? 'failed' : card.state === 'ready' ? 'done' : card.state === 'needs_review' ? 'thinking' : 'running'}
+                        status={card.state === 'blocked' ? 'failed' : card.state === 'ready' ? 'complete' : card.state === 'needs_review' ? 'thinking' : 'running'}
                         size={48}
                         strokeWidth={2.5}
                         className={card.state === 'blocked' ? 'text-red-500' : card.state === 'needs_review' ? 'text-amber-500' : card.state === 'ready' ? 'text-emerald-500' : 'text-sky-500'}
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <PixelAvatar size={34} color={colorForWorker(card.workerId)} accentColor="#fbbf24" status={card.state === 'blocked' ? 'failed' : card.state === 'ready' ? 'running' : 'idle'} />
+                        <PixelAvatar size={34} color={colorForWorker(card.workerId)} accentColor="#fbbf24" status={card.state === 'blocked' ? 'failed' : card.state === 'ready' ? 'complete' : 'idle'} />
                       </div>
                     </div>
                     <div className="min-w-0 flex-1">
@@ -851,7 +853,7 @@ export function Swarm2ReportsView({
                     {(card.state === 'needs_review' || card.state === 'blocked' || card.state === 'ready') ? (
                       <button
                         type="button"
-                        onClick={() => onRouteToReviewer?.(card)}
+                        onClick={() => onRouteToReviewer?.(latestInboxItem)}
                         className="rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] px-2.5 py-1.5 text-[11px] text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
                       >
                         Steer

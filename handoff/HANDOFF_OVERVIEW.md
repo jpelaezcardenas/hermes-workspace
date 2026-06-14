@@ -1,6 +1,6 @@
 # Hermes Codex Handoff
 
-Stand: 2026-06-01
+Stand: 2026-06-14
 
 Zweck:
 Hermes kann Aufgaben fuer Codex hier sauber ablegen. Codex kann Ergebnisse strukturiert zurueckgeben. So bleiben automatische Hermes-Jobs, Decision Inbox und Codex-Umsetzung verbunden.
@@ -27,16 +27,11 @@ Hermes legt nur dann ein Codex-Handoff an, wenn aus der Decision Inbox eine konk
 ## Aktuelle Handoff-Lage
 
 Offene Codex-Inbox-Handoffs:
-- Keine offenen Codex-Inbox-Handoffs ohne passende Outbox-Rueckgabe.
-
-Archiv-Review 2026-06-01:
-- `codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md`: erledigt, passende Outbox-Rueckgabe vorhanden, am 2026-06-01 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-28-ge-spielraum-schmale-viewport.md`.
-- `codex-handoff-2026-05-31-ge-minikisten-checkliste.md`: erledigt, passende Outbox-Rueckgabe vorhanden, am 2026-06-01 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-31-ge-minikisten-checkliste.md`.
+- `codex-handoff-2026-06-07-uk-startkarte-fachfremde-kollegen.md`: offen, keine passende Outbox-Rückgabe gefunden.
+- `codex-handoff-2026-06-14-uk-startkarte-handoff-review.md`: offen, keine passende Outbox-Rückgabe gefunden.
 
 ## Zuletzt abgeschlossene Handoffs
 
-- `codex-handoff-2026-05-28-ge-spielraum-schmale-viewport.md`: abgeschlossen und am 2026-06-01 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-28-ge-spielraum-schmale-viewport.md`.
-- `codex-handoff-2026-05-31-ge-minikisten-checkliste.md`: abgeschlossen und am 2026-06-01 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-31-ge-minikisten-checkliste.md`.
 - `codex-handoff-2026-05-18-lernwerkstatt-mengen-spielraum.md`: abgeschlossen und am 2026-05-21 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-18-lernwerkstatt-mengen-spielraum.md`.
 - `codex-handoff-2026-05-20-gartenpost-prototyp.md`: abgeschlossen und am 2026-05-21 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-20-gartenpost-prototyp.md`.
 - `codex-handoff-2026-05-20-ge-spielraum-pattern.md`: abgeschlossen und am 2026-05-21 archiviert. Ergebnis liegt in `codex-outbox/codex-result-2026-05-20-ge-spielraum-pattern.md`.

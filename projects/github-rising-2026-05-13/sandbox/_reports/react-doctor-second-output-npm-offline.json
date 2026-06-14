@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.6",
+  "ok": true,
+  "directory": "/Users/zondrius/hermes-workspace/projects/github-rising-2026-05-13/sandbox/react-doctor/demo-react-app",
+  "mode": "full",
+  "diff": null,
+  "projects": [
+    {
+      "directory": "/Users/zondrius/hermes-workspace/projects/github-rising-2026-05-13/sandbox/react-doctor/demo-react-app",
+      "project": {
+        "rootDirectory": "/Users/zondrius/hermes-workspace/projects/github-rising-2026-05-13/sandbox/react-doctor/demo-react-app",
+        "projectName": "synthetic-react-doctor-demo",
+        "reactVersion": "latest",
+        "framework": "vite",
+        "hasTypeScript": false,
+        "hasReactCompiler": false,
+        "hasTanStackQuery": false,
+        "sourceFileCount": 1
+      },
+      "diagnostics": [
+        {
+          "filePath": "src/main.jsx",
+          "plugin": "react-doctor",
+          "rule": "no-effect-chain",
+          "severity": "warning",
+          "message": "useEffect reacts to \"copiedItems\" which is set by another useEffect — chains of effects add an extra render per link and become rigid as code evolves. Compute what you can during render and write all related state inside the event handler that originally fires the chain",
+          "help": "Compute as much as possible during render (e.g. `const isGameOver = round > 5`) and write all related state inside the event handler that originally fires the chain. Each effect link adds an extra render and makes the code rigid as requirements evolve",
+          "line": 16,
+          "column": 3,
+          "category": "State & Effects"
+        },
+        {
+          "filePath": "src/main.jsx",
+          "plugin": "react-doctor",
+          "rule": "no-array-index-as-key",
+          "severity": "warning",
+          "message": "Array index \"index\" used as key — causes bugs when list is reordered or filtered",
+          "help": "Use a stable unique identifier: `key={item.id}` or `key={item.slug}` — index keys break on reorder/filter",
+          "line": 35,
+          "column": 13,
+          "category": "Correctness"
+        }
+      ],
+      "score": {
+        "score": 99,
+        "label": "Great"
+      },
+      "skippedChecks": [],
+      "elapsedMilliseconds": 134.86508300000003
+    }
+  ],
+  "diagnostics": [
+    {
+      "filePath": "src/main.jsx",
+      "plugin": "react-doctor",
+      "rule": "no-effect-chain",
+      "severity": "warning",
+      "message": "useEffect reacts to \"copiedItems\" which is set by another useEffect — chains of effects add an extra render per link and become rigid as code evolves. Compute what you can during render and write all related state inside the event handler that originally fires the chain",
+      "help": "Compute as much as possible during render (e.g. `const isGameOver = round > 5`) and write all related state inside the event handler that originally fires the chain. Each effect link adds an extra render and makes the code rigid as requirements evolve",
+      "line": 16,
+      "column": 3,
+      "category": "State & Effects"
+    },
+    {
+      "filePath": "src/main.jsx",
+      "plugin": "react-doctor",
+      "rule": "no-array-index-as-key",
+      "severity": "warning",
+      "message": "Array index \"index\" used as key — causes bugs when list is reordered or filtered",
+      "help": "Use a stable unique identifier: `key={item.id}` or `key={item.slug}` — index keys break on reorder/filter",
+      "line": 35,
+      "column": 13,
+      "category": "Correctness"
+    }
+  ],
+  "summary": {
+    "errorCount": 0,
+    "warningCount": 2,
+    "affectedFileCount": 1,
+    "totalDiagnosticCount": 2,
+    "score": 99,
+    "scoreLabel": "Great"
+  },
+  "elapsedMilliseconds": 137.694542,
+  "error": null
+}

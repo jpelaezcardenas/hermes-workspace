@@ -3,10 +3,17 @@ import { json } from '@tanstack/react-start'
 import { z } from 'zod'
 import { createKanbanCard, getKanbanBackendMeta, listKanbanCards, updateKanbanCard } from '../../server/kanban-backend'
 
+const AcceptanceCriteriaSchema = z.preprocess((value) => {
+  if (typeof value === 'string') {
+    return value.split('\n').map((item) => item.trim()).filter(Boolean)
+  }
+  return value
+}, z.array(z.string().trim().min(1)).optional().default([]))
+
 const CreateCardSchema = z.object({
   title: z.string().trim().min(1).max(200),
   spec: z.string().trim().max(5000).optional().default(''),
-  acceptanceCriteria: z.string().trim().max(5000).optional().default(''),
+  acceptanceCriteria: AcceptanceCriteriaSchema,
   assignedWorker: z.string().trim().max(120).optional().nullable(),
   reviewer: z.string().trim().max(120).optional().nullable(),
   status: z.enum(['backlog', 'ready', 'running', 'review', 'blocked', 'done']).optional().default('backlog'),

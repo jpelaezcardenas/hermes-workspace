@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "start": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "build:esbuild": "node build-esbuild.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "vite": "latest"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-darwin-arm64": "^1.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

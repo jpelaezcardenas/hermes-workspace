@@ -128,6 +128,7 @@ describe("Stock Risk Commander", () => {
       "## Kurzfazit",
       "## Job Alignment",
       "## Combined Risk Board",
+      "## Potential Candidate Board",
       "## Top Research Attention",
       "## Risk Overrides",
       "## Institutional Pressure Overlay",
@@ -138,6 +139,9 @@ describe("Stock Risk Commander", () => {
     ]) {
       expect(report).toContain(section);
     }
+    const potentialSection = report.match(/## Potential Candidate Board\n([\s\S]*?)\n\n## Top Research Attention/)?.[1] || "";
+    expect(potentialSection).toContain("SAFE");
+    expect(potentialSection).toMatch(/Research Review|Watch|Risk Review|Archive\/Avoid Review/);
     expect(report.toLowerCase()).not.toMatch(/buy now|sell now|short now|strong buy|strong sell|price target|kursziel|option|leverage|margin|garantiert/);
   });
 
