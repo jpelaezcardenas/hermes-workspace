@@ -138,8 +138,6 @@ export const SwarmTerminal = memo(function SwarmTerminalComponent({
     async function bootstrap() {
       if (!containerRef.current) return
       await ensureXterm()
-      if (!containerRef.current) return
-
       const terminal = new TerminalCtor({
         cursorBlink: true,
         cursorStyle: 'bar',
