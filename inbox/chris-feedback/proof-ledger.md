@@ -26,3 +26,5 @@ Examples:
 ## Real Entries
 
 Only lines below this heading are real proof entries. Hermes jobs must ignore the examples, format line, headings and instructions above.
+
+2026-06-15 | Schule | S-Kiste/Deutsch-Wahrnehmung | parked | Chris: S-Gegenstand/S-Bildkarte zu plump | nicht wieder als Kernbaustein waehlen

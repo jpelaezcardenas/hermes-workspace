@@ -1,6 +1,18 @@
 # Lehrer-Morgenkarte GE - 2026-06-14
 Fuer morgen: 2026-06-15
 
+## Korrektur / Park-Regel vom 2026-06-15
+
+Diese Morgenkarte ist als heutiger Auftrag **geparkt**.
+
+Grund: Chris bewertet die S-Kiste-Linie mit S-Gegenstand/S-Bildkarte als zu plump. Die Datei bleibt als Verlauf erhalten, darf aber nicht mehr als Kernbaustein, Life Card, `SOFORT_MACHEN`, `Naechste kleinste Aktion`, App-Idee oder Handoff-Quelle genutzt werden.
+
+Korrigierte Entscheidung:
+- Keine S-Kiste.
+- Keine S-Gegenstand/S-Bildkarte-Station.
+- Keine isolierte Buchstaben-Gegenstand-Uebung.
+- Wenn heute Entlastung noetig ist: eine vorhandene reale Handlung mit **Start / Pause / Fertig** vereinfachen.
+
 ## Kurzfazit
 Bester Kern fuer morgen ist die **S-Kiste als kurze Deutsch- und Wahrnehmungsstation**: hoeren, fuehlen, zeigen und in zwei Felder sortieren. Rueckmeldung: keine; Proof: keine reale Nutzungszeile vorhanden, deshalb nur als kleine TEST_CARD nutzen und nicht als bewaehrt ausbauen.
 
