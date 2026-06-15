@@ -4,7 +4,6 @@ import { seedAgentPresets } from './agent-presets'
 import {
   AiBrain03Icon,
   Settings01Icon,
-  PlusSignIcon,
 } from '@hugeicons/core-free-icons'
 import { cn } from '@/lib/utils'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -13,7 +12,6 @@ import { formatRelativeTime } from '@/screens/dashboard/lib/formatters'
 import { OrchestratorCard } from './components/orchestrator-card'
 import { OperationsAgentCard } from './components/operations-agent-card'
 import { OperationsAgentDetail } from './components/operations-agent-detail'
-import { OperationsNewAgentModal } from './components/operations-new-agent-modal'
 import { OperationsSettingsModal } from './components/operations-settings-modal'
 import { FullOutputsView } from './components/full-outputs-view'
 import { AgentBusPanel } from './components/agent-bus-panel'
@@ -178,7 +176,6 @@ export const THEME_STYLE: CSSProperties = {
 
 export function OperationsScreen() {
   useEffect(() => { seedAgentPresets() }, [])
-  const [newAgentOpen, setNewAgentOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [settingsAgentId, setSettingsAgentId] = useState<string | null>(null)
   const [view, setView] = useState<'overview' | 'outputs'>('overview')
@@ -197,8 +194,6 @@ export function OperationsScreen() {
     settings,
     saveSettings,
     defaultModel,
-    createAgent,
-    isCreatingAgent,
     saveAgent,
     isSavingAgent,
     deleteAgent,
@@ -239,7 +234,7 @@ export function OperationsScreen() {
   }, [])
 
   // Split: AI sisters + delegation profiles first (sorted by priority), then others
-  const { sisterAgents, otherAgents } = useMemo(() => {
+  const { sisterAgents } = useMemo(() => {
     const si: typeof agents = []
     const ot: typeof agents = []
     for (const agent of agents) {
@@ -251,10 +246,8 @@ export function OperationsScreen() {
       const pb = sisterMap[b.id]?.priority ?? 99
       return pa - pb
     })
-    return { sisterAgents: si, otherAgents: ot }
+    return { sisterAgents: si }
   }, [agents, sisterMap])
-
-  const sortedAgents = useMemo(() => [...sisterAgents, ...otherAgents], [sisterAgents, otherAgents])
   const rosterEntries = useMemo(
     () =>
       [...(sistersQuery.data ?? [])].sort(
@@ -318,13 +311,6 @@ export function OperationsScreen() {
               </button>
             </div>
             <Button
-              className="bg-[var(--theme-accent)] text-primary-950 hover:bg-[var(--theme-accent-strong)]"
-              onClick={() => setNewAgentOpen(true)}
-            >
-              <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={1.8} />
-              New Agent
-            </Button>
-            <Button
               variant="secondary"
               className="border border-[var(--theme-border)] bg-[var(--theme-card)] text-[var(--theme-text)] hover:bg-[var(--theme-card2)]"
               onClick={() => setSettingsOpen(true)}
@@ -353,7 +339,7 @@ export function OperationsScreen() {
               transition={{ duration: 0.25 }}
             >
               <OrchestratorCard
-                totalAgents={sortedAgents.length}
+                totalAgents={sisterAgents.length}
                 sisterCount={sisterAgents.length}
               />
             </motion.div>
@@ -366,7 +352,7 @@ export function OperationsScreen() {
               <OperationsHealthSummary
                 configPending={configQuery.isPending}
                 configError={configQuery.error}
-                profilesCount={sortedAgents.length}
+                profilesCount={sisterAgents.length}
                 sessionsPending={sessionsQuery.isPending}
                 sessionsError={sessionsQuery.error}
                 sessionsCount={sessionsQuery.data?.length ?? 0}
@@ -417,65 +403,6 @@ export function OperationsScreen() {
               </div>
             ) : null}
 
-            {otherAgents.length > 0 ? (
-              <div className="space-y-3">
-                {sisterAgents.length > 0 ? (
-                  <div className="flex items-center gap-2 px-1">
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--theme-muted)]">Agents</span>
-                    <span className="h-px flex-1 bg-[var(--theme-border)]" />
-                  </div>
-                ) : null}
-                <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {otherAgents.map((agent, index) => (
-                    <motion.div
-                      key={agent.id}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: (sisterAgents.length + index) * 0.04, duration: 0.22 }}
-                    >
-                      <OperationsAgentCard
-                        agent={agent}
-                        sisterInfo={sisterMap[agent.id]}
-                        onOpenSettings={(agentId) => setSettingsAgentId(agentId)}
-                      />
-                    </motion.div>
-                  ))}
-                  <motion.button
-                    type="button"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: sortedAgents.length * 0.04, duration: 0.22 }}
-                    onClick={() => setNewAgentOpen(true)}
-                    className="flex min-h-[19rem] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-[var(--theme-border)] bg-[var(--theme-card)] p-4 text-center shadow-[0_20px_60px_color-mix(in_srgb,var(--theme-shadow)_10%,transparent)] transition-colors hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent-soft)]"
-                  >
-                    <HugeiconsIcon
-                      icon={PlusSignIcon}
-                      size={32}
-                      strokeWidth={1.7}
-                      className="text-[var(--theme-muted)]"
-                    />
-                    <span className="mt-3 text-sm text-[var(--theme-muted)]">Add Agent</span>
-                  </motion.button>
-                </section>
-              </div>
-            ) : (
-              <motion.button
-                type="button"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: sisterAgents.length * 0.04, duration: 0.22 }}
-                onClick={() => setNewAgentOpen(true)}
-                className="flex min-h-[19rem] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-[var(--theme-border)] bg-[var(--theme-card)] p-4 text-center shadow-[0_20px_60px_color-mix(in_srgb,var(--theme-shadow)_10%,transparent)] transition-colors hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent-soft)]"
-              >
-                <HugeiconsIcon
-                  icon={PlusSignIcon}
-                  size={32}
-                  strokeWidth={1.7}
-                  className="text-[var(--theme-muted)]"
-                />
-                <span className="mt-3 text-sm text-[var(--theme-muted)]">Add Agent</span>
-              </motion.button>
-            )}
 
             {rosterEntries.length > 0 ? (
               <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 shadow-[0_24px_80px_var(--theme-shadow)]">
@@ -516,7 +443,7 @@ export function OperationsScreen() {
               <div className="mt-4 space-y-3">
                 {recentActivity.length > 0 ? (
                   recentActivity.map((activity) => {
-                    const agent = sortedAgents.find((entry) => entry.id === activity.agentId)
+                    const agent = sisterAgents.find((entry) => entry.id === activity.agentId)
                     return (
                       <div
                         key={activity.id}
@@ -543,14 +470,6 @@ export function OperationsScreen() {
           </>
         )}
       </section>
-
-      <OperationsNewAgentModal
-        open={newAgentOpen}
-        defaultModel={defaultModel}
-        onClose={() => setNewAgentOpen(false)}
-        onCreate={createAgent}
-        isSaving={isCreatingAgent}
-      />
 
       <OperationsSettingsModal
         open={settingsOpen}

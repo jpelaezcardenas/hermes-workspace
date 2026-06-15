@@ -852,6 +852,13 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
+      to: '/agents',
+      icon: UserMultipleIcon,
+      label: 'Agent Team',
+      active: pathname.startsWith('/agents'),
+    },
+    {
+      kind: 'link',
       to: '/swarm',
       icon: UserGroupIcon,
       label: 'Swarm',
