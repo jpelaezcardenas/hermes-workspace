@@ -71,13 +71,13 @@ function deriveAgentRows(agents: AgentHubLayoutProps['agents'], sessions: Gatewa
 
   if (recent.length === 0) {
     return [
-      { id: 'placeholder-1', name: 'Nova', modelId: 'auto', status: 'idle' as const, lastLine: 'Waiting for first mission…', taskCount: 0, roleDescription: 'Worker' },
-      { id: 'placeholder-2', name: 'Pixel', modelId: 'auto', status: 'idle' as const, lastLine: 'Standing by…', taskCount: 0, roleDescription: 'Worker' },
-      { id: 'placeholder-3', name: 'Blaze', modelId: 'auto', status: 'idle' as const, lastLine: 'Ready to build.', taskCount: 0, roleDescription: 'Worker' },
+      { id: 'placeholder-1', name: 'Astra', modelId: 'auto', status: 'idle' as const, lastLine: 'Waiting for first mission…', taskCount: 0, roleDescription: 'Orchestrator' },
+      { id: 'placeholder-2', name: 'Nova',  modelId: 'auto', status: 'idle' as const, lastLine: 'Standing by…', taskCount: 0, roleDescription: 'Researcher' },
+      { id: 'placeholder-3', name: 'Ada',   modelId: 'auto', status: 'idle' as const, lastLine: 'Ready to build.', taskCount: 0, roleDescription: 'Code Specialist' },
     ]
   }
 
-  const NAMES = ['Nova', 'Pixel', 'Blaze', 'Echo', 'Sage', 'Drift']
+  const NAMES = ['Astra', 'Nova', 'Ada', 'Maya', 'Vega', 'Atlas']
   return recent.map((session, i) => {
     const updatedAt = readTimestamp(session.updatedAt)
     const statusText = `${readText(session.status)} ${readText(session.kind)}`.toLowerCase()

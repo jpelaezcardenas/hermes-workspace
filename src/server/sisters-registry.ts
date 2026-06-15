@@ -218,13 +218,14 @@ function readDelegationProfiles(hermesRoot: string): Sister[] {
     const profilePath = getProfilePath(hermesRoot, id)
     const { hasProfile, isLive } = checkProfileLive(profilePath)
     const overrides = obj(entry.config_overrides)
+    const profileRole = str(entry.role) || id
     result.push({
       id,
-      name: id.charAt(0).toUpperCase() + id.slice(1),
-      emoji: emojiForRole(id),
+      name: str(entry.name) || (id.charAt(0).toUpperCase() + id.slice(1)),
+      emoji: str(entry.emoji) || emojiForRole(profileRole),
       description: str(entry.description),
       model: str(overrides.model) || undefined,
-      role: id,
+      role: profileRole,
       type: 'delegation_profile',
       profilePath,
       hasProfile,

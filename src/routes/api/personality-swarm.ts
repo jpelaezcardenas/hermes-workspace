@@ -20,6 +20,7 @@ export const Route = createFileRoute('/api/personality-swarm')({
           ok: true,
           presets: Object.entries(PERSONALITY_PRESETS).map(([key, p]) => ({
             key,
+            name: p.name,
             label: p.label,
             description: p.description,
             prompt: p.prompt,
