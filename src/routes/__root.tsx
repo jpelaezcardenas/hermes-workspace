@@ -296,24 +296,6 @@ function RootLayout() {
 
     syncOnboardingCompletion()
 
-    void fetch('/api/connection-status')
-      .then((res) => (res.ok ? res.json() : null))
-      .then(
-        (
-          status: {
-            ok?: boolean
-            chatReady?: boolean
-            modelConfigured?: boolean
-          } | null,
-        ) => {
-          if (status?.ok || (status?.chatReady && status?.modelConfigured)) {
-            localStorage.setItem(ONBOARDING_KEY, 'true')
-            syncOnboardingCompletion()
-          }
-        },
-      )
-      .catch(() => undefined)
-
     const handleStorage = (event: StorageEvent) => {
       if (event.key && event.key !== ONBOARDING_KEY) return
       syncOnboardingCompletion()
@@ -349,11 +331,35 @@ function RootLayout() {
     let cancelled = false
     fetchClaudeAuthStatus()
       .then((status) => {
-        if (!cancelled) setAuthStatus(status)
+        if (cancelled) return
+        setAuthStatus(status)
+        if (status.authenticated || !status.authRequired) {
+          void fetch('/api/connection-status')
+            .then((res) => (res.ok ? res.json() : null))
+            .then(
+              (
+                connectionStatus: {
+                  ok?: boolean
+                  chatReady?: boolean
+                  modelConfigured?: boolean
+                } | null,
+              ) => {
+                if (
+                  !cancelled &&
+                  (connectionStatus?.ok ||
+                    (connectionStatus?.chatReady && connectionStatus?.modelConfigured))
+                ) {
+                  localStorage.setItem(ONBOARDING_KEY, 'true')
+                  setOnboardingComplete(true)
+                }
+              },
+            )
+            .catch(() => undefined)
+        }
       })
       .catch(() => {
         if (!cancelled) {
-          setAuthStatus({ authenticated: true, authRequired: false })
+          setAuthStatus((prev) => prev ?? { authenticated: false, authRequired: true })
         }
       })
     return () => {
