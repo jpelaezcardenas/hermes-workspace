@@ -19,6 +19,139 @@ import { FullOutputsView } from './components/full-outputs-view'
 import { AgentBusPanel } from './components/agent-bus-panel'
 import { useOperations } from './hooks/use-operations'
 
+type AgentBusHealth = {
+  ok?: boolean
+  issues?: Array<unknown>
+  status?: {
+    summary?: {
+      total?: number
+      down?: number
+      events?: number
+    }
+  }
+}
+
+type HealthTone = 'good' | 'warn' | 'bad' | 'loading'
+
+function HealthTile({
+  label,
+  value,
+  detail,
+  tone,
+}: {
+  label: string
+  value: string
+  detail: string
+  tone: HealthTone
+}) {
+  return (
+    <div
+      className={cn(
+        'rounded-2xl border px-4 py-3',
+        tone === 'good' && 'border-emerald-200 bg-emerald-50 text-emerald-900',
+        tone === 'warn' && 'border-amber-200 bg-amber-50 text-amber-950',
+        tone === 'bad' && 'border-red-200 bg-red-50 text-red-900',
+        tone === 'loading' && 'border-[var(--theme-border)] bg-[var(--theme-bg)] text-[var(--theme-muted)]',
+      )}
+    >
+      <div className="text-sm font-semibold">{label}</div>
+      <div className="mt-2 text-2xl font-bold leading-none">{value}</div>
+      <div className="mt-1 text-xs opacity-70">{detail}</div>
+    </div>
+  )
+}
+
+function OperationsHealthSummary({
+  configPending,
+  configError,
+  profilesCount,
+  sessionsPending,
+  sessionsError,
+  sessionsCount,
+  cronPending,
+  cronError,
+  cronCount,
+  sistersPending,
+  sistersError,
+  sistersCount,
+  agentBus,
+  agentBusPending,
+  agentBusError,
+  lastChecked,
+}: {
+  configPending: boolean
+  configError: unknown
+  profilesCount: number
+  sessionsPending: boolean
+  sessionsError: unknown
+  sessionsCount: number
+  cronPending: boolean
+  cronError: unknown
+  cronCount: number
+  sistersPending: boolean
+  sistersError: unknown
+  sistersCount: number
+  agentBus: AgentBusHealth | null
+  agentBusPending: boolean
+  agentBusError: string | null
+  lastChecked: number | null
+}) {
+  const agentBusIssues = agentBus?.issues?.length ?? agentBus?.status?.summary?.down ?? 0
+  const checkedLabel = lastChecked ? `Last checked ${formatRelativeTime(lastChecked)}` : 'Waiting for first check'
+
+  return (
+    <section className="rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-card)] p-5 shadow-[0_24px_80px_var(--theme-shadow)]">
+      <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-accent-strong)]">
+            Operations Health
+          </p>
+          <h2 className="mt-1 text-lg font-semibold text-[var(--theme-text)]">
+            Control plane readiness
+          </h2>
+          <p className="mt-1 text-sm text-[var(--theme-muted-2)]">
+            Live checks for profiles, sessions, cron, sisters, and Agent Bus.
+          </p>
+        </div>
+        <span className="text-xs text-[var(--theme-muted)]">{checkedLabel}</span>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-5">
+        <HealthTile
+          label="Profiles"
+          value={configPending ? '…' : String(profilesCount)}
+          detail={configError ? 'Config API failed' : 'loaded from profiles'}
+          tone={configPending ? 'loading' : configError ? 'bad' : 'good'}
+        />
+        <HealthTile
+          label="Sessions"
+          value={sessionsPending ? '…' : String(sessionsCount)}
+          detail={sessionsError ? 'Gateway sessions failed' : 'activity source'}
+          tone={sessionsPending ? 'loading' : sessionsError ? 'bad' : 'good'}
+        />
+        <HealthTile
+          label="Cron"
+          value={cronPending ? '…' : String(cronCount)}
+          detail={cronError ? 'Cron API failed' : 'scheduled jobs'}
+          tone={cronPending ? 'loading' : cronError ? 'bad' : 'good'}
+        />
+        <HealthTile
+          label="Sisters"
+          value={sistersPending ? '…' : String(sistersCount)}
+          detail={sistersError ? 'Registry failed' : 'registry entries'}
+          tone={sistersPending ? 'loading' : sistersError ? 'bad' : 'good'}
+        />
+        <HealthTile
+          label="Agent Bus"
+          value={agentBusPending ? '…' : String(agentBus?.status?.summary?.total ?? 0)}
+          detail={agentBusError ? agentBusError : `${agentBusIssues} issue${agentBusIssues === 1 ? '' : 's'}`}
+          tone={agentBusPending ? 'loading' : agentBusError ? 'bad' : agentBusIssues > 0 ? 'warn' : 'good'}
+        />
+      </div>
+    </section>
+  )
+}
+
 export const THEME_STYLE: CSSProperties = {
   ['--theme-bg' as string]: 'var(--color-surface)',
   ['--theme-card' as string]: 'var(--color-primary-50)',
@@ -49,6 +182,10 @@ export function OperationsScreen() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [settingsAgentId, setSettingsAgentId] = useState<string | null>(null)
   const [view, setView] = useState<'overview' | 'outputs'>('overview')
+  const [agentBusHealth, setAgentBusHealth] = useState<AgentBusHealth | null>(null)
+  const [agentBusError, setAgentBusError] = useState<string | null>(null)
+  const [agentBusPending, setAgentBusPending] = useState(true)
+  const [healthLastChecked, setHealthLastChecked] = useState<number | null>(null)
   const {
     agents,
     recentActivity,
@@ -67,6 +204,39 @@ export function OperationsScreen() {
     deleteAgent,
     isDeletingAgent,
   } = useOperations()
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadAgentBusHealth() {
+      setAgentBusPending(true)
+      try {
+        const response = await fetch('/api/agent-bus', {
+          headers: { Accept: 'application/json' },
+        })
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        const payload = (await response.json()) as AgentBusHealth
+        if (cancelled) return
+        setAgentBusHealth(payload)
+        setAgentBusError(null)
+      } catch (err) {
+        if (cancelled) return
+        setAgentBusError(err instanceof Error ? err.message : 'Agent Bus failed')
+      } finally {
+        if (!cancelled) {
+          setAgentBusPending(false)
+          setHealthLastChecked(Date.now())
+        }
+      }
+    }
+
+    void loadAgentBusHealth()
+    const timer = window.setInterval(() => void loadAgentBusHealth(), 30_000)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [])
 
   // Split: AI sisters + delegation profiles first (sorted by priority), then others
   const { sisterAgents, otherAgents } = useMemo(() => {
@@ -192,6 +362,31 @@ export function OperationsScreen() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05, duration: 0.25 }}
+            >
+              <OperationsHealthSummary
+                configPending={configQuery.isPending}
+                configError={configQuery.error}
+                profilesCount={sortedAgents.length}
+                sessionsPending={sessionsQuery.isPending}
+                sessionsError={sessionsQuery.error}
+                sessionsCount={sessionsQuery.data?.length ?? 0}
+                cronPending={cronJobsQuery.isPending}
+                cronError={cronJobsQuery.error}
+                cronCount={cronJobsQuery.data?.length ?? 0}
+                sistersPending={sistersQuery.isPending}
+                sistersError={sistersQuery.error}
+                sistersCount={sistersQuery.data?.length ?? 0}
+                agentBus={agentBusHealth}
+                agentBusPending={agentBusPending}
+                agentBusError={agentBusError}
+                lastChecked={healthLastChecked}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.25 }}
             >
               <AgentBusPanel />
             </motion.div>
