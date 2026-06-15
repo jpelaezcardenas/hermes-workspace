@@ -2,10 +2,11 @@ import { useEffect, useId, useState } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Copy01Icon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { CodeBlock } from './code-block'
+import type { Mermaid } from 'mermaid'
 import { writeTextToClipboard } from '@/lib/clipboard'
 import { cn } from '@/lib/utils'
 
-let mermaidReady: Promise<typeof import('mermaid').default> | null = null
+let mermaidReady: Promise<Mermaid> | null = null
 
 function getMermaid() {
   if (!mermaidReady) {
