@@ -563,24 +563,24 @@ ${conflictDetails}`
     }
   }
 
-  let parsed: { recommendations: AiFileRecommendation[]; summary: string } | null = null
+  let parsed: AiAnalysisPayload | null = null
   try {
     const text = result.stdout.trim()
-    try {
-      parsed = JSON.parse(text) as typeof parsed
-    } catch {
-      const match = text.match(/\{[\s\S]*\}/)
-      if (match) parsed = JSON.parse(match[0]) as typeof parsed
-    }
+    let payloadText = text
+    const match = text.match(/\{[\s\S]*\}/)
+    if (match) payloadText = match[0]
+    parsed = JSON.parse(payloadText) as AiAnalysisPayload
   } catch {
     /* ignore */
   }
 
+  const recommendations = parsed ? parsed.recommendations : []
+  const summary = parsed ? parsed.summary : result.stdout.slice(0, 500)
   const analysis: NaveenAiAnalysis = {
-    recommendations: Array.isArray(parsed?.recommendations)
-      ? (parsed!.recommendations as AiFileRecommendation[])
+    recommendations: Array.isArray(recommendations)
+      ? recommendations
       : [],
-    summary: parsed?.summary ?? result.stdout.slice(0, 500),
+    summary,
     checkedAt: Date.now(),
   }
 
@@ -588,6 +588,8 @@ ${conflictDetails}`
   writeFileSync(AI_CACHE_FILE, JSON.stringify(analysis, null, 2) + '\n')
   return analysis
 }
+
+type AiAnalysisPayload = { recommendations: AiFileRecommendation[]; summary: string }
 
 export function readCachedAiAnalysis(): NaveenAiAnalysis | null {
   try {

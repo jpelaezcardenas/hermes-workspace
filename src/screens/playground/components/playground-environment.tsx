@@ -595,7 +595,7 @@ export function ScatteredScenery({
   worldId,
   seed = 1,
 }: {
-  worldId: 'agora' | 'forge' | 'grove' | 'oracle' | 'arena'
+  worldId: 'training' | 'agora' | 'forge' | 'grove' | 'oracle' | 'arena'
   seed?: number
 }) {
   const items = useMemo(() => {
