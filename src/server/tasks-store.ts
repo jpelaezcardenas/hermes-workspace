@@ -6,8 +6,17 @@ import { randomUUID } from 'node:crypto'
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
-export type TaskAgentState = 'reviewing' | 'delegating' | 'working' | null
+export type TaskAgentState = 'reviewing' | 'delegating' | 'working' | 'waiting_for_input' | null
 export type TaskSource = 'human' | 'idea_job' | 'astra' | null
+
+export type ActivityEntry = {
+  id: string
+  by: string
+  byEmoji: string
+  action: string
+  note: string
+  at: string
+}
 
 export type TaskRecord = {
   id: string
@@ -27,6 +36,9 @@ export type TaskRecord = {
   agent_name?: string | null
   agent_action_at?: string | null
   source?: TaskSource
+  agent_comment?: string | null
+  agent_history?: ActivityEntry[]
+  waiting_for_user?: boolean
 }
 
 type TaskFile = { tasks: TaskRecord[] }
@@ -87,6 +99,9 @@ function normalizeTask(task: Partial<TaskRecord> & Pick<TaskRecord, 'id' | 'titl
     agent_name: task.agent_name ?? null,
     agent_action_at: task.agent_action_at ?? null,
     source: task.source ?? null,
+    agent_comment: task.agent_comment ?? null,
+    agent_history: Array.isArray(task.agent_history) ? task.agent_history : [],
+    waiting_for_user: task.waiting_for_user ?? false,
   }
 }
 
