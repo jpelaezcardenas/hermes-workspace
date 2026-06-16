@@ -29,8 +29,14 @@ async function handler({ request }: { request: Request }): Promise<Response> {
   const target = `${ODYSSEUS_BASE}/api${rest}${url.search}`
 
   const upstreamHeaders = new Headers(request.headers)
-  // Don't forward host header — let the HTTP client set it correctly
-  upstreamHeaders.delete('host')
+  // Don't forward host or hop-by-hop headers
+  for (const h of ['host', 'connection', 'keep-alive', 'upgrade', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailer']) {
+    upstreamHeaders.delete(h)
+  }
+  // Prevent nginx/CDN buffering on SSE stream endpoints
+  if (url.pathname.includes('/stream/')) {
+    upstreamHeaders.set('X-Accel-Buffering', 'no')
+  }
 
   let body: BodyInit | null = null
   if (request.method !== 'GET' && request.method !== 'HEAD') {
@@ -59,7 +65,7 @@ async function handler({ request }: { request: Request }): Promise<Response> {
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Odysseus unreachable'
     return new Response(
-      JSON.stringify({ ok: false, error: message }),
+      JSON.stringify({ ok: false, error: `Odysseus unreachable (${target}): ${message}` }),
       {
         status: 502,
         headers: { 'content-type': 'application/json' },

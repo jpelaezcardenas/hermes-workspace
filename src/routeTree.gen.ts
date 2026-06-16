@@ -95,6 +95,7 @@ import { Route as ApiPlaygroundAdminRouteImport } from './routes/api/playground-
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPersonalitySwarmRouteImport } from './routes/api/personality-swarm'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
+import { Route as ApiOdysseusBootstrapRouteImport } from './routes/api/odysseus-bootstrap'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
 import { Route as ApiMediaRouteImport } from './routes/api/media'
@@ -628,6 +629,11 @@ const ApiPersonalitySwarmRoute = ApiPersonalitySwarmRouteImport.update({
 const ApiPathsRoute = ApiPathsRouteImport.update({
   id: '/api/paths',
   path: '/api/paths',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOdysseusBootstrapRoute = ApiOdysseusBootstrapRouteImport.update({
+  id: '/api/odysseus-bootstrap',
+  path: '/api/odysseus-bootstrap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiModelsRoute = ApiModelsRouteImport.update({
@@ -1215,6 +1221,7 @@ export interface FileRoutesByFullPath {
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
+  '/api/odysseus-bootstrap': typeof ApiOdysseusBootstrapRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/personality-swarm': typeof ApiPersonalitySwarmRoute
   '/api/ping': typeof ApiPingRoute
@@ -1405,6 +1412,7 @@ export interface FileRoutesByTo {
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
+  '/api/odysseus-bootstrap': typeof ApiOdysseusBootstrapRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/personality-swarm': typeof ApiPersonalitySwarmRoute
   '/api/ping': typeof ApiPingRoute
@@ -1597,6 +1605,7 @@ export interface FileRoutesById {
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
   '/api/models': typeof ApiModelsRoute
+  '/api/odysseus-bootstrap': typeof ApiOdysseusBootstrapRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/personality-swarm': typeof ApiPersonalitySwarmRoute
   '/api/ping': typeof ApiPingRoute
@@ -1790,6 +1799,7 @@ export interface FileRouteTypes {
     | '/api/media'
     | '/api/memory'
     | '/api/models'
+    | '/api/odysseus-bootstrap'
     | '/api/paths'
     | '/api/personality-swarm'
     | '/api/ping'
@@ -1980,6 +1990,7 @@ export interface FileRouteTypes {
     | '/api/media'
     | '/api/memory'
     | '/api/models'
+    | '/api/odysseus-bootstrap'
     | '/api/paths'
     | '/api/personality-swarm'
     | '/api/ping'
@@ -2171,6 +2182,7 @@ export interface FileRouteTypes {
     | '/api/media'
     | '/api/memory'
     | '/api/models'
+    | '/api/odysseus-bootstrap'
     | '/api/paths'
     | '/api/personality-swarm'
     | '/api/ping'
@@ -2363,6 +2375,7 @@ export interface RootRouteChildren {
   ApiMediaRoute: typeof ApiMediaRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
   ApiModelsRoute: typeof ApiModelsRoute
+  ApiOdysseusBootstrapRoute: typeof ApiOdysseusBootstrapRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPersonalitySwarmRoute: typeof ApiPersonalitySwarmRoute
   ApiPingRoute: typeof ApiPingRoute
@@ -3063,6 +3076,13 @@ declare module '@tanstack/react-router' {
       path: '/api/paths'
       fullPath: '/api/paths'
       preLoaderRoute: typeof ApiPathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/odysseus-bootstrap': {
+      id: '/api/odysseus-bootstrap'
+      path: '/api/odysseus-bootstrap'
+      fullPath: '/api/odysseus-bootstrap'
+      preLoaderRoute: typeof ApiOdysseusBootstrapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/models': {
@@ -4086,6 +4106,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMediaRoute: ApiMediaRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
   ApiModelsRoute: ApiModelsRoute,
+  ApiOdysseusBootstrapRoute: ApiOdysseusBootstrapRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPersonalitySwarmRoute: ApiPersonalitySwarmRoute,
   ApiPingRoute: ApiPingRoute,
@@ -4186,12 +4207,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
