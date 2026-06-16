@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
-import { getTheme, setTheme, isValidTheme } from '@/lib/theme'
-import { useSettingsStore, type StudioSettings } from '@/hooks/use-settings'
-import { useChatSettingsStore, type ChatSettings } from '@/hooks/use-chat-settings'
+import type { ChatSettings } from '@/hooks/use-chat-settings'
+import type { StudioSettings } from '@/hooks/use-settings'
+import { getTheme, isValidTheme, setTheme } from '@/lib/theme'
+import { useChatSettingsStore } from '@/hooks/use-chat-settings'
+import { useSettingsStore } from '@/hooks/use-settings'
 
 type SyncedSettings = {
   theme?: string
