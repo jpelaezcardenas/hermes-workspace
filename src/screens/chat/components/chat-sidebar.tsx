@@ -586,11 +586,12 @@ function ChatSidebarComponent({
   const isTasksActive = pathname === '/tasks'
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
+  const isMissionControlActive = pathname === '/mission-control'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
   const echoStudioEnabled = useSettingsStore(
     (state) => state.settings.experimentalEchoStudio,
   )
-  const mainRoutes = ['/chat', '/new', '/files', '/terminal']
+  const mainRoutes = ['/chat', '/new', '/mission-control', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
 
@@ -790,6 +791,14 @@ function ChatSidebarComponent({
       icon: DashboardSquare01Icon,
       label: t('nav.dashboard'),
       active: isDashboardActive,
+    },
+    {
+      kind: 'link',
+      to: '/mission-control',
+      icon: Building01Icon,
+      label: 'Mission Control',
+      active: isMissionControlActive,
+      badge: 'NEW',
     },
     {
       kind: 'link',

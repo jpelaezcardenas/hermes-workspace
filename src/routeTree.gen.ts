@@ -21,6 +21,7 @@ import { Route as ReserveRouteImport } from './routes/reserve'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
+import { Route as MissionControlRouteImport } from './routes/mission-control'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
@@ -82,6 +83,7 @@ import { Route as ApiPlaygroundAdminRouteImport } from './routes/api/playground-
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
+import { Route as ApiMissionControlRouteImport } from './routes/api/mission-control'
 import { Route as ApiMemoryRouteImport } from './routes/api/memory'
 import { Route as ApiMediaRouteImport } from './routes/api/media'
 import { Route as ApiMcpRouteImport } from './routes/api/mcp'
@@ -228,6 +230,11 @@ const PlaygroundRoute = PlaygroundRouteImport.update({
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionControlRoute = MissionControlRouteImport.update({
+  id: '/mission-control',
+  path: '/mission-control',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemoryRoute = MemoryRouteImport.update({
@@ -534,6 +541,11 @@ const ApiPathsRoute = ApiPathsRouteImport.update({
 const ApiModelsRoute = ApiModelsRouteImport.update({
   id: '/api/models',
   path: '/api/models',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMissionControlRoute = ApiMissionControlRouteImport.update({
+  id: '/api/mission-control',
+  path: '/api/mission-control',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiMemoryRoute = ApiMemoryRouteImport.update({
@@ -992,6 +1004,7 @@ export interface FileRoutesByFullPath {
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
+  '/mission-control': typeof MissionControlRoute
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
@@ -1034,6 +1047,7 @@ export interface FileRoutesByFullPath {
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
+  '/api/mission-control': typeof ApiMissionControlRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
@@ -1154,6 +1168,7 @@ export interface FileRoutesByTo {
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
+  '/mission-control': typeof MissionControlRoute
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
@@ -1195,6 +1210,7 @@ export interface FileRoutesByTo {
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
+  '/api/mission-control': typeof ApiMissionControlRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
@@ -1316,6 +1332,7 @@ export interface FileRoutesById {
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
+  '/mission-control': typeof MissionControlRoute
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
@@ -1358,6 +1375,7 @@ export interface FileRoutesById {
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
+  '/api/mission-control': typeof ApiMissionControlRoute
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
@@ -1480,6 +1498,7 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/mcp'
     | '/memory'
+    | '/mission-control'
     | '/operations'
     | '/playground'
     | '/profiles'
@@ -1522,6 +1541,7 @@ export interface FileRouteTypes {
     | '/api/mcp'
     | '/api/media'
     | '/api/memory'
+    | '/api/mission-control'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
@@ -1642,6 +1662,7 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/mcp'
     | '/memory'
+    | '/mission-control'
     | '/operations'
     | '/playground'
     | '/profiles'
@@ -1683,6 +1704,7 @@ export interface FileRouteTypes {
     | '/api/mcp'
     | '/api/media'
     | '/api/memory'
+    | '/api/mission-control'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
@@ -1803,6 +1825,7 @@ export interface FileRouteTypes {
     | '/jobs'
     | '/mcp'
     | '/memory'
+    | '/mission-control'
     | '/operations'
     | '/playground'
     | '/profiles'
@@ -1845,6 +1868,7 @@ export interface FileRouteTypes {
     | '/api/mcp'
     | '/api/media'
     | '/api/memory'
+    | '/api/mission-control'
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
@@ -1966,6 +1990,7 @@ export interface RootRouteChildren {
   JobsRoute: typeof JobsRoute
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
+  MissionControlRoute: typeof MissionControlRoute
   OperationsRoute: typeof OperationsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
@@ -2008,6 +2033,7 @@ export interface RootRouteChildren {
   ApiMcpRoute: typeof ApiMcpRouteWithChildren
   ApiMediaRoute: typeof ApiMediaRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
+  ApiMissionControlRoute: typeof ApiMissionControlRoute
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
@@ -2169,6 +2195,13 @@ declare module '@tanstack/react-router' {
       path: '/operations'
       fullPath: '/operations'
       preLoaderRoute: typeof OperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mission-control': {
+      id: '/mission-control'
+      path: '/mission-control'
+      fullPath: '/mission-control'
+      preLoaderRoute: typeof MissionControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memory': {
@@ -2596,6 +2629,13 @@ declare module '@tanstack/react-router' {
       path: '/api/models'
       fullPath: '/api/models'
       preLoaderRoute: typeof ApiModelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mission-control': {
+      id: '/api/mission-control'
+      path: '/api/mission-control'
+      fullPath: '/api/mission-control'
+      preLoaderRoute: typeof ApiMissionControlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/memory': {
@@ -3435,6 +3475,7 @@ const rootRouteChildren: RootRouteChildren = {
   JobsRoute: JobsRoute,
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
+  MissionControlRoute: MissionControlRoute,
   OperationsRoute: OperationsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
@@ -3477,6 +3518,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMcpRoute: ApiMcpRouteWithChildren,
   ApiMediaRoute: ApiMediaRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
+  ApiMissionControlRoute: ApiMissionControlRoute,
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,

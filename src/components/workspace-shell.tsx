@@ -169,6 +169,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   // Derive active session from URL
   const mobilePageTitle = (() => {
     if (pathname.startsWith('/terminal')) return 'Terminal'
+    if (pathname.startsWith('/mission-control')) return 'Mission Control'
     if (pathname.startsWith('/files')) return 'Files'
     if (pathname.startsWith('/jobs')) return 'Jobs'
     if (pathname.startsWith('/conductor')) return 'Conductor'
