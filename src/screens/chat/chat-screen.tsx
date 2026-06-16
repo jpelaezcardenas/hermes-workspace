@@ -113,7 +113,7 @@ import { ErrorToastContainer, showErrorToast } from '@/components/error-toast'
 // ContextMeter removed — ContextBar (PR #32) replaces it
 import { persistRecoveryMessage, useChatStore } from '@/stores/chat-store'
 import { useSessionModelStore } from '@/stores/session-model-store'
-import { useResearchCard } from '@/hooks/use-research-card'
+import { useResearchCard, setActiveResearch } from '@/hooks/use-research-card'
 // MOBILE_TAB_BAR_OFFSET removed — tab bar always hidden in chat
 import { useTapDebug } from '@/hooks/use-tap-debug'
 import { useChatMode } from '@/hooks/use-chat-mode'
@@ -2701,6 +2701,25 @@ export function ChatScreen({
     resetKey: `${resolvedSessionKey || activeCanonicalKey || 'main'}:${researchResetKey}`,
   })
 
+  const handleResearch = useCallback(async (query: string) => {
+    const key = resolvedSessionKey || activeCanonicalKey || 'main'
+    try {
+      const res = await fetch('/api/odysseus/research/start', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ query, max_rounds: 0, max_time: 300 }),
+      })
+      if (res.ok) {
+        const data = (await res.json()) as { session_id?: string }
+        if (data.session_id) {
+          setActiveResearch(key, data.session_id)
+        }
+      }
+    } catch {
+      // ignore — research is best-effort from chat
+    }
+  }, [resolvedSessionKey, activeCanonicalKey])
+
   // Pull-to-refresh offset removed
 
   const handleOpenAgentDetails = useCallback(() => {
@@ -2930,6 +2949,7 @@ export function ChatScreen({
             <ChatComposer
               onSubmit={send}
               onAbort={handleAbortStreaming}
+              onResearch={handleResearch}
               isLoading={sending || waitingForResponse}
               disabled={sending || hideUi}
               sessionKey={
