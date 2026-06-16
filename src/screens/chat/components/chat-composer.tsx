@@ -8,6 +8,7 @@ import {
   Delete01Icon,
   Mic01Icon,
   StopIcon,
+  Telescope02Icon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -96,6 +97,7 @@ type ChatComposerProps = {
   /** Called when user changes thinking level */
   onThinkingLevelChange?: (level: ThinkingLevel) => void
   onAbort?: () => void
+  onResearch?: (query: string) => void
   /** Embedded inside another surface (e.g. Operations card), so mobile composer
    * must stay inline instead of docking fixed to the viewport bottom. */
   embedded?: boolean
@@ -880,6 +882,7 @@ function ChatComposerComponent({
   thinkingLevel: externalThinkingLevel,
   onThinkingLevelChange,
   onAbort,
+  onResearch,
   embedded = false,
   hideModelSelector = false,
 }: ChatComposerProps) {
@@ -2760,6 +2763,30 @@ function ChatComposerComponent({
                     />
                   </Button>
                 </PromptInputAction>
+                {onResearch && (
+                  <PromptInputAction tooltip="Deep research">
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
+                      className="rounded-lg text-primary-500 hover:bg-primary-100 dark:hover:bg-primary-800 hover:text-accent-600"
+                      aria-label="Deep research"
+                      disabled={disabled || !value.trim()}
+                      onClick={() => {
+                        const q = value.trim()
+                        if (q) {
+                          onResearch(q)
+                          setValue('')
+                        }
+                      }}
+                    >
+                      <HugeiconsIcon
+                        icon={Telescope02Icon}
+                        size={20}
+                        strokeWidth={1.5}
+                      />
+                    </Button>
+                  </PromptInputAction>
+                )}
                 {hasDraft && !isLoading && (
                   <PromptInputAction tooltip="Clear draft">
                     <Button

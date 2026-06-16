@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   ArrowRight01Icon,
   Clock01Icon,
-  PauseIcon,
   PlayIcon,
   Settings01Icon,
 } from '@hugeicons/core-free-icons'
@@ -17,7 +16,60 @@ import { toast } from '@/components/ui/toast'
 import { runCronJob, toggleCronJob } from '@/lib/cron-api'
 import { cn } from '@/lib/utils'
 import { useAgentChat, type OperationsChatMessage } from '../hooks/use-agent-chat'
-import type { OperationsAgent } from '../hooks/use-operations'
+import type { OperationsAgent, SisterInfo } from '../hooks/use-operations'
+
+const SISTER_BADGE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  astra:    { bg: 'bg-violet-500/15',  text: 'text-violet-300',  border: 'border-violet-400/30' },
+  novus:    { bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-400/30' },
+  nova:     { bg: 'bg-sky-500/15',     text: 'text-sky-300',     border: 'border-sky-400/30' },
+  business: { bg: 'bg-amber-500/15',   text: 'text-amber-300',   border: 'border-amber-400/30' },
+  default:  { bg: 'bg-primary-500/10', text: 'text-primary-400', border: 'border-primary-300/20' },
+}
+
+function badgeStyle(sister: SisterInfo) {
+  if (SISTER_BADGE_STYLES[sister.id]) return SISTER_BADGE_STYLES[sister.id]
+  if (sister.type === 'business_agent') return SISTER_BADGE_STYLES.business
+  return SISTER_BADGE_STYLES.default
+}
+
+function PersonalityBadge({ sister }: { sister: SisterInfo }) {
+  const style = badgeStyle(sister)
+  const tier = sister.modelPreference
+    ? sister.modelPreference.startsWith('local:')
+      ? 'local'
+      : sister.modelPreference.includes(':free')
+        ? 'free'
+        : sister.modelPreference.includes(':paid')
+          ? 'paid'
+          : null
+    : null
+  const hasGrowth = (sister.growthEntryCount ?? 0) > 0
+  const growthTitle = hasGrowth
+    ? `${sister.growthLabel} (${sister.growthEntryCount} improvement${(sister.growthEntryCount ?? 0) === 1 ? '' : 's'})${sister.lastNote ? `\n"${sister.lastNote}"` : ''}`
+    : undefined
+  return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap justify-center">
+      <span
+        className={cn(
+          'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
+          style.bg, style.text, style.border,
+        )}
+        title={sister.description || sister.role}
+      >
+        {sister.emoji} {sister.name}
+        {tier ? <span className="opacity-60">· {tier}</span> : null}
+      </span>
+      {hasGrowth ? (
+        <span
+          className="inline-flex items-center gap-0.5 rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[10px] text-white/50"
+          title={growthTitle}
+        >
+          {sister.growthEmoji} {sister.growthLabel}
+        </span>
+      ) : null}
+    </span>
+  )
+}
 
 function getStatusStyles(status: OperationsAgent['status']) {
   if (status === 'error') {
@@ -168,19 +220,20 @@ export function OperationsInlineChat({
 
 export function OperationsAgentCard({
   agent,
+  sisterInfo,
   onOpenSettings,
 }: {
   agent: OperationsAgent
+  sisterInfo?: SisterInfo
   onOpenSettings: (agentId: string) => void
 }) {
   const queryClient = useQueryClient()
   const status = getStatusStyles(agent.status)
   const displayName = stripEmojiPrefix(agent.name)
   const [showCronPanel, setShowCronPanel] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
   const { messages, sendMessage, isSending, error } = useAgentChat(agent.sessionKey)
   const cronJobCount = agent.jobs.length
-  const isActive = agent.status === 'active' && !isPaused
+  const isActive = agent.status === 'active'
 
   const toggleMutation = useMutation({
     mutationFn: async (payload: { jobId: string; enabled: boolean }) =>
@@ -212,13 +265,8 @@ export function OperationsAgentCard({
     },
   })
 
-  async function handlePlayPause() {
-    if (isActive) {
-      setIsPaused(true)
-      return
-    }
-
-    setIsPaused(false)
+  async function handleRunNow() {
+    if (isActive) return
     await sendMessage('Run your primary task now')
   }
 
@@ -255,7 +303,7 @@ export function OperationsAgentCard({
             <span
               className={cn(
                 'h-2 w-2 shrink-0 rounded-full',
-                agent.status === 'active' && !isPaused && 'animate-pulse',
+                agent.status === 'active' && 'animate-pulse',
                 status.dot,
               )}
               aria-label={status.label}
@@ -271,16 +319,16 @@ export function OperationsAgentCard({
             aria-label={
               agent.needsSetup
                 ? `Configure ${displayName} before running`
-                : isActive ? `Pause ${displayName}` : `Run ${displayName} now`
+                : isActive ? `${displayName} is already running` : `Run ${displayName} now`
             }
             onClick={() => {
               if (agent.needsSetup) {
                 onOpenSettings(agent.id)
                 return
               }
-              void handlePlayPause()
+              void handleRunNow()
             }}
-            disabled={(isSending && !isActive)}
+            disabled={isSending || isActive}
             title={
               agent.needsSetup
                 ? 'No model configured — open settings to set one up'
@@ -294,7 +342,7 @@ export function OperationsAgentCard({
             )}
           >
             <HugeiconsIcon
-              icon={isActive ? PauseIcon : PlayIcon}
+              icon={PlayIcon}
               size={16}
               strokeWidth={1.8}
             />
@@ -336,6 +384,7 @@ export function OperationsAgentCard({
           </div>
         </div>
 
+        {sisterInfo ? <PersonalityBadge sister={sisterInfo} /> : null}
         <p className="w-full truncate text-[11px] text-[var(--theme-muted)]">
           {agent.meta.description || 'No description'}
         </p>

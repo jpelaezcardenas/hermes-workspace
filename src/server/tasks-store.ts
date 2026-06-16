@@ -6,6 +6,18 @@ import { randomUUID } from 'node:crypto'
 export type TaskColumn = 'backlog' | 'todo' | 'in_progress' | 'review' | 'blocked' | 'done' | 'deleted'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
+export type TaskAgentState = 'reviewing' | 'delegating' | 'working' | 'waiting_for_input' | null
+export type TaskSource = 'human' | 'idea_job' | 'astra' | null
+
+export type ActivityEntry = {
+  id: string
+  by: string
+  byEmoji: string
+  action: string
+  note: string
+  at: string
+}
+
 export type TaskRecord = {
   id: string
   title: string
@@ -20,6 +32,13 @@ export type TaskRecord = {
   created_at: string
   updated_at: string
   session_id?: string | null
+  agent_state?: TaskAgentState
+  agent_name?: string | null
+  agent_action_at?: string | null
+  source?: TaskSource
+  agent_comment?: string | null
+  agent_history?: ActivityEntry[]
+  waiting_for_user?: boolean
 }
 
 type TaskFile = { tasks: TaskRecord[] }
@@ -31,8 +50,8 @@ type TaskFilters = {
   includeDone?: boolean
 }
 
-type CreateTaskInput = Partial<TaskRecord> & { title: string }
-type UpdateTaskInput = Partial<Omit<TaskRecord, 'id' | 'created_at' | 'created_by'>>
+export type CreateTaskInput = Partial<TaskRecord> & { title: string }
+export type UpdateTaskInput = Partial<Omit<TaskRecord, 'id' | 'created_at' | 'created_by'>>
 
 const CLAUDE_HOME = process.env.HERMES_HOME ?? process.env.CLAUDE_HOME ?? path.join(os.homedir(), '.hermes')
 const TASKS_FILE = path.join(CLAUDE_HOME, 'tasks.json')
@@ -76,6 +95,13 @@ function normalizeTask(task: Partial<TaskRecord> & Pick<TaskRecord, 'id' | 'titl
     created_at: task.created_at,
     updated_at: task.updated_at,
     session_id: task.session_id ?? null,
+    agent_state: task.agent_state ?? null,
+    agent_name: task.agent_name ?? null,
+    agent_action_at: task.agent_action_at ?? null,
+    source: task.source ?? null,
+    agent_comment: task.agent_comment ?? null,
+    agent_history: Array.isArray(task.agent_history) ? task.agent_history : [],
+    waiting_for_user: task.waiting_for_user ?? false,
   }
 }
 
@@ -116,6 +142,10 @@ export function createTask(input: CreateTaskInput): TaskRecord {
     created_by: typeof input.created_by === 'string' && input.created_by ? input.created_by : 'user',
     created_at: now,
     updated_at: now,
+    source: input.source,
+    agent_state: input.agent_state,
+    agent_name: input.agent_name,
+    agent_action_at: input.agent_action_at,
   })
   file.tasks.push(task)
   writeTaskFile({ tasks: file.tasks.map(normalizeTask) })

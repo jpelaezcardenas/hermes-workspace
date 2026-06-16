@@ -6,6 +6,34 @@ import { fetchCronJobs } from '@/lib/cron-api'
 import { fetchSessions, type GatewaySession } from '@/lib/gateway-api'
 import { formatModelName, formatRelativeTime } from '@/screens/dashboard/lib/formatters'
 
+export type SisterInfo = {
+  id: string
+  name: string
+  emoji: string
+  description: string
+  role: string
+  type: 'ai_sister' | 'business_agent' | 'delegation_profile'
+  modelPreference?: string
+  priority?: number
+  handoffTo?: string
+  growthLevel?: number
+  growthLabel?: string
+  growthEmoji?: string
+  growthEntryCount?: number
+  lastNote?: string
+}
+
+async function fetchSisters(): Promise<SisterInfo[]> {
+  try {
+    const res = await fetch('/api/sisters')
+    if (!res.ok) return []
+    const payload = (await res.json()) as { ok?: boolean; sisters?: SisterInfo[] }
+    return Array.isArray(payload.sisters) ? payload.sisters : []
+  } catch {
+    return []
+  }
+}
+
 // Claude-Workspace adapter: Operations is backed by Hermes profiles
 // (each profile = one persistent agent). Profiles live at ~/.hermes/profiles/<name>/
 // with their own config.yaml, sessions, skills.
@@ -247,7 +275,7 @@ async function fetchOperationsConfig(): Promise<ConfigPayload> {
   const profiles = await fetchClaudeProfiles()
   const list = profiles.map((profile) => ({
     id: profile.name,
-    name: profile.name === 'default' ? 'Workspace' : profile.name,
+    name: profile.name === 'default' ? 'Astra' : profile.name,
     model: profile.model || '',
     workspace: profile.path,
     agentDir: profile.path,
@@ -415,11 +443,17 @@ function getAgentJobs(agentId: string, jobs: CronJob[]): CronJob[] {
 }
 
 function getAgentSessions(agentId: string, sessions: GatewaySession[]): GatewaySession[] {
+  const expectedSessionKey = getOperationsSessionKey(agentId)
   return [...sessions]
     .filter((session) => {
       const label = readString(session.label)
       const key = readString(session.key)
-      return label.includes(agentId) || key.includes(agentId)
+      return (
+        key === expectedSessionKey ||
+        label === expectedSessionKey ||
+        label === agentId ||
+        key.endsWith(`ops-${agentId}`)
+      )
     })
     .sort((left, right) => {
       const leftTs = readTimestamp(left.updatedAt) ?? 0
@@ -552,6 +586,23 @@ export function useOperations() {
     queryFn: fetchCronJobs,
     refetchInterval: 30_000,
   })
+
+  const sistersQuery = useQuery({
+    queryKey: ['sisters'],
+    queryFn: fetchSisters,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  })
+
+  const sisterMap = useMemo(() => {
+    const map: Record<string, SisterInfo> = {}
+    for (const s of sistersQuery.data ?? []) {
+      map[s.id] = s
+      // Astra IS the default profile — map 'default' → astra so the badge shows
+      if (s.id === 'astra') map['default'] = s
+    }
+    return map
+  }, [sistersQuery.data])
 
   const agents = useMemo(() => {
     const parsed = configQuery.data?.parsed
@@ -759,6 +810,8 @@ export function useOperations() {
     configQuery,
     sessionsQuery,
     cronJobsQuery,
+    sistersQuery,
+    sisterMap,
     recentActivity,
     settings,
     saveSettings,

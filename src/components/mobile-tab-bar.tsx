@@ -12,6 +12,7 @@ import {
   PuzzleIcon,
   Rocket01Icon,
   Settings01Icon,
+  Telescope02Icon,
   UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import {
@@ -52,6 +53,13 @@ export const MOBILE_NAV_TABS: Array<TabItem> = [
     icon: DashboardSquare01Icon,
     to: '/dashboard',
     match: (p) => p === '/dashboard',
+  },
+  {
+    id: 'research',
+    label: 'Research',
+    icon: Telescope02Icon,
+    to: '/research',
+    match: (p) => p.startsWith('/research'),
   },
   {
     id: 'chat',

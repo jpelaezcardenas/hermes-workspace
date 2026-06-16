@@ -20,6 +20,93 @@ import type { CrewMember } from '@/hooks/use-crew-status'
 import { getOnlineStatus } from '@/hooks/use-crew-status'
 import { cn } from '@/lib/utils'
 
+type SisterData = { id: string; name: string; emoji: string; role: string; type: string }
+
+// Static role → sister ID mapping (both named HARP crew roles and numbered worker display labels)
+const ROLE_TO_SISTER_ID: Record<string, string> = {
+  // Named HARP crew
+  orchestrator: 'astra', 'km-agent': 'astra',
+  strategist: 'atlas', 'ops-watch': 'bia', 'inbox-triage': 'keeper',
+  researcher: 'nova', reviewer: 'vega', docs: 'keeper',
+  builder: 'maya', qa: 'lyra', maintainer: 'sentinel',
+  // Swarm role names (ROLE_PRESETS)
+  astra: 'astra', novus: 'novus', vega: 'vega', nova: 'nova',
+  lyra: 'lyra', bia: 'bia', sentinel: 'sentinel', atlas: 'atlas',
+  keeper: 'keeper', daiane: 'daiane',
+  // Numbered display labels (from roleFromId())
+  'pr / issues': 'keeper', 'qwen pc1': 'novus', benchloop: 'novus',
+  research: 'nova', ops: 'bia', hackathon: 'novus', worker: 'astra',
+}
+
+const SISTER_BADGE_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  astra:    { bg: 'bg-violet-500/12',  text: 'text-violet-300',  border: 'border-violet-400/25' },
+  novus:    { bg: 'bg-emerald-500/12', text: 'text-emerald-300', border: 'border-emerald-400/25' },
+  nova:     { bg: 'bg-sky-500/12',     text: 'text-sky-300',     border: 'border-sky-400/25' },
+  luna:     { bg: 'bg-indigo-500/12',  text: 'text-indigo-300',  border: 'border-indigo-400/25' },
+  ada:      { bg: 'bg-cyan-500/12',    text: 'text-cyan-300',    border: 'border-cyan-400/25' },
+  maya:     { bg: 'bg-lime-500/12',    text: 'text-lime-300',    border: 'border-lime-400/25' },
+  vega:     { bg: 'bg-orange-500/12',  text: 'text-orange-300',  border: 'border-orange-400/25' },
+  atlas:    { bg: 'bg-teal-500/12',    text: 'text-teal-300',    border: 'border-teal-400/25' },
+  lyra:     { bg: 'bg-purple-500/12',  text: 'text-purple-300',  border: 'border-purple-400/25' },
+  bia:      { bg: 'bg-rose-500/12',    text: 'text-rose-300',    border: 'border-rose-400/25' },
+  keeper:   { bg: 'bg-slate-500/12',   text: 'text-slate-300',   border: 'border-slate-400/25' },
+  daiane:   { bg: 'bg-yellow-500/12',  text: 'text-yellow-300',  border: 'border-yellow-400/25' },
+  sentinel: { bg: 'bg-stone-500/12',   text: 'text-stone-300',   border: 'border-stone-400/25' },
+  vitoria:  { bg: 'bg-pink-500/12',    text: 'text-pink-300',    border: 'border-pink-400/25' },
+  larissa:  { bg: 'bg-green-500/12',   text: 'text-green-300',   border: 'border-green-400/25' },
+  clara:    { bg: 'bg-amber-500/12',   text: 'text-amber-300',   border: 'border-amber-400/25' },
+  helena:   { bg: 'bg-gray-500/12',    text: 'text-gray-300',    border: 'border-gray-400/25' },
+  business: { bg: 'bg-amber-500/12',   text: 'text-amber-300',   border: 'border-amber-400/25' },
+  default:  { bg: 'bg-primary-500/10', text: 'text-primary-300', border: 'border-primary-300/20' },
+}
+
+function badgeColors(id: string, type: string) {
+  if (SISTER_BADGE_COLORS[id]) return SISTER_BADGE_COLORS[id]
+  if (type === 'business_agent') return SISTER_BADGE_COLORS.business
+  return SISTER_BADGE_COLORS.default
+}
+
+function useSistersByRole() {
+  const { data: sisters } = useQuery<SisterData[]>({
+    queryKey: ['sisters'],
+    queryFn: async () => {
+      const res = await fetch('/api/sisters')
+      if (!res.ok) return []
+      const p = (await res.json()) as { ok?: boolean; sisters?: SisterData[] }
+      return Array.isArray(p.sisters) ? p.sisters : []
+    },
+    staleTime: 60_000,
+  })
+  return useMemo(() => {
+    const byId: Record<string, SisterData> = {}
+    for (const s of sisters ?? []) byId[s.id] = s
+    const map: Record<string, SisterData> = {}
+    for (const [role, sisterId] of Object.entries(ROLE_TO_SISTER_ID)) {
+      if (byId[sisterId]) map[role] = byId[sisterId]
+    }
+    return map
+  }, [sisters])
+}
+
+function PersonalityBadge({ role, workerId }: { role: string; workerId?: string }) {
+  const sistersByRole = useSistersByRole()
+  // Try role first, then fall back to workerId (role descriptions don't match keys; IDs do)
+  const sister = sistersByRole[role.toLowerCase()] ?? (workerId ? sistersByRole[workerId.toLowerCase()] : undefined)
+  if (!sister) return null
+  const colors = badgeColors(sister.id, sister.type)
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full border px-1.5 py-[1px] text-[9px] font-semibold',
+        colors.bg, colors.text, colors.border,
+      )}
+      title={`Personality: ${sister.name}`}
+    >
+      {sister.emoji} {sister.name}
+    </span>
+  )
+}
+
 type WorkerState =
   | 'active'
   | 'idle'
@@ -412,7 +499,8 @@ export function OperationalWorkerCard({
           </h3>
         </div>
 
-        <div className="absolute right-0 flex max-w-[9rem] items-center gap-1">
+        <div className="absolute right-0 flex max-w-[10rem] flex-col items-end gap-0.5">
+          <div className="flex items-center gap-1">
           <span
             className="truncate rounded-full border border-[var(--theme-accent)]/30 bg-[var(--theme-accent-soft)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--theme-muted)]"
             title={role}
@@ -431,7 +519,8 @@ export function OperationalWorkerCard({
           >
             <HugeiconsIcon icon={Settings01Icon} size={16} strokeWidth={1.8} />
           </button>
-
+          </div>
+          <PersonalityBadge role={role} workerId={member.id} />
         </div>
       </div>
 

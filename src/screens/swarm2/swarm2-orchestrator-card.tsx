@@ -19,7 +19,7 @@ import type { CrewMember } from '@/hooks/use-crew-status'
 import { cn } from '@/lib/utils'
 
 const ORCHESTRATOR_NAME_KEY = 'swarm2:orchestrator:name'
-const DEFAULT_NAME = 'Main Agent'
+const DEFAULT_NAME = 'Astra'
 
 type SwarmCardMode = 'cards' | 'office'
 type AgentLens = 'all' | 'working' | 'reviewing' | 'blocked' | 'ready'
@@ -138,7 +138,7 @@ export function Swarm2OrchestratorCard({
     id: agent.workerId,
     name: agent.workerName,
     modelId: agent.role,
-    status: agent.state === 'blocked' ? 'error' : agent.state === 'ready' ? 'done' : 'active',
+    status: agent.state === 'blocked' ? 'error' : agent.state === 'ready' ? 'ready' : 'active',
     lastLine: agent.task,
     lastAt: Date.now(),
     taskCount: agent.state === 'ready' ? 0 : 1,
@@ -350,6 +350,7 @@ export function Swarm2OrchestratorCard({
                   agentRows={officeAgents}
                   missionRunning={activeAgents.some((agent) => agent.state === 'working' || agent.state === 'reviewing')}
                   onViewOutput={() => undefined}
+                  processType="parallel"
                   containerHeight={360}
                   hideHeader
                 />
