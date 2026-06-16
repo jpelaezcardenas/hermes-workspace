@@ -1,6 +1,6 @@
 # Hermes Codex Handoff
 
-Stand: 2026-06-14
+Stand: 2026-06-16
 
 Zweck:
 Hermes kann Aufgaben fuer Codex hier sauber ablegen. Codex kann Ergebnisse strukturiert zurueckgeben. So bleiben automatische Hermes-Jobs, Decision Inbox und Codex-Umsetzung verbunden.
@@ -29,6 +29,7 @@ Hermes legt nur dann ein Codex-Handoff an, wenn aus der Decision Inbox eine konk
 Offene Codex-Inbox-Handoffs:
 - `codex-handoff-2026-06-07-uk-startkarte-fachfremde-kollegen.md`: offen, keine passende Outbox-Rückgabe gefunden.
 - `codex-handoff-2026-06-14-uk-startkarte-handoff-review.md`: offen, keine passende Outbox-Rückgabe gefunden.
+- `codex-handoff-2026-06-15-lernwerkstatt-startseite-entmischen.md`: offen, keine passende Outbox-Rückgabe gefunden.
 
 ## Zuletzt abgeschlossene Handoffs
 

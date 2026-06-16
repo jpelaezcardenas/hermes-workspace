@@ -416,7 +416,98 @@
       "primary_document": "xslF345X06/primary_doc.xml",
       "filed_at": "2026-06-09",
       "document_review_required": true
+    },
+    {
+      "id": "DVLT-4-0001104659-26-073504-2026-06-12",
+      "observed_at": "2026-06-15",
+      "ticker": "DVLT",
+      "source": "SEC",
+      "form": "4",
+      "holder": "Datavault AI Inc.",
+      "cik": "0001682149",
+      "accession": "0001104659-26-073504",
+      "primary_document": "xslF345X06/tm2617853-2_4seq1.xml",
+      "filed_at": "2026-06-12",
+      "document_review_required": true
+    },
+    {
+      "id": "DVLT-4-0001104659-26-073503-2026-06-12",
+      "observed_at": "2026-06-15",
+      "ticker": "DVLT",
+      "source": "SEC",
+      "form": "4",
+      "holder": "Datavault AI Inc.",
+      "cik": "0001682149",
+      "accession": "0001104659-26-073503",
+      "primary_document": "xslF345X06/tm2617853-1_4seq1.xml",
+      "filed_at": "2026-06-12",
+      "document_review_required": true
+    },
+    {
+      "id": "BFRG-4-0001493152-26-028744-2026-06-15",
+      "observed_at": "2026-06-16",
+      "ticker": "BFRG",
+      "source": "SEC",
+      "form": "4",
+      "holder": "BullFrog AI Holdings, Inc.",
+      "cik": "0001829247",
+      "accession": "0001493152-26-028744",
+      "primary_document": "xslF345X06/ownership.xml",
+      "filed_at": "2026-06-15",
+      "document_review_required": true
+    },
+    {
+      "id": "BFRG-4-0001493152-26-028743-2026-06-15",
+      "observed_at": "2026-06-16",
+      "ticker": "BFRG",
+      "source": "SEC",
+      "form": "4",
+      "holder": "BullFrog AI Holdings, Inc.",
+      "cik": "0001829247",
+      "accession": "0001493152-26-028743",
+      "primary_document": "xslF345X06/ownership.xml",
+      "filed_at": "2026-06-15",
+      "document_review_required": true
+    },
+    {
+      "id": "BFRG-4-0001493152-26-028742-2026-06-15",
+      "observed_at": "2026-06-16",
+      "ticker": "BFRG",
+      "source": "SEC",
+      "form": "4",
+      "holder": "BullFrog AI Holdings, Inc.",
+      "cik": "0001829247",
+      "accession": "0001493152-26-028742",
+      "primary_document": "xslF345X06/ownership.xml",
+      "filed_at": "2026-06-15",
+      "document_review_required": true
+    },
+    {
+      "id": "NBIS-4-0001513845-26-000074-2026-06-15",
+      "observed_at": "2026-06-16",
+      "ticker": "NBIS",
+      "source": "SEC",
+      "form": "4",
+      "holder": "Nebius Group N.V.",
+      "cik": "0001513845",
+      "accession": "0001513845-26-000074",
+      "primary_document": "xslF345X06/form4.xml",
+      "filed_at": "2026-06-15",
+      "document_review_required": true
+    },
+    {
+      "id": "PLTR-4-0001705189-26-000011-2026-06-15",
+      "observed_at": "2026-06-16",
+      "ticker": "PLTR",
+      "source": "SEC",
+      "form": "4",
+      "holder": "Palantir Technologies Inc.",
+      "cik": "0001321655",
+      "accession": "0001705189-26-000011",
+      "primary_document": "xslF345X06/wk-form4_1781568055.xml",
+      "filed_at": "2026-06-15",
+      "document_review_required": true
     }
   ],
-  "generated_at": "2026-06-12T07:51:00.484Z"
+  "generated_at": "2026-06-16T07:50:57.996Z"
 }

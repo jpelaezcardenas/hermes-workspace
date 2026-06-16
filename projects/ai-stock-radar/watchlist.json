@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-06-12",
+  "updated_at": "2026-06-16",
   "provider_status": {
     "market_data": "free_price_data_unavailable",
     "filings": "available",
@@ -59,7 +59,7 @@
       ],
       "quality_notes": [],
       "score_penalty": 0,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "WAIT_FOR_CONFIRMATION: Wait for stronger evidence or price/volume context; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -80,7 +80,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "B",
@@ -208,7 +208,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -291,31 +291,31 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "pass",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "WAIT",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "WATCH_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "free_source_evidence_still_needs_manual_review",
               "detail": "risk label in current evidence stack"
             }
@@ -394,7 +394,7 @@
         "limited us gaap facts"
       ],
       "score_penalty": 0,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -417,7 +417,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "B",
@@ -545,7 +545,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -643,37 +643,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "foreign_issuer",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "limited_us_gaap_facts",
               "detail": "risk label in current evidence stack"
             }
@@ -759,7 +759,7 @@
         "cash runway watch"
       ],
       "score_penalty": 14,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -780,7 +780,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "C",
@@ -910,7 +910,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -1010,37 +1010,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -1122,7 +1122,7 @@
         "name only ai watch"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1143,7 +1143,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1274,7 +1274,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -1382,37 +1382,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -1498,7 +1498,7 @@
         "delisting watch"
       ],
       "score_penalty": 30,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1519,7 +1519,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -1653,7 +1653,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -1762,37 +1762,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -1902,7 +1902,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 35,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -1926,7 +1926,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2058,7 +2058,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -2167,55 +2167,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "clinical_risk",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_burn_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -2295,7 +2295,7 @@
         "name only ai watch"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2316,7 +2316,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2447,7 +2447,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -2555,31 +2555,31 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -2666,7 +2666,7 @@
         "offering watch"
       ],
       "score_penalty": 40,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -2687,7 +2687,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -2818,7 +2818,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -2928,43 +2928,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -3039,7 +3039,7 @@
         "SEC companyfacts fundamentals unavailable"
       ],
       "score_penalty": 25,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3058,7 +3058,7 @@
         "fundamental_quality": "limited public fact coverage",
         "signal_breadth": "3 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3189,7 +3189,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -3294,31 +3294,31 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -3408,7 +3408,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 42,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3429,7 +3429,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3564,7 +3564,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -3675,43 +3675,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -3797,7 +3797,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 33,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "DOWNGRADE_REVIEW: Review whether the candidate should be capped or downgraded; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -3818,7 +3818,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -3949,7 +3949,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -4057,37 +4057,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -4173,7 +4173,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 34,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -4194,7 +4194,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -4326,7 +4326,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -4435,43 +4435,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -4568,7 +4568,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 48,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -4589,7 +4589,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -4720,7 +4720,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -4832,49 +4832,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -4957,7 +4957,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 37,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -4978,7 +4978,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -5109,7 +5109,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -5217,37 +5217,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -5334,7 +5334,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 37,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -5355,7 +5355,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -5486,7 +5486,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -5596,37 +5596,37 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -5729,7 +5729,7 @@
         "offering watch"
       ],
       "score_penalty": 45,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -5753,7 +5753,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -5888,7 +5888,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -5999,55 +5999,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "crowded_large_cap",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "overheated_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -6134,7 +6134,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 47,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "CHECK_DILUTION: Check offering, warrants, cash runway, and share-count trend; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -6155,7 +6155,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -6286,7 +6286,7 @@
           "catalyst_calendar": {
             "label": "no_known_event",
             "score": 0,
-            "next_review_at": "2026-06-22",
+            "next_review_at": "2026-06-26",
             "reasons": [
               "no specific upcoming catalyst event is known from local evidence"
             ]
@@ -6396,43 +6396,43 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "caution",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -6527,7 +6527,7 @@
         "cash runway watch"
       ],
       "score_penalty": 59,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -6548,7 +6548,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -6684,7 +6684,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -6797,49 +6797,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -6939,7 +6939,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 63,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -6960,7 +6960,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -7094,7 +7094,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -7209,49 +7209,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -7346,7 +7346,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 63,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -7367,7 +7367,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -7501,7 +7501,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -7616,49 +7616,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -7755,7 +7755,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 67,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -7776,7 +7776,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -7910,7 +7910,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -8025,49 +8025,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -8164,7 +8164,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 67,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -8185,7 +8185,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -8319,7 +8319,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -8434,49 +8434,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -8569,7 +8569,7 @@
         "cash runway watch"
       ],
       "score_penalty": 69,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -8590,7 +8590,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -8724,7 +8724,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -8839,49 +8839,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -8975,7 +8975,7 @@
         "offering watch"
       ],
       "score_penalty": 70,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -8996,7 +8996,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -9130,7 +9130,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -9245,49 +9245,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -9387,7 +9387,7 @@
         "offering watch"
       ],
       "score_penalty": 70,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -9408,7 +9408,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -9542,7 +9542,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -9657,49 +9657,49 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -9799,7 +9799,7 @@
         "revenue decline watch"
       ],
       "score_penalty": 75,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -9820,7 +9820,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -9954,7 +9954,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -10071,55 +10071,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "revenue_decline_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -10226,7 +10226,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 96,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -10247,7 +10247,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -10381,7 +10381,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -10500,55 +10500,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -10652,7 +10652,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 81,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -10673,7 +10673,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -10807,7 +10807,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -10924,55 +10924,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -11074,7 +11074,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 81,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -11095,7 +11095,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -11229,7 +11229,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -11346,55 +11346,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "dilution_trend_watch",
               "detail": "risk label in current evidence stack"
             }
@@ -11505,7 +11505,7 @@
         "dilution trend watch"
       ],
       "score_penalty": 96,
-      "last_checked": "2026-06-12",
+      "last_checked": "2026-06-16",
       "next_action": "ARCHIVE_REVIEW: Review for archive or Avoid status because a hard risk gate fired; no trade action.",
       "sources": [
         "Nasdaq Symbol Directory",
@@ -11526,7 +11526,7 @@
         "fundamental_quality": "SEC companyfacts available",
         "signal_breadth": "4 independent public source types"
       },
-      "first_seen": "2026-06-12",
+      "first_seen": "2026-06-16",
       "age_days": 0,
       "status": "fresh",
       "idea_grade": "X",
@@ -11660,7 +11660,7 @@
           "catalyst_calendar": {
             "label": "review_window",
             "score": 3,
-            "next_review_at": "2026-06-17",
+            "next_review_at": "2026-06-21",
             "reasons": [
               "known filing or catalyst context should be reviewed again"
             ]
@@ -11779,55 +11779,55 @@
           "events": [
             {
               "kind": "checked",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "last_checked",
               "detail": "candidate was reviewed"
             },
             {
               "kind": "filing_catalyst",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "hard_catalyst",
               "detail": "filing or material-agreement catalyst detected"
             },
             {
               "kind": "evidence_firewall",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "reject",
               "detail": "evidence firewall verdict"
             },
             {
               "kind": "advanced_signal",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "RISK_TRAP",
               "detail": "advanced signal stack label"
             },
             {
               "kind": "thesis",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "BROKEN_THESIS",
               "detail": "thesis intelligence verdict"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "name_only_ai_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "delisting_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "offering_watch",
               "detail": "risk label in current evidence stack"
             },
             {
               "kind": "risk_event",
-              "date": "2026-06-12",
+              "date": "2026-06-16",
               "label": "cash_runway_watch",
               "detail": "risk label in current evidence stack"
             }

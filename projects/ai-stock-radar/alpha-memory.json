@@ -7968,8 +7968,1552 @@
         "dilution_trend_watch"
       ],
       "status": "pending"
+    },
+    {
+      "id": "GMEX-2026-06-15",
+      "ticker": "GMEX",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "B",
+      "score": 65,
+      "category": "Early Watch",
+      "hypothesis_label": "CONTRADICTION_REVIEW",
+      "thesis_verdict": "WATCH_THESIS",
+      "advanced_label": "WAIT",
+      "contradiction_severity": "watch",
+      "catalyst_timing": "stale_or_thin",
+      "risk_labels": [
+        "free_source_evidence_still_needs_manual_review"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "NBIS-2026-06-15",
+      "ticker": "NBIS",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "B",
+      "score": 69,
+      "category": "Early Watch",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "foreign_issuer",
+        "limited_us_gaap_facts"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "DUKR-2026-06-15",
+      "ticker": "DUKR",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "C",
+      "score": 63,
+      "category": "Early Watch",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "cash_runway_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AISP-2026-06-15",
+      "ticker": "AISP",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 52,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AMCI-2026-06-15",
+      "ticker": "AMCI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 47,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "delisting_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "RXRX-2026-06-15",
+      "ticker": "RXRX",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 44,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "clinical_risk",
+        "cash_burn_watch",
+        "offering_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GMM-2026-06-15",
+      "ticker": "GMM",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 40,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "KDK-2026-06-15",
+      "ticker": "KDK",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 37,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GFAI-2026-06-15",
+      "ticker": "GFAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 35,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "RR-2026-06-15",
+      "ticker": "RR",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 35,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AIIO-2026-06-15",
+      "ticker": "AIIO",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 32,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "ARBE-2026-06-15",
+      "ticker": "ARBE",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 31,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "cash_runway_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "ODYS-2026-06-15",
+      "ticker": "ODYS",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 29,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "offering_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "HPAI-2026-06-15",
+      "ticker": "HPAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 28,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "RZLV-2026-06-15",
+      "ticker": "RZLV",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 28,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "PLTR-2026-06-15",
+      "ticker": "PLTR",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 25,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "crowded_large_cap",
+        "overheated_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "HCAI-2026-06-15",
+      "ticker": "HCAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 18,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "cash_runway_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "KITT-2026-06-15",
+      "ticker": "KITT",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 18,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "JTAI-2026-06-15",
+      "ticker": "JTAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 14,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "KIDZ-2026-06-15",
+      "ticker": "KIDZ",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 14,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "ARAI-2026-06-15",
+      "ticker": "ARAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 10,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "BFRG-2026-06-15",
+      "ticker": "BFRG",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 10,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "MYSE-2026-06-15",
+      "ticker": "MYSE",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 8,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "FABC-2026-06-15",
+      "ticker": "FABC",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 7,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "MSAI-2026-06-15",
+      "ticker": "MSAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 7,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "MDAI-2026-06-15",
+      "ticker": "MDAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 2,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AIFC-2026-06-15",
+      "ticker": "AIFC",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "DVLT-2026-06-15",
+      "ticker": "DVLT",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GXAI-2026-06-15",
+      "ticker": "GXAI",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "PDYN-2026-06-15",
+      "ticker": "PDYN",
+      "date": "2026-06-15",
+      "due_dates": {
+        "d7": "2026-06-22",
+        "d30": "2026-07-15",
+        "d90": "2026-09-13"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GMEX-2026-06-16",
+      "ticker": "GMEX",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "B",
+      "score": 65,
+      "category": "Early Watch",
+      "hypothesis_label": "CONTRADICTION_REVIEW",
+      "thesis_verdict": "WATCH_THESIS",
+      "advanced_label": "WAIT",
+      "contradiction_severity": "watch",
+      "catalyst_timing": "stale_or_thin",
+      "risk_labels": [
+        "free_source_evidence_still_needs_manual_review"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "NBIS-2026-06-16",
+      "ticker": "NBIS",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "B",
+      "score": 69,
+      "category": "Early Watch",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "foreign_issuer",
+        "limited_us_gaap_facts"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "DUKR-2026-06-16",
+      "ticker": "DUKR",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "C",
+      "score": 63,
+      "category": "Early Watch",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "cash_runway_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AISP-2026-06-16",
+      "ticker": "AISP",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 52,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AMCI-2026-06-16",
+      "ticker": "AMCI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 47,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "delisting_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "RXRX-2026-06-16",
+      "ticker": "RXRX",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 44,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "clinical_risk",
+        "cash_burn_watch",
+        "offering_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GMM-2026-06-16",
+      "ticker": "GMM",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 40,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "KDK-2026-06-16",
+      "ticker": "KDK",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 37,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GFAI-2026-06-16",
+      "ticker": "GFAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 35,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "RR-2026-06-16",
+      "ticker": "RR",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 35,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AIIO-2026-06-16",
+      "ticker": "AIIO",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 32,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "ARBE-2026-06-16",
+      "ticker": "ARBE",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 31,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "cash_runway_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "ODYS-2026-06-16",
+      "ticker": "ODYS",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 29,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "offering_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "HPAI-2026-06-16",
+      "ticker": "HPAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 28,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "RZLV-2026-06-16",
+      "ticker": "RZLV",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 28,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "PLTR-2026-06-16",
+      "ticker": "PLTR",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 25,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "crowded_large_cap",
+        "overheated_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "HCAI-2026-06-16",
+      "ticker": "HCAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 18,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "cash_runway_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "KITT-2026-06-16",
+      "ticker": "KITT",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 18,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "JTAI-2026-06-16",
+      "ticker": "JTAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 14,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "KIDZ-2026-06-16",
+      "ticker": "KIDZ",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 14,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "ARAI-2026-06-16",
+      "ticker": "ARAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 10,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "BFRG-2026-06-16",
+      "ticker": "BFRG",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 10,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "MYSE-2026-06-16",
+      "ticker": "MYSE",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 8,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "FABC-2026-06-16",
+      "ticker": "FABC",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 7,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "MSAI-2026-06-16",
+      "ticker": "MSAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 7,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "MDAI-2026-06-16",
+      "ticker": "MDAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 2,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "dilution_trend_watch",
+        "revenue_decline_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AIFC-2026-06-16",
+      "ticker": "AIFC",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "DVLT-2026-06-16",
+      "ticker": "DVLT",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "GXAI-2026-06-16",
+      "ticker": "GXAI",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "PDYN-2026-06-16",
+      "ticker": "PDYN",
+      "date": "2026-06-16",
+      "due_dates": {
+        "d7": "2026-06-23",
+        "d30": "2026-07-16",
+        "d90": "2026-09-14"
+      },
+      "horizon_days": 30,
+      "entry_close": null,
+      "idea_grade": "X",
+      "score": 0,
+      "category": "Avoid",
+      "hypothesis_label": "RISK_PATTERN",
+      "thesis_verdict": "BROKEN_THESIS",
+      "advanced_label": "RISK_TRAP",
+      "contradiction_severity": "critical",
+      "catalyst_timing": "late_or_risk",
+      "risk_labels": [
+        "name_only_ai_watch",
+        "delisting_watch",
+        "offering_watch",
+        "cash_runway_watch",
+        "dilution_trend_watch"
+      ],
+      "status": "pending"
     }
   ],
   "assessments": [],
-  "generated_at": "2026-06-12T07:36:11.425Z"
+  "generated_at": "2026-06-16T07:36:45.432Z"
 }
