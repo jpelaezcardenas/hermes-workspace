@@ -53,8 +53,16 @@ Este registro contiene el consenso obtenido tras las evaluaciones conjuntas de *
   Get-Process -Name "chrome" -ErrorAction SilentlyContinue | Stop-Process -Force
   ```
 
+### Caso 3: "Authentication error — check your API key in Settings" al enviar mensajes
+- **Síntoma**: El Dashboard y los modelos (GLM 5.2) cargan bien, el Gateway y Dashboard están corriendo, pero al escribir en el chat sale un error de autenticación rojo. En CLI funciona perfecto.
+- **La Verdad Operativa**: Este no es un error de tu API Key del LLM (Anthropic/GLM/etc.), sino un rechazo del propio **Gateway local (puerto 8642)** al UI del Workspace (`localhost:3000`). El Gateway exige un Bearer token para uso externo (incluso en localhost).
+- **Solución Rápida**: Asegurarse de que el token coincida. En `hermes-workspace/.env`, revisar `HERMES_API_TOKEN`. Ese mismo valor **debe** estar definido como `API_SERVER_KEY=valor` en `C:\Users\contexia\AppData\Local\hermes\profiles\contexia\.env`. Tras sincronizarlos, reiniciar el gateway.
+
 ---
 
 ## 3. Reglas de Modificación
 - Cualquier cambio a la arquitectura, los puertos, o la adición de nuevos agentes debe registrarse en este documento antes de proceder.
-- **Ubicación en GitHub**: `jpelaezcardenas/hermes-workspace` (y ecosistema asociado `hermes` / `antigravity-app`).
+- **Ubicaciones en GitHub**:
+  - `jpelaezcardenas/hermes-workspace`
+  - `jpelaezcardenas/hermes`
+  - `jpelaezcardenas/antigravity-app`
